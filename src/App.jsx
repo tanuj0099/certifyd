@@ -52,7 +52,6 @@ import ResumeAnalyzer from "./components/ResumeAnalyzer.jsx";
   and replace the old "Cert Assembly" feature box section with `<CertAssemblyBentoGrid />`.
 */
 import CertAssemblyBentoGrid from "./components/CertAssemblyBentoGrid.jsx";
-import CertAssemblyBentoGrid from "./CertAssemblyBentoGrid.jsx";
 import Hero from "./components/Hero.jsx";
 import Heatmap from "./components/Heatmap.jsx";
 import ModeSelector, { ModePill } from "./components/ModeSelector.jsx";
