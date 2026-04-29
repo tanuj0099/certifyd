@@ -264,7 +264,7 @@ var NotAResumeError = function({ rejectedBy, onDismiss }) {
       <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
         <AlertTriangle size={24} color={tone} />
       </div>
-      <h3 style={{ fontFamily: FH, fontWeight: '800', fontSize: '15px', color: tone, marginBottom: '7px' }}>{msg.title}</h3>
+      <h4 style={{ color: tone, marginBottom: '7px' }}>{msg.title}</h4>
       <p style={{ fontSize: '13px', color: 'var(--text-3)', fontFamily: FB, lineHeight: '1.6', marginBottom: '14px' }}>{msg.desc}</p>
       {/* FIX: onDismiss only clears rejection + fileName, NOT the textarea text.
           Previously called clearAll() which wiped pasted text the user would need to retype. */}
@@ -291,14 +291,14 @@ var CleanLoader = function() {
   }, []) // stable — LOADER_STEPS is module-level constant
 
   return (
-    <div style={{ padding: '22px', borderRadius: '13px', background: 'var(--surface)', border: '1px solid var(--border)' }}>
+    <div className="glass" style={{ padding: '22px', borderRadius: '13px' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '18px' }}>
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1.3, repeat: Infinity, ease: 'linear' }}
           style={{ width: '16px', height: '16px', borderRadius: '50%', border: '2px solid rgba(81,177,231,0.2)', borderTopColor: PICTON, flexShrink: 0 }}
         />
-        <span style={{ fontFamily: FM, fontSize: '10px', color: 'var(--text-4)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Analysing</span>
+        <span className="micro-label" style={{ color: 'var(--text-4)' }}>Analysing</span>
         <span style={{ marginLeft: 'auto', fontFamily: FM, fontSize: '11px', color: PICTON, fontWeight: '700' }}>
           {Math.round(((step + 1) / LOADER_STEPS.length) * 100)}%
         </span>
@@ -333,7 +333,7 @@ var PreferencesPanel = function({ timeline, onTimeline, domainIntent, onDomain, 
 
       {/* Timeline */}
       <div>
-        <div style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '9px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+        <div className="micro-label" style={{ color: 'var(--text-4)', marginBottom: '9px', display: 'flex', alignItems: 'center', gap: '6px' }}>
           <Clock size={10} />
           How soon do you need results?
         </div>
@@ -366,7 +366,7 @@ var PreferencesPanel = function({ timeline, onTimeline, domainIntent, onDomain, 
       {/* Domain — show if not switcher */}
       {mode !== 'switcher' && (
         <div>
-          <div style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '9px' }}>
+          <div className="micro-label" style={{ color: 'var(--text-4)', marginBottom: '9px' }}>
             Which domain are you targeting?
           </div>
           <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
@@ -438,7 +438,8 @@ var PersonalisedHero = function({ name, city, domain, primaryCert, mode }) {
       {phase >= 0 && (
         <motion.p
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
-          style={{ fontFamily: FM, fontSize: '11px', color: 'var(--text-4)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '10px', lineHeight: 1.6 }}
+          className="micro-label"
+          style={{ color: 'var(--text-4)', marginBottom: '10px', lineHeight: 1.6 }}
         >
           {intro}
         </motion.p>
@@ -489,24 +490,24 @@ var PrimaryCertHero = function({ cert }) {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '11px', flexWrap: 'wrap', gap: '6px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           <Star size={12} color={EMERALD} fill={EMERALD} />
-          <span style={{ fontFamily: FM, fontSize: '9px', color: EMERALD, textTransform: 'uppercase', letterSpacing: '0.12em', fontWeight: '700' }}>Primary Move</span>
+          <span className="micro-label" style={{ color: EMERALD }}>Primary Move</span>
         </div>
         <div style={{ display: 'flex', gap: '5px' }}>
-          <span style={{ fontFamily: FM, fontSize: '9px', padding: '3px 7px', borderRadius: '5px', background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.22)', color: EMERALD }}>+{cert.roi}</span>
-          <span style={{ fontFamily: FM, fontSize: '9px', padding: '3px 7px', borderRadius: '5px', background: 'rgba(81,177,231,0.12)', border: '1px solid rgba(81,177,231,0.22)', color: PICTON }}>{cert.timeline}</span>
+          <span className="tabular-nums" style={{ fontFamily: FM, fontSize: '9px', padding: '3px 7px', borderRadius: '5px', background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.22)', color: EMERALD }}>+{cert.roi}</span>
+          <span className="tabular-nums" style={{ fontFamily: FM, fontSize: '9px', padding: '3px 7px', borderRadius: '5px', background: 'rgba(81,177,231,0.12)', border: '1px solid rgba(81,177,231,0.22)', color: PICTON }}>{cert.timeline}</span>
         </div>
       </div>
-      <h2 style={{ fontFamily: FH, fontWeight: '800', fontSize: 'clamp(16px, 3.5vw, 23px)', color: 'var(--text)', letterSpacing: '-0.025em', lineHeight: 1.2, marginBottom: '8px' }}>
+      <h2 style={{ fontSize: 'clamp(16px, 3.5vw, 23px)', color: 'var(--text)', marginBottom: '8px' }}>
         {cert.name}
       </h2>
-      <p style={{ fontFamily: FB, fontSize: '13px', color: 'var(--text-3)', lineHeight: 1.65, marginBottom: '12px' }}>
+      <h3 style={{ fontSize: '13px', color: 'var(--text-3)', lineHeight: 1.65, marginBottom: '12px', fontWeight: '400' }}>
         {cert.why}
-      </p>
+      </h3>
       {cert.fastTrack && (
         <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', padding: '9px 11px', borderRadius: '8px', background: 'rgba(99,102,241,0.07)', border: '1px solid rgba(99,102,241,0.14)' }}>
           <Zap size={11} color={VIOLET} style={{ flexShrink: 0, marginTop: '2px' }} />
           <div>
-            <div style={{ fontFamily: FM, fontSize: '8px', color: VIOLET, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '3px' }}>This Week</div>
+            <div className="micro-label" style={{ color: VIOLET, marginBottom: '3px' }}>This Week</div>
             <div style={{ fontFamily: FB, fontSize: '12px', color: 'var(--text-3)', lineHeight: 1.5 }}>{cert.fastTrack}</div>
           </div>
         </div>
@@ -554,13 +555,13 @@ var CertLeaderboardRow = function({ cert, rank, onSelect, mode }) {
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '3px', flexShrink: 0 }}>
         {exceedsSwitcherLimit ? (
-          <span style={{ fontFamily: FM, fontSize: '9px', padding: '2px 7px', borderRadius: '5px', background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.3)', color: AMBER, whiteSpace: 'nowrap' }}>
+          <span className="micro-label" style={{ padding: '2px 7px', borderRadius: '5px', background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.3)', color: AMBER, whiteSpace: 'nowrap' }}>
             Exceeds 8-mo window
           </span>
         ) : (
-          <span style={{ fontFamily: FM, fontSize: '11px', fontWeight: '700', color: EMERALD }}>+{cert.roi}</span>
+          <span className="tabular-nums" style={{ fontFamily: FM, fontSize: '11px', fontWeight: '700', color: EMERALD }}>+{cert.roi}</span>
         )}
-        <span style={{ fontFamily: FM, fontSize: '10px', color: 'var(--text-4)' }}>{cert.timeline}</span>
+        <span className="tabular-nums" style={{ fontFamily: FM, fontSize: '10px', color: 'var(--text-4)' }}>{cert.timeline}</span>
       </div>
       {!exceedsSwitcherLimit && (
         <motion.div animate={{ x: hovered ? 3 : 0 }} transition={{ duration: 0.13 }}>
@@ -634,7 +635,7 @@ var ResultDisplay = function({ result, onCertSelected, mode, onClear }) {
           initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 2.0, duration: 0.35 }}
           style={{ marginBottom: '14px' }}
         >
-          <div style={{ fontFamily: FM, fontSize: '9px', color: AMBER, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '7px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+          <div className="micro-label" style={{ color: AMBER, marginBottom: '7px', display: 'flex', alignItems: 'center', gap: '5px' }}>
             <AlertTriangle size={10} color={AMBER} /> Gaps to close
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
@@ -716,7 +717,7 @@ var ResultDisplay = function({ result, onCertSelected, mode, onClear }) {
         >
           <TrendingUp size={13} color={VIOLET} style={{ flexShrink: 0, marginTop: '2px' }} />
           <div>
-            <div style={{ fontFamily: FM, fontSize: '9px', color: VIOLET, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '3px' }}>Market Insight</div>
+            <div className="micro-label" style={{ color: VIOLET, marginBottom: '3px' }}>Market Insight</div>
             <div style={{ fontFamily: FB, fontSize: '13px', color: 'var(--text-3)', lineHeight: 1.6 }}>{result.marketInsight}</div>
           </div>
         </motion.div>
@@ -885,7 +886,7 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
 
       {/* ── Input mode tab switcher ─────────────────────── */}
       {!hasResult && (
-        <div style={{ display: 'flex', gap: '4px', padding: '4px', borderRadius: '10px', background: 'var(--surface)', border: '1px solid var(--border)' }}>
+        <div className="glass" style={{ display: 'flex', gap: '4px', padding: '4px', borderRadius: '10px' }}>
           {[
             { id: 'upload', label: '↑ Upload Resume',   sub: 'PDF / DOC / paste' },
             { id: 'skills', label: '✦ Tag Your Skills', sub: 'No resume? Use this' },
@@ -920,8 +921,8 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
             initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.22 }} style={{ overflow: 'hidden' }}
           >
-            <div style={{ padding: '16px', borderRadius: '11px', background: 'var(--surface)', border: '1px solid var(--border)' }}>
-              <div style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '14px' }}>
+            <div className="glass" style={{ padding: '16px', borderRadius: '11px' }}>
+              <div className="micro-label" style={{ color: 'var(--text-4)', marginBottom: '14px' }}>
                 Tag skills you already have — pick at least 3
                 {pickedSkills.length > 0 && <span style={{ color: EMERALD, marginLeft: '8px' }}>{pickedSkills.length} selected</span>}
               </div>
@@ -943,7 +944,7 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
               {SKILL_GROUPS.map(function(group) {
                 return (
                   <div key={group.group} style={{ marginBottom: '12px' }}>
-                    <div style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '6px' }}>{group.group}</div>
+                    <div className="micro-label" style={{ color: 'var(--text-4)', marginBottom: '6px' }}>{group.group}</div>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
                       {group.skills.map(function(skill) {
                         var picked = pickedSkills.includes(skill)
@@ -994,7 +995,10 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
             <div style={{
               borderRadius: '11px',
               border: '1.5px dashed ' + (dragging ? PICTON : hasFile ? EMERALD : 'var(--border)'),
-              background: dragging ? PICTON + '08' : hasFile ? EMERALD + '06' : 'var(--surface)',
+              background: dragging ? PICTON + '08' : hasFile ? EMERALD + '06' : 'var(--glass-bg)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
               transition: 'border-color 0.2s, background 0.2s',
             }}>
               <div

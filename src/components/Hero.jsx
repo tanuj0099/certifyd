@@ -159,7 +159,8 @@ function StudentPath({ certName, certCost }) {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, delay: 0.1 }}
-      style={{ marginBottom: '16px', padding: '18px', borderRadius: '13px', background: 'var(--surface)', border: '1px solid var(--glass-border)' }}
+      className="glass"
+      style={{ marginBottom: '16px', padding: '18px', borderRadius: '13px' }}
     >
       <div style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '6px' }}>
         <Star size={9} color={VIOLET} />
@@ -604,8 +605,8 @@ function StatCard({ label, value, sub, color, delay = 0, badge, rangeData }) {
         boxShadow: '0 4px 20px -5px ' + color + '20',
       }}
     >
-      <div style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '5px' }}>{label}</div>
-      <div style={{ fontFamily: FM, fontSize: 'clamp(0.9rem,2vw,1.4rem)', fontWeight: '800', color, letterSpacing: '-0.03em' }}>{value}</div>
+      <div className="micro-label" style={{ color: 'var(--text-4)', marginBottom: '5px' }}>{label}</div>
+      <div className="tabular-nums" style={{ fontSize: 'clamp(0.9rem,2vw,1.4rem)', fontWeight: '800', color, letterSpacing: '-0.03em' }}>{value}</div>
       {sub && <div style={{ fontSize: '10px', color: 'var(--text-4)', marginTop: '4px', fontFamily: FB, lineHeight: '1.4' }}>{sub}</div>}
       {badge && (
         <div style={{ marginTop: '7px', display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '2px 8px', borderRadius: '9999px', background: badge.color + '15', border: '1px solid ' + badge.color + '30' }}>
@@ -622,7 +623,7 @@ function StatCard({ label, value, sub, color, delay = 0, badge, rangeData }) {
 function ChartTip({ active, payload, label }) {
   if (!active || !payload?.length) return null
   return (
-    <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '10px', padding: '10px 14px' }}>
+    <div className="glass" style={{ borderRadius: '10px', padding: '10px 14px' }}>
       <div style={{ fontFamily: FM, fontSize: '10px', color: 'var(--text-4)', marginBottom: '5px' }}>{label}</div>
       {payload.map(function(p, i) {
         return (
@@ -652,13 +653,12 @@ function AIResult({ result, certName, onReset }) {
       initial={prefersReduced ? false : { opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
       transition={TT}
-      style={{ marginTop: '14px', borderRadius: '24px', background: 'var(--surface)', border: '1px solid var(--glass-border)', overflow: 'hidden', boxShadow: '0 10px 30px -10px rgba(0,0,0,0.1)' }}
+      className="glass"
+      style={{ marginTop: '14px', borderRadius: '24px', overflow: 'hidden' }}
     >
       <div style={{ padding: '14px 16px', background: vc + '0d', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
         <div>
-          <div style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '4px' }}>
-            ROI ASSESSMENT
-          </div>
+          <div className="micro-label" style={{ color: 'var(--text-4)', marginBottom: '5px' }}>ROI ASSESSMENT</div>
           <div style={{ fontSize: '13px', fontWeight: '700', color: vc, fontFamily: FH, lineHeight: '1.4' }}>
             {result.verdict}
           </div>
@@ -950,7 +950,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
       </AnimatePresence>
 
       {/* ── Sliders ─────────────────────────────────────── */}
-      <div style={{ marginBottom: '20px', padding: '20px 18px', borderRadius: '13px', background: 'var(--surface)', border: '1px solid var(--glass-border)' }}>
+      <div className="glass" style={{ marginBottom: '20px', padding: '20px 18px', borderRadius: '13px' }}>
 
         {isStudent ? (
           <div style={{ marginBottom: '18px', padding: '11px 13px', borderRadius: '9px', background: 'rgba(74,140,106,0.07)', border: '1px solid rgba(74,140,106,0.2)' }}>
@@ -1036,42 +1036,51 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
               <StatCard label="Investment"    value={'₹' + certCost + 'L'} color={AMBER}  delay={0.05} />
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '8px', marginBottom: '12px' }}>
-              <StatCard label="New Salary"    value={'₹' + roi.newSalaryL + 'L/yr'}         color={PICTON}  delay={0}    />
-              <StatCard
-                label="Payback Window"
-                value={
-                  selectedCert
-                    ? getPaybackRange(roi.breakEvenMonths, selectedCert.demand, hikePercent)
-                    : (roi.breakEvenMonths > 0 ? roi.breakEvenMonths + ' mo' : '--')
-                }
-                sub={roi.anchor}
-                color={AMBER}
-                delay={0.05}
-                badge={selectedCert ? getPaybackConfidence(selectedCert.demand, hikePercent) : null}
-                rangeData={selectedCert && roi.breakEvenMonths > 0 ? (() => {
-                  const conf   = getPaybackConfidence(selectedCert.demand, hikePercent)
-                  const spread = conf.label === 'High confidence' ? 0.15 : conf.label === 'Medium confidence' ? 0.25 : 0.35
-                  return {
-                    lo:  Math.max(1, Math.round(roi.breakEvenMonths * (1 - spread))),
-                    hi:  Math.round(roi.breakEvenMonths * (1 + spread)),
-                    mid: roi.breakEvenMonths,
-                  }
-                })() : null}
-              />
-              <StatCard label="5-Yr Net Gain" value={'₹' + roi.fiveYearGainL + 'L'}         color={EMERALD} delay={0.1}  />
-              <StatCard label="Monthly +"     value={'₹' + roi.monthlyGainK + 'K'}           color={VIOLET}  delay={0.15} />
-            </div>
-          )}
+            <>
+              {/* ── Financial Hero Metrics ──────────────────────── */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '8px', marginBottom: '12px' }}>
+                <div className="glass" style={{ padding: '24px 16px', textAlign: 'center', borderColor: 'var(--border-accent)', background: EMERALD + '08' }}>
+                  <div className="micro-label" style={{ color: 'var(--text-4)', marginBottom: '8px' }}>5-Yr Net Gain</div>
+                  <div className="text-financial-hero" style={{ color: EMERALD }}>
+                    ₹{roi.fiveYearGainL}L
+                  </div>
+                </div>
+                <div className="glass" style={{ padding: '24px 16px', textAlign: 'center', borderColor: roi.roiPercent > 200 ? 'var(--border-accent)' : 'var(--border)', background: roi.roiPercent > 200 ? EMERALD + '08' : VIOLET + '08' }}>
+                  <div className="micro-label" style={{ color: 'var(--text-4)', marginBottom: '8px' }}>Projected ROI</div>
+                  <div className="text-financial-hero" style={{ color: roi.roiPercent > 200 ? EMERALD : VIOLET }}>
+                    {roi.roiPercent}%
+                  </div>
+                </div>
+              </div>
 
-          {!isStudent ? (
-            <div style={{ marginBottom: '12px', padding: '9px 12px', borderRadius: '9px', background: roi.roiPercent > 200 ? 'rgba(16,185,129,0.07)' : 'rgba(99,102,241,0.06)', border: '1px solid ' + (roi.roiPercent > 200 ? 'rgba(16,185,129,0.2)' : 'rgba(99,102,241,0.18)'), display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <TrendingUp size={13} color={roi.roiPercent > 200 ? EMERALD : VIOLET} />
-              <span style={{ fontFamily: FM, fontSize: '12px', color: roi.roiPercent > 200 ? EMERALD : VIOLET, fontWeight: '700' }}>
-                5-Year ROI: {roi.roiPercent}%
-              </span>
-            </div>
-          ) : null}
+              {/* ── Secondary Dash Stats ────────────────────────── */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px', marginBottom: '12px' }}>
+                <StatCard label="New Salary"    value={'₹' + roi.newSalaryL + 'L/yr'}         color={PICTON}  delay={0}    />
+                <StatCard label="Monthly +"     value={'₹' + roi.monthlyGainK + 'K'}           color={VIOLET}  delay={0.05} />
+                <StatCard
+                  label="Payback Window"
+                  value={
+                    selectedCert
+                      ? getPaybackRange(roi.breakEvenMonths, selectedCert.demand, hikePercent)
+                      : (roi.breakEvenMonths > 0 ? roi.breakEvenMonths + ' mo' : '--')
+                  }
+                  sub={roi.anchor}
+                  color={AMBER}
+                  delay={0.1}
+                  badge={selectedCert ? getPaybackConfidence(selectedCert.demand, hikePercent) : null}
+                  rangeData={selectedCert && roi.breakEvenMonths > 0 ? (() => {
+                    const conf   = getPaybackConfidence(selectedCert.demand, hikePercent)
+                    const spread = conf.label === 'High confidence' ? 0.15 : conf.label === 'Medium confidence' ? 0.25 : 0.35
+                    return {
+                      lo:  Math.max(1, Math.round(roi.breakEvenMonths * (1 - spread))),
+                      hi:  Math.round(roi.breakEvenMonths * (1 + spread)),
+                      mid: roi.breakEvenMonths,
+                    }
+                  })() : null}
+                />
+              </div>
+            </>
+          )}
 
           {!isStudent && (
             <DataNote>
@@ -1090,7 +1099,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
 
       {/* ── Chart ──────────────────────────────────────── */}
       {!isStudent && roi.chartData && roi.chartData.length > 0 ? (
-        <div style={{ marginBottom: '20px', marginTop: '16px', padding: '16px', borderRadius: '13px', background: 'var(--surface)', border: '1px solid var(--glass-border)' }}>
+        <div className="glass" style={{ marginBottom: '20px', marginTop: '16px', padding: '16px', borderRadius: '13px' }}>
           <div style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '10px' }}>CUMULATIVE GAIN — 24 MONTHS</div>
           <ResponsiveContainer width="100%" height={150}>
             <LineChart data={roi.chartData} margin={{ top: 4, right: 8, bottom: 0, left: -16 }}>

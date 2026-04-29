@@ -377,7 +377,7 @@ function CertAssembly() {
         </div>
 
         <div style={{ opacity: assembledOp, position: 'absolute', bottom: '10%', left: 0, right: 0, textAlign: 'center', pointerEvents: 'none', zIndex: 5 }}>
-          <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.15em', background: C.surface, display: 'inline-block', padding: '8px 18px', border: `1px solid ${C.border}` }}>
+          <div className="glass" style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.15em', display: 'inline-block', padding: '8px 18px' }}>
             ✓ BRIEFING COMPILED
           </div>
         </div>
@@ -408,7 +408,7 @@ function DataComposition() {
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: '14px', flexWrap: 'wrap' }}>
           <div style={{ fontFamily: F_SANS, fontWeight: '500', fontSize: 'clamp(1rem, 2vw, 1.2rem)', color: C.text2 }}>5-year net gain · AWS Solutions Architect</div>
-          <div style={{ padding: '4px 10px', background: C.surface, border: `1px solid ${C.border}`, fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.08em' }}>BLR MEDIAN '26</div>
+          <div className="glass" style={{ padding: '4px 10px', fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.08em' }}>BLR MEDIAN '26</div>
         </div>
       </motion.div>
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', borderTop: `1px solid ${C.border}` }}>
@@ -441,7 +441,7 @@ function HowItWorks({ onEnter }) {
   return (
     <StorySection id="03" title="SYS_ARCHITECTURE" bg={C.surface}>
       <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }}>
-        <h2 style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: 'clamp(1.8rem, 4.5vw, 3.2rem)', color: C.text, letterSpacing: '-0.03em', lineHeight: 1.05, margin: '0 0 52px' }}>Three inputs.<br />Data-driven projections.</h2>
+        <h2 style={{ margin: '0 0 52px' }}>Three inputs.<br />Data-driven projections.</h2>
       </motion.div>
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: isMobile ? '32px' : '36px' }}>
         {steps.map((step, i) => (
@@ -476,7 +476,7 @@ function VsSection() {
   return (
     <StorySection id="04" title="INDUSTRY_RISKS" bg={C.bg}>
       <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }}>
-        <h2 style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: 'clamp(1.8rem, 4.5vw, 3.2rem)', color: C.text, letterSpacing: '-0.03em', lineHeight: 1.05, margin: '0 0 52px' }}>Every other guide<br />is pointing you wrong.</h2>
+        <h2 style={{ margin: '0 0 52px' }}>Every other guide<br />is pointing you wrong.</h2>
       </motion.div>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         {pairs.map((pair, i) => (
@@ -507,7 +507,7 @@ function ElevenPM({ onEnter }) {
   return (
     <StorySection id="05" title="USER_STORIES" bg={C.surface}>
       <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }}>
-        <h2 style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: 'clamp(1.8rem, 4.5vw, 3.2rem)', color: C.text, letterSpacing: '-0.03em', lineHeight: 1.05, margin: '0 0 52px' }}>We know what you're<br />thinking right now.</h2>
+        <h2 style={{ margin: '0 0 52px' }}>We know what you're<br />thinking right now.</h2>
       </motion.div>
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', borderTop: `1px solid ${C.border}` }}>
         {stories.map((s, i) => {
@@ -541,9 +541,9 @@ function ThreeModes() {
   return (
     <StorySection id="06" title="SYS_MODES" bg={C.bg}>
       <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }}>
-        <h2 style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: 'clamp(1.8rem, 4.5vw, 3.2rem)', color: C.text, letterSpacing: '-0.03em', lineHeight: 1.05, margin: '0 0 52px' }}>Three tracks.<br /><span style={{ color: C.gold }}>One tool.</span></h2>
+        <h2 style={{ margin: '0 0 52px' }}>Three tracks.<br /><span style={{ color: C.gold }}>One tool.</span></h2>
       </motion.div>
-      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: isMobile ? '24px' : '32px', padding: isMobile ? '24px' : '32px', background: C.surface, border: `1px solid ${C.border}` }}>
+      <div className="glass" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: isMobile ? '24px' : '32px', padding: isMobile ? '24px' : '32px' }}>
         {modes.map((m, i) => (
           <motion.div key={m.label} variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
             <div style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: '17px', color: C.text, letterSpacing: '-0.02em', marginBottom: '6px' }}>{m.label}</div>
@@ -570,7 +570,7 @@ function SocialProof() {
   return (
     <StorySection id="07" title="FIELD_REPORTS" bg={C.surface}>
       <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }}>
-        <h2 style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: 'clamp(1.8rem, 4.5vw, 3.2rem)', color: C.text, letterSpacing: '-0.03em', lineHeight: 1.05, margin: '0 0 52px' }}>They ran the numbers first.<br /><span style={{ color: C.gold }}>Then decided.</span></h2>
+        <h2 style={{ margin: '0 0 52px' }}>They ran the numbers first.<br /><span style={{ color: C.gold }}>Then decided.</span></h2>
       </motion.div>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         {quotes.map((q, i) => {
