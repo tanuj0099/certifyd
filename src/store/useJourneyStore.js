@@ -1,0 +1,105 @@
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
+import { CERTIFICATIONS } from '../tokens.js'
+
+// ─────────────────────────────────────────────────────────
+// useJourneyStore — single source of truth for:
+//   • slider values  (salary, certCost, hikePercent)
+//   • selected cert  (selectedCert, certName)
+//   • journey state  (mode, modeLocked, activeTab)
+//   • resume context (prefilledCert, resumeCity, resumeDomain, resumeName)
+//
+// Persisted slices: salary, certCost, hikePercent, mode
+// Transient slices: selectedCert, certName, activeTab, resume context
+// ─────────────────────────────────────────────────────────
+
+export const useJourneyStore = create(
+  persist(
+    (set, get) => ({
+      // ── Slider values (persisted) ──────────────────────
+      salary:      12,
+      certCost:    0.25,
+      hikePercent: 30,
+
+      setSalary:      (v) => set({ salary: v }),
+      setCertCost:    (v) => set({ certCost: v }),
+      setHikePercent: (v) => set({ hikePercent: v }),
+
+      // ── Selected cert ──────────────────────────────────
+      selectedCert: null,
+      certName:     '',
+
+      setSelectedCert: (cert) => {
+        if (!cert) return
+        // Auto-sync certCost + hikePercent from cert data
+        set({
+          selectedCert: cert,
+          certName:     cert.name,
+          certCost:     cert.examCostL ?? get().certCost,
+          hikePercent:  cert.avgHike   ?? get().hikePercent,
+        })
+      },
+
+      clearCert: () => set({ selectedCert: null, certName: '' }),
+
+      // ── Journey / nav state (transient) ───────────────
+      activeTab:  'resume',
+      setActiveTab: (tab) => set({ activeTab: tab }),
+
+      // ── Mode (persisted) ──────────────────────────────
+      mode:       'professional',
+      modeLocked: false,
+
+      setMode: (id) => set({ mode: id, modeLocked: true }),
+      resetMode: () => set({ modeLocked: false }),
+
+      // ── Resume AI context (transient) ─────────────────
+      prefilledCert: '',
+      resumeCity:    '',
+      resumeDomain:  '',
+      resumeName:    '',
+
+      setResumeContext: ({ certName, city, domain, name }) => {
+        const found = certName
+          ? CERTIFICATIONS.find((c) =>
+              c.name.toLowerCase().includes(certName.toLowerCase()) ||
+              certName.toLowerCase().includes(c.name.toLowerCase())
+            )
+          : null
+
+        set({
+          prefilledCert: certName || '',
+          resumeCity:    city    || '',
+          resumeDomain:  domain  || '',
+          resumeName:    name    || '',
+        })
+
+        // Auto-select the matched cert so Hero doesn't need to search again
+        if (found) {
+          set({
+            selectedCert: found,
+            certName:     found.name,
+            certCost:     found.examCostL ?? get().certCost,
+            hikePercent:  found.avgHike   ?? get().hikePercent,
+          })
+        }
+      },
+
+      clearResumeContext: () => set({
+        prefilledCert: '',
+        resumeCity:    '',
+        resumeDomain:  '',
+        resumeName:    '',
+      }),
+    }),
+    {
+      name: 'certify-roi-journey',        // localStorage key
+      partialize: (state) => ({           // only persist these slices
+        salary:      state.salary,
+        certCost:    state.certCost,
+        hikePercent: state.hikePercent,
+        mode:        state.mode,
+      }),
+    }
+  )
+)
