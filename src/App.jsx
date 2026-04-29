@@ -2064,95 +2064,7 @@ const AppPage = function ({ onCertSelected }) {
                     })}
                   </div>
 
-                  {/* Secondary Tools Separator */}
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      width: "100%",
-                      maxWidth: "600px",
-                      gap: "16px",
-                      marginBottom: "24px",
-                    }}
-                  >
-                    <div
-                      style={{
-                        flex: 1,
-                        height: "1px",
-                        background: "var(--border-subtle)",
-                      }}
-                    />
-                    <span
-                      style={{
-                        fontFamily: FM,
-                        fontSize: "10px",
-                        color: "var(--text-4)",
-                        letterSpacing: "0.15em",
-                      }}
-                    >
-                      EXPLORE MORE TOOLS
-                    </span>
-                    <div
-                      style={{
-                        flex: 1,
-                        height: "1px",
-                        background: "var(--border-subtle)",
-                      }}
-                    />
-                  </div>
 
-                  {/* Secondary Tools */}
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: "12px",
-                      flexWrap: "wrap",
-                    }}
-                  >
-                    {TOOL_TABS.map((tab) => {
-                      const active = activeTab === tab.id;
-                      return (
-                        <button
-                          key={tab.id}
-                          onClick={() => onTabChange(tab.id)}
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "8px",
-                            padding: "8px 16px",
-                            borderRadius: "100px",
-                            border: active
-                              ? "1px solid var(--border)"
-                              : "1px solid transparent",
-                            background: active
-                              ? "var(--surface)"
-                              : "transparent",
-                            color: active ? "var(--text)" : "var(--text-4)",
-                            fontSize: "12px",
-                            fontWeight: active ? "600" : "500",
-                            cursor: "pointer",
-                            fontFamily: FB,
-                            transition: "all 0.2s ease",
-                          }}
-                          onMouseEnter={(e) => {
-                            if (!active)
-                              e.currentTarget.style.color = "var(--text-2)";
-                            e.currentTarget.style.background = "var(--surface)";
-                          }}
-                          onMouseLeave={(e) => {
-                            if (!active)
-                              e.currentTarget.style.color = "var(--text-4)";
-                            e.currentTarget.style.background = "transparent";
-                          }}
-                        >
-                          <tab.icon size={13} />
-                          {tab.label}
-                        </button>
-                      );
-                    })}
-                  </div>
                 </div>
 
                 <AnimatePresence mode="wait">
@@ -2329,6 +2241,98 @@ const AppPage = function ({ onCertSelected }) {
                     ) : null}
                   </motion.div>
                 </AnimatePresence>
+
+                {/* Secondary Tools Separator - Moved Below Step 1/2/3 */}
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: "40px" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      width: "100%",
+                      maxWidth: "600px",
+                      gap: "16px",
+                      marginBottom: "24px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        flex: 1,
+                        height: "1px",
+                        background: "var(--border-subtle)",
+                      }}
+                    />
+                    <span
+                      style={{
+                        fontFamily: FM,
+                        fontSize: "10px",
+                        color: "var(--text-4)",
+                        letterSpacing: "0.15em",
+                      }}
+                    >
+                      EXPLORE MORE TOOLS
+                    </span>
+                    <div
+                      style={{
+                        flex: 1,
+                        height: "1px",
+                        background: "var(--border-subtle)",
+                      }}
+                    />
+                  </div>
+
+                  {/* Secondary Tools */}
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "12px",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    {TOOL_TABS.map((tab) => {
+                      const active = activeTab === tab.id;
+                      return (
+                        <button
+                          key={tab.id}
+                          onClick={() => onTabChange(tab.id)}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                            padding: "8px 16px",
+                            borderRadius: "100px",
+                            border: active
+                              ? "1px solid var(--border)"
+                              : "1px solid transparent",
+                            background: active
+                              ? "var(--surface)"
+                              : "transparent",
+                            color: active ? "var(--text)" : "var(--text-4)",
+                            fontSize: "12px",
+                            fontWeight: active ? "600" : "500",
+                            cursor: "pointer",
+                            fontFamily: FB,
+                            transition: "all 0.2s ease",
+                          }}
+                          onMouseEnter={(e) => {
+                            if (!active)
+                              e.currentTarget.style.color = "var(--text-2)";
+                            e.currentTarget.style.background = "var(--surface)";
+                          }}
+                          onMouseLeave={(e) => {
+                            if (!active)
+                              e.currentTarget.style.color = "var(--text-4)";
+                            e.currentTarget.style.background = "transparent";
+                          }}
+                        >
+                          <tab.icon size={13} />
+                          {tab.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
             </AppSection>
           </div>

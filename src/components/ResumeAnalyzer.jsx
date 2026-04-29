@@ -349,14 +349,14 @@ var PreferencesPanel = function({ timeline, onTimeline, domainIntent, onDomain, 
                   padding: '11px 12px', borderRadius: '10px',
                   background: active ? INDIGO + '14' : 'var(--surface)',
                   border: '1px solid ' + (active ? INDIGO + '40' : 'var(--border)'),
-                  color: active ? VIOLET : 'var(--text-3)',
+                  color: active ? VIOLET : 'var(--text-2)',
                   cursor: 'pointer', transition: 'all 0.16s',
                   display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '3px',
                   textAlign: 'left',
                 }}
               >
                 <span style={{ fontSize: '13px', fontFamily: FH, fontWeight: active ? '700' : '500' }}>{opt.label}</span>
-                <span style={{ fontSize: '10px', fontFamily: FM, color: active ? VIOLET + 'AA' : 'var(--text-4)' }}>{opt.sub}</span>
+                <span style={{ fontSize: '10px', fontFamily: FM, color: active ? VIOLET + 'AA' : 'var(--text-3)' }}>{opt.sub}</span>
               </button>
             )
           })}
@@ -380,7 +380,7 @@ var PreferencesPanel = function({ timeline, onTimeline, domainIntent, onDomain, 
                     padding: '6px 12px', borderRadius: '8px',
                     background: active ? INDIGO + '14' : 'transparent',
                     border: '1px solid ' + (active ? INDIGO + '40' : 'var(--border)'),
-                    color: active ? VIOLET : 'var(--text-4)',
+                    color: active ? VIOLET : 'var(--text-2)',
                     fontSize: '12px', fontFamily: FB,
                     fontWeight: active ? '600' : '400',
                     cursor: 'pointer', transition: 'all 0.14s',

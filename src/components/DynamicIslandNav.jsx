@@ -9,13 +9,18 @@ import { Sun, Moon, Menu, X, User } from 'lucide-react'
 const F_SANS  = "'Inter', 'DM Sans', sans-serif"
 const F_MONO  = "'JetBrains Mono', 'IBM Plex Mono', monospace"
 
-const NAV_ITEMS = [
+const MARKETING_NAV_ITEMS = [
   { label: 'Home',           pageId: 'home'          },
   { label: 'Tools',          pageId: 'app'           },
   { label: 'Product',        pageId: 'how-it-works'  },
   { label: 'Pricing',        pageId: 'pricing'       },
   { label: 'About',          pageId: 'about'         },
   { label: 'FAQ',            pageId: 'faq'           },
+]
+
+const APP_NAV_ITEMS = [
+  { label: 'Home',           pageId: 'home'          },
+  { label: 'Dashboard',      pageId: 'app'           },
 ]
 
 function NavItem({ label, pageId, isActive, onActivate, onNavigate, theme }) {
@@ -109,7 +114,7 @@ function ThemeToggle({ isDark, onToggle, theme }) {
   )
 }
 
-function MobileMenuPanel({ isOpen, onClose, activeHref, onActivate, isDark, onToggle, onNavigate, theme }) {
+function MobileMenuPanel({ isOpen, onClose, activeHref, onActivate, isDark, onToggle, onNavigate, theme, navItems }) {
   const t = theme
 
   return (
@@ -133,7 +138,7 @@ function MobileMenuPanel({ isOpen, onClose, activeHref, onActivate, isDark, onTo
             padding: '8px', overflow: 'hidden',
           }}
         >
-          {NAV_ITEMS.map((item, i) => {
+          {navItems.map((item, i) => {
             const isActive = activeHref === item.pageId
             return (
               <motion.div
@@ -177,7 +182,7 @@ function MobileMenuPanel({ isOpen, onClose, activeHref, onActivate, isDark, onTo
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: NAV_ITEMS.length * 0.04 + 0.05, duration: 0.3 }}
+            transition={{ delay: navItems.length * 0.04 + 0.05, duration: 0.3 }}
             style={{ padding: '8px 8px 4px', display: 'flex', justifyContent: 'flex-end' }}
           >
             <ThemeToggle isDark={isDark} onToggle={onToggle} theme={t} />
@@ -205,6 +210,9 @@ export default function DynamicIslandNav({ isDark, toggleTheme, onNavigate, curr
     border: 'rgba(0,0,0,0.07)', borderMid: 'rgba(0,0,0,0.13)',
   }
   const theme = isDark ? DARK_THEME : LIGHT_THEME
+
+  const isAppMode = user || currentPage === 'app' || currentPage === 'features' || currentPage === 'pricing' ? false : false // Wait, if currentPage === 'app', we show APP_NAV_ITEMS
+  const activeNavItems = (user || currentPage === 'app') ? APP_NAV_ITEMS : MARKETING_NAV_ITEMS
 
   const [activeHref, setActiveHref] = useState('')
   const [menuOpen, setMenuOpen] = useState(false)
@@ -298,7 +306,7 @@ export default function DynamicIslandNav({ isDark, toggleTheme, onNavigate, curr
           {!isMobile && (
             <>
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                {NAV_ITEMS.map((item) => (
+                {activeNavItems.map((item) => (
                   <NavItem
                     key={item.pageId}
                     label={item.label}
@@ -398,6 +406,7 @@ export default function DynamicIslandNav({ isDark, toggleTheme, onNavigate, curr
         onToggle={toggleTheme}
         onNavigate={onNavigate}
         theme={theme}
+        navItems={activeNavItems}
       />
     </>
   )
