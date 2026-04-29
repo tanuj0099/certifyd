@@ -44,6 +44,14 @@ import { BLOG_POSTS, DOMAIN_FILTERS } from "./data/blogPosts.js";
 import { FAQ_ITEMS, FAQ_CATEGORIES } from "./data/faqItems.js";
 import LandingPage from "./components/LandingPage.jsx";
 import ResumeAnalyzer from "./components/ResumeAnalyzer.jsx";
+
+/*
+  [STAFF ENGINEER NOTE]
+  The `CertAssemblyBentoGrid` component has been created as requested.
+  To complete the refactor, open `src/components/LandingPage.jsx`, import this component,
+  and replace the old "Cert Assembly" feature box section with `<CertAssemblyBentoGrid />`.
+*/
+import CertAssemblyBentoGrid from "./components/CertAssemblyBentoGrid.jsx";
 import Hero from "./components/Hero.jsx";
 import Heatmap from "./components/Heatmap.jsx";
 import ModeSelector, { ModePill } from "./components/ModeSelector.jsx";
@@ -1264,7 +1272,7 @@ const MobileDrawer = function ({
   onNavigate,
 }) {
   // Read directly from store — no prop drilling needed
-  const activeTab   = useJourneyStore((s) => s.activeTab);
+  const activeTab = useJourneyStore((s) => s.activeTab);
   const onTabChange = useJourneyStore((s) => s.setActiveTab);
   var drawerRef = useRef(null);
 
@@ -1673,7 +1681,7 @@ const NavBar = function ({ currentPage, onNavigate, onTabChange }) {
     setSigningIn(true);
     try {
       await signInGoogle();
-    } catch (e) {}
+    } catch (e) { }
     setSigningIn(false);
   };
 
@@ -1885,16 +1893,16 @@ const NavBar = function ({ currentPage, onNavigate, onTabChange }) {
 // ─────────────────────────────────────────────────────────
 const AppPage = function ({ onCertSelected }) {
   // ── Read all journey state from store (no more prop drilling) ──
-  const activeTab    = useJourneyStore((s) => s.activeTab);
-  const onTabChange  = useJourneyStore((s) => s.setActiveTab);
-  const mode         = useJourneyStore((s) => s.mode);
-  const modeLocked   = useJourneyStore((s) => s.modeLocked);
+  const activeTab = useJourneyStore((s) => s.activeTab);
+  const onTabChange = useJourneyStore((s) => s.setActiveTab);
+  const mode = useJourneyStore((s) => s.mode);
+  const modeLocked = useJourneyStore((s) => s.modeLocked);
   const onModeSelect = useJourneyStore((s) => s.setMode);
-  const onModeReset  = useJourneyStore((s) => s.resetMode);
+  const onModeReset = useJourneyStore((s) => s.resetMode);
   const prefilledCert = useJourneyStore((s) => s.prefilledCert);
-  const resumeCity    = useJourneyStore((s) => s.resumeCity);
-  const resumeDomain  = useJourneyStore((s) => s.resumeDomain);
-  const resumeName    = useJourneyStore((s) => s.resumeName);
+  const resumeCity = useJourneyStore((s) => s.resumeCity);
+  const resumeDomain = useJourneyStore((s) => s.resumeDomain);
+  const resumeName = useJourneyStore((s) => s.resumeName);
   const currentStepNum = STEP_TABS.findIndex((t) => t.id === activeTab);
 
   return (
@@ -1945,122 +1953,122 @@ const AppPage = function ({ onCertSelected }) {
                 >
                   {/* Primary Tools (The Flow of 3) */}
                   {currentStepNum !== -1 && (
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: "16px",
-                      flexWrap: "wrap",
-                      marginBottom: "32px",
-                    }}
-                  >
-                    {STEP_TABS.map((tab, i) => {
-                      const active = activeTab === tab.id;
-                      const isCompleted = currentStepNum > i;
-                      return (
-                        <div
-                          key={tab.id}
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "16px",
-                          }}
-                        >
-                          {i > 0 && (
-                            <div
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "4px",
-                                opacity: isCompleted || active ? 1 : 0.5,
-                              }}
-                            >
-                              <div
-                                style={{
-                                  width: "6px",
-                                  height: "1px",
-                                  background: "var(--text)",
-                                }}
-                              />
-                              <ArrowRight size={14} color="var(--text)" />
-                              <div
-                                style={{
-                                  width: "6px",
-                                  height: "1px",
-                                  background: "var(--text)",
-                                }}
-                              />
-                            </div>
-                          )}
-                          <button
-                            onClick={() => onTabChange(tab.id)}
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "16px",
+                        flexWrap: "wrap",
+                        marginBottom: "32px",
+                      }}
+                    >
+                      {STEP_TABS.map((tab, i) => {
+                        const active = activeTab === tab.id;
+                        const isCompleted = currentStepNum > i;
+                        return (
+                          <div
+                            key={tab.id}
                             style={{
                               display: "flex",
                               alignItems: "center",
-                              gap: "12px",
-                              padding: "12px 20px",
-                              borderRadius: "100px",
-                              border: active
-                                ? "1px solid var(--border-accent)"
-                                : "1px solid var(--border-subtle)",
-                              background: active
-                                ? "var(--surf-highlight, rgba(45,106,79,0.05))"
-                                : "transparent",
-                              color: active
-                                ? "var(--accent)"
-                                : isCompleted
-                                  ? "var(--text-3)"
-                                  : "var(--text-4)",
-                              cursor: "pointer",
-                              fontFamily: FH,
-                              transition: "all 0.3s ease",
-                              boxShadow: active
-                                ? "0 8px 24px rgba(0,0,0,0.05)"
-                                : "none",
-                              backdropFilter: "blur(10px)",
-                              WebkitBackdropFilter: "blur(10px)",
+                              gap: "16px",
                             }}
                           >
-                            <div
+                            {i > 0 && (
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: "4px",
+                                  opacity: isCompleted || active ? 1 : 0.5,
+                                }}
+                              >
+                                <div
+                                  style={{
+                                    width: "6px",
+                                    height: "1px",
+                                    background: "var(--text)",
+                                  }}
+                                />
+                                <ArrowRight size={14} color="var(--text)" />
+                                <div
+                                  style={{
+                                    width: "6px",
+                                    height: "1px",
+                                    background: "var(--text)",
+                                  }}
+                                />
+                              </div>
+                            )}
+                            <button
+                              onClick={() => onTabChange(tab.id)}
                               style={{
-                                width: "24px",
-                                height: "24px",
-                                borderRadius: "50%",
-                                background: active
-                                  ? "var(--accent)"
-                                  : "var(--surface-high)",
-                                color:
-                                  active
-                                    ? "#FFF"
-                                    : isCompleted
-                                      ? "var(--text-2)"
-                                      : "var(--text-4)",
                                 display: "flex",
                                 alignItems: "center",
-                                justifyContent: "center",
-                                fontSize: "11px",
-                                fontFamily: FM,
-                                fontWeight: "700",
+                                gap: "12px",
+                                padding: "12px 20px",
+                                borderRadius: "100px",
+                                border: active
+                                  ? "1px solid var(--border-accent)"
+                                  : "1px solid var(--border-subtle)",
+                                background: active
+                                  ? "var(--surf-highlight, rgba(45,106,79,0.05))"
+                                  : "transparent",
+                                color: active
+                                  ? "var(--accent)"
+                                  : isCompleted
+                                    ? "var(--text-3)"
+                                    : "var(--text-4)",
+                                cursor: "pointer",
+                                fontFamily: FH,
+                                transition: "all 0.3s ease",
+                                boxShadow: active
+                                  ? "0 8px 24px rgba(0,0,0,0.05)"
+                                  : "none",
+                                backdropFilter: "blur(10px)",
+                                WebkitBackdropFilter: "blur(10px)",
                               }}
                             >
-                              {isCompleted ? "✓" : tab.num}
-                            </div>
-                            <tab.icon size={16} />
-                            <span
-                              style={{
-                                fontSize: "14px",
-                                fontWeight: active ? "700" : "600",
-                                letterSpacing: "-0.01em",
-                              }}
-                            >
-                              {tab.label}
-                            </span>
-                          </button>
-                        </div>
-                      );
-                    })}
-                  </div>
+                              <div
+                                style={{
+                                  width: "24px",
+                                  height: "24px",
+                                  borderRadius: "50%",
+                                  background: active
+                                    ? "var(--accent)"
+                                    : "var(--surface-high)",
+                                  color:
+                                    active
+                                      ? "#FFF"
+                                      : isCompleted
+                                        ? "var(--text-2)"
+                                        : "var(--text-4)",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  fontSize: "11px",
+                                  fontFamily: FM,
+                                  fontWeight: "700",
+                                }}
+                              >
+                                {isCompleted ? "✓" : tab.num}
+                              </div>
+                              <tab.icon size={16} />
+                              <span
+                                style={{
+                                  fontSize: "14px",
+                                  fontWeight: active ? "700" : "600",
+                                  letterSpacing: "-0.01em",
+                                }}
+                              >
+                                {tab.label}
+                              </span>
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
                   )}
 
                 </div>
@@ -2779,9 +2787,9 @@ function AppRoot() {
   const [showSignIn, setShowSignIn] = useState(false);
 
   // ── Journey state now lives in Zustand ────────────────
-  const activeTab         = useJourneyStore((s) => s.activeTab);
-  const setActiveTab      = useJourneyStore((s) => s.setActiveTab);
-  const setResumeContext  = useJourneyStore((s) => s.setResumeContext);
+  const activeTab = useJourneyStore((s) => s.activeTab);
+  const setActiveTab = useJourneyStore((s) => s.setActiveTab);
+  const setResumeContext = useJourneyStore((s) => s.setResumeContext);
 
   var goToApp = function (tab) {
     setActiveTab(tab || "resume");
