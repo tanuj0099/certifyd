@@ -161,9 +161,22 @@ function GlassPill({ children }) {
 function StorySection({ id = '', title = '', children, bg = '', noBorderTop = false }) {
   const C = useTheme()
   const isMobile = useIsMobile()
+  const d = C.name === 'dark'
   return (
-    <div style={{ background: bg || C.bg, borderTop: noBorderTop ? 'none' : `1px solid ${C.border}`, position: 'relative' }}>
-      <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', flexDirection: isMobile ? 'column' : 'row' }}>
+    <div style={{ position: 'relative', padding: isMobile ? '16px' : '32px 24px' }}>
+      <div style={{ 
+        maxWidth: '1400px', 
+        margin: '0 auto', 
+        display: 'flex', 
+        flexDirection: isMobile ? 'column' : 'row',
+        background: d ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.6)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        border: `1px solid ${d ? 'rgba(255, 255, 255, 0.08)' : 'rgba(26,25,22,0.06)'}`,
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+        borderRadius: '16px',
+        overflow: 'hidden'
+      }}>
         {!isMobile && (
           <div style={{ width: '140px', flexShrink: 0, borderRight: `1px solid ${C.border}`, position: 'relative' }}>
             <div style={{ position: 'sticky', top: '120px', padding: '32px 0', display: 'flex', alignItems: 'center', flexDirection: 'column', height: '360px' }}>
