@@ -30,17 +30,37 @@ var TIMELINE_OPTIONS = [
 
 // ── Domain options ────────────────────────────────────────
 var DOMAIN_CHOICES = [
-  { id: 'auto',          label: 'Auto-detect',  sub: 'AI picks from your resume' },
-  { id: 'tech',          label: 'Cloud / Tech', sub: 'AWS, Azure, DevOps'        },
-  { id: 'data',          label: 'Data & AI',    sub: 'Analytics, ML, BI'         },
-  { id: 'cybersecurity', label: 'Cybersecurity',sub: 'CEH, CISSP, CISM'          },
-  { id: 'finance',       label: 'Finance',      sub: 'CFA, CA, CMA, NISM'        },
-  { id: 'management',    label: 'Management',   sub: 'PMP, CSM, Six Sigma'       },
-  { id: 'marketing',     label: 'Marketing',    sub: 'Google, Meta, HubSpot'     },
-  { id: 'hr',            label: 'HR & People',  sub: 'SHRM, Analytics'           },
-  { id: 'government',    label: 'Govt / PSU',   sub: 'GATE, IBPS, SSC'           },
-  { id: 'medical',       label: 'Medical',      sub: 'DNB, USMLE, ACRP'          },
+  { id: 'auto',          label: 'Auto-detect',  sub: 'Picks from your profile' },
+  { id: 'tech',          label: 'Cloud / Tech', sub: 'AWS, Azure, DevOps'      },
+  { id: 'data',          label: 'Data & AI',    sub: 'Analytics, ML, BI'       },
+  { id: 'cybersecurity', label: 'Cybersecurity',sub: 'CEH, CISSP, CISM'        },
+  { id: 'finance',       label: 'Finance',      sub: 'CFA, CA, CMA, NISM'      },
+  { id: 'management',    label: 'Management',   sub: 'PMP, CSM, Six Sigma'     },
+  { id: 'marketing',     label: 'Marketing',    sub: 'Google, Meta, HubSpot'   },
+  { id: 'hr',            label: 'HR & People',  sub: 'SHRM, Analytics'         },
+  { id: 'government',    label: 'Govt / PSU',   sub: 'GATE, IBPS, SSC'         },
+  { id: 'medical',       label: 'Medical',      sub: 'DNB, USMLE, ACRP'        },
 ]
+
+// ── Manual skill tags (for mobile / no-resume flow) ───────
+var SKILL_GROUPS = [
+  { group: 'Cloud & Infra',  skills: ['AWS', 'Azure', 'GCP', 'Docker', 'Kubernetes', 'Linux', 'Terraform'] },
+  { group: 'Development',    skills: ['Python', 'Java', 'JavaScript', 'Node.js', 'React', 'SQL', 'REST APIs'] },
+  { group: 'Data & AI',      skills: ['Pandas', 'Power BI', 'Tableau', 'Excel', 'Machine Learning', 'TensorFlow'] },
+  { group: 'Management',     skills: ['Agile', 'Scrum', 'JIRA', 'Stakeholder Mgmt', 'Risk Mgmt', 'Budgeting'] },
+  { group: 'Business',       skills: ['Excel', 'PowerPoint', 'SAP', 'Salesforce', 'Google Analytics', 'Tally'] },
+  { group: 'Security',       skills: ['Network Security', 'SIEM', 'Penetration Testing', 'OWASP', 'IAM', 'SOC'] },
+]
+
+function buildSkillText(skills, role, exp) {
+  return [
+    'Skills: ' + skills.join(', ') + '.',
+    role ? 'Current role: ' + role + '.' : '',
+    exp  ? 'Experience: ' + exp + ' years.' : '',
+    'Education: Bachelor\'s degree.',
+    'Looking for certification recommendations to advance career.',
+  ].filter(Boolean).join(' ')
+}
 
 // ── Loader steps — defined OUTSIDE component so the array
 //    reference is stable and won't re-trigger useEffect ────
@@ -712,6 +732,10 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
   var [pdfLoading,   setPdfLoading]   = useState(false)
   var [timeline,     setTimeline]     = useState('flexible')
   var [domainIntent, setDomainIntent] = useState('auto')
+  var [inputMode,    setInputMode]    = useState('upload')   // 'upload' | 'skills'
+  var [pickedSkills, setPickedSkills] = useState([])
+  var [skillRole,    setSkillRole]    = useState('')
+  var [skillExp,     setSkillExp]     = useState('')
   var fileRef = useRef(null)
 
   // switchTarget — read from Zustand store (no more localStorage)
@@ -771,12 +795,22 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
   }
 
   var handleAnalyse = async function() {
-    if (!text.trim()) { setError('Please upload a file or paste your resume text'); return }
-    var validation = validateDocument(text)
-    if (!validation.isResume) { setRejection(validation.rejectedBy || 'default'); return }
+    // If skill-tag mode: synthesize text from selected skills
+    var analyseText = text
+    if (inputMode === 'skills') {
+      if (pickedSkills.length < 3) { setError('Pick at least 3 skills to get a recommendation'); return }
+      analyseText = buildSkillText(pickedSkills, skillRole, skillExp)
+      setText(analyseText)
+    }
+    if (!analyseText.trim()) { setError('Please upload a file, paste your resume, or tag your skills'); return }
+    // Skip document validation for synthesized skill text
+    if (inputMode !== 'skills') {
+      var validation = validateDocument(analyseText)
+      if (!validation.isResume) { setRejection(validation.rejectedBy || 'default'); return }
+    }
     setLoading(true); setResult(null); setError(null); setRejection(null)
     try {
-      var safeText = text.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, ' ').replace(/\s+/g, ' ').slice(0, 2200).trim()
+      var safeText = analyseText.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, ' ').replace(/\s+/g, ' ').slice(0, 2200).trim()
       var raw    = await callGroqForResume(null, buildPrompt(safeText, mode, timeline, domainIntent, switchTarget))
       if (!raw || raw.length < 30) throw new Error('Empty response — try again')
       var parsed = safeParseResumeJSON(raw)
@@ -807,6 +841,13 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
     } finally { setLoading(false) }
   }
 
+  // Toggle a skill in/out of the selection
+  var toggleSkill = function(skill) {
+    setPickedSkills(function(prev) {
+      return prev.includes(skill) ? prev.filter(function(s) { return s !== skill }) : [...prev, skill]
+    })
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
 
@@ -821,11 +862,109 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
         />
       )}
 
-      {/* Upload zone — FIX: NeonCard replaced with plain dashed-border div.
-          Animated border on a drag target competed with the drag interaction visually.
-          FIX: Upload icon animation removed — bouncing icon was decorative noise. */}
+      {/* ── Input mode tab switcher ─────────────────────── */}
+      {!hasResult && (
+        <div style={{ display: 'flex', gap: '4px', padding: '4px', borderRadius: '10px', background: 'var(--surface)', border: '1px solid var(--border)' }}>
+          {[
+            { id: 'upload', label: '↑ Upload Resume',   sub: 'PDF / DOC / paste' },
+            { id: 'skills', label: '✦ Tag Your Skills', sub: 'No resume? Use this' },
+          ].map(function(tab) {
+            var active = inputMode === tab.id
+            return (
+              <button
+                key={tab.id}
+                onClick={function() { setInputMode(tab.id); setError(null) }}
+                style={{
+                  flex: 1, padding: '8px 12px', borderRadius: '7px', cursor: 'pointer',
+                  background: active ? 'var(--bg)' : 'transparent',
+                  border: active ? '1px solid var(--border)' : '1px solid transparent',
+                  color: active ? 'var(--text)' : 'var(--text-4)',
+                  fontFamily: FH, fontWeight: active ? '700' : '400',
+                  fontSize: '12px', transition: 'all 0.18s',
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px',
+                }}
+              >
+                <span>{tab.label}</span>
+                <span style={{ fontSize: '10px', opacity: 0.6, fontFamily: FM }}>{tab.sub}</span>
+              </button>
+            )
+          })}
+        </div>
+      )}
+
+      {/* ── Skill tag grid (mobile-first fallback) ───────── */}
       <AnimatePresence>
-        {!hasResult && !text.trim() && (
+        {!hasResult && inputMode === 'skills' && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.22 }} style={{ overflow: 'hidden' }}
+          >
+            <div style={{ padding: '16px', borderRadius: '11px', background: 'var(--surface)', border: '1px solid var(--border)' }}>
+              <div style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '14px' }}>
+                Tag skills you already have — pick at least 3
+                {pickedSkills.length > 0 && <span style={{ color: EMERALD, marginLeft: '8px' }}>{pickedSkills.length} selected</span>}
+              </div>
+
+              {/* Optional role + exp context */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '14px' }}>
+                <input
+                  value={skillRole} onChange={function(e) { setSkillRole(e.target.value) }}
+                  placeholder="Current role (optional)"
+                  style={{ padding: '8px 10px', borderRadius: '8px', background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text)', fontSize: '12px', fontFamily: FB, outline: 'none', boxSizing: 'border-box' }}
+                />
+                <input
+                  value={skillExp} onChange={function(e) { setSkillExp(e.target.value) }}
+                  placeholder="Years of exp (optional)"
+                  style={{ padding: '8px 10px', borderRadius: '8px', background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text)', fontSize: '12px', fontFamily: FB, outline: 'none', boxSizing: 'border-box' }}
+                />
+              </div>
+
+              {SKILL_GROUPS.map(function(group) {
+                return (
+                  <div key={group.group} style={{ marginBottom: '12px' }}>
+                    <div style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '6px' }}>{group.group}</div>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
+                      {group.skills.map(function(skill) {
+                        var picked = pickedSkills.includes(skill)
+                        return (
+                          <button
+                            key={skill}
+                            onClick={function() { toggleSkill(skill) }}
+                            style={{
+                              padding: '5px 11px', borderRadius: '99px', cursor: 'pointer',
+                              background: picked ? INDIGO + '18' : 'transparent',
+                              border: '1px solid ' + (picked ? INDIGO + '50' : 'var(--border)'),
+                              color: picked ? VIOLET : 'var(--text-3)',
+                              fontSize: '12px', fontFamily: FB,
+                              fontWeight: picked ? '700' : '400',
+                              transition: 'all 0.13s',
+                            }}
+                          >
+                            {skill}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )
+              })}
+
+              {pickedSkills.length > 0 && (
+                <button
+                  onClick={function() { setPickedSkills([]) }}
+                  style={{ fontSize: '11px', color: 'var(--text-4)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: FB, marginTop: '4px' }}
+                >
+                  Clear all
+                </button>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Upload zone — only shown in upload mode */}
+      <AnimatePresence>
+        {!hasResult && !text.trim() && inputMode === 'upload' && (
           <motion.div
             initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}

@@ -844,7 +844,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
           ) : null}
           {prefilledCert ? (
             <span style={{ marginLeft: 'auto', fontSize: '10px', color: VIOLET, fontFamily: FM, padding: '2px 7px', borderRadius: '4px', background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.2)' }}>
-              From Resume AI
+              Auto-mapped from resume
             </span>
           ) : null}
         </motion.div>
@@ -918,9 +918,9 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
       <div style={{ marginBottom: '20px', padding: '20px 18px', borderRadius: '13px', background: 'var(--surface)', border: '1px solid var(--glass-border)' }}>
 
         {isStudent ? (
-          <div style={{ marginBottom: '18px', padding: '11px 13px', borderRadius: '9px', background: 'rgba(129,140,248,0.07)', border: '1px solid rgba(129,140,248,0.2)' }}>
-            <div style={{ fontSize: '11px', color: VIOLET, fontFamily: FM, marginBottom: '3px' }}>STUDENT MODE</div>
-            <div style={{ fontSize: '12px', color: 'var(--text-3)', fontFamily: FB }}>Target: first offer. ROI from career investment, not salary hike.</div>
+          <div style={{ marginBottom: '18px', padding: '11px 13px', borderRadius: '9px', background: 'rgba(74,140,106,0.07)', border: '1px solid rgba(74,140,106,0.2)' }}>
+            <div style={{ fontSize: '11px', color: '#4A8C6A', fontFamily: FM, marginBottom: '3px' }}>BREAKING IN</div>
+            <div style={{ fontSize: '12px', color: 'var(--text-3)', fontFamily: FB }}>Target: first offer. Projected ROI based on time-to-hire, not salary hike.</div>
           </div>
         ) : (
           <>

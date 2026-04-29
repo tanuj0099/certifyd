@@ -3,9 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { GraduationCap, Repeat, Briefcase, RotateCcw } from 'lucide-react'
 
 const MODES = [
-  { id: 'student', label: 'STUDENT', sub: 'First offer - Fresher path', color: '#4A8C6A', icon: GraduationCap, desc: 'Path to your first 4-6L offer' },
-  { id: 'switcher', label: 'SWITCHER', sub: 'Changing fields', color: '#F59E0B', icon: Repeat, desc: 'Moving to a new domain' },
-  { id: 'professional', label: 'PROFESSIONAL', sub: 'Level up - Max ROI', color: '#10B981', icon: Briefcase, desc: 'Maximise your next hike' },
+  { id: 'student',      label: 'Breaking In',     sub: 'No current salary',         color: '#4A8C6A', icon: GraduationCap, desc: 'Path to your first ₹4.8L+ offer' },
+  { id: 'switcher',     label: 'Domain Pivot',    sub: 'Changing fields',            color: '#F59E0B', icon: Repeat,        desc: 'Switch domains in 5–8 months' },
+  { id: 'professional', label: 'Level Up',        sub: 'Upskilling for a promotion', color: '#10B981', icon: Briefcase,     desc: 'Max ROI on your next cert' },
 ]
 
 const SWITCH_DOMAINS = [
@@ -48,7 +48,7 @@ export function ModePill({ mode, onReset }) {
       <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: current.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
         <Icon size={11} color={current.color} />
       </div>
-      <span style={{ fontSize: '11px', fontWeight: '700', color: current.color, fontFamily: FM, letterSpacing: '0.07em', textTransform: 'uppercase' }}>
+      <span style={{ fontSize: '11px', fontWeight: '700', color: current.color, fontFamily: FM, letterSpacing: '0.03em' }}>
         {current.label}
       </span>
       <button
@@ -364,11 +364,11 @@ function ModeSelector({ onSelect }) {
                 transition={{ delay: 0.2, duration: 0.5 }}
                 style={{
                   fontFamily: FM, fontSize: 'clamp(9px, 1.1vw, 12px)',
-                  color: 'var(--text-4)', letterSpacing: '0.32em',
+                  color: 'var(--text-4)', letterSpacing: '0.22em',
                   textTransform: 'uppercase', textAlign: 'center',
                 }}
               >
-                WHO ARE YOU?
+                WHAT'S YOUR GOAL RIGHT NOW?
               </motion.div>
 
               <WordRow hovered={hovered} setHovered={setHovered} onPick={handleWordPick} />
@@ -378,11 +378,11 @@ function ModeSelector({ onSelect }) {
                 animate={{ opacity: hovered ? 0 : 1 }}
                 transition={{ delay: 1.4, duration: 0.5 }}
                 style={{
-                  fontFamily: FB, fontSize: 'clamp(11px, 1.2vw, 14px)',
-                  color: 'var(--text-4)', textAlign: 'center',
-                }}
-              >
-                pick one - it shapes every recommendation
+                fontFamily: FB, fontSize: 'clamp(11px, 1.2vw, 14px)',
+                color: 'var(--text-4)', textAlign: 'center',
+              }}
+            >
+              pick one — it shapes every recommendation and filter
               </motion.div>
             </motion.div>
           ) : null}

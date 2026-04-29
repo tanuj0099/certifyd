@@ -1,125 +1,127 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Mail, Copy, Check, Zap, ChevronDown, RefreshCw } from 'lucide-react'
+import { Briefcase, Copy, Check, ChevronDown, RefreshCw, Zap } from 'lucide-react'
 import { callGroqForPitch } from '../services/aiService.jsx'
 
 const F_HEAD = "'Bricolage Grotesque', 'Plus Jakarta Sans', sans-serif"
 const F_MONO = "'Commit Mono', 'JetBrains Mono', monospace"
 const F_BODY = "'Inter', sans-serif"
 const T = { duration: 0.28, ease: [0.4, 0, 0.2, 1] }
+const EMERALD = '#10B981'
+const VIOLET  = '#6366F1'
+const AMBER   = '#F59E0B'
 
-// ── Tone definitions ──────────────────────────────────────
-const TONES = [
-  {
-    id:    'formal',
-    label: 'Formal',
-    desc:  'Professional, polished',
-    color: '#6366F1',
-    prefix: `Write a formal, professional email. Use measured language, no contractions. Lead with the business case first, then personal request. Sign off formally.`,
-  },
-  {
-    id:    'direct',
-    label: 'Direct',
-    desc:  'No fluff, straight ask',
-    color: '#10B981',
-    prefix: `Write a direct, confident email. Get to the point in the first line. No pleasantries, no padding. The ask is in sentence two. Short paragraphs, punchy.`,
-  },
-  {
-    id:    'data',
-    label: 'Data-Heavy',
-    desc:  'Numbers & ROI first',
-    color: '#F59E0B',
-    prefix: `Write a data-driven email. Open with hard numbers (cost, expected ROI, India job market stats). Every paragraph should have at least one quantified claim. The manager should feel the financial logic is undeniable.`,
-  },
-]
+// ── Build a structured JSON prompt ────────────────────────
+const buildCasePrompt = ({ certName, salary, certCost, hikePercent, name, company, role }) => `
+You are a concise financial analyst helping an Indian tech professional build a reimbursement business case for their manager.
 
-const buildPitchPrompt = ({ certName, salary, certCost, hikePercent, name, company, role, tonePrefix }) => `
-You are a professional email writer helping an Indian tech professional pitch their certification to their manager.
-
-${tonePrefix}
-
-Person: ${name || 'Professional'}
+Person: ${name || 'the employee'}
 Current role: ${role || 'Software Engineer'}
 Company: ${company || 'their company'}
 Certification: ${certName}
 Current salary: ₹${salary}L/yr
 Cert cost: ₹${(certCost * 100000).toLocaleString('en-IN')}
-Expected hike after cert: ${hikePercent}%
+Expected salary hike post-cert: ${hikePercent}%
 
-Rules:
-- Subject line first, then email body
-- India-specific: mention Naukri/LinkedIn demand signal, staying with company post-cert
-- Length: under 200 words total
-- Format: Subject: [subject line] then blank line then email body
-- No "I hope this email finds you well"
-- End with: Best regards, ${name || '[Your Name]'}
+Respond in VALID JSON only, no markdown. Exactly this shape:
+{
+  "cost":        "<one line: total cost including exam fee, materials, and time off if applicable>",
+  "companyGain": "<one line: specific skill or capability the company gets in-house — be concrete, not generic>",
+  "timeCommit":  "<one line: realistic study hours per week and total weeks, with impact on work hours>",
+  "roiStatement":"<one line: hard number — monthly salary cost increase vs. capability ROI, in rupees>",
+  "demandNote":  "<one line: India job market signal — Naukri/LinkedIn demand stat for this cert if you know it>"
+}
 `
 
-const PitchBoss = ({ certName, salary, certCost, hikePercent, name, mode }) => {
-  const [open,     setOpen]     = useState(false)
-  const [company,  setCompany]  = useState('')
-  const [role,     setRole]     = useState('')
-  const [email,    setEmail]    = useState('')
-  const [loading,  setLoading]  = useState(false)
-  const [copied,   setCopied]   = useState(false)
-  const [error,    setError]    = useState(null)
-  const [tone,     setTone]     = useState('formal')
+// ── Render bullet with copy-able content ─────────────────
+function BulletRow({ icon, label, value, color }) {
+  const [copied, setCopied] = useState(false)
+  const handleCopy = () => {
+    navigator.clipboard.writeText(value)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 1800)
+  }
+  return (
+    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', padding: '12px 0', borderBottom: '1px solid var(--border)' }}>
+      <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: color + '18', border: '1px solid ' + color + '30', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '1px' }}>
+        <span style={{ fontSize: '13px' }}>{icon}</span>
+      </div>
+      <div style={{ flex: 1 }}>
+        <div style={{ fontFamily: F_MONO, fontSize: '9px', color: color, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '4px' }}>{label}</div>
+        <div style={{ fontFamily: F_BODY, fontSize: '13px', color: 'var(--text-2)', lineHeight: '1.55' }}>{value}</div>
+      </div>
+      <button
+        onClick={handleCopy}
+        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', color: copied ? EMERALD : 'var(--text-4)', flexShrink: 0, transition: 'color 0.2s' }}
+        title="Copy this point"
+      >
+        {copied ? <Check size={12} /> : <Copy size={12} />}
+      </button>
+    </div>
+  )
+}
 
-  // Only show for professional and switcher
+// ── Copy-all formatted text ───────────────────────────────
+function buildCopyText(bcase, certName, name) {
+  return [
+    `Reimbursement request — ${certName}`,
+    '',
+    `💰 Cost: ${bcase.cost}`,
+    `🏢 Company benefit: ${bcase.companyGain}`,
+    `⏱ Time commitment: ${bcase.timeCommit}`,
+    `📈 ROI: ${bcase.roiStatement}`,
+    `📊 Market signal: ${bcase.demandNote}`,
+    '',
+    `— ${name || '[Your Name]'}`,
+  ].join('\n')
+}
+
+const PitchBoss = ({ certName, salary, certCost, hikePercent, name, mode }) => {
+  const [open,    setOpen]    = useState(false)
+  const [company, setCompany] = useState('')
+  const [role,    setRole]    = useState('')
+  const [bcase,   setBcase]   = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [copied,  setCopied]  = useState(false)
+  const [error,   setError]   = useState(null)
+
+  // Only show for professional track
   if (mode === 'student') return null
 
-  const activeTone = TONES.find(t => t.id === tone) || TONES[0]
-
   const handleGenerate = async () => {
-    setLoading(true); setError(null); setEmail('')
+    setLoading(true); setError(null); setBcase(null)
     try {
-      const text = await callGroqForPitch(null, buildPitchPrompt({
+      const raw = await callGroqForPitch(null, buildCasePrompt({
         certName, salary, certCost, hikePercent, name, company, role,
-        tonePrefix: activeTone.prefix,
       }))
-      setEmail(text)
+      // Extract JSON from response
+      const jsonMatch = raw.match(/\{[\s\S]*\}/)
+      if (!jsonMatch) throw new Error('Could not parse structured response.')
+      const parsed = JSON.parse(jsonMatch[0])
+      if (!parsed.cost || !parsed.companyGain) throw new Error('Incomplete response — try again.')
+      setBcase(parsed)
     } catch (e) {
-      setError(e.message || 'Failed to generate. Check API connection.')
+      setError(e.message || 'Generation failed. Check API connection.')
     } finally { setLoading(false) }
   }
 
-  // Change tone + auto-regenerate if email already exists
-  const handleTone = async (newTone) => {
-    setTone(newTone)
-    if (email) {
-      setLoading(true); setError(null); setEmail('')
-      const selected = TONES.find(t => t.id === newTone) || TONES[0]
-      try {
-        const text = await callGroqForPitch(null, buildPitchPrompt({
-          certName, salary, certCost, hikePercent, name, company, role,
-          tonePrefix: selected.prefix,
-        }))
-        setEmail(text)
-      } catch (e) {
-        setError(e.message || 'Failed to generate.')
-      } finally { setLoading(false) }
-    }
-  }
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(email)
+  const handleCopyAll = () => {
+    if (!bcase) return
+    navigator.clipboard.writeText(buildCopyText(bcase, certName, name))
     setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    setTimeout(() => setCopied(false), 2500)
   }
-
-  const [subject, ...bodyLines] = email.split('\n')
-  const body = bodyLines.join('\n').trim()
 
   return (
     <div style={{ marginTop: '8px' }}>
       <button
         onClick={() => setOpen(v => !v)}
-        style={{ width: '100%', padding: '9px 14px', borderRadius: '9px', background: open ? 'rgba(129,140,248,0.1)' : 'var(--surface)', border: `1px solid ${open ? 'rgba(129,140,248,0.3)' : 'var(--border)'}`, color: open ? '#818CF8' : 'var(--text-3)', fontSize: '12px', cursor: 'pointer', fontFamily: F_BODY, fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px', transition: 'all 0.18s' }}
+        style={{ width: '100%', padding: '9px 14px', borderRadius: '9px', background: open ? 'rgba(99,102,241,0.1)' : 'var(--surface)', border: `1px solid ${open ? 'rgba(99,102,241,0.3)' : 'var(--border)'}`, color: open ? VIOLET : 'var(--text-3)', fontSize: '12px', cursor: 'pointer', fontFamily: F_BODY, fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px', transition: 'all 0.18s' }}
       >
-        <Mail size={13} />
-        Pitch My Boss
-        <span style={{ marginLeft: 'auto', fontSize: '11px', opacity: 0.6, fontFamily: F_MONO }}>get company to pay</span>
-        <ChevronDown size={12} style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+        <Briefcase size={13} />
+        Reimbursement Case
+        <span style={{ marginLeft: 'auto', fontSize: '11px', opacity: 0.55, fontFamily: F_MONO }}>get company to pay</span>
+        <ChevronDown size={12} style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', flexShrink: 0 }} />
       </button>
 
       <AnimatePresence>
@@ -128,65 +130,38 @@ const PitchBoss = ({ certName, salary, certCost, hikePercent, name, mode }) => {
             initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
             transition={T} style={{ overflow: 'hidden' }}
           >
-            <div style={{ padding: '16px', marginTop: '8px', borderRadius: '12px', background: 'var(--surface)', border: '1px solid rgba(129,140,248,0.2)' }}>
+            <div style={{ padding: '16px', marginTop: '8px', borderRadius: '12px', background: 'var(--surface)', border: '1px solid rgba(99,102,241,0.2)' }}>
 
-              <div style={{ fontFamily: F_MONO, fontSize: '9px', color: '#818CF8', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Mail size={10} /> AI EMAIL GENERATOR · {certName?.toUpperCase()}
+              <div style={{ fontFamily: F_MONO, fontSize: '9px', color: VIOLET, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Briefcase size={9} /> REIMBURSEMENT BUSINESS CASE · {certName?.toUpperCase()}
               </div>
 
-              {/* Tone toggles */}
-              <div style={{ marginBottom: '14px' }}>
-                <div style={{ fontFamily: F_MONO, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '8px' }}>
-                  Email Tone
-                </div>
-                <div style={{ display: 'flex', gap: '6px' }}>
-                  {TONES.map(t => {
-                    const active = tone === t.id
-                    return (
-                      <motion.button
-                        key={t.id}
-                        onClick={() => handleTone(t.id)}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.97 }}
-                        style={{
-                          flex: 1, padding: '8px 10px', borderRadius: '9px', cursor: 'pointer',
-                          background: active ? t.color + '14' : 'transparent',
-                          border: '1px solid ' + (active ? t.color + '40' : 'var(--border)'),
-                          display: 'flex', flexDirection: 'column', alignItems: 'flex-start',
-                          gap: '2px', transition: 'all 0.16s',
-                        }}
-                      >
-                        <span style={{ fontFamily: F_HEAD, fontWeight: '700', fontSize: '12px', color: active ? t.color : 'var(--text-3)' }}>
-                          {t.label}
-                        </span>
-                        <span style={{ fontFamily: F_MONO, fontSize: '9px', color: active ? t.color + 'AA' : 'var(--text-4)', letterSpacing: '0.04em' }}>
-                          {t.desc}
-                        </span>
-                      </motion.button>
-                    )
-                  })}
+              {/* Callout: what this is */}
+              <div style={{ padding: '10px 12px', borderRadius: '8px', background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.15)', marginBottom: '14px' }}>
+                <div style={{ fontFamily: F_BODY, fontSize: '12px', color: 'var(--text-3)', lineHeight: '1.55' }}>
+                  This generates <strong style={{ color: 'var(--text-2)' }}>4–5 hard-hitting bullet points</strong> based on your numbers — not a generic email. Copy the points you need and write the greeting yourself.
                 </div>
               </div>
 
-              {/* Optional inputs */}
+              {/* Optional context inputs */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '12px' }}>
                 <div>
-                  <div style={{ fontSize: '10px', color: 'var(--text-4)', fontFamily: F_MONO, marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Company (optional)</div>
+                  <div style={{ fontSize: '10px', color: 'var(--text-4)', fontFamily: F_MONO, marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Company</div>
                   <input
                     value={company} onChange={e => setCompany(e.target.value)}
                     placeholder="e.g. Infosys"
                     style={{ width: '100%', padding: '8px 10px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)', fontSize: '13px', fontFamily: F_BODY, outline: 'none', boxSizing: 'border-box' }}
-                    onFocus={e => e.target.style.borderColor = '#818CF855'}
+                    onFocus={e => e.target.style.borderColor = VIOLET + '55'}
                     onBlur={e  => e.target.style.borderColor = 'var(--border)'}
                   />
                 </div>
                 <div>
-                  <div style={{ fontSize: '10px', color: 'var(--text-4)', fontFamily: F_MONO, marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Your Role (optional)</div>
+                  <div style={{ fontSize: '10px', color: 'var(--text-4)', fontFamily: F_MONO, marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Your Role</div>
                   <input
                     value={role} onChange={e => setRole(e.target.value)}
                     placeholder="e.g. Senior Dev"
                     style={{ width: '100%', padding: '8px 10px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)', fontSize: '13px', fontFamily: F_BODY, outline: 'none', boxSizing: 'border-box' }}
-                    onFocus={e => e.target.style.borderColor = '#818CF855'}
+                    onFocus={e => e.target.style.borderColor = VIOLET + '55'}
                     onBlur={e  => e.target.style.borderColor = 'var(--border)'}
                   />
                 </div>
@@ -198,55 +173,54 @@ const PitchBoss = ({ certName, salary, certCost, hikePercent, name, mode }) => {
                 </div>
               )}
 
-              {!email && !loading && (
+              {!bcase && !loading && (
                 <motion.button
                   onClick={handleGenerate}
                   whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
-                  style={{ width: '100%', padding: '11px', borderRadius: '9px', background: 'linear-gradient(135deg,' + activeTone.color + ',hsl(from ' + activeTone.color + ' h s 35%))', border: 'none', color: 'white', fontSize: '13px', fontWeight: '700', cursor: 'pointer', fontFamily: F_HEAD, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '7px', letterSpacing: '-0.01em' }}
+                  style={{ width: '100%', padding: '11px', borderRadius: '9px', background: `linear-gradient(135deg, ${VIOLET}, #4338CA)`, border: 'none', color: 'white', fontSize: '13px', fontWeight: '700', cursor: 'pointer', fontFamily: F_HEAD, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '7px', letterSpacing: '-0.01em', boxShadow: '0 8px 20px -4px rgba(99,102,241,0.35)' }}
                 >
-                  <Zap size={14} /> Generate {activeTone.label} Pitch Email
+                  <Zap size={14} /> Build Reimbursement Case
                 </motion.button>
               )}
 
               {loading && (
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', padding: '16px' }}>
                   <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                    style={{ width: 16, height: 16, borderRadius: '50%', border: '2px solid ' + activeTone.color, borderTopColor: 'transparent' }} />
-                  <span style={{ fontSize: '13px', color: 'var(--text-3)', fontFamily: F_BODY }}>Writing your {activeTone.label.toLowerCase()} pitch...</span>
+                    style={{ width: 16, height: 16, borderRadius: '50%', border: `2px solid ${VIOLET}`, borderTopColor: 'transparent' }} />
+                  <span style={{ fontSize: '13px', color: 'var(--text-3)', fontFamily: F_BODY }}>Calculating business case...</span>
                 </div>
               )}
 
-              {email && (
+              {bcase && (
                 <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={T}>
-                  {/* Subject */}
-                  {subject?.startsWith('Subject:') && (
-                    <div style={{ padding: '9px 12px', borderRadius: '8px', background: activeTone.color + '12', border: '1px solid ' + activeTone.color + '28', marginBottom: '10px' }}>
-                      <div style={{ fontSize: '9px', color: activeTone.color, fontFamily: F_MONO, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '3px' }}>Subject</div>
-                      <div style={{ fontSize: '13px', color: 'var(--text)', fontFamily: F_HEAD, fontWeight: '700' }}>{subject.replace('Subject:', '').trim()}</div>
-                    </div>
-                  )}
 
-                  {/* Body */}
-                  <div style={{ padding: '12px', borderRadius: '8px', background: 'var(--bg)', border: '1px solid var(--border)', marginBottom: '10px' }}>
-                    <pre style={{ fontSize: '13px', color: 'var(--text-2)', fontFamily: F_BODY, lineHeight: '1.7', whiteSpace: 'pre-wrap', margin: 0 }}>
-                      {body || email}
-                    </pre>
+                  {/* Instruction strip */}
+                  <div style={{ fontFamily: F_MONO, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>
+                    Copy the points you need · write the greeting in your own voice
                   </div>
 
-                  <div style={{ display: 'flex', gap: '8px' }}>
+                  {/* Bullets */}
+                  <BulletRow icon="💰" label="Cost"                 value={bcase.cost}         color={AMBER}   />
+                  <BulletRow icon="🏢" label="Company Benefit"      value={bcase.companyGain}  color={VIOLET}  />
+                  <BulletRow icon="⏱" label="Time Commitment"       value={bcase.timeCommit}   color="#94A3B8" />
+                  <BulletRow icon="📈" label="ROI"                  value={bcase.roiStatement} color={EMERALD} />
+                  <BulletRow icon="📊" label="Market Signal"        value={bcase.demandNote}   color={AMBER}   />
+
+                  {/* Actions */}
+                  <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
                     <motion.button
-                      onClick={handleCopy}
+                      onClick={handleCopyAll}
                       whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
-                      style={{ flex: 1, padding: '9px', borderRadius: '8px', background: copied ? 'rgba(16,185,129,0.1)' : 'var(--surface)', border: `1px solid ${copied ? 'rgba(16,185,129,0.3)' : 'var(--border)'}`, color: copied ? '#10B981' : 'var(--text-2)', fontSize: '12px', cursor: 'pointer', fontFamily: F_BODY, fontWeight: '600', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', transition: 'all 0.2s' }}
+                      style={{ flex: 1, padding: '9px', borderRadius: '8px', background: copied ? 'rgba(16,185,129,0.1)' : 'var(--surface)', border: `1px solid ${copied ? 'rgba(16,185,129,0.3)' : 'var(--border)'}`, color: copied ? EMERALD : 'var(--text-2)', fontSize: '12px', cursor: 'pointer', fontFamily: F_BODY, fontWeight: '600', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', transition: 'all 0.2s' }}
                     >
                       {copied ? <Check size={13} /> : <Copy size={13} />}
-                      {copied ? 'Copied!' : 'Copy Email'}
+                      {copied ? 'Copied all points!' : 'Copy All Points'}
                     </motion.button>
                     <button
-                      onClick={() => { setEmail(''); setError(null) }}
+                      onClick={() => { setBcase(null); setError(null) }}
                       style={{ padding: '9px 14px', borderRadius: '8px', background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text-4)', fontSize: '12px', cursor: 'pointer', fontFamily: F_BODY, display: 'flex', alignItems: 'center', gap: '5px' }}
                     >
-                      <RefreshCw size={11} /> Regenerate
+                      <RefreshCw size={11} /> Rebuild
                     </button>
                   </div>
                 </motion.div>

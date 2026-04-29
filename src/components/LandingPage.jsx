@@ -415,7 +415,7 @@ function DataComposition() {
         <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }} style={{ padding: isMobile ? '36px 0' : '48px 48px 48px 0', borderBottom: isMobile ? `1px solid ${C.border}` : 'none', borderRight: isMobile ? 'none' : `1px solid ${C.border}` }}>
           <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.12em', marginBottom: '14px' }}>// PAYBACK_PERIOD</div>
           <div style={{ fontFamily: F_MONO, fontSize: 'clamp(2.5rem, 6vw, 4rem)', color: C.text, lineHeight: 1, letterSpacing: '-0.03em', fontWeight: '500', marginBottom: '14px' }}><CountUp end={6} suffix=" MO" /></div>
-          <div style={{ fontFamily: F_SANS, fontSize: '14px', color: C.text2, lineHeight: '1.65', maxWidth: '36ch' }}>Not "a few months." The exact month your investment turns profitable — calculated for your salary and city.</div>
+          <div style={{ fontFamily: F_SANS, fontSize: '14px', color: C.text2, lineHeight: '1.65', maxWidth: '36ch' }}>Not a rough guess. A probabilistic payback window — calculated from your salary, city, and cert cost, with a confidence range.</div>
         </motion.div>
         <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }} transition={{ delay: 0.1 }} style={{ padding: isMobile ? '36px 0' : '48px 0 48px 48px' }}>
           <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.12em', marginBottom: '14px' }}>// SALARY_DELTA</div>
@@ -434,14 +434,14 @@ function HowItWorks({ onEnter }) {
   const C = useTheme()
   const isMobile = useIsMobile()
   const steps = [
-    { id: '01', label: 'Basecamp', subtitle: 'Where you start', desc: 'Enter your current salary, role, and city. Upload your resume to let AI set your starting elevation.' },
-    { id: '02', label: 'Route', subtitle: 'Choose your path', desc: 'Select a cert or let AI recommend the highest-ROI route. Compare up to three paths side by side.' },
-    { id: '03', label: 'Summit', subtitle: 'Know the outcome', desc: 'Exact payback month, 5-year net gain, monthly delta, and a verdict on whether the climb is worth making.' },
+    { id: '01', label: 'Current Baseline', subtitle: 'Where you stand now', desc: 'Enter your current salary, role, and city. Upload your resume to automatically map your skills and benchmark salary.' },
+    { id: '02', label: 'Certification Pathways', subtitle: 'Compare your options', desc: 'Select a cert or get a data-driven recommendation. Compare up to three paths side by side on cost, time, and expected ROI.' },
+    { id: '03', label: 'ROI Dashboard', subtitle: 'See the numbers', desc: 'Estimated payback window, 5-year net gain, monthly delta — all calibrated to your city and salary. A financial projection, not a promise.' },
   ]
   return (
     <StorySection id="03" title="SYS_ARCHITECTURE" bg={C.surface}>
       <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }}>
-        <h2 style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: 'clamp(1.8rem, 4.5vw, 3.2rem)', color: C.text, letterSpacing: '-0.03em', lineHeight: 1.05, margin: '0 0 52px' }}>Three stages.<br />One clear answer.</h2>
+        <h2 style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: 'clamp(1.8rem, 4.5vw, 3.2rem)', color: C.text, letterSpacing: '-0.03em', lineHeight: 1.05, margin: '0 0 52px' }}>Three inputs.<br />Data-driven projections.</h2>
       </motion.div>
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: isMobile ? '32px' : '36px' }}>
         {steps.map((step, i) => (
@@ -474,7 +474,7 @@ function VsSection() {
     { wrong: 'US salary data converted to rupees', right: 'Naukri · AmbitionBox · LinkedIn India. 2026 data. Not converted from San Francisco.' },
   ]
   return (
-    <StorySection id="04" title="MARKET_HAZARDS" bg={C.bg}>
+    <StorySection id="04" title="INDUSTRY_RISKS" bg={C.bg}>
       <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }}>
         <h2 style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: 'clamp(1.8rem, 4.5vw, 3.2rem)', color: C.text, letterSpacing: '-0.03em', lineHeight: 1.05, margin: '0 0 52px' }}>Every other guide<br />is pointing you wrong.</h2>
       </motion.div>
@@ -505,7 +505,7 @@ function ElevenPM({ onEnter }) {
     { time: '12:03 AM', name: 'Arjun', loc: 'Pune', role: 'CS · Fresh graduate', thought: '"Which cert gets me placed here in India?"', context: 'Three articles. All recommend AWS. All in USD.', answer: 'Student Mode. GCP placed 47 Pune freshers in Q1 2026.' },
   ]
   return (
-    <StorySection id="05" title="FELLOW_CLIMBERS" bg={C.surface}>
+    <StorySection id="05" title="USER_STORIES" bg={C.surface}>
       <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }}>
         <h2 style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: 'clamp(1.8rem, 4.5vw, 3.2rem)', color: C.text, letterSpacing: '-0.03em', lineHeight: 1.05, margin: '0 0 52px' }}>We know what you're<br />thinking right now.</h2>
       </motion.div>
@@ -534,14 +534,14 @@ function ThreeModes() {
   const C = useTheme()
   const isMobile = useIsMobile()
   const modes = [
-    { label: 'Student', sub: 'No salary yet', desc: 'Path to a ₹4.8L+ first offer. Reframes ROI around career investment, not salary hike.' },
-    { label: 'Switcher', sub: 'Changing domains', desc: 'Domain switch in 5–8 months. Only fast-track options shown. Long certs hidden.' },
-    { label: 'Professional', sub: 'Levelling up', desc: 'Maximum ROI on your next cert. Break-even analysis, city benchmarks, and a pitch-your-boss email.' },
+    { label: 'Breaking In', sub: 'No salary yet', desc: 'Path to a ₹4.8L+ first offer. Reframes ROI around career investment and time-to-hire, not salary hikes.' },
+    { label: 'Domain Pivot', sub: 'Changing fields', desc: 'Switch domains in 5–8 months. Only fast-track options shown. Longer programs filtered out.' },
+    { label: 'Level Up', sub: 'Upskilling for a promotion', desc: 'Maximum ROI on your next cert. Payback window, city benchmarks, and a reimbursement case for your manager.' },
   ]
   return (
     <StorySection id="06" title="SYS_MODES" bg={C.bg}>
       <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }}>
-        <h2 style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: 'clamp(1.8rem, 4.5vw, 3.2rem)', color: C.text, letterSpacing: '-0.03em', lineHeight: 1.05, margin: '0 0 52px' }}>Three modes.<br /><span style={{ color: C.gold }}>One tool.</span></h2>
+        <h2 style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: 'clamp(1.8rem, 4.5vw, 3.2rem)', color: C.text, letterSpacing: '-0.03em', lineHeight: 1.05, margin: '0 0 52px' }}>Three tracks.<br /><span style={{ color: C.gold }}>One tool.</span></h2>
       </motion.div>
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: isMobile ? '24px' : '32px', padding: isMobile ? '24px' : '32px', background: C.surface, border: `1px solid ${C.border}` }}>
         {modes.map((m, i) => (
@@ -570,7 +570,7 @@ function SocialProof() {
   return (
     <StorySection id="07" title="FIELD_REPORTS" bg={C.surface}>
       <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }}>
-        <h2 style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: 'clamp(1.8rem, 4.5vw, 3.2rem)', color: C.text, letterSpacing: '-0.03em', lineHeight: 1.05, margin: '0 0 52px' }}>They chose the right route.<br /><span style={{ color: C.gold }}>It worked.</span></h2>
+        <h2 style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: 'clamp(1.8rem, 4.5vw, 3.2rem)', color: C.text, letterSpacing: '-0.03em', lineHeight: 1.05, margin: '0 0 52px' }}>They ran the numbers first.<br /><span style={{ color: C.gold }}>Then decided.</span></h2>
       </motion.div>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         {quotes.map((q, i) => {
@@ -604,7 +604,7 @@ const FAQ_ITEMS = [
   { q: 'Do I need to create an account?', a: 'No. The ROI calculator, comparison tool, and city demand heatmap are all free with no signup.' },
   { q: 'What certifications are covered?', a: '103 certifications across 17 domains — cloud, data, cybersecurity, finance, project management, and more.' },
   { q: 'Is this only useful for India?', a: 'Salary benchmarks and demand data are India-specific. The framework applies anywhere, but numbers are calibrated for India.' },
-  { q: 'How does the Resume AI work?', a: 'Upload a resume or paste your profile. AI reads your domain, role, and experience, then recommends the highest-ROI certifications for your background.' },
+  { q: 'How does the resume analysis work?', a: 'Upload your resume. The tool reads your domain, experience level, and existing skills to benchmark your current position and surface certifications with the highest ROI for your profile. No AI buzzwords — just filtered, ranked data.' },
 ]
 
 function FAQItem({ item }) {
