@@ -243,9 +243,9 @@ export function Footer() {
         <p style={{ fontFamily: F_MONO, fontSize: '11px', color: 'var(--text-4)', margin: 0 }}>
           © 2026 CertifyROI. All rights reserved.
         </p>
-        <p style={{ fontFamily: F_MONO, fontSize: '11px', color: 'var(--text-4)', margin: 0 }}>
+        <div className="mono-tag" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '10px', color: 'var(--accent)', letterSpacing: '0.05em', opacity: 0.8 }}>
           Data: Q1 2026 · Naukri · LinkedIn India · NASSCOM · AmbitionBox
-        </p>
+        </div>
       </div>
     </footer>
   )

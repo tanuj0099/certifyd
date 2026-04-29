@@ -54,7 +54,7 @@ function CertSelector({ value, onChange, label, color }) {
       <button
         onClick={function() { setOpen(function(v) { return !v }) }}
         style={{
-          width: '100%', padding: '12px 14px',
+          width: '100%', padding: '16px 14px',
           background: selected ? color + '0e' : 'var(--surface)',
           border: '1px solid ' + (selected ? color + '44' : 'var(--border)'),
           borderRadius: '10px',

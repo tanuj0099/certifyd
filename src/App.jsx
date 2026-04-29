@@ -158,6 +158,7 @@ const DataFreshnessBadge = function () {
         }}
       />
       <span
+        className="mono-tag"
         style={{
           fontFamily: FM,
           fontSize: "10px",
@@ -1943,6 +1944,7 @@ const AppPage = function ({ onCertSelected }) {
                   }}
                 >
                   {/* Primary Tools (The Flow of 3) */}
+                  {currentStepNum !== -1 && (
                   <div
                     style={{
                       display: "flex",
@@ -2059,7 +2061,7 @@ const AppPage = function ({ onCertSelected }) {
                       );
                     })}
                   </div>
-
+                  )}
 
                 </div>
 

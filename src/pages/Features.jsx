@@ -153,7 +153,7 @@ export default function FeaturesPage() {
             background: 'var(--accent)',
             boxShadow: '0 0 6px var(--accent)',
           }} />
-          <span style={{
+          <span className="mono-tag" style={{
             fontFamily: F_MONO, fontSize: '11px',
             color: 'var(--accent)', letterSpacing: '0.06em',
           }}>

@@ -152,9 +152,9 @@ export function MarketingFooter() {
           <p style={{ fontFamily: FB, fontSize: '12px', color: 'var(--text-4)', margin: 0 }}>
             Copyright 2026 CertifyROI. Salary figures are medians, not guarantees.
           </p>
-          <p style={{ fontFamily: FM, fontSize: '11px', color: 'var(--text-4)', margin: 0, opacity: 0.65 }}>
+          <div className="mono-tag" style={{ fontFamily: FM, fontSize: '11px', color: 'var(--text-4)', margin: 0, opacity: 0.65 }}>
             Data: Q1 2026 - LinkedIn India - NASSCOM - Naukri - AmbitionBox
-          </p>
+          </div>
         </div>
       </div>
     </footer>

@@ -259,14 +259,9 @@ export default function PricingPage() {
             background: 'var(--accent)',
             boxShadow: '0 0 6px var(--accent)',
           }} />
-          <span style={{
-            fontFamily: F_MONO,
-            fontSize: '11px',
-            color: 'var(--accent)',
-            letterSpacing: '0.06em',
-          }}>
+          <div className="mono-tag" style={{ fontFamily: F_MONO, fontSize: '11px', color: 'var(--accent)', letterSpacing: '0.06em' }}>
             Data: Q1 2026 - LinkedIn India - NASSCOM - Naukri - AmbitionBox
-          </span>
+          </div>
         </motion.div>
       </div>
     </MarketingPageShell>
