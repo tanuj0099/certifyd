@@ -553,8 +553,42 @@ function PickMessage({ certName, prefilledCert, firstName }) {
   )
 }
 
+// ── Payback range bar (confidence interval visual) ───────
+function PaybackRangeBar({ lo, hi, mid, color }) {
+  // Render a horizontal timeline: lo ─────[mid]───── hi
+  // The center "most likely" zone is highlighted
+  const spread = hi - lo
+  if (!spread || spread <= 0) return null
+  const leftPct  = 0
+  const midLeft  = ((mid - 0.5 - lo) / spread) * 100
+  const midRight = ((mid + 0.5 - lo) / spread) * 100
+
+  return (
+    <div style={{ marginTop: '10px', padding: '0 4px' }}>
+      <div style={{ position: 'relative', height: '6px', borderRadius: '99px', background: color + '1A', overflow: 'hidden' }}>
+        {/* Highlighted center zone */}
+        <div style={{
+          position: 'absolute', top: 0, bottom: 0,
+          left: Math.max(0, midLeft) + '%',
+          width: Math.min(100, midRight - midLeft) + '%',
+          background: color,
+          borderRadius: '99px',
+          opacity: 0.85,
+        }} />
+        {/* Full range track */}
+        <div style={{ position: 'absolute', top: '2px', bottom: '2px', left: '2px', right: '2px', borderRadius: '99px', background: color + '30' }} />
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '5px' }}>
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: color + 'AA' }}>{lo} mo</span>
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: color, fontWeight: '700' }}>~{mid} mo</span>
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: color + 'AA' }}>{hi} mo</span>
+      </div>
+    </div>
+  )
+}
+
 // ── Stat card ─────────────────────────────────────────────
-function StatCard({ label, value, sub, color, delay = 0, badge }) {
+function StatCard({ label, value, sub, color, delay = 0, badge, rangeData }) {
   const prefersReduced = useReducedMotion()
   return (
     <motion.div
@@ -579,6 +613,7 @@ function StatCard({ label, value, sub, color, delay = 0, badge }) {
           <span style={{ fontFamily: FM, fontSize: '9px', color: badge.color, letterSpacing: '0.06em' }}>{badge.label}</span>
         </div>
       )}
+      {rangeData && <PaybackRangeBar lo={rangeData.lo} hi={rangeData.hi} mid={rangeData.mid} color={color} />}
     </motion.div>
   )
 }
@@ -622,7 +657,7 @@ function AIResult({ result, certName, onReset }) {
       <div style={{ padding: '14px 16px', background: vc + '0d', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
         <div>
           <div style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '4px' }}>
-            AI ASSESSMENT
+            ROI ASSESSMENT
           </div>
           <div style={{ fontSize: '13px', fontWeight: '700', color: vc, fontFamily: FH, lineHeight: '1.4' }}>
             {result.verdict}
@@ -1014,6 +1049,15 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
                 color={AMBER}
                 delay={0.05}
                 badge={selectedCert ? getPaybackConfidence(selectedCert.demand, hikePercent) : null}
+                rangeData={selectedCert && roi.breakEvenMonths > 0 ? (() => {
+                  const conf   = getPaybackConfidence(selectedCert.demand, hikePercent)
+                  const spread = conf.label === 'High confidence' ? 0.15 : conf.label === 'Medium confidence' ? 0.25 : 0.35
+                  return {
+                    lo:  Math.max(1, Math.round(roi.breakEvenMonths * (1 - spread))),
+                    hi:  Math.round(roi.breakEvenMonths * (1 + spread)),
+                    mid: roi.breakEvenMonths,
+                  }
+                })() : null}
               />
               <StatCard label="5-Yr Net Gain" value={'₹' + roi.fiveYearGainL + 'L'}         color={EMERALD} delay={0.1}  />
               <StatCard label="Monthly +"     value={'₹' + roi.monthlyGainK + 'K'}           color={VIOLET}  delay={0.15} />

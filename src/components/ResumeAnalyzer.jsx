@@ -516,23 +516,33 @@ var PrimaryCertHero = function({ cert }) {
 }
 
 // ── CertLeaderboardRow ────────────────────────────────────
-var CertLeaderboardRow = function({ cert, rank, onSelect }) {
+var CertLeaderboardRow = function({ cert, rank, onSelect, mode }) {
   var [hovered, setHovered] = useState(false)
   var col = rank === 2 ? PICTON : VIOLET
+
+  // Switcher: parse AI-returned timeline string to detect over-8-month certs
+  var exceedsSwitcherLimit = false
+  if (mode === 'switcher' && cert.timeline) {
+    var monthMatch = cert.timeline.match(/(\d+)/)
+    if (monthMatch) exceedsSwitcherLimit = parseInt(monthMatch[1], 10) > 8
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, x: -10 }}
-      animate={{ opacity: 1, x: 0 }}
+      animate={{ opacity: exceedsSwitcherLimit ? 0.45 : 1, x: 0 }}
       transition={{ duration: 0.3, delay: (rank - 2) * 0.1 }}
       onMouseEnter={function() { setHovered(true) }}
       onMouseLeave={function() { setHovered(false) }}
-      onClick={function() { if (onSelect) onSelect(cert.name) }}
+      onClick={function() { if (onSelect && !exceedsSwitcherLimit) onSelect(cert.name) }}
       style={{
         display: 'flex', alignItems: 'center', gap: '11px', padding: '12px 13px',
-        borderRadius: '10px', border: '1px solid ' + (hovered ? col + '33' : 'var(--border)'),
-        background: hovered ? col + '06' : 'var(--surface)',
-        cursor: onSelect ? 'pointer' : 'default',
+        borderRadius: '10px',
+        border: '1px solid ' + (exceedsSwitcherLimit ? 'rgba(245,158,11,0.25)' : hovered ? col + '33' : 'var(--border)'),
+        background: exceedsSwitcherLimit ? 'rgba(245,158,11,0.04)' : hovered ? col + '06' : 'var(--surface)',
+        cursor: onSelect && !exceedsSwitcherLimit ? 'pointer' : 'default',
         transition: 'all 0.15s', marginBottom: '6px',
+        filter: exceedsSwitcherLimit ? 'grayscale(0.4)' : 'none',
       }}
     >
       <div style={{ width: '24px', height: '24px', borderRadius: '7px', flexShrink: 0, background: col + '12', border: '1px solid ' + col + '25', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -543,12 +553,20 @@ var CertLeaderboardRow = function({ cert, rank, onSelect }) {
         <div style={{ fontFamily: FB, fontSize: '12px', color: 'var(--text-4)', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical' }}>{cert.why}</div>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '3px', flexShrink: 0 }}>
-        <span style={{ fontFamily: FM, fontSize: '11px', fontWeight: '700', color: EMERALD }}>+{cert.roi}</span>
+        {exceedsSwitcherLimit ? (
+          <span style={{ fontFamily: FM, fontSize: '9px', padding: '2px 7px', borderRadius: '5px', background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.3)', color: AMBER, whiteSpace: 'nowrap' }}>
+            Exceeds 8-mo window
+          </span>
+        ) : (
+          <span style={{ fontFamily: FM, fontSize: '11px', fontWeight: '700', color: EMERALD }}>+{cert.roi}</span>
+        )}
         <span style={{ fontFamily: FM, fontSize: '10px', color: 'var(--text-4)' }}>{cert.timeline}</span>
       </div>
-      <motion.div animate={{ x: hovered ? 3 : 0 }} transition={{ duration: 0.13 }}>
-        <ArrowRight size={13} color={hovered ? col : 'var(--text-4)'} />
-      </motion.div>
+      {!exceedsSwitcherLimit && (
+        <motion.div animate={{ x: hovered ? 3 : 0 }} transition={{ duration: 0.13 }}>
+          <ArrowRight size={13} color={hovered ? col : 'var(--text-4)'} />
+        </motion.div>
+      )}
     </motion.div>
   )
 }
@@ -658,7 +676,7 @@ var ResultDisplay = function({ result, onCertSelected, mode, onClear }) {
                 style={{ overflow: 'hidden' }}
               >
                 {otherCerts.map(function(cert, i) {
-                  return <CertLeaderboardRow key={i} cert={cert} rank={i + 2} onSelect={onCertSelected ? handleSelect : null} />
+                  return <CertLeaderboardRow key={i} cert={cert} rank={i + 2} mode={mode} onSelect={onCertSelected ? handleSelect : null} />
                 })}
               </motion.div>
             )}
@@ -730,6 +748,7 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
   var [rejection,    setRejection]    = useState(null)
   var [dragging,     setDragging]     = useState(false)
   var [pdfLoading,   setPdfLoading]   = useState(false)
+  var [textReady,    setTextReady]    = useState(true)    // false while PDF is still extracting
   var [timeline,     setTimeline]     = useState('flexible')
   var [domainIntent, setDomainIntent] = useState('auto')
   var [inputMode,    setInputMode]    = useState('upload')   // 'upload' | 'skills'
@@ -751,38 +770,38 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
     var ext = file.name.split('.').pop().toLowerCase()
     setError(null); setRejection(null)
     if (ext === 'pdf') {
-      // FIX: set fileName early so UI shows "reading..." state,
-      // but clear it on EITHER failure path so textarea becomes visible.
-      setFileName(file.name); setText(''); setPdfLoading(true)
+      // OPTIMISTIC: accept file immediately, extract in background
+      setFileName(file.name); setText(''); setPdfLoading(true); setTextReady(false)
       try {
         var extracted = await readPdfFile(file)
         if (!extracted || !extracted.trim()) {
-          // FIX: clear fileName so !hasFile → textarea appears
           setFileName('')
           setError('Could not extract text from this PDF. Please paste your resume below.')
+          setTextReady(true)
           return
         }
         setText(extracted)
+        setTextReady(true)
       } catch(e) {
-        // FIX: clear fileName on parse exception too
         setFileName('')
         setError('PDF parsing failed. Please paste your resume text below.')
+        setTextReady(true)
       } finally {
         setPdfLoading(false)
       }
       return
     }
-    setFileName(file.name); setText('')
+    setFileName(file.name); setText(''); setTextReady(false)
     var reader = new FileReader()
-    reader.onload  = function(e) { setText(e.target.result || '') }
-    reader.onerror = function()  { setError('Could not read file. Try pasting text instead.'); setFileName('') }
+    reader.onload  = function(e) { setText(e.target.result || ''); setTextReady(true) }
+    reader.onerror = function()  { setError('Could not read file. Try pasting text instead.'); setFileName(''); setTextReady(true) }
     reader.readAsText(file)
   }
 
   var handleDrop = function(e) { e.preventDefault(); setDragging(false); readFile(e.dataTransfer.files[0]) }
 
   var clearAll = function() {
-    setText(''); setFileName(''); setResult(null); setError(null); setRejection(null)
+    setText(''); setFileName(''); setResult(null); setError(null); setRejection(null); setTextReady(true)
   }
 
   // FIX: separate dismiss-rejection from clear-all.
@@ -795,6 +814,8 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
   }
 
   var handleAnalyse = async function() {
+    // If PDF is still extracting, wait — optimistic UI means button is active but needs text
+    if (!textReady) { setError('Still reading your file — please wait a moment and try again.'); return }
     // If skill-tag mode: synthesize text from selected skills
     var analyseText = text
     if (inputMode === 'skills') {
@@ -1073,31 +1094,43 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
         )}
       </AnimatePresence>
 
-      {/* Analyse button */}
+      {/* Analyse button — enabled as soon as file is selected (optimistic) */}
       {!hasResult && !loading && (
         <motion.button
           onClick={handleAnalyse}
-          disabled={!text.trim() && !hasFile}
-          whileHover={(text.trim() || hasFile) ? { scale: 1.01, y: -1 } : {}}
-          whileTap={(text.trim() || hasFile) ? { scale: 0.98 } : {}}
+          disabled={!text.trim() && !hasFile && !(inputMode === 'skills' && pickedSkills.length >= 3)}
+          whileHover={(text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3)) ? { scale: 1.01, y: -1 } : {}}
+          whileTap={(text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3)) ? { scale: 0.98 } : {}}
           style={{
             width: '100%', fontSize: '15px', padding: '14px',
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '9px',
-            background: (text.trim() || hasFile)
+            background: (text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3))
               ? 'linear-gradient(135deg,' + PICTON + ',#3B8CC7)'
               : 'transparent',
-            border: (text.trim() || hasFile) ? 'none' : '1px solid var(--border)',
+            border: (text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3)) ? 'none' : '1px solid var(--border)',
             borderRadius: '12px',
-            color: (text.trim() || hasFile) ? 'white' : 'var(--text-4)',
+            color: (text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3)) ? 'white' : 'var(--text-4)',
             fontFamily: FH, fontWeight: '800',
-            cursor: (text.trim() || hasFile) ? 'pointer' : 'not-allowed',
-            boxShadow: (text.trim() || hasFile) ? '0 4px 16px rgba(81,177,231,0.25)' : 'none',
+            cursor: (text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3)) ? 'pointer' : 'not-allowed',
+            boxShadow: (text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3)) ? '0 4px 16px rgba(81,177,231,0.25)' : 'none',
             letterSpacing: '-0.015em',
             transition: 'all 0.2s',
+            position: 'relative',
           }}
         >
-          <Sparkles size={15} />
-          Analyse My Resume with AI
+          {pdfLoading ? (
+            <>
+              <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                style={{ width: 14, height: 14, borderRadius: '50%', border: '2px solid rgba(255,255,255,0.4)', borderTopColor: 'white' }} />
+              Analyse Profile
+              <span style={{ fontSize: '11px', opacity: 0.75, marginLeft: '4px' }}>(reading file...)</span>
+            </>
+          ) : (
+            <>
+              <Sparkles size={15} />
+              Analyse Profile
+            </>
+          )}
         </motion.button>
       )}
 
