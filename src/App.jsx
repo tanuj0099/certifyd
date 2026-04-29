@@ -2001,18 +2001,14 @@ const AppPage = function ({ onCertSelected }) {
                               borderRadius: "100px",
                               border: active
                                 ? "1px solid var(--border-accent)"
-                                : isCompleted
-                                  ? "1px solid var(--border)"
-                                  : "1px solid var(--border-subtle)",
+                                : "1px solid var(--border-subtle)",
                               background: active
                                 ? "var(--surf-highlight, rgba(45,106,79,0.05))"
-                                : isCompleted
-                                  ? "var(--surface)"
-                                  : "transparent",
+                                : "transparent",
                               color: active
                                 ? "var(--accent)"
                                 : isCompleted
-                                  ? "var(--text)"
+                                  ? "var(--text-3)"
                                   : "var(--text-4)",
                               cursor: "pointer",
                               fontFamily: FH,
@@ -2031,13 +2027,13 @@ const AppPage = function ({ onCertSelected }) {
                                 borderRadius: "50%",
                                 background: active
                                   ? "var(--accent)"
-                                  : isCompleted
-                                    ? "var(--accent-light, #4A8C6A)"
-                                    : "var(--surface-high)",
+                                  : "var(--surface-high)",
                                 color:
-                                  active || isCompleted
+                                  active
                                     ? "#FFF"
-                                    : "var(--text-4)",
+                                    : isCompleted
+                                      ? "var(--text-2)"
+                                      : "var(--text-4)",
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
@@ -2046,7 +2042,7 @@ const AppPage = function ({ onCertSelected }) {
                                 fontWeight: "700",
                               }}
                             >
-                              {tab.num}
+                              {isCompleted ? "✓" : tab.num}
                             </div>
                             <tab.icon size={16} />
                             <span
@@ -2265,7 +2261,7 @@ const AppPage = function ({ onCertSelected }) {
                       style={{
                         fontFamily: FM,
                         fontSize: "10px",
-                        color: "var(--text-4)",
+                        color: "var(--text-3)",
                         letterSpacing: "0.15em",
                       }}
                     >

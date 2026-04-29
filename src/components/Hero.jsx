@@ -452,7 +452,7 @@ function Leadboard({ domainList, sorted, preferred, showAll, setShowAll, activeC
                   {cert.name}
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
-                  <div style={{ fontFamily: FB, fontSize: '11px', color: 'var(--text-4)', lineHeight: 1.3, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '180px' }}>
+                  <div style={{ fontFamily: FB, fontSize: '11px', color: 'var(--text-3)', lineHeight: 1.3, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '180px' }}>
                     {cert.forWho}
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '3px', padding: '1px 6px', borderRadius: '9999px', background: readiness.color + '12', border: '1px solid ' + readiness.color + '25', flexShrink: 0 }}>
@@ -930,7 +930,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
                   <ShieldCheck size={9} color={stripReadiness.color} />
                   <span style={{ fontFamily: FM, fontSize: '9px', color: stripReadiness.color, letterSpacing: '0.06em' }}>{stripReadiness.label}</span>
                 </div>
-                <span style={{ fontSize: '11px', color: 'var(--text-4)', fontFamily: FB }}>{selectedCert.forWho}</span>
+                <span style={{ fontSize: '11px', color: 'var(--text-3)', fontFamily: FB }}>{selectedCert.forWho}</span>
                 <a href={selectedCert.link} target="_blank" rel="noopener noreferrer"
                   style={{ marginLeft: 'auto', fontSize: '11px', color: VIOLET, fontFamily: FM, textDecoration: 'none', letterSpacing: '0.05em' }}>
                   Official Site

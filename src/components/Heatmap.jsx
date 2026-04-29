@@ -187,7 +187,7 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
             const active = selectedDomain === cat.id
             return (
               <button key={cat.id} onClick={() => setSelectedDomain(cat.id)}
-                style={{ padding: '6px 13px', borderRadius: '7px', fontSize: '12px', fontWeight: active ? '700' : '500', cursor: 'pointer', fontFamily: F_BODY, background: active ? cat.color + '14' : 'var(--surface)', border: '1px solid ' + (active ? cat.color + '3A' : 'var(--border)'), color: active ? cat.color : 'var(--text-3)', transition: 'all 0.15s', minHeight: '34px' }}>
+                style={{ padding: '6px 13px', borderRadius: '7px', fontSize: '12px', fontWeight: active ? '700' : '500', cursor: 'pointer', fontFamily: F_BODY, background: active ? cat.color + '14' : 'var(--surface)', border: '1px solid ' + (active ? cat.color + '3A' : 'var(--border)'), color: active ? cat.color : 'var(--text-2)', transition: 'all 0.15s', minHeight: '34px' }}>
                 {cat.label}
               </button>
             )
