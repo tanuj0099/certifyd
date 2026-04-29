@@ -61,6 +61,7 @@ function NavItem({ label, pageId, isActive, onActivate, onNavigate, theme }) {
         position: 'relative', fontFamily: F_SANS, fontSize: '13px',
         fontWeight: isActive ? '600' : '400', letterSpacing: '-0.01em',
         color: isActive ? t.text : t.text2, transition: 'color 0.15s',
+        whiteSpace: 'nowrap',
       }}>
         {label}
       </span>

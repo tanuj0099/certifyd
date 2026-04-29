@@ -1973,7 +1973,7 @@ const AppPage = function ({ onCertSelected }) {
                                 display: "flex",
                                 alignItems: "center",
                                 gap: "4px",
-                                opacity: isCompleted || active ? 1 : 0.3,
+                                opacity: isCompleted || active ? 1 : 0.5,
                               }}
                             >
                               <div

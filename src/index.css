@@ -12,9 +12,9 @@
     --surface:        #FFFFFF;
     --surface-high:   #EFECE7;
     --text:           #1A1916;
-    --text-2:         #5C5A56;
-    --text-3:         #8C8A86;
-    --text-4:         #8B8681;
+    --text-2:         #4B5563;
+    --text-3:         #6B7280;
+    --text-4:         #9CA3AF;
 
     /* No blue, no purple, no indigo */
     --accent:         #1B4332;   /* strict, dark forest green for light mode */
