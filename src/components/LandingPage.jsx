@@ -406,47 +406,323 @@ function CertAssembly() {
 }
 
 // ─────────────────────────────────────────────────────────
-// DATA COMPOSITION
+// DATA COMPOSITION — drop-in replacement for the existing
+// DataComposition() function in LandingPage.jsx
+//
+// Rules applied:
+//  1. StorySection wrapper preserved — left margin sidebar untouched
+//  2. True bento grid: 5yr gain = md:col-span-2, metrics tile right
+//  3. Cards: flat #141414, 1px border only, no glass/blur/shadow
+//  4. Green (#2D6A4F / C.gold) ONLY on 5yr gain value + +35% text
+//     + "Calculate ROI" button — all other accents dimmed to text3
+//  5. tabular-nums on every large metric
 // ─────────────────────────────────────────────────────────
+
 function DataComposition() {
   const C = useTheme()
   const isMobile = useIsMobile()
+
+  // ── Flat card token — no glass, no blur, no shadow ──────
+  const CARD_BG     = C.name === 'dark' ? '#141414' : '#F2F0EC'
+  const CARD_BORDER = C.name === 'dark'
+    ? '1px solid rgba(255,255,255,0.08)'
+    : '1px solid rgba(0,0,0,0.09)'
+  const CARD_RADIUS = '4px'
+
+  // ── Accent rules:
+  //   - PRIMARY  → C.gold  (5yr gain, +35%)
+  //   - MUTED    → C.text3 (payback, labels, icons, decorative borders)
+  //   - NEUTRAL  → C.text  (payback value — important but not brand-green)
+  const PRIMARY_ACCENT = C.gold
+  const MUTED_ACCENT   = C.text3
+
+  // ── Shared metric label style ───────────────────────────
+  const labelStyle = {
+    fontFamily: F_MONO,
+    fontSize: '10px',
+    color: MUTED_ACCENT,            // dimmed — not green
+    letterSpacing: '0.14em',
+    textTransform: 'uppercase',
+    marginBottom: '10px',
+    display: 'block',
+  }
+
+  // ── Shared big number style ─────────────────────────────
+  const bigNumBase = {
+    fontFamily: F_MONO,
+    fontVariantNumeric: 'tabular-nums',   // rigid alignment
+    fontFeatureSettings: '"tnum"',
+    lineHeight: 1,
+    letterSpacing: '-0.03em',
+    fontWeight: '500',
+  }
+
+  // ── Grid layout ─────────────────────────────────────────
+  // Mobile: single column stack
+  // Desktop: 3-col grid, hero card spans 2 cols
+  //
+  //  ┌─────────────────────┬───────────────┐
+  //  │  ₹14.2L 5-YR GAIN   │  6 MO PAYBACK │
+  //  │  (col-span-2)        ├───────────────┤
+  //  │                      │  +35% DELTA   │
+  //  └─────────────────────┴───────────────┘
+
+  const gridStyle = isMobile
+    ? { display: 'flex', flexDirection: 'column', gap: '8px' }
+    : {
+        display: 'grid',
+        gridTemplateColumns: '2fr 1fr',
+        gridTemplateRows:    '1fr 1fr',
+        gap: '8px',
+      }
+
   return (
     <StorySection id="02" title="METRICS_LOG" noBorderTop>
+
+      {/* ── Section label ─────────────────────────────── */}
       <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }}>
-        <div style={{ fontFamily: F_SANS, fontSize: '14px', color: C.text2, letterSpacing: '0.01em', marginBottom: '28px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <div style={{ width: '6px', height: '6px', background: C.text3, borderRadius: '1px' }} />
+        <div style={{
+          fontFamily: F_SANS,
+          fontSize: '14px',
+          color: C.text2,
+          letterSpacing: '0.01em',
+          marginBottom: '32px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+        }}>
+          <div style={{
+            width: '6px', height: '6px',
+            background: MUTED_ACCENT,   // dimmed square, not green
+            borderRadius: '1px',
+          }} />
           The numbers behind the route
         </div>
       </motion.div>
-      <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }} style={{ marginBottom: '56px' }}>
-        <div style={{ fontFamily: F_MONO, fontSize: 'clamp(3.5rem, 10vw, 8rem)', color: C.text, lineHeight: 1, letterSpacing: '-0.04em', fontWeight: '500', display: 'flex', alignItems: 'flex-start' }}>
-          <span style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', color: C.gold, marginTop: 'clamp(0.5rem, 1vw, 1rem)', marginRight: '4px' }}>₹</span>
-          <CountUp end={14.2} />
-          <span style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', color: C.gold, marginTop: 'clamp(0.5rem, 1vw, 1rem)', marginLeft: '4px' }}>L</span>
+
+      {/* ── Bento grid ────────────────────────────────── */}
+      <motion.div
+        variants={RISE}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true }}
+        style={gridStyle}
+      >
+
+        {/* CARD 1 — 5-Year Net Gain (hero, spans 2 rows on desktop) */}
+        <div style={{
+          background:   CARD_BG,
+          border:       CARD_BORDER,
+          borderRadius: CARD_RADIUS,
+          padding:      isMobile ? '32px 28px' : '44px 40px',
+          display:      'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          gridRow:      isMobile ? 'auto' : '1 / 3',    // spans both rows
+        }}>
+
+          {/* Top label row */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '28px' }}>
+            <span style={labelStyle}>// 5_YR_NET_GAIN</span>
+            <div style={{
+              fontFamily: F_MONO,
+              fontSize: '10px',
+              color: MUTED_ACCENT,
+              letterSpacing: '0.1em',
+              padding: '3px 9px',
+              border: CARD_BORDER,    // same muted border, not green
+              borderRadius: '2px',
+            }}>
+              AWS SAA · BLR '26
+            </div>
+          </div>
+
+          {/* Big number — PRIMARY_ACCENT (gold/green) */}
+          <div>
+            <div style={{
+              ...bigNumBase,
+              fontSize: isMobile ? 'clamp(3.8rem, 14vw, 6rem)' : 'clamp(4rem, 8vw, 7rem)',
+              color: PRIMARY_ACCENT,   // ← brand green, earns its place
+              marginBottom: '6px',
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '2px',
+            }}>
+              <span style={{
+                fontSize: isMobile ? 'clamp(1.8rem, 6vw, 2.8rem)' : 'clamp(2rem, 4vw, 3rem)',
+                marginTop: isMobile ? '0.4rem' : '0.5rem',
+                color: PRIMARY_ACCENT,
+                fontVariantNumeric: 'tabular-nums',
+                fontFeatureSettings: '"tnum"',
+              }}>₹</span>
+              <CountUp end={14.2} />
+              <span style={{
+                fontSize: isMobile ? 'clamp(1.8rem, 6vw, 2.8rem)' : 'clamp(2rem, 4vw, 3rem)',
+                marginTop: isMobile ? '0.4rem' : '0.5rem',
+                color: PRIMARY_ACCENT,
+                fontVariantNumeric: 'tabular-nums',
+                fontFeatureSettings: '"tnum"',
+              }}>L</span>
+            </div>
+
+            <div style={{
+              fontFamily: F_SANS,
+              fontSize: '14px',
+              color: C.text2,
+              lineHeight: '1.65',
+              maxWidth: '36ch',
+              marginTop: '16px',
+            }}>
+              Cumulative salary uplift net of certification cost —
+              calculated from your salary, city, and expected hike.
+              Not a range. A number.
+            </div>
+          </div>
+
+          {/* Bottom rule */}
+          <div style={{
+            marginTop: '32px',
+            paddingTop: '20px',
+            borderTop: CARD_BORDER,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+          }}>
+            <div style={{
+              width: '6px', height: '6px',
+              borderRadius: '50%',
+              background: MUTED_ACCENT,  // muted dot, not green
+            }} />
+            <span style={{
+              fontFamily: F_MONO,
+              fontSize: '10px',
+              color: MUTED_ACCENT,
+              letterSpacing: '0.1em',
+            }}>
+              SOURCE: NAUKRI · AMBITIONBOX · LINKEDIN INDIA · Q1 2026
+            </span>
+          </div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: '14px', flexWrap: 'wrap' }}>
-          <div style={{ fontFamily: F_SANS, fontWeight: '500', fontSize: 'clamp(1rem, 2vw, 1.2rem)', color: C.text2 }}>5-year net gain · AWS Solutions Architect</div>
-          <div className="glass" style={{ padding: '4px 10px', fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.08em' }}>BLR MEDIAN '26</div>
+
+        {/* CARD 2 — Payback Period */}
+        <div style={{
+          background:   CARD_BG,
+          border:       CARD_BORDER,
+          borderRadius: CARD_RADIUS,
+          padding:      isMobile ? '28px' : '32px 28px',
+          display:      'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+        }}>
+          <span style={labelStyle}>// PAYBACK_PERIOD</span>
+
+          <div>
+            <div style={{
+              ...bigNumBase,
+              fontSize: isMobile ? 'clamp(2.8rem, 10vw, 4rem)' : 'clamp(2.4rem, 4vw, 3.6rem)',
+              color: C.text,   // ← neutral, not green — payback is neutral fact
+              marginBottom: '10px',
+            }}>
+              <CountUp end={6} suffix=" MO" />
+            </div>
+
+            <div style={{
+              fontFamily: F_SANS,
+              fontSize: '13px',
+              color: C.text3,
+              lineHeight: '1.6',
+            }}>
+              Probabilistic payback window with confidence range.
+              Not a rough guess.
+            </div>
+          </div>
+
+          {/* Muted tick mark */}
+          <div style={{
+            marginTop: '20px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+          }}>
+            <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+              <path
+                d="M1 4L3.8 7L9 1"
+                stroke={MUTED_ACCENT}
+                strokeWidth="1.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <span style={{
+              fontFamily: F_MONO,
+              fontSize: '10px',
+              color: MUTED_ACCENT,
+              letterSpacing: '0.1em',
+            }}>
+              CITY-CALIBRATED
+            </span>
+          </div>
         </div>
+
+        {/* CARD 3 — Salary Delta */}
+        <div style={{
+          background:   CARD_BG,
+          border:       CARD_BORDER,
+          borderRadius: CARD_RADIUS,
+          padding:      isMobile ? '28px' : '32px 28px',
+          display:      'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+        }}>
+          <span style={labelStyle}>// SALARY_DELTA</span>
+
+          <div>
+            <div style={{
+              ...bigNumBase,
+              fontSize: isMobile ? 'clamp(2.8rem, 10vw, 4rem)' : 'clamp(2.4rem, 4vw, 3.6rem)',
+              color: PRIMARY_ACCENT,   // ← brand green — positive outcome, earns it
+              marginBottom: '10px',
+            }}>
+              <CountUp end={35} suffix="%" />
+            </div>
+
+            <div style={{
+              fontFamily: F_SANS,
+              fontSize: '13px',
+              color: C.text3,
+              lineHeight: '1.6',
+            }}>
+              India-sourced. City-specific.
+              Not US data converted at today's rate.
+            </div>
+          </div>
+
+          {/* Muted provenance tag */}
+          <div style={{
+            marginTop: '20px',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            padding: '4px 8px',
+            border: CARD_BORDER,
+            borderRadius: '2px',
+            alignSelf: 'flex-start',
+          }}>
+            <span style={{
+              fontFamily: F_MONO,
+              fontSize: '10px',
+              color: MUTED_ACCENT,
+              letterSpacing: '0.1em',
+            }}>
+              MEDIAN '26
+            </span>
+          </div>
+        </div>
+
       </motion.div>
-      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', borderTop: `1px solid ${C.border}` }}>
-        <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }} style={{ padding: isMobile ? '36px 0' : '48px 48px 48px 0', borderBottom: isMobile ? `1px solid ${C.border}` : 'none', borderRight: isMobile ? 'none' : `1px solid ${C.border}` }}>
-          <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.12em', marginBottom: '14px' }}>// PAYBACK_PERIOD</div>
-          <div style={{ fontFamily: F_MONO, fontSize: 'clamp(2.5rem, 6vw, 4rem)', color: C.text, lineHeight: 1, letterSpacing: '-0.03em', fontWeight: '500', marginBottom: '14px' }}><CountUp end={6} suffix=" MO" /></div>
-          <div style={{ fontFamily: F_SANS, fontSize: '14px', color: C.text2, lineHeight: '1.65', maxWidth: '36ch' }}>Not a rough guess. A probabilistic payback window — calculated from your salary, city, and cert cost, with a confidence range.</div>
-        </motion.div>
-        <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }} transition={{ delay: 0.1 }} style={{ padding: isMobile ? '36px 0' : '48px 0 48px 48px' }}>
-          <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.12em', marginBottom: '14px' }}>// SALARY_DELTA</div>
-          <div style={{ fontFamily: F_MONO, fontSize: 'clamp(2.5rem, 6vw, 4rem)', color: C.text, lineHeight: 1, letterSpacing: '-0.03em', fontWeight: '500', marginBottom: '14px' }}><CountUp end={35} suffix="%" /></div>
-          <div style={{ fontFamily: F_SANS, fontSize: '14px', color: C.text2, lineHeight: '1.65', maxWidth: '36ch' }}>India-sourced. City-specific. Not US data converted at today's rate and called "India salary insights."</div>
-        </motion.div>
-      </div>
     </StorySection>
   )
-}
-
-// ─────────────────────────────────────────────────────────
+}// ─────────────────────────────────────────────────────────
 // HOW IT WORKS
 // ─────────────────────────────────────────────────────────
 function HowItWorks({ onEnter }) {
