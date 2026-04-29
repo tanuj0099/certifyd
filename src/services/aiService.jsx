@@ -1,8 +1,11 @@
 // ─────────────────────────────────────────────────────────
-// API key lives on the server only (api/groq.js)
-// This file never touches the key — safe in browser
+// aiService.jsx  — Phase 2: JSON mode, no regex parsing
+//
+// API key lives on the server only (api/groq.js).
+// This file never touches the key — safe in browser.
 // ─────────────────────────────────────────────────────────
 
+// ── ROI prompt — requests strict JSON output ──────────────
 const buildROIPrompt = ({ certName, currentSalary, certCost, hikePercent, isStudent }) => {
   const annualSalary    = currentSalary * 100000
   const hikedSalary     = annualSalary * (1 + hikePercent / 100)
@@ -12,73 +15,72 @@ const buildROIPrompt = ({ certName, currentSalary, certCost, hikePercent, isStud
 
   const context = isStudent
     ? `STUDENT with no salary, targeting first job in India. Cert: ${certName}. Goal: first offer Rs.4.8L+.`
-    : `Salary: Rs.${currentSalary}L/yr going to Rs.${(hikedSalary / 100000).toFixed(1)}L. Cost: Rs.${certCost}L. Break-even: ${breakEvenMonths} months. 5yr net: Rs.${(fiveYearGain / 100000).toFixed(1)}L.`
+    : `Salary: Rs.${currentSalary}L/yr → Rs.${(hikedSalary/100000).toFixed(1)}L. Cost: Rs.${certCost}L. Break-even: ${breakEvenMonths} months. 5yr net: Rs.${(fiveYearGain/100000).toFixed(1)}L.`
 
-  return `You are CertifyROI, a brutally honest career advisor for Indian tech professionals (2026).
+  return `You are CertifyROI, a brutally honest career advisor for Indian professionals (2026).
 ${context}
 Certification: ${certName || 'General IT Certification'}
 
-Reply in EXACTLY this format, no extra text:
+Respond with ONLY a valid JSON object — no markdown, no prose, no code fences.
 
-**VERDICT:** [Strong ROI / Moderate ROI / Weak ROI - one sentence with % and timeline]
-
-**BREAK-EVEN:** [X months - real-world India anchor e.g. = 6 months Pune PG rent]
-
-**5-YEAR PROJECTION:** [Rs.X.XL - anchor e.g. = Honda City down payment twice over]
-
-**MARKET DEMAND (India 2026):**
-- [specific Naukri/LinkedIn demand signal with number]
-- [top 2 hiring companies in India]
-- [YoY growth signal]
-
-**RISKS:**
-- [biggest real risk]
-- [how to mitigate it]
-
-**STUDENT FAST-TRACK:** ${isStudent ? '[3 concrete steps + timeline to Rs.4.8L]' : '[N/A]'}
-
-**BOTTOM LINE:** [one punchy action sentence - be direct]
-
-Under 260 words. India-specific. No fluff.`
+{
+  "verdict": "Strong ROI / Moderate ROI / Weak ROI — one sentence with % and timeline",
+  "breakEven": "X months — real-world India anchor e.g. = 6 months Pune PG rent",
+  "projection": "Rs.X.XL — anchor e.g. = Honda City down payment twice over",
+  "demand": [
+    "specific Naukri/LinkedIn demand signal with number",
+    "top 2 hiring companies in India",
+    "YoY growth signal"
+  ],
+  "risks": [
+    "biggest real risk",
+    "how to mitigate it"
+  ],
+  "studentTrack": "${isStudent ? '3 concrete steps + timeline to Rs.4.8L' : ''}",
+  "bottomLine": "one punchy action sentence — be direct"
 }
 
-const parseROIResponse = (text) => {
-  const get = (p) => { const m = text.match(p); return m ? m[1].trim() : '' }
+Rules: India-specific. Under 260 words total across all fields. No fluff.`
+}
 
-  // Fix: match both • and - bullet styles from AI
-  const getBullets = (p) => {
-    const m = text.match(p)
-    if (!m) return []
-    return m[1]
-      .split('\n')
-      .filter(l => l.trim().match(/^[•\-\*]/))
-      .map(l => l.replace(/^[•\-\*]\s*/, '').trim())
-      .filter(Boolean)
-  }
-
-  return {
-    verdict:      get(/\*\*VERDICT:\*\*\s*(.+?)(?=\n\*\*|\n\n|$)/s),
-    breakEven:    get(/\*\*BREAK-EVEN:\*\*\s*(.+?)(?=\n\*\*|\n\n|$)/s),
-    projection:   get(/\*\*5-YEAR PROJECTION:\*\*\s*(.+?)(?=\n\*\*|\n\n|$)/s),
-    demand:       getBullets(/\*\*MARKET DEMAND.*?\*\*\s*([\s\S]+?)(?=\n\*\*RISKS)/s),
-    risks:        getBullets(/\*\*RISKS:\*\*\s*([\s\S]+?)(?=\n\*\*STUDENT|\n\*\*BOTTOM)/s),
-    studentTrack: get(/\*\*STUDENT FAST-TRACK:\*\*\s*(.+?)(?=\n\*\*|\n\n|$)/s).replace('[N/A]', '').trim(),
-    bottomLine:   get(/\*\*BOTTOM LINE:\*\*\s*(.+?)(?=\n\*\*|\n\n|$)/s),
-    raw: text,
+// ── Safely parse JSON from AI — never throws ─────────────
+const safeParseJSON = (text) => {
+  try {
+    // Strip any accidental markdown fences the model adds
+    const cleaned = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').trim()
+    return JSON.parse(cleaned)
+  } catch {
+    return null
   }
 }
+
+// ── Fallback when JSON parse fails ───────────────────────
+const roiFallback = (text) => ({
+  verdict:      'Analysis complete — see raw output below',
+  breakEven:    '—',
+  projection:   '—',
+  demand:       [],
+  risks:        [],
+  studentTrack: '',
+  bottomLine:   'Re-run the analysis for a structured result.',
+  raw:          text,
+  parseError:   true,
+})
 
 // ── Core fetch — hits /api/groq server endpoint ───────────
-const callGroq = async (messages, maxTokens = 700, temperature = 0.65) => {
+const callGroq = async (messages, maxTokens = 700, temperature = 0.65, jsonMode = false) => {
+  const body = {
+    model:       'llama-3.3-70b-versatile',
+    messages,
+    max_tokens:  maxTokens,
+    temperature,
+  }
+  if (jsonMode) body.response_format = { type: 'json_object' }
+
   const response = await fetch('/api/groq', {
-    method: 'POST',
+    method:  'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: 'llama-3.3-70b-versatile',
-      messages,
-      max_tokens: maxTokens,
-      temperature,
-    }),
+    body:    JSON.stringify(body),
   })
 
   if (!response.ok) {
@@ -99,16 +101,32 @@ const callGroq = async (messages, maxTokens = 700, temperature = 0.65) => {
 }
 
 // ── Public exports ────────────────────────────────────────
+
 export const analyzeROI = async ({ certName, currentSalary, certCost, hikePercent, isStudent = false }) => {
-  const text = await callGroq(
+  const text   = await callGroq(
     [
-      { role: 'system', content: 'You are CertifyROI. Respond ONLY in the exact format requested. India market 2026.' },
+      { role: 'system', content: 'You are CertifyROI. Respond ONLY with a valid JSON object. India market 2026.' },
       { role: 'user',   content: buildROIPrompt({ certName, currentSalary, certCost, hikePercent, isStudent }) },
     ],
     700,
-    0.65
+    0.65,
+    true   // ← JSON mode ON
   )
-  return parseROIResponse(text)
+
+  const parsed = safeParseJSON(text)
+  if (!parsed) return roiFallback(text)
+
+  return {
+    verdict:      parsed.verdict      || '',
+    breakEven:    parsed.breakEven    || '',
+    projection:   parsed.projection   || '',
+    demand:       Array.isArray(parsed.demand) ? parsed.demand : [],
+    risks:        Array.isArray(parsed.risks)  ? parsed.risks  : [],
+    studentTrack: parsed.studentTrack || '',
+    bottomLine:   parsed.bottomLine   || '',
+    raw:          text,
+    parseError:   false,
+  }
 }
 
 export const callGroqForPitch = async (_unusedApiKey, prompt) => {
@@ -122,11 +140,12 @@ export const callGroqForPitch = async (_unusedApiKey, prompt) => {
 export const callGroqForResume = async (_unusedApiKey, prompt) => {
   return callGroq(
     [
-      { role: 'system', content: 'You are CertifyROI. Follow format exactly. India market 2026. No extra text.' },
+      { role: 'system', content: 'You are CertifyROI. Respond ONLY with a valid JSON object. India market 2026.' },
       { role: 'user',   content: prompt },
     ],
-    800,
-    0.62
+    900,
+    0.62,
+    true   // ← JSON mode ON
   )
 }
 
@@ -143,5 +162,6 @@ export const getMockResponse = ({ certName, currentSalary, certCost, hikePercent
     studentTrack: isStudent ? 'Step 1: Complete cert in 4 months. Step 2: Build 2 GitHub projects. Step 3: Apply to Capgemini iON for Rs.4.8L offer.' : '',
     bottomLine:   'Run: vercel dev (not npm run dev) to enable the API proxy locally.',
     raw:          '(demo)',
+    parseError:   false,
   }
 }

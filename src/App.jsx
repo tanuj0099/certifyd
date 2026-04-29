@@ -1260,10 +1260,11 @@ const MobileDrawer = function ({
   open,
   onClose,
   currentPage,
-  activeTab,
   onNavigate,
-  onTabChange,
 }) {
+  // Read directly from store — no prop drilling needed
+  const activeTab   = useJourneyStore((s) => s.activeTab);
+  const onTabChange = useJourneyStore((s) => s.setActiveTab);
   var drawerRef = useRef(null);
 
   useEffect(
@@ -1653,11 +1654,12 @@ const MobileDrawer = function ({
 // ─────────────────────────────────────────────────────────
 // NAVBAR
 // ─────────────────────────────────────────────────────────
-const NavBar = function ({ currentPage, activeTab, onNavigate, onTabChange }) {
+const NavBar = function ({ currentPage, onNavigate, onTabChange }) {
   var [drawerOpen, setDrawerOpen] = useState(false);
   var [signingIn, setSigningIn] = useState(false);
   var isMobile = useIsMobile();
   var { user, signInGoogle, signOut, loading } = useAuth();
+  // activeTab consumed from store inside MobileDrawer directly
 
   var go = function (id) {
     onNavigate(id);
@@ -1682,9 +1684,7 @@ const NavBar = function ({ currentPage, activeTab, onNavigate, onTabChange }) {
           setDrawerOpen(false);
         }}
         currentPage={currentPage}
-        activeTab={activeTab}
         onNavigate={go}
-        onTabChange={switchTab}
       />
 
       {/* DynamicIslandNav handles all fixed navigation */}
@@ -2777,6 +2777,7 @@ function AppRoot() {
   const [showSignIn, setShowSignIn] = useState(false);
 
   // ── Journey state now lives in Zustand ────────────────
+  const activeTab         = useJourneyStore((s) => s.activeTab);
   const setActiveTab      = useJourneyStore((s) => s.setActiveTab);
   const setResumeContext  = useJourneyStore((s) => s.setResumeContext);
 

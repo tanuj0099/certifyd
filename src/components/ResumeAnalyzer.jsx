@@ -7,6 +7,7 @@ import {
 } from 'lucide-react'
 import { CERTIFICATIONS, CERT_DOMAINS } from '../tokens.js'
 import { callGroqForResume } from '../services/aiService.jsx'
+import { useJourneyStore } from '../store/useJourneyStore.js'
 
 // ── Font tokens → CSS variables ───────────────────────────
 var FM = 'var(--font-mono)'
@@ -124,64 +125,97 @@ var readPdfFile = async function(file) {
   return fullText.trim()
 }
 
-// ── Prompt builder ────────────────────────────────────────
+// ── Prompt builder — requests strict JSON output ─────────
 var buildPrompt = function(resumeText, mode, timeline, domainIntent, switchTarget) {
   var timelineNote = timeline === 'fast'
-    ? 'IMPORTANT: User needs FAST-TRACK only — certs completable in 1-3 months. Never recommend anything longer.'
+    ? 'IMPORTANT: User needs FAST-TRACK only — certs completable in 1–3 months.'
     : timeline === 'medium'
-    ? 'User has 3-6 months. Recommend certs within that window.'
+    ? 'User has 3–6 months. Recommend certs within that window.'
     : 'Flexible timeline — recommend the best certs regardless of duration.'
 
   var domainNote = switchTarget
-    ? 'The user has explicitly stated they want to SWITCH CAREERS to the field of: "' + switchTarget + '". This is their #1 priority. Your primary task is to find certifications that help them enter this specific field, even if their resume points elsewhere. For example, if they say "Sports Analytics" and their resume is in finance, you MUST recommend data analytics certs applicable to sports, NOT more finance certs. CRITICAL: If and only if the user\'s target is nonsensical (like "I want to be a dragon"), then you may ignore it and auto-detect from the resume. Otherwise, the user\'s stated target is the absolute priority.'
+    ? 'User wants to SWITCH CAREERS to: "' + switchTarget + '". This is their #1 priority. Find certs for that specific field even if resume points elsewhere.'
     : (domainIntent && domainIntent !== 'auto')
     ? 'User wants to grow in: ' + domainIntent + '. Prioritise certs in that domain.'
     : 'Auto-detect best domain from resume.'
 
-  return 'You are CertifyROI, a career advisor for Indian professionals (2026).\nUser mode: ' + mode + '\nTimeline: ' + timelineNote + '\nDomain: ' + domainNote + '\n\nResume:\n' + resumeText.slice(0, 2200) + '\n\nReply in EXACTLY this format, no extra text:\n\n**NAME:** [full name or "Not found"]\n**PROFILE SUMMARY:** 2-3 specific sentences about their background and biggest career opportunity\n**CITY:** [city from resume or "Not specified"]\n**DOMAIN:** [primary: tech/data/management/business/finance/marketing/product/design/hr]\n\n**SKILL GAPS:**\n- gap one\n- gap two\n- gap three\n\n**TOP CERT #1 (PRIMARY MOVE):**\nName: exact name\nWhy: specific reason tied to their resume\nROI: hike %\nTimeline: X months\nFast Track: one concrete first step with resource name\n\n**TOP CERT #2:**\nName: exact name\nWhy: specific reason\nROI: hike %\nTimeline: X months\nFast Track: one concrete first step\n\n**TOP CERT #3:**\nName: exact name\nWhy: specific reason\nROI: hike %\nTimeline: X months\nFast Track: one concrete first step\n\n**IMMEDIATE ACTION:** one thing to do THIS WEEK with platform name\n**MARKET INSIGHT:** one sentence on India demand for top cert in their city\n\nUnder 380 words. India-specific. Be specific to their actual resume.'
+  return 'You are CertifyROI, a career advisor for Indian professionals (2026).\n' +
+    'Mode: ' + mode + '\nTimeline: ' + timelineNote + '\nDomain: ' + domainNote + '\n\n' +
+    'Resume:\n' + resumeText.slice(0, 2200) + '\n\n' +
+    'Respond with ONLY a valid JSON object — no markdown, no prose, no code fences.\n\n' +
+    '{\n' +
+    '  "name": "full name or empty string",\n' +
+    '  "summary": "2-3 sentences on background and biggest career opportunity",\n' +
+    '  "city": "city from resume or empty string",\n' +
+    '  "domain": "one of: tech|data|cybersecurity|finance|management|marketing|hr|government|medical|business",\n' +
+    '  "gaps": ["gap one", "gap two", "gap three"],\n' +
+    '  "certs": [\n' +
+    '    { "name": "exact cert name", "why": "specific reason tied to resume", "roi": "hike % range", "timeline": "X months", "fastTrack": "one concrete first step" },\n' +
+    '    { "name": "exact cert name", "why": "specific reason", "roi": "hike % range", "timeline": "X months", "fastTrack": "one concrete first step" },\n' +
+    '    { "name": "exact cert name", "why": "specific reason", "roi": "hike % range", "timeline": "X months", "fastTrack": "one concrete first step" }\n' +
+    '  ],\n' +
+    '  "immediateAction": "one thing to do this week with platform name",\n' +
+    '  "marketInsight": "one sentence on India demand for top cert in their city"\n' +
+    '}\n\n' +
+    'Rules: India-specific. Under 380 words total. Be specific to their actual resume.'
 }
 
-// ── Parser ────────────────────────────────────────────────
-var parseResponse = function(text) {
-  var get = function(pattern) { var m = text.match(pattern); return m ? m[1].trim() : '' }
-  var getBullets = function(pattern) {
-    var m = text.match(pattern)
-    if (!m) return []
-    return m[1].split('\n').filter(function(l) { return l.trim().match(/^[•\-\*]/) }).map(function(l) { return l.replace(/^[•\-\*]\s*/, '').trim() }).filter(Boolean)
-  }
-  var certs = []
-  for (var i = 1; i <= 3; i++) {
-    var block = text.match(new RegExp('\\*\\*TOP CERT #' + i + '.*?\\*\\*([\\s\\S]+?)(?=\\*\\*TOP CERT #' + (i+1) + '|\\*\\*IMMEDIATE|$)'))
-    if (block) {
-      var b = block[1]
-      certs.push({
-        name:      (b.match(/Name:\s*(.+)/)      || [])[1]?.trim() || '',
-        why:       (b.match(/Why:\s*(.+)/)        || [])[1]?.trim() || '',
-        roi:       (b.match(/ROI:\s*(.+)/)        || [])[1]?.trim() || '',
-        timeline:  (b.match(/Timeline:\s*(.+)/)   || [])[1]?.trim() || '',
-        fastTrack: (b.match(/Fast Track:\s*(.+)/) || [])[1]?.trim() || '',
-        primary:   i === 1,
-      })
+// ── Safe JSON parser — never throws ──────────────────────
+var INDIA_CITIES = ['Bangalore','Bengaluru','Hyderabad','Pune','Mumbai','Delhi','Chennai','Kolkata','Noida','Gurgaon','Gurugram','Ahmedabad','Kochi','Vadodara','Jaipur']
+var DOMAIN_MAP   = ['tech','data','cybersecurity','finance','management','marketing','hr','government','medical','business']
+
+var safeParseResumeJSON = function(text) {
+  try {
+    var cleaned = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').trim()
+    var obj     = JSON.parse(cleaned)
+
+    // Normalise city to a known Indian city
+    var cityRaw  = (obj.city || '').toLowerCase()
+    var city     = INDIA_CITIES.find(function(c) { return cityRaw.includes(c.toLowerCase()) }) || ''
+
+    // Normalise domain
+    var domainRaw = (obj.domain || '').toLowerCase()
+    var domain    = DOMAIN_MAP.find(function(k) { return domainRaw.includes(k) }) || 'business'
+
+    // Ensure certs is an array with primary flag
+    var certs = (Array.isArray(obj.certs) ? obj.certs : []).slice(0, 3).map(function(c, i) {
+      return {
+        name:      String(c.name      || ''),
+        why:       String(c.why       || ''),
+        roi:       String(c.roi       || ''),
+        timeline:  String(c.timeline  || ''),
+        fastTrack: String(c.fastTrack || ''),
+        primary:   i === 0,
+      }
+    }).filter(function(c) { return c.name })
+
+    // Trim name to first 2 words
+    var nameRaw = String(obj.name || '')
+    var name    = (nameRaw && nameRaw !== 'Not found') ? nameRaw.split(' ').slice(0, 2).join(' ') : ''
+
+    return {
+      name:            name,
+      summary:         String(obj.summary         || ''),
+      city:            city,
+      domain:          domain,
+      gaps:            Array.isArray(obj.gaps) ? obj.gaps.map(String) : [],
+      certs:           certs,
+      immediateAction: String(obj.immediateAction || ''),
+      marketInsight:   String(obj.marketInsight   || ''),
+      raw:             text,
+      parseError:      false,
     }
-  }
-  var nameRaw   = get(/\*\*NAME:\*\*\s*(.+?)(?=\n\*\*|\n\n|$)/s)
-  var name      = (nameRaw === 'Not found' || !nameRaw) ? '' : nameRaw.split(' ').slice(0, 2).join(' ')
-  var cityRaw   = get(/\*\*CITY:\*\*\s*(.+?)(?=\n\*\*|\n\n|$)/s)
-  var INDIA_CITIES = ['Bangalore','Bengaluru','Hyderabad','Pune','Mumbai','Delhi','Chennai','Kolkata','Noida','Gurgaon','Gurugram','Ahmedabad','Kochi','Vadodara','Jaipur']
-  var city      = INDIA_CITIES.find(function(c) { return cityRaw.toLowerCase().includes(c.toLowerCase()) }) || ''
-  var domainRaw = get(/\*\*DOMAIN:\*\*\s*(.+?)(?=\n\*\*|\n\n|$)/s).toLowerCase()
-  var domainMap = ['tech','data','management','business','finance','marketing','product','design','hr']
-  var domain    = domainMap.find(function(k) { return domainRaw.includes(k) }) || 'business'
-  return {
-    name:            name,
-    summary:         get(/\*\*PROFILE SUMMARY:\*\*\s*(.+?)(?=\n\*\*|\n\n|$)/s),
-    city:            city,
-    domain:          domain,
-    gaps:            getBullets(/\*\*SKILL GAPS:\*\*\s*([\s\S]+?)(?=\n\*\*TOP CERT)/s),
-    certs:           certs.filter(function(c) { return c.name }),
-    immediateAction: get(/\*\*IMMEDIATE ACTION:\*\*\s*(.+?)(?=\n\*\*|\n\n|$)/s),
-    marketInsight:   get(/\*\*MARKET INSIGHT:\*\*\s*(.+?)(?=\n\*\*|\n\n|$)/s),
-    raw:             text,
+  } catch (_) {
+    // JSON parse failed — return a safe empty shell so UI doesn't crash
+    return {
+      name: '', summary: 'Analysis complete — re-run for structured results.',
+      city: '', domain: 'business',
+      gaps: [], certs: [],
+      immediateAction: text.slice(0, 300),
+      marketInsight: '',
+      raw: text,
+      parseError: true,
+    }
   }
 }
 
@@ -680,10 +714,10 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
   var [domainIntent, setDomainIntent] = useState('auto')
   var fileRef = useRef(null)
 
-  var switchTarget = null
-  if (mode === 'switcher') {
-    try { switchTarget = localStorage.getItem('certifyroi_switch_domain') || null } catch(e) {}
-  }
+  // switchTarget — read from Zustand store (no more localStorage)
+  var switchTarget = useJourneyStore(function(s) {
+    return mode === 'switcher' ? (s.resumeDomain || null) : null
+  })
 
   var hasFile   = !!fileName
   var hasResult = !!result
@@ -743,12 +777,13 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
     setLoading(true); setResult(null); setError(null); setRejection(null)
     try {
       var safeText = text.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, ' ').replace(/\s+/g, ' ').slice(0, 2200).trim()
-      var raw      = await callGroqForResume(null, buildPrompt(safeText, mode, timeline, domainIntent, switchTarget))
+      var raw    = await callGroqForResume(null, buildPrompt(safeText, mode, timeline, domainIntent, switchTarget))
       if (!raw || raw.length < 30) throw new Error('Empty response — try again')
-      var parsed = parseResponse(raw)
+      var parsed = safeParseResumeJSON(raw)
       setResult(parsed.certs?.length ? parsed : {
-        name: parsed.name, summary: 'Analysis complete', city: '', domain: 'business',
-        gaps: [], certs: [], immediateAction: raw, marketInsight: '', raw: raw
+        ...parsed,
+        summary: parsed.summary || 'Analysis complete',
+        immediateAction: parsed.immediateAction || parsed.raw?.slice(0, 300) || '',
       })
     } catch(e) {
       console.error('Resume AI error:', e)
