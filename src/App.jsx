@@ -127,10 +127,10 @@ const PageWrapper = function ({
       style={{
         position: "relative",
         minHeight: "100vh",
+        backgroundColor: "#F9FAFB",
         paddingTop: NAV_H + "px",
       }}
     >
-      <WaveBg variant="app" />
       <div style={{ position: "relative", zIndex: 1 }}>
         <AppSection id={id} title={title.toUpperCase()} noBorderTop>
           <div style={{ maxWidth: maxWidth || "800px" }}>{children}</div>
@@ -151,9 +151,9 @@ const DataFreshnessBadge = function () {
         alignItems: "center",
         gap: "6px",
         padding: "4px 10px",
-        borderRadius: "6px",
-        background: "rgba(45,106,79,0.06)",
-        border: "1px solid rgba(45,106,79,0.16)",
+        borderRadius: "4px",
+        background: "#FFFFFF",
+        border: "1px solid #E5E7EB",
         marginBottom: "16px",
       }}
     >
@@ -170,7 +170,7 @@ const DataFreshnessBadge = function () {
         style={{
           fontFamily: FM,
           fontSize: "10px",
-          color: "var(--accent)",
+          color: "#374151",
           letterSpacing: "0.06em",
           opacity: 0.72,
         }}
@@ -230,8 +230,12 @@ const TermsPage = function () {
           return (
             <div
               key={i}
-              className="glass"
-              style={{ padding: "18px 20px", marginBottom: "10px" }}
+              style={{ 
+                padding: "18px 20px", 
+                marginBottom: "10px",
+                background: "#FFFFFF",
+                border: "1px solid #E5E7EB"
+              }}
             >
               <h3
                 style={{
@@ -317,8 +321,12 @@ const PrivacyPage = function () {
           return (
             <div
               key={i}
-              className="glass"
-              style={{ padding: "18px 20px", marginBottom: "10px" }}
+              style={{ 
+                padding: "18px 20px", 
+                marginBottom: "10px",
+                background: "#FFFFFF",
+                border: "1px solid #E5E7EB"
+              }}
             >
               <h3
                 style={{
@@ -397,8 +405,12 @@ const CookiesPage = function () {
           return (
             <div
               key={i}
-              className="glass"
-              style={{ padding: "18px 20px", marginBottom: "10px" }}
+              style={{ 
+                padding: "18px 20px", 
+                marginBottom: "10px",
+                background: "#FFFFFF",
+                border: "1px solid #E5E7EB"
+              }}
             >
               <h3
                 style={{
@@ -592,14 +604,14 @@ const _OldBlogPage = function () {
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.04 }}
-                className="glass"
                 style={{
                   padding: "22px",
                   display: "flex",
                   flexDirection: "column",
                   cursor: "pointer",
+                  background: "#FFFFFF",
+                  border: "1px solid #E5E7EB"
                 }}
-                whileHover={{ y: -2 }}
                 onClick={function () {
                   setExpandedPost(isExpanded ? null : post.id);
                 }}
@@ -916,11 +928,10 @@ const _OldFAQPage = function () {
                   return (
                     <motion.div
                       key={idx}
-                      className="glass"
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.04 }}
-                      style={{ overflow: "hidden", cursor: "pointer" }}
+                      style={{ overflow: "hidden", cursor: "pointer", background: "#FFFFFF", border: "1px solid #E5E7EB" }}
                       onClick={function () {
                         setOpen(isOpen ? null : idx);
                       }}
@@ -1008,10 +1019,10 @@ const _OldContactPage = function () {
   var inputStyle = {
     width: "100%",
     padding: "11px 14px",
-    background: "var(--surface)",
-    border: "1px solid var(--border)",
-    borderRadius: "10px",
-    color: "var(--text)",
+    background: "#FFFFFF",
+    border: "1px solid #E5E7EB",
+    borderRadius: "4px",
+    color: "#111827",
     fontSize: "14px",
     fontFamily: FB,
     outline: "none",
@@ -1051,8 +1062,12 @@ const _OldContactPage = function () {
         </p>
         {sent ? (
           <div
-            className="glass"
-            style={{ padding: "48px", textAlign: "center" }}
+            style={{ 
+              padding: "48px", 
+              textAlign: "center",
+              background: "#FFFFFF",
+              border: "1px solid #E5E7EB"
+            }}
           >
             <div style={{ fontSize: "3.5rem", marginBottom: "16px" }}>✅</div>
             <h3
@@ -1079,7 +1094,11 @@ const _OldContactPage = function () {
             </p>
           </div>
         ) : (
-          <div className="glass" style={{ padding: "clamp(20px,4vw,32px)" }}>
+          <div style={{ 
+            padding: "clamp(20px,4vw,32px)",
+            background: "#FFFFFF",
+            border: "1px solid #E5E7EB"
+          }}>
             {[
               { key: "name", label: "Name", type: "text", ph: "Your name" },
               {
@@ -1105,10 +1124,10 @@ const _OldContactPage = function () {
                     }}
                     style={inputStyle}
                     onFocus={function (e) {
-                      e.target.style.borderColor = "var(--border-accent)";
+                      e.target.style.borderColor = "#10B981";
                     }}
                     onBlur={function (e) {
-                      e.target.style.borderColor = "var(--border)";
+                      e.target.style.borderColor = "#E5E7EB";
                     }}
                   />
                 </div>
@@ -1123,7 +1142,7 @@ const _OldContactPage = function () {
                     return { ...p, subject: e.target.value };
                   });
                 }}
-                style={{ ...inputStyle, background: "var(--surface)" }}
+                style={{ ...inputStyle, background: "#FFFFFF" }}
               >
                 <option>General feedback</option>
                 <option>Data correction</option>
@@ -1145,10 +1164,10 @@ const _OldContactPage = function () {
                 }}
                 style={{ ...inputStyle, resize: "vertical", lineHeight: "1.6" }}
                 onFocus={function (e) {
-                  e.target.style.borderColor = "var(--border-accent)";
+                  e.target.style.borderColor = "#10B981";
                 }}
                 onBlur={function (e) {
-                  e.target.style.borderColor = "var(--border)";
+                  e.target.style.borderColor = "#E5E7EB";
                 }}
               />
             </div>
@@ -1331,8 +1350,7 @@ const MobileDrawer = function ({
             style={{
               position: "fixed",
               inset: 0,
-              background: "rgba(0,0,0,0.55)",
-              backdropFilter: "blur(2px)",
+              background: "rgba(0,0,0,0.3)",
               zIndex: 298,
             }}
           />
@@ -1351,8 +1369,8 @@ const MobileDrawer = function ({
           bottom: 0,
           width: "min(300px,82vw)",
           zIndex: 299,
-          background: "var(--bg)",
-          borderRight: "1px solid var(--border)",
+          background: "#FFFFFF",
+          borderRight: "1px solid #E5E7EB",
           display: "flex",
           flexDirection: "column",
           overflowY: "auto",
@@ -1363,7 +1381,7 @@ const MobileDrawer = function ({
         <div
           style={{
             padding: "16px 20px",
-            borderBottom: "1px solid var(--border)",
+            borderBottom: "1px solid #E5E7EB",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -1411,8 +1429,8 @@ const MobileDrawer = function ({
           <button
             onClick={onClose}
             style={{
-              background: "var(--surface)",
-              border: "1px solid var(--border)",
+              background: "#FFFFFF",
+              border: "1px solid #E5E7EB",
               borderRadius: "7px",
               padding: "7px",
               cursor: "pointer",
@@ -1464,10 +1482,10 @@ const MobileDrawer = function ({
                   borderRadius: "10px",
                   cursor: "pointer",
                   textAlign: "left",
-                  background: isActive ? "var(--indigo-dim)" : "var(--surface)",
+                  background: isActive ? "#F3F4F6" : "#FFFFFF",
                   border:
                     "1px solid " +
-                    (isActive ? "var(--border-accent)" : "var(--border)"),
+                    (isActive ? "#10B981" : "#E5E7EB"),
                   display: "flex",
                   alignItems: "center",
                   gap: "10px",
@@ -1479,10 +1497,10 @@ const MobileDrawer = function ({
                     width: "22px",
                     height: "22px",
                     borderRadius: "50%",
-                    background: isActive ? "var(--indigo)" : "var(--bg)",
+                    background: isActive ? "#10B981" : "#F9FAFB",
                     border:
                       "1px solid " +
-                      (isActive ? "var(--indigo)" : "var(--border)"),
+                      (isActive ? "#10B981" : "#E5E7EB"),
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -1500,7 +1518,7 @@ const MobileDrawer = function ({
                     style={{
                       fontSize: "13px",
                       fontWeight: "700",
-                      color: isActive ? "var(--indigo-light)" : "var(--text)",
+                      color: isActive ? "#10B981" : "#111827",
                       fontFamily: FH,
                       letterSpacing: "-0.01em",
                     }}
@@ -1548,10 +1566,10 @@ const MobileDrawer = function ({
                   borderRadius: "10px",
                   cursor: "pointer",
                   textAlign: "left",
-                  background: isActive ? "var(--indigo-dim)" : "var(--surface)",
+                  background: isActive ? "#F3F4F6" : "#FFFFFF",
                   border:
                     "1px solid " +
-                    (isActive ? "var(--border-accent)" : "var(--border)"),
+                    (isActive ? "#10B981" : "#E5E7EB"),
                   display: "flex",
                   alignItems: "center",
                   gap: "10px",
@@ -1560,7 +1578,7 @@ const MobileDrawer = function ({
               >
                 <t.icon
                   size={16}
-                  color={isActive ? "var(--indigo)" : "var(--text-4)"}
+                  color={isActive ? "#10B981" : "#9CA3AF"}
                   style={{ flexShrink: 0 }}
                 />
                 <div>
@@ -1568,7 +1586,7 @@ const MobileDrawer = function ({
                     style={{
                       fontSize: "13px",
                       fontWeight: "700",
-                      color: isActive ? "var(--indigo-light)" : "var(--text)",
+                      color: isActive ? "#10B981" : "#111827",
                       fontFamily: FH,
                       letterSpacing: "-0.01em",
                     }}
@@ -1620,16 +1638,16 @@ const MobileDrawer = function ({
                 style={{
                   width: "100%",
                   padding: "11px 14px",
-                  borderRadius: "9px",
-                  background: isActive ? "var(--indigo-dim)" : "var(--surface)",
+                  borderRadius: "4px",
+                  background: isActive ? "#F3F4F6" : "#FFFFFF",
                   border:
                     "1px solid " +
-                    (isActive ? "var(--border-accent)" : "var(--border)"),
+                    (isActive ? "#10B981" : "#E5E7EB"),
                   cursor: "pointer",
                   display: "flex",
                   alignItems: "center",
                   gap: "10px",
-                  color: isActive ? "var(--indigo-light)" : "var(--text-2)",
+                  color: isActive ? "#10B981" : "#374151",
                   fontSize: "13px",
                   fontFamily: FB,
                   minHeight: "44px",
@@ -1638,7 +1656,7 @@ const MobileDrawer = function ({
               >
                 <item.icon
                   size={14}
-                  color={isActive ? "var(--indigo)" : "var(--text-4)"}
+                  color={isActive ? "#10B981" : "#9CA3AF"}
                 />
                 {item.label}
               </button>
@@ -1649,7 +1667,7 @@ const MobileDrawer = function ({
         <div
           style={{
             padding: "16px 20px",
-            borderTop: "1px solid var(--border)",
+            borderTop: "1px solid #E5E7EB",
             flexShrink: 0,
           }}
         >
@@ -1703,8 +1721,8 @@ const NavBar = function ({ currentPage, onNavigate, onTabChange }) {
           {/* Row 1: Core Flow — CENTERED */}
           <div
             style={{
-              borderTop: "1px solid var(--border)",
-              background: "var(--bg)",
+              borderTop: "1px solid #E5E7EB",
+              background: "#FFFFFF",
             }}
           >
             <div
@@ -1753,14 +1771,14 @@ const NavBar = function ({ currentPage, onNavigate, onTabChange }) {
                         borderRadius: "8px",
                         border:
                           "1px solid " +
-                          (active ? "var(--border-accent)" : "transparent"),
+                          (active ? "#10B981" : "transparent"),
                         background: active
-                          ? "var(--indigo-dim)"
+                          ? "#ECFDF5"
                           : "transparent",
                         color: active
-                          ? "var(--indigo-light)"
+                          ? "#10B981"
                           : isCompleted
-                            ? "var(--accent-light, var(--accent))"
+                            ? "#10B981"
                             : "var(--text-3)",
                         cursor: "pointer",
                         fontFamily: FH,
@@ -1776,17 +1794,17 @@ const NavBar = function ({ currentPage, onNavigate, onTabChange }) {
                           height: "18px",
                           borderRadius: "50%",
                           background: active
-                            ? "var(--indigo)"
+                            ? "#10B981"
                             : isCompleted
-                              ? "var(--indigo-dim)"
-                              : "var(--surface)",
+                              ? "#ECFDF5"
+                              : "#F9FAFB",
                           border:
                             "1px solid " +
                             (active
-                              ? "var(--indigo)"
+                              ? "#10B981"
                               : isCompleted
-                                ? "var(--border-accent)"
-                                : "var(--border)"),
+                                ? "#10B981"
+                                : "#E5E7EB"),
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
@@ -1808,6 +1826,7 @@ const NavBar = function ({ currentPage, onNavigate, onTabChange }) {
                         style={{
                           fontSize: "12px",
                           fontWeight: active ? "700" : "500",
+                          fontVariantNumeric: "tabular-nums",
                           letterSpacing: "-0.01em",
                         }}
                       >
@@ -1823,8 +1842,8 @@ const NavBar = function ({ currentPage, onNavigate, onTabChange }) {
           {/* Row 2: Tools — CENTERED */}
           <div
             style={{
-              borderTop: "1px solid var(--border-subtle)",
-              background: "var(--surface)",
+              borderTop: "1px solid #E5E7EB",
+              background: "#FFFFFF",
             }}
           >
             <div
@@ -1860,9 +1879,9 @@ const NavBar = function ({ currentPage, onNavigate, onTabChange }) {
                       border: "none",
                       borderBottom:
                         "2px solid " +
-                        (active ? "var(--indigo)" : "transparent"),
-                      background: active ? "var(--indigo-dim)" : "transparent",
-                      color: active ? "var(--indigo-light)" : "var(--text-4)",
+                        (active ? "#10B981" : "transparent"),
+                      background: active ? "#ECFDF5" : "transparent",
+                      color: active ? "#10B981" : "#9CA3AF",
                       fontSize: "12px",
                       fontWeight: active ? "700" : "400",
                       cursor: "pointer",
@@ -1910,12 +1929,10 @@ const AppPage = function ({ onCertSelected }) {
       style={{
         paddingTop: NAV_H + "px",
         minHeight: "100vh",
-        background: "var(--app-bg)",
+        background: "#F9FAFB",
         position: "relative",
       }}
     >
-      <WaveBg variant="app" />
-
       <AnimatePresence>
         {!modeLocked ? <ModeSelector onSelect={onModeSelect} /> : null}
       </AnimatePresence>
@@ -2011,12 +2028,12 @@ const AppPage = function ({ onCertSelected }) {
                                 borderRadius: "100px",
                                 border: active
                                   ? "1px solid var(--border-accent)"
-                                  : "1px solid var(--border-subtle)",
+                                  : "1px solid #E5E7EB",
                                 background: active
-                                  ? "var(--surf-highlight, rgba(45,106,79,0.05))"
-                                  : "transparent",
+                                  ? "#FFFFFF"
+                                  : "#FFFFFF",
                                 color: active
-                                  ? "var(--accent)"
+                                  ? "#10B981"
                                   : isCompleted
                                     ? "var(--text-3)"
                                     : "var(--text-4)",
@@ -2024,10 +2041,8 @@ const AppPage = function ({ onCertSelected }) {
                                 fontFamily: FH,
                                 transition: "all 0.3s ease",
                                 boxShadow: active
-                                  ? "0 8px 24px rgba(0,0,0,0.05)"
+                                  ? "none"
                                   : "none",
-                                backdropFilter: "blur(10px)",
-                                WebkitBackdropFilter: "blur(10px)",
                               }}
                             >
                               <div
@@ -2036,8 +2051,8 @@ const AppPage = function ({ onCertSelected }) {
                                   height: "24px",
                                   borderRadius: "50%",
                                   background: active
-                                    ? "var(--accent)"
-                                    : "var(--surface-high)",
+                                    ? "#10B981"
+                                    : "#F9FAFB",
                                   color:
                                     active
                                       ? "#FFF"
@@ -2059,6 +2074,7 @@ const AppPage = function ({ onCertSelected }) {
                                 style={{
                                   fontSize: "14px",
                                   fontWeight: active ? "700" : "600",
+                                  fontVariantNumeric: "tabular-nums",
                                   letterSpacing: "-0.01em",
                                 }}
                               >
@@ -2083,8 +2099,11 @@ const AppPage = function ({ onCertSelected }) {
                   >
                     {activeTab === "resume" ? (
                       <div
-                        className="glass"
-                        style={{ padding: "clamp(16px,3vw,28px)" }}
+                        style={{ 
+                          padding: "clamp(16px,3vw,28px)",
+                          background: "#FFFFFF",
+                          border: "1px solid #E5E7EB"
+                        }}
                       >
                         <ResumeAnalyzer
                           mode={mode}
@@ -2132,9 +2151,9 @@ const AppPage = function ({ onCertSelected }) {
                               gap: "9px",
                               padding: "13px 24px",
                               borderRadius: "12px",
-                              background: "var(--indigo-dim)",
-                              border: "1px solid var(--border-accent)",
-                              color: "var(--indigo-light)",
+                              background: "#10B981",
+                              border: "1px solid #10B981",
+                              color: "#FFFFFF",
                               fontSize: "14px",
                               fontFamily: FH,
                               fontWeight: "700",
@@ -2153,8 +2172,11 @@ const AppPage = function ({ onCertSelected }) {
                     {activeTab === "heatmap" ? (
                       <div>
                         <div
-                          className="glass"
-                          style={{ padding: "clamp(16px,3vw,28px)" }}
+                          style={{ 
+                            padding: "clamp(16px,3vw,28px)",
+                            background: "#FFFFFF",
+                            border: "1px solid #E5E7EB"
+                          }}
                         >
                           <Heatmap
                             prefilledCity={resumeCity}
@@ -2181,8 +2203,8 @@ const AppPage = function ({ onCertSelected }) {
                               gap: "7px",
                               padding: "11px 18px",
                               borderRadius: "10px",
-                              background: "var(--surface)",
-                              border: "1px solid var(--border)",
+                              background: "#FFFFFF",
+                              border: "1px solid #E5E7EB",
                               color: "var(--text-4)",
                               fontSize: "13px",
                               fontFamily: FH,
@@ -2198,8 +2220,11 @@ const AppPage = function ({ onCertSelected }) {
 
                     {activeTab === "compare" ? (
                       <div
-                        className="glass"
-                        style={{ padding: "clamp(16px,3vw,28px)" }}
+                        style={{ 
+                          padding: "clamp(16px,3vw,28px)",
+                          background: "#FFFFFF",
+                          border: "1px solid #E5E7EB"
+                        }}
                       >
                         <CertCompare
                           salary={mode === "student" ? 4.8 : 8}
@@ -2210,8 +2235,11 @@ const AppPage = function ({ onCertSelected }) {
 
                     {activeTab === "simulate" ? (
                       <div
-                        className="glass"
-                        style={{ padding: "clamp(16px,3vw,28px)" }}
+                        style={{ 
+                          padding: "clamp(16px,3vw,28px)",
+                          background: "#FFFFFF",
+                          border: "1px solid #E5E7EB"
+                        }}
                       >
                         <CareerSimulator
                           initialSalary={mode === "student" ? 4.8 : 8}
@@ -2221,8 +2249,11 @@ const AppPage = function ({ onCertSelected }) {
 
                     {activeTab === "jobmap" ? (
                       <div
-                        className="glass"
-                        style={{ padding: "clamp(16px,3vw,28px)" }}
+                        style={{ 
+                          padding: "clamp(16px,3vw,28px)",
+                          background: "#FFFFFF",
+                          border: "1px solid #E5E7EB"
+                        }}
                       >
                         <JobCertMap />
                       </div>
@@ -2230,8 +2261,11 @@ const AppPage = function ({ onCertSelected }) {
 
                     {activeTab === "college" ? (
                       <div
-                        className="glass"
-                        style={{ padding: "clamp(16px,3vw,28px)" }}
+                        style={{ 
+                          padding: "clamp(16px,3vw,28px)",
+                          background: "#FFFFFF",
+                          border: "1px solid #E5E7EB"
+                        }}
                       >
                         <CollegeVsCorporate />
                       </div>
@@ -2239,8 +2273,11 @@ const AppPage = function ({ onCertSelected }) {
 
                     {activeTab === "hikeverifier" ? (
                       <div
-                        className="glass"
-                        style={{ padding: "clamp(16px,3vw,28px)" }}
+                        style={{ 
+                          padding: "clamp(16px,3vw,28px)",
+                          background: "#FFFFFF",
+                          border: "1px solid #E5E7EB"
+                        }}
                       >
                         <HikeVerifier prefilledCert={prefilledCert} />
                       </div>
@@ -2264,7 +2301,7 @@ const AppPage = function ({ onCertSelected }) {
                       style={{
                         flex: 1,
                         height: "1px",
-                        background: "var(--border-subtle)",
+                        background: "#E5E7EB",
                       }}
                     />
                     <span
@@ -2281,7 +2318,7 @@ const AppPage = function ({ onCertSelected }) {
                       style={{
                         flex: 1,
                         height: "1px",
-                        background: "var(--border-subtle)",
+                        background: "#E5E7EB",
                       }}
                     />
                   </div>
@@ -2310,11 +2347,11 @@ const AppPage = function ({ onCertSelected }) {
                             borderRadius: "100px",
                             border: active
                               ? "1px solid var(--border)"
-                              : "1px solid transparent",
+                              : "1px solid #E5E7EB",
                             background: active
-                              ? "var(--surface)"
-                              : "transparent",
-                            color: active ? "var(--text)" : "var(--text-4)",
+                              ? "#FFFFFF"
+                              : "#FFFFFF",
+                            color: active ? "#111827" : "#6B7280",
                             fontSize: "12px",
                             fontWeight: active ? "600" : "500",
                             cursor: "pointer",
@@ -2323,12 +2360,12 @@ const AppPage = function ({ onCertSelected }) {
                           }}
                           onMouseEnter={(e) => {
                             if (!active)
-                              e.currentTarget.style.color = "var(--text-2)";
-                            e.currentTarget.style.background = "var(--surface)";
+                              e.currentTarget.style.color = "#111827";
+                            e.currentTarget.style.background = "#F9FAFB";
                           }}
                           onMouseLeave={(e) => {
                             if (!active)
-                              e.currentTarget.style.color = "var(--text-4)";
+                              e.currentTarget.style.color = "#6B7280";
                             e.currentTarget.style.background = "transparent";
                           }}
                         >
@@ -2359,10 +2396,10 @@ const Footer = function ({ onNavigate }) {
   return (
     <footer
       style={{
-        borderTop: "1px solid var(--border)",
+        borderTop: "1px solid #E5E7EB",
         padding: "40px 16px 24px",
         marginTop: "auto",
-        background: "var(--bg)",
+        background: "#FFFFFF",
       }}
     >
       <div style={{ maxWidth: "1240px", margin: "0 auto" }}>
@@ -2592,8 +2629,8 @@ const Footer = function ({ onNavigate }) {
                 marginTop: "14px",
                 padding: "10px 12px",
                 borderRadius: "8px",
-                background: "var(--indigo-dim)",
-                border: "1px solid var(--border-accent)",
+                background: "#F9FAFB",
+                border: "1px solid #E5E7EB",
               }}
             >
               <div
@@ -2623,7 +2660,7 @@ const Footer = function ({ onNavigate }) {
 
         <div
           style={{
-            borderTop: "1px solid var(--border)",
+            borderTop: "1px solid #E5E7EB",
             paddingTop: "16px",
             display: "flex",
             justifyContent: "space-between",
@@ -2672,9 +2709,7 @@ const SignInModal = function ({ isOpen, onClose, onSignIn, loading }) {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "rgba(0,0,0,0.4)",
-        backdropFilter: "blur(8px)",
-        WebkitBackdropFilter: "blur(8px)",
+        background: "rgba(0,0,0,0.3)",
         padding: "24px",
       }}
     >
@@ -2683,13 +2718,13 @@ const SignInModal = function ({ isOpen, onClose, onSignIn, loading }) {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 10 }}
         style={{
-          background: "var(--surface)",
-          border: "1px solid var(--border-accent)",
-          borderRadius: "24px",
+          background: "#FFFFFF",
+          border: "1px solid #E5E7EB",
+          borderRadius: "8px",
           padding: "32px",
           width: "100%",
           maxWidth: "400px",
-          boxShadow: "0 24px 48px rgba(0,0,0,0.12)",
+          boxShadow: "none",
           position: "relative",
           display: "flex",
           flexDirection: "column",
@@ -2717,8 +2752,8 @@ const SignInModal = function ({ isOpen, onClose, onSignIn, loading }) {
             width: "48px",
             height: "48px",
             borderRadius: "50%",
-            background: "var(--indigo-dim)",
-            color: "var(--accent)",
+            background: "#ECFDF5",
+            color: "#10B981",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -2758,8 +2793,8 @@ const SignInModal = function ({ isOpen, onClose, onSignIn, loading }) {
             width: "100%",
             padding: "14px",
             borderRadius: "100px",
-            background: "var(--accent)",
-            color: "white",
+            background: "#10B981",
+            color: "#FFFFFF",
             border: "none",
             fontSize: "15px",
             fontFamily: FH,
