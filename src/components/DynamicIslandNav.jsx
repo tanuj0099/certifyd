@@ -12,13 +12,10 @@ const F_MONO  = "'JetBrains Mono', 'IBM Plex Mono', monospace"
 const NAV_ITEMS = [
   { label: 'Home',           pageId: 'home'          },
   { label: 'Tools',          pageId: 'app'           },
-  { label: 'How It Works',   pageId: 'how-it-works'  },
-  { label: 'Features',       pageId: 'features'      },
+  { label: 'Product',        pageId: 'how-it-works'  },
   { label: 'Pricing',        pageId: 'pricing'       },
   { label: 'About',          pageId: 'about'         },
   { label: 'FAQ',            pageId: 'faq'           },
-  { label: 'Blog',           pageId: 'blog'          },
-  { label: 'Contact',        pageId: 'contact'       },
 ]
 
 function NavItem({ label, pageId, isActive, onActivate, onNavigate, theme }) {
@@ -324,9 +321,9 @@ export default function DynamicIslandNav({ isDark, toggleTheme, onNavigate, curr
                   style={{
                     display: 'flex', alignItems: 'center', gap: '6px',
                     height: '32px', padding: '0 12px', borderRadius: '16px',
-                    background: user ? (isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)') : 'var(--accent)',
-                    border: '1px solid ' + (user ? borderColor : 'var(--accent-light, #4A8C6A)'),
-                    color: user ? theme.text : '#FFFFFF',
+                    background: user ? (isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)') : 'transparent',
+                    border: '1px solid ' + borderColor,
+                    color: theme.text,
                     fontFamily: F_SANS, fontSize: '12px', fontWeight: '600',
                     cursor: 'pointer', transition: 'all 0.15s', outline: 'none'
                   }}
@@ -355,10 +352,10 @@ export default function DynamicIslandNav({ isDark, toggleTheme, onNavigate, curr
                 onClick={user ? onSignOut : onSignIn}
                 style={{
                   width: '32px', height: '32px', borderRadius: '50%',
-                  background: user ? (isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)') : 'var(--accent)',
-                  border: '1px solid ' + (user ? borderColor : 'var(--accent-light, #4A8C6A)'),
+                  background: user ? (isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)') : 'transparent',
+                  border: '1px solid ' + borderColor,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  cursor: 'pointer', color: user ? theme.text2 : '#FFFFFF', flexShrink: 0,
+                  cursor: 'pointer', color: theme.text2, flexShrink: 0,
                 }}
               >
                 <User size={14} strokeWidth={2.5} />

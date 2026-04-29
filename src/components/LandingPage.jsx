@@ -102,7 +102,7 @@ function CountUp({ end, prefix = '', suffix = '', duration = 1.8 }) {
   return <motion.span onViewportEnter={() => setOn(true)}>{prefix}{count.toLocaleString('en-IN', { maximumFractionDigits: String(end).includes('.') ? 1 : 0 })}{suffix}</motion.span>
 }
 
-function PillBtn({ onClick = () => {}, children, large }) {
+function PillBtn({ onClick = () => {}, children, large, primary = false }) {
   const C = useTheme()
   const [h, setH] = useState(false)
   const d = C.name === 'dark'
@@ -116,19 +116,25 @@ function PillBtn({ onClick = () => {}, children, large }) {
         display: 'inline-flex', alignItems: 'center', gap: '10px',
         padding: large ? '0 30px' : '0 22px',
         height: large ? '54px' : '44px',
-        background: d
-          ? `linear-gradient(135deg, rgba(255,255,255,${h ? 0.07 : 0.045}), rgba(255,255,255,${h ? 0.02 : 0.01}))`
-          : `linear-gradient(135deg, rgba(0,0,0,${h ? 0.05 : 0.035}), rgba(0,0,0,${h ? 0.015 : 0.008}))`,
-        border: `1px solid ${d ? `rgba(255,255,255,${h ? 0.13 : 0.09})` : `rgba(0,0,0,${h ? 0.1 : 0.07})`}`,
+        background: primary 
+          ? (h ? 'var(--accent-light, #4A8C6A)' : 'var(--accent, #2D6A4F)')
+          : (d
+            ? `linear-gradient(135deg, rgba(255,255,255,${h ? 0.07 : 0.045}), rgba(255,255,255,${h ? 0.02 : 0.01}))`
+            : `linear-gradient(135deg, rgba(0,0,0,${h ? 0.05 : 0.035}), rgba(0,0,0,${h ? 0.015 : 0.008}))`),
+        border: primary 
+          ? `1px solid var(--accent-light, #4A8C6A)`
+          : `1px solid ${d ? `rgba(255,255,255,${h ? 0.13 : 0.09})` : `rgba(0,0,0,${h ? 0.1 : 0.07})`}`,
         borderRadius: '9999px',
         fontSize: large ? '12px' : '11px',
         fontFamily: F_SANS, fontWeight: '600',
         letterSpacing: '0.07em', textTransform: 'uppercase',
         cursor: 'pointer',
-        color: d ? C.goldL : C.gold,
-        boxShadow: d
-          ? `0 2px 12px rgba(0,0,0,${h ? 0.35 : 0.25})`
-          : `0 2px 8px rgba(0,0,0,${h ? 0.06 : 0.04})`,
+        color: primary ? '#FFFFFF' : (d ? C.goldL : C.gold),
+        boxShadow: primary 
+          ? `0 4px 14px rgba(45, 106, 79, ${h ? 0.4 : 0.25})`
+          : (d
+            ? `0 2px 12px rgba(0,0,0,${h ? 0.35 : 0.25})`
+            : `0 2px 8px rgba(0,0,0,${h ? 0.06 : 0.04})`),
         backdropFilter: 'blur(10px)',
         WebkitBackdropFilter: 'blur(10px)',
         transition: 'all 0.3s ease',
@@ -820,8 +826,9 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
             <div style={{
               position: 'absolute', inset: 0,
               background: C.name === 'light'
-                ? `radial-gradient(ellipse 90% 80% at 46% 50%, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.72) 100%)`
+                ? `linear-gradient(to right, transparent 50%, rgba(244, 242, 238, 0.95) 100%), radial-gradient(ellipse 90% 80% at 46% 50%, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.72) 100%)`
                 : `
+                  linear-gradient(to right, transparent 40%, rgba(10,10,10,0.98) 100%),
                   linear-gradient(to top, ${C.bg} 0%, transparent 28%),
                   radial-gradient(ellipse 82% 70% at 46% 50%, rgba(10,10,10,0.36) 0%, rgba(10,10,10,0.88) 100%)
                 `,
@@ -904,7 +911,7 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.28 }}
             >
-              <PillBtn onClick={handleEnter} large>Calculate ROI <ArrowRight size={15} /></PillBtn>
+              <PillBtn onClick={handleEnter} large primary>Calculate ROI <ArrowRight size={15} /></PillBtn>
             </motion.div>
           </div>
         </div>
