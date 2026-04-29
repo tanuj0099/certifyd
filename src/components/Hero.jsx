@@ -58,6 +58,17 @@ function getPaybackConfidence(demand, hikePercent) {
   return { label: 'Low confidence', color: '#94A3B8' }
 }
 
+// ── Feature 3b: Payback range (replaces exact month) ───────
+function getPaybackRange(months, demand, hikePercent) {
+  if (!months || months <= 0) return '--'
+  const conf = getPaybackConfidence(demand, hikePercent)
+  const spread = conf.label === 'High confidence' ? 0.15
+               : conf.label === 'Medium confidence' ? 0.25 : 0.35
+  const lo = Math.max(1, Math.round(months * (1 - spread)))
+  const hi = Math.round(months * (1 + spread))
+  return lo + '–' + hi + ' mo'
+}
+
 // ── Feature 5: Per-cert readiness ─────────────────────────
 function getCertReadiness(forWho = '') {
   const lower = forWho.toLowerCase()
@@ -78,6 +89,126 @@ function getNotIdealNote(cert) {
   if (lower.includes('senior') && !lower.includes('fresher'))
     notes.push('not suited for freshers or career switchers without related experience')
   return notes.length > 0 ? notes[0] : null
+}
+
+// ── Share ROI URL ─────────────────────────────────────
+function ShareURLButton({ certName, salary, certCost, hikePercent, mode }) {
+  const [copied, setCopied] = useState(false)
+  if (!certName) return null
+
+  const handleCopy = () => {
+    const base   = window.location.origin + '/app'
+    const params = new URLSearchParams({
+      cert:  certName,
+      sal:   salary,
+      cost:  certCost,
+      hike:  hikePercent,
+      mode:  mode || 'professional',
+      tab:   'calculator',
+    })
+    const url = base + '?' + params.toString()
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2500)
+    }).catch(() => {
+      // Fallback: select text
+      const el = document.createElement('textarea')
+      el.value = url
+      document.body.appendChild(el)
+      el.select()
+      document.execCommand('copy')
+      document.body.removeChild(el)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2500)
+    })
+  }
+
+  return (
+    <motion.button
+      onClick={handleCopy}
+      whileHover={{ scale: 1.02, y: -1 }}
+      whileTap={{ scale: 0.97 }}
+      style={{
+        padding: '8px 14px', borderRadius: '9px', cursor: 'pointer',
+        background: copied ? 'rgba(16,185,129,0.1)' : 'var(--surface)',
+        border: '1px solid ' + (copied ? 'rgba(16,185,129,0.3)' : 'var(--border)'),
+        color: copied ? EMERALD : 'var(--text-3)',
+        fontSize: '12px', fontFamily: FB, fontWeight: '600',
+        display: 'flex', alignItems: 'center', gap: '5px',
+        transition: 'all 0.2s',
+      }}
+    >
+      {copied ? <CheckCircle size={12} /> : <ArrowRight size={12} />}
+      {copied ? 'Link copied!' : 'Share My ROI'}
+    </motion.button>
+  )
+}
+
+// ── Student stepping-stone path ────────────────────────
+function StudentPath({ certName, certCost }) {
+  if (!certName) return null
+  const steps = [
+    { num: '01', label: 'Get Certified',  detail: certName.split(' ').slice(0, 3).join(' '), time: '2–4 mo', color: INDIGO },
+    { num: '02', label: 'Build Portfolio', detail: '2 real projects on GitHub', time: '1–2 mo', color: VIOLET },
+    { num: '03', label: 'Mock Interviews', detail: 'Pramp / Exponent / peers', time: '3–4 wk', color: PICTON },
+    { num: '04', label: 'First Offer',     detail: '₹4.8L+ target package',    time: '',       color: EMERALD },
+  ]
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, delay: 0.1 }}
+      style={{ marginBottom: '16px', padding: '18px', borderRadius: '13px', background: 'var(--surface)', border: '1px solid var(--glass-border)' }}
+    >
+      <div style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+        <Star size={9} color={VIOLET} />
+        Your path to ₹4.8L+
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+        {steps.map((step, i) => (
+          <div key={i} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+            {/* Connector line + circle */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0, width: '28px' }}>
+              <div style={{
+                width: '28px', height: '28px', borderRadius: '50%',
+                background: step.color + '18', border: '1px solid ' + step.color + '40',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontFamily: FM, fontSize: '9px', color: step.color, fontWeight: '700',
+              }}>
+                {step.num}
+              </div>
+              {i < steps.length - 1 && (
+                <div style={{ width: '1px', flex: 1, minHeight: '18px', background: 'linear-gradient(' + step.color + '50, ' + steps[i+1].color + '30)', marginTop: '2px', marginBottom: '2px' }} />
+              )}
+            </div>
+
+            {/* Content */}
+            <div style={{ paddingBottom: i < steps.length - 1 ? '14px' : '0', flex: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2px' }}>
+                <span style={{ fontFamily: FH, fontWeight: '800', fontSize: '13px', color: step.color, letterSpacing: '-0.01em' }}>
+                  {step.label}
+                </span>
+                {step.time && (
+                  <span style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)', padding: '2px 7px', borderRadius: '99px', background: step.color + '10', border: '1px solid ' + step.color + '20' }}>
+                    {step.time}
+                  </span>
+                )}
+              </div>
+              <div style={{ fontFamily: FB, fontSize: '12px', color: i === steps.length - 1 ? EMERALD : 'var(--text-3)', fontWeight: i === steps.length - 1 ? '700' : '400' }}>
+                {step.detail}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ marginTop: '14px', padding: '9px 12px', borderRadius: '8px', background: 'rgba(16,185,129,0.07)', border: '1px solid rgba(16,185,129,0.2)', fontSize: '11px', color: 'var(--text-4)', fontFamily: FB, lineHeight: '1.6' }}>
+        Total investment: ₹{certCost}L · Timeline: 4–7 months · Target: Capgemini iON / TCS iON / BFSI entry roles
+      </div>
+    </motion.div>
+  )
 }
 
 
@@ -873,8 +1004,12 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '8px', marginBottom: '12px' }}>
               <StatCard label="New Salary"    value={'₹' + roi.newSalaryL + 'L/yr'}         color={PICTON}  delay={0}    />
               <StatCard
-                label="Break-even"
-                value={roi.breakEvenMonths > 0 ? roi.breakEvenMonths + ' mo' : '--'}
+                label="Payback Window"
+                value={
+                  selectedCert
+                    ? getPaybackRange(roi.breakEvenMonths, selectedCert.demand, hikePercent)
+                    : (roi.breakEvenMonths > 0 ? roi.breakEvenMonths + ' mo' : '--')
+                }
                 sub={roi.anchor}
                 color={AMBER}
                 delay={0.05}
@@ -900,6 +1035,13 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
             </DataNote>
           )}
         </motion.div>
+      </AnimatePresence>
+
+      {/* ── Student path graphic ───────────────────────── */}
+      <AnimatePresence>
+        {isStudent && certName ? (
+          <StudentPath key={certName} certName={certName} certCost={certCost} />
+        ) : null}
       </AnimatePresence>
 
       {/* ── Chart ──────────────────────────────────────── */}
@@ -1007,6 +1149,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
           >
             <CheckCircle size={12} /> Verify My Hike
           </button>
+          <ShareURLButton certName={certName} salary={salary} certCost={certCost} hikePercent={hikePercent} mode={mode} />
         </div>
       ) : null}
 

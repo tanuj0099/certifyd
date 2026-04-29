@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Award, ChevronDown, Scale, Info } from 'lucide-react'
+import { Award, ChevronDown, Scale, Info, Zap, DollarSign, TrendingUp } from 'lucide-react'
 import { CERTIFICATIONS, CERT_DOMAINS } from '../tokens.js'
 
 // ── Font tokens → CSS variables ───────────────────────────
@@ -473,14 +473,14 @@ function CertCompare({ salary, prefilledCert }) {
     : null
 
   var TABLE_ROWS = bothReady ? [
-    { label: 'Expected Hike',   vA: '+' + dataA.avgHike + '%',                     vB: '+' + dataB.avgHike + '%',                     win: dataA.avgHike > dataB.avgHike ? 'A' : 'B' },
-    { label: 'Cert Cost',       vA: '₹' + (dataA.avgCost/100000).toFixed(1) + 'L', vB: '₹' + (dataB.avgCost/100000).toFixed(1) + 'L', win: dataA.avgCost < dataB.avgCost ? 'A' : 'B' },
-    { label: 'Break-even',      vA: roiA.breakEven + ' mo',                         vB: roiB.breakEven + ' mo',                         win: roiA.breakEven < roiB.breakEven ? 'A' : 'B' },
-    { label: '5-Yr Net Gain',   vA: '₹' + roiA.fiveYearNet + 'L',                  vB: '₹' + roiB.fiveYearNet + 'L',                  win: parseFloat(roiA.fiveYearNet) > parseFloat(roiB.fiveYearNet) ? 'A' : 'B' },
-    { label: '5-Yr ROI %',      vA: roiA.roiPct + '%',                              vB: roiB.roiPct + '%',                              win: roiA.roiPct > roiB.roiPct ? 'A' : 'B' },
-    { label: 'Study Time',      vA: dataA.timeMonths + ' mo',                       vB: dataB.timeMonths + ' mo',                       win: dataA.timeMonths < dataB.timeMonths ? 'A' : 'B' },
-    { label: 'Market Demand',   vA: dataA.demand,                                   vB: dataB.demand,                                   win: demandScore(dataA.demand) >= demandScore(dataB.demand) ? 'A' : 'B' },
-    { label: 'Annual Salary +', vA: '₹' + roiA.annualGain + 'L',                   vB: '₹' + roiB.annualGain + 'L',                   win: parseFloat(roiA.annualGain) > parseFloat(roiB.annualGain) ? 'A' : 'B' },
+    { label: 'Expected Hike',   vA: '+' + dataA.avgHike + '%',                     vB: '+' + dataB.avgHike + '%',                     win: dataA.avgHike > dataB.avgHike ? 'A' : 'B',             winIcon: <TrendingUp size={10} /> },
+    { label: 'Cert Cost',       vA: '₹' + (dataA.avgCost/100000).toFixed(1) + 'L', vB: '₹' + (dataB.avgCost/100000).toFixed(1) + 'L', win: dataA.avgCost < dataB.avgCost ? 'A' : 'B',             winIcon: <DollarSign size={10} /> },
+    { label: 'Study Time',      vA: dataA.timeMonths + ' mo',                       vB: dataB.timeMonths + ' mo',                       win: dataA.timeMonths < dataB.timeMonths ? 'A' : 'B',        winIcon: <Zap size={10} /> },
+    { label: '5-Yr Net Gain',   vA: '₹' + roiA.fiveYearNet + 'L',                  vB: '₹' + roiB.fiveYearNet + 'L',                  win: parseFloat(roiA.fiveYearNet) > parseFloat(roiB.fiveYearNet) ? 'A' : 'B', winIcon: <TrendingUp size={10} /> },
+    { label: '5-Yr ROI %',      vA: roiA.roiPct + '%',                              vB: roiB.roiPct + '%',                              win: roiA.roiPct > roiB.roiPct ? 'A' : 'B',                 winIcon: <TrendingUp size={10} /> },
+    { label: 'Break-even',      vA: roiA.breakEven + ' mo',                         vB: roiB.breakEven + ' mo',                         win: roiA.breakEven < roiB.breakEven ? 'A' : 'B',           winIcon: <Zap size={10} /> },
+    { label: 'Market Demand',   vA: dataA.demand,                                   vB: dataB.demand,                                   win: demandScore(dataA.demand) >= demandScore(dataB.demand) ? 'A' : 'B', winIcon: <TrendingUp size={10} /> },
+    { label: 'Annual Salary +', vA: '₹' + roiA.annualGain + 'L',                   vB: '₹' + roiB.annualGain + 'L',                   win: parseFloat(roiA.annualGain) > parseFloat(roiB.annualGain) ? 'A' : 'B', winIcon: <DollarSign size={10} /> },
   ] : []
 
   return (
@@ -509,17 +509,34 @@ function CertCompare({ salary, prefilledCert }) {
                 marginBottom: '20px', padding: '14px 18px', borderRadius: '12px',
                 background: winner === 'A' ? 'rgba(99,102,241,0.08)' : 'rgba(16,185,129,0.08)',
                 border: '1px solid ' + (winner === 'A' ? 'rgba(99,102,241,0.25)' : 'rgba(16,185,129,0.25)'),
-                display: 'flex', alignItems: 'center', gap: '10px',
               }}
             >
-              <Award size={16} color={winner === 'A' ? COL_A : COL_B} />
-              <div>
-                <span style={{ fontSize: '13px', fontWeight: '700', color: winner === 'A' ? COL_A : COL_B, fontFamily: F_HEAD }}>
-                  {winner === 'A' ? dataA.name : dataB.name} wins on 5-year ROI
-                </span>
-                <span style={{ fontSize: '12px', color: 'var(--text-4)', fontFamily: F_BODY, marginLeft: '8px' }}>
-                  +₹{Math.abs(parseFloat(roiA.fiveYearNet) - parseFloat(roiB.fiveYearNet)).toFixed(1)}L more over 5 years
-                </span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                <Award size={16} color={winner === 'A' ? COL_A : COL_B} />
+                <div>
+                  <span style={{ fontSize: '13px', fontWeight: '700', color: winner === 'A' ? COL_A : COL_B, fontFamily: F_HEAD }}>
+                    {winner === 'A' ? dataA.name : dataB.name} wins on 5-year ROI
+                  </span>
+                  <span style={{ fontSize: '12px', color: 'var(--text-4)', fontFamily: F_BODY, marginLeft: '8px' }}>
+                    +₹{Math.abs(parseFloat(roiA.fiveYearNet) - parseFloat(roiB.fiveYearNet)).toFixed(1)}L more over 5 years
+                  </span>
+                </div>
+              </div>
+              {/* Confidence breakdown chips */}
+              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                {[
+                  { label: '⚡ Faster',   ok: (winner === 'A' ? dataA : dataB).timeMonths <= (winner === 'A' ? dataB : dataA).timeMonths },
+                  { label: '💰 Cheaper',  ok: (winner === 'A' ? dataA : dataB).avgCost   <= (winner === 'A' ? dataB : dataA).avgCost },
+                  { label: '📈 Higher hike', ok: (winner === 'A' ? dataA : dataB).avgHike >= (winner === 'A' ? dataB : dataA).avgHike },
+                  { label: '🔥 Higher demand', ok: demandScore((winner === 'A' ? dataA : dataB).demand) >= demandScore((winner === 'A' ? dataB : dataA).demand) },
+                ].map(function(chip, i) {
+                  var col = winner === 'A' ? COL_A : COL_B
+                  return chip.ok ? (
+                    <span key={i} style={{ padding: '3px 9px', borderRadius: '99px', fontSize: '10px', fontFamily: F_MONO, background: col + '15', border: '1px solid ' + col + '30', color: col }}>
+                      {chip.label}
+                    </span>
+                  ) : null
+                })}
               </div>
             </motion.div>
 
@@ -598,11 +615,11 @@ function CertCompare({ salary, prefilledCert }) {
                     <div style={{ display: 'flex', alignItems: 'center', fontSize: '12px', color: 'var(--text-3)', fontFamily: F_BODY }}>
                       {row.label}
                     </div>
-                    <div style={{ padding: '8px', borderRadius: '8px', textAlign: 'center', background: row.win === 'A' ? 'rgba(99,102,241,0.1)' : 'var(--surface)', border: '1px solid ' + (row.win === 'A' ? 'rgba(99,102,241,0.22)' : 'var(--border)'), fontFamily: F_MONO, fontSize: '12px', color: row.win === 'A' ? COL_A : 'var(--text-3)', fontWeight: row.win === 'A' ? '700' : '500' }}>
-                      {row.vA}{row.win === 'A' ? <span style={{ marginLeft: '4px', fontSize: '9px' }}>✓</span> : null}
+                    <div style={{ padding: '8px', borderRadius: '8px', textAlign: 'center', background: row.win === 'A' ? 'rgba(99,102,241,0.1)' : 'var(--surface)', border: '1px solid ' + (row.win === 'A' ? 'rgba(99,102,241,0.22)' : 'var(--border)'), fontFamily: F_MONO, fontSize: '12px', color: row.win === 'A' ? COL_A : 'var(--text-3)', fontWeight: row.win === 'A' ? '700' : '500', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+                      {row.vA}{row.win === 'A' ? <span style={{ color: COL_A, display: 'inline-flex' }}>{row.winIcon}</span> : null}
                     </div>
-                    <div style={{ padding: '8px', borderRadius: '8px', textAlign: 'center', background: row.win === 'B' ? 'rgba(16,185,129,0.1)' : 'var(--surface)', border: '1px solid ' + (row.win === 'B' ? 'rgba(16,185,129,0.22)' : 'var(--border)'), fontFamily: F_MONO, fontSize: '12px', color: row.win === 'B' ? COL_B : 'var(--text-3)', fontWeight: row.win === 'B' ? '700' : '500' }}>
-                      {row.vB}{row.win === 'B' ? <span style={{ marginLeft: '4px', fontSize: '9px' }}>✓</span> : null}
+                    <div style={{ padding: '8px', borderRadius: '8px', textAlign: 'center', background: row.win === 'B' ? 'rgba(16,185,129,0.1)' : 'var(--surface)', border: '1px solid ' + (row.win === 'B' ? 'rgba(16,185,129,0.22)' : 'var(--border)'), fontFamily: F_MONO, fontSize: '12px', color: row.win === 'B' ? COL_B : 'var(--text-3)', fontWeight: row.win === 'B' ? '700' : '500', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+                      {row.vB}{row.win === 'B' ? <span style={{ color: COL_B, display: 'inline-flex' }}>{row.winIcon}</span> : null}
                     </div>
                   </motion.div>
                 )
