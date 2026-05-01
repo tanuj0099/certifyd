@@ -127,7 +127,7 @@ const PageWrapper = function ({
       style={{
         position: "relative",
         minHeight: "100vh",
-        backgroundColor: "#F9FAFB",
+        backgroundColor: "var(--bg-elevated)",
         paddingTop: NAV_H + "px",
       }}
     >
@@ -151,9 +151,9 @@ const DataFreshnessBadge = function () {
         alignItems: "center",
         gap: "6px",
         padding: "4px 10px",
-        borderRadius: "4px",
-        background: "#FFFFFF",
-        border: "1px solid #E5E7EB",
+        borderRadius: "8px",
+        background: "var(--bg-surface)",
+        border: "1px solid var(--border-subtle)",
         marginBottom: "16px",
       }}
     >

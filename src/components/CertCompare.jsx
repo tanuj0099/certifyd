@@ -8,10 +8,13 @@ const F_HEAD = 'var(--font-head)'
 const F_MONO = 'var(--font-mono)'
 const F_BODY = 'var(--font-body)'
 
-const COLORS = ['#6366F1', '#10B981', '#F59E0B', '#E11D48']
+const COLORS = ['var(--accent-primary)', 'var(--semantic-success)', 'var(--semantic-warning)', 'var(--semantic-danger)']
 
 function demandColor(demand) {
-  return demand === 'Very High' ? '#10B981' : demand === 'High' ? '#51B1E7' : demand === 'Medium' ? '#F59E0B' : '#94A3B8'
+  return demand === 'Very High' ? 'var(--semantic-success)'
+       : demand === 'High'      ? 'var(--accent-secondary)'
+       : demand === 'Medium'    ? 'var(--semantic-warning)'
+       : 'var(--text-muted)'
 }
 
 function demandScore(demand) {
@@ -47,10 +50,10 @@ function CertSelector({ value, onChange, label, color, disabled }) {
         style={{
           width: '100%',
           padding: '12px 14px',
-          background: selected ? color + '0e' : 'var(--surface)',
-          border: '1px solid ' + (selected ? color + '44' : 'var(--border)'),
-          borderRadius: '8px',
-          color: selected ? color : 'var(--text-3)',
+          background: selected ? color + '12' : 'var(--bg-surface)',
+          border: '1px solid ' + (selected ? color + '22' : 'var(--border-subtle)'),
+          borderRadius: '12px',
+          color: selected ? color : 'var(--text-primary)',
           fontSize: '13px',
           cursor: disabled ? 'not-allowed' : 'pointer',
           fontFamily: F_HEAD,

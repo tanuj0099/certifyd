@@ -22,9 +22,9 @@ import { useJourneyStore } from '../store/useJourneyStore.js'
 const GUEST_FREE_LIMIT = parseInt(import.meta.env.VITE_GUEST_FREE_LIMIT || '3', 10)
 
 // ── Font constants ────────────────────────────────────────
-const FH = "'Bricolage Grotesque',sans-serif"
-const FM = "'JetBrains Mono',monospace"
-const FB = "'Inter',sans-serif"
+const FH = 'var(--font-head)'
+const FM = 'var(--font-mono)'
+const FB = 'var(--font-body)'
 
 const TT = { duration: 0.28, ease: [0.4, 0, 0.2, 1] }
 
@@ -298,19 +298,22 @@ function Slider({ label, value, min = 0, max = 100, step = 1, onChange, prefix =
 
   return (
     <div style={{ marginBottom: '22px', opacity: disabled ? 0.45 : 1 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-        <label style={{ fontSize: '11px', color: 'var(--text-3)', fontFamily: FM, textTransform: 'uppercase', letterSpacing: '0.08em', userSelect: 'none' }}>
-          {label}
-        </label>
-        <motion.div
-          key={display}
-          initial={prefersReduced ? false : { opacity: 0.5, y: -4 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.12 }}
-          style={{ fontFamily: FM, fontSize: '17px', fontWeight: '700', color, letterSpacing: '-0.02em' }}
-        >
-          {display}
-        </motion.div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '10px', gap: '12px', flexWrap: 'wrap' }}>
+        <div>
+          <div className="control-label">{label}</div>
+          <div style={{ fontFamily: FH, fontSize: '0.92rem', fontWeight: 700, color: color, marginTop: '6px' }}>{display}</div>
+        </div>
+        <input
+          type="number"
+          value={value}
+          min={min}
+          max={max}
+          step={step}
+          disabled={disabled}
+          onChange={e => onChange(Math.min(max, Math.max(min, parseFloat(e.target.value) || min)))}
+          className="input-number"
+          style={{ maxWidth: '140px' }}
+        />
       </div>
 
       <div
@@ -318,7 +321,7 @@ function Slider({ label, value, min = 0, max = 100, step = 1, onChange, prefix =
         onMouseDown={onMouseDown}
         onTouchStart={onTouchStart}
         onKeyDown={onKeyDown}
-        onMouseEnter={function() { setHover(true)  }}
+        onMouseEnter={function() { setHover(true) }}
         onMouseLeave={function() { setHover(false) }}
         tabIndex={disabled ? -1 : 0}
         role="slider"
@@ -330,19 +333,19 @@ function Slider({ label, value, min = 0, max = 100, step = 1, onChange, prefix =
         style={{
           position: 'relative', height: '44px',
           display: 'flex', alignItems: 'center',
-          cursor:   disabled ? 'not-allowed' : drag ? 'grabbing' : 'pointer',
-          outline:  'none', touchAction: 'none',
+          cursor: disabled ? 'not-allowed' : drag ? 'grabbing' : 'pointer',
+          outline: 'none', touchAction: 'none',
           userSelect: 'none', WebkitUserSelect: 'none',
         }}
       >
-        <div style={{ position: 'absolute', left: 0, right: 0, height: '5px', borderRadius: '3px', background: 'var(--glass-border)', pointerEvents: 'none' }}>
-          <div style={{ position: 'absolute', left: 0, width: pct + '%', height: '100%', borderRadius: '3px', background: 'linear-gradient(90deg,' + color + '55,' + color + ')', transition: drag ? 'none' : 'width 0.06s linear', pointerEvents: 'none' }} />
+        <div className="slider-visual">
+          <div className="slider-fill" style={{ width: pct + '%' }} />
         </div>
         <div style={{
           position: 'absolute', left: pct + '%',
           transform: 'translateX(-50%) scale(' + thumbScale + ')',
           width: '24px', height: '24px', borderRadius: '50%',
-          backgroundImage: 'linear-gradient(145deg,' + color + ',' + color + 'cc)',
+          background: 'var(--accent-primary)',
           boxShadow: thumbShadow,
           cursor: disabled ? 'not-allowed' : drag ? 'grabbing' : 'grab',
           zIndex: 3, pointerEvents: 'none',
@@ -353,22 +356,12 @@ function Slider({ label, value, min = 0, max = 100, step = 1, onChange, prefix =
               : 'left 0.06s linear, transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.18s',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5px' }}>
-            {[0, 1].map(function(r) {
-              return (
-                <div key={r} style={{ display: 'flex', gap: '2.5px' }}>
-                  {[0, 1].map(function(c) {
-                    return <div key={c} style={{ width: '2px', height: '2px', borderRadius: '50%', background: 'rgba(255,255,255,0.75)' }} />
-                  })}
-                </div>
-              )
-            })}
-          </div>
+          <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: 'rgba(255,255,255,0.85)' }} />
         </div>
       </div>
 
       {note ? (
-        <div style={{ fontSize: '11px', color: 'var(--text-4)', marginTop: '2px', fontFamily: FB, lineHeight: '1.5', paddingLeft: '2px' }}>
+        <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '8px', fontFamily: FB, lineHeight: '1.6' }}>
           {note}
         </div>
       ) : null}
@@ -381,15 +374,9 @@ function Slider({ label, value, min = 0, max = 100, step = 1, onChange, prefix =
 // ─────────────────────────────────────────────────────────
 function DataNote({ children }) {
   return (
-    <div style={{
-      display: 'flex', alignItems: 'flex-start', gap: '6px',
-      padding: '7px 10px', borderRadius: '7px',
-      background: 'rgba(100,116,139,0.06)',
-      border: '1px solid rgba(100,116,139,0.12)',
-      marginTop: '4px',
-    }}>
-      <Info size={10} color="var(--text-4)" style={{ flexShrink: 0, marginTop: '1px' }} />
-      <span style={{ fontFamily: FM, fontSize: '10px', color: 'var(--text-4)', letterSpacing: '0.03em', lineHeight: '1.5' }}>
+    <div className="callout-card" style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', marginTop: '4px' }}>
+      <Info size={14} color="var(--text-muted)" style={{ flexShrink: 0, marginTop: '2px' }} />
+      <span style={{ fontFamily: FB, fontSize: '0.92rem', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
         {children}
       </span>
     </div>
@@ -689,16 +676,20 @@ function AIResult({ result, certName, onReset }) {
       {(result.breakEven || result.projection) && (
         <div style={{ padding: '14px 16px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: '10px' }}>
           {result.breakEven && (
-            <div style={{ padding: '10px 12px', borderRadius: '12px', background: 'var(--bg)', border: '1px solid var(--border)' }}>
-              <div style={{ fontFamily: FM, fontSize: '9px', color: AMBER, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>BREAK-EVEN</div>
-              <div style={{ fontSize: '12px', color: 'var(--text-2)', fontFamily: FB, lineHeight: '1.6' }}>{result.breakEven}</div>
-            </div>
-          )}
-          {result.projection && (
-            <div style={{ padding: '10px 12px', borderRadius: '12px', background: 'var(--bg)', border: '1px solid var(--border)' }}>
-              <div style={{ fontFamily: FM, fontSize: '9px', color: EMERALD, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>5-YR PROJECTION</div>
-              <div style={{ fontSize: '12px', color: 'var(--text-2)', fontFamily: FB, lineHeight: '1.6' }}>{result.projection}</div>
-            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: '10px' }}>
+            {result.breakEven && (
+              <div style={{ padding: '14px 16px', borderRadius: '16px', background: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)' }}>
+                <div className="label-box" style={{ marginBottom: '6px' }}>Break-even</div>
+                <div style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', fontFamily: FB, lineHeight: 1.6 }}>{result.breakEven}</div>
+              </div>
+            )}
+            {result.projection && (
+              <div style={{ padding: '14px 16px', borderRadius: '16px', background: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)' }}>
+                <div className="label-box" style={{ marginBottom: '6px' }}>5-Yr projection</div>
+                <div style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', fontFamily: FB, lineHeight: 1.6 }}>{result.projection}</div>
+              </div>
+            )}
+          </div>
           )}
         </div>
       )}
@@ -719,15 +710,26 @@ function AIResult({ result, certName, onReset }) {
 
       {result.risks?.length > 0 && (
         <div style={{ padding: '0 16px 12px' }}>
-          <div style={{ fontFamily: FM, fontSize: '9px', color: '#EF4444', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '7px' }}>RISKS</div>
-          {result.risks.map(function(r, i) {
-            return (
-              <div key={i} style={{ display: 'flex', gap: '8px', marginBottom: '5px' }}>
-                <AlertTriangle size={11} color="#EF4444" style={{ flexShrink: 0, marginTop: '2px' }} />
-                <span style={{ fontSize: '12px', color: 'var(--text-2)', fontFamily: FB, lineHeight: '1.5' }}>{r}</span>
-              </div>
-            )
-          })}
+          <div className="label-box" style={{ marginBottom: '12px' }}>Risks</div>
+          <div style={{ display: 'grid', gap: '12px' }}>
+            {result.risks.map(function(r, i) {
+              return (
+                <div key={i} className="callout-card" style={{ display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
+                  <div style={{ width: '44px', minWidth: '44px', height: '44px', borderRadius: '16px', background: 'var(--bg-surface)', display: 'grid', placeItems: 'center', boxShadow: 'var(--shadow-soft)' }}>
+                    <AlertTriangle size={18} color="var(--semantic-danger)" />
+                  </div>
+                  <div>
+                    <div style={{ fontFamily: FH, fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '6px' }}>
+                      Risk {i + 1}
+                    </div>
+                    <p style={{ fontFamily: FB, fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: 1.7, margin: 0 }}>
+                      {r}
+                    </p>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
         </div>
       )}
 
@@ -958,9 +960,9 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               transition={T}
-              style={{ marginBottom: '18px', borderRadius: '12px', background: 'var(--bg)', border: '1px solid var(--border)', overflow: 'hidden' }}
+              style={{ marginBottom: '18px', borderRadius: '22px', background: 'var(--bg-surface)', boxShadow: 'var(--shadow-soft)', overflow: 'hidden' }}
             >
-              <div style={{ padding: '11px 14px', display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center', borderBottom: notIdealNote ? '1px solid var(--border)' : 'none' }}>
+              <div style={{ padding: '18px 20px', display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center', borderBottom: notIdealNote ? '1px solid var(--border-subtle)' : 'none' }}>
                 <span style={{ fontFamily: FH, fontWeight: '700', fontSize: '12px', color: VIOLET }}>{selectedCert.name}</span>
                 <span style={{ fontSize: '10px', padding: '2px 6px', borderRadius: '4px', background: dc(selectedCert.demand) + '18', color: dc(selectedCert.demand), fontFamily: FM }}>{selectedCert.demand}</span>
                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '2px 8px', borderRadius: '9999px', background: stripReadiness.color + '13', border: '1px solid ' + stripReadiness.color + '28' }}>
