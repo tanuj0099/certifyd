@@ -771,10 +771,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
   }, []);
 
   // ── Loading Fallback ────────────────────────────────────
-  if (dbLoading) {
-    return <div style={{ padding: '40px', textAlign: 'center', fontFamily: 'var(--font-body)', color: 'var(--text-3)' }}>Connecting to live database...</div>;
-  }
-
+  
   mode = mode || 'professional'
 
   var [text, setText] = useState('')
@@ -905,6 +902,11 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
       return prev.includes(skill) ? prev.filter(function (s) { return s !== skill }) : [...prev, skill]
     })
   }
+
+  if (dbLoading) {
+    return <div style={{ padding: '40px', textAlign: 'center', fontFamily: 'var(--font-body)', color: 'var(--text-3)' }}>Connecting to live database...</div>;
+  }
+
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>

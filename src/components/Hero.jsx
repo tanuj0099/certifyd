@@ -751,10 +751,10 @@ function AIResult({ result, certName, onReset }) {
   )
 }
 
-/// Don't forget these imports at the very top of your file!
-// import { useState, useEffect, useCallback, useRef } from 'react';
-// import { supabase } from '../services/supabase.js'; 
 
+// ─────────────────────────────────────────────────────────
+// MAIN HERO COMPONENT
+// ─────────────────────────────────────────────────────────
 function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
   // ── Database State ──────────────────────────────────────
   const [certificationsData, setCertificationsData] = useState([]);
@@ -762,8 +762,6 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
   const [dbLoading, setDbLoading] = useState(true);
 
   // ── The "Once and For All" Alias Fix ────────────────────
-  // This guarantees that whether the code below asks for uppercase 
-  // or lowercase, it will always find the data and never crash.
   const CERTIFICATIONS = certificationsData;
   const certifications = certificationsData;
   const CERT_DOMAINS = domainsData;
@@ -788,25 +786,6 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
     }
     fetchDatabase();
   }, []);
-  // ── Fetch from Supabase on mount ────────────────────────
-  useEffect(() => {
-    async function fetchDatabase() {
-      try {
-        const [certsResponse, domainsResponse] = await Promise.all([
-          supabase.from('certifications').select('*'),
-          supabase.from('domains').select('*')
-        ]);
-
-        if (certsResponse.data) setCERTIFICATIONS(certsResponse.data);
-        if (domainsResponse.data) setCERT_DOMAINS(domainsResponse.data);
-      } catch (error) {
-        console.error("Failed to fetch Supabase data:", error);
-      } finally {
-        setDbLoading(false);
-      }
-    }
-    fetchDatabase();
-  }, []);
 
   // ── Props with fallbacks ────────────────────────────────
   mode = mode || 'professional';
@@ -818,7 +797,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
   const isStudent = mode === 'student';
   const prefersReduced = useReducedMotion();
 
-  // ── Store: slider values (replaces useLocalStorage calls) ─
+  // ── Store: slider values ────────────────────────────────
   const salary = useJourneyStore(s => s.salary);
   const certCost = useJourneyStore(s => s.certCost);
   const hikePercent = useJourneyStore(s => s.hikePercent);
@@ -834,7 +813,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
   const storeSetSelected = useJourneyStore(s => s.setSelectedCert);
   const storeClearCert = useJourneyStore(s => s.clearCert);
 
-  // ── Local UI state (transient — not persisted) ──────────
+  // ── Local UI state ──────────────────────────────────────
   const [aiResult, setAiResult] = useState(null);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState(null);
@@ -842,109 +821,95 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
   const [cooldown, setCooldown] = useState(0);
   const [showAll, setShowAll] = useState(false);
 
-  // Derive from store
-  const certName = storeCertName || prefilledCert
-  const selectedCert = storeSelectedCert || null
+  // ── Derived state ───────────────────────────────────────
+  const certName = storeCertName || prefilledCert;
+  const selectedCert = storeSelectedCert || null;
 
-  const { user } = useAuth()
-  const guest = useGuestCounter(GUEST_FREE_LIMIT)
+  const { user } = useAuth();
+  const guest = useGuestCounter(GUEST_FREE_LIMIT);
 
-  const firstName = resumeName ? resumeName.split(' ')[0] : ''
-  const displayCity = resumeCity
+  const firstName = resumeName ? resumeName.split(' ')[0] : '';
+  const displayCity = resumeCity;
 
-  // ── Cooldown timer ──────────────────────────────────────
+  // ── Hooks & Effects ─────────────────────────────────────
   useEffect(function () {
-    if (cooldown <= 0) return
-    var t = setTimeout(function () { setCooldown(function (v) { return v - 1 }) }, 1000)
-    return function () { clearTimeout(t) }
-  }, [cooldown])
+    if (cooldown <= 0) return;
+    var t = setTimeout(function () { setCooldown(function (v) { return v - 1 }) }, 1000);
+    return function () { clearTimeout(t) };
+  }, [cooldown]);
 
   useEffect(function () {
-    const controller = new AbortController()
-    Promise.all([
-      fetchCertifications({ limit: 200, signal: controller.signal }),
-      fetchDomains({ signal: controller.signal }),
-    ]).then(function ([certs, domainRows]) {
-      setCertifications(certs)
-      setDomains(domainRows)
-    }).catch(function () {
-      setCertifications([])
-      setDomains([])
-    })
-    return function () { controller.abort() }
-  }, [])
-
-  // ── Sync prefilledCert from Resume AI ──────────────────
-  useEffect(function () {
-    if (!prefilledCert) return
-    setAiResult(null)
-    setAiError(null)
+    if (!prefilledCert) return;
+    setAiResult(null);
+    setAiError(null);
     var found = certifications.find(function (c) {
       return c.name.toLowerCase().includes(prefilledCert.toLowerCase()) ||
-        prefilledCert.toLowerCase().includes(c.name.toLowerCase())
-    })
+        prefilledCert.toLowerCase().includes(c.name.toLowerCase());
+    });
     if (found) {
-      storeSetSelected(found)
-      // storeSetSelected auto-syncs certCost + hikePercent
+      storeSetSelected(found);
     }
-  }, [prefilledCert, certifications])
+  }, [prefilledCert, certifications, storeSetSelected]);
 
-  // ── Student mode: zero salary ───────────────────────────
   useEffect(function () {
-    if (isStudent) setSalary(0)
-  }, [isStudent])
+    if (isStudent) setSalary(0);
+  }, [isStudent, setSalary]);
 
-  const roi = useROICalc({ currentSalary: isStudent ? expectedFirstSalary : salary, certCost, hikePercent: isStudent ? 0 : hikePercent })
+  const roi = useROICalc({ currentSalary: isStudent ? expectedFirstSalary : salary, certCost, hikePercent: isStudent ? 0 : hikePercent });
 
-  // ── Pick cert from leaderboard ──────────────────────────
   const pickCert = useCallback(function (cert) {
-    storeSetSelected(cert)
-    setAiResult(null)
-    setAiError(null)
-  }, [storeSetSelected])
+    storeSetSelected(cert);
+    setAiResult(null);
+    setAiError(null);
+  }, [storeSetSelected]);
 
-  // ── AI analysis ─────────────────────────────────────────
   const analyse = useCallback(async function () {
-    if (!certName.trim()) { setAiError('Select a certification first'); return }
-    if (!user && guest.exceeded) { setAiError('Free limit reached — sign in for unlimited'); return }
-    if (cooldown > 0) return
-    setAiLoading(true)
-    setAiResult(null)
-    setAiError(null)
+    if (!certName.trim()) { setAiError('Select a certification first'); return; }
+    if (!user && guest.exceeded) { setAiError('Free limit reached — sign in for unlimited'); return; }
+    if (cooldown > 0) return;
+    setAiLoading(true);
+    setAiResult(null);
+    setAiError(null);
     try {
-      var r = await analyzeROI({ certName, currentSalary: salary, certCost, hikePercent, isStudent })
-      setAiResult(r)
-      if (!user) guest.increment()
-      setCooldown(10)
+      var r = await analyzeROI({ certName, currentSalary: salary, certCost, hikePercent, isStudent });
+      setAiResult(r);
+      if (!user) guest.increment();
+      setCooldown(10);
     } catch (e) {
-      setAiError(e.message || 'Analysis failed')
+      setAiError(e.message || 'Analysis failed');
     }
-    setAiLoading(false)
-  }, [certName, salary, certCost, hikePercent, isStudent, user, guest, cooldown])
+    setAiLoading(false);
+  }, [certName, salary, certCost, hikePercent, isStudent, user, guest, cooldown]);
 
-  var canAnalyse = certName && (user || !guest.exceeded) && cooldown === 0
+  const canAnalyse = certName && (user || !guest.exceeded) && cooldown === 0;
 
-  // ── Domain + cert lists ─────────────────────────────────
   const demandScore = function (d) {
-    return d === 'Very High' ? 4 : d === 'High' ? 3 : d === 'Medium' ? 2 : 1
-  }
+    return d === 'Very High' ? 4 : d === 'High' ? 3 : d === 'Medium' ? 2 : 1;
+  };
+  
   const domainAliases = {
     tech: 'tech', data: 'data', management: 'management', business: 'business',
     finance: 'finance', marketing: 'marketing', product: 'product',
     design: 'design', hr: 'hr', cybersecurity: 'cybersecurity',
     medical: 'medical', law: 'law', architecture: 'architecture',
     engineering: 'engineering', government: 'government', mba: 'mba',
-  }
-  const mappedDomain = domainAliases[resumeDomain] || null
-  const domainMatchList = mappedDomain ? CERTIFICATIONS.filter(function (c) { return c.domain === mappedDomain }) : []
-  const sortedByDem = [...CERTIFICATIONS].sort(function (a, b) { return demandScore(b.demand) - demandScore(a.demand) || b.avgHike - a.avgHike })
+  };
+  
+  const mappedDomain = domainAliases[resumeDomain] || null;
+  const domainMatchList = mappedDomain ? CERTIFICATIONS.filter(function (c) { return c.domain === mappedDomain }) : [];
+  const sortedByDem = [...CERTIFICATIONS].sort(function (a, b) { return demandScore(b.demand) - demandScore(a.demand) || b.avgHike - a.avgHike });
   const preferredCerts = prefilledCert
     ? CERTIFICATIONS.filter(function (c) { return c.name.toLowerCase().includes(prefilledCert.toLowerCase()) || prefilledCert.toLowerCase().includes(c.name.toLowerCase()) })
-    : []
+    : [];
 
-  // ── Reduced-motion transition helper ───────────────────
-  const T = prefersReduced ? { duration: 0 } : TT
+  const T = prefersReduced ? { duration: 0 } : TT;
 
+  // ── Early Return AFTER all hooks ────────────────────────
+  if (dbLoading) {
+    return <div style={{ padding: '40px', textAlign: 'center', fontFamily: 'var(--font-body)', color: 'var(--text-3)' }}>Connecting to live database...</div>;
+  }
+
+  // ── Main UI Return ──────────────────────────────────────
   return (
     <div style={{ position: 'relative' }}>
 

@@ -151,9 +151,7 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
   }, []);
 
   // ── Loading Fallback ────────────────────────────────────
-  if (dbLoading) {
-    return <div style={{ padding: '40px', textAlign: 'center', fontFamily: 'var(--font-body)', color: 'var(--text-3)' }}>Connecting to live database...</div>;
-  }
+  
 
   const [selectedDomain, setSelectedDomain] = useState('tech')
   const [selectedCity,   setSelectedCity]   = useState('')
@@ -184,6 +182,10 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
   const subtitleText = firstName
     ? (firstName + ', here is the demand map for your field across India.')
     : 'Pick a domain and see where demand is highest across India.'
+
+    if (dbLoading) {
+    return <div style={{ padding: '40px', textAlign: 'center', fontFamily: 'var(--font-body)', color: 'var(--text-3)' }}>Connecting to live database...</div>;
+  }
 
   return (
     <div>

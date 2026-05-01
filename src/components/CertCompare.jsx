@@ -475,9 +475,6 @@ function CertCompare({ salary, prefilledCert }) {
   }, []);
 
   // ── Loading Fallback ────────────────────────────────────
-  if (dbLoading) {
-    return <div style={{ padding: '40px', textAlign: 'center', fontFamily: 'var(--font-body)', color: 'var(--text-3)' }}>Connecting to live database...</div>;
-  }
 
   salary        = salary        || 8
   prefilledCert = prefilledCert || ''
@@ -518,6 +515,10 @@ function CertCompare({ salary, prefilledCert }) {
     { label: 'Market Demand',   vA: dataA.demand,                                   vB: dataB.demand,                                   win: demandScore(dataA.demand) >= demandScore(dataB.demand) ? 'A' : 'B', winIcon: <TrendingUp size={10} /> },
     { label: 'Annual Salary +', vA: '₹' + roiA.annualGain + 'L',                   vB: '₹' + roiB.annualGain + 'L',                   win: parseFloat(roiA.annualGain) > parseFloat(roiB.annualGain) ? 'A' : 'B', winIcon: <DollarSign size={10} /> },
   ] : []
+
+  if (dbLoading) {
+  return <div>Connecting to live database...</div>;
+}
 
   return (
     <div>
