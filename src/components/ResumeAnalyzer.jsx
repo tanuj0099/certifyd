@@ -5,8 +5,8 @@ import {
   ArrowRight, RefreshCw, User, TrendingUp,
   Zap, Target, Star, Clock, ChevronDown, MapPin
 } from 'lucide-react'
+import { supabase } from '../services/supabase.js'
 import { callGroqForResume } from '../services/aiService.jsx'
-import { certificationToRecommendation, fetchCertifications, fetchDomains, rankCertificationsForSwitcher } from '../services/dataService.jsx'
 import { useJourneyStore } from '../store/useJourneyStore.js'
 
 // ── Font tokens → CSS variables ───────────────────────────
@@ -15,48 +15,48 @@ var FB = 'var(--font-body)'
 var FH = 'var(--font-head)'
 
 // ── Color constants ───────────────────────────────────────
-var PICTON  = '#51B1E7'
+var PICTON = '#51B1E7'
 var EMERALD = '#10B981'
-var AMBER   = '#F59E0B'
-var INDIGO  = '#6366F1'
-var VIOLET  = '#818CF8'
+var AMBER = '#F59E0B'
+var INDIGO = '#6366F1'
+var VIOLET = '#818CF8'
 
 // ── Timeline options ──────────────────────────────────────
 var TIMELINE_OPTIONS = [
-  { id: 'fast',     label: 'Fast track', sub: '1–3 months', desc: 'Quick wins — get results fast' },
-  { id: 'medium',   label: 'Standard',   sub: '3–6 months', desc: 'Balanced depth and speed'      },
-  { id: 'flexible', label: 'No rush',    sub: 'Open',       desc: 'Best cert regardless of time'  },
+  { id: 'fast', label: 'Fast track', sub: '1–3 months', desc: 'Quick wins — get results fast' },
+  { id: 'medium', label: 'Standard', sub: '3–6 months', desc: 'Balanced depth and speed' },
+  { id: 'flexible', label: 'No rush', sub: 'Open', desc: 'Best cert regardless of time' },
 ]
 
 // ── Domain options ────────────────────────────────────────
 var DOMAIN_CHOICES = [
-  { id: 'auto',          label: 'Auto-detect',  sub: 'Picks from your profile' },
-  { id: 'tech',          label: 'Cloud / Tech', sub: 'AWS, Azure, DevOps'      },
-  { id: 'data',          label: 'Data & AI',    sub: 'Analytics, ML, BI'       },
-  { id: 'cybersecurity', label: 'Cybersecurity',sub: 'CEH, CISSP, CISM'        },
-  { id: 'finance',       label: 'Finance',      sub: 'CFA, CA, CMA, NISM'      },
-  { id: 'management',    label: 'Management',   sub: 'PMP, CSM, Six Sigma'     },
-  { id: 'marketing',     label: 'Marketing',    sub: 'Google, Meta, HubSpot'   },
-  { id: 'hr',            label: 'HR & People',  sub: 'SHRM, Analytics'         },
-  { id: 'government',    label: 'Govt / PSU',   sub: 'GATE, IBPS, SSC'         },
-  { id: 'medical',       label: 'Medical',      sub: 'DNB, USMLE, ACRP'        },
+  { id: 'auto', label: 'Auto-detect', sub: 'Picks from your profile' },
+  { id: 'tech', label: 'Cloud / Tech', sub: 'AWS, Azure, DevOps' },
+  { id: 'data', label: 'Data & AI', sub: 'Analytics, ML, BI' },
+  { id: 'cybersecurity', label: 'Cybersecurity', sub: 'CEH, CISSP, CISM' },
+  { id: 'finance', label: 'Finance', sub: 'CFA, CA, CMA, NISM' },
+  { id: 'management', label: 'Management', sub: 'PMP, CSM, Six Sigma' },
+  { id: 'marketing', label: 'Marketing', sub: 'Google, Meta, HubSpot' },
+  { id: 'hr', label: 'HR & People', sub: 'SHRM, Analytics' },
+  { id: 'government', label: 'Govt / PSU', sub: 'GATE, IBPS, SSC' },
+  { id: 'medical', label: 'Medical', sub: 'DNB, USMLE, ACRP' },
 ]
 
 // ── Manual skill tags (for mobile / no-resume flow) ───────
 var SKILL_GROUPS = [
-  { group: 'Cloud & Infra',  skills: ['AWS', 'Azure', 'GCP', 'Docker', 'Kubernetes', 'Linux', 'Terraform'] },
-  { group: 'Development',    skills: ['Python', 'Java', 'JavaScript', 'Node.js', 'React', 'SQL', 'REST APIs'] },
-  { group: 'Data & AI',      skills: ['Pandas', 'Power BI', 'Tableau', 'Excel', 'Machine Learning', 'TensorFlow'] },
-  { group: 'Management',     skills: ['Agile', 'Scrum', 'JIRA', 'Stakeholder Mgmt', 'Risk Mgmt', 'Budgeting'] },
-  { group: 'Business',       skills: ['Excel', 'PowerPoint', 'SAP', 'Salesforce', 'Google Analytics', 'Tally'] },
-  { group: 'Security',       skills: ['Network Security', 'SIEM', 'Penetration Testing', 'OWASP', 'IAM', 'SOC'] },
+  { group: 'Cloud & Infra', skills: ['AWS', 'Azure', 'GCP', 'Docker', 'Kubernetes', 'Linux', 'Terraform'] },
+  { group: 'Development', skills: ['Python', 'Java', 'JavaScript', 'Node.js', 'React', 'SQL', 'REST APIs'] },
+  { group: 'Data & AI', skills: ['Pandas', 'Power BI', 'Tableau', 'Excel', 'Machine Learning', 'TensorFlow'] },
+  { group: 'Management', skills: ['Agile', 'Scrum', 'JIRA', 'Stakeholder Mgmt', 'Risk Mgmt', 'Budgeting'] },
+  { group: 'Business', skills: ['Excel', 'PowerPoint', 'SAP', 'Salesforce', 'Google Analytics', 'Tally'] },
+  { group: 'Security', skills: ['Network Security', 'SIEM', 'Penetration Testing', 'OWASP', 'IAM', 'SOC'] },
 ]
 
 function buildSkillText(skills, role, exp) {
   return [
     'Skills: ' + skills.join(', ') + '.',
     role ? 'Current role: ' + role + '.' : '',
-    exp  ? 'Experience: ' + exp + ' years.' : '',
+    exp ? 'Experience: ' + exp + ' years.' : '',
     'Education: Bachelor\'s degree.',
     'Looking for certification recommendations to advance career.',
   ].filter(Boolean).join(' ')
@@ -72,62 +72,62 @@ var LOADER_STEPS = [
 ]
 
 // ── Document validator ────────────────────────────────────
-var validateDocument = function(text) {
-  var t    = text.toLowerCase()
+var validateDocument = function (text) {
+  var t = text.toLowerCase()
   var tRaw = text
   var hardRejectRules = [
-    { label: 'fee receipt',    patterns: ['fee receipt', 'bill no', 'gst no'],                        min: 2 },
-    { label: 'fee receipt',    patterns: ['annual fee', 'total amount', 'amount in words'],           min: 2 },
-    { label: 'fee receipt',    patterns: ['billdesk', 'mode of transfer', 'total amount'],            min: 2 },
-    { label: 'hall ticket',    patterns: ['hall ticket', 'reporting time', 'invigilator'],            min: 2 },
-    { label: 'hall ticket',    patterns: ['examination hall', 'course code', 'reporting time'],       min: 2 },
-    { label: 'hall ticket',    patterns: ['reg.no:', 'exam time', 'venue'],                           min: 3 },
-    { label: 'question paper', patterns: ['total marks', 'section a', 'section b'],                  min: 3 },
-    { label: 'question paper', patterns: ['each carries', 'answer any', 'marks)'],                   min: 2 },
-    { label: 'question paper', patterns: ['q1.', 'q2.', 'q3.'],                                      min: 3 },
-    { label: 'study notes',    patterns: ['last minute revision', 'formula sheet'],                  min: 1 },
-    { label: 'study notes',    patterns: ['master formula', 'traps to avoid'],                       min: 1 },
-    { label: 'assignment',     patterns: ['submitted to', 'submitted by', 'assistant professor'],    min: 2 },
-    { label: 'technical doc',  patterns: ['select * from', 'sql query', 'database schema'],          min: 1 },
-    { label: 'research report',patterns: ['null hypothesis', 'p-value', 'chi-square', 'anova'],      min: 3 },
+    { label: 'fee receipt', patterns: ['fee receipt', 'bill no', 'gst no'], min: 2 },
+    { label: 'fee receipt', patterns: ['annual fee', 'total amount', 'amount in words'], min: 2 },
+    { label: 'fee receipt', patterns: ['billdesk', 'mode of transfer', 'total amount'], min: 2 },
+    { label: 'hall ticket', patterns: ['hall ticket', 'reporting time', 'invigilator'], min: 2 },
+    { label: 'hall ticket', patterns: ['examination hall', 'course code', 'reporting time'], min: 2 },
+    { label: 'hall ticket', patterns: ['reg.no:', 'exam time', 'venue'], min: 3 },
+    { label: 'question paper', patterns: ['total marks', 'section a', 'section b'], min: 3 },
+    { label: 'question paper', patterns: ['each carries', 'answer any', 'marks)'], min: 2 },
+    { label: 'question paper', patterns: ['q1.', 'q2.', 'q3.'], min: 3 },
+    { label: 'study notes', patterns: ['last minute revision', 'formula sheet'], min: 1 },
+    { label: 'study notes', patterns: ['master formula', 'traps to avoid'], min: 1 },
+    { label: 'assignment', patterns: ['submitted to', 'submitted by', 'assistant professor'], min: 2 },
+    { label: 'technical doc', patterns: ['select * from', 'sql query', 'database schema'], min: 1 },
+    { label: 'research report', patterns: ['null hypothesis', 'p-value', 'chi-square', 'anova'], min: 3 },
     { label: 'academic paper', patterns: ['table of contents', 'literature review', 'bibliography'], min: 2 },
   ]
   for (var ri = 0; ri < hardRejectRules.length; ri++) {
     var rule = hardRejectRules[ri]
-    var matches = rule.patterns.filter(function(p) { return t.includes(p) })
+    var matches = rule.patterns.filter(function (p) { return t.includes(p) })
     if (matches.length >= rule.min) return { isResume: false, rejectedBy: rule.label, score: 0 }
   }
   var score = 0
   if (/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/.test(tRaw)) score += 3
-  if (/(\+91[\s\-]?)?[6-9]\d{9}/.test(tRaw))                          score += 3
-  if (t.includes('linkedin'))                                            score += 3
-  var sections = ['education','experience','skills','projects','achievements','certifications','volunteering','leadership','internship','employment history','work experience','extracurricular','awards','publications','languages']
-  var sectionHits = sections.filter(function(s) { return t.includes(s) })
+  if (/(\+91[\s\-]?)?[6-9]\d{9}/.test(tRaw)) score += 3
+  if (t.includes('linkedin')) score += 3
+  var sections = ['education', 'experience', 'skills', 'projects', 'achievements', 'certifications', 'volunteering', 'leadership', 'internship', 'employment history', 'work experience', 'extracurricular', 'awards', 'publications', 'languages']
+  var sectionHits = sections.filter(function (s) { return t.includes(s) })
   score += sectionHits.length * 1.5
   if (sectionHits.length >= 3) score += 2
-  var degrees = ['bba','mba','b.tech','btech','m.tech','mtech','bsc','msc','bca','mca','bcom','mcom','pgdm','diploma','cbse','icse']
-  if (degrees.filter(function(d) { return t.includes(d) }).length >= 1) score += 2
-  var institutions = ['university','college','institute','iit','nit','bits','vit','srm','manipal','christ','symbiosis','amity']
-  if (institutions.filter(function(i) { return t.includes(i) }).length >= 1) score += 1
+  var degrees = ['bba', 'mba', 'b.tech', 'btech', 'm.tech', 'mtech', 'bsc', 'msc', 'bca', 'mca', 'bcom', 'mcom', 'pgdm', 'diploma', 'cbse', 'icse']
+  if (degrees.filter(function (d) { return t.includes(d) }).length >= 1) score += 2
+  var institutions = ['university', 'college', 'institute', 'iit', 'nit', 'bits', 'vit', 'srm', 'manipal', 'christ', 'symbiosis', 'amity']
+  if (institutions.filter(function (i) { return t.includes(i) }).length >= 1) score += 1
   if (/\b20\d{2}\s*[–\-]\s*(20\d{2}|present)/i.test(tRaw)) score += 2
   if (/(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\s*'?\d{2,4}/i.test(tRaw)) score += 1
-  var actionVerbs = ['managed','led ','developed','built ','handled','coordinated','organized','achieved','launched','mentored','conducted','reduced','increased','collaborated','spearheaded','implemented','delivered','designed','created','trained','secured','boosted']
-  var verbHits = actionVerbs.filter(function(v) { return t.includes(v) })
+  var actionVerbs = ['managed', 'led ', 'developed', 'built ', 'handled', 'coordinated', 'organized', 'achieved', 'launched', 'mentored', 'conducted', 'reduced', 'increased', 'collaborated', 'spearheaded', 'implemented', 'delivered', 'designed', 'created', 'trained', 'secured', 'boosted']
+  var verbHits = actionVerbs.filter(function (v) { return t.includes(v) })
   if (verbHits.length >= 2) score += 2
   if (verbHits.length >= 4) score += 1
-  var tools = ['excel','powerpoint','canva','python','java','sql','tableau','figma','aws','azure','docker','git','tally','powerbi']
-  if (tools.filter(function(t2) { return t.includes(t2) }).length >= 2) score += 2
+  var tools = ['excel', 'powerpoint', 'canva', 'python', 'java', 'sql', 'tableau', 'figma', 'aws', 'azure', 'docker', 'git', 'tally', 'powerbi']
+  if (tools.filter(function (t2) { return t.includes(t2) }).length >= 2) score += 2
   if (text.trim().length < 150) return { isResume: false, rejectedBy: 'too short', score: score }
   return { isResume: score >= 8, score: score, sectionHits: sectionHits, verbHits: verbHits }
 }
 
 // ── PDF reader ────────────────────────────────────────────
-var readPdfFile = async function(file) {
+var readPdfFile = async function (file) {
   if (!window.pdfjsLib) {
-    await new Promise(function(resolve, reject) {
+    await new Promise(function (resolve, reject) {
       var script = document.createElement('script')
-      script.src     = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'
-      script.onload  = resolve
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'
+      script.onload = resolve
       script.onerror = reject
       document.head.appendChild(script)
     })
@@ -135,29 +135,29 @@ var readPdfFile = async function(file) {
   window.pdfjsLib.GlobalWorkerOptions.workerSrc =
     'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'
   var arrayBuffer = await file.arrayBuffer()
-  var pdf         = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise
+  var pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise
   var fullText = ''
   for (var i = 1; i <= pdf.numPages; i++) {
-    var page    = await pdf.getPage(i)
+    var page = await pdf.getPage(i)
     var content = await page.getTextContent()
-    fullText += content.items.map(function(item) { return item.str }).join(' ') + '\n'
+    fullText += content.items.map(function (item) { return item.str }).join(' ') + '\n'
   }
   return fullText.trim()
 }
 
 // ── Prompt builder — requests strict JSON output ─────────
-var buildPrompt = function(resumeText, mode, timeline, domainIntent, switchTarget) {
+var buildPrompt = function (resumeText, mode, timeline, domainIntent, switchTarget) {
   var timelineNote = timeline === 'fast'
     ? 'IMPORTANT: User needs FAST-TRACK only — certs completable in 1–3 months.'
     : timeline === 'medium'
-    ? 'User has 3–6 months. Recommend certs within that window.'
-    : 'Flexible timeline — recommend the best certs regardless of duration.'
+      ? 'User has 3–6 months. Recommend certs within that window.'
+      : 'Flexible timeline — recommend the best certs regardless of duration.'
 
   var domainNote = switchTarget
     ? 'User wants to SWITCH CAREERS to: "' + switchTarget + '". This is their #1 priority. Find certs for that specific field even if resume points elsewhere.'
     : (domainIntent && domainIntent !== 'auto')
-    ? 'User wants to grow in: ' + domainIntent + '. Prioritise certs in that domain.'
-    : 'Auto-detect best domain from resume.'
+      ? 'User wants to grow in: ' + domainIntent + '. Prioritise certs in that domain.'
+      : 'Auto-detect best domain from resume.'
 
   return 'You are CertifyROI, a career advisor for Indian professionals (2026).\n' +
     'Mode: ' + mode + '\nTimeline: ' + timelineNote + '\nDomain: ' + domainNote + '\n\n' +
@@ -181,49 +181,49 @@ var buildPrompt = function(resumeText, mode, timeline, domainIntent, switchTarge
 }
 
 // ── Safe JSON parser — never throws ──────────────────────
-var INDIA_CITIES = ['Bangalore','Bengaluru','Hyderabad','Pune','Mumbai','Delhi','Chennai','Kolkata','Noida','Gurgaon','Gurugram','Ahmedabad','Kochi','Vadodara','Jaipur']
-var DOMAIN_MAP   = ['tech','data','cybersecurity','finance','management','marketing','hr','government','medical','business']
+var INDIA_CITIES = ['Bangalore', 'Bengaluru', 'Hyderabad', 'Pune', 'Mumbai', 'Delhi', 'Chennai', 'Kolkata', 'Noida', 'Gurgaon', 'Gurugram', 'Ahmedabad', 'Kochi', 'Vadodara', 'Jaipur']
+var DOMAIN_MAP = ['tech', 'data', 'cybersecurity', 'finance', 'management', 'marketing', 'hr', 'government', 'medical', 'business']
 
-var safeParseResumeJSON = function(text) {
+var safeParseResumeJSON = function (text) {
   try {
     var cleaned = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').trim()
-    var obj     = JSON.parse(cleaned)
+    var obj = JSON.parse(cleaned)
 
     // Normalise city to a known Indian city
-    var cityRaw  = (obj.city || '').toLowerCase()
-    var city     = INDIA_CITIES.find(function(c) { return cityRaw.includes(c.toLowerCase()) }) || ''
+    var cityRaw = (obj.city || '').toLowerCase()
+    var city = INDIA_CITIES.find(function (c) { return cityRaw.includes(c.toLowerCase()) }) || ''
 
     // Normalise domain
     var domainRaw = (obj.domain || '').toLowerCase()
-    var domain    = DOMAIN_MAP.find(function(k) { return domainRaw.includes(k) }) || 'business'
+    var domain = DOMAIN_MAP.find(function (k) { return domainRaw.includes(k) }) || 'business'
 
     // Ensure certs is an array with primary flag
-    var certs = (Array.isArray(obj.certs) ? obj.certs : []).slice(0, 3).map(function(c, i) {
+    var certs = (Array.isArray(obj.certs) ? obj.certs : []).slice(0, 3).map(function (c, i) {
       return {
-        name:      String(c.name      || ''),
-        why:       String(c.why       || ''),
-        roi:       String(c.roi       || ''),
-        timeline:  String(c.timeline  || ''),
+        name: String(c.name || ''),
+        why: String(c.why || ''),
+        roi: String(c.roi || ''),
+        timeline: String(c.timeline || ''),
         fastTrack: String(c.fastTrack || ''),
-        primary:   i === 0,
+        primary: i === 0,
       }
-    }).filter(function(c) { return c.name })
+    }).filter(function (c) { return c.name })
 
     // Trim name to first 2 words
     var nameRaw = String(obj.name || '')
-    var name    = (nameRaw && nameRaw !== 'Not found') ? nameRaw.split(' ').slice(0, 2).join(' ') : ''
+    var name = (nameRaw && nameRaw !== 'Not found') ? nameRaw.split(' ').slice(0, 2).join(' ') : ''
 
     return {
-      name:            name,
-      summary:         String(obj.summary         || ''),
-      city:            city,
-      domain:          domain,
-      gaps:            Array.isArray(obj.gaps) ? obj.gaps.map(String) : [],
-      certs:           certs,
+      name: name,
+      summary: String(obj.summary || ''),
+      city: city,
+      domain: domain,
+      gaps: Array.isArray(obj.gaps) ? obj.gaps.map(String) : [],
+      certs: certs,
       immediateAction: String(obj.immediateAction || ''),
-      marketInsight:   String(obj.marketInsight   || ''),
-      raw:             text,
-      parseError:      false,
+      marketInsight: String(obj.marketInsight || ''),
+      raw: text,
+      parseError: false,
     }
   } catch (_) {
     // JSON parse failed — return a safe empty shell so UI doesn't crash
@@ -239,47 +239,19 @@ var safeParseResumeJSON = function(text) {
   }
 }
 
-var detectCityFromText = function(text) {
-  var lower = text.toLowerCase()
-  return INDIA_CITIES.find(function(city) { return lower.includes(city.toLowerCase()) }) || ''
-}
-
-var buildSwitcherResult = function({ certs, domain, domainChoices, city, timeline }) {
-  var domainLabel = domainChoices.find(function(item) { return item.id === domain })?.label || domain
-  var ranked = rankCertificationsForSwitcher(certs, timeline)
-  var chosen = (ranked.length ? ranked : certs).slice(0, 3).map(certificationToRecommendation)
-
-  return {
-    name: '',
-    summary: 'Career switch detected. Recommendations are pulled directly from the certification database for ' + domainLabel + ', not inferred by AI.',
-    city: city || '',
-    domain: domain,
-    gaps: [
-      'Build domain-specific project proof before applying',
-      'Translate existing experience into ' + domainLabel + ' vocabulary',
-      'Prioritise certifications with short completion time and clear hiring signal',
-    ],
-    certs: chosen,
-    immediateAction: chosen[0] ? 'Start with ' + chosen[0].name + ' and build one portfolio artifact alongside it.' : 'No certifications found for this domain yet.',
-    marketInsight: domainLabel + ' demand is loaded from your certification database and city demand API.',
-    raw: '(database-direct)',
-    parseError: false,
-  }
-}
-
 // ── Not-a-resume error ────────────────────────────────────
-var NotAResumeError = function({ rejectedBy, onDismiss }) {
+var NotAResumeError = function ({ rejectedBy, onDismiss }) {
   var messages = {
-    'fee receipt':    { title: "That's a fee receipt",       desc: "Please upload your CV or resume instead." },
-    'hall ticket':    { title: "That's an exam hall ticket",  desc: "Please upload your resume or LinkedIn profile." },
-    'question paper': { title: "That's a question paper",     desc: "Please upload your actual resume." },
-    'study notes':    { title: "These are study notes",       desc: "Please upload your resume or CV." },
-    'assignment':     { title: "That's a college assignment", desc: "Please upload your personal resume." },
-    'technical doc':  { title: "That's a technical document", desc: "Please upload your resume instead." },
-    'research report':{ title: "That's a research report",    desc: "Please upload your personal resume." },
-    'academic paper': { title: "That's an academic paper",    desc: "Please upload your resume." },
-    'too short':      { title: "Too short to be a resume",    desc: "Please paste more of your profile - work experience, education, skills." },
-    default:          { title: "That doesn't look like a resume", desc: "We need your work experience, education, skills, and contact details." },
+    'fee receipt': { title: "That's a fee receipt", desc: "Please upload your CV or resume instead." },
+    'hall ticket': { title: "That's an exam hall ticket", desc: "Please upload your resume or LinkedIn profile." },
+    'question paper': { title: "That's a question paper", desc: "Please upload your actual resume." },
+    'study notes': { title: "These are study notes", desc: "Please upload your resume or CV." },
+    'assignment': { title: "That's a college assignment", desc: "Please upload your personal resume." },
+    'technical doc': { title: "That's a technical document", desc: "Please upload your resume instead." },
+    'research report': { title: "That's a research report", desc: "Please upload your personal resume." },
+    'academic paper': { title: "That's an academic paper", desc: "Please upload your resume." },
+    'too short': { title: "Too short to be a resume", desc: "Please paste more of your profile - work experience, education, skills." },
+    default: { title: "That doesn't look like a resume", desc: "We need your work experience, education, skills, and contact details." },
   }
   var msg = messages[rejectedBy] || messages.default
   var isTooShort = rejectedBy === 'too short'
@@ -308,14 +280,14 @@ var NotAResumeError = function({ rejectedBy, onDismiss }) {
 
 // ── Clean loader ──────────────────────────────────────────
 // LOADER_STEPS moved above to module scope — stable reference, no useEffect re-fires.
-var CleanLoader = function() {
+var CleanLoader = function () {
   var [step, setStep] = useState(0)
 
-  useEffect(function() {
-    var timers = LOADER_STEPS.map(function(_, i) {
-      return setTimeout(function() { setStep(i) }, i * 1000)
+  useEffect(function () {
+    var timers = LOADER_STEPS.map(function (_, i) {
+      return setTimeout(function () { setStep(i) }, i * 1000)
     })
-    return function() { timers.forEach(clearTimeout) }
+    return function () { timers.forEach(clearTimeout) }
   }, []) // stable — LOADER_STEPS is module-level constant
 
   return (
@@ -355,7 +327,7 @@ var CleanLoader = function() {
 }
 
 // ── Preferences panel ─────────────────────────────────────
-var PreferencesPanel = function({ timeline, onTimeline, domainIntent, onDomain, mode, switchTarget, domainChoices }) {
+var PreferencesPanel = function ({ timeline, onTimeline, domainIntent, onDomain, mode, switchTarget }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '16px' }}>
 
@@ -366,12 +338,12 @@ var PreferencesPanel = function({ timeline, onTimeline, domainIntent, onDomain, 
           How soon do you need results?
         </div>
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-          {TIMELINE_OPTIONS.map(function(opt) {
+          {TIMELINE_OPTIONS.map(function (opt) {
             var active = timeline === opt.id
             return (
               <button
                 key={opt.id}
-                onClick={function() { onTimeline(opt.id) }}
+                onClick={function () { onTimeline(opt.id) }}
                 style={{
                   flex: '1', minWidth: '100px',
                   padding: '11px 12px', borderRadius: '10px',
@@ -398,12 +370,12 @@ var PreferencesPanel = function({ timeline, onTimeline, domainIntent, onDomain, 
             Which domain are you targeting?
           </div>
           <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-            {domainChoices.map(function(d) {
+            {DOMAIN_CHOICES.map(function (d) {
               var active = domainIntent === d.id
               return (
                 <button
                   key={d.id}
-                  onClick={function() { onDomain(d.id) }}
+                  onClick={function () { onDomain(d.id) }}
                   style={{
                     padding: '6px 12px', borderRadius: '8px',
                     background: active ? INDIGO + '14' : 'transparent',
@@ -427,7 +399,7 @@ var PreferencesPanel = function({ timeline, onTimeline, domainIntent, onDomain, 
         <div style={{ padding: '10px 14px', borderRadius: '9px', background: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.22)', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span style={{ fontSize: '12px', color: AMBER, fontFamily: FM, letterSpacing: '0.04em', fontWeight: '700' }}>Target domain:</span>
           <span style={{ padding: '3px 10px', borderRadius: '6px', background: 'rgba(245,158,11,0.15)', border: '1px solid rgba(245,158,11,0.3)', fontSize: '12px', color: AMBER, fontFamily: FH, fontWeight: '700' }}>
-            {domainChoices.find(function(d) { return d.id === switchTarget })?.label || switchTarget}
+            {DOMAIN_CHOICES.find(function (d) { return d.id === switchTarget })?.label || switchTarget}
           </span>
           <span style={{ fontSize: '11px', color: 'var(--text-4)', fontFamily: FB, marginLeft: '4px' }}>will be prioritised</span>
         </div>
@@ -439,17 +411,17 @@ var PreferencesPanel = function({ timeline, onTimeline, domainIntent, onDomain, 
 }
 
 // ── PersonalisedHero ──────────────────────────────────────
-var PersonalisedHero = function({ name, city, domain, primaryCert, mode, domainChoices }) {
+var PersonalisedHero = function ({ name, city, domain, primaryCert, mode, certDomains }) {
   var [phase, setPhase] = useState(0)
 
-  useEffect(function() {
-    var t1 = setTimeout(function() { setPhase(1) }, 600)
-    var t2 = setTimeout(function() { setPhase(2) }, 1200)
-    return function() { clearTimeout(t1); clearTimeout(t2) }
+  useEffect(function () {
+    var t1 = setTimeout(function () { setPhase(1) }, 600)
+    var t2 = setTimeout(function () { setPhase(2) }, 1200)
+    return function () { clearTimeout(t1); clearTimeout(t2) }
   }, [])
 
-  var domainLabel = domainChoices.find(function(d) { return d.id === domain })?.label || domain
-  var firstName   = name ? name.split(' ')[0] : ''
+  var domainLabel = certDomains && certDomains.length > 0 ? certDomains.find(function (d) { return d.id === domain })?.label || domain : domain
+  var firstName = name ? name.split(' ')[0] : ''
   var intro = firstName
     ? firstName + ', out of 103 certifications analysed for ' + (city ? 'a professional in ' + city : 'your profile') + ' right now —'
     : 'For a ' + (mode === 'student' ? 'student' : mode === 'switcher' ? 'career switcher' : 'professional') + ' in ' + domainLabel + ' right now —'
@@ -499,12 +471,12 @@ var PersonalisedHero = function({ name, city, domain, primaryCert, mode, domainC
 }
 
 // ── PrimaryCertHero ───────────────────────────────────────
-var PrimaryCertHero = function({ cert }) {
+var PrimaryCertHero = function ({ cert }) {
   var [hovered, setHovered] = useState(false)
   return (
     <div
-      onMouseEnter={function() { setHovered(true) }}
-      onMouseLeave={function() { setHovered(false) }}
+      onMouseEnter={function () { setHovered(true) }}
+      onMouseLeave={function () { setHovered(false) }}
       style={{
         position: 'relative', borderRadius: '13px', overflow: 'hidden',
         border: '1px solid ' + (hovered ? 'rgba(16,185,129,0.4)' : 'rgba(16,185,129,0.22)'),
@@ -545,7 +517,7 @@ var PrimaryCertHero = function({ cert }) {
 }
 
 // ── CertLeaderboardRow ────────────────────────────────────
-var CertLeaderboardRow = function({ cert, rank, onSelect, mode }) {
+var CertLeaderboardRow = function ({ cert, rank, onSelect, mode }) {
   var [hovered, setHovered] = useState(false)
   var col = rank === 2 ? PICTON : VIOLET
 
@@ -561,9 +533,9 @@ var CertLeaderboardRow = function({ cert, rank, onSelect, mode }) {
       initial={{ opacity: 0, x: -10 }}
       animate={{ opacity: exceedsSwitcherLimit ? 0.45 : 1, x: 0 }}
       transition={{ duration: 0.3, delay: (rank - 2) * 0.1 }}
-      onMouseEnter={function() { setHovered(true) }}
-      onMouseLeave={function() { setHovered(false) }}
-      onClick={function() { if (onSelect && !exceedsSwitcherLimit) onSelect(cert.name) }}
+      onMouseEnter={function () { setHovered(true) }}
+      onMouseLeave={function () { setHovered(false) }}
+      onClick={function () { if (onSelect && !exceedsSwitcherLimit) onSelect(cert.name) }}
       style={{
         display: 'flex', alignItems: 'center', gap: '11px', padding: '12px 13px',
         borderRadius: '10px',
@@ -601,23 +573,23 @@ var CertLeaderboardRow = function({ cert, rank, onSelect, mode }) {
 }
 
 // ── ResultDisplay ─────────────────────────────────────────
-var ResultDisplay = function({ result, onCertSelected, mode, onClear, domainChoices }) {
+var ResultDisplay = function ({ result, onCertSelected, mode, onClear, certDomains }) {
   var [showOtherCerts, setShowOtherCerts] = useState(false)
   var primaryCert = result.certs[0]
-  var otherCerts  = result.certs.slice(1)
-  var firstName   = result.name ? result.name.split(' ')[0] : ''
+  var otherCerts = result.certs.slice(1)
+  var firstName = result.name ? result.name.split(' ')[0] : ''
 
-  var handleSelect = useCallback(function(certName) {
+  var handleSelect = useCallback(function (certName) {
     if (onCertSelected) onCertSelected(certName, result.city, result.domain, result.name)
   }, [onCertSelected, result])
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
-      <PersonalisedHero name={result.name} city={result.city} domain={result.domain} primaryCert={primaryCert} mode={mode} domainChoices={domainChoices} />
+      <PersonalisedHero name={result.name} city={result.city} domain={result.domain} primaryCert={primaryCert} mode={mode} certDomains={certDomains} />
 
       {primaryCert && onCertSelected && (
         <motion.button
-          onClick={function() { handleSelect(primaryCert.name) }}
+          onClick={function () { handleSelect(primaryCert.name) }}
           initial={{ opacity: 0, y: 7 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.6, duration: 0.35 }}
           whileHover={{ scale: 1.02, y: -2 }} whileTap={{ scale: 0.97 }}
           style={{ width: '100%', padding: '14px 18px', borderRadius: '11px', border: 'none', cursor: 'pointer', background: 'linear-gradient(135deg,' + EMERALD + ',#0DA271)', color: 'white', fontSize: '14px', fontWeight: '800', fontFamily: FH, letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '9px', boxShadow: '0 5px 20px rgba(16,185,129,0.28)', marginBottom: '16px' }}
@@ -667,10 +639,10 @@ var ResultDisplay = function({ result, onCertSelected, mode, onClear, domainChoi
             <AlertTriangle size={10} color={AMBER} /> Gaps to close
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-            {result.gaps.map(function(gap, i) {
+            {result.gaps.map(function (gap, i) {
               return (
                 <div key={i} style={{ display: 'flex', gap: '9px', alignItems: 'flex-start', padding: '8px 11px', borderRadius: '8px', background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.13)' }}>
-                  <span style={{ fontFamily: FM, fontSize: '10px', color: AMBER, flexShrink: 0, marginTop: '1px' }}>0{i+1}</span>
+                  <span style={{ fontFamily: FM, fontSize: '10px', color: AMBER, flexShrink: 0, marginTop: '1px' }}>0{i + 1}</span>
                   <span style={{ fontFamily: FB, fontSize: '12px', color: 'var(--text-3)', lineHeight: 1.5 }}>{gap}</span>
                 </div>
               )
@@ -685,7 +657,7 @@ var ResultDisplay = function({ result, onCertSelected, mode, onClear, domainChoi
           style={{ marginBottom: '14px' }}
         >
           <button
-            onClick={function() { setShowOtherCerts(function(v) { return !v }) }}
+            onClick={function () { setShowOtherCerts(function (v) { return !v }) }}
             style={{ width: '100%', padding: '9px 13px', borderRadius: '9px', border: '1px solid var(--border)', background: 'transparent', color: 'var(--text-4)', fontFamily: FM, fontSize: '10px', letterSpacing: '0.07em', textTransform: 'uppercase', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: showOtherCerts ? '8px' : '0' }}
           >
             <span>Other options ({otherCerts.length} more)</span>
@@ -704,7 +676,7 @@ var ResultDisplay = function({ result, onCertSelected, mode, onClear, domainChoi
                 initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.22 }}
                 style={{ overflow: 'hidden' }}
               >
-                {otherCerts.map(function(cert, i) {
+                {otherCerts.map(function (cert, i) {
                   return <CertLeaderboardRow key={i} cert={cert} rank={i + 2} mode={mode} onSelect={onCertSelected ? handleSelect : null} />
                 })}
               </motion.div>
@@ -756,8 +728,8 @@ var ResultDisplay = function({ result, onCertSelected, mode, onClear, domainChoi
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.8 }}
         whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.97 }}
         style={{ width: '100%', padding: '11px 14px', borderRadius: '10px', cursor: 'pointer', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-4)', fontSize: '13px', fontFamily: FH, fontWeight: '600', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '7px', transition: 'all 0.15s' }}
-        onMouseEnter={function(e) { e.currentTarget.style.borderColor = PICTON + '33'; e.currentTarget.style.color = PICTON }}
-        onMouseLeave={function(e) { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-4)' }}
+        onMouseEnter={function (e) { e.currentTarget.style.borderColor = PICTON + '33'; e.currentTarget.style.color = PICTON }}
+        onMouseLeave={function (e) { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-4)' }}
       >
         <RefreshCw size={13} /> Upload a different resume
       </motion.button>
@@ -766,53 +738,71 @@ var ResultDisplay = function({ result, onCertSelected, mode, onClear, domainChoi
 }
 
 // ── MAIN ──────────────────────────────────────────────────
-var ResumeAnalyzer = function({ mode, onCertSelected }) {
+var ResumeAnalyzer = function ({ mode, onCertSelected }) {
+  // ── Database State ──────────────────────────────────────
+  const [certificationsData, setCertificationsData] = useState([]);
+  const [domainsData, setDomainsData] = useState([]);
+  const [dbLoading, setDbLoading] = useState(true);
+
+  // ── The "Once and For All" Alias Fix ────────────────────
+  const CERTIFICATIONS = certificationsData;
+  const certifications = certificationsData;
+  const CERT_DOMAINS = domainsData;
+  const certDomains = domainsData;
+
+  // ── Fetch from Supabase on mount ────────────────────────
+  useEffect(() => {
+    async function fetchDatabase() {
+      try {
+        const [certsResponse, domainsResponse] = await Promise.all([
+          supabase.from('certifications').select('*'),
+          supabase.from('domains').select('*')
+        ]);
+
+        if (certsResponse.data) setCertificationsData(certsResponse.data);
+        if (domainsResponse.data) setDomainsData(domainsResponse.data);
+      } catch (error) {
+        console.error("Failed to fetch Supabase data:", error);
+      } finally {
+        setDbLoading(false);
+      }
+    }
+    fetchDatabase();
+  }, []);
+
+  // ── Loading Fallback ────────────────────────────────────
+  if (dbLoading) {
+    return <div style={{ padding: '40px', textAlign: 'center', fontFamily: 'var(--font-body)', color: 'var(--text-3)' }}>Connecting to live database...</div>;
+  }
+
   mode = mode || 'professional'
 
-  var [text,         setText]         = useState('')
-  var [fileName,     setFileName]     = useState('')
-  var [loading,      setLoading]      = useState(false)
-  var [result,       setResult]       = useState(null)
-  var [error,        setError]        = useState(null)
-  var [rejection,    setRejection]    = useState(null)
-  var [dragging,     setDragging]     = useState(false)
-  var [pdfLoading,   setPdfLoading]   = useState(false)
-  var [textReady,    setTextReady]    = useState(true)    // false while PDF is still extracting
-  var [timeline,     setTimeline]     = useState('flexible')
+  var [text, setText] = useState('')
+  var [fileName, setFileName] = useState('')
+  var [loading, setLoading] = useState(false)
+  var [result, setResult] = useState(null)
+  var [error, setError] = useState(null)
+  var [rejection, setRejection] = useState(null)
+  var [dragging, setDragging] = useState(false)
+  var [pdfLoading, setPdfLoading] = useState(false)
+  var [textReady, setTextReady] = useState(true)    // false while PDF is still extracting
+  var [timeline, setTimeline] = useState('flexible')
   var [domainIntent, setDomainIntent] = useState('auto')
-  var [domainChoices, setDomainChoices] = useState(DOMAIN_CHOICES)
-  var [inputMode,    setInputMode]    = useState('upload')   // 'upload' | 'skills'
+  var [inputMode, setInputMode] = useState('upload')   // 'upload' | 'skills'
   var [pickedSkills, setPickedSkills] = useState([])
-  var [skillRole,    setSkillRole]    = useState('')
-  var [skillExp,     setSkillExp]     = useState('')
+  var [skillRole, setSkillRole] = useState('')
+  var [skillExp, setSkillExp] = useState('')
   var fileRef = useRef(null)
 
   // switchTarget — read from Zustand store (no more localStorage)
-  var switchTarget = useJourneyStore(function(s) {
+  var switchTarget = useJourneyStore(function (s) {
     return mode === 'switcher' ? (s.resumeDomain || null) : null
   })
 
-  var hasFile   = !!fileName
+  var hasFile = !!fileName
   var hasResult = !!result
 
-  useEffect(function() {
-    var controller = new AbortController()
-    fetchDomains({ signal: controller.signal })
-      .then(function(domains) {
-        if (!domains.length) return
-        var merged = DOMAIN_CHOICES.map(function(choice) {
-          var dynamic = domains.find(function(domain) { return domain.id === choice.id })
-          return dynamic ? { ...choice, label: dynamic.label || dynamic.name || choice.label } : choice
-        })
-        setDomainChoices(merged)
-      })
-      .catch(function() {
-        setDomainChoices(DOMAIN_CHOICES)
-      })
-    return function() { controller.abort() }
-  }, [])
-
-  var readFile = async function(file) {
+  var readFile = async function (file) {
     if (!file) return
     var ext = file.name.split('.').pop().toLowerCase()
     setError(null); setRejection(null)
@@ -829,7 +819,7 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
         }
         setText(extracted)
         setTextReady(true)
-      } catch(e) {
+      } catch (e) {
         setFileName('')
         setError('PDF parsing failed. Please paste your resume text below.')
         setTextReady(true)
@@ -840,27 +830,27 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
     }
     setFileName(file.name); setText(''); setTextReady(false)
     var reader = new FileReader()
-    reader.onload  = function(e) { setText(e.target.result || ''); setTextReady(true) }
-    reader.onerror = function()  { setError('Could not read file. Try pasting text instead.'); setFileName(''); setTextReady(true) }
+    reader.onload = function (e) { setText(e.target.result || ''); setTextReady(true) }
+    reader.onerror = function () { setError('Could not read file. Try pasting text instead.'); setFileName(''); setTextReady(true) }
     reader.readAsText(file)
   }
 
-  var handleDrop = function(e) { e.preventDefault(); setDragging(false); readFile(e.dataTransfer.files[0]) }
+  var handleDrop = function (e) { e.preventDefault(); setDragging(false); readFile(e.dataTransfer.files[0]) }
 
-  var clearAll = function() {
+  var clearAll = function () {
     setText(''); setFileName(''); setResult(null); setError(null); setRejection(null); setTextReady(true)
   }
 
   // FIX: separate dismiss-rejection from clear-all.
   // On rejection dismiss, only clear the rejection + file — NOT the pasted text.
   // If a user pasted text that failed, they shouldn't have to re-paste after dismissing.
-  var dismissRejection = function() {
+  var dismissRejection = function () {
     setRejection(null)
     setFileName('')   // clear any file reference
     // setText preserved intentionally
   }
 
-  var handleAnalyse = async function() {
+  var handleAnalyse = async function () {
     // If PDF is still extracting, wait — optimistic UI means button is active but needs text
     if (!textReady) { setError('Still reading your file — please wait a moment and try again.'); return }
     // If skill-tag mode: synthesize text from selected skills
@@ -879,26 +869,7 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
     setLoading(true); setResult(null); setError(null); setRejection(null)
     try {
       var safeText = analyseText.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, ' ').replace(/\s+/g, ' ').slice(0, 2200).trim()
-      var targetDomain = mode === 'switcher' ? (switchTarget || domainIntent) : null
-      if (mode === 'switcher' && targetDomain && targetDomain !== 'auto') {
-        var domainExists = domainChoices.some(function(domain) { return domain.id === targetDomain })
-        if (!domainExists) {
-          var label = String(targetDomain).trim()
-          setError("We currently track ROI for 12 major domains, but we don't have enough verified salary data for '" + label + "' yet.")
-          return
-        }
-        var directCerts = await fetchCertifications({ domain: targetDomain, limit: 25 })
-        if (!directCerts.length) throw new Error('No certifications found for ' + targetDomain + '. Check Supabase domain_id values.')
-        setResult(buildSwitcherResult({
-          certs: directCerts,
-          domain: targetDomain,
-          domainChoices: domainChoices,
-          city: detectCityFromText(safeText),
-          timeline: timeline,
-        }))
-        return
-      }
-      var raw    = await callGroqForResume(null, buildPrompt(safeText, mode, timeline, domainIntent, switchTarget))
+      var raw = await callGroqForResume(null, buildPrompt(safeText, mode, timeline, domainIntent, switchTarget))
       if (!raw || raw.length < 30) throw new Error('Empty response — try again')
       var parsed = safeParseResumeJSON(raw)
       setResult(parsed.certs?.length ? parsed : {
@@ -906,7 +877,7 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
         summary: parsed.summary || 'Analysis complete',
         immediateAction: parsed.immediateAction || parsed.raw?.slice(0, 300) || '',
       })
-    } catch(e) {
+    } catch (e) {
       console.error('Resume AI error:', e)
       if (e.message?.includes('not configured') || e.message?.includes('500') || e.message?.includes('404') || e.message === 'NO_KEY') {
         setResult({
@@ -915,8 +886,8 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
           gaps: ['No hands-on cloud portfolio projects', 'Missing architecture-level certifications', 'Limited DevOps exposure'],
           certs: [
             { name: 'AWS Solutions Architect', why: 'Highest ROI for Indian tech professionals — 2,400+ open roles on Naukri', roi: '30-40%', timeline: '3 months', fastTrack: 'Register free on AWS Skill Builder today', primary: true },
-            { name: 'Google Data Analytics',   why: 'High demand, entry-friendly', roi: '20-28%', timeline: '4 months', fastTrack: 'Enrol on Coursera — first 7 days free', primary: false },
-            { name: 'PMP Certification',       why: 'Best path to senior management', roi: '25-30%', timeline: '6 months', fastTrack: "Download PMI's free Exam Content Outline", primary: false },
+            { name: 'Google Data Analytics', why: 'High demand, entry-friendly', roi: '20-28%', timeline: '4 months', fastTrack: 'Enrol on Coursera — first 7 days free', primary: false },
+            { name: 'PMP Certification', why: 'Best path to senior management', roi: '25-30%', timeline: '6 months', fastTrack: "Download PMI's free Exam Content Outline", primary: false },
           ],
           immediateAction: 'Check Vercel → Settings → Environment Variables → ensure GROQ_API_KEY is set.',
           marketInsight: 'AWS certified professionals in Bangalore command 35% higher salaries — 2,400+ active roles on Naukri as of March 2026.',
@@ -929,9 +900,9 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
   }
 
   // Toggle a skill in/out of the selection
-  var toggleSkill = function(skill) {
-    setPickedSkills(function(prev) {
-      return prev.includes(skill) ? prev.filter(function(s) { return s !== skill }) : [...prev, skill]
+  var toggleSkill = function (skill) {
+    setPickedSkills(function (prev) {
+      return prev.includes(skill) ? prev.filter(function (s) { return s !== skill }) : [...prev, skill]
     })
   }
 
@@ -946,7 +917,6 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
           onDomain={setDomainIntent}
           mode={mode}
           switchTarget={switchTarget}
-          domainChoices={domainChoices}
         />
       )}
 
@@ -954,14 +924,14 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
       {!hasResult && (
         <div className="glass" style={{ display: 'flex', gap: '4px', padding: '4px', borderRadius: '10px' }}>
           {[
-            { id: 'upload', label: '↑ Upload Resume',   sub: 'PDF / DOC / paste' },
+            { id: 'upload', label: '↑ Upload Resume', sub: 'PDF / DOC / paste' },
             { id: 'skills', label: '✦ Tag Your Skills', sub: 'No resume? Use this' },
-          ].map(function(tab) {
+          ].map(function (tab) {
             var active = inputMode === tab.id
             return (
               <button
                 key={tab.id}
-                onClick={function() { setInputMode(tab.id); setError(null) }}
+                onClick={function () { setInputMode(tab.id); setError(null) }}
                 style={{
                   flex: 1, padding: '8px 12px', borderRadius: '7px', cursor: 'pointer',
                   background: active ? 'var(--bg)' : 'transparent',
@@ -996,28 +966,28 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
               {/* Optional role + exp context */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '14px' }}>
                 <input
-                  value={skillRole} onChange={function(e) { setSkillRole(e.target.value) }}
+                  value={skillRole} onChange={function (e) { setSkillRole(e.target.value) }}
                   placeholder="Current role (optional)"
                   style={{ padding: '8px 10px', borderRadius: '8px', background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text)', fontSize: '12px', fontFamily: FB, outline: 'none', boxSizing: 'border-box' }}
                 />
                 <input
-                  value={skillExp} onChange={function(e) { setSkillExp(e.target.value) }}
+                  value={skillExp} onChange={function (e) { setSkillExp(e.target.value) }}
                   placeholder="Years of exp (optional)"
                   style={{ padding: '8px 10px', borderRadius: '8px', background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text)', fontSize: '12px', fontFamily: FB, outline: 'none', boxSizing: 'border-box' }}
                 />
               </div>
 
-              {SKILL_GROUPS.map(function(group) {
+              {SKILL_GROUPS.map(function (group) {
                 return (
                   <div key={group.group} style={{ marginBottom: '12px' }}>
                     <div className="micro-label" style={{ color: 'var(--text-4)', marginBottom: '6px' }}>{group.group}</div>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
-                      {group.skills.map(function(skill) {
+                      {group.skills.map(function (skill) {
                         var picked = pickedSkills.includes(skill)
                         return (
                           <button
                             key={skill}
-                            onClick={function() { toggleSkill(skill) }}
+                            onClick={function () { toggleSkill(skill) }}
                             style={{
                               padding: '5px 11px', borderRadius: '99px', cursor: 'pointer',
                               background: picked ? INDIGO + '18' : 'transparent',
@@ -1039,7 +1009,7 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
 
               {pickedSkills.length > 0 && (
                 <button
-                  onClick={function() { setPickedSkills([]) }}
+                  onClick={function () { setPickedSkills([]) }}
                   style={{ fontSize: '11px', color: 'var(--text-4)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: FB, marginTop: '4px' }}
                 >
                   Clear all
@@ -1068,10 +1038,10 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
               transition: 'border-color 0.2s, background 0.2s',
             }}>
               <div
-                onDragOver={function(e) { e.preventDefault(); setDragging(true) }}
-                onDragLeave={function() { setDragging(false) }}
+                onDragOver={function (e) { e.preventDefault(); setDragging(true) }}
+                onDragLeave={function () { setDragging(false) }}
                 onDrop={handleDrop}
-                onClick={function() { if (!hasFile) fileRef.current?.click() }}
+                onClick={function () { if (!hasFile) fileRef.current?.click() }}
                 style={{ padding: '22px', cursor: hasFile ? 'default' : 'pointer', textAlign: 'center' }}
               >
                 <input
@@ -1079,7 +1049,7 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
                   type="file"
                   accept=".txt,.pdf,.doc,.docx"
                   style={{ display: 'none' }}
-                  onChange={function(e) { readFile(e.target.files[0]) }}
+                  onChange={function (e) { readFile(e.target.files[0]) }}
                 />
                 {pdfLoading ? (
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
@@ -1095,7 +1065,7 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
                     <FileText size={14} color={EMERALD} />
                     <span style={{ fontSize: '13px', color: EMERALD, fontWeight: '600', fontFamily: FH }}>{fileName}</span>
                     <button
-                      onClick={function(e) { e.stopPropagation(); clearAll() }}
+                      onClick={function (e) { e.stopPropagation(); clearAll() }}
                       style={{ background: 'none', border: 'none', color: 'var(--text-4)', cursor: 'pointer' }}
                     >
                       <X size={13} />
@@ -1136,7 +1106,7 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
           >
             <textarea
               value={text}
-              onChange={function(e) { setText(e.target.value) }}
+              onChange={function (e) { setText(e.target.value) }}
               placeholder="Paste your resume, LinkedIn About section, or work experience here. Include your city for better results."
               rows={6}
               style={{ width: '100%', padding: '14px', background: 'var(--bg)', border: '1px solid ' + (text.trim() ? PICTON + '44' : 'var(--border)'), borderRadius: '11px', color: 'var(--text)', fontSize: '13px', fontFamily: FB, outline: 'none', resize: 'vertical', lineHeight: '1.6', transition: 'border-color 0.18s', boxSizing: 'border-box' }}
@@ -1214,7 +1184,7 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
 
       <AnimatePresence>
         {result && (
-          <ResultDisplay result={result} onCertSelected={onCertSelected} mode={mode} onClear={clearAll} domainChoices={domainChoices} />
+          <ResultDisplay result={result} onCertSelected={onCertSelected} mode={mode} onClear={clearAll} certDomains={CERT_DOMAINS} />
         )}
       </AnimatePresence>
 
