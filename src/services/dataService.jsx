@@ -1,4 +1,4 @@
-import { supabase } from './supabaseClient.js'
+import { supabase } from './supabase.js'
 
 export async function fetchCertifications({ domain = '', limit = 100, signal } = {}) {
   const params = new URLSearchParams()

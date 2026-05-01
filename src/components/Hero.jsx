@@ -1,3 +1,4 @@
+import { supabase } from '../services/supabase.js';
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import {
@@ -28,16 +29,16 @@ const FB = 'var(--font-body)'
 
 const TT = { duration: 0.28, ease: [0.4, 0, 0.2, 1] }
 
-const PICTON  = '#51B1E7'
+const PICTON = '#51B1E7'
 const EMERALD = '#10B981'
-const AMBER   = '#F59E0B'
-const INDIGO  = '#6366F1'
-const VIOLET  = '#818CF8'
+const AMBER = '#F59E0B'
+const INDIGO = '#6366F1'
+const VIOLET = '#818CF8'
 
 function dc(d) {
   if (d === 'Very High') return EMERALD
-  if (d === 'High')      return PICTON
-  if (d === 'Medium')    return AMBER
+  if (d === 'High') return PICTON
+  if (d === 'Medium') return AMBER
   return '#94A3B8'
 }
 
@@ -47,7 +48,7 @@ function getAffordabilityBand(certCostL, salaryL, isStudent) {
   if (baseline <= 0 || certCostL <= 0) return null
   const ratio = certCostL / baseline
   if (ratio <= 0.10) return { label: 'Good value', color: EMERALD, tip: 'Under 10% of salary — well within budget' }
-  if (ratio <= 0.25) return { label: 'Risky',      color: AMBER,   tip: '10–25% of salary — tight but manageable' }
+  if (ratio <= 0.25) return { label: 'Risky', color: AMBER, tip: '10–25% of salary — tight but manageable' }
   return { label: 'Premium stretch', color: INDIGO, tip: 'Over 25% of salary — significant commitment' }
 }
 
@@ -65,7 +66,7 @@ function getPaybackRange(months, demand, hikePercent) {
   if (!months || months <= 0) return '--'
   const conf = getPaybackConfidence(demand, hikePercent)
   const spread = conf.label === 'High confidence' ? 0.15
-               : conf.label === 'Medium confidence' ? 0.25 : 0.35
+    : conf.label === 'Medium confidence' ? 0.25 : 0.35
   const lo = Math.max(1, Math.round(months * (1 - spread)))
   const hi = Math.round(months * (1 + spread))
   return lo + '–' + hi + ' mo'
@@ -74,9 +75,9 @@ function getPaybackRange(months, demand, hikePercent) {
 // ── Feature 5: Per-cert readiness ─────────────────────────
 function getCertReadiness(forWho = '') {
   const lower = forWho.toLowerCase()
-  const beginnerSignals  = ['fresher', 'entry', 'beginner', 'career switch', 'anyone entering', 'fresh', 'no experience']
+  const beginnerSignals = ['fresher', 'entry', 'beginner', 'career switch', 'anyone entering', 'fresh', 'no experience']
   const foundationSignals = ['senior', '2+ yr', '3+ yr', '3+ yrs', '2+ yrs', 'years', '5+ yr', 'experienced', 'mid-level']
-  if (beginnerSignals.some(s => lower.includes(s)))   return { label: 'Beginner ready',   color: EMERALD }
+  if (beginnerSignals.some(s => lower.includes(s))) return { label: 'Beginner ready', color: EMERALD }
   if (foundationSignals.some(s => lower.includes(s))) return { label: 'Needs foundation', color: VIOLET }
   return { label: 'Intermediate', color: AMBER }
 }
@@ -87,7 +88,7 @@ function getNotIdealNote(cert) {
   const lower = (cert.forWho || '').toLowerCase()
   const notes = []
   if (cert.demand === 'Low') notes.push('low market demand in India right now')
-  if (cert.avgHike < 18)    notes.push('modest average salary impact (<18%)')
+  if (cert.avgHike < 18) notes.push('modest average salary impact (<18%)')
   if (lower.includes('senior') && !lower.includes('fresher'))
     notes.push('not suited for freshers or career switchers without related experience')
   return notes.length > 0 ? notes[0] : null
@@ -99,14 +100,14 @@ function ShareURLButton({ certName, salary, certCost, hikePercent, mode }) {
   if (!certName) return null
 
   const handleCopy = () => {
-    const base   = window.location.origin + '/app'
+    const base = window.location.origin + '/app'
     const params = new URLSearchParams({
-      cert:  certName,
-      sal:   salary,
-      cost:  certCost,
-      hike:  hikePercent,
-      mode:  mode || 'professional',
-      tab:   'calculator',
+      cert: certName,
+      sal: salary,
+      cost: certCost,
+      hike: hikePercent,
+      mode: mode || 'professional',
+      tab: 'calculator',
     })
     const url = base + '?' + params.toString()
     navigator.clipboard.writeText(url).then(() => {
@@ -208,7 +209,7 @@ function StudentPath({ certName, certCost, domain, firstSalary }) {
                 {step.num}
               </div>
               {i < steps.length - 1 && (
-                <div style={{ width: '1px', flex: 1, minHeight: '18px', background: 'linear-gradient(' + step.color + '50, ' + steps[i+1].color + '30)', marginTop: '2px', marginBottom: '2px' }} />
+                <div style={{ width: '1px', flex: 1, minHeight: '18px', background: 'linear-gradient(' + step.color + '50, ' + steps[i + 1].color + '30)', marginTop: '2px', marginBottom: '2px' }} />
               )}
             </div>
 
@@ -235,55 +236,55 @@ function StudentPath({ certName, certCost, domain, firstSalary }) {
 }
 
 function Slider({ label, value, min = 0, max = 100, step = 1, onChange, prefix = '', suffix = '', color = INDIGO, note, formatDisplay, disabled = false }) {
-  const trackRef        = useRef(null)
-  const [drag,  setDrag]  = useState(false)
+  const trackRef = useRef(null)
+  const [drag, setDrag] = useState(false)
   const [hover, setHover] = useState(false)
-  const prefersReduced  = useReducedMotion()
+  const prefersReduced = useReducedMotion()
 
   const pct = Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100))
 
-  const snap = useCallback(function(raw) {
+  const snap = useCallback(function (raw) {
     var stepped = Math.round((raw - min) / step) * step + min
     var clamped = Math.max(min, Math.min(max, stepped))
     return parseFloat(clamped.toFixed(10))
   }, [min, max, step])
 
-  const fromX = useCallback(function(clientX) {
+  const fromX = useCallback(function (clientX) {
     var el = trackRef.current
     if (!el) return value
     var rect = el.getBoundingClientRect()
-    var x    = Math.max(0, Math.min(clientX - rect.left, rect.width))
+    var x = Math.max(0, Math.min(clientX - rect.left, rect.width))
     return snap(min + (x / rect.width) * (max - min))
   }, [min, max, snap, value])
 
-  const onMouseDown = useCallback(function(e) {
+  const onMouseDown = useCallback(function (e) {
     if (disabled) return
     e.preventDefault()
     setDrag(true)
     onChange(fromX(e.clientX))
     function onMove(e) { onChange(fromX(e.clientX)) }
-    function onUp()   { setDrag(false); window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp) }
+    function onUp() { setDrag(false); window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp) }
     window.addEventListener('mousemove', onMove)
-    window.addEventListener('mouseup',   onUp)
+    window.addEventListener('mouseup', onUp)
   }, [disabled, fromX, onChange])
 
-  const onTouchStart = useCallback(function(e) {
+  const onTouchStart = useCallback(function (e) {
     if (disabled) return
     e.preventDefault()
     setDrag(true)
     onChange(fromX(e.touches[0].clientX))
     function onMove(e) { e.preventDefault(); onChange(fromX(e.touches[0].clientX)) }
-    function onEnd()   { setDrag(false); window.removeEventListener('touchmove', onMove); window.removeEventListener('touchend', onEnd) }
+    function onEnd() { setDrag(false); window.removeEventListener('touchmove', onMove); window.removeEventListener('touchend', onEnd) }
     window.addEventListener('touchmove', onMove, { passive: false })
-    window.addEventListener('touchend',  onEnd)
+    window.addEventListener('touchend', onEnd)
   }, [disabled, fromX, onChange])
 
-  const onKeyDown = useCallback(function(e) {
+  const onKeyDown = useCallback(function (e) {
     if (disabled) return
     var map = { ArrowRight: step, ArrowUp: step, ArrowLeft: -step, ArrowDown: -step }
     if (map[e.key] !== undefined) { e.preventDefault(); onChange(snap(value + map[e.key])) }
     if (e.key === 'Home') { e.preventDefault(); onChange(min) }
-    if (e.key === 'End')  { e.preventDefault(); onChange(max) }
+    if (e.key === 'End') { e.preventDefault(); onChange(max) }
   }, [disabled, step, snap, value, min, max, onChange])
 
   var display = formatDisplay
@@ -291,10 +292,10 @@ function Slider({ label, value, min = 0, max = 100, step = 1, onChange, prefix =
     : (prefix + (typeof value === 'number' ? value.toLocaleString('en-IN') : value) + suffix)
 
   // Respect prefers-reduced-motion for thumb animations
-  var thumbScale  = prefersReduced ? 1 : (drag ? 1.22 : hover ? 1.08 : 1)
+  var thumbScale = prefersReduced ? 1 : (drag ? 1.22 : hover ? 1.08 : 1)
   var thumbShadow = drag
     ? ('0 0 0 10px ' + color + '15, 0 4px 16px rgba(0,0,0,0.35)')
-    : ('0 0 0 4px '  + color + '22, 0 2px 8px rgba(0,0,0,0.25)')
+    : ('0 0 0 4px ' + color + '22, 0 2px 8px rgba(0,0,0,0.25)')
 
   return (
     <div style={{ marginBottom: '22px', opacity: disabled ? 0.45 : 1 }}>
@@ -321,8 +322,8 @@ function Slider({ label, value, min = 0, max = 100, step = 1, onChange, prefix =
         onMouseDown={onMouseDown}
         onTouchStart={onTouchStart}
         onKeyDown={onKeyDown}
-        onMouseEnter={function() { setHover(true) }}
-        onMouseLeave={function() { setHover(false) }}
+        onMouseEnter={function () { setHover(true) }}
+        onMouseLeave={function () { setHover(false) }}
         tabIndex={disabled ? -1 : 0}
         role="slider"
         aria-valuemin={min}
@@ -389,13 +390,13 @@ function DataNote({ children }) {
 function Leadboard({ domainList, sorted, preferred, showAll, setShowAll, activeCertName, onPick, mappedDomain, isPrefilled, domains }) {
   const isSinglePrefilled = isPrefilled && preferred.length > 0
 
-  const seen      = new Set()
+  const seen = new Set()
   const finalList = []
 
   if (isSinglePrefilled) {
     preferred.forEach(c => { finalList.push(c) })
   } else {
-    ;[...preferred, ...domainList, ...sorted].forEach(function(c) {
+    ;[...preferred, ...domainList, ...sorted].forEach(function (c) {
       if (!seen.has(c.id) && finalList.length < (showAll ? 999 : 10)) {
         seen.add(c.id)
         finalList.push(c)
@@ -411,12 +412,12 @@ function Leadboard({ domainList, sorted, preferred, showAll, setShowAll, activeC
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
           <div style={{ fontFamily: FM, fontSize: '10px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
             {mappedDomain
-              ? (domains.find(function(d) { return d.id === mappedDomain })?.label || mappedDomain) + ' · Top Picks'
+              ? (domains.find(function (d) { return d.id === mappedDomain })?.label || mappedDomain) + ' · Top Picks'
               : 'Highest Demand Certs'}
           </div>
           {mappedDomain && (
             <button
-              onClick={function() { setShowAll(function(v) { return !v }) }}
+              onClick={function () { setShowAll(function (v) { return !v }) }}
               style={{ fontFamily: FM, fontSize: '9px', color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer', letterSpacing: '0.06em', textTransform: 'uppercase', padding: 0 }}
             >
               {showAll ? 'Show Less ▴' : 'Show All ▾'}
@@ -426,16 +427,16 @@ function Leadboard({ domainList, sorted, preferred, showAll, setShowAll, activeC
       )}
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-        {finalList.map(function(cert, i) {
-          const active      = activeCertName === cert.name
-          const isPrefill   = preferred.some(function(p) { return p.id === cert.id })
-          const demColor    = dc(cert.demand)
-          const readiness   = getCertReadiness(cert.forWho)
+        {finalList.map(function (cert, i) {
+          const active = activeCertName === cert.name
+          const isPrefill = preferred.some(function (p) { return p.id === cert.id })
+          const demColor = dc(cert.demand)
+          const readiness = getCertReadiness(cert.forWho)
 
           return (
             <motion.button
               key={cert.id}
-              onClick={function() { onPick(cert) }}
+              onClick={function () { onPick(cert) }}
               whileHover={{ scale: 1.01, x: 2 }}
               whileTap={{ scale: 0.98 }}
               style={{
@@ -483,7 +484,7 @@ function Leadboard({ domainList, sorted, preferred, showAll, setShowAll, activeC
 
       {hasMoreDomain && (
         <button
-          onClick={function() { setShowAll(true) }}
+          onClick={function () { setShowAll(true) }}
           style={{ width: '100%', marginTop: '8px', padding: '8px', borderRadius: '8px', background: 'transparent', border: '1px dashed var(--border)', color: 'var(--text-4)', fontFamily: FM, fontSize: '10px', letterSpacing: '0.06em', textTransform: 'uppercase', cursor: 'pointer' }}
         >
           + {domainList.length - 10} more in this domain
@@ -502,7 +503,7 @@ function PickMessage({ certName, prefilledCert, firstName }) {
 
   const isPrimary = prefilledCert &&
     (certName.toLowerCase().includes(prefilledCert.toLowerCase()) ||
-     prefilledCert.toLowerCase().includes(certName.toLowerCase()))
+      prefilledCert.toLowerCase().includes(certName.toLowerCase()))
 
   const springTransition = prefersReduced
     ? { duration: 0 }
@@ -513,8 +514,8 @@ function PickMessage({ certName, prefilledCert, firstName }) {
       <motion.div
         key="great"
         initial={{ opacity: 0, y: -8, scale: 0.97 }}
-        animate={{ opacity: 1, y: 0,  scale: 1 }}
-        exit={{   opacity: 0, y: -6 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: -6 }}
         transition={springTransition}
         style={{ marginBottom: '16px', padding: '13px 16px', borderRadius: '12px', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.28)', display: 'flex', alignItems: 'flex-start', gap: '10px' }}
       >
@@ -541,8 +542,8 @@ function PickMessage({ certName, prefilledCert, firstName }) {
     <motion.div
       key="interesting"
       initial={{ opacity: 0, y: -8, scale: 0.97 }}
-      animate={{ opacity: 1, y: 0,  scale: 1 }}
-      exit={{   opacity: 0, y: -6 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -6 }}
       transition={springTransition}
       style={{ marginBottom: '16px', padding: '13px 16px', borderRadius: '12px', background: 'rgba(81,177,231,0.07)', border: '1px solid rgba(81,177,231,0.25)', display: 'flex', alignItems: 'flex-start', gap: '10px' }}
     >
@@ -565,8 +566,8 @@ function PaybackRangeBar({ lo, hi, mid, color }) {
   // The center "most likely" zone is highlighted
   const spread = hi - lo
   if (!spread || spread <= 0) return null
-  const leftPct  = 0
-  const midLeft  = ((mid - 0.5 - lo) / spread) * 100
+  const leftPct = 0
+  const midLeft = ((mid - 0.5 - lo) / spread) * 100
   const midRight = ((mid + 0.5 - lo) / spread) * 100
 
   return (
@@ -630,7 +631,7 @@ function ChartTip({ active, payload, label }) {
   return (
     <div className="glass" style={{ borderRadius: '10px', padding: '10px 14px' }}>
       <div style={{ fontFamily: FM, fontSize: '10px', color: 'var(--text-4)', marginBottom: '5px' }}>{label}</div>
-      {payload.map(function(p, i) {
+      {payload.map(function (p, i) {
         return (
           <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '3px' }}>
             <div style={{ width: 7, height: 7, borderRadius: '50%', background: p.color }} />
@@ -649,9 +650,9 @@ function ChartTip({ active, payload, label }) {
 // ─────────────────────────────────────────────────────────
 function AIResult({ result, certName, onReset }) {
   const prefersReduced = useReducedMotion()
-  var vc = result.verdict?.toLowerCase().includes('strong')   ? EMERALD
-         : result.verdict?.toLowerCase().includes('moderate') ? AMBER
-         : '#EF4444'
+  var vc = result.verdict?.toLowerCase().includes('strong') ? EMERALD
+    : result.verdict?.toLowerCase().includes('moderate') ? AMBER
+      : '#EF4444'
 
   return (
     <motion.div
@@ -677,19 +678,19 @@ function AIResult({ result, certName, onReset }) {
         <div style={{ padding: '14px 16px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: '10px' }}>
           {result.breakEven && (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: '10px' }}>
-            {result.breakEven && (
-              <div style={{ padding: '14px 16px', borderRadius: '16px', background: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)' }}>
-                <div className="label-box" style={{ marginBottom: '6px' }}>Break-even</div>
-                <div style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', fontFamily: FB, lineHeight: 1.6 }}>{result.breakEven}</div>
-              </div>
-            )}
-            {result.projection && (
-              <div style={{ padding: '14px 16px', borderRadius: '16px', background: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)' }}>
-                <div className="label-box" style={{ marginBottom: '6px' }}>5-Yr projection</div>
-                <div style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', fontFamily: FB, lineHeight: 1.6 }}>{result.projection}</div>
-              </div>
-            )}
-          </div>
+              {result.breakEven && (
+                <div style={{ padding: '14px 16px', borderRadius: '16px', background: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)' }}>
+                  <div className="label-box" style={{ marginBottom: '6px' }}>Break-even</div>
+                  <div style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', fontFamily: FB, lineHeight: 1.6 }}>{result.breakEven}</div>
+                </div>
+              )}
+              {result.projection && (
+                <div style={{ padding: '14px 16px', borderRadius: '16px', background: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)' }}>
+                  <div className="label-box" style={{ marginBottom: '6px' }}>5-Yr projection</div>
+                  <div style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', fontFamily: FB, lineHeight: 1.6 }}>{result.projection}</div>
+                </div>
+              )}
+            </div>
           )}
         </div>
       )}
@@ -697,7 +698,7 @@ function AIResult({ result, certName, onReset }) {
       {result.demand?.length > 0 && (
         <div style={{ padding: '0 16px 12px' }}>
           <div style={{ fontFamily: FM, fontSize: '9px', color: VIOLET, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '7px' }}>MARKET DEMAND</div>
-          {result.demand.map(function(d, i) {
+          {result.demand.map(function (d, i) {
             return (
               <div key={i} style={{ display: 'flex', gap: '8px', marginBottom: '5px' }}>
                 <span style={{ color: VIOLET, fontFamily: FM, fontSize: '11px', flexShrink: 0 }}>◆</span>
@@ -712,7 +713,7 @@ function AIResult({ result, certName, onReset }) {
         <div style={{ padding: '0 16px 12px' }}>
           <div className="label-box" style={{ marginBottom: '12px' }}>Risks</div>
           <div style={{ display: 'grid', gap: '12px' }}>
-            {result.risks.map(function(r, i) {
+            {result.risks.map(function (r, i) {
               return (
                 <div key={i} className="callout-card" style={{ display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
                   <div style={{ width: '44px', minWidth: '44px', height: '44px', borderRadius: '16px', background: 'var(--bg-surface)', display: 'grid', placeItems: 'center', boxShadow: 'var(--shadow-soft)' }}>
@@ -750,86 +751,137 @@ function AIResult({ result, certName, onReset }) {
   )
 }
 
-// ─────────────────────────────────────────────────────────
-// MAIN HERO COMPONENT
-// ─────────────────────────────────────────────────────────
-function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
-  // ── Props with fallbacks ────────────────────────────────
-  mode          = mode          || 'professional'
-  prefilledCert = prefilledCert || ''
-  resumeName    = resumeName    || ''
-  resumeCity    = resumeCity    || ''
-  resumeDomain  = resumeDomain  || ''
+/// Don't forget these imports at the very top of your file!
+// import { useState, useEffect, useCallback, useRef } from 'react';
+// import { supabase } from '../services/supabase.js'; 
 
-  const isStudent      = mode === 'student'
-  const prefersReduced = useReducedMotion()
+function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
+  // ── Database State ──────────────────────────────────────
+  const [certificationsData, setCertificationsData] = useState([]);
+  const [domainsData, setDomainsData] = useState([]);
+  const [dbLoading, setDbLoading] = useState(true);
+
+  // ── The "Once and For All" Alias Fix ────────────────────
+  // This guarantees that whether the code below asks for uppercase 
+  // or lowercase, it will always find the data and never crash.
+  const CERTIFICATIONS = certificationsData;
+  const certifications = certificationsData;
+  const CERT_DOMAINS = domainsData;
+  const certDomains = domainsData;
+
+  // ── Fetch from Supabase on mount ────────────────────────
+  useEffect(() => {
+    async function fetchDatabase() {
+      try {
+        const [certsResponse, domainsResponse] = await Promise.all([
+          supabase.from('certifications').select('*'),
+          supabase.from('domains').select('*')
+        ]);
+
+        if (certsResponse.data) setCertificationsData(certsResponse.data);
+        if (domainsResponse.data) setDomainsData(domainsResponse.data);
+      } catch (error) {
+        console.error("Failed to fetch Supabase data:", error);
+      } finally {
+        setDbLoading(false);
+      }
+    }
+    fetchDatabase();
+  }, []);
+  // ── Fetch from Supabase on mount ────────────────────────
+  useEffect(() => {
+    async function fetchDatabase() {
+      try {
+        const [certsResponse, domainsResponse] = await Promise.all([
+          supabase.from('certifications').select('*'),
+          supabase.from('domains').select('*')
+        ]);
+
+        if (certsResponse.data) setCERTIFICATIONS(certsResponse.data);
+        if (domainsResponse.data) setCERT_DOMAINS(domainsResponse.data);
+      } catch (error) {
+        console.error("Failed to fetch Supabase data:", error);
+      } finally {
+        setDbLoading(false);
+      }
+    }
+    fetchDatabase();
+  }, []);
+
+  // ── Props with fallbacks ────────────────────────────────
+  mode = mode || 'professional';
+  prefilledCert = prefilledCert || '';
+  resumeName = resumeName || '';
+  resumeCity = resumeCity || '';
+  resumeDomain = resumeDomain || '';
+
+  const isStudent = mode === 'student';
+  const prefersReduced = useReducedMotion();
 
   // ── Store: slider values (replaces useLocalStorage calls) ─
-  const salary      = useJourneyStore(s => s.salary)
-  const certCost    = useJourneyStore(s => s.certCost)
-  const hikePercent = useJourneyStore(s => s.hikePercent)
-  const expectedFirstSalary = useJourneyStore(s => s.expectedFirstSalary || 4.8)
-  const setSalary      = useJourneyStore(s => s.setSalary)
-  const setCertCost    = useJourneyStore(s => s.setCertCost)
-  const setHikePercent = useJourneyStore(s => s.setHikePercent)
-  const setExpectedFirstSalary = useJourneyStore(s => s.setExpectedFirstSalary)
+  const salary = useJourneyStore(s => s.salary);
+  const certCost = useJourneyStore(s => s.certCost);
+  const hikePercent = useJourneyStore(s => s.hikePercent);
+  const expectedFirstSalary = useJourneyStore(s => s.expectedFirstSalary || 4.8);
+  const setSalary = useJourneyStore(s => s.setSalary);
+  const setCertCost = useJourneyStore(s => s.setCertCost);
+  const setHikePercent = useJourneyStore(s => s.setHikePercent);
+  const setExpectedFirstSalary = useJourneyStore(s => s.setExpectedFirstSalary);
 
   // ── Store: selected cert ────────────────────────────────
-  const storeSelectedCert = useJourneyStore(s => s.selectedCert)
-  const storeCertName     = useJourneyStore(s => s.certName)
-  const storeSetSelected  = useJourneyStore(s => s.setSelectedCert)
-  const storeClearCert    = useJourneyStore(s => s.clearCert)
+  const storeSelectedCert = useJourneyStore(s => s.selectedCert);
+  const storeCertName = useJourneyStore(s => s.certName);
+  const storeSetSelected = useJourneyStore(s => s.setSelectedCert);
+  const storeClearCert = useJourneyStore(s => s.clearCert);
 
   // ── Local UI state (transient — not persisted) ──────────
-  const [aiResult,     setAiResult]     = useState(null)
-  const [aiLoading,    setAiLoading]    = useState(false)
-  const [aiError,      setAiError]      = useState(null)
-  const [showVerifier, setShowVerifier] = useState(false)
-  const [cooldown,     setCooldown]     = useState(0)
-  const [showAll,      setShowAll]      = useState(false)
-  const [certifications, setCertifications] = useState([])
-  const [domains, setDomains] = useState([])
+  const [aiResult, setAiResult] = useState(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState(null);
+  const [showVerifier, setShowVerifier] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
+  const [showAll, setShowAll] = useState(false);
 
   // Derive from store
-  const certName     = storeCertName     || prefilledCert
+  const certName = storeCertName || prefilledCert
   const selectedCert = storeSelectedCert || null
 
   const { user } = useAuth()
-  const guest    = useGuestCounter(GUEST_FREE_LIMIT)
+  const guest = useGuestCounter(GUEST_FREE_LIMIT)
 
-  const firstName   = resumeName ? resumeName.split(' ')[0] : ''
+  const firstName = resumeName ? resumeName.split(' ')[0] : ''
   const displayCity = resumeCity
 
   // ── Cooldown timer ──────────────────────────────────────
-  useEffect(function() {
+  useEffect(function () {
     if (cooldown <= 0) return
-    var t = setTimeout(function() { setCooldown(function(v) { return v - 1 }) }, 1000)
-    return function() { clearTimeout(t) }
+    var t = setTimeout(function () { setCooldown(function (v) { return v - 1 }) }, 1000)
+    return function () { clearTimeout(t) }
   }, [cooldown])
 
-  useEffect(function() {
+  useEffect(function () {
     const controller = new AbortController()
     Promise.all([
       fetchCertifications({ limit: 200, signal: controller.signal }),
       fetchDomains({ signal: controller.signal }),
-    ]).then(function([certs, domainRows]) {
+    ]).then(function ([certs, domainRows]) {
       setCertifications(certs)
       setDomains(domainRows)
-    }).catch(function() {
+    }).catch(function () {
       setCertifications([])
       setDomains([])
     })
-    return function() { controller.abort() }
+    return function () { controller.abort() }
   }, [])
 
   // ── Sync prefilledCert from Resume AI ──────────────────
-  useEffect(function() {
+  useEffect(function () {
     if (!prefilledCert) return
     setAiResult(null)
     setAiError(null)
-    var found = certifications.find(function(c) {
+    var found = certifications.find(function (c) {
       return c.name.toLowerCase().includes(prefilledCert.toLowerCase()) ||
-             prefilledCert.toLowerCase().includes(c.name.toLowerCase())
+        prefilledCert.toLowerCase().includes(c.name.toLowerCase())
     })
     if (found) {
       storeSetSelected(found)
@@ -838,22 +890,22 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
   }, [prefilledCert, certifications])
 
   // ── Student mode: zero salary ───────────────────────────
-  useEffect(function() {
+  useEffect(function () {
     if (isStudent) setSalary(0)
   }, [isStudent])
 
   const roi = useROICalc({ currentSalary: isStudent ? expectedFirstSalary : salary, certCost, hikePercent: isStudent ? 0 : hikePercent })
 
   // ── Pick cert from leaderboard ──────────────────────────
-  const pickCert = useCallback(function(cert) {
+  const pickCert = useCallback(function (cert) {
     storeSetSelected(cert)
     setAiResult(null)
     setAiError(null)
   }, [storeSetSelected])
 
   // ── AI analysis ─────────────────────────────────────────
-  const analyse = useCallback(async function() {
-    if (!certName.trim())        { setAiError('Select a certification first'); return }
+  const analyse = useCallback(async function () {
+    if (!certName.trim()) { setAiError('Select a certification first'); return }
     if (!user && guest.exceeded) { setAiError('Free limit reached — sign in for unlimited'); return }
     if (cooldown > 0) return
     setAiLoading(true)
@@ -864,7 +916,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
       setAiResult(r)
       if (!user) guest.increment()
       setCooldown(10)
-    } catch(e) {
+    } catch (e) {
       setAiError(e.message || 'Analysis failed')
     }
     setAiLoading(false)
@@ -873,7 +925,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
   var canAnalyse = certName && (user || !guest.exceeded) && cooldown === 0
 
   // ── Domain + cert lists ─────────────────────────────────
-  const demandScore = function(d) {
+  const demandScore = function (d) {
     return d === 'Very High' ? 4 : d === 'High' ? 3 : d === 'Medium' ? 2 : 1
   }
   const domainAliases = {
@@ -883,11 +935,11 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
     medical: 'medical', law: 'law', architecture: 'architecture',
     engineering: 'engineering', government: 'government', mba: 'mba',
   }
-  const mappedDomain    = domainAliases[resumeDomain] || null
-  const domainMatchList = mappedDomain ? CERTIFICATIONS.filter(function(c) { return c.domain === mappedDomain }) : []
-  const sortedByDem     = [...CERTIFICATIONS].sort(function(a, b) { return demandScore(b.demand) - demandScore(a.demand) || b.avgHike - a.avgHike })
-  const preferredCerts  = prefilledCert
-    ? CERTIFICATIONS.filter(function(c) { return c.name.toLowerCase().includes(prefilledCert.toLowerCase()) || prefilledCert.toLowerCase().includes(c.name.toLowerCase()) })
+  const mappedDomain = domainAliases[resumeDomain] || null
+  const domainMatchList = mappedDomain ? CERTIFICATIONS.filter(function (c) { return c.domain === mappedDomain }) : []
+  const sortedByDem = [...CERTIFICATIONS].sort(function (a, b) { return demandScore(b.demand) - demandScore(a.demand) || b.avgHike - a.avgHike })
+  const preferredCerts = prefilledCert
+    ? CERTIFICATIONS.filter(function (c) { return c.name.toLowerCase().includes(prefilledCert.toLowerCase()) || prefilledCert.toLowerCase().includes(c.name.toLowerCase()) })
     : []
 
   // ── Reduced-motion transition helper ───────────────────
@@ -953,7 +1005,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
       <AnimatePresence>
         {selectedCert ? (() => {
           const stripReadiness = getCertReadiness(selectedCert.forWho)
-          const notIdealNote   = getNotIdealNote(selectedCert)
+          const notIdealNote = getNotIdealNote(selectedCert)
           return (
             <motion.div
               initial={prefersReduced ? false : { opacity: 0, y: 4 }}
@@ -1071,8 +1123,8 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
         >
           {isStudent ? (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '8px', marginBottom: '12px' }}>
-              <StatCard label="Target Offer"  value="₹4.8L+"               color={VIOLET} delay={0}    />
-              <StatCard label="Investment"    value={'₹' + certCost + 'L'} color={AMBER}  delay={0.05} />
+              <StatCard label="Target Offer" value="₹4.8L+" color={VIOLET} delay={0} />
+              <StatCard label="Investment" value={'₹' + certCost + 'L'} color={AMBER} delay={0.05} />
             </div>
           ) : (
             <>
@@ -1094,8 +1146,8 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
 
               {/* ── Secondary Dash Stats ────────────────────────── */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px', marginBottom: '12px' }}>
-                <StatCard label="New Salary"    value={'₹' + roi.newSalaryL + 'L/yr'}         color={PICTON}  delay={0}    />
-                <StatCard label="Monthly +"     value={'₹' + roi.monthlyGainK + 'K'}           color={VIOLET}  delay={0.05} />
+                <StatCard label="New Salary" value={'₹' + roi.newSalaryL + 'L/yr'} color={PICTON} delay={0} />
+                <StatCard label="Monthly +" value={'₹' + roi.monthlyGainK + 'K'} color={VIOLET} delay={0.05} />
                 <StatCard
                   label="Payback Window"
                   value={
@@ -1108,11 +1160,11 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
                   delay={0.1}
                   badge={selectedCert ? getPaybackConfidence(selectedCert.demand, hikePercent) : null}
                   rangeData={selectedCert && roi.breakEvenMonths > 0 ? (() => {
-                    const conf   = getPaybackConfidence(selectedCert.demand, hikePercent)
+                    const conf = getPaybackConfidence(selectedCert.demand, hikePercent)
                     const spread = conf.label === 'High confidence' ? 0.15 : conf.label === 'Medium confidence' ? 0.25 : 0.35
                     return {
-                      lo:  Math.max(1, Math.round(roi.breakEvenMonths * (1 - spread))),
-                      hi:  Math.round(roi.breakEvenMonths * (1 + spread)),
+                      lo: Math.max(1, Math.round(roi.breakEvenMonths * (1 - spread))),
+                      hi: Math.round(roi.breakEvenMonths * (1 + spread)),
                       mid: roi.breakEvenMonths,
                     }
                   })() : null}
@@ -1144,11 +1196,11 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
             <LineChart data={roi.chartData} margin={{ top: 4, right: 8, bottom: 0, left: -16 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(99,102,241,0.05)" />
               <XAxis dataKey="label" tick={{ fontSize: 9, fill: 'var(--text-4)', fontFamily: FM }} axisLine={false} tickLine={false} interval={4} />
-              <YAxis tick={{ fontSize: 9, fill: 'var(--text-4)', fontFamily: FM }} axisLine={false} tickLine={false} tickFormatter={function(v) { return '₹' + v + 'K' }} />
+              <YAxis tick={{ fontSize: 9, fill: 'var(--text-4)', fontFamily: FM }} axisLine={false} tickLine={false} tickFormatter={function (v) { return '₹' + v + 'K' }} />
               <Tooltip content={ChartTip} />
               <ReferenceLine y={0} stroke="rgba(99,102,241,0.08)" strokeDasharray="4 4" />
-              <Line type="monotone" dataKey="action"   name="With Cert" stroke={EMERALD} strokeWidth={2.5} dot={false} activeDot={{ r: 4, fill: EMERALD }} />
-              <Line type="monotone" dataKey="inaction" name="Inaction"  stroke="#475569" strokeWidth={1.5} strokeDasharray="5 4" dot={false} />
+              <Line type="monotone" dataKey="action" name="With Cert" stroke={EMERALD} strokeWidth={2.5} dot={false} activeDot={{ r: 4, fill: EMERALD }} />
+              <Line type="monotone" dataKey="inaction" name="Inaction" stroke="#475569" strokeWidth={1.5} strokeDasharray="5 4" dot={false} />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -1226,7 +1278,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
               exit={{ opacity: 0, y: -4, filter: 'blur(4px)' }}
               transition={prefersReduced ? { duration: 0 } : { type: 'spring', duration: 0.45, bounce: 0 }}
             >
-              <AIResult result={aiResult} certName={certName} onReset={function() { setAiResult(null) }} />
+              <AIResult result={aiResult} certName={certName} onReset={function () { setAiResult(null) }} />
             </motion.div>
           ) : null}
         </AnimatePresence>
@@ -1236,7 +1288,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
       {certName ? (
         <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '8px' }}>
           <button
-            onClick={function() { setShowVerifier(function(v) { return !v }) }}
+            onClick={function () { setShowVerifier(function (v) { return !v }) }}
             style={{ padding: '8px 14px', borderRadius: '9px', background: showVerifier ? 'rgba(16,185,129,0.1)' : 'var(--surface)', border: '1px solid ' + (showVerifier ? 'rgba(16,185,129,0.25)' : 'var(--border)'), color: showVerifier ? EMERALD : 'var(--text-3)', fontSize: '12px', cursor: 'pointer', fontFamily: FB, fontWeight: '600', display: 'flex', alignItems: 'center', gap: '5px', transition: 'all 0.18s' }}
           >
             <CheckCircle size={12} /> Verify My Hike
@@ -1255,7 +1307,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
             exit={{ opacity: 0, y: -6 }}
             transition={T}
           >
-            <HikeVerifier certName={certName} projectedHike={hikePercent} onClose={function() { setShowVerifier(false) }} />
+            <HikeVerifier certName={certName} projectedHike={hikePercent} onClose={function () { setShowVerifier(false) }} />
           </motion.div>
         ) : null}
       </AnimatePresence>
