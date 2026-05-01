@@ -9,15 +9,17 @@ import {
   LineChart, Line, XAxis, YAxis, Tooltip,
   ResponsiveContainer, ReferenceLine, CartesianGrid
 } from 'recharts'
-import { CERTIFICATIONS, CERT_DOMAINS, GUEST_FREE_LIMIT } from '../tokens.js'
 import { useROICalc, useGuestCounter } from '../hooks/hooks.jsx'
 import { useAuth } from '../hooks/useAuth.jsx'
 import { analyzeROI } from '../services/aiService.jsx'
+import { fetchCertifications, fetchDomains } from '../services/dataService.jsx'
 import AILoadingState from './AILoadingState.jsx'
 import HikeVerifier from './HikeVerifier.jsx'
 import PitchBoss from './PitchBoss.jsx'
 import ShareROICard from './ShareROICard.jsx'
 import { useJourneyStore } from '../store/useJourneyStore.js'
+
+const GUEST_FREE_LIMIT = parseInt(import.meta.env.VITE_GUEST_FREE_LIMIT || '3', 10)
 
 // ── Font constants ────────────────────────────────────────
 const FH = "'Bricolage Grotesque',sans-serif"
@@ -145,14 +147,45 @@ function ShareURLButton({ certName, salary, certCost, hikePercent, mode }) {
 }
 
 // ── Student stepping-stone path ────────────────────────
-function StudentPath({ certName, certCost }) {
-  if (!certName) return null
-  const steps = [
-    { num: '01', label: 'Get Certified',  detail: certName.split(' ').slice(0, 3).join(' '), time: '2–4 mo', color: INDIGO },
-    { num: '02', label: 'Build Portfolio', detail: '2 real projects on GitHub', time: '1–2 mo', color: VIOLET },
-    { num: '03', label: 'Mock Interviews', detail: 'Pramp / Exponent / peers', time: '3–4 wk', color: PICTON },
-    { num: '04', label: 'First Offer',     detail: '₹4.8L+ target package',    time: '',       color: EMERALD },
+function getStudentPathSteps(domain, certName, firstSalary) {
+  const domainSteps = {
+    finance: [
+      { label: 'Build Models', detail: '3-statement model and valuation case', time: '3-4 wk', color: VIOLET },
+      { label: 'Mock Cases', detail: 'Equity research and FP&A case practice', time: '3-4 wk', color: PICTON },
+    ],
+    data: [
+      { label: 'Build Dashboards', detail: '2 SQL + BI projects with public datasets', time: '1-2 mo', color: VIOLET },
+      { label: 'Case Practice', detail: 'Analytics take-home problems and metric trees', time: '3-4 wk', color: PICTON },
+    ],
+    marketing: [
+      { label: 'Campaign Proof', detail: 'Run or simulate 2 performance campaigns', time: '3-4 wk', color: VIOLET },
+      { label: 'Portfolio Review', detail: 'Landing page, ads, and analytics teardown', time: '2-3 wk', color: PICTON },
+    ],
+    management: [
+      { label: 'Project Proof', detail: 'Create agile plan, risk register, and roadmap', time: '3-4 wk', color: VIOLET },
+      { label: 'Interview Drills', detail: 'Stakeholder and delivery scenario practice', time: '3-4 wk', color: PICTON },
+    ],
+    hr: [
+      { label: 'People Ops Kit', detail: 'Hiring funnel, JD scorecard, and HR dashboard', time: '3-4 wk', color: VIOLET },
+      { label: 'Case Practice', detail: 'Talent, engagement, and policy scenarios', time: '2-3 wk', color: PICTON },
+    ],
+    tech: [
+      { label: 'Build Lab Proof', detail: '2 deployable projects with architecture notes', time: '1-2 mo', color: VIOLET },
+      { label: 'Interview Drills', detail: 'System, troubleshooting, and role-based practice', time: '3-4 wk', color: PICTON },
+    ],
+  }
+  const middle = domainSteps[domain] || domainSteps.tech
+  return [
+    { num: '01', label: 'Get Certified', detail: certName.split(' ').slice(0, 3).join(' '), time: '2-4 mo', color: INDIGO },
+    { num: '02', ...middle[0] },
+    { num: '03', ...middle[1] },
+    { num: '04', label: 'First Offer', detail: 'Rs.' + firstSalary.toFixed(1) + 'L target package', time: '', color: EMERALD },
   ]
+}
+
+function StudentPath({ certName, certCost, domain, firstSalary }) {
+  if (!certName) return null
+  const steps = getStudentPathSteps(domain || 'tech', certName, firstSalary || 4.8)
 
   return (
     <motion.div
@@ -164,20 +197,14 @@ function StudentPath({ certName, certCost }) {
     >
       <div style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '6px' }}>
         <Star size={9} color={VIOLET} />
-        Your path to ₹4.8L+
+        Your path to Rs.{(firstSalary || 4.8).toFixed(1)}L+
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
         {steps.map((step, i) => (
           <div key={i} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-            {/* Connector line + circle */}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0, width: '28px' }}>
-              <div style={{
-                width: '28px', height: '28px', borderRadius: '50%',
-                background: step.color + '18', border: '1px solid ' + step.color + '40',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontFamily: FM, fontSize: '9px', color: step.color, fontWeight: '700',
-              }}>
+              <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: step.color + '18', border: '1px solid ' + step.color + '40', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FM, fontSize: '9px', color: step.color, fontWeight: '700' }}>
                 {step.num}
               </div>
               {i < steps.length - 1 && (
@@ -185,16 +212,11 @@ function StudentPath({ certName, certCost }) {
               )}
             </div>
 
-            {/* Content */}
             <div style={{ paddingBottom: i < steps.length - 1 ? '14px' : '0', flex: 1 }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2px' }}>
-                <span style={{ fontFamily: FH, fontWeight: '800', fontSize: '13px', color: step.color, letterSpacing: '-0.01em' }}>
-                  {step.label}
-                </span>
+                <span style={{ fontFamily: FH, fontWeight: '800', fontSize: '13px', color: step.color, letterSpacing: '-0.01em' }}>{step.label}</span>
                 {step.time && (
-                  <span style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)', padding: '2px 7px', borderRadius: '99px', background: step.color + '10', border: '1px solid ' + step.color + '20' }}>
-                    {step.time}
-                  </span>
+                  <span style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)', padding: '2px 7px', borderRadius: '99px', background: step.color + '10', border: '1px solid ' + step.color + '20' }}>{step.time}</span>
                 )}
               </div>
               <div style={{ fontFamily: FB, fontSize: '12px', color: i === steps.length - 1 ? EMERALD : 'var(--text-3)', fontWeight: i === steps.length - 1 ? '700' : '400' }}>
@@ -206,16 +228,12 @@ function StudentPath({ certName, certCost }) {
       </div>
 
       <div style={{ marginTop: '14px', padding: '9px 12px', borderRadius: '8px', background: 'rgba(16,185,129,0.07)', border: '1px solid rgba(16,185,129,0.2)', fontSize: '11px', color: 'var(--text-4)', fontFamily: FB, lineHeight: '1.6' }}>
-        Total investment: ₹{certCost}L · Timeline: 4–7 months · Target: Capgemini iON / TCS iON / BFSI entry roles
+        Total investment: Rs.{certCost}L / Timeline: 4-7 months / Target: verified entry roles in {domain || 'your domain'}
       </div>
     </motion.div>
   )
 }
 
-
-// ─────────────────────────────────────────────────────────
-// CUSTOM SLIDER
-// ─────────────────────────────────────────────────────────
 function Slider({ label, value, min = 0, max = 100, step = 1, onChange, prefix = '', suffix = '', color = INDIGO, note, formatDisplay, disabled = false }) {
   const trackRef        = useRef(null)
   const [drag,  setDrag]  = useState(false)
@@ -381,7 +399,7 @@ function DataNote({ children }) {
 // ─────────────────────────────────────────────────────────
 // CERT LEADERBOARD
 // ─────────────────────────────────────────────────────────
-function Leadboard({ domainList, sorted, preferred, showAll, setShowAll, activeCertName, onPick, mappedDomain, isPrefilled }) {
+function Leadboard({ domainList, sorted, preferred, showAll, setShowAll, activeCertName, onPick, mappedDomain, isPrefilled, domains }) {
   const isSinglePrefilled = isPrefilled && preferred.length > 0
 
   const seen      = new Set()
@@ -406,7 +424,7 @@ function Leadboard({ domainList, sorted, preferred, showAll, setShowAll, activeC
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
           <div style={{ fontFamily: FM, fontSize: '10px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
             {mappedDomain
-              ? (CERT_DOMAINS.find(function(d) { return d.id === mappedDomain })?.label || mappedDomain) + ' · Top Picks'
+              ? (domains.find(function(d) { return d.id === mappedDomain })?.label || mappedDomain) + ' · Top Picks'
               : 'Highest Demand Certs'}
           </div>
           {mappedDomain && (
@@ -748,9 +766,11 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
   const salary      = useJourneyStore(s => s.salary)
   const certCost    = useJourneyStore(s => s.certCost)
   const hikePercent = useJourneyStore(s => s.hikePercent)
+  const expectedFirstSalary = useJourneyStore(s => s.expectedFirstSalary || 4.8)
   const setSalary      = useJourneyStore(s => s.setSalary)
   const setCertCost    = useJourneyStore(s => s.setCertCost)
   const setHikePercent = useJourneyStore(s => s.setHikePercent)
+  const setExpectedFirstSalary = useJourneyStore(s => s.setExpectedFirstSalary)
 
   // ── Store: selected cert ────────────────────────────────
   const storeSelectedCert = useJourneyStore(s => s.selectedCert)
@@ -765,6 +785,8 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
   const [showVerifier, setShowVerifier] = useState(false)
   const [cooldown,     setCooldown]     = useState(0)
   const [showAll,      setShowAll]      = useState(false)
+  const [certifications, setCertifications] = useState([])
+  const [domains, setDomains] = useState([])
 
   // Derive from store
   const certName     = storeCertName     || prefilledCert
@@ -783,12 +805,27 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
     return function() { clearTimeout(t) }
   }, [cooldown])
 
+  useEffect(function() {
+    const controller = new AbortController()
+    Promise.all([
+      fetchCertifications({ limit: 200, signal: controller.signal }),
+      fetchDomains({ signal: controller.signal }),
+    ]).then(function([certs, domainRows]) {
+      setCertifications(certs)
+      setDomains(domainRows)
+    }).catch(function() {
+      setCertifications([])
+      setDomains([])
+    })
+    return function() { controller.abort() }
+  }, [])
+
   // ── Sync prefilledCert from Resume AI ──────────────────
   useEffect(function() {
     if (!prefilledCert) return
     setAiResult(null)
     setAiError(null)
-    var found = CERTIFICATIONS.find(function(c) {
+    var found = certifications.find(function(c) {
       return c.name.toLowerCase().includes(prefilledCert.toLowerCase()) ||
              prefilledCert.toLowerCase().includes(c.name.toLowerCase())
     })
@@ -796,14 +833,14 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
       storeSetSelected(found)
       // storeSetSelected auto-syncs certCost + hikePercent
     }
-  }, [prefilledCert])
+  }, [prefilledCert, certifications])
 
   // ── Student mode: zero salary ───────────────────────────
   useEffect(function() {
     if (isStudent) setSalary(0)
   }, [isStudent])
 
-  const roi = useROICalc({ currentSalary: salary, certCost, hikePercent })
+  const roi = useROICalc({ currentSalary: isStudent ? expectedFirstSalary : salary, certCost, hikePercent: isStudent ? 0 : hikePercent })
 
   // ── Pick cert from leaderboard ──────────────────────────
   const pickCert = useCallback(function(cert) {
@@ -1236,3 +1273,4 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
 }
 
 export default Hero
+

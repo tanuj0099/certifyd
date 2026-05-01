@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { AlertTriangle, Building2, Globe, Loader2, MapPin, RefreshCw, Wifi } from 'lucide-react'
+import { fetchDemandFromSupabase } from '../services/dataService.jsx'
 
 const F_HEAD = 'var(--font-head)'
 const F_BODY = 'var(--font-body)'
@@ -111,6 +112,13 @@ function CityDemandCard({ city, demand, loading }) {
 }
 
 async function fetchDemand(domain, city = 'all', signal) {
+  try {
+    return await fetchDemandFromSupabase({ domain, city })
+  } catch {
+    // Supabase is the primary source; API fallback keeps local/dev usable until
+    // VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are configured.
+  }
+
   const response = await fetch('/api/demand?domain=' + encodeURIComponent(domain) + '&city=' + encodeURIComponent(city), { signal })
   if (!response.ok) throw new Error('Demand API returned HTTP ' + response.status)
   return response.json()

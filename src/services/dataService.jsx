@@ -1,3 +1,5 @@
+import { supabase } from './supabaseClient.js'
+
 export async function fetchCertifications({ domain = '', limit = 100, signal } = {}) {
   const params = new URLSearchParams()
   if (domain) params.set('domain', domain)
@@ -38,4 +40,41 @@ export function rankCertificationsForSwitcher(certs, timeline = 'flexible') {
       if (hikeDelta) return hikeDelta
       return Number(a.timeMonths || 99) - Number(b.timeMonths || 99)
     })
+}
+
+export function normalizeDemandCount(jobCount) {
+  const count = Number(jobCount || 0)
+  if (count > 2000) return 5
+  if (count >= 1000) return 4
+  if (count >= 500) return 3
+  if (count >= 150) return 2
+  return 1
+}
+
+export async function fetchDemandFromSupabase({ domain, city = 'all' } = {}) {
+  if (!supabase) throw new Error('Supabase client is not configured')
+
+  let query = supabase
+    .from('demand_counts')
+    .select('city_id,domain_id,job_count,updated_at')
+    .eq('domain_id', domain)
+
+  if (city && city !== 'all') query = query.eq('city_id', city)
+
+  const { data, error } = await query
+  if (error) throw error
+
+  const cities = {}
+  ;(data || []).forEach(row => {
+    cities[row.city_id] = {
+      jobCount: Number(row.job_count || 0),
+      level: normalizeDemandCount(row.job_count),
+      updatedAt: row.updated_at || '',
+    }
+  })
+
+  return {
+    source: 'supabase',
+    cities,
+  }
 }

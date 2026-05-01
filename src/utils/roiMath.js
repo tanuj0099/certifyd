@@ -35,7 +35,7 @@ export function calculateAdvancedROI({
   }
 
   // Year 0 cash flow is the certification cost. Years 1-5 compare two salary
-  // timelines: normal corporate raise path vs certification-hike path.
+  // timelines: the normal corporate raise path vs certification-hike path.
   let discountedGainINR = 0
   let undiscountedGainINR = 0
   let breakEvenMonths = 0
@@ -43,7 +43,7 @@ export function calculateAdvancedROI({
 
   for (let year = 1; year <= years; year += 1) {
     const baselineSalary = salaryINR * Math.pow(1 + annualIncrementRate, year)
-    const certSalary = salaryINR * (1 + hike) * Math.pow(1 + annualIncrementRate, year - 1)
+    const certSalary = salaryINR * (1 + hike) * Math.pow(1 + annualIncrementRate, year)
     const incrementalGain = certSalary - baselineSalary
     const presentValueGain = incrementalGain / Math.pow(1 + discountRate, year)
 
@@ -66,7 +66,7 @@ export function calculateAdvancedROI({
   }
 
   const netPresentValueINR = discountedGainINR - costINR
-  const firstYearGainINR = salaryINR * (1 + hike) - salaryINR * (1 + annualIncrementRate)
+  const firstYearGainINR = (salaryINR * (1 + hike) * (1 + annualIncrementRate)) - (salaryINR * (1 + annualIncrementRate))
   const monthlyGainINR = firstYearGainINR / 12
   const fallbackBreakEven = monthlyGainINR > 0 ? Math.ceil(costINR / monthlyGainINR) : 0
   const finalBreakEven = breakEvenMonths || fallbackBreakEven

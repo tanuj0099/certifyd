@@ -20,10 +20,12 @@ export const useJourneyStore = create(
       salary:      12,
       certCost:    0.25,
       hikePercent: 30,
+      expectedFirstSalary: 4.8,
 
       setSalary:      (v) => set({ salary: v }),
       setCertCost:    (v) => set({ certCost: v }),
       setHikePercent: (v) => set({ hikePercent: v }),
+      setExpectedFirstSalary: (v) => set({ expectedFirstSalary: v }),
 
       // ── Selected cert ──────────────────────────────────
       selectedCert: null,
@@ -35,7 +37,7 @@ export const useJourneyStore = create(
         set({
           selectedCert: cert,
           certName:     cert.name,
-          certCost:     cert.examCostL ?? get().certCost,
+          certCost:     cert.examCostL ?? (cert.avgCost ? cert.avgCost / 100000 : get().certCost),
           hikePercent:  cert.avgHike   ?? get().hikePercent,
         })
       },
@@ -98,6 +100,7 @@ export const useJourneyStore = create(
         salary:      state.salary,
         certCost:    state.certCost,
         hikePercent: state.hikePercent,
+        expectedFirstSalary: state.expectedFirstSalary,
         mode:        state.mode,
       }),
     }

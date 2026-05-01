@@ -881,6 +881,12 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
       var safeText = analyseText.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, ' ').replace(/\s+/g, ' ').slice(0, 2200).trim()
       var targetDomain = mode === 'switcher' ? (switchTarget || domainIntent) : null
       if (mode === 'switcher' && targetDomain && targetDomain !== 'auto') {
+        var domainExists = domainChoices.some(function(domain) { return domain.id === targetDomain })
+        if (!domainExists) {
+          var label = String(targetDomain).trim()
+          setError("We currently track ROI for 12 major domains, but we don't have enough verified salary data for '" + label + "' yet.")
+          return
+        }
         var directCerts = await fetchCertifications({ domain: targetDomain, limit: 25 })
         if (!directCerts.length) throw new Error('No certifications found for ' + targetDomain + '. Check Supabase domain_id values.')
         setResult(buildSwitcherResult({
