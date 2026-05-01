@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { calculateAdvancedROI, ROI_DEFAULTS } from '../utils/roiMath.js'
 
 // ── localStorage hook ─────────────────────────────────────
 export const useLocalStorage = (key, initialValue) => {
@@ -64,19 +65,21 @@ export const useROICalc = ({ currentSalary, certCost, hikePercent }) => {
   const annualSalaryINR = isStudent ? 0 : currentSalary * 100000
   const baselineINR     = isStudent ? STUDENT_BASELINE : annualSalaryINR
   const certCostINR     = certCost * 100000
-  const inflationRate   = 0.06 // 6% inflation
+  const inflationRate   = ROI_DEFAULTS.discountRate
+  const roi = calculateAdvancedROI({
+    salaryLPA: isStudent ? STUDENT_BASELINE / 100000 : currentSalary,
+    certCostINR,
+    hikePercent: isStudent ? 0 : hikePercent,
+  })
 
-  // Action path
-  const newSalaryINR  = isStudent
-    ? STUDENT_BASELINE
-    : annualSalaryINR * (1 + hikePercent / 100)
-  const annualGainINR = newSalaryINR - annualSalaryINR
+  const newSalaryINR  = isStudent ? STUDENT_BASELINE : parseFloat(roi.newSalaryL) * 100000
+  const annualGainINR = isStudent ? 0 : parseFloat(roi.annualGainL) * 100000
   const monthlyGain   = annualGainINR / 12
-  const breakEvenMonths = monthlyGain > 0
-    ? Math.ceil(certCostINR / monthlyGain) : 0
-  const fiveYearGainINR  = annualGainINR * 5 - certCostINR
-  const roiPercent = certCostINR > 0
-    ? Math.round((fiveYearGainINR / certCostINR) * 100) : 0
+  const breakEvenMonths = isStudent ? 0 : roi.breakEvenMonths
+  const fiveYearGainINR = isStudent ? STUDENT_BASELINE * 5 - certCostINR : roi.fiveYearGainINR
+  const roiPercent = isStudent
+    ? (certCostINR > 0 ? Math.round((fiveYearGainINR / certCostINR) * 100) : 0)
+    : roi.roiPercent
 
   // Career multiplier for students
   const careerMultiplier = isStudent && certCost > 0
