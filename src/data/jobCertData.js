@@ -998,3 +998,26 @@ export const MANDATORY_FINANCIAL_CERTS = [
     link: 'https://www.nseindia.com/education/content/ncfm_certifications.htm',
   },
 ]
+
+// ── ALL CERTIFICATIONS (for search/filter) ────────────────
+const allCerts = new Set()
+
+GOVT_DATA.forEach(org => {
+  org.roles.forEach(role => {
+    allCerts.add(role.cert)
+  })
+})
+
+PRIVATE_DATA.forEach(company => {
+  company.tracks.forEach(track => {
+    track.certs.forEach(cert => {
+      allCerts.add(cert)
+    })
+  })
+})
+
+MANDATORY_FINANCIAL_CERTS.forEach(cert => {
+  allCerts.add(cert.cert)
+})
+
+export const CERTIFICATIONS = Array.from(allCerts).sort()
