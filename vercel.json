@@ -2,6 +2,8 @@
   "rewrites": [
     { "source": "/api/groq", "destination": "/api/groq" },
     { "source": "/api/demand", "destination": "/api/demand" },
+    { "source": "/api/certifications", "destination": "/api/certifications" },
+    { "source": "/api/domains", "destination": "/api/domains" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ],
   "headers": [

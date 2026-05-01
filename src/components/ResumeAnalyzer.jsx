@@ -5,8 +5,8 @@ import {
   ArrowRight, RefreshCw, User, TrendingUp,
   Zap, Target, Star, Clock, ChevronDown, MapPin
 } from 'lucide-react'
-import { CERTIFICATIONS, CERT_DOMAINS } from '../tokens.js'
 import { callGroqForResume } from '../services/aiService.jsx'
+import { certificationToRecommendation, fetchCertifications, fetchDomains, rankCertificationsForSwitcher } from '../services/dataService.jsx'
 import { useJourneyStore } from '../store/useJourneyStore.js'
 
 // ── Font tokens → CSS variables ───────────────────────────
@@ -239,6 +239,34 @@ var safeParseResumeJSON = function(text) {
   }
 }
 
+var detectCityFromText = function(text) {
+  var lower = text.toLowerCase()
+  return INDIA_CITIES.find(function(city) { return lower.includes(city.toLowerCase()) }) || ''
+}
+
+var buildSwitcherResult = function({ certs, domain, domainChoices, city, timeline }) {
+  var domainLabel = domainChoices.find(function(item) { return item.id === domain })?.label || domain
+  var ranked = rankCertificationsForSwitcher(certs, timeline)
+  var chosen = (ranked.length ? ranked : certs).slice(0, 3).map(certificationToRecommendation)
+
+  return {
+    name: '',
+    summary: 'Career switch detected. Recommendations are pulled directly from the certification database for ' + domainLabel + ', not inferred by AI.',
+    city: city || '',
+    domain: domain,
+    gaps: [
+      'Build domain-specific project proof before applying',
+      'Translate existing experience into ' + domainLabel + ' vocabulary',
+      'Prioritise certifications with short completion time and clear hiring signal',
+    ],
+    certs: chosen,
+    immediateAction: chosen[0] ? 'Start with ' + chosen[0].name + ' and build one portfolio artifact alongside it.' : 'No certifications found for this domain yet.',
+    marketInsight: domainLabel + ' demand is loaded from your certification database and city demand API.',
+    raw: '(database-direct)',
+    parseError: false,
+  }
+}
+
 // ── Not-a-resume error ────────────────────────────────────
 var NotAResumeError = function({ rejectedBy, onDismiss }) {
   var messages = {
@@ -327,7 +355,7 @@ var CleanLoader = function() {
 }
 
 // ── Preferences panel ─────────────────────────────────────
-var PreferencesPanel = function({ timeline, onTimeline, domainIntent, onDomain, mode, switchTarget }) {
+var PreferencesPanel = function({ timeline, onTimeline, domainIntent, onDomain, mode, switchTarget, domainChoices }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '16px' }}>
 
@@ -370,7 +398,7 @@ var PreferencesPanel = function({ timeline, onTimeline, domainIntent, onDomain, 
             Which domain are you targeting?
           </div>
           <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-            {DOMAIN_CHOICES.map(function(d) {
+            {domainChoices.map(function(d) {
               var active = domainIntent === d.id
               return (
                 <button
@@ -399,7 +427,7 @@ var PreferencesPanel = function({ timeline, onTimeline, domainIntent, onDomain, 
         <div style={{ padding: '10px 14px', borderRadius: '9px', background: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.22)', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span style={{ fontSize: '12px', color: AMBER, fontFamily: FM, letterSpacing: '0.04em', fontWeight: '700' }}>Target domain:</span>
           <span style={{ padding: '3px 10px', borderRadius: '6px', background: 'rgba(245,158,11,0.15)', border: '1px solid rgba(245,158,11,0.3)', fontSize: '12px', color: AMBER, fontFamily: FH, fontWeight: '700' }}>
-            {DOMAIN_CHOICES.find(function(d) { return d.id === switchTarget })?.label || switchTarget}
+            {domainChoices.find(function(d) { return d.id === switchTarget })?.label || switchTarget}
           </span>
           <span style={{ fontSize: '11px', color: 'var(--text-4)', fontFamily: FB, marginLeft: '4px' }}>will be prioritised</span>
         </div>
@@ -411,7 +439,7 @@ var PreferencesPanel = function({ timeline, onTimeline, domainIntent, onDomain, 
 }
 
 // ── PersonalisedHero ──────────────────────────────────────
-var PersonalisedHero = function({ name, city, domain, primaryCert, mode }) {
+var PersonalisedHero = function({ name, city, domain, primaryCert, mode, domainChoices }) {
   var [phase, setPhase] = useState(0)
 
   useEffect(function() {
@@ -420,7 +448,7 @@ var PersonalisedHero = function({ name, city, domain, primaryCert, mode }) {
     return function() { clearTimeout(t1); clearTimeout(t2) }
   }, [])
 
-  var domainLabel = CERT_DOMAINS.find(function(d) { return d.id === domain })?.label || domain
+  var domainLabel = domainChoices.find(function(d) { return d.id === domain })?.label || domain
   var firstName   = name ? name.split(' ')[0] : ''
   var intro = firstName
     ? firstName + ', out of 103 certifications analysed for ' + (city ? 'a professional in ' + city : 'your profile') + ' right now —'
@@ -573,7 +601,7 @@ var CertLeaderboardRow = function({ cert, rank, onSelect, mode }) {
 }
 
 // ── ResultDisplay ─────────────────────────────────────────
-var ResultDisplay = function({ result, onCertSelected, mode, onClear }) {
+var ResultDisplay = function({ result, onCertSelected, mode, onClear, domainChoices }) {
   var [showOtherCerts, setShowOtherCerts] = useState(false)
   var primaryCert = result.certs[0]
   var otherCerts  = result.certs.slice(1)
@@ -585,7 +613,7 @@ var ResultDisplay = function({ result, onCertSelected, mode, onClear }) {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
-      <PersonalisedHero name={result.name} city={result.city} domain={result.domain} primaryCert={primaryCert} mode={mode} />
+      <PersonalisedHero name={result.name} city={result.city} domain={result.domain} primaryCert={primaryCert} mode={mode} domainChoices={domainChoices} />
 
       {primaryCert && onCertSelected && (
         <motion.button
@@ -752,6 +780,7 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
   var [textReady,    setTextReady]    = useState(true)    // false while PDF is still extracting
   var [timeline,     setTimeline]     = useState('flexible')
   var [domainIntent, setDomainIntent] = useState('auto')
+  var [domainChoices, setDomainChoices] = useState(DOMAIN_CHOICES)
   var [inputMode,    setInputMode]    = useState('upload')   // 'upload' | 'skills'
   var [pickedSkills, setPickedSkills] = useState([])
   var [skillRole,    setSkillRole]    = useState('')
@@ -765,6 +794,23 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
 
   var hasFile   = !!fileName
   var hasResult = !!result
+
+  useEffect(function() {
+    var controller = new AbortController()
+    fetchDomains({ signal: controller.signal })
+      .then(function(domains) {
+        if (!domains.length) return
+        var merged = DOMAIN_CHOICES.map(function(choice) {
+          var dynamic = domains.find(function(domain) { return domain.id === choice.id })
+          return dynamic ? { ...choice, label: dynamic.label || dynamic.name || choice.label } : choice
+        })
+        setDomainChoices(merged)
+      })
+      .catch(function() {
+        setDomainChoices(DOMAIN_CHOICES)
+      })
+    return function() { controller.abort() }
+  }, [])
 
   var readFile = async function(file) {
     if (!file) return
@@ -833,6 +879,19 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
     setLoading(true); setResult(null); setError(null); setRejection(null)
     try {
       var safeText = analyseText.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, ' ').replace(/\s+/g, ' ').slice(0, 2200).trim()
+      var targetDomain = mode === 'switcher' ? (switchTarget || domainIntent) : null
+      if (mode === 'switcher' && targetDomain && targetDomain !== 'auto') {
+        var directCerts = await fetchCertifications({ domain: targetDomain, limit: 25 })
+        if (!directCerts.length) throw new Error('No certifications found for ' + targetDomain + '. Check Supabase domain_id values.')
+        setResult(buildSwitcherResult({
+          certs: directCerts,
+          domain: targetDomain,
+          domainChoices: domainChoices,
+          city: detectCityFromText(safeText),
+          timeline: timeline,
+        }))
+        return
+      }
       var raw    = await callGroqForResume(null, buildPrompt(safeText, mode, timeline, domainIntent, switchTarget))
       if (!raw || raw.length < 30) throw new Error('Empty response — try again')
       var parsed = safeParseResumeJSON(raw)
@@ -881,6 +940,7 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
           onDomain={setDomainIntent}
           mode={mode}
           switchTarget={switchTarget}
+          domainChoices={domainChoices}
         />
       )}
 
@@ -1148,7 +1208,7 @@ var ResumeAnalyzer = function({ mode, onCertSelected }) {
 
       <AnimatePresence>
         {result && (
-          <ResultDisplay result={result} onCertSelected={onCertSelected} mode={mode} onClear={clearAll} />
+          <ResultDisplay result={result} onCertSelected={onCertSelected} mode={mode} onClear={clearAll} domainChoices={domainChoices} />
         )}
       </AnimatePresence>
 

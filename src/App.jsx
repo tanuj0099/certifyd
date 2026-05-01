@@ -1,4 +1,3 @@
-import { CERTIFICATIONS } from './tokens.js';
 import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import {
   BrowserRouter,
@@ -45,18 +44,6 @@ import { BLOG_POSTS, DOMAIN_FILTERS } from "./data/blogPosts.js";
 import { FAQ_ITEMS, FAQ_CATEGORIES } from "./data/faqItems.js";
 import LandingPage from "./components/LandingPage.jsx";
 import ResumeAnalyzer from "./components/ResumeAnalyzer.jsx";
-
-let sql = 'INSERT INTO certifications (id, name, avg_cost, avg_hike, time_months, demand, link, affiliate, tags, domain_id, for_who) VALUES\n';
-const values = CERTIFICATIONS.map(cert => {
-  const safeName = cert.name.replace(/'/g, "''");
-  const safeDemand = cert.demand.replace(/'/g, "''");
-  const safeLink = cert.link.replace(/'/g, "''");
-  const safeDomain = cert.domain.replace(/'/g, "''");
-  const safeForWho = cert.forWho.replace(/'/g, "''");
-  const safeTags = `ARRAY[${cert.tags.map(t => `'${t.replace(/'/g, "''")}'`).join(', ')}]`;
-  return `('${cert.id}', '${safeName}', ${cert.avgCost}, ${cert.avgHike}, ${cert.timeMonths}, '${safeDemand}', '${safeLink}', ${cert.affiliate}, ${safeTags}, '${safeDomain}', '${safeForWho}')`;
-});
-console.log(sql + values.join(',\n') + ';');
 
 /*
   [STAFF ENGINEER NOTE]
