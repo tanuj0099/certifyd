@@ -1,56 +1,44 @@
 import React, { useState, useEffect, createContext, useContext } from 'react'
 import { motion } from 'framer-motion'
-import { useTheme as useGlobalTheme } from '../hooks/useTheme'
+import { useTheme as useGlobalTheme, THEME_PRESETS } from '../hooks/useTheme'
 
 // ─────────────────────────────────────────────────────────
-// THEMES
+// THEMES — Maps to 5-theme engine in useTheme.jsx
+// Components that use C.bg, C.text, etc. read from here.
 // ─────────────────────────────────────────────────────────
-export const THEMES = {
-  dark: {
-    name: 'dark',
-    bg: '#0A0A0A',
-    bgAlt: '#101010',
-    surface: '#131313',
-    text: '#F0F0F0',
-    text2: '#A8A8A8',
-    text3: '#6E6E6E',
-    text4: '#3A3A3A',
-    gold: '#D4AF37',
-    goldL: '#F0D060',
-    err: '#D94848',
-    line: '#1E1E1E',
-    lineHeavy: '#2C2C2C',
-    border: 'rgba(255,255,255,0.07)',
-    borderMid: 'rgba(255,255,255,0.13)',
-    certBg: '#080808',
-  },
-  light: {
-    name: 'light',
-    bg: '#F4F2EE',
-    bgAlt: '#EBE8E3',
-    surface: '#FAFAF8',
-    text: '#121212',
-    text2: '#555555',
-    text3: '#858585',
-    text4: '#A3A3A3',
-    gold: '#A07828',
-    goldL: '#C9A84C',
-    err: '#C93636',
-    line: '#DDD9D3',
-    lineHeavy: '#C2BCB3',
-    border: 'rgba(0,0,0,0.07)',
-    borderMid: 'rgba(0,0,0,0.15)',
-    certBg: '#F8F8F6',
-  }
-}
+export const THEMES = Object.fromEntries(
+  Object.entries(THEME_PRESETS).map(([id, t]) => [id, {
+    name:      id,
+    bg:        t.bg,
+    bgAlt:     t.bgAlt,
+    surface:   t.surface,
+    text:      t.text,
+    text2:     t.text2,
+    text3:     t.text3,
+    text4:     t.text4,
+    gold:      t.gold || '#C9A84C',
+    goldL:     t.gold || '#C9A84C',
+    err:       '#D94848',
+    line:      t.border,
+    lineHeavy: t.borderMid,
+    border:    t.border,
+    borderMid: t.borderMid,
+    certBg:    t.bg,
+  }])
+)
 
-export const F_SERIF = "'EB Garamond', 'Cormorant Garamond', Georgia, serif"
+// Legacy compat: dark/light aliases
+THEMES.dark  = THEMES.nordic
+THEMES.light = THEMES.ash
+
+export const F_SERIF = "'Inter', system-ui, sans-serif"
 export const F_SANS  = "'Inter', 'DM Sans', sans-serif"
 export const F_MONO  = "'JetBrains Mono', 'IBM Plex Mono', monospace"
 
+// Spring-loaded entrance (stiffness: 120, damping: 20)
 export const RISE = {
   hidden: { y: 28, opacity: 0 },
-  show: { y: 0, opacity: 1, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } }
+  show: { y: 0, opacity: 1, transition: { type: 'spring', stiffness: 120, damping: 20 } }
 }
 
 export function useIsMobile() {
@@ -64,8 +52,8 @@ export function useIsMobile() {
 }
 
 export function useThemeContext() {
-  const { isDark } = useGlobalTheme()
-  return isDark ? THEMES.dark : THEMES.light
+  const { current } = useGlobalTheme()
+  return THEMES[current.id] || THEMES.nordic
 }
 
 // ─────────────────────────────────────────────────────────
@@ -82,33 +70,23 @@ export function CrosshairIcon({ color }) {
 
 export function PillBtn({ onClick = () => {}, children, large, style = {} }) {
   const C = useThemeContext()
-  const [h, setH] = useState(false)
-  const d = C.name === 'dark'
   return (
     <motion.button
       onClick={onClick}
-      onMouseEnter={() => setH(true)}
-      onMouseLeave={() => setH(false)}
       whileTap={{ scale: 0.97 }}
+      whileHover={{ scale: 1.02 }}
       style={{
         display: 'inline-flex', alignItems: 'center', gap: '10px',
         padding: large ? '0 30px' : '0 22px',
         height: large ? '54px' : '44px',
-        background: d
-          ? `linear-gradient(135deg, rgba(255,255,255,${h ? 0.07 : 0.045}), rgba(255,255,255,${h ? 0.02 : 0.01}))`
-          : `linear-gradient(135deg, rgba(0,0,0,${h ? 0.05 : 0.035}), rgba(0,0,0,${h ? 0.015 : 0.008}))`,
-        border: `1px solid ${d ? `rgba(255,255,255,${h ? 0.13 : 0.09})` : `rgba(0,0,0,${h ? 0.1 : 0.07})`}`,
+        background: 'var(--accent)',
+        border: 'none',
         borderRadius: '9999px',
         fontSize: large ? '12px' : '11px',
         fontFamily: F_SANS, fontWeight: '600',
         letterSpacing: '0.07em', textTransform: 'uppercase',
         cursor: 'pointer',
-        color: d ? C.goldL : C.gold,
-        boxShadow: d
-          ? `0 2px 12px rgba(0,0,0,${h ? 0.35 : 0.25})`
-          : `0 2px 8px rgba(0,0,0,${h ? 0.06 : 0.04})`,
-        backdropFilter: 'blur(10px)',
-        WebkitBackdropFilter: 'blur(10px)',
+        color: 'var(--bg)',
         transition: 'all 0.3s ease',
         ...style
       }}
@@ -119,15 +97,12 @@ export function PillBtn({ onClick = () => {}, children, large, style = {} }) {
 }
 
 export function GlassPill({ children, style = {} }) {
-  const C = useThemeContext()
-  const d = C.name === 'dark'
   return (
     <div style={{
       display: 'inline-flex', alignItems: 'center', gap: '10px',
       padding: '7px 16px', borderRadius: '9999px',
-      background: d ? 'rgba(255,255,255,0.035)' : 'rgba(0,0,0,0.03)',
-      backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
-      border: `1px solid ${d ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)'}`,
+      background: 'var(--bg-alt)',
+      border: '1px solid var(--border)',
       ...style
     }}>
       {children}
@@ -138,7 +113,6 @@ export function GlassPill({ children, style = {} }) {
 export function AppSection({ id = '', title = '', children, bg = '', noBorderTop = false }) {
   const C = useThemeContext()
   const isMobile = useIsMobile()
-  const d = C.name === 'dark'
   return (
     <div style={{ position: 'relative', padding: isMobile ? '16px' : '32px 24px' }}>
       <div style={{ 
@@ -146,12 +120,9 @@ export function AppSection({ id = '', title = '', children, bg = '', noBorderTop
         margin: '0 auto', 
         display: 'flex', 
         flexDirection: isMobile ? 'column' : 'row',
-        background: d ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.6)',
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)',
-        border: `1px solid ${d ? 'rgba(255, 255, 255, 0.08)' : 'rgba(26,25,22,0.06)'}`,
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-        borderRadius: '16px',
+        background: 'var(--surface)',
+        border: '1px solid var(--border)',
+        borderRadius: '12px',
         overflow: 'hidden'
       }}>
         {!isMobile && (

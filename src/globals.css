@@ -8,15 +8,15 @@
   --text-muted: #64748b;
   --text-inverted: #ffffff;
   --accent-primary: #1e40af;
-  --accent-primary-soft: rgba(30,64,175,0.12);
+  --accent-primary-soft: transparent;
   --accent-secondary: #2563eb;
   --semantic-success: #0f766e;
   --semantic-warning: #b45309;
   --semantic-danger: #b91c1c;
-  --border-subtle: rgba(15,23,42,0.08);
-  --border-strong: rgba(15,23,42,0.14);
-  --shadow-soft: 0 18px 45px rgba(15,23,42,0.06);
-  --shadow-medium: 0 24px 65px rgba(15,23,42,0.08);
+  --border-subtle: transparent;
+  --border-strong: transparent;
+  --shadow-soft: 0 18px 45px transparent;
+  --shadow-medium: 0 24px 65px transparent;
   --radius-sm: 10px;
   --radius-md: 16px;
   --radius-lg: 24px;
@@ -35,15 +35,15 @@ html[data-theme='dark'], .dark {
   --text-muted: #94a3b8;
   --text-inverted: #0f172a;
   --accent-primary: #4f7cf8;
-  --accent-primary-soft: rgba(79,124,248,0.14);
+  --accent-primary-soft: transparent;
   --accent-secondary: #38bdf8;
   --semantic-success: #2dd4bf;
   --semantic-warning: #f59e0b;
   --semantic-danger: #f87171;
-  --border-subtle: rgba(148,163,184,0.14);
-  --border-strong: rgba(148,163,184,0.24);
-  --shadow-soft: 0 18px 45px rgba(15,23,42,0.24);
-  --shadow-medium: 0 24px 65px rgba(15,23,42,0.32);
+  --border-subtle: transparent;
+  --border-strong: transparent;
+  --shadow-soft: 0 18px 45px transparent;
+  --shadow-medium: 0 24px 65px transparent;
 }
 
 body {
@@ -65,7 +65,7 @@ body {
 .panel-soft {
   background: var(--bg-elevated);
   border-radius: var(--radius-lg);
-  box-shadow: 0 10px 34px rgba(15,23,42,0.04);
+  box-shadow: 0 10px 34px transparent;
 }
 
 .control-label {
@@ -91,7 +91,7 @@ body {
 
 .input-number:focus {
   border-color: var(--accent-primary);
-  box-shadow: 0 0 0 4px rgba(30,64,175,0.12);
+  box-shadow: 0 0 0 4px transparent;
 }
 
 .slider-visual {
@@ -141,7 +141,7 @@ body {
   background: var(--bg-elevated);
   border-radius: 18px;
   padding: 18px;
-  box-shadow: 0 12px 34px rgba(15,23,42,0.06);
+  box-shadow: 0 12px 34px transparent;
 }
 
 .shadow-strong {

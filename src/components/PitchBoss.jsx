@@ -7,9 +7,9 @@ const F_HEAD = "'Bricolage Grotesque', 'Plus Jakarta Sans', sans-serif"
 const F_MONO = "'Commit Mono', 'JetBrains Mono', monospace"
 const F_BODY = "'Inter', sans-serif"
 const T = { duration: 0.28, ease: [0.4, 0, 0.2, 1] }
-const EMERALD = '#10B981'
-const VIOLET  = '#6366F1'
-const AMBER   = '#F59E0B'
+const EMERALD = 'var(--linear-blue)'
+const VIOLET  = 'var(--linear-blue)'
+const AMBER   = 'var(--cool-grey)'
 
 // ── Build a structured JSON prompt ────────────────────────
 const buildCasePrompt = ({ certName, salary, certCost, hikePercent, name, company, role }) => `
@@ -116,7 +116,7 @@ const PitchBoss = ({ certName, salary, certCost, hikePercent, name, mode }) => {
     <div style={{ marginTop: '8px' }}>
       <button
         onClick={() => setOpen(v => !v)}
-        style={{ width: '100%', padding: '9px 14px', borderRadius: '9px', background: open ? 'rgba(99,102,241,0.1)' : 'var(--surface)', border: `1px solid ${open ? 'rgba(99,102,241,0.3)' : 'var(--border)'}`, color: open ? VIOLET : 'var(--text-3)', fontSize: '12px', cursor: 'pointer', fontFamily: F_BODY, fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px', transition: 'all 0.18s' }}
+        style={{ width: '100%', padding: '9px 14px', borderRadius: '9px', background: open ? 'transparent' : 'transparent', border: `1px solid ${open ? 'transparent' : 'var(--border)'}`, color: open ? VIOLET : 'var(--text-3)', fontSize: '12px', cursor: 'pointer', fontFamily: F_BODY, fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px', transition: 'all 0.18s' }}
       >
         <Briefcase size={13} />
         Reimbursement Case
@@ -130,14 +130,14 @@ const PitchBoss = ({ certName, salary, certCost, hikePercent, name, mode }) => {
             initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
             transition={T} style={{ overflow: 'hidden' }}
           >
-            <div style={{ padding: '16px', marginTop: '8px', borderRadius: '12px', background: 'var(--surface)', border: '1px solid rgba(99,102,241,0.2)' }}>
+            <div style={{ padding: '16px', marginTop: '8px', borderRadius: '12px', background: 'transparent', border: '1px solid transparent' }}>
 
               <div style={{ fontFamily: F_MONO, fontSize: '9px', color: VIOLET, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <Briefcase size={9} /> REIMBURSEMENT BUSINESS CASE · {certName?.toUpperCase()}
               </div>
 
               {/* Callout: what this is */}
-              <div style={{ padding: '10px 12px', borderRadius: '8px', background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.15)', marginBottom: '14px' }}>
+              <div style={{ padding: '10px 12px', borderRadius: '8px', background: 'transparent', border: '1px solid transparent', marginBottom: '14px' }}>
                 <div style={{ fontFamily: F_BODY, fontSize: '12px', color: 'var(--text-3)', lineHeight: '1.55' }}>
                   This generates <strong style={{ color: 'var(--text-2)' }}>4–5 hard-hitting bullet points</strong> based on your numbers — not a generic email. Copy the points you need and write the greeting yourself.
                 </div>
@@ -168,7 +168,7 @@ const PitchBoss = ({ certName, salary, certCost, hikePercent, name, mode }) => {
               </div>
 
               {error && (
-                <div style={{ padding: '9px 12px', borderRadius: '8px', background: 'rgba(239,68,68,0.07)', border: '1px solid rgba(239,68,68,0.2)', fontSize: '12px', color: '#EF4444', fontFamily: F_BODY, marginBottom: '10px' }}>
+                <div style={{ padding: '9px 12px', borderRadius: '8px', background: 'transparent', border: '1px solid transparent', fontSize: '12px', color: 'var(--cool-grey)', fontFamily: F_BODY, marginBottom: '10px' }}>
                   {error}
                 </div>
               )}
@@ -177,7 +177,7 @@ const PitchBoss = ({ certName, salary, certCost, hikePercent, name, mode }) => {
                 <motion.button
                   onClick={handleGenerate}
                   whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
-                  style={{ width: '100%', padding: '11px', borderRadius: '9px', background: `linear-gradient(135deg, ${VIOLET}, #4338CA)`, border: 'none', color: 'white', fontSize: '13px', fontWeight: '700', cursor: 'pointer', fontFamily: F_HEAD, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '7px', letterSpacing: '-0.01em', boxShadow: '0 8px 20px -4px rgba(99,102,241,0.35)' }}
+                  style={{ width: '100%', padding: '11px', borderRadius: '9px', background: `transparent`, border: 'none', color: 'white', fontSize: '13px', fontWeight: '700', cursor: 'pointer', fontFamily: F_HEAD, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '7px', letterSpacing: '-0.01em', boxShadow: 'none' }}
                 >
                   <Zap size={14} /> Build Reimbursement Case
                 </motion.button>
@@ -211,14 +211,14 @@ const PitchBoss = ({ certName, salary, certCost, hikePercent, name, mode }) => {
                     <motion.button
                       onClick={handleCopyAll}
                       whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
-                      style={{ flex: 1, padding: '9px', borderRadius: '8px', background: copied ? 'rgba(16,185,129,0.1)' : 'var(--surface)', border: `1px solid ${copied ? 'rgba(16,185,129,0.3)' : 'var(--border)'}`, color: copied ? EMERALD : 'var(--text-2)', fontSize: '12px', cursor: 'pointer', fontFamily: F_BODY, fontWeight: '600', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', transition: 'all 0.2s' }}
+                      style={{ flex: 1, padding: '9px', borderRadius: '8px', background: copied ? 'transparent' : 'transparent', border: `1px solid ${copied ? 'transparent' : 'var(--border)'}`, color: copied ? EMERALD : 'var(--text-2)', fontSize: '12px', cursor: 'pointer', fontFamily: F_BODY, fontWeight: '600', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', transition: 'all 0.2s' }}
                     >
                       {copied ? <Check size={13} /> : <Copy size={13} />}
                       {copied ? 'Copied all points!' : 'Copy All Points'}
                     </motion.button>
                     <button
                       onClick={() => { setBcase(null); setError(null) }}
-                      style={{ padding: '9px 14px', borderRadius: '8px', background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text-4)', fontSize: '12px', cursor: 'pointer', fontFamily: F_BODY, display: 'flex', alignItems: 'center', gap: '5px' }}
+                      style={{ padding: '9px 14px', borderRadius: '8px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-4)', fontSize: '12px', cursor: 'pointer', fontFamily: F_BODY, display: 'flex', alignItems: 'center', gap: '5px' }}
                     >
                       <RefreshCw size={11} /> Rebuild
                     </button>

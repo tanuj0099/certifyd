@@ -10,12 +10,12 @@ var F_HEAD = "var(--font-head)"
 var F_BODY = "var(--font-body)"
 var F_MONO = "var(--font-mono)"
 
-const PICTON  = '#51B1E7'
-const EMERALD = '#10B981'
-const AMBER   = '#F59E0B'
-const INDIGO  = '#6366F1'
-const VIOLET  = '#818CF8'
-const RED     = '#EF4444'
+const PICTON  = 'var(--linear-blue)'
+const EMERALD = 'var(--linear-blue)'
+const AMBER   = 'var(--cool-grey)'
+const INDIGO  = 'var(--linear-blue)'
+const VIOLET  = 'var(--accent)'
+const RED     = 'var(--cool-grey)'
 
 const SPRING = { type: 'spring', stiffness: 380, damping: 28 }
 const EASE   = { duration: 0.3, ease: [0.4, 0, 0.2, 1] }
@@ -68,12 +68,12 @@ function ScoreBar({ label, actual, projected, color }) {
         </span>
       </div>
       <div style={{ position: 'relative', height: '8px', borderRadius: '4px', background: 'var(--border)', overflow: 'visible', marginBottom: '4px' }}>
-        <div style={{ position: 'absolute', left: 0, height: '100%', width: pctProj + '%', borderRadius: '4px', background: 'rgba(148,163,184,0.25)' }} />
+        <div style={{ position: 'absolute', left: 0, height: '100%', width: pctProj + '%', borderRadius: '4px', background: 'transparent' }} />
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: pctActual + '%' }}
           transition={{ duration: 0.75, ease: [0.4, 0, 0.2, 1], delay: 0.15 }}
-          style={{ position: 'absolute', left: 0, height: '100%', borderRadius: '4px', background: 'linear-gradient(90deg,' + color + '88,' + color + ')' }}
+          style={{ position: 'absolute', left: 0, height: '100%', borderRadius: '4px', background: 'transparent' }}
         />
         <div style={{ position: 'absolute', left: pctProj + '%', top: '-3px', bottom: '-3px', width: '2px', background: 'var(--text-4)', borderRadius: '1px', transform: 'translateX(-50%)' }} />
       </div>
@@ -136,11 +136,11 @@ function HikeVerifier({ certName, projectedHike, onClose }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={SPRING}
-      style={{ background: 'var(--surface)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: '14px', overflow: 'hidden', marginTop: '14px', boxShadow: 'inset 0 1px 0 var(--card-highlight), 0 2px 8px rgba(0,0,0,0.06)' }}
+      style={{ background: 'transparent', border: '1px solid transparent', borderRadius: '14px', overflow: 'hidden', marginTop: '14px', boxShadow: 'none' }}
     >
       {/* ── Header ─────────────────────────────────────── */}
       <div style={{ padding: '14px 18px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <div style={{ width: 30, height: 30, borderRadius: '8px', background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+        <div style={{ width: 30, height: 30, borderRadius: '8px', background: 'transparent', border: '1px solid transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
           <Target size={14} color={EMERALD} />
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
@@ -197,7 +197,7 @@ function HikeVerifier({ certName, projectedHike, onClose }) {
 
               <motion.button onClick={handleSubmit} disabled={!canSubmit}
                 whileHover={canSubmit ? { y: -2 } : {}} whileTap={canSubmit ? { scale: 0.97 } : {}}
-                style={{ width: '100%', padding: '13px 20px', borderRadius: '10px', background: canSubmit ? 'linear-gradient(135deg,' + EMERALD + ',#059669)' : 'var(--surface)', border: canSubmit ? 'none' : '1px solid var(--border)', color: canSubmit ? 'white' : 'var(--text-4)', fontSize: '14px', fontWeight: '700', cursor: canSubmit ? 'pointer' : 'not-allowed', fontFamily: F_HEAD, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', opacity: canSubmit ? 1 : 0.5, letterSpacing: '-0.01em', transition: 'all 0.2s' }}>
+                style={{ width: '100%', padding: '13px 20px', borderRadius: '10px', background: canSubmit ? 'transparent' : 'transparent', border: canSubmit ? 'none' : '1px solid var(--border)', color: canSubmit ? 'white' : 'var(--text-4)', fontSize: '14px', fontWeight: '700', cursor: canSubmit ? 'pointer' : 'not-allowed', fontFamily: F_HEAD, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', opacity: canSubmit ? 1 : 0.5, letterSpacing: '-0.01em', transition: 'all 0.2s' }}>
                 <Zap size={14} /> See How You Did
               </motion.button>
             </motion.div>
@@ -229,7 +229,7 @@ function HikeVerifier({ certName, projectedHike, onClose }) {
 
               {/* Comparison text */}
               <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ ...EASE, delay: 0.18 }}
-                style={{ padding: '12px 15px', borderRadius: '9px', background: actualHike >= projectedHike ? 'rgba(16,185,129,0.06)' : 'rgba(245,158,11,0.06)', border: '1px solid ' + verdict.color + '25', display: 'flex', alignItems: 'flex-start', gap: '10px', marginBottom: '14px' }}>
+                style={{ padding: '12px 15px', borderRadius: '9px', background: actualHike >= projectedHike ? 'transparent' : 'transparent', border: '1px solid ' + verdict.color + '25', display: 'flex', alignItems: 'flex-start', gap: '10px', marginBottom: '14px' }}>
                 {actualHike >= projectedHike
                   ? <TrendingUp size={15} color={verdict.color} style={{ flexShrink: 0, marginTop: '1px' }} />
                   : <TrendingDown size={15} color={verdict.color} style={{ flexShrink: 0, marginTop: '1px' }} />
@@ -259,7 +259,7 @@ function HikeVerifier({ certName, projectedHike, onClose }) {
 
               {/* Time taken */}
               <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ ...EASE, delay: 0.27 }}
-                style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 14px', borderRadius: '9px', background: 'rgba(81,177,231,0.06)', border: '1px solid rgba(81,177,231,0.18)', marginBottom: '14px' }}>
+                style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 14px', borderRadius: '9px', background: 'transparent', border: '1px solid transparent', marginBottom: '14px' }}>
                 <Clock size={13} color={PICTON} style={{ flexShrink: 0 }} />
                 <span style={{ fontSize: '12px', color: 'var(--text-2)', fontFamily: F_BODY, lineHeight: '1.5' }}>
                   You saw results in <strong style={{ color: PICTON, fontFamily: F_MONO }}>{months} months</strong>
@@ -295,7 +295,7 @@ function HikeVerifier({ certName, projectedHike, onClose }) {
               {/* Reset */}
               <motion.button onClick={handleReset}
                 whileHover={{ scale: 1.01, y: -1 }} whileTap={{ scale: 0.97 }}
-                style={{ width: '100%', padding: '11px', borderRadius: '10px', background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text-3)', fontSize: '13px', cursor: 'pointer', fontFamily: F_HEAD, fontWeight: '600', transition: 'all 0.18s', letterSpacing: '-0.01em' }}>
+                style={{ width: '100%', padding: '11px', borderRadius: '10px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-3)', fontSize: '13px', cursor: 'pointer', fontFamily: F_HEAD, fontWeight: '600', transition: 'all 0.18s', letterSpacing: '-0.01em' }}>
                 Verify Another Cert
               </motion.button>
 

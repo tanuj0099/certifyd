@@ -165,3 +165,56 @@ export const getMockResponse = ({ certName, currentSalary, certCost, hikePercent
     parseError:   false,
   }
 }
+
+// ── Domain validation via Groq ────────────────────────────
+// Returns { isValid: bool, normalized: string, reason: string }
+export const validateDomain = async (domainInput) => {
+  if (!domainInput || !domainInput.trim()) {
+    return { isValid: false, normalized: '', reason: 'No domain entered' }
+  }
+
+  const prompt = `You are a strict career domain classifier for a professional certification platform (India 2026).
+
+The user entered this as their target career domain: "${domainInput.trim()}"
+
+Your task:
+1. Determine if this is a real, recognized professional career field or domain (e.g., "Cybersecurity", "Cloud Computing", "Finance", "Data Science", "Project Management", "Marketing", "Healthcare", "HR", "Law", "Architecture" etc.).
+2. If it is valid, normalize it to a clean title-case label.
+3. If it is nonsense, gibberish, a random word, an insult, or not a professional domain, mark it invalid.
+
+Respond ONLY with a valid JSON object — no markdown, no prose:
+{
+  "isValid": true or false,
+  "normalized": "Clean Title Case Domain Name or empty string if invalid",
+  "reason": "One sentence explanation"
+}
+
+Examples:
+- "cybersec" → { "isValid": true, "normalized": "Cybersecurity", "reason": "Recognized abbreviation of Cybersecurity domain." }
+- "asdfghjkl" → { "isValid": false, "normalized": "", "reason": "Not a recognized professional domain." }
+- "rubbish" → { "isValid": false, "normalized": "", "reason": "Not a recognized professional domain." }
+- "data analytics" → { "isValid": true, "normalized": "Data & Analytics", "reason": "Recognized data domain." }
+`
+
+  try {
+    const text = await callGroq(
+      [
+        { role: 'system', content: 'You are a strict domain validator. Respond ONLY with valid JSON.' },
+        { role: 'user', content: prompt },
+      ],
+      150,
+      0.1,
+      true  // JSON mode
+    )
+    const cleaned = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').trim()
+    const parsed = JSON.parse(cleaned)
+    return {
+      isValid:    !!parsed.isValid,
+      normalized: parsed.normalized || '',
+      reason:     parsed.reason || '',
+    }
+  } catch {
+    // If API fails, allow through (fail open — don't block user)
+    return { isValid: true, normalized: domainInput.trim(), reason: 'Validation skipped (API unavailable)' }
+  }
+}

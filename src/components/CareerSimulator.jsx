@@ -7,7 +7,7 @@ import { CERTIFICATIONS, CERT_DOMAINS } from '../tokens.js'
 const FH = "'Bricolage Grotesque','Plus Jakarta Sans',sans-serif"
 const FM = "'Commit Mono','JetBrains Mono',monospace"
 const FB = "'Inter',sans-serif"
-const COLORS = ['#6366F1','#10B981','#F59E0B','#EF4444']
+const COLORS = ['var(--linear-blue)','var(--linear-blue)','var(--cool-grey)','var(--cool-grey)']
 
 function CertPicker({ value, onChange, exclude, index }) {
   const [open, setOpen] = useState(false)
@@ -16,11 +16,11 @@ function CertPicker({ value, onChange, exclude, index }) {
   const filtered = CERTIFICATIONS.filter(function(c) {
     return (domain === 'all' || c.domain === domain) && !exclude.includes(c.name)
   })
-  const color = COLORS[index] || '#6366F1'
+  const color = COLORS[index] || 'var(--linear-blue)'
   return (
     <div style={{ position: 'relative' }}>
       <button onClick={function() { setOpen(function(v) { return !v }) }}
-        style={{ width: '100%', padding: '11px 14px', background: selected ? color + '0e' : 'var(--surface)', border: '1px solid ' + (selected ? color + '44' : 'var(--border)'), borderRadius: '10px', color: selected ? color : 'var(--text-4)', fontSize: '13px', cursor: 'pointer', fontFamily: FH, fontWeight: selected ? '700' : '500', display: 'flex', alignItems: 'center', gap: '8px', transition: 'all 0.18s' }}>
+        style={{ width: '100%', padding: '11px 14px', background: selected ? color + '0e' : 'transparent', border: '1px solid ' + (selected ? color + '44' : 'var(--border)'), borderRadius: '10px', color: selected ? color : 'var(--text-4)', fontSize: '13px', cursor: 'pointer', fontFamily: FH, fontWeight: selected ? '700' : '500', display: 'flex', alignItems: 'center', gap: '8px', transition: 'all 0.18s' }}>
         <div style={{ width: 8, height: 8, borderRadius: '50%', background: color, flexShrink: 0 }} />
         <span style={{ flex: 1, textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
           {selected ? selected.name : 'Add cert ' + (index + 1) + '...'}
@@ -31,7 +31,7 @@ function CertPicker({ value, onChange, exclude, index }) {
       <AnimatePresence>
         {open ? (
           <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
-            style={{ position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 60, marginTop: '6px', borderRadius: '12px', background: 'var(--surface)', border: '1px solid ' + color + '33', overflow: 'hidden', boxShadow: '0 16px 40px rgba(0,0,0,0.25)' }}>
+            style={{ position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 60, marginTop: '6px', borderRadius: '12px', background: 'transparent', border: '1px solid ' + color + '33', overflow: 'hidden', boxShadow: 'none' }}>
             <div style={{ display: 'flex', gap: '4px', padding: '8px', borderBottom: '1px solid var(--border)', flexWrap: 'wrap' }}>
               {CERT_DOMAINS.slice(0, 6).map(function(d) {
                 return (
@@ -47,7 +47,7 @@ function CertPicker({ value, onChange, exclude, index }) {
                 return (
                   <button key={cert.id} onClick={function() { onChange(cert.name); setOpen(false) }}
                     style={{ width: '100%', padding: '10px 14px', background: 'transparent', border: 'none', color: 'var(--text-2)', fontSize: '13px', cursor: 'pointer', fontFamily: FB, textAlign: 'left', display: 'flex', justifyContent: 'space-between', transition: 'background 0.12s' }}
-                    onMouseEnter={function(e) { e.currentTarget.style.background = 'var(--surface-high)' }}
+                    onMouseEnter={function(e) { e.currentTarget.style.background = 'transparent' }}
                     onMouseLeave={function(e) { e.currentTarget.style.background = 'transparent' }}>
                     <span>{cert.name}</span>
                     <span style={{ fontFamily: FM, fontSize: '11px', color: color, flexShrink: 0 }}>+{cert.avgHike}%</span>
@@ -65,7 +65,7 @@ function CertPicker({ value, onChange, exclude, index }) {
 function ChartTip({ active, payload, label }) {
   if (!active || !payload || !payload.length) return null
   return (
-    <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '10px', padding: '10px 14px' }}>
+    <div style={{ background: 'transparent', border: '1px solid var(--border)', borderRadius: '10px', padding: '10px 14px' }}>
       <div style={{ fontFamily: FM, fontSize: '10px', color: 'var(--text-4)', marginBottom: '5px' }}>{label}</div>
       {payload.map(function(p, i) {
         return (
@@ -124,14 +124,14 @@ function CareerSimulator({ initialSalary }) {
         CAREER PATH SIMULATOR - MULTI-CERT TRAJECTORY
       </div>
 
-      <div style={{ marginBottom: '20px', padding: '16px', borderRadius: '12px', background: 'var(--surface)', border: '1px solid var(--glass-border)' }}>
+      <div style={{ marginBottom: '20px', padding: '16px', borderRadius: '12px', background: 'transparent', border: '1px solid var(--glass-border)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
           <label style={{ fontSize: '11px', color: 'var(--text-3)', fontFamily: FM, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Starting Salary</label>
-          <span style={{ fontFamily: FM, fontSize: '16px', fontWeight: '700', color: '#51B1E7' }}>Rs.{salary}L/yr</span>
+          <span style={{ fontFamily: FM, fontSize: '16px', fontWeight: '700', color: 'var(--linear-blue)' }}>Rs.{salary}L/yr</span>
         </div>
         <input type="range" min={2} max={40} step={0.5} value={salary}
           onChange={function(e) { setSalary(parseFloat(e.target.value)) }}
-          className="slider" style={{ accentColor: '#51B1E7' }} />
+          className="slider" style={{ accentColor: 'var(--linear-blue)' }} />
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '20px' }}>
@@ -164,10 +164,10 @@ function CareerSimulator({ initialSalary }) {
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(110px,1fr))', gap: '8px', marginBottom: '16px' }}>
               {[
-                { label: 'Final Salary', value: 'Rs.' + finalSalary + 'L/yr', color: '#10B981' },
-                { label: 'Total Gain',   value: '+Rs.' + totalGain + 'L/yr',  color: '#6366F1' },
-                { label: 'Total Time',   value: totalMonths + ' months',        color: '#F59E0B' },
-                { label: 'Total Cost',   value: 'Rs.' + totalCost + 'L',        color: '#EF4444' },
+                { label: 'Final Salary', value: 'Rs.' + finalSalary + 'L/yr', color: 'var(--linear-blue)' },
+                { label: 'Total Gain',   value: '+Rs.' + totalGain + 'L/yr',  color: 'var(--linear-blue)' },
+                { label: 'Total Time',   value: totalMonths + ' months',        color: 'var(--cool-grey)' },
+                { label: 'Total Cost',   value: 'Rs.' + totalCost + 'L',        color: 'var(--cool-grey)' },
               ].map(function(s, i) {
                 return (
                   <motion.div key={i} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.06 }}
@@ -179,7 +179,7 @@ function CareerSimulator({ initialSalary }) {
               })}
             </div>
 
-            <div style={{ padding: '16px', borderRadius: '12px', background: 'var(--surface)', border: '1px solid var(--glass-border)', marginBottom: '14px' }}>
+            <div style={{ padding: '16px', borderRadius: '12px', background: 'transparent', border: '1px solid var(--glass-border)', marginBottom: '14px' }}>
               <div style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '12px' }}>
                 SALARY TRAJECTORY - {totalMonths} MONTHS
               </div>
@@ -187,15 +187,15 @@ function CareerSimulator({ initialSalary }) {
                 <AreaChart data={trajectory} margin={{ top: 4, right: 8, bottom: 0, left: -8 }}>
                   <defs>
                     <linearGradient id="salGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%"  stopColor="#6366F1" stopOpacity={0.25} />
-                      <stop offset="95%" stopColor="#6366F1" stopOpacity={0.02} />
+                      <stop offset="5%"  stopColor="var(--linear-blue)" stopOpacity={0.25} />
+                      <stop offset="95%" stopColor="var(--linear-blue)" stopOpacity={0.02} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(99,102,241,0.06)" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="transparent" />
                   <XAxis dataKey="label" tick={{ fontSize: 10, fill: 'var(--text-4)', fontFamily: FM }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
                   <YAxis tick={{ fontSize: 10, fill: 'var(--text-4)', fontFamily: FM }} axisLine={false} tickLine={false} tickFormatter={function(v) { return 'Rs.' + v + 'L' }} domain={['dataMin - 1', 'dataMax + 2']} />
                   <Tooltip content={ChartTip} />
-                  <Area type="monotone" dataKey="salary" stroke="#6366F1" strokeWidth={2.5} fill="url(#salGrad)" dot={false} activeDot={{ r: 5, fill: '#6366F1' }} />
+                  <Area type="monotone" dataKey="salary" stroke="var(--linear-blue)" strokeWidth={2.5} fill="url(#salGrad)" dot={false} activeDot={{ r: 5, fill: 'var(--linear-blue)' }} />
                   {milestones.map(function(m, i) {
                     return <ReferenceLine key={i} x={m.label} stroke={m.color || COLORS[i]} strokeDasharray="4 3" strokeWidth={1.5} />
                   })}
@@ -213,9 +213,9 @@ function CareerSimulator({ initialSalary }) {
                   </div>
                 )
               })}
-              <div style={{ padding: '12px 14px', borderRadius: '9px', background: 'rgba(16,185,129,0.07)', border: '1px solid rgba(16,185,129,0.22)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ padding: '12px 14px', borderRadius: '9px', background: 'transparent', border: '1px solid transparent', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: '13px', color: 'var(--text-2)', fontFamily: FB, fontWeight: '600' }}>Net gain over 5 years (after cert costs)</span>
-                <span style={{ fontFamily: FM, fontSize: '15px', color: '#10B981', fontWeight: '700' }}>
+                <span style={{ fontFamily: FM, fontSize: '15px', color: 'var(--linear-blue)', fontWeight: '700' }}>
                   +Rs.{(totalGain * 5 - parseFloat(totalCost)).toFixed(1)}L
                 </span>
               </div>

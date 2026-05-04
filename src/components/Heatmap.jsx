@@ -8,9 +8,9 @@ var F_HEAD = "var(--font-head)"
 var F_BODY = "var(--font-body)"
 var F_MONO = "var(--font-mono)"
 
-const PICTON  = '#51B1E7'
-const EMERALD = '#10B981'
-const AMBER   = '#F59E0B'
+const PICTON  = 'var(--linear-blue)'
+const EMERALD = 'var(--linear-blue)'
+const AMBER   = 'var(--cool-grey)'
 const SPRING  = { type: 'spring', stiffness: 400, damping: 30 }
 
 const CITIES = [
@@ -26,10 +26,10 @@ const CITIES = [
 
 const CERT_CATEGORIES = [
   { id: 'tech',       label: 'Tech & Cloud',   color: PICTON,    remoteFlag: 'remote',         certs: ['AWS SAA', 'Azure', 'GCP', 'CKA', 'CompTIA Sec+', 'CEH'] },
-  { id: 'data',       label: 'Data & AI',      color: '#818CF8', remoteFlag: 'remote',         certs: ['Google Data Analytics', 'IBM Data Science', 'TensorFlow', 'Tableau'] },
+  { id: 'data',       label: 'Data & AI',      color: 'var(--accent)', remoteFlag: 'remote',         certs: ['Google Data Analytics', 'IBM Data Science', 'TensorFlow', 'Tableau'] },
   { id: 'management', label: 'Project Mgmt',   color: EMERALD,   remoteFlag: 'hybrid',         certs: ['PMP', 'Scrum Master', 'PRINCE2'] },
   { id: 'business',   label: 'Business & Ops', color: AMBER,     remoteFlag: 'city-dependent', certs: ['Six Sigma', 'APICS CSCP', 'Google PM'] },
-  { id: 'finance',    label: 'Finance',        color: '#34D399', remoteFlag: 'city-dependent', certs: ['CFA Level 1', 'FMVA', 'CPA'] },
+  { id: 'finance',    label: 'Finance',        color: 'var(--linear-blue)', remoteFlag: 'city-dependent', certs: ['CFA Level 1', 'FMVA', 'CPA'] },
   { id: 'marketing',  label: 'Marketing',      color: '#F472B6', remoteFlag: 'hybrid',         certs: ['Google Digital Marketing', 'HubSpot', 'Meta Blueprint'] },
   { id: 'product',    label: 'Product & UX',   color: '#A78BFA', remoteFlag: 'remote',         certs: ['Google UX', 'Product Mgmt Cert', 'CSPO'] },
   { id: 'hr',         label: 'HR & People',    color: '#FB923C', remoteFlag: 'city-dependent', certs: ['SHRM-CP', 'HRCI PHR', 'LinkedIn HR'] },
@@ -54,11 +54,11 @@ const DEMAND = {
 }
 
 const LEVEL_CONFIG = {
-  5: { label: 'Very High', color: EMERALD,   bg: 'rgba(16,185,129,0.08)',  border: 'rgba(16,185,129,0.22)', bar: '100%' },
-  4: { label: 'High',      color: PICTON,    bg: 'rgba(81,177,231,0.08)',  border: 'rgba(81,177,231,0.22)', bar: '80%'  },
-  3: { label: 'Medium',    color: AMBER,     bg: 'rgba(245,158,11,0.08)',  border: 'rgba(245,158,11,0.22)', bar: '60%'  },
-  2: { label: 'Low',       color: '#64748B', bg: 'rgba(100,116,139,0.06)', border: 'rgba(100,116,139,0.18)', bar: '35%' },
-  1: { label: 'Very Low',  color: '#94A3B8', bg: 'rgba(148,163,184,0.05)', border: 'rgba(148,163,184,0.12)', bar: '15%' },
+  5: { label: 'Very High', color: EMERALD,   bg: 'transparent',  border: 'transparent', bar: '100%' },
+  4: { label: 'High',      color: PICTON,    bg: 'transparent',  border: 'transparent', bar: '80%'  },
+  3: { label: 'Medium',    color: AMBER,     bg: 'transparent',  border: 'transparent', bar: '60%'  },
+  2: { label: 'Low',       color: '#64748B', bg: 'transparent', border: 'transparent', bar: '35%' },
+  1: { label: 'Very Low',  color: '#94A3B8', bg: 'transparent', border: 'transparent', bar: '15%' },
 }
 
 const CITY_ALIASES   = { 'bengaluru': 'bangalore', 'blr': 'bangalore', 'ncr': 'delhi', 'gurgaon': 'delhi', 'gurugram': 'delhi', 'noida': 'delhi', 'faridabad': 'delhi', 'bom': 'mumbai', 'hyd': 'hyderabad', 'pnq': 'pune', 'ccu': 'kolkata', 'maa': 'chennai', 'amd': 'ahmedabad' }
@@ -191,7 +191,7 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
     <div>
       {/* ── Header ─────────────────────────────────────── */}
       <div style={{ marginBottom: '24px' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '4px 12px', borderRadius: '6px', background: 'rgba(81,177,231,0.08)', border: '1px solid rgba(81,177,231,0.2)', fontSize: '10px', color: PICTON, marginBottom: '12px', letterSpacing: '0.1em', fontFamily: F_MONO, textTransform: 'uppercase' }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '4px 12px', borderRadius: '6px', background: 'transparent', border: '1px solid transparent', fontSize: '10px', color: PICTON, marginBottom: '12px', letterSpacing: '0.1em', fontFamily: F_MONO, textTransform: 'uppercase' }}>
           <MapPin size={10} /> India demand intelligence · 2026
         </div>
         <h2 style={{ fontFamily: F_HEAD, fontWeight: '800', fontSize: 'clamp(1.5rem,3.2vw,2rem)', color: 'var(--text)', marginBottom: '6px', letterSpacing: '-0.03em' }}>
@@ -204,7 +204,7 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
         {autoDetected && (prefilledCity || prefilledDomain) && (
           <motion.div
             initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={SPRING}
-            style={{ marginTop: '12px', padding: '10px 14px', borderRadius: '8px', background: 'rgba(16,185,129,0.06)', border: '1px solid rgba(16,185,129,0.18)', display: 'flex', alignItems: 'center', gap: '10px' }}
+            style={{ marginTop: '12px', padding: '10px 14px', borderRadius: '8px', background: 'transparent', border: '1px solid transparent', display: 'flex', alignItems: 'center', gap: '10px' }}
           >
             <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: EMERALD, flexShrink: 0 }} />
             <div style={{ fontSize: '12px', color: 'var(--text-3)', fontFamily: F_BODY }}>
@@ -226,7 +226,7 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
             const active = selectedDomain === cat.id
             return (
               <button key={cat.id} onClick={() => setSelectedDomain(cat.id)}
-                style={{ padding: '6px 13px', borderRadius: '7px', fontSize: '12px', fontWeight: active ? '700' : '500', cursor: 'pointer', fontFamily: F_BODY, background: active ? cat.color + '14' : 'var(--surface)', border: '1px solid ' + (active ? cat.color + '3A' : 'var(--border)'), color: active ? cat.color : 'var(--text-2)', transition: 'all 0.15s', minHeight: '34px' }}>
+                style={{ padding: '6px 13px', borderRadius: '7px', fontSize: '12px', fontWeight: active ? '700' : '500', cursor: 'pointer', fontFamily: F_BODY, background: active ? cat.color + '14' : 'transparent', border: '1px solid ' + (active ? cat.color + '3A' : 'var(--border)'), color: active ? cat.color : 'var(--text-2)', transition: 'all 0.15s', minHeight: '34px' }}>
                 {cat.label}
               </button>
             )
@@ -239,7 +239,7 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
         <motion.div key={selectedDomain} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
 
           {/* Domain insight — plain bordered panel, no NeonCard */}
-          <div style={{ padding: '18px 20px', borderRadius: '12px', background: 'var(--surface)', border: '1px solid var(--border)', marginBottom: '18px' }}>
+          <div style={{ padding: '18px 20px', borderRadius: '12px', background: 'transparent', border: '1px solid var(--border)', marginBottom: '18px' }}>
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap', marginBottom: '16px' }}>
               <div style={{ flex: 1 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '6px' }}>
@@ -342,7 +342,7 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
             <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
               {CITIES.map(city => (
                 <button key={city.id} onClick={() => setSelectedCity(selectedCity === city.id ? '' : city.id)}
-                  style={{ padding: '5px 11px', borderRadius: '6px', fontSize: '11px', cursor: 'pointer', fontFamily: F_MONO, letterSpacing: '0.04em', background: selectedCity === city.id ? 'rgba(81,177,231,0.12)' : 'var(--surface)', border: '1px solid ' + (selectedCity === city.id ? 'rgba(81,177,231,0.35)' : 'var(--border)'), color: selectedCity === city.id ? PICTON : 'var(--text-3)', transition: 'all 0.15s', minHeight: '32px' }}>
+                  style={{ padding: '5px 11px', borderRadius: '6px', fontSize: '11px', cursor: 'pointer', fontFamily: F_MONO, letterSpacing: '0.04em', background: selectedCity === city.id ? 'transparent' : 'transparent', border: '1px solid ' + (selectedCity === city.id ? 'transparent' : 'var(--border)'), color: selectedCity === city.id ? PICTON : 'var(--text-3)', transition: 'all 0.15s', minHeight: '32px' }}>
                   {city.short}
                 </button>
               ))}
@@ -380,7 +380,7 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
                     <motion.div key={cat.id}
                       initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.035, duration: 0.2 }}
                       onClick={() => setSelectedDomain(cat.id)}
-                      style={{ padding: '11px 14px', borderRadius: '9px', background: active ? cat.color + '0c' : 'var(--surface)', border: '1px solid ' + (active ? cat.color + '28' : 'var(--border)'), cursor: 'pointer', transition: 'all 0.15s' }}
+                      style={{ padding: '11px 14px', borderRadius: '9px', background: active ? cat.color + '0c' : 'transparent', border: '1px solid ' + (active ? cat.color + '28' : 'var(--border)'), cursor: 'pointer', transition: 'all 0.15s' }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
                         <span style={{ fontFamily: F_MONO, fontSize: '10px', color: i < 3 ? cat.color : 'var(--text-4)', minWidth: '24px', fontWeight: i < 3 ? '700' : '400' }}>
@@ -402,7 +402,7 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
           )}
 
           {/* ── Legend + data source ─────────────────────── */}
-          <div style={{ padding: '14px 16px', borderRadius: '9px', background: 'var(--surface)', border: '1px solid var(--border)', marginTop: '18px' }}>
+          <div style={{ padding: '14px 16px', borderRadius: '9px', background: 'transparent', border: '1px solid var(--border)', marginTop: '18px' }}>
             <div style={{ fontFamily: F_MONO, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '10px' }}>
               Demand scale
             </div>

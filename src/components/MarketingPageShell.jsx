@@ -28,7 +28,7 @@ export function PillButton({ children, href, onClick, type = 'button', wide = fa
         padding: wide ? '0 28px' : '0 24px',
         borderRadius: '9999px',
         border: '1px solid var(--border-accent)',
-        background: 'linear-gradient(135deg, var(--text), var(--text))',
+        background: 'transparent, var(--text))',
         color: 'var(--bg)',
         textDecoration: 'none',
         fontFamily: FB,
@@ -36,7 +36,7 @@ export function PillButton({ children, href, onClick, type = 'button', wide = fa
         fontWeight: '700',
         letterSpacing: '0.08em',
         textTransform: 'uppercase',
-        boxShadow: '0 12px 28px var(--shadow)',
+        boxShadow: 'none',
         cursor: 'pointer',
       }}
     >
@@ -50,7 +50,7 @@ export function GlassCard({ children, style }) {
     <div
       className="glass"
       style={{
-        background: 'var(--surface)',
+        background: 'transparent',
         backdropFilter: 'blur(14px)',
         WebkitBackdropFilter: 'blur(14px)',
         border: '1px solid var(--border)',
@@ -108,7 +108,7 @@ export function MarketingFooter() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '24px', marginBottom: '28px' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
-              <div style={{ width: '26px', height: '26px', background: 'linear-gradient(135deg,var(--accent),var(--gold))', borderRadius: '7px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ width: '26px', height: '26px', background: 'transparent,var(--gold))', borderRadius: '7px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <TrendingUp size={13} color="white" />
               </div>
               <span style={{ fontFamily: FH, fontWeight: '800', fontSize: '15px', color: 'var(--text)', letterSpacing: '-0.01em' }}>

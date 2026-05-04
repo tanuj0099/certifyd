@@ -61,6 +61,7 @@ import CertCompare from "./components/CertCompare.jsx";
 import CareerSimulator from "./components/CareerSimulator.jsx";
 import JobCertMap from "./components/JobCertMap.jsx";
 import HikeVerifier from "./components/HikeVerifier.jsx";
+import Dashboard from "./components/Dashboard.jsx";
 import { AppSection } from "./components/SharedUI.jsx";
 import { MarketingFooter } from "./components/MarketingPageShell.jsx";
 const FAQPage = lazy(() => import("./pages/FAQ.jsx"));
@@ -571,14 +572,14 @@ const _OldBlogPage = function () {
                   transition: "all 0.18s",
                   background:
                     domainFilter === d
-                      ? "rgba(99,102,241,0.12)"
+                      ? "transparent"
                       : "var(--surface)",
                   border:
                     "1px solid " +
                     (domainFilter === d
-                      ? "rgba(99,102,241,0.3)"
+                      ? "transparent"
                       : "var(--border)"),
-                  color: domainFilter === d ? "#818CF8" : "var(--text-4)",
+                  color: domainFilter === d ? "var(--accent)" : "var(--text-4)",
                   minHeight: "32px",
                 }}
               >
@@ -1269,7 +1270,7 @@ const StepArrow = function ({ active }) {
       <svg width="20" height="12" viewBox="0 0 20 12" fill="none">
         <path
           d="M0 6 H14 M10 1 L16 6 L10 11"
-          stroke={active ? "#6366F1" : "rgba(99,102,241,0.25)"}
+          stroke={active ? "#6366F1" : "transparent"}
           strokeWidth="1.6"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -1350,7 +1351,7 @@ const MobileDrawer = function ({
             style={{
               position: "fixed",
               inset: 0,
-              background: "rgba(0,0,0,0.3)",
+              background: "transparent",
               zIndex: 298,
             }}
           />
@@ -1405,7 +1406,7 @@ const MobileDrawer = function ({
               style={{
                 width: "28px",
                 height: "28px",
-                background: "linear-gradient(135deg,var(--indigo),#4338CA)",
+                background: "transparent,#4338CA)",
                 borderRadius: "8px",
                 display: "flex",
                 alignItems: "center",
@@ -1933,6 +1934,154 @@ const AppPage = function ({ onCertSelected }) {
         position: "relative",
       }}
     >
+      {/* ─── PREMIUM FLOATING NAVIGATION BAR ─── */}
+      {modeLocked && (
+        <nav
+          style={{
+            position: "sticky",
+            top: 0,
+            zIndex: 100,
+            borderBottom: "1px solid #E5E7EB",
+            background: "#F9FAFB/80",
+            backdropFilter: "blur(12px)",
+            webkitBackdropFilter: "blur(12px)",
+          }}
+        >
+          <div
+            style={{
+              maxWidth: "1400px",
+              margin: "0 auto",
+              padding: "0 16px",
+              height: "56px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            {/* Brand Section */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+              }}
+            >
+              <div
+                style={{
+                  width: "5px",
+                  height: "5px",
+                  borderRadius: "2px",
+                  background: "linear-gradient(135deg, var(--accent) 0%, #8A8F98 100%)",
+                  boxShadow: "0 0 12px rgba(94, 106, 210, 0.4)",
+                }}
+              />
+              <span
+                style={{
+                  fontFamily: FH,
+                  fontWeight: "700",
+                  fontSize: "13px",
+                  letterSpacing: "0.05em",
+                  color: "#111827",
+                  textTransform: "uppercase",
+                }}
+              >
+                CertifyROI
+              </span>
+            </div>
+
+            {/* Tab Toggles */}
+            <div
+              style={{
+                display: "flex",
+                gap: "6px",
+                background: "#FFFFFF",
+                padding: "4px",
+                borderRadius: "10px",
+                border: "1px solid #E5E7EB",
+              }}
+            >
+              <button
+                onClick={() => onTabChange("dashboard")}
+                style={{
+                  padding: "8px 16px",
+                  borderRadius: "8px",
+                  border: "none",
+                  fontSize: "13px",
+                  fontWeight: "600",
+                  fontFamily: FH,
+                  background:
+                    activeTab === "dashboard"
+                      ? "linear-gradient(135deg, var(--accent) 0%, var(--accent) 100%)"
+                      : "transparent",
+                  color: activeTab === "dashboard" ? "#FFFFFF" : "#6B7280",
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
+                  boxShadow:
+                    activeTab === "dashboard"
+                      ? "0 4px 12px rgba(94, 106, 210, 0.3)"
+                      : "none",
+                  letterSpacing: "-0.01em",
+                }}
+                onMouseEnter={(e) => {
+                  if (activeTab !== "dashboard") {
+                    e.target.style.background = "#F3F4F6";
+                    e.target.style.color = "#111827";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (activeTab !== "dashboard") {
+                    e.target.style.background = "transparent";
+                    e.target.style.color = "#6B7280";
+                  }
+                }}
+              >
+                Market Pulse
+              </button>
+              <button
+                onClick={() => onTabChange("compare")}
+                style={{
+                  padding: "8px 16px",
+                  borderRadius: "8px",
+                  border: "none",
+                  fontSize: "13px",
+                  fontWeight: "600",
+                  fontFamily: FH,
+                  background:
+                    activeTab === "compare"
+                      ? "linear-gradient(135deg, var(--accent) 0%, var(--accent) 100%)"
+                      : "transparent",
+                  color: activeTab === "compare" ? "#FFFFFF" : "#6B7280",
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
+                  boxShadow:
+                    activeTab === "compare"
+                      ? "0 4px 12px rgba(94, 106, 210, 0.3)"
+                      : "none",
+                  letterSpacing: "-0.01em",
+                }}
+                onMouseEnter={(e) => {
+                  if (activeTab !== "compare") {
+                    e.target.style.background = "#F3F4F6";
+                    e.target.style.color = "#111827";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (activeTab !== "compare") {
+                    e.target.style.background = "transparent";
+                    e.target.style.color = "#6B7280";
+                  }
+                }}
+              >
+                Pivot Analysis
+              </button>
+            </div>
+
+            {/* Spacer */}
+            <div style={{ width: "100px" }} />
+          </div>
+        </nav>
+      )}
+
       <AnimatePresence>
         {!modeLocked ? <ModeSelector onSelect={onModeSelect} /> : null}
       </AnimatePresence>
@@ -2097,7 +2246,11 @@ const AppPage = function ({ onCertSelected }) {
                     exit={{ opacity: 0, y: -10 }}
                     transition={T}
                   >
-                    {activeTab === "resume" ? (
+                    {activeTab === "dashboard" ? (
+                    <Dashboard />
+                  ) : null}
+
+                  {activeTab === "resume" ? (
                       <div
                         style={{ 
                           padding: "clamp(16px,3vw,28px)",
@@ -2424,7 +2577,7 @@ const Footer = function ({ onNavigate }) {
                 style={{
                   width: "26px",
                   height: "26px",
-                  background: "linear-gradient(135deg,var(--indigo),#4338CA)",
+                  background: "transparent,#4338CA)",
                   borderRadius: "7px",
                   display: "flex",
                   alignItems: "center",
@@ -2709,7 +2862,7 @@ const SignInModal = function ({ isOpen, onClose, onSignIn, loading }) {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "rgba(0,0,0,0.3)",
+        background: "transparent",
         padding: "24px",
       }}
     >
@@ -2827,7 +2980,7 @@ function AppRoot() {
   const setResumeContext = useJourneyStore((s) => s.setResumeContext);
 
   var goToApp = function (tab) {
-    setActiveTab(tab || "resume");
+    setActiveTab(tab || "dashboard");
     navigate("/app");
   };
 

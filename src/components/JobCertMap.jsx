@@ -20,7 +20,7 @@ const SearchBar = ({ value, onChange }) => (
       value={value}
       onChange={e => onChange(e.target.value)}
       placeholder="Search by company, role, or certification..."
-      style={{ width: '100%', padding: '11px 14px 11px 36px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '10px', color: 'var(--text)', fontSize: '14px', fontFamily: F_BODY, outline: 'none', transition: 'border-color 0.18s', boxSizing: 'border-box' }}
+      style={{ width: '100%', padding: '11px 14px 11px 36px', background: 'transparent', border: '1px solid var(--border)', borderRadius: '10px', color: 'var(--text)', fontSize: '14px', fontFamily: F_BODY, outline: 'none', transition: 'border-color 0.18s', boxSizing: 'border-box' }}
       onFocus={e => e.target.style.borderColor = 'var(--border-accent)'}
       onBlur={e  => e.target.style.borderColor = 'var(--border)'}
     />
@@ -29,7 +29,7 @@ const SearchBar = ({ value, onChange }) => (
 
 // ── Verified badge ────────────────────────────────────────────
 const DataBadge = ({ verified, source }) => (
-  <div style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '3px 8px', borderRadius: '5px', background: verified ? 'rgba(16,185,129,0.08)' : 'rgba(245,158,11,0.08)', border: `1px solid ${verified ? 'rgba(16,185,129,0.2)' : 'rgba(245,158,11,0.2)'}`, fontSize: '10px', color: verified ? '#10B981' : '#F59E0B', fontFamily: F_MONO }}>
+  <div style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '3px 8px', borderRadius: '5px', background: verified ? 'transparent' : 'transparent', border: `1px solid ${verified ? 'transparent' : 'transparent'}`, fontSize: '10px', color: verified ? 'var(--linear-blue)' : 'var(--cool-grey)', fontFamily: F_MONO }}>
     {verified ? <CheckCircle size={9} /> : <AlertCircle size={9} />}
     {verified ? 'Official Source' : 'Employee Reported'}
   </div>
@@ -40,7 +40,7 @@ const GovtCard = ({ org }) => {
   const [open, setOpen] = useState(false)
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={T}
-      style={{ borderRadius: '14px', background: 'var(--surface)', border: '1px solid var(--glass-border)', overflow: 'hidden', marginBottom: '12px' }}>
+      style={{ borderRadius: '14px', background: 'transparent', border: '1px solid var(--glass-border)', overflow: 'hidden', marginBottom: '12px' }}>
 
       {/* Header */}
       <button onClick={() => setOpen(v => !v)}
@@ -68,7 +68,7 @@ const GovtCard = ({ org }) => {
         {open && (
           <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={T} style={{ overflow: 'hidden' }}>
             {org.roles.map((role, i) => (
-              <div key={i} style={{ padding: '14px 18px', borderBottom: i < org.roles.length - 1 ? '1px solid var(--border)' : 'none', background: i % 2 === 0 ? 'transparent' : 'rgba(0,0,0,0.015)' }}>
+              <div key={i} style={{ padding: '14px 18px', borderBottom: i < org.roles.length - 1 ? '1px solid var(--border)' : 'none', background: i % 2 === 0 ? 'transparent' : 'transparent' }}>
 
                 {/* Role header */}
                 <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px', marginBottom: '10px', flexWrap: 'wrap' }}>
@@ -81,9 +81,9 @@ const GovtCard = ({ org }) => {
                   </div>
                   <div style={{ flexShrink: 0 }}>
                     {role.mandatory ? (
-                      <span style={{ fontSize: '10px', padding: '2px 8px', borderRadius: '4px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', color: '#EF4444', fontFamily: F_MONO }}>MANDATORY</span>
+                      <span style={{ fontSize: '10px', padding: '2px 8px', borderRadius: '4px', background: 'transparent', border: '1px solid transparent', color: 'var(--cool-grey)', fontFamily: F_MONO }}>MANDATORY</span>
                     ) : (
-                      <span style={{ fontSize: '10px', padding: '2px 8px', borderRadius: '4px', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.2)', color: '#F59E0B', fontFamily: F_MONO }}>PREFERRED</span>
+                      <span style={{ fontSize: '10px', padding: '2px 8px', borderRadius: '4px', background: 'transparent', border: '1px solid transparent', color: 'var(--cool-grey)', fontFamily: F_MONO }}>PREFERRED</span>
                     )}
                   </div>
                 </div>
@@ -99,13 +99,13 @@ const GovtCard = ({ org }) => {
                   {role.salaryRange && (
                     <div style={{ padding: '8px 10px', borderRadius: '8px', background: 'var(--bg)', border: '1px solid var(--border)' }}>
                       <div style={{ fontSize: '9px', color: 'var(--text-4)', fontFamily: F_MONO, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '3px' }}>Salary Range</div>
-                      <div style={{ fontSize: '12px', color: '#10B981', fontFamily: F_MONO, fontWeight: '700' }}>{role.salaryRange}</div>
+                      <div style={{ fontSize: '12px', color: 'var(--linear-blue)', fontFamily: F_MONO, fontWeight: '700' }}>{role.salaryRange}</div>
                     </div>
                   )}
                   {role.openings && (
                     <div style={{ padding: '8px 10px', borderRadius: '8px', background: 'var(--bg)', border: '1px solid var(--border)' }}>
                       <div style={{ fontSize: '9px', color: 'var(--text-4)', fontFamily: F_MONO, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '3px' }}>Openings</div>
-                      <div style={{ fontSize: '12px', color: '#51B1E7', fontFamily: F_MONO, fontWeight: '700' }}>{role.openings}</div>
+                      <div style={{ fontSize: '12px', color: 'var(--linear-blue)', fontFamily: F_MONO, fontWeight: '700' }}>{role.openings}</div>
                     </div>
                   )}
                 </div>
@@ -136,7 +136,7 @@ const PrivateCard = ({ company }) => {
   const [open, setOpen] = useState(false)
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={T}
-      style={{ borderRadius: '14px', background: 'var(--surface)', border: '1px solid var(--glass-border)', overflow: 'hidden', marginBottom: '12px' }}>
+      style={{ borderRadius: '14px', background: 'transparent', border: '1px solid var(--glass-border)', overflow: 'hidden', marginBottom: '12px' }}>
 
       {/* Header */}
       <button onClick={() => setOpen(v => !v)}
@@ -155,9 +155,9 @@ const PrivateCard = ({ company }) => {
       </button>
 
       {/* Disclaimer */}
-      <div style={{ margin: '0 18px 14px', padding: '8px 12px', borderRadius: '8px', background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.18)', display: 'flex', gap: '7px', alignItems: 'flex-start' }}>
-        <AlertCircle size={11} color="#F59E0B" style={{ flexShrink: 0, marginTop: '2px' }} />
-        <span style={{ fontSize: '11px', color: '#F59E0B', fontFamily: F_BODY, lineHeight: '1.5' }}>
+      <div style={{ margin: '0 18px 14px', padding: '8px 12px', borderRadius: '8px', background: 'transparent', border: '1px solid transparent', display: 'flex', gap: '7px', alignItems: 'flex-start' }}>
+        <AlertCircle size={11} color="var(--cool-grey)" style={{ flexShrink: 0, marginTop: '2px' }} />
+        <span style={{ fontSize: '11px', color: 'var(--cool-grey)', fontFamily: F_BODY, lineHeight: '1.5' }}>
           {company.disclaimer} Source: {company.source}
         </span>
       </div>
@@ -167,7 +167,7 @@ const PrivateCard = ({ company }) => {
         {open && (
           <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={T} style={{ overflow: 'hidden' }}>
             {company.tracks.map((track, i) => (
-              <div key={i} style={{ padding: '14px 18px', borderTop: '1px solid var(--border)', background: i % 2 === 0 ? 'transparent' : 'rgba(0,0,0,0.01)' }}>
+              <div key={i} style={{ padding: '14px 18px', borderTop: '1px solid var(--border)', background: i % 2 === 0 ? 'transparent' : 'transparent' }}>
 
                 {/* Transition arrow */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px', flexWrap: 'wrap' }}>
@@ -179,7 +179,7 @@ const PrivateCard = ({ company }) => {
                       <span style={{ fontSize: '10px', padding: '2px 7px', borderRadius: '4px', background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text-4)', fontFamily: F_MONO }}>⏱ {track.typicalTime}</span>
                     )}
                     {track.salaryJump && (
-                      <span style={{ fontSize: '10px', padding: '2px 7px', borderRadius: '4px', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)', color: '#10B981', fontFamily: F_MONO }}>+{track.salaryJump} hike</span>
+                      <span style={{ fontSize: '10px', padding: '2px 7px', borderRadius: '4px', background: 'transparent', border: '1px solid transparent', color: 'var(--linear-blue)', fontFamily: F_MONO }}>+{track.salaryJump} hike</span>
                     )}
                   </div>
                 </div>
@@ -216,14 +216,14 @@ const PrivateCard = ({ company }) => {
 
 // ── Mandatory financial cert card ────────────────────────────
 const MandatoryCertCard = ({ cert }) => (
-  <div style={{ padding: '14px 16px', borderRadius: '12px', background: 'rgba(239,68,68,0.04)', border: '1px solid rgba(239,68,68,0.18)', marginBottom: '10px' }}>
+  <div style={{ padding: '14px 16px', borderRadius: '12px', background: 'transparent', border: '1px solid transparent', marginBottom: '10px' }}>
     <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px', marginBottom: '8px', flexWrap: 'wrap' }}>
       <div style={{ fontFamily: F_HEAD, fontWeight: '700', fontSize: '14px', color: 'var(--text)', flex: 1 }}>{cert.cert}</div>
-      <span style={{ fontSize: '10px', padding: '2px 8px', borderRadius: '4px', background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.25)', color: '#EF4444', fontFamily: F_MONO, flexShrink: 0 }}>SEBI/IRDAI MANDATED</span>
+      <span style={{ fontSize: '10px', padding: '2px 8px', borderRadius: '4px', background: 'transparent', border: '1px solid transparent', color: 'var(--cool-grey)', fontFamily: F_MONO, flexShrink: 0 }}>SEBI/IRDAI MANDATED</span>
     </div>
-    <div style={{ fontSize: '11px', color: '#F59E0B', fontFamily: F_MONO, marginBottom: '5px' }}>Authority: {cert.authority}</div>
+    <div style={{ fontSize: '11px', color: 'var(--cool-grey)', fontFamily: F_MONO, marginBottom: '5px' }}>Authority: {cert.authority}</div>
     <div style={{ fontSize: '12px', color: 'var(--text-3)', fontFamily: F_BODY, marginBottom: '5px' }}>Who needs it: {cert.who}</div>
-    <div style={{ fontSize: '11px', color: '#EF4444', fontFamily: F_BODY, display: 'flex', gap: '6px', alignItems: 'flex-start' }}>
+    <div style={{ fontSize: '11px', color: 'var(--cool-grey)', fontFamily: F_BODY, display: 'flex', gap: '6px', alignItems: 'flex-start' }}>
       <AlertCircle size={11} style={{ flexShrink: 0, marginTop: '2px' }} />
       {cert.penalty}
     </div>
@@ -281,7 +281,7 @@ const JobCertMap = () => {
       </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: '4px', marginBottom: '20px', padding: '4px', background: 'var(--surface)', borderRadius: '12px', border: '1px solid var(--border)', width: 'fit-content' }}>
+      <div style={{ display: 'flex', gap: '4px', marginBottom: '20px', padding: '4px', background: 'transparent', borderRadius: '12px', border: '1px solid var(--border)', width: 'fit-content' }}>
         {[
           { id: 'govt', label: 'Government & PSU', count: GOVT_DATA.length },
           { id: 'private', label: 'Private Companies', count: PRIVATE_DATA.length },
@@ -303,8 +303,8 @@ const JobCertMap = () => {
         <Info size={13} color="var(--indigo-light)" style={{ flexShrink: 0, marginTop: '2px' }} />
         <div style={{ fontSize: '12px', color: 'var(--text-3)', fontFamily: F_BODY, lineHeight: '1.6' }}>
           {tab === 'govt' && <><strong style={{ color: 'var(--indigo-light)' }}>Government data</strong> is from official UPSC/SSC/IBPS/RRB notifications and government circulars. Verified accurate as of March 2026.</>}
-          {tab === 'private' && <><strong style={{ color: '#F59E0B' }}>Private company data</strong> is reported by employees on AmbitionBox, Glassdoor India, and LinkedIn. Not official company policy. Actual requirements vary by business unit and year.</>}
-          {tab === 'mandatory' && <><strong style={{ color: '#EF4444' }}>These certifications are legally mandated</strong> by SEBI or IRDAI. You cannot legally sell financial/insurance products in India without them.</>}
+          {tab === 'private' && <><strong style={{ color: 'var(--cool-grey)' }}>Private company data</strong> is reported by employees on AmbitionBox, Glassdoor India, and LinkedIn. Not official company policy. Actual requirements vary by business unit and year.</>}
+          {tab === 'mandatory' && <><strong style={{ color: 'var(--cool-grey)' }}>These certifications are legally mandated</strong> by SEBI or IRDAI. You cannot legally sell financial/insurance products in India without them.</>}
         </div>
       </div>
 
@@ -336,8 +336,8 @@ const JobCertMap = () => {
 
         {tab === 'mandatory' && (
           <motion.div key="mandatory" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.18 }}>
-            <div style={{ marginBottom: '16px', padding: '14px 16px', borderRadius: '12px', background: 'rgba(239,68,68,0.05)', border: '1px solid rgba(239,68,68,0.2)' }}>
-              <div style={{ fontFamily: F_HEAD, fontWeight: '700', fontSize: '14px', color: '#EF4444', marginBottom: '5px' }}>Legal Requirement - Not Optional</div>
+            <div style={{ marginBottom: '16px', padding: '14px 16px', borderRadius: '12px', background: 'transparent', border: '1px solid transparent' }}>
+              <div style={{ fontFamily: F_HEAD, fontWeight: '700', fontSize: '14px', color: 'var(--cool-grey)', marginBottom: '5px' }}>Legal Requirement - Not Optional</div>
               <div style={{ fontSize: '13px', color: 'var(--text-2)', fontFamily: F_BODY, lineHeight: '1.6' }}>
                 If you work in financial services in India, selling mutual funds, insurance, or derivatives without these certifications is illegal. SEBI and IRDAI actively penalise violations.
               </div>

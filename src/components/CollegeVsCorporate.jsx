@@ -3,10 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { GraduationCap, Award, TrendingUp, Clock, DollarSign, CheckCircle, X } from 'lucide-react'
 
-const PICTON  = '#51B1E7'
-const EMERALD = '#10B981'
-const AMBER   = '#F59E0B'
-const INDIGO  = '#6366F1'
+const PICTON  = 'var(--linear-blue)'
+const EMERALD = 'var(--linear-blue)'
+const AMBER   = 'var(--cool-grey)'
+const INDIGO  = 'var(--linear-blue)'
 const SPRING  = { type: 'spring', stiffness: 400, damping: 30 }
 
 const SliderRow = ({ label, value, min, max, step, onChange, format, color }) => {
@@ -19,9 +19,9 @@ const SliderRow = ({ label, value, min, max, step, onChange, format, color }) =>
       </div>
       <div style={{ position: 'relative', height: '20px', display: 'flex', alignItems: 'center' }}>
         <div style={{ position: 'absolute', left: 0, right: 0, height: '4px', borderRadius: '2px', background: 'var(--border)' }} />
-        <div style={{ position: 'absolute', left: 0, width: `${pct}%`, height: '4px', borderRadius: '2px', background: `linear-gradient(90deg, ${color}99, ${color})`, pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', left: 0, width: `${pct}%`, height: '4px', borderRadius: '2px', background: `transparent`, pointerEvents: 'none' }} />
         <input type="range" min={min} max={max} step={step} value={value} onChange={e => onChange(Number(e.target.value))} style={{ position: 'absolute', width: '100%', height: '4px', opacity: 0, cursor: 'pointer', zIndex: 2 }} />
-        <div style={{ position: 'absolute', left: `calc(${pct}% - 10px)`, width: 20, height: 20, borderRadius: '50%', background: `linear-gradient(135deg, ${color}, ${color}cc)`, boxShadow: `0 0 0 4px ${color}20`, pointerEvents: 'none', transition: 'left 0.06s' }} />
+        <div style={{ position: 'absolute', left: `calc(${pct}% - 10px)`, width: 20, height: 20, borderRadius: '50%', background: `transparent`, boxShadow: `0 0 0 4px ${color}20`, pointerEvents: 'none', transition: 'left 0.06s' }} />
       </div>
     </div>
   )
@@ -38,7 +38,7 @@ const StatBox = ({ label, value, sub, color }) => (
 const ChartTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null
   return (
-    <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '9px', padding: '10px 14px', boxShadow: '0 4px 20px rgba(0,0,0,0.15)' }}>
+    <div style={{ background: 'transparent', border: '1px solid var(--border)', borderRadius: '9px', padding: '10px 14px', boxShadow: 'none' }}>
       <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: 'var(--text-4)', marginBottom: '6px' }}>YEAR {label}</div>
       {payload.map((p, i) => (
         <div key={i} style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '12px', color: p.color, fontWeight: '600', marginBottom: '2px' }}>
@@ -138,7 +138,7 @@ const CollegeVsCorporate = () => {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', marginBottom: '20px' }}>
 
         {/* Inputs */}
-        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '14px', padding: '22px', boxShadow: 'inset 0 1px 0 var(--card-highlight)' }}>
+        <div style={{ background: 'transparent', border: '1px solid var(--border)', borderRadius: '14px', padding: '22px', boxShadow: 'none' }}>
           <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: PICTON, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '16px' }}>YOUR NUMBERS</div>
           <SliderRow label="Current Salary (₹L/yr)"    value={currentSalary}  min={4}  max={40} step={1}   onChange={setCurrentSalary}  format={v => `₹${v}L`}      color={PICTON}  />
           <SliderRow label="MBA Total Fee (₹L)"         value={mbaFee}         min={5}  max={40} step={1}   onChange={setMbaFee}          format={v => `₹${v}L`}      color={INDIGO}  />
@@ -170,14 +170,14 @@ const CollegeVsCorporate = () => {
 
           {/* Side by side stats */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-            <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '14px' }}>
+            <div style={{ background: 'transparent', border: '1px solid var(--border)', borderRadius: '12px', padding: '14px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '10px' }}>
                 <GraduationCap size={13} color={INDIGO} />
                 <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: '700', fontSize: '13px', color: INDIGO }}>MBA Path</span>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '7px' }}>
                 {[
-                  { label: 'Total Cost',    value: `₹${calc.mba.totalCost.toFixed(0)}L`,         color: '#EF4444' },
+                  { label: 'Total Cost',    value: `₹${calc.mba.totalCost.toFixed(0)}L`,         color: 'var(--cool-grey)' },
                   { label: 'New Salary',    value: `₹${calc.mba.newSalary.toFixed(1)}L/yr`,       color: INDIGO    },
                   { label: '5-yr Net',      value: `₹${calc.mba.net5yr.toFixed(1)}L`,             color: EMERALD   },
                   { label: 'Break-even',    value: `${calc.mba.breakEven.toFixed(1)} yrs`,         color: AMBER     },
@@ -190,14 +190,14 @@ const CollegeVsCorporate = () => {
                 ))}
               </div>
             </div>
-            <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '14px' }}>
+            <div style={{ background: 'transparent', border: '1px solid var(--border)', borderRadius: '12px', padding: '14px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '10px' }}>
                 <Award size={13} color={PICTON} />
                 <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: '700', fontSize: '13px', color: PICTON }}>4 Certs Path</span>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '7px' }}>
                 {[
-                  { label: 'Total Cost',    value: `₹${calc.cert.totalCost.toFixed(1)}L`,          color: '#EF4444' },
+                  { label: 'Total Cost',    value: `₹${calc.cert.totalCost.toFixed(1)}L`,          color: 'var(--cool-grey)' },
                   { label: 'New Salary',    value: `₹${calc.cert.newSalary.toFixed(1)}L/yr`,        color: PICTON    },
                   { label: '5-yr Net',      value: `₹${calc.cert.net5yr.toFixed(1)}L`,              color: EMERALD   },
                   { label: 'Break-even',    value: `${calc.cert.breakEven.toFixed(0)} months`,       color: AMBER     },
@@ -215,7 +215,7 @@ const CollegeVsCorporate = () => {
       </div>
 
       {/* Chart */}
-      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '14px', padding: '22px', marginBottom: '16px', boxShadow: 'inset 0 1px 0 var(--card-highlight)' }}>
+      <div style={{ background: 'transparent', border: '1px solid var(--border)', borderRadius: '14px', padding: '22px', marginBottom: '16px', boxShadow: 'none' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
           <div>
             <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: '800', fontSize: '13px', color: 'var(--text)', letterSpacing: '-0.01em' }}>7-YEAR NET EARNINGS</div>
@@ -251,7 +251,7 @@ const CollegeVsCorporate = () => {
       {/* Pros/Cons toggle */}
       <button
         onClick={() => setShowDetails(v => !v)}
-        style={{ width: '100%', padding: '12px', borderRadius: '10px', background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text-3)', fontSize: '13px', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: '600', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', transition: 'all 0.18s', marginBottom: '12px' }}
+        style={{ width: '100%', padding: '12px', borderRadius: '10px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-3)', fontSize: '13px', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: '600', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', transition: 'all 0.18s', marginBottom: '12px' }}
         onMouseEnter={e => { e.currentTarget.style.borderColor = PICTON + '44'; e.currentTarget.style.color = PICTON }}
         onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-3)' }}
       >
@@ -267,7 +267,7 @@ const CollegeVsCorporate = () => {
                 { title: 'Choose MBA when...', items: pros.mba, color: INDIGO },
                 { title: 'Choose Certs when...', items: pros.certs, color: PICTON },
               ].map((col, ci) => (
-                <div key={ci} style={{ background: 'var(--surface)', border: `1px solid ${col.color}22`, borderRadius: '12px', padding: '18px' }}>
+                <div key={ci} style={{ background: 'transparent', border: `1px solid ${col.color}22`, borderRadius: '12px', padding: '18px' }}>
                   <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: '700', fontSize: '13px', color: col.color, marginBottom: '12px' }}>{col.title}</div>
                   {col.items.map((item, i) => (
                     <div key={i} style={{ display: 'flex', gap: '8px', marginBottom: '9px', alignItems: 'flex-start' }}>
@@ -279,7 +279,7 @@ const CollegeVsCorporate = () => {
               ))}
             </div>
 
-            <div style={{ padding: '14px 18px', borderRadius: '10px', background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.18)', marginTop: '12px', display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
+            <div style={{ padding: '14px 18px', borderRadius: '10px', background: 'transparent', border: '1px solid transparent', marginTop: '12px', display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
               <TrendingUp size={16} color={AMBER} style={{ flexShrink: 0, marginTop: '2px' }} />
               <div style={{ fontSize: '13px', color: 'var(--text-2)', fontFamily: 'Inter, sans-serif', lineHeight: '1.65' }}>
                 <strong style={{ color: AMBER }}>India reality check:</strong> An IIM-A/B/C MBA still commands a network premium that certs cannot replicate. But for everyone else — Tier 2/3 colleges, private universities, or online MBAs — the cert stack almost always wins on pure ROI within 5 years.

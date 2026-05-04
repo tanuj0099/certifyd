@@ -18,7 +18,7 @@ class ErrorBoundary extends Component {
     if (this.state.hasError) {
       return (
         <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg)', padding: '24px' }}>
-          <div style={{ maxWidth: '480px', textAlign: 'center', background: 'var(--surface)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '16px', padding: '40px', boxShadow: '0 4px 24px rgba(0,0,0,0.1)' }}>
+          <div style={{ maxWidth: '480px', textAlign: 'center', background: 'transparent', border: '1px solid transparent', borderRadius: '16px', padding: '40px', boxShadow: 'none' }}>
             <div style={{ fontSize: '3rem', marginBottom: '16px' }}>⚠️</div>
             <h2 style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: '800', fontSize: '1.4rem', color: 'var(--text)', marginBottom: '8px', letterSpacing: '-0.01em' }}>
               Something went wrong
@@ -31,7 +31,7 @@ class ErrorBoundary extends Component {
             </p>
             <button
               onClick={() => { this.setState({ hasError: false, error: null }); window.location.reload() }}
-              style={{ padding: '11px 28px', borderRadius: '10px', background: 'linear-gradient(135deg, #51B1E7, #3B8CC7)', border: 'none', color: 'white', fontSize: '14px', fontWeight: '700', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans, sans-serif', boxShadow: '0 4px 16px rgba(81,177,231,0.35)' }}
+              style={{ padding: '11px 28px', borderRadius: '10px', background: 'transparent, #3B8CC7)', border: 'none', color: 'white', fontSize: '14px', fontWeight: '700', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans, sans-serif', boxShadow: 'none' }}
             >
               Reload App
             </button>

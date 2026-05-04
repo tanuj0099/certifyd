@@ -2,9 +2,9 @@ import { useState, useEffect, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Flame, CheckCircle, Clock, Target, RotateCcw } from 'lucide-react'
 
-const PICTON  = '#51B1E7'
-const EMERALD = '#10B981'
-const AMBER   = '#F59E0B'
+const PICTON  = 'var(--linear-blue)'
+const EMERALD = 'var(--linear-blue)'
+const AMBER   = 'var(--cool-grey)'
 const SPRING  = { type: 'spring', stiffness: 400, damping: 30 }
 
 const CERT_MODULES = {
@@ -99,7 +99,7 @@ const BurnRate = ({ certName = 'Your Certification', breakEvenMonths = 6 }) => {
             <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: 'var(--text-4)' }}>{certName}</div>
           </div>
         </div>
-        <button onClick={() => setShowReset(v => !v)} style={{ background: 'none', border: 'none', color: 'var(--text-4)', cursor: 'pointer', fontSize: '12px', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', gap: '4px', transition: 'color 0.15s' }} onMouseEnter={e => e.currentTarget.style.color = '#EF4444'} onMouseLeave={e => e.currentTarget.style.color = 'var(--text-4)'}>
+        <button onClick={() => setShowReset(v => !v)} style={{ background: 'none', border: 'none', color: 'var(--text-4)', cursor: 'pointer', fontSize: '12px', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', gap: '4px', transition: 'color 0.15s' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--cool-grey)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--text-4)'}>
           <RotateCcw size={12} /> Reset
         </button>
       </div>
@@ -107,11 +107,11 @@ const BurnRate = ({ certName = 'Your Certification', breakEvenMonths = 6 }) => {
       <AnimatePresence>
         {showReset && (
           <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={SPRING}
-            style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(239,68,68,0.07)', border: '1px solid rgba(239,68,68,0.2)', marginBottom: '14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+            style={{ padding: '12px 16px', borderRadius: '10px', background: 'transparent', border: '1px solid transparent', marginBottom: '14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
             <span style={{ fontSize: '13px', color: 'var(--text-2)', fontFamily: 'Inter, sans-serif' }}>Reset all progress?</span>
             <div style={{ display: 'flex', gap: '8px' }}>
-              <button onClick={reset} style={{ padding: '5px 12px', borderRadius: '7px', background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.25)', color: '#EF4444', fontSize: '12px', cursor: 'pointer', fontFamily: 'Inter, sans-serif', fontWeight: '600' }}>Reset</button>
-              <button onClick={() => setShowReset(false)} style={{ padding: '5px 12px', borderRadius: '7px', background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text-3)', fontSize: '12px', cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Cancel</button>
+              <button onClick={reset} style={{ padding: '5px 12px', borderRadius: '7px', background: 'transparent', border: '1px solid transparent', color: 'var(--cool-grey)', fontSize: '12px', cursor: 'pointer', fontFamily: 'Inter, sans-serif', fontWeight: '600' }}>Reset</button>
+              <button onClick={() => setShowReset(false)} style={{ padding: '5px 12px', borderRadius: '7px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-3)', fontSize: '12px', cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Cancel</button>
             </div>
           </motion.div>
         )}
@@ -123,7 +123,7 @@ const BurnRate = ({ certName = 'Your Certification', breakEvenMonths = 6 }) => {
           { icon: Flame,       color: AMBER,   label: 'Streak',    value: data.streak + (stats.streakAlive ? '' : ' (paused)'), sub: 'days' },
           { icon: CheckCircle, color: EMERALD, label: 'Done',      value: stats.completedCount + '/' + totalModules, sub: 'modules' },
           { icon: Target,      color: PICTON,  label: 'Progress',  value: stats.pct + '%', sub: 'complete' },
-          { icon: Clock,       color: '#818CF8', label: 'ETA',     value: stats.daysToFinish > 365 ? '1yr+' : stats.daysToFinish + 'd', sub: 'remaining' },
+          { icon: Clock,       color: 'var(--accent)', label: 'ETA',     value: stats.daysToFinish > 365 ? '1yr+' : stats.daysToFinish + 'd', sub: 'remaining' },
         ].map((s, i) => (
           <div key={i} style={{ padding: '11px 10px', borderRadius: '10px', background: `${s.color}08`, border: `1px solid ${s.color}20`, textAlign: 'center' }}>
             <s.icon size={13} color={s.color} style={{ display: 'block', margin: '0 auto 5px' }} />
@@ -137,7 +137,7 @@ const BurnRate = ({ certName = 'Your Certification', breakEvenMonths = 6 }) => {
       <div style={{ marginBottom: '16px' }}>
         <div style={{ height: '6px', borderRadius: '3px', background: 'var(--border)', overflow: 'hidden' }}>
           <motion.div initial={{ width: 0 }} animate={{ width: stats.pct + '%' }} transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-            style={{ height: '100%', borderRadius: '3px', background: `linear-gradient(90deg, ${PICTON}, ${EMERALD})` }} />
+            style={{ height: '100%', borderRadius: '3px', background: `transparent` }} />
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '5px' }}>
           <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: 'var(--text-4)' }}>Started {data.startDate}</span>
@@ -163,7 +163,7 @@ const BurnRate = ({ certName = 'Your Certification', breakEvenMonths = 6 }) => {
               transition={{ delay: i * 0.03, duration: 0.2 }}
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.98 }}
-              style={{ width: '100%', padding: '10px 14px', borderRadius: '9px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px', background: done ? `${EMERALD}08` : 'var(--surface)', border: `1px solid ${done ? EMERALD + '28' : 'var(--border)'}`, transition: 'all 0.18s', textAlign: 'left' }}
+              style={{ width: '100%', padding: '10px 14px', borderRadius: '9px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px', background: done ? `${EMERALD}08` : 'transparent', border: `1px solid ${done ? EMERALD + '28' : 'var(--border)'}`, transition: 'all 0.18s', textAlign: 'left' }}
             >
               <div style={{ width: 20, height: 20, borderRadius: '6px', flexShrink: 0, border: `2px solid ${done ? EMERALD : 'var(--border)'}`, background: done ? `${EMERALD}14` : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.18s' }}>
                 {done && <CheckCircle size={11} color={EMERALD} />}

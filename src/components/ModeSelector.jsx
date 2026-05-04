@@ -4,8 +4,8 @@ import { GraduationCap, Repeat, Briefcase, RotateCcw } from 'lucide-react'
 
 const MODES = [
   { id: 'student',      label: 'Breaking In',     sub: 'No current salary',         color: '#4A8C6A', icon: GraduationCap, desc: 'Path to your first ₹4.8L+ offer' },
-  { id: 'switcher',     label: 'Domain Pivot',    sub: 'Changing fields',            color: '#F59E0B', icon: Repeat,        desc: 'Switch domains in 5–8 months' },
-  { id: 'professional', label: 'Level Up',        sub: 'Upskilling for a promotion', color: '#10B981', icon: Briefcase,     desc: 'Max ROI on your next cert' },
+  { id: 'switcher',     label: 'Domain Pivot',    sub: 'Changing fields',            color: 'var(--cool-grey)', icon: Repeat,        desc: 'Switch domains in 5–8 months' },
+  { id: 'professional', label: 'Level Up',        sub: 'Upskilling for a promotion', color: 'var(--linear-blue)', icon: Briefcase,     desc: 'Max ROI on your next cert' },
 ]
 
 const SWITCH_DOMAINS = [
@@ -86,11 +86,11 @@ function WordRow({ hovered, setHovered, onPick }) {
               onClick={() => onPick(mode.id)}
               style={{
                 cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'flex-start',
-                width: '100%', background: isHovered ? mode.color + '0C' : 'var(--surface)',
+                width: '100%', background: isHovered ? mode.color + '0C' : 'transparent',
                 border: isHovered ? '1px solid ' + mode.color + '40' : '1px solid var(--border)',
                 borderRadius: '24px', padding: '32px 24px', textAlign: 'left',
                 opacity: hovered && !isHovered ? 0.4 : 1, outline: 'none',
-                boxShadow: isHovered ? '0 12px 32px ' + mode.color + '15' : '0 4px 12px rgba(0,0,0,0.02)',
+                boxShadow: isHovered ? '0 12px 32px ' + mode.color + '15' : '0 4px 12px transparent',
                 transform: isHovered ? 'translateY(-4px)' : 'translateY(0)',
                 transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
               }}
@@ -177,7 +177,7 @@ function DomainPicker({ onConfirm, color }) {
                 padding: '13px 11px',
                 borderRadius: '11px',
                 border: '1px solid ' + (isSelected ? color + '65' : 'var(--border)'),
-                background: isSelected ? color + '18' : 'var(--surface)',
+                background: isSelected ? color + '18' : 'transparent',
                 color: isSelected ? color : 'var(--text-2)',
                 fontSize: 'clamp(11px, 1.2vw, 13px)',
                 fontFamily: FH,
@@ -228,7 +228,7 @@ function DomainPicker({ onConfirm, color }) {
             color: selected === 'custom' ? color : 'var(--text)',
             fontSize: 'clamp(12px, 1.2vw, 14px)', fontFamily: FB, outline: 'none',
             transition: 'all 0.2s', textAlign: 'center',
-            boxShadow: selected === 'custom' ? '0 0 20px ' + color + '15' : 'inset 0 2px 4px rgba(0,0,0,0.02)',
+            boxShadow: selected === 'custom' ? '0 0 20px ' + color + '15' : 'inset 0 2px 4px transparent',
           }}
         />
       </motion.div>
@@ -244,7 +244,7 @@ function DomainPicker({ onConfirm, color }) {
           whileTap={selected ? { scale: 0.97 } : {}}
           style={{
             padding: '14px 44px', borderRadius: '40px', border: 'none',
-            background: selected ? 'linear-gradient(135deg,' + color + ',#B86800)' : 'var(--surface)',
+            background: selected ? 'transparent' : 'transparent',
             color: selected ? 'white' : 'var(--text-4)',
             fontSize: '15px', fontFamily: FH, fontWeight: '800',
             cursor: selected ? 'pointer' : 'not-allowed',
@@ -322,7 +322,7 @@ function ModeSelector({ onSelect }) {
     >
       <div style={{
         position: 'absolute', inset: 0,
-        backgroundImage: 'radial-gradient(rgba(45,106,79,0.08) 1px, transparent 1px)',
+        backgroundImage: 'transparent',
         backgroundSize: '32px 32px',
         pointerEvents: 'none',
       }} />
@@ -339,9 +339,7 @@ function ModeSelector({ onSelect }) {
               position: 'absolute', pointerEvents: 'none',
               width: '75vw', height: '75vw', maxWidth: '680px', maxHeight: '680px',
               borderRadius: '50%',
-              background: 'radial-gradient(circle,' +
-                (MODES.find((m) => m.id === hovered)?.color || '#2D6A4F') +
-                '0D 0%, transparent 65%)',
+              background: 'transparent',
             }}
           />
         ) : null}
@@ -394,7 +392,7 @@ function ModeSelector({ onSelect }) {
               key="domain"
               style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
             >
-              <DomainPicker onConfirm={handleDomainConfirm} color="#F59E0B" />
+              <DomainPicker onConfirm={handleDomainConfirm} color="var(--cool-grey)" />
             </motion.div>
           ) : null}
         </AnimatePresence>

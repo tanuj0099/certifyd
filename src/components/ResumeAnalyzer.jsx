@@ -6,7 +6,7 @@ import {
   Zap, Target, Star, Clock, ChevronDown, MapPin
 } from 'lucide-react'
 import { supabase } from '../services/supabase.js'
-import { callGroqForResume } from '../services/aiService.jsx'
+import { callGroqForResume, validateDomain } from '../services/aiService.jsx'
 import { useJourneyStore } from '../store/useJourneyStore.js'
 
 // ── Font tokens → CSS variables ───────────────────────────
@@ -15,11 +15,11 @@ var FB = 'var(--font-body)'
 var FH = 'var(--font-head)'
 
 // ── Color constants ───────────────────────────────────────
-var PICTON = '#51B1E7'
-var EMERALD = '#10B981'
-var AMBER = '#F59E0B'
-var INDIGO = '#6366F1'
-var VIOLET = '#818CF8'
+var PICTON = 'var(--linear-blue)'
+var EMERALD = 'var(--linear-blue)'
+var AMBER = 'var(--cool-grey)'
+var INDIGO = 'var(--linear-blue)'
+var VIOLET = 'var(--accent)'
 
 // ── Timeline options ──────────────────────────────────────
 var TIMELINE_OPTIONS = [
@@ -146,14 +146,17 @@ var readPdfFile = async function (file) {
 }
 
 // ── Prompt builder — requests strict JSON output ─────────
-var buildPrompt = function (resumeText, mode, timeline, domainIntent, switchTarget) {
+var buildPrompt = function (resumeText, mode, timeline, domainIntent, switchTarget, targetDomain) {
   var timelineNote = timeline === 'fast'
     ? 'IMPORTANT: User needs FAST-TRACK only — certs completable in 1–3 months.'
     : timeline === 'medium'
       ? 'User has 3–6 months. Recommend certs within that window.'
       : 'Flexible timeline — recommend the best certs regardless of duration.'
 
-  var domainNote = switchTarget
+  // targetDomain (from Landing Page "Pivot Domains") takes highest priority
+  var domainNote = targetDomain
+    ? 'PRIORITY PIVOT TARGET: User explicitly wants to move into "' + targetDomain + '". This overrides everything else. Surface certs for this field even if resume points elsewhere.'
+    : switchTarget
     ? 'User wants to SWITCH CAREERS to: "' + switchTarget + '". This is their #1 priority. Find certs for that specific field even if resume points elsewhere.'
     : (domainIntent && domainIntent !== 'auto')
       ? 'User wants to grow in: ' + domainIntent + '. Prioritise certs in that domain.'
@@ -255,11 +258,11 @@ var NotAResumeError = function ({ rejectedBy, onDismiss }) {
   }
   var msg = messages[rejectedBy] || messages.default
   var isTooShort = rejectedBy === 'too short'
-  var tone = isTooShort ? '#F59E0B' : '#FCA5A5'
+  var tone = isTooShort ? 'var(--cool-grey)' : '#FCA5A5'
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
-      style={{ padding: '22px', borderRadius: '13px', background: isTooShort ? 'rgba(245,158,11,0.08)' : 'rgba(239,68,68,0.07)', border: isTooShort ? '1px solid rgba(245,158,11,0.28)' : '1px solid rgba(239,68,68,0.22)', textAlign: 'center' }}
+      style={{ padding: '22px', borderRadius: '13px', background: isTooShort ? 'transparent' : 'transparent', border: isTooShort ? '1px solid transparent' : '1px solid transparent', textAlign: 'center' }}
     >
       <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
         <AlertTriangle size={24} color={tone} />
@@ -270,7 +273,7 @@ var NotAResumeError = function ({ rejectedBy, onDismiss }) {
           Previously called clearAll() which wiped pasted text the user would need to retype. */}
       <button
         onClick={onDismiss}
-        style={{ padding: '8px 18px', borderRadius: '8px', background: isTooShort ? 'rgba(245,158,11,0.12)' : 'rgba(239,68,68,0.12)', border: isTooShort ? '1px solid rgba(245,158,11,0.28)' : '1px solid rgba(239,68,68,0.25)', color: tone, fontSize: '13px', fontWeight: '600', cursor: 'pointer', fontFamily: FH }}
+        style={{ padding: '8px 18px', borderRadius: '8px', background: isTooShort ? 'transparent' : 'transparent', border: isTooShort ? '1px solid transparent' : '1px solid transparent', color: tone, fontSize: '13px', fontWeight: '600', cursor: 'pointer', fontFamily: FH }}
       >
         Try a different file
       </button>
@@ -296,7 +299,7 @@ var CleanLoader = function () {
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1.3, repeat: Infinity, ease: 'linear' }}
-          style={{ width: '16px', height: '16px', borderRadius: '50%', border: '2px solid rgba(81,177,231,0.2)', borderTopColor: PICTON, flexShrink: 0 }}
+          style={{ width: '16px', height: '16px', borderRadius: '50%', border: '2px solid transparent', borderTopColor: PICTON, flexShrink: 0 }}
         />
         <span className="micro-label" style={{ color: 'var(--text-4)' }}>Analysing</span>
         <span style={{ marginLeft: 'auto', fontFamily: FM, fontSize: '11px', color: PICTON, fontWeight: '700' }}>
@@ -319,7 +322,7 @@ var CleanLoader = function () {
         <motion.div
           animate={{ width: Math.round(((step + 1) / LOADER_STEPS.length) * 100) + '%' }}
           transition={{ duration: 0.5, ease: 'easeOut' }}
-          style={{ height: '100%', background: 'linear-gradient(90deg,' + PICTON + ',' + VIOLET + ')', borderRadius: '2px' }}
+          style={{ height: '100%', background: 'transparent', borderRadius: '2px' }}
         />
       </div>
     </div>
@@ -347,7 +350,7 @@ var PreferencesPanel = function ({ timeline, onTimeline, domainIntent, onDomain,
                 style={{
                   flex: '1', minWidth: '100px',
                   padding: '11px 12px', borderRadius: '10px',
-                  background: active ? INDIGO + '14' : 'var(--surface)',
+                  background: active ? INDIGO + '14' : 'transparent',
                   border: '1px solid ' + (active ? INDIGO + '40' : 'var(--border)'),
                   color: active ? VIOLET : 'var(--text)',
                   cursor: 'pointer', transition: 'all 0.16s',
@@ -396,9 +399,9 @@ var PreferencesPanel = function ({ timeline, onTimeline, domainIntent, onDomain,
 
       {/* Switcher: show their chosen domain as a badge */}
       {mode === 'switcher' && switchTarget && (
-        <div style={{ padding: '10px 14px', borderRadius: '9px', background: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.22)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ padding: '10px 14px', borderRadius: '9px', background: 'transparent', border: '1px solid transparent', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span style={{ fontSize: '12px', color: AMBER, fontFamily: FM, letterSpacing: '0.04em', fontWeight: '700' }}>Target domain:</span>
-          <span style={{ padding: '3px 10px', borderRadius: '6px', background: 'rgba(245,158,11,0.15)', border: '1px solid rgba(245,158,11,0.3)', fontSize: '12px', color: AMBER, fontFamily: FH, fontWeight: '700' }}>
+          <span style={{ padding: '3px 10px', borderRadius: '6px', background: 'transparent', border: '1px solid transparent', fontSize: '12px', color: AMBER, fontFamily: FH, fontWeight: '700' }}>
             {DOMAIN_CHOICES.find(function (d) { return d.id === switchTarget })?.label || switchTarget}
           </span>
           <span style={{ fontSize: '11px', color: 'var(--text-4)', fontFamily: FB, marginLeft: '4px' }}>will be prioritised</span>
@@ -433,7 +436,7 @@ var PersonalisedHero = function ({ name, city, domain, primaryCert, mode, certDo
         initial={{ scaleX: 0 }}
         animate={{ scaleX: 1 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        style={{ height: '1px', background: 'linear-gradient(90deg,' + INDIGO + '55,' + EMERALD + '55,transparent)', marginBottom: '18px', transformOrigin: 'left' }}
+        style={{ height: '1px', background: 'transparent', marginBottom: '18px', transformOrigin: 'left' }}
       />
       {phase >= 0 && (
         <motion.p
@@ -453,7 +456,7 @@ var PersonalisedHero = function ({ name, city, domain, primaryCert, mode, certDo
             <span style={{ fontSize: 'clamp(20px, 4.5vw, 30px)', color: 'var(--text)' }}>
               {callout.split(' ').slice(0, -1).join(' ')}{' '}
             </span>
-            <span style={{ fontSize: 'clamp(20px, 4.5vw, 30px)', background: 'linear-gradient(135deg,' + EMERALD + ',' + PICTON + ',' + VIOLET + ')', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+            <span style={{ fontSize: 'clamp(20px, 4.5vw, 30px)', background: 'transparent', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
               {callout.split(' ').at(-1)}
             </span>
           </div>
@@ -479,22 +482,22 @@ var PrimaryCertHero = function ({ cert }) {
       onMouseLeave={function () { setHovered(false) }}
       style={{
         position: 'relative', borderRadius: '13px', overflow: 'hidden',
-        border: '1px solid ' + (hovered ? 'rgba(16,185,129,0.4)' : 'rgba(16,185,129,0.22)'),
-        background: 'linear-gradient(135deg, rgba(16,185,129,0.07), rgba(81,177,231,0.04), rgba(99,102,241,0.06))',
+        border: '1px solid ' + (hovered ? 'transparent' : 'transparent'),
+        background: 'transparent',
         padding: '18px',
-        boxShadow: hovered ? '0 0 24px rgba(16,185,129,0.12), 0 4px 20px rgba(0,0,0,0.14)' : '0 2px 10px rgba(0,0,0,0.08)',
+        boxShadow: hovered ? '0 0 24px transparent, 0 4px 20px transparent' : '0 2px 10px transparent',
         transition: 'border-color 0.2s, box-shadow 0.2s',
       }}
     >
-      <div style={{ position: 'absolute', top: 0, left: '15%', right: '15%', height: '1px', background: 'linear-gradient(90deg,transparent,' + EMERALD + '70,' + PICTON + '70,transparent)' }} />
+      <div style={{ position: 'absolute', top: 0, left: '15%', right: '15%', height: '1px', background: 'transparent' }} />
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '11px', flexWrap: 'wrap', gap: '6px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           <Star size={12} color={EMERALD} fill={EMERALD} />
           <span className="micro-label" style={{ color: EMERALD }}>Primary Move</span>
         </div>
         <div style={{ display: 'flex', gap: '5px' }}>
-          <span className="tabular-nums" style={{ fontFamily: FM, fontSize: '9px', padding: '3px 7px', borderRadius: '5px', background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.22)', color: EMERALD }}>+{cert.roi}</span>
-          <span className="tabular-nums" style={{ fontFamily: FM, fontSize: '9px', padding: '3px 7px', borderRadius: '5px', background: 'rgba(81,177,231,0.12)', border: '1px solid rgba(81,177,231,0.22)', color: PICTON }}>{cert.timeline}</span>
+          <span className="tabular-nums" style={{ fontFamily: FM, fontSize: '9px', padding: '3px 7px', borderRadius: '5px', background: 'transparent', border: '1px solid transparent', color: EMERALD }}>+{cert.roi}</span>
+          <span className="tabular-nums" style={{ fontFamily: FM, fontSize: '9px', padding: '3px 7px', borderRadius: '5px', background: 'transparent', border: '1px solid transparent', color: PICTON }}>{cert.timeline}</span>
         </div>
       </div>
       <h2 style={{ fontSize: 'clamp(16px, 3.5vw, 23px)', color: 'var(--text)', marginBottom: '8px' }}>
@@ -504,7 +507,7 @@ var PrimaryCertHero = function ({ cert }) {
         {cert.why}
       </h3>
       {cert.fastTrack && (
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', padding: '9px 11px', borderRadius: '8px', background: 'rgba(99,102,241,0.07)', border: '1px solid rgba(99,102,241,0.14)' }}>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', padding: '9px 11px', borderRadius: '8px', background: 'transparent', border: '1px solid transparent' }}>
           <Zap size={11} color={VIOLET} style={{ flexShrink: 0, marginTop: '2px' }} />
           <div>
             <div className="micro-label" style={{ color: VIOLET, marginBottom: '3px' }}>This Week</div>
@@ -539,8 +542,8 @@ var CertLeaderboardRow = function ({ cert, rank, onSelect, mode }) {
       style={{
         display: 'flex', alignItems: 'center', gap: '11px', padding: '12px 13px',
         borderRadius: '10px',
-        border: '1px solid ' + (exceedsSwitcherLimit ? 'rgba(245,158,11,0.25)' : hovered ? col + '33' : 'var(--border)'),
-        background: exceedsSwitcherLimit ? 'rgba(245,158,11,0.04)' : hovered ? col + '06' : 'var(--surface)',
+        border: '1px solid ' + (exceedsSwitcherLimit ? 'transparent' : hovered ? col + '33' : 'var(--border)'),
+        background: exceedsSwitcherLimit ? 'transparent' : hovered ? col + '06' : 'transparent',
         cursor: onSelect && !exceedsSwitcherLimit ? 'pointer' : 'default',
         transition: 'all 0.15s', marginBottom: '6px',
         filter: exceedsSwitcherLimit ? 'grayscale(0.4)' : 'none',
@@ -555,7 +558,7 @@ var CertLeaderboardRow = function ({ cert, rank, onSelect, mode }) {
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '3px', flexShrink: 0 }}>
         {exceedsSwitcherLimit ? (
-          <span className="micro-label" style={{ padding: '2px 7px', borderRadius: '5px', background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.3)', color: AMBER, whiteSpace: 'nowrap' }}>
+          <span className="micro-label" style={{ padding: '2px 7px', borderRadius: '5px', background: 'transparent', border: '1px solid transparent', color: AMBER, whiteSpace: 'nowrap' }}>
             Exceeds 8-mo window
           </span>
         ) : (
@@ -592,7 +595,7 @@ var ResultDisplay = function ({ result, onCertSelected, mode, onClear, certDomai
           onClick={function () { handleSelect(primaryCert.name) }}
           initial={{ opacity: 0, y: 7 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.6, duration: 0.35 }}
           whileHover={{ scale: 1.02, y: -2 }} whileTap={{ scale: 0.97 }}
-          style={{ width: '100%', padding: '14px 18px', borderRadius: '11px', border: 'none', cursor: 'pointer', background: 'linear-gradient(135deg,' + EMERALD + ',#0DA271)', color: 'white', fontSize: '14px', fontWeight: '800', fontFamily: FH, letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '9px', boxShadow: '0 5px 20px rgba(16,185,129,0.28)', marginBottom: '16px' }}
+          style={{ width: '100%', padding: '14px 18px', borderRadius: '11px', border: 'none', cursor: 'pointer', background: 'transparent', color: 'white', fontSize: '14px', fontWeight: '800', fontFamily: FH, letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '9px', boxShadow: 'none', marginBottom: '16px' }}
         >
           <TrendingUp size={14} />
           Calculate ROI for {primaryCert.name.split(' ').slice(0, 3).join(' ')}
@@ -641,7 +644,7 @@ var ResultDisplay = function ({ result, onCertSelected, mode, onClear, certDomai
           <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
             {result.gaps.map(function (gap, i) {
               return (
-                <div key={i} style={{ display: 'flex', gap: '9px', alignItems: 'flex-start', padding: '8px 11px', borderRadius: '8px', background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.13)' }}>
+                <div key={i} style={{ display: 'flex', gap: '9px', alignItems: 'flex-start', padding: '8px 11px', borderRadius: '8px', background: 'transparent', border: '1px solid transparent' }}>
                   <span style={{ fontFamily: FM, fontSize: '10px', color: AMBER, flexShrink: 0, marginTop: '1px' }}>0{i + 1}</span>
                   <span style={{ fontFamily: FB, fontSize: '12px', color: 'var(--text-3)', lineHeight: 1.5 }}>{gap}</span>
                 </div>
@@ -713,7 +716,7 @@ var ResultDisplay = function ({ result, onCertSelected, mode, onClear, certDomai
       {result.marketInsight && (
         <motion.div
           initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 2.6 }}
-          style={{ padding: '11px 13px', borderRadius: '10px', background: 'rgba(99,102,241,0.07)', border: '1px solid rgba(99,102,241,0.15)', display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '16px' }}
+          style={{ padding: '11px 13px', borderRadius: '10px', background: 'transparent', border: '1px solid transparent', display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '16px' }}
         >
           <TrendingUp size={13} color={VIOLET} style={{ flexShrink: 0, marginTop: '2px' }} />
           <div>
@@ -796,6 +799,14 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
     return mode === 'switcher' ? (s.resumeDomain || null) : null
   })
 
+  // targetDomain — from Landing Page "Pivot Domains" input, persisted in Zustand
+  var targetDomain    = useJourneyStore(function (s) { return s.targetDomain || '' })
+  var setTargetDomain = useJourneyStore(function (s) { return s.setTargetDomain })
+
+  var [domainValidationError, setDomainValidationError] = useState(null)
+  var [domainOverride, setDomainOverride]               = useState('')
+  var [domainValidating, setDomainValidating]           = useState(false)
+
   var hasFile = !!fileName
   var hasResult = !!result
 
@@ -863,10 +874,33 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
       var validation = validateDocument(analyseText)
       if (!validation.isResume) { setRejection(validation.rejectedBy || 'default'); return }
     }
-    setLoading(true); setResult(null); setError(null); setRejection(null)
+    setLoading(true); setResult(null); setError(null); setRejection(null); setDomainValidationError(null)
+
+    // ── Domain Validation (Groq) ─────────────────────────
+    var domainToValidate = domainOverride || targetDomain
+    if (domainToValidate && domainToValidate.trim()) {
+      setDomainValidating(true)
+      try {
+        var domainResult = await validateDomain(domainToValidate)
+        setDomainValidating(false)
+        if (!domainResult.isValid) {
+          setLoading(false)
+          setDomainValidationError(domainToValidate)
+          return
+        }
+        // Use the normalized domain for the Groq resume prompt
+        if (domainResult.normalized) {
+          setTargetDomain(domainResult.normalized)
+        }
+      } catch (_) {
+        setDomainValidating(false)
+        // Fail open — continue analysis
+      }
+    }
+
     try {
       var safeText = analyseText.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, ' ').replace(/\s+/g, ' ').slice(0, 2200).trim()
-      var raw = await callGroqForResume(null, buildPrompt(safeText, mode, timeline, domainIntent, switchTarget))
+      var raw = await callGroqForResume(null, buildPrompt(safeText, mode, timeline, domainIntent, switchTarget, domainOverride || targetDomain))
       if (!raw || raw.length < 30) throw new Error('Empty response — try again')
       var parsed = safeParseResumeJSON(raw)
       setResult(parsed.certs?.length ? parsed : {
@@ -910,6 +944,55 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+
+      {/* ── Target pivot domain badge (from LandingPage) ──── */}
+      {(targetDomain || domainOverride) && !domainValidationError && (
+        <div style={{ padding: '10px 14px', borderRadius: '8px', background: 'transparent', border: '1px solid transparent', display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+          <span style={{ fontFamily: FM, fontSize: '9px', color: 'var(--linear-blue)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>TARGET PIVOT</span>
+          <span style={{ fontFamily: FM, fontSize: '12px', fontWeight: '700', color: '#F9FAFB', padding: '2px 10px', borderRadius: '4px', background: 'transparent', border: '1px solid transparent' }}>
+            {domainOverride || targetDomain}
+          </span>
+          <span style={{ fontFamily: FM, fontSize: '9px', color: 'transparent', marginLeft: 'auto' }}>Analysis will prioritise this domain</span>
+        </div>
+      )}
+
+      {/* ── Domain validation error UI (Linear/Vercel palette) ── */}
+      {domainValidationError && (
+        <div style={{ padding: '16px 18px', borderRadius: '8px', background: 'var(--border-subtle)', border: '1px solid transparent' }}>
+          <div style={{ fontFamily: FM, fontSize: '10px', letterSpacing: '0.14em', color: '#8A8F98', marginBottom: '10px' }}>
+            STATUS: DOMAIN NOT IDENTIFIED // ENTER VALID DOMAIN
+          </div>
+          <div style={{ fontFamily: FM, fontSize: '12px', color: '#8A8F98', marginBottom: '14px', lineHeight: 1.6 }}>
+            "<span style={{ color: '#F9FAFB' }}>{domainValidationError}</span>" is not a recognized professional domain.
+          </div>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <input
+              value={domainOverride}
+              onChange={function (e) { setDomainOverride(e.target.value) }}
+              placeholder="e.g. Cybersecurity, Finance, Data Science"
+              style={{
+                flex: 1, padding: '9px 12px', borderRadius: '6px',
+                background: 'var(--border-subtle)',
+                border: '1px solid transparent',
+                color: '#F9FAFB', fontFamily: FM, fontSize: '13px',
+                outline: 'none',
+              }}
+            />
+            <button
+              onClick={function () { setDomainValidationError(null); if (domainOverride) setTargetDomain(domainOverride) }}
+              style={{ padding: '9px 16px', borderRadius: '6px', background: 'var(--accent)', border: 'none', color: '#fff', fontFamily: FM, fontSize: '12px', fontWeight: '700', cursor: 'pointer', letterSpacing: '0.04em', whiteSpace: 'nowrap' }}
+            >
+              RETRY →
+            </button>
+          </div>
+        </div>
+      )}
+
+      {domainValidating && (
+        <div style={{ padding: '10px 14px', borderRadius: '8px', background: 'var(--border-subtle)', border: '1px solid var(--border-subtle)', fontFamily: FM, fontSize: '10px', color: '#8A8F98', letterSpacing: '0.1em' }}>
+          ANALYZING TARGET DOMAIN VIA GROQ... [Validation logic running]
+        </div>
+      )}
 
       {!hasResult && (
         <PreferencesPanel
@@ -1033,10 +1116,10 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
             <div style={{
               borderRadius: '11px',
               border: '1.5px dashed ' + (dragging ? PICTON : hasFile ? EMERALD : 'var(--border)'),
-              background: dragging ? PICTON + '08' : hasFile ? EMERALD + '06' : 'var(--glass-bg)',
+              background: dragging ? PICTON + '08' : hasFile ? EMERALD + '06' : 'transparent',
               backdropFilter: 'blur(16px)',
               WebkitBackdropFilter: 'blur(16px)',
-              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+              boxShadow: 'none',
               transition: 'border-color 0.2s, background 0.2s',
             }}>
               <div
@@ -1147,14 +1230,14 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
             width: '100%', fontSize: '15px', padding: '14px',
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '9px',
             background: (text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3))
-              ? 'linear-gradient(135deg,' + PICTON + ',#3B8CC7)'
+              ? 'transparent'
               : 'transparent',
             border: (text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3)) ? 'none' : '1px solid var(--border)',
             borderRadius: '12px',
             color: (text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3)) ? 'white' : 'var(--text-4)',
             fontFamily: FH, fontWeight: '800',
             cursor: (text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3)) ? 'pointer' : 'not-allowed',
-            boxShadow: (text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3)) ? '0 4px 16px rgba(81,177,231,0.25)' : 'none',
+            boxShadow: (text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3)) ? '0 4px 16px transparent' : 'none',
             letterSpacing: '-0.015em',
             transition: 'all 0.2s',
             position: 'relative',
@@ -1163,7 +1246,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
           {pdfLoading ? (
             <>
               <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                style={{ width: 14, height: 14, borderRadius: '50%', border: '2px solid rgba(255,255,255,0.4)', borderTopColor: 'white' }} />
+                style={{ width: 14, height: 14, borderRadius: '50%', border: '2px solid transparent', borderTopColor: 'white' }} />
               Analyse Profile
               <span style={{ fontSize: '11px', opacity: 0.75, marginLeft: '4px' }}>(reading file...)</span>
             </>
@@ -1179,7 +1262,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
       {loading && <CleanLoader />}
 
       {error && (
-        <div style={{ padding: '11px 13px', borderRadius: '10px', background: 'rgba(239,68,68,0.07)', border: '1px solid rgba(239,68,68,0.2)', fontSize: '13px', color: '#FCA5A5', display: 'flex', gap: '8px', fontFamily: FB }}>
+        <div style={{ padding: '11px 13px', borderRadius: '10px', background: 'transparent', border: '1px solid transparent', fontSize: '13px', color: '#FCA5A5', display: 'flex', gap: '8px', fontFamily: FB }}>
           <AlertTriangle size={14} style={{ flexShrink: 0, marginTop: '1px' }} /><span>{error}</span>
         </div>
       )}

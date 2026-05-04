@@ -120,7 +120,7 @@ export default function BlogPage() {
                 padding: '8px 16px',
                 borderRadius: '20px',
                 border: selectedTag === tag ? '2px solid var(--accent)' : '1px solid var(--border)',
-                background: selectedTag === tag ? 'rgba(74,140,106,0.1)' : 'transparent',
+                background: selectedTag === tag ? 'transparent' : 'transparent',
                 color: 'var(--text-2)',
                 fontFamily: F_BODY,
                 fontSize: '13px',
@@ -219,7 +219,7 @@ export default function BlogPage() {
                     style={{
                       padding: '4px 10px',
                       borderRadius: '12px',
-                      background: 'rgba(74,140,106,0.08)',
+                      background: 'transparent',
                       color: 'var(--accent)',
                       fontSize: '11px',
                       fontWeight: '600',
@@ -232,7 +232,7 @@ export default function BlogPage() {
                   <span style={{
                     padding: '4px 10px',
                     borderRadius: '12px',
-                    background: 'rgba(74,140,106,0.08)',
+                    background: 'transparent',
                     color: 'var(--accent)',
                     fontSize: '11px',
                     fontWeight: '600',

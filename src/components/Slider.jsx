@@ -14,7 +14,7 @@ function Slider({
   onChange,
   prefix = '',
   suffix = '',
-  color = '#6366F1',
+  color = 'var(--linear-blue)',
   note,
   formatDisplay,
   disabled = false,
@@ -160,8 +160,8 @@ function Slider({
           right: 0,
           height: '6px',
           borderRadius: '4px',
-          background: 'rgba(255,255,255,0.06)',
-          border: '1px solid rgba(255,255,255,0.04)',
+          background: 'var(--border-subtle)',
+          border: '1px solid var(--border-subtle)',
           pointerEvents: 'none',
           overflow: 'visible',
         }}>
@@ -172,7 +172,7 @@ function Slider({
             width: pct + '%',
             height: '100%',
             borderRadius: '4px',
-            background: 'linear-gradient(90deg,' + color + '80,' + color + ')',
+            background: 'transparent',
             boxShadow: drag ? ('0 0 12px ' + color + '60') : ('0 0 6px ' + color + '30'),
             transition: drag ? 'none' : 'width 0.05s linear, box-shadow 0.2s',
             pointerEvents: 'none',
@@ -203,11 +203,11 @@ function Slider({
           height: '26px',
           borderRadius: '50%',
           background: drag
-            ? ('linear-gradient(145deg,' + color + 'ee,' + color + ')')
-            : ('linear-gradient(145deg,' + color + 'dd,' + color + 'aa)'),
+            ? ('transparent')
+            : ('transparent'),
           boxShadow: drag
-            ? ('0 0 0 8px ' + color + '20, 0 0 0 14px ' + color + '08, 0 4px 20px rgba(0,0,0,0.5)')
-            : ('0 0 0 5px ' + color + '18, 0 2px 10px rgba(0,0,0,0.35)'),
+            ? ('0 0 0 8px ' + color + '20, 0 0 0 14px ' + color + '08, 0 4px 20px transparent')
+            : ('0 0 0 5px ' + color + '18, 0 2px 10px transparent'),
           cursor: disabled ? 'not-allowed' : drag ? 'grabbing' : 'grab',
           zIndex: 4,
           pointerEvents: 'none',
@@ -230,7 +230,7 @@ function Slider({
                         width: '2.5px',
                         height: '2.5px',
                         borderRadius: '50%',
-                        background: 'rgba(255,255,255,0.85)',
+                        background: 'transparent',
                       }} />
                     )
                   })}
@@ -251,7 +251,7 @@ function Slider({
               width: tick === 0 || tick === 100 ? '4px' : '3px',
               height: tick === 0 || tick === 100 ? '4px' : '3px',
               borderRadius: '50%',
-              background: tick <= pct ? color + '70' : 'rgba(255,255,255,0.12)',
+              background: tick <= pct ? color + '70' : 'transparent',
               pointerEvents: 'none',
               transition: 'background 0.1s',
             }} />

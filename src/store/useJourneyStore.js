@@ -61,6 +61,10 @@ export const useJourneyStore = create(
       resumeDomain:  '',
       resumeName:    '',
 
+      // ── Pivot domain intent (persisted across nav) ─────
+      targetDomain: '',
+      setTargetDomain: (v) => set({ targetDomain: v || '' }),
+
       setResumeContext: ({ certName, city, domain, name }) => {
         const found = certName
           ? CERTIFICATIONS.find((c) =>
@@ -102,6 +106,7 @@ export const useJourneyStore = create(
         hikePercent: state.hikePercent,
         expectedFirstSalary: state.expectedFirstSalary,
         mode:        state.mode,
+        targetDomain: state.targetDomain,
       }),
     }
   )

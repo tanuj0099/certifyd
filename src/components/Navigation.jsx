@@ -22,10 +22,10 @@ const Navigation = () => {
       transition={{ duration: 0.4, ease: 'easeOut' }}
       style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
-        background: 'rgba(11,14,20,0.92)',
+        background: 'transparent',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(255,255,255,0.05)',
+        borderBottom: '1px solid var(--border-subtle)',
       }}
     >
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
@@ -33,14 +33,14 @@ const Navigation = () => {
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div style={{
               width: '36px', height: '36px',
-              background: 'linear-gradient(135deg, #6366F1, #4F46E5)',
+              background: 'transparent, #4F46E5)',
               borderRadius: '10px',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
               <TrendingUp size={18} color="white" />
             </div>
             <span style={{ fontFamily: 'Bebas Neue', fontSize: '22px', letterSpacing: '0.06em', color: '#F8FAFC' }}>
-              Certify<span style={{ color: '#6366F1' }}>ROI</span>
+              Certify<span style={{ color: 'var(--linear-blue)' }}>ROI</span>
             </span>
           </div>
 
@@ -49,9 +49,9 @@ const Navigation = () => {
               user ? (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   {user.photoURL ? (
-                    <img src={user.photoURL} alt="" style={{ width: '30px', height: '30px', borderRadius: '50%', border: '2px solid rgba(99,102,241,0.4)' }} />
+                    <img src={user.photoURL} alt="" style={{ width: '30px', height: '30px', borderRadius: '50%', border: '2px solid transparent' }} />
                   ) : (
-                    <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: 'linear-gradient(135deg, #6366F1, #10B981)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: 'transparent, var(--linear-blue))', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <User size={14} color="white" />
                     </div>
                   )}
@@ -60,8 +60,8 @@ const Navigation = () => {
                     style={{
                       display: 'flex', alignItems: 'center', gap: '6px',
                       padding: '7px 14px',
-                      background: 'rgba(239,68,68,0.1)',
-                      border: '1px solid rgba(239,68,68,0.2)',
+                      background: 'transparent',
+                      border: '1px solid transparent',
                       borderRadius: '8px', color: '#FCA5A5', fontSize: '13px', cursor: 'pointer',
                     }}
                   >
@@ -75,7 +75,7 @@ const Navigation = () => {
                   style={{
                     display: 'flex', alignItems: 'center', gap: '7px',
                     padding: '8px 18px',
-                    background: 'linear-gradient(135deg, #6366F1, #4F46E5)',
+                    background: 'transparent, #4F46E5)',
                     border: 'none', borderRadius: '10px', color: 'white',
                     fontSize: '14px', fontWeight: '600', cursor: 'pointer',
                     opacity: signingIn ? 0.7 : 1,

@@ -40,7 +40,7 @@ export function Header({ currentPage }) {
       <header style={{
         position: 'fixed', top: 0, left: 0, right: 0,
         height: '64px', zIndex: 9999,
-        background: scrolled ? 'rgba(250,250,248,0.92)' : 'rgba(250,250,248,0.8)',
+        background: scrolled ? 'transparent' : 'transparent',
         backdropFilter: 'blur(20px) saturate(180%)',
         WebkitBackdropFilter: 'blur(20px) saturate(180%)',
         borderBottom: '1px solid var(--border)',
@@ -86,10 +86,10 @@ export function Header({ currentPage }) {
                     fontFamily: F_BODY, fontSize: '13px', fontWeight: isActive ? '600' : '500',
                     color: isActive ? 'var(--text)' : 'var(--text-2)',
                     transition: 'all 0.2s var(--ease-out)',
-                    background: isActive ? 'rgba(0,0,0,0.04)' : 'transparent',
+                    background: isActive ? 'transparent' : 'transparent',
                   }}
                   onMouseEnter={(e) => {
-                    if (!isActive) e.currentTarget.style.background = 'rgba(0,0,0,0.03)'
+                    if (!isActive) e.currentTarget.style.background = 'transparent'
                   }}
                   onMouseLeave={(e) => {
                     if (!isActive) e.currentTarget.style.background = 'transparent'
@@ -141,7 +141,7 @@ export function Header({ currentPage }) {
                     textDecoration: 'none', padding: '12px 16px', borderRadius: '8px',
                     fontFamily: F_BODY, fontSize: '14px', fontWeight: isActive ? '600' : '500',
                     color: isActive ? 'var(--text)' : 'var(--text-2)',
-                    background: isActive ? 'rgba(0,0,0,0.04)' : 'transparent',
+                    background: isActive ? 'transparent' : 'transparent',
                   }}
                 >
                   {item.label}
@@ -162,7 +162,7 @@ export function Footer() {
   return (
     <footer style={{
       borderTop: '1px solid var(--border)',
-      background: 'var(--bg-secondary)',
+      background: 'transparent',
       padding: '48px 24px 32px',
     }}>
       <div style={{

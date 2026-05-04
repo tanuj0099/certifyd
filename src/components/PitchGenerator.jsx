@@ -3,9 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Mail, MessageSquare, X, Sparkles, Copy, Check } from 'lucide-react'
 import { callGroqForPitch } from '../services/aiService.jsx'
 
-const PICTON  = '#51B1E7'
-const EMERALD = '#10B981'
-const AMBER   = '#F59E0B'
+const PICTON  = 'var(--linear-blue)'
+const EMERALD = 'var(--linear-blue)'
+const AMBER   = 'var(--cool-grey)'
 const SPRING  = { type: 'spring', stiffness: 400, damping: 30 }
 
 const buildPrompt = ({ certName, certCost, currentSalary, hikePercent, recipientType }) => {
@@ -71,9 +71,9 @@ const PitchGenerator = ({ certName, certCost, currentSalary, hikePercent, onClos
     <motion.div
       initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
       transition={SPRING}
-      style={{ background: '#121826', border: '1px solid ' + PICTON + '22', borderRadius: '14px', overflow: 'hidden', marginTop: '14px', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06), 0 0 0 1px rgba(0,0,0,0.4)' }}
+      style={{ background: '#121826', border: '1px solid ' + PICTON + '22', borderRadius: '14px', overflow: 'hidden', marginTop: '14px', boxShadow: 'none' }}
     >
-      <div style={{ padding: '14px 18px', borderBottom: '1px solid rgba(255,255,255,0.04)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <div style={{ padding: '14px 18px', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', gap: '8px' }}>
         <div style={{ width: 28, height: 28, borderRadius: '8px', background: PICTON + '14', border: '1px solid ' + PICTON + '28', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <Mail size={13} color={PICTON} />
         </div>
@@ -85,7 +85,7 @@ const PitchGenerator = ({ certName, certCost, currentSalary, hikePercent, onClos
       </div>
 
       <div style={{ padding: '16px 18px' }}>
-        <div style={{ padding: '9px 12px', borderRadius: '8px', background: 'rgba(16,185,129,0.06)', border: '1px solid rgba(16,185,129,0.14)', marginBottom: '14px', fontSize: '12px', color: '#475569', fontFamily: 'Inter, sans-serif', lineHeight: '1.5' }}>
+        <div style={{ padding: '9px 12px', borderRadius: '8px', background: 'transparent', border: '1px solid transparent', marginBottom: '14px', fontSize: '12px', color: '#475569', fontFamily: 'Inter, sans-serif', lineHeight: '1.5' }}>
           💡 Most Indian companies have unused L&D budgets every year. Most employees never ask.
         </div>
 
@@ -94,14 +94,14 @@ const PitchGenerator = ({ certName, certCost, currentSalary, hikePercent, onClos
           <div style={{ display: 'flex', gap: '7px', flexWrap: 'wrap' }}>
             {TYPE_OPTIONS.map(opt => (
               <button key={opt.id} onClick={() => { setType(opt.id); setResult(null) }}
-                style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '6px 12px', borderRadius: '7px', fontSize: '12px', fontWeight: '600', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans, sans-serif', background: type === opt.id ? PICTON + '14' : '#0D1117', border: '1px solid ' + (type === opt.id ? PICTON + '44' : 'rgba(255,255,255,0.05)'), color: type === opt.id ? PICTON : '#475569', transition: 'all 0.15s' }}>
+                style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '6px 12px', borderRadius: '7px', fontSize: '12px', fontWeight: '600', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans, sans-serif', background: type === opt.id ? PICTON + '14' : '#0D1117', border: '1px solid ' + (type === opt.id ? PICTON + '44' : 'var(--border-subtle)'), color: type === opt.id ? PICTON : '#475569', transition: 'all 0.15s' }}>
                 <opt.icon size={11} />{opt.label}
               </button>
             ))}
           </div>
         </div>
 
-        <div style={{ padding: '9px 12px', borderRadius: '8px', background: '#0D1117', border: '1px solid rgba(255,255,255,0.04)', marginBottom: '14px', display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+        <div style={{ padding: '9px 12px', borderRadius: '8px', background: '#0D1117', border: '1px solid var(--border-subtle)', marginBottom: '14px', display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
           {[{ label: 'CERT', value: certName, color: '#F8FAFC' }, { label: 'COST', value: 'Rs.' + certCost + 'L', color: AMBER }, { label: 'HIKE', value: '+' + hikePercent + '%', color: EMERALD }].map((item, i) => (
             <div key={i}>
               <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '9px', color: '#1E293B', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '2px' }}>{item.label}</div>
@@ -114,16 +114,16 @@ const PitchGenerator = ({ certName, certCost, currentSalary, hikePercent, onClos
           {loading ? <><div className="pulse-dot" />Writing...</> : <><Sparkles size={13} />Generate {type === 'email' ? 'Email' : type === 'slack' ? 'Slack Message' : 'WhatsApp'}</>}
         </button>
 
-        {error && <div style={{ padding: '9px 12px', borderRadius: '8px', background: 'rgba(239,68,68,0.07)', border: '1px solid rgba(239,68,68,0.18)', fontSize: '12px', color: '#FCA5A5', fontFamily: 'Inter, sans-serif' }}>{error}</div>}
+        {error && <div style={{ padding: '9px 12px', borderRadius: '8px', background: 'transparent', border: '1px solid transparent', fontSize: '12px', color: '#FCA5A5', fontFamily: 'Inter, sans-serif' }}>{error}</div>}
 
         <AnimatePresence>
           {result && (
             <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.22 }}>
               <div style={{ position: 'relative' }}>
-                <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', padding: '14px', borderRadius: '9px', background: '#0D1117', border: '1px solid rgba(255,255,255,0.04)', fontSize: '12px', color: '#94A3B8', lineHeight: '1.7', fontFamily: 'Inter, sans-serif', maxHeight: '300px', overflowY: 'auto' }}>
+                <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', padding: '14px', borderRadius: '9px', background: '#0D1117', border: '1px solid var(--border-subtle)', fontSize: '12px', color: '#94A3B8', lineHeight: '1.7', fontFamily: 'Inter, sans-serif', maxHeight: '300px', overflowY: 'auto' }}>
                   {result}
                 </pre>
-                <button onClick={copy} style={{ position: 'absolute', top: '10px', right: '10px', display: 'flex', alignItems: 'center', gap: '4px', padding: '4px 9px', borderRadius: '6px', background: copied ? 'rgba(16,185,129,0.12)' : '#121826', border: '1px solid ' + (copied ? 'rgba(16,185,129,0.3)' : 'rgba(255,255,255,0.06)'), color: copied ? EMERALD : '#475569', fontSize: '11px', cursor: 'pointer', fontFamily: 'JetBrains Mono, monospace', transition: 'all 0.18s' }}>
+                <button onClick={copy} style={{ position: 'absolute', top: '10px', right: '10px', display: 'flex', alignItems: 'center', gap: '4px', padding: '4px 9px', borderRadius: '6px', background: copied ? 'transparent' : '#121826', border: '1px solid ' + (copied ? 'transparent' : 'var(--border-subtle)'), color: copied ? EMERALD : '#475569', fontSize: '11px', cursor: 'pointer', fontFamily: 'JetBrains Mono, monospace', transition: 'all 0.18s' }}>
                   {copied ? <><Check size={10} />Copied</> : <><Copy size={10} />Copy</>}
                 </button>
               </div>

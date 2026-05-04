@@ -57,12 +57,12 @@ const AILoadingState = ({ certName }) => {
                 >
                   <div style={{
                     width: '28px', height: '28px', borderRadius: '8px', flexShrink: 0,
-                    background: isCompleted ? 'rgba(16,185,129,0.12)' : isActive ? 'var(--indigo-dim)' : 'rgba(255,255,255,0.03)',
-                    border: `1px solid ${isCompleted ? 'rgba(16,185,129,0.3)' : isActive ? 'var(--border-accent)' : 'var(--border)'}`,
+                    background: isCompleted ? 'transparent' : isActive ? 'var(--indigo-dim)' : 'var(--border-subtle)',
+                    border: `1px solid ${isCompleted ? 'transparent' : isActive ? 'var(--border-accent)' : 'var(--border)'}`,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     transition: 'all 0.3s',
                   }}>
-                    {isCompleted ? <Check size={13} color="#10B981" /> : <Icon size={13} color={isActive ? 'var(--indigo-light)' : 'var(--text-4)'} />}
+                    {isCompleted ? <Check size={13} color="var(--linear-blue)" /> : <Icon size={13} color={isActive ? 'var(--indigo-light)' : 'var(--text-4)'} />}
                   </div>
                   <span style={{
                     fontSize: '13px',
@@ -95,7 +95,7 @@ const AILoadingState = ({ certName }) => {
           initial={{ width: '0%' }}
           animate={{ width: `${((currentStep + 1) / LOADING_STEPS.length) * 100}%` }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
-          style={{ height: '100%', borderRadius: '2px', background: 'linear-gradient(90deg, var(--indigo), var(--indigo-light))' }}
+          style={{ height: '100%', borderRadius: '2px', background: 'transparent, var(--indigo-light))' }}
         />
       </div>
 

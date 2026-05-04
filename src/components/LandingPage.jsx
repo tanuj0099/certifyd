@@ -1,55 +1,19 @@
 import { motion, useScroll, AnimatePresence } from 'framer-motion'
 import React, { useRef, useState, useEffect, createContext, useContext } from 'react'
 import { ArrowRight, ChevronDown, BarChart2, CheckCircle2 } from 'lucide-react'
+import { useJourneyStore } from '../store/useJourneyStore.js'
+import { THEMES } from './SharedUI.jsx'
+import { useTheme as useThemeContext } from '../hooks/useTheme.jsx'
 
 // ─────────────────────────────────────────────────────────
-// THEME
+// THEME — Read from 5-theme engine
 // ─────────────────────────────────────────────────────────
-const THEMES = {
-  dark: {
-    name: 'dark',
-    bg: '#0A0A0A',
-    bgAlt: '#101010',
-    surface: '#131313',
-    text: '#F0F0F0',
-    text2: '#A8A8A8',
-    text3: '#6E6E6E',
-    text4: '#3A3A3A',
-    gold: '#D4AF37',
-    goldL: '#F0D060',
-    err: '#D94848',
-    line: '#1E1E1E',
-    lineHeavy: '#2C2C2C',
-    border: 'rgba(255,255,255,0.07)',
-    borderMid: 'rgba(255,255,255,0.13)',
-    certBg: '#080808',
-  },
-  light: {
-    name: 'light',
-    bg: '#F4F2EE',
-    bgAlt: '#EBE8E3',
-    surface: '#FAFAF8',
-    text: '#121212',
-    text2: '#555555',
-    text3: '#858585',
-    text4: '#A3A3A3',
-    gold: '#A07828',
-    goldL: '#C9A84C',
-    err: '#C93636',
-    line: '#DDD9D3',
-    lineHeavy: '#C2BCB3',
-    border: 'rgba(0,0,0,0.07)',
-    borderMid: 'rgba(0,0,0,0.15)',
-    certBg: '#F8F8F6',
-  }
-}
+const ThemeContext = createContext(THEMES.nordic)
+function useTheme() { return useContext(ThemeContext) || THEMES.nordic }
 
-const ThemeContext = createContext(THEMES.dark)
-function useTheme() { return useContext(ThemeContext) || THEMES.dark }
-
-// ─────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // HOOKS
-// ─────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function useIsMobile() {
   const [m, setM] = useState(false)
   useEffect(() => {
@@ -60,9 +24,9 @@ function useIsMobile() {
   return m
 }
 
-// ─────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // TOKENS
-// ─────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const F_SERIF = "'EB Garamond', 'Cormorant Garamond', Georgia, serif"
 const F_SANS  = "'Inter', 'DM Sans', sans-serif"
 const F_MONO  = "'JetBrains Mono', 'IBM Plex Mono', monospace"
@@ -72,9 +36,9 @@ const RISE = {
   show: { y: 0, opacity: 1, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } }
 }
 
-// ─────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // PRIMITIVES
-// ─────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function CrosshairIcon({ color }) {
   return (
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -119,11 +83,11 @@ function PillBtn({ onClick = () => {}, children, large, primary = false }) {
         background: primary 
           ? (h ? 'var(--accent-light, #4A8C6A)' : 'var(--accent, #2D6A4F)')
           : (d
-            ? `linear-gradient(135deg, rgba(255,255,255,${h ? 0.07 : 0.045}), rgba(255,255,255,${h ? 0.02 : 0.01}))`
-            : `linear-gradient(135deg, rgba(0,0,0,${h ? 0.05 : 0.035}), rgba(0,0,0,${h ? 0.015 : 0.008}))`),
+            ? `transparent`
+            : `transparent`),
         border: primary 
           ? `1px solid var(--accent-light, #4A8C6A)`
-          : `1px solid ${d ? `rgba(255,255,255,${h ? 0.13 : 0.09})` : `rgba(0,0,0,${h ? 0.1 : 0.07})`}`,
+          : `1px solid ${d ? `transparent` : `transparent`}`,
         borderRadius: '9999px',
         fontSize: large ? '12px' : '11px',
         fontFamily: F_SANS, fontWeight: '600',
@@ -131,10 +95,10 @@ function PillBtn({ onClick = () => {}, children, large, primary = false }) {
         cursor: 'pointer',
         color: primary ? '#FFFFFF' : (d ? C.goldL : C.gold),
         boxShadow: primary 
-          ? `0 4px 14px rgba(45, 106, 79, ${h ? 0.4 : 0.25})`
+          ? `0 4px 14px transparent`
           : (d
-            ? `0 2px 12px rgba(0,0,0,${h ? 0.35 : 0.25})`
-            : `0 2px 8px rgba(0,0,0,${h ? 0.06 : 0.04})`),
+            ? `0 2px 12px transparent`
+            : `0 2px 8px transparent`),
         backdropFilter: 'blur(10px)',
         WebkitBackdropFilter: 'blur(10px)',
         transition: 'all 0.3s ease',
@@ -152,18 +116,18 @@ function GlassPill({ children }) {
     <div style={{
       display: 'inline-flex', alignItems: 'center', gap: '10px',
       padding: '7px 16px', borderRadius: '9999px',
-      background: d ? 'rgba(255,255,255,0.035)' : 'rgba(0,0,0,0.03)',
+      background: d ? 'var(--border-subtle)' : 'transparent',
       backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
-      border: `1px solid ${d ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)'}`,
+      border: `1px solid ${d ? 'var(--border-subtle)' : 'transparent'}`,
     }}>
       {children}
     </div>
   )
 }
 
-// ─────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // STORY SECTION
-// ─────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function StorySection({ id = '', title = '', children, bg = '', noBorderTop = false }) {
   const C = useTheme()
   const isMobile = useIsMobile()
@@ -175,11 +139,11 @@ function StorySection({ id = '', title = '', children, bg = '', noBorderTop = fa
         margin: '0 auto', 
         display: 'flex', 
         flexDirection: isMobile ? 'column' : 'row',
-        background: d ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.6)',
+        background: d ? 'var(--border-subtle)' : 'transparent',
         backdropFilter: 'blur(16px)',
         WebkitBackdropFilter: 'blur(16px)',
-        border: `1px solid ${d ? 'rgba(255, 255, 255, 0.08)' : 'rgba(26,25,22,0.06)'}`,
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+        border: `1px solid ${d ? 'var(--border-subtle)' : 'transparent'}`,
+        boxShadow: 'none',
         borderRadius: '16px',
         overflow: 'hidden'
       }}>
@@ -213,17 +177,17 @@ function StorySection({ id = '', title = '', children, bg = '', noBorderTop = fa
   )
 }
 
-// ─────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // TRUST STRIP
-// ─────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function TrustStrip() {
   const C = useTheme()
   const isMobile = useIsMobile()
   const items = [
-    { tag: 'SYS.CLOUD', text: 'AWS cert holders earn ₹2.4L more/yr in Bangalore' },
+    { tag: 'SYS.CLOUD', text: 'AWS cert holders earn â‚¹2.4L more/yr in Bangalore' },
     { tag: 'SYS.DEMAND', text: '2,400+ cloud roles open on Naukri right now' },
     { tag: 'SYS.FINANCE', text: 'Average PMP payback period: 7 months' },
-    { tag: 'SYS.DATA', text: 'Google Analytics · ₹18K invested → ₹3.2L annual gain' },
+    { tag: 'SYS.DATA', text: 'Google Analytics Â· â‚¹18K invested â†’ â‚¹3.2L annual gain' },
     { tag: 'SYS.DEVOPS', text: 'CKA Kubernetes: highest ROI cert in India 2026' },
   ]
   return (
@@ -245,9 +209,9 @@ function TrustStrip() {
   )
 }
 
-// ─────────────────────────────────────────────────────────
-// CERT ASSEMBLY — metallic border + swoosh
-// ─────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// CERT ASSEMBLY â€” metallic border + swoosh
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function CertAssembly() {
   const C = useTheme()
   const isMobile = useIsMobile()
@@ -332,7 +296,7 @@ function CertAssembly() {
                       <stop offset="100%" stopColor="#444" />
                     </linearGradient>
                   </defs>
-                  <rect x="0" y="0" width="480" height="340" fill={C.certBg} style={{ filter: 'drop-shadow(0 28px 56px rgba(0,0,0,0.5))' }} />
+                  <rect x="0" y="0" width="480" height="340" fill={C.certBg} style={{ filter: 'drop-shadow(0 28px 56px transparent)' }} />
                   <rect x="1.5" y="1.5" width="477" height="337" fill="none" stroke="url(#metalGrad)" strokeWidth="1.5" />
                   <rect x="12" y="12" width="456" height="316" fill="none" stroke="#2a2a2a" strokeWidth="0.8" />
                 </svg>
@@ -340,13 +304,13 @@ function CertAssembly() {
 
               {/* Layer 2: Content */}
               <div style={{ position: 'absolute', inset: 0, transform: l2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '32px' }}>
-                <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.gold, letterSpacing: '0.18em', marginBottom: '14px', textTransform: 'uppercase' }}>CertifyROI · Route Analysis</div>
+                <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.gold, letterSpacing: '0.18em', marginBottom: '14px', textTransform: 'uppercase' }}>CertifyROI Â· Route Analysis</div>
                 <div style={{ fontFamily: F_SERIF, fontWeight: '400', fontSize: isMobile ? '1.6rem' : 'clamp(1.5rem, 3.2vw, 2.4rem)', color: C.text, marginBottom: '6px', textAlign: 'center', lineHeight: 1.1 }}>Route Briefing</div>
-                <div style={{ fontFamily: F_SANS, fontSize: '13px', color: C.text3, marginBottom: '28px', textAlign: 'center' }}>Personalised · India 2026</div>
+                <div style={{ fontFamily: F_SANS, fontSize: '13px', color: C.text3, marginBottom: '28px', textAlign: 'center' }}>Personalised Â· India 2026</div>
                 <div style={{ display: 'flex', gap: '28px', marginBottom: '20px', width: '100%', justifyContent: 'center' }}>
                   {[
                     { l: 'PAYBACK', v: '6 MO', c: C.text },
-                    { l: '5-YR GAIN', v: '₹14.2L', c: C.gold },
+                    { l: '5-YR GAIN', v: 'â‚¹14.2L', c: C.gold },
                     { l: 'DELTA', v: '+35%', c: C.text },
                   ].map((s, i) => (
                     <div key={i} style={{ textAlign: 'center' }}>
@@ -362,7 +326,7 @@ function CertAssembly() {
                 </div>
               </div>
 
-              {/* SWOOSH — metallic light sweep */}
+              {/* SWOOSH â€” metallic light sweep */}
               <AnimatePresence>
                 {showSwoosh && (
                   <motion.div
@@ -377,7 +341,7 @@ function CertAssembly() {
                       top: '-15%',
                       bottom: '-15%',
                       width: '30%',
-                      background: 'linear-gradient(105deg, transparent 20%, rgba(180,185,195,0.04) 36%, rgba(200,205,215,0.12) 44%, rgba(230,235,240,0.28) 49%, rgba(255,255,255,0.38) 50%, rgba(230,235,240,0.28) 51%, rgba(200,205,215,0.12) 56%, rgba(180,185,195,0.04) 64%, transparent 80%)',
+                      background: 'transparent',
                       transform: 'skewX(-15deg)',
                       pointerEvents: 'none',
                       zIndex: 12,
@@ -390,14 +354,14 @@ function CertAssembly() {
 
           <div style={{ opacity: hintOp, marginTop: '36px', textAlign: 'center', pointerEvents: 'none' }}>
             <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}>
-              <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.18em' }}>↓ SCROLL TO ASSEMBLE ↓</div>
+              <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.18em' }}>â†“ SCROLL TO ASSEMBLE â†“</div>
             </motion.div>
           </div>
         </div>
 
         <div style={{ opacity: assembledOp, position: 'absolute', bottom: '10%', left: 0, right: 0, textAlign: 'center', pointerEvents: 'none', zIndex: 5 }}>
           <div className="glass" style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.15em', display: 'inline-block', padding: '8px 18px' }}>
-            ✓ BRIEFING COMPILED
+            âœ“ BRIEFING COMPILED
           </div>
         </div>
       </div>
@@ -405,49 +369,49 @@ function CertAssembly() {
   )
 }
 
-// ─────────────────────────────────────────────────────────
-// DATA COMPOSITION — drop-in replacement for the existing
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// DATA COMPOSITION â€” drop-in replacement for the existing
 // DataComposition() function in LandingPage.jsx
 //
 // Rules applied:
-//  1. StorySection wrapper preserved — left margin sidebar untouched
+//  1. StorySection wrapper preserved â€” left margin sidebar untouched
 //  2. True bento grid: 5yr gain = md:col-span-2, metrics tile right
 //  3. Cards: flat #141414, 1px border only, no glass/blur/shadow
 //  4. Green (#2D6A4F / C.gold) ONLY on 5yr gain value + +35% text
-//     + "Calculate ROI" button — all other accents dimmed to text3
+//     + "Calculate ROI" button â€” all other accents dimmed to text3
 //  5. tabular-nums on every large metric
-// ─────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function DataComposition() {
   const C = useTheme()
   const isMobile = useIsMobile()
 
-  // ── Flat card token — no glass, no blur, no shadow ──────
+  // â”€â”€ Flat card token â€” no glass, no blur, no shadow â”€â”€â”€â”€â”€â”€
   const CARD_BG     = C.name === 'dark' ? '#141414' : '#F2F0EC'
   const CARD_BORDER = C.name === 'dark'
-    ? '1px solid rgba(255,255,255,0.08)'
-    : '1px solid rgba(0,0,0,0.09)'
+    ? '1px solid var(--border-subtle)'
+    : '1px solid transparent'
   const CARD_RADIUS = '4px'
 
-  // ── Accent rules:
-  //   - PRIMARY  → C.gold  (5yr gain, +35%)
-  //   - MUTED    → C.text3 (payback, labels, icons, decorative borders)
-  //   - NEUTRAL  → C.text  (payback value — important but not brand-green)
+  // â”€â”€ Accent rules:
+  //   - PRIMARY  â†’ C.gold  (5yr gain, +35%)
+  //   - MUTED    â†’ C.text3 (payback, labels, icons, decorative borders)
+  //   - NEUTRAL  â†’ C.text  (payback value â€” important but not brand-green)
   const PRIMARY_ACCENT = C.gold
   const MUTED_ACCENT   = C.text3
 
-  // ── Shared metric label style ───────────────────────────
+  // â”€â”€ Shared metric label style â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const labelStyle = {
     fontFamily: F_MONO,
     fontSize: '10px',
-    color: MUTED_ACCENT,            // dimmed — not green
+    color: MUTED_ACCENT,            // dimmed â€” not green
     letterSpacing: '0.14em',
     textTransform: 'uppercase',
     marginBottom: '10px',
     display: 'block',
   }
 
-  // ── Shared big number style ─────────────────────────────
+  // â”€â”€ Shared big number style â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const bigNumBase = {
     fontFamily: F_MONO,
     fontVariantNumeric: 'tabular-nums',   // rigid alignment
@@ -457,15 +421,15 @@ function DataComposition() {
     fontWeight: '500',
   }
 
-  // ── Grid layout ─────────────────────────────────────────
+  // â”€â”€ Grid layout â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   // Mobile: single column stack
   // Desktop: 3-col grid, hero card spans 2 cols
   //
-  //  ┌─────────────────────┬───────────────┐
-  //  │  ₹14.2L 5-YR GAIN   │  6 MO PAYBACK │
-  //  │  (col-span-2)        ├───────────────┤
-  //  │                      │  +35% DELTA   │
-  //  └─────────────────────┴───────────────┘
+  //  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+  //  â”‚  â‚¹14.2L 5-YR GAIN   â”‚  6 MO PAYBACK â”‚
+  //  â”‚  (col-span-2)        â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
+  //  â”‚                      â”‚  +35% DELTA   â”‚
+  //  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 
   const gridStyle = isMobile
     ? { display: 'flex', flexDirection: 'column', gap: '8px' }
@@ -479,7 +443,7 @@ function DataComposition() {
   return (
     <StorySection id="02" title="METRICS_LOG" noBorderTop>
 
-      {/* ── Section label ─────────────────────────────── */}
+      {/* â”€â”€ Section label â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }}>
         <div style={{
           fontFamily: F_SANS,
@@ -500,7 +464,7 @@ function DataComposition() {
         </div>
       </motion.div>
 
-      {/* ── Bento grid ────────────────────────────────── */}
+      {/* â”€â”€ Bento grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <motion.div
         variants={RISE}
         initial="hidden"
@@ -509,7 +473,7 @@ function DataComposition() {
         style={gridStyle}
       >
 
-        {/* CARD 1 — 5-Year Net Gain (hero, spans 2 rows on desktop) */}
+        {/* CARD 1 â€” 5-Year Net Gain (hero, spans 2 rows on desktop) */}
         <div style={{
           background:   CARD_BG,
           border:       CARD_BORDER,
@@ -533,16 +497,16 @@ function DataComposition() {
               border: CARD_BORDER,    // same muted border, not green
               borderRadius: '2px',
             }}>
-              AWS SAA · BLR '26
+              {"AWS SAA Â· BLR '26"}
             </div>
           </div>
 
-          {/* Big number — PRIMARY_ACCENT (gold/green) */}
+          {/* Big number â€” PRIMARY_ACCENT (gold/green) */}
           <div>
             <div style={{
               ...bigNumBase,
               fontSize: isMobile ? 'clamp(3.8rem, 14vw, 6rem)' : 'clamp(4rem, 8vw, 7rem)',
-              color: PRIMARY_ACCENT,   // ← brand green, earns its place
+              color: PRIMARY_ACCENT,   // â† brand green, earns its place
               marginBottom: '6px',
               display: 'flex',
               alignItems: 'flex-start',
@@ -554,7 +518,7 @@ function DataComposition() {
                 color: PRIMARY_ACCENT,
                 fontVariantNumeric: 'tabular-nums',
                 fontFeatureSettings: '"tnum"',
-              }}>₹</span>
+              }}>â‚¹</span>
               <CountUp end={14.2} />
               <span style={{
                 fontSize: isMobile ? 'clamp(1.8rem, 6vw, 2.8rem)' : 'clamp(2rem, 4vw, 3rem)',
@@ -573,7 +537,7 @@ function DataComposition() {
               maxWidth: '36ch',
               marginTop: '16px',
             }}>
-              Cumulative salary uplift net of certification cost —
+              Cumulative salary uplift net of certification cost &mdash;
               calculated from your salary, city, and expected hike.
               Not a range. A number.
             </div>
@@ -599,12 +563,12 @@ function DataComposition() {
               color: MUTED_ACCENT,
               letterSpacing: '0.1em',
             }}>
-              SOURCE: NAUKRI · AMBITIONBOX · LINKEDIN INDIA · Q1 2026
+              {"SOURCE: NAUKRI Â· AMBITIONBOX Â· LINKEDIN INDIA Â· Q1 2026"}
             </span>
           </div>
         </div>
 
-        {/* CARD 2 — Payback Period */}
+        {/* CARD 2 â€” Payback Period */}
         <div style={{
           background:   CARD_BG,
           border:       CARD_BORDER,
@@ -620,7 +584,7 @@ function DataComposition() {
             <div style={{
               ...bigNumBase,
               fontSize: isMobile ? 'clamp(2.8rem, 10vw, 4rem)' : 'clamp(2.4rem, 4vw, 3.6rem)',
-              color: C.text,   // ← neutral, not green — payback is neutral fact
+              color: C.text,   // â† neutral, not green â€” payback is neutral fact
               marginBottom: '10px',
             }}>
               <CountUp end={6} suffix=" MO" />
@@ -664,7 +628,7 @@ function DataComposition() {
           </div>
         </div>
 
-        {/* CARD 3 — Salary Delta */}
+        {/* CARD 3 â€” Salary Delta */}
         <div style={{
           background:   CARD_BG,
           border:       CARD_BORDER,
@@ -680,7 +644,7 @@ function DataComposition() {
             <div style={{
               ...bigNumBase,
               fontSize: isMobile ? 'clamp(2.8rem, 10vw, 4rem)' : 'clamp(2.4rem, 4vw, 3.6rem)',
-              color: PRIMARY_ACCENT,   // ← brand green — positive outcome, earns it
+              color: PRIMARY_ACCENT,   // â† brand green â€” positive outcome, earns it
               marginBottom: '10px',
             }}>
               <CountUp end={35} suffix="%" />
@@ -693,7 +657,7 @@ function DataComposition() {
               lineHeight: '1.6',
             }}>
               India-sourced. City-specific.
-              Not US data converted at today's rate.
+              Not US data converted at today&apos;s rate.
             </div>
           </div>
 
@@ -722,16 +686,16 @@ function DataComposition() {
       </motion.div>
     </StorySection>
   )
-}// ─────────────────────────────────────────────────────────
+}// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // HOW IT WORKS
-// ─────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function HowItWorks({ onEnter }) {
   const C = useTheme()
   const isMobile = useIsMobile()
   const steps = [
     { id: '01', label: 'Current Baseline', subtitle: 'Where you stand now', desc: 'Enter your current salary, role, and city. Upload your resume to automatically map your skills and benchmark salary.' },
     { id: '02', label: 'Certification Pathways', subtitle: 'Compare your options', desc: 'Select a cert or get a data-driven recommendation. Compare up to three paths side by side on cost, time, and expected ROI.' },
-    { id: '03', label: 'ROI Dashboard', subtitle: 'See the numbers', desc: 'Estimated payback window, 5-year net gain, monthly delta — all calibrated to your city and salary. A financial projection, not a promise.' },
+    { id: '03', label: 'ROI Dashboard', subtitle: 'See the numbers', desc: 'Estimated payback window, 5-year net gain, monthly delta â€” all calibrated to your city and salary. A financial projection, not a promise.' },
   ]
   return (
     <StorySection id="03" title="SYS_ARCHITECTURE" bg={C.surface}>
@@ -759,14 +723,126 @@ function HowItWorks({ onEnter }) {
 }
 
 // ─────────────────────────────────────────────────────────
-// VS SECTION
+// PIVOT DOMAINS CARD
+// Action card on Landing Page — saves targetDomain to store
+// before navigating so ResumeAnalyzer can pick it up.
 // ─────────────────────────────────────────────────────────
+function PivotDomainsCard({ onEnter }) {
+  const C = useTheme()
+  const isMobile = useIsMobile()
+  const setTargetDomain = useJourneyStore(function (s) { return s.setTargetDomain })
+  const storedDomain    = useJourneyStore(function (s) { return s.targetDomain || '' })
+
+  const [domain, setDomain]   = useState(storedDomain)
+  const [pivotFocus, setPivotFocus] = useState(false)
+
+  const FM = F_MONO
+  const LINEAR_BLUE = 'var(--accent)'
+  const COOL_GREY   = '#8A8F98'
+
+  function handleStartSwitching() {
+    setTargetDomain(domain)
+    onEnter()
+  }
+
+  return (
+    <StorySection id="02.5" title="PIVOT_ENGINE" bg={C.surface}>
+      <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '32px' : '64px', alignItems: 'start' }}>
+
+          {/* ── Left: Optimize Current Path ── */}
+          <div>
+            <div style={{ fontFamily: FM, fontSize: '10px', color: COOL_GREY, letterSpacing: '0.14em', marginBottom: '14px' }}>// OPTIMIZE CURRENT PATH</div>
+            <div style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: '20px', color: C.text, letterSpacing: '-0.02em', marginBottom: '10px', lineHeight: 1.2 }}>Already in your lane.<br />Go deeper, not wider.</div>
+            <div style={{ fontFamily: F_SANS, fontSize: '14px', color: C.text2, lineHeight: '1.7', marginBottom: '22px' }}>
+              Select a cert, input your current salary, and we calculate the exact payback window and 5-year gain — down to the rupee.
+            </div>
+            <PillBtn onClick={onEnter}>
+              Calculate ROI <ArrowRight size={13} />
+            </PillBtn>
+          </div>
+
+          {/* ── Right: Pivot Domains ── */}
+          <div>
+            <div style={{ fontFamily: FM, fontSize: '10px', color: COOL_GREY, letterSpacing: '0.14em', marginBottom: '14px' }}>// PIVOT DOMAINS</div>
+            <div style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: '20px', color: C.text, letterSpacing: '-0.02em', marginBottom: '10px', lineHeight: 1.2 }}>Switch fields.<br />Get a cert-first roadmap.</div>
+            <div style={{ fontFamily: F_SANS, fontSize: '14px', color: C.text2, lineHeight: '1.7', marginBottom: '18px' }}>
+              Enter the domain you want to break into. We validate it, then surface certifications specifically for switchers.
+            </div>
+
+            {/* Input + state machine */}
+            <div style={{ position: 'relative' }}>
+              <div style={{
+                display: 'flex', gap: '8px', alignItems: 'center',
+                padding: '4px 4px 4px 14px',
+                borderRadius: '8px',
+                border: '1px solid ' + (pivotFocus ? LINEAR_BLUE + '60' : (C.name === 'dark' ? 'var(--border-subtle)' : 'transparent')),
+                background: C.name === 'dark' ? 'var(--border-subtle)' : 'transparent',
+                transition: 'border-color 0.18s',
+              }}>
+                <input
+                  value={domain}
+                  onChange={function (e) { setDomain(e.target.value) }}
+                  onFocus={function () { setPivotFocus(true) }}
+                  onBlur={function () { setPivotFocus(false) }}
+                  onKeyDown={function (e) { if (e.key === 'Enter' && domain.trim()) handleStartSwitching() }}
+                  placeholder="e.g. Cybersecurity, Data Science, Finance..."
+                  style={{
+                    flex: 1, background: 'transparent', border: 'none', outline: 'none',
+                    fontFamily: FM, fontSize: '13px',
+                    color: C.text,
+                    '::placeholder': { color: COOL_GREY },
+                  }}
+                />
+                <button
+                  onClick={handleStartSwitching}
+                  disabled={!domain.trim()}
+                  style={{
+                    padding: '9px 16px', borderRadius: '6px',
+                    background: domain.trim() ? LINEAR_BLUE : 'transparent',
+                    border: '1px solid ' + (domain.trim() ? LINEAR_BLUE : 'var(--border-subtle)'),
+                    color: domain.trim() ? '#fff' : COOL_GREY,
+                    fontFamily: FM, fontSize: '11px', fontWeight: '700',
+                    cursor: domain.trim() ? 'pointer' : 'not-allowed',
+                    letterSpacing: '0.06em', whiteSpace: 'nowrap',
+                    transition: 'all 0.18s',
+                  }}
+                >
+                  START SWITCHING →
+                </button>
+              </div>
+
+              {/* Validation note — appears when domain is non-empty */}
+              {domain.trim() && (
+                <motion.div
+                  initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}
+                  style={{
+                    marginTop: '8px', padding: '8px 12px', borderRadius: '6px',
+                    background: C.name === 'dark' ? '#08090A' : '#F7F8F8',
+                    border: '1px solid ' + (C.name === 'dark' ? 'var(--border-subtle)' : 'transparent'),
+                    fontFamily: FM, fontSize: '10px', color: COOL_GREY, letterSpacing: '0.08em',
+                  }}
+                >
+                  GROQ VALIDATION WILL RUN ON ANALYSIS // {domain.trim().toUpperCase()}
+                </motion.div>
+              )}
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    </StorySection>
+  )
+}
+
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// VS SECTION
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function VsSection() {
   const C = useTheme()
   const pairs = [
-    { wrong: '"AWS is good for cloud engineers"', right: 'AWS SAA at ₹9L salary: payback month 6. ₹14.2L net gain over 5 years. Or it isn\'t worth it.' },
-    { wrong: '"Upskill for career growth"', right: '₹23,600 extra every month from month 7 — compounding over 5 years. In rupees, not "growth."' },
-    { wrong: 'US salary data converted to rupees', right: 'Naukri · AmbitionBox · LinkedIn India. 2026 data. Not converted from San Francisco.' },
+    { wrong: '"AWS is good for cloud engineers"', right: 'AWS SAA at â‚¹9L salary: payback month 6. â‚¹14.2L net gain over 5 years. Or it isn\'t worth it.' },
+    { wrong: '"Upskill for career growth"', right: 'â‚¹23,600 extra every month from month 7 â€” compounding over 5 years. In rupees, not "growth."' },
+    { wrong: 'US salary data converted to rupees', right: 'Naukri Â· AmbitionBox Â· LinkedIn India. 2026 data. Not converted from San Francisco.' },
   ]
   return (
     <StorySection id="04" title="INDUSTRY_RISKS" bg={C.bg}>
@@ -788,16 +864,16 @@ function VsSection() {
   )
 }
 
-// ─────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // 11 PM STORIES
-// ─────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function ElevenPM({ onEnter }) {
   const C = useTheme()
   const isMobile = useIsMobile()
   const stories = [
-    { time: '11:47 PM', name: 'Rohan', loc: 'Pune', role: '2 yrs · Backend Engineer', thought: '"Should I do AWS? Or is it too late?"', context: 'Ex-classmate promoted to Cloud Architect. ₹28L CTC.', answer: 'AWS SAA at ₹9L: payback month 6. 5-year gain ₹14.2L.' },
-    { time: '11:12 PM', name: 'Sneha', loc: 'Bangalore', role: '6 yrs · Ops Manager', thought: '"Is the switch possible without an MBA?"', context: 'Every data job requires 3 years experience. She has zero.', answer: 'Google Data Analytics + 2 GitHub projects. 5 months. ₹8L → ₹12L.' },
-    { time: '12:03 AM', name: 'Arjun', loc: 'Pune', role: 'CS · Fresh graduate', thought: '"Which cert gets me placed here in India?"', context: 'Three articles. All recommend AWS. All in USD.', answer: 'Student Mode. GCP placed 47 Pune freshers in Q1 2026.' },
+    { time: '11:47 PM', name: 'Rohan', loc: 'Pune', role: '2 yrs Â· Backend Engineer', thought: '"Should I do AWS? Or is it too late?"', context: 'Ex-classmate promoted to Cloud Architect. â‚¹28L CTC.', answer: 'AWS SAA at â‚¹9L: payback month 6. 5-year gain â‚¹14.2L.' },
+    { time: '11:12 PM', name: 'Sneha', loc: 'Bangalore', role: '6 yrs Â· Ops Manager', thought: '"Is the switch possible without an MBA?"', context: 'Every data job requires 3 years experience. She has zero.', answer: 'Google Data Analytics + 2 GitHub projects. 5 months. â‚¹8L â†’ â‚¹12L.' },
+    { time: '12:03 AM', name: 'Arjun', loc: 'Pune', role: 'CS Â· Fresh graduate', thought: '"Which cert gets me placed here in India?"', context: 'Three articles. All recommend AWS. All in USD.', answer: 'Student Mode. GCP placed 47 Pune freshers in Q1 2026.' },
   ]
   return (
     <StorySection id="05" title="USER_STORIES" bg={C.surface}>
@@ -811,7 +887,7 @@ function ElevenPM({ onEnter }) {
             <motion.div key={i} variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }} transition={{ delay: i * 0.08 }} onClick={onEnter} style={{ paddingLeft: !isMobile && i > 0 ? '36px' : '0', paddingRight: !isMobile && i < 2 ? '36px' : '0', paddingTop: '36px', paddingBottom: '36px', borderRight: !isMobile && !last ? `1px solid ${C.border}` : 'none', borderBottom: isMobile && !last ? `1px solid ${C.border}` : 'none', cursor: 'pointer' }}>
               <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.06em', marginBottom: '14px' }}>// LOG_TIME: {s.time}</div>
               <div style={{ fontFamily: F_SERIF, fontStyle: 'italic', fontWeight: '400', fontSize: '20px', color: C.text, lineHeight: 1.35, marginBottom: '14px' }}>{s.thought}</div>
-              <div style={{ fontFamily: F_SANS, fontSize: '13px', color: C.text2, lineHeight: '1.6', marginBottom: '20px' }}><em style={{ fontStyle: 'italic' }}>{s.name}</em>, {s.loc} — {s.role}. {s.context}</div>
+              <div style={{ fontFamily: F_SANS, fontSize: '13px', color: C.text2, lineHeight: '1.6', marginBottom: '20px' }}><em style={{ fontStyle: 'italic' }}>{s.name}</em>, {s.loc} â€” {s.role}. {s.context}</div>
               <div style={{ width: '20px', height: '2px', background: C.text3, marginBottom: '14px' }} />
               <div style={{ fontFamily: F_SANS, fontWeight: '600', fontSize: '13px', color: C.text, lineHeight: '1.55' }}>{s.answer}</div>
             </motion.div>
@@ -822,15 +898,15 @@ function ElevenPM({ onEnter }) {
   )
 }
 
-// ─────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // THREE MODES
-// ─────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function ThreeModes() {
   const C = useTheme()
   const isMobile = useIsMobile()
   const modes = [
-    { label: 'Breaking In', sub: 'No salary yet', desc: 'Path to a ₹4.8L+ first offer. Reframes ROI around career investment and time-to-hire, not salary hikes.' },
-    { label: 'Domain Pivot', sub: 'Changing fields', desc: 'Switch domains in 5–8 months. Only fast-track options shown. Longer programs filtered out.' },
+    { label: 'Breaking In', sub: 'No salary yet', desc: 'Path to a â‚¹4.8L+ first offer. Reframes ROI around career investment and time-to-hire, not salary hikes.' },
+    { label: 'Domain Pivot', sub: 'Changing fields', desc: 'Switch domains in 5â€“8 months. Only fast-track options shown. Longer programs filtered out.' },
     { label: 'Level Up', sub: 'Upskilling for a promotion', desc: 'Maximum ROI on your next cert. Payback window, city benchmarks, and a reimbursement case for your manager.' },
   ]
   return (
@@ -851,16 +927,16 @@ function ThreeModes() {
   )
 }
 
-// ─────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // SOCIAL PROOF
-// ─────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function SocialProof() {
   const C = useTheme()
   const isMobile = useIsMobile()
   const quotes = [
-    { quote: 'CertifyROI said payback was month 8. It was month 7. Switched companies immediately. ₹6L hike.', name: 'Priya S.', detail: 'Bangalore · Engineer → Cloud Architect', hike: '+₹6L/yr' },
-    { quote: 'Was about to spend ₹12L on an MBA. The analysis showed a different path — 5 months, 1% of the cost.', name: 'Rahul M.', detail: 'Hyderabad · Ops Manager → Data Analyst', hike: 'Saved ₹12L' },
-    { quote: 'Student Mode. India-specific. GCP placed 47 Pune freshres in Q1 2026. My ₹5.2L offer was one of them.', name: 'Ananya K.', detail: 'Pune · Fresh Graduate', hike: '₹5.2L offer' },
+    { quote: 'CertifyROI said payback was month 8. It was month 7. Switched companies immediately. â‚¹6L hike.', name: 'Priya S.', detail: 'Bangalore Â· Engineer â†’ Cloud Architect', hike: '+â‚¹6L/yr' },
+    { quote: 'Was about to spend â‚¹12L on an MBA. The analysis showed a different path â€” 5 months, 1% of the cost.', name: 'Rahul M.', detail: 'Hyderabad Â· Ops Manager â†’ Data Analyst', hike: 'Saved â‚¹12L' },
+    { quote: 'Student Mode. India-specific. GCP placed 47 Pune freshres in Q1 2026. My â‚¹5.2L offer was one of them.', name: 'Ananya K.', detail: 'Pune Â· Fresh Graduate', hike: 'â‚¹5.2L offer' },
   ]
   return (
     <StorySection id="07" title="FIELD_REPORTS" bg={C.surface}>
@@ -891,15 +967,15 @@ function SocialProof() {
   )
 }
 
-// ─────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // FAQ
-// ─────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const FAQ_ITEMS = [
-  { q: 'How accurate are the ROI calculations?', a: 'Based on median salary data from Naukri, AmbitionBox, and LinkedIn India — updated quarterly. Directional estimates, not guarantees.' },
+  { q: 'How accurate are the ROI calculations?', a: 'Based on median salary data from Naukri, AmbitionBox, and LinkedIn India â€” updated quarterly. Directional estimates, not guarantees.' },
   { q: 'Do I need to create an account?', a: 'No. The ROI calculator, comparison tool, and city demand heatmap are all free with no signup.' },
-  { q: 'What certifications are covered?', a: '103 certifications across 17 domains — cloud, data, cybersecurity, finance, project management, and more.' },
+  { q: 'What certifications are covered?', a: '103 certifications across 17 domains â€” cloud, data, cybersecurity, finance, project management, and more.' },
   { q: 'Is this only useful for India?', a: 'Salary benchmarks and demand data are India-specific. The framework applies anywhere, but numbers are calibrated for India.' },
-  { q: 'How does the resume analysis work?', a: 'Upload your resume. The tool reads your domain, experience level, and existing skills to benchmark your current position and surface certifications with the highest ROI for your profile. No AI buzzwords — just filtered, ranked data.' },
+  { q: 'How does the resume analysis work?', a: 'Upload your resume. The tool reads your domain, experience level, and existing skills to benchmark your current position and surface certifications with the highest ROI for your profile. No AI buzzwords â€” just filtered, ranked data.' },
 ]
 
 function FAQItem({ item }) {
@@ -939,9 +1015,9 @@ function FAQ() {
   )
 }
 
-// ─────────────────────────────────────────────────────────
-// FINAL CTA — centered, bold, clean, no sidebar
-// ─────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// FINAL CTA â€” centered, bold, clean, no sidebar
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function FinalCTA({ onEnter }) {
   const C = useTheme()
   const isMobile = useIsMobile()
@@ -960,7 +1036,7 @@ function FinalCTA({ onEnter }) {
       justifyContent: 'center',
       textAlign: 'center',
     }}>
-      {/* Topographic circles — subtle */}
+      {/* Topographic circles â€” subtle */}
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: d ? 0.12 : 0.08 }}>
         <svg width="100%" height="100%" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice">
           <circle cx="400" cy="300" r="120" fill="none" stroke={C.lineHeavy} strokeWidth="0.8" />
@@ -1023,7 +1099,7 @@ function FinalCTA({ onEnter }) {
               <div style={{ width: '4px', height: '10px', background: C.gold }} />
               <div style={{ width: '4px', height: '10px', background: C.gold, opacity: 0.35 }} />
             </div>
-            <span style={{ fontFamily: F_SANS, fontSize: '11px', color: C.text2, letterSpacing: '0.03em', fontWeight: '400' }}>Complimentary · Private · India-calibrated</span>
+            <span style={{ fontFamily: F_SANS, fontSize: '11px', color: C.text2, letterSpacing: '0.03em', fontWeight: '400' }}>Complimentary Â· Private Â· India-calibrated</span>
           </GlassPill>
         </motion.div>
       </div>
@@ -1031,9 +1107,9 @@ function FinalCTA({ onEnter }) {
   )
 }
 
-// ─────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // FOOTER
-// ─────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function Footer() {
   const C = useTheme()
   const isMobile = useIsMobile()
@@ -1046,18 +1122,19 @@ function Footer() {
             <BarChart2 size={15} color={C.gold} />
             <span style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: '13px', color: C.text }}>Certify<span style={{ color: C.gold }}>ROI</span></span>
           </div>
-          <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.08em' }}>DATA: LINKEDIN · NASSCOM · NAUKRI · 2026</div>
+          <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.08em' }}>DATA: LINKEDIN Â· NASSCOM Â· NAUKRI Â· 2026</div>
         </div>
       </div>
     </div>
   )
 }
 
-// ─────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // APP
-// ─────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export default function App({ onNavigate, onEnter, isDark = true }) {
-  const C = isDark ? THEMES.dark : THEMES.light
+  const { current } = useThemeContext()
+  const C = THEMES[current.id] || THEMES.nordic
   const isMobile = useIsMobile()
   const handleEnter = typeof onEnter === 'function' ? onEnter : function() {}
 
@@ -1070,9 +1147,9 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
         overflow: 'clip',
         transition: 'background 0.3s ease, color 0.3s ease',
       }}>
-        {/* ═══════════════════════════════════════════
-            HERO — centered mountain, tagline on mountain
-        ═══════════════════════════════════════════ */}
+        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+            HERO â€” centered mountain, tagline on mountain
+        â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         <div style={{
           position: 'relative',
           height: '100vh',
@@ -1084,7 +1161,7 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
           overflow: 'hidden',
         }}>
 
-          {/* Mountain — centered, full bleed */}
+          {/* Mountain â€” centered, full bleed */}
           <div style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
             <img
               src="/mountain.png"
@@ -1098,15 +1175,15 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
                   : 'brightness(0.62) contrast(1.12) saturate(0.82)',
               }}
             />
-            {/* Radial fade — more aggressive on light mode for readability */}
+            {/* Radial fade â€” more aggressive on light mode for readability */}
             <div style={{
               position: 'absolute', inset: 0,
               background: C.name === 'light'
-                ? `linear-gradient(to right, transparent 50%, rgba(244, 242, 238, 0.95) 100%), radial-gradient(ellipse 90% 80% at 46% 50%, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.72) 100%)`
+                ? `transparent, transparent`
                 : `
-                  linear-gradient(to right, transparent 40%, rgba(10,10,10,0.98) 100%),
-                  linear-gradient(to top, ${C.bg} 0%, transparent 28%),
-                  radial-gradient(ellipse 82% 70% at 46% 50%, rgba(10,10,10,0.36) 0%, rgba(10,10,10,0.88) 100%)
+                  transparent,
+                  transparent,
+                  transparent
                 `,
             }} />
           </div>
@@ -1121,7 +1198,7 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
             maxWidth: '820px',
             width: '100%',
           }}>
-            {/* Mono label — centered with gold lines on both sides */}
+            {/* Mono label â€” centered with gold lines on both sides */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -1138,7 +1215,7 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
               <div style={{ width: '28px', height: '1px', background: C.gold }} />
             </motion.div>
 
-            {/* Headline — tightly spaced, on the mountain */}
+            {/* Headline â€” tightly spaced, on the mountain */}
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -1153,15 +1230,15 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
                 color: '#FFFFFF',
                 marginBottom: '28px',
                 maxWidth: '13ch',
-                textShadow: '0 2px 32px rgba(0,0,0,0.6), 0 4px 80px rgba(0,0,0,0.45)',
+                textShadow: '0 2px 32px transparent, 0 4px 80px transparent',
               }}
             >
               Your next cert<br />
               is either a{' '}
               <span style={{ color: C.gold, fontStyle: 'italic' }}>goldmine</span>
               <br />
-              <span style={{ color: 'rgba(255,255,255,0.82)' }}>or a{' '}</span>
-              <span style={{ color: 'rgba(255,255,255,0.65)', fontStyle: 'italic' }}>mistake.</span>
+              <span style={{ color: 'rgba(255,255,255,0.6)' }}>or a{' '}</span>
+              <span style={{ color: 'rgba(255,255,255,0.45)', fontStyle: 'italic' }}>mistake.</span>
             </motion.h1>
 
             {/* Supporting text */}
@@ -1175,13 +1252,13 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
                 opacity: 0.88,
                 maxWidth: '380px', lineHeight: '1.6',
                 margin: '0 0 36px',
-                textShadow: '0 1px 20px rgba(0,0,0,0.7)',
+                textShadow: '0 1px 20px transparent',
               }}
             >
               Know the exact payback period before you pay the fee. Calculated for your city and current salary.
             </motion.p>
 
-            {/* CTA — button only, no pill box */}
+            {/* CTA â€” button only, no pill box */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -1192,10 +1269,11 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
           </div>
         </div>
 
-        {/* ══════════ SECTIONS ══════════ */}
+        {/* â•â•â•â•â•â•â•â•â•â• SECTIONS â•â•â•â•â•â•â•â•â•â• */}
         <TrustStrip />
         <CertAssembly />
         <DataComposition />
+        <PivotDomainsCard onEnter={handleEnter} />
         <HowItWorks onEnter={handleEnter} />
         <VsSection />
         <ElevenPM onEnter={handleEnter} />

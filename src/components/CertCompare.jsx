@@ -10,12 +10,12 @@ var F_HEAD = 'var(--font-head)'
 var F_MONO = 'var(--font-mono)'
 var F_BODY = 'var(--font-body)'
 
-var COLORS = ['#6366F1', '#10B981', '#F59E0B', '#E11D48']
-var COL_A = '#6366F1'
-var COL_B = '#10B981'
+var COLORS = ['var(--linear-blue)', 'var(--linear-blue)', 'var(--cool-grey)', '#E11D48']
+var COL_A = 'var(--linear-blue)'
+var COL_B = 'var(--linear-blue)'
 
 function demandColor(d) {
-  return d === 'Very High' ? '#10B981' : d === 'High' ? '#51B1E7' : d === 'Medium' ? '#F59E0B' : '#94A3B8'
+  return d === 'Very High' ? 'var(--linear-blue)' : d === 'High' ? 'var(--linear-blue)' : d === 'Medium' ? 'var(--cool-grey)' : '#94A3B8'
 }
 function demandScore(d) {
   return d === 'Very High' ? 4 : d === 'High' ? 3 : d === 'Medium' ? 2 : 1
@@ -55,7 +55,7 @@ function CertSelector({ value, onChange, label, color, certifications, domains }
         onClick={function() { setOpen(function(v) { return !v }) }}
         style={{
           width: '100%', padding: '16px 14px',
-          background: selected ? color + '0e' : 'var(--surface)',
+          background: selected ? color + '0e' : 'transparent',
           border: '1px solid ' + (selected ? color + '44' : 'var(--border)'),
           borderRadius: '10px',
           color: selected ? color : 'var(--text-4)',
@@ -82,10 +82,10 @@ function CertSelector({ value, onChange, label, color, certifications, domains }
             style={{
               position: 'absolute', top: '100%', left: 0, right: 0,
               zIndex: 60, marginTop: '6px', borderRadius: '12px',
-              background: 'var(--surface)',
+              background: 'transparent',
               border: '1px solid ' + color + '33',
               overflow: 'hidden',
-              boxShadow: '0 16px 40px rgba(0,0,0,0.25)',
+              boxShadow: 'none',
             }}
           >
             <div style={{ display: 'flex', gap: '4px', padding: '8px', flexWrap: 'wrap', borderBottom: '1px solid var(--border)' }}>
@@ -122,7 +122,7 @@ function CertSelector({ value, onChange, label, color, certifications, domains }
                       display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                       gap: '8px', transition: 'background 0.12s',
                     }}
-                    onMouseEnter={function(e) { if (value !== cert.name) e.currentTarget.style.background = 'var(--surface-high)' }}
+                    onMouseEnter={function(e) { if (value !== cert.name) e.currentTarget.style.background = 'transparent' }}
                     onMouseLeave={function(e) { if (value !== cert.name) e.currentTarget.style.background = 'transparent' }}
                   >
                     <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -269,7 +269,7 @@ function RadarChartSVG({ data, nameA, nameB, animate }) {
               key={ri}
               points={pts}
               fill="none"
-              stroke={ri === rings.length - 1 ? 'rgba(99,102,241,0.2)' : 'rgba(99,102,241,0.07)'}
+              stroke={ri === rings.length - 1 ? 'transparent' : 'transparent'}
               strokeWidth={ri === rings.length - 1 ? '1' : '0.7'}
               strokeDasharray={ri < rings.length - 1 ? '3 4' : 'none'}
             />
@@ -278,7 +278,7 @@ function RadarChartSVG({ data, nameA, nameB, animate }) {
 
         {/* Axis spokes */}
         {spokes.map(function(pt, i) {
-          return <line key={i} x1={CX} y1={CY} x2={pt.x} y2={pt.y} stroke="rgba(99,102,241,0.12)" strokeWidth="1" />
+          return <line key={i} x1={CX} y1={CY} x2={pt.x} y2={pt.y} stroke="transparent" strokeWidth="1" />
         })}
 
         {/* Polygon A — fill */}
@@ -300,7 +300,7 @@ function RadarChartSVG({ data, nameA, nameB, animate }) {
         />
 
         {/* Center dot */}
-        <circle cx={CX} cy={CY} r="3" fill="rgba(99,102,241,0.4)" />
+        <circle cx={CX} cy={CY} r="3" fill="transparent" />
 
         {/* Vertex dots — A */}
         {dotsA.map(function(dot, i) {
@@ -351,7 +351,7 @@ function RadarChartSVG({ data, nameA, nameB, animate }) {
             if (TY < 10) TY = dot.y + 12
             return (
               <g>
-                <rect x={TX} y={TY} width={TW} height={42} rx="7" fill="var(--surface)" stroke={col} strokeWidth="1" strokeOpacity="0.5" />
+                <rect x={TX} y={TY} width={TW} height={42} rx="7" fill="transparent" stroke={col} strokeWidth="1" strokeOpacity="0.5" />
                 {/* FIX: fontFamily moved to style prop — CSS vars don't resolve in SVG presentation attrs */}
                 <text x={TX + 8} y={TY + 14} fontSize="9" fill={col} style={{ fontFamily: 'var(--font-mono)' }} fontWeight="700">
                   {name.split(' ').slice(0, 2).join(' ')}
@@ -386,7 +386,7 @@ function RadarChartSVG({ data, nameA, nameB, animate }) {
                 dominantBaseline="middle"
                 fontSize="10"
                 style={{ fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}
-                fill="rgba(255,255,255,0.55)"
+                fill="transparent"
                 letterSpacing="0.06em"
               >
                 {lb.axis}
@@ -426,7 +426,7 @@ function RadarChartSVG({ data, nameA, nameB, animate }) {
           var p = polar(0, R * pct / 100)
           return (
             <text key={pct} x={p.x + 5} y={p.y}
-              fontSize="8" fill="rgba(99,102,241,0.35)"
+              fontSize="8" fill="transparent"
               style={{ fontFamily: 'var(--font-mono)' }}
               dominantBaseline="middle"
             >
@@ -544,8 +544,8 @@ function CertCompare({ salary, prefilledCert }) {
               initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4, delay: 0.1 }}
               style={{
                 marginBottom: '20px', padding: '14px 18px', borderRadius: '12px',
-                background: winner === 'A' ? 'rgba(99,102,241,0.08)' : 'rgba(16,185,129,0.08)',
-                border: '1px solid ' + (winner === 'A' ? 'rgba(99,102,241,0.25)' : 'rgba(16,185,129,0.25)'),
+                background: winner === 'A' ? 'transparent' : 'transparent',
+                border: '1px solid ' + (winner === 'A' ? 'transparent' : 'transparent'),
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
@@ -580,9 +580,9 @@ function CertCompare({ salary, prefilledCert }) {
             {/* Radar chart */}
             <motion.div
               initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.15 }}
-              style={{ marginBottom: '24px', borderRadius: '18px', background: 'var(--surface)', border: '1px solid var(--glass-border)', overflow: 'hidden', position: 'relative' }}
+              style={{ marginBottom: '24px', borderRadius: '18px', background: 'transparent', border: '1px solid var(--glass-border)', overflow: 'hidden', position: 'relative' }}
             >
-              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '2px', background: 'linear-gradient(90deg, ' + COL_A + ', transparent 40%, transparent 60%, ' + COL_B + ')' }} />
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '2px', background: 'transparent' }} />
 
               <div style={{ padding: '18px 20px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px' }}>
                 <div>
@@ -598,7 +598,7 @@ function CertCompare({ salary, prefilledCert }) {
                   {[{ name: dataA.name, color: COL_A }, { name: dataB.name, color: COL_B }].map(function(item, i) {
                     return (
                       <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '5px 10px', borderRadius: '20px', background: item.color + '12', border: '1px solid ' + item.color + '30' }}>
-                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: item.color, boxShadow: '0 0 8px ' + item.color + '80' }} />
+                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: item.color, boxShadow: 'none' + item.color + '80' }} />
                         <span style={{ fontFamily: F_MONO, fontSize: '10px', color: item.color, fontWeight: '700', maxWidth: '100px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                           {item.name.split(' ').slice(0, 3).join(' ')}
                         </span>
@@ -622,7 +622,7 @@ function CertCompare({ salary, prefilledCert }) {
                 ].map(function(item, i) {
                   return (
                     <div key={i} style={{ padding: '7px 8px', borderRadius: '8px', background: 'var(--bg)', border: '1px solid var(--border)', textAlign: 'center' }}>
-                      <div style={{ fontFamily: F_MONO, fontSize: '8px', color: 'rgba(99,102,241,0.75)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '2px' }}>{item.axis}</div>
+                      <div style={{ fontFamily: F_MONO, fontSize: '8px', color: 'transparent', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '2px' }}>{item.axis}</div>
                       <div style={{ fontFamily: F_BODY, fontSize: '10px', color: 'var(--text-4)', lineHeight: '1.3' }}>{item.desc}</div>
                     </div>
                   )
@@ -634,10 +634,10 @@ function CertCompare({ salary, prefilledCert }) {
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2 }}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 120px 120px', gap: '8px', marginBottom: '8px' }}>
                 <div />
-                <div style={{ fontFamily: F_MONO, fontSize: '10px', color: COL_A, textAlign: 'center', padding: '6px', borderRadius: '8px', background: 'rgba(99,102,241,0.07)', border: '1px solid rgba(99,102,241,0.15)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <div style={{ fontFamily: F_MONO, fontSize: '10px', color: COL_A, textAlign: 'center', padding: '6px', borderRadius: '8px', background: 'transparent', border: '1px solid transparent', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {dataA.name.split(' ').slice(0, 2).join(' ')}
                 </div>
-                <div style={{ fontFamily: F_MONO, fontSize: '10px', color: COL_B, textAlign: 'center', padding: '6px', borderRadius: '8px', background: 'rgba(16,185,129,0.07)', border: '1px solid rgba(16,185,129,0.15)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <div style={{ fontFamily: F_MONO, fontSize: '10px', color: COL_B, textAlign: 'center', padding: '6px', borderRadius: '8px', background: 'transparent', border: '1px solid transparent', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {dataB.name.split(' ').slice(0, 2).join(' ')}
                 </div>
               </div>
@@ -652,10 +652,10 @@ function CertCompare({ salary, prefilledCert }) {
                     <div style={{ display: 'flex', alignItems: 'center', fontSize: '12px', color: 'var(--text-3)', fontFamily: F_BODY }}>
                       {row.label}
                     </div>
-                    <div style={{ padding: '8px', borderRadius: '8px', textAlign: 'center', background: row.win === 'A' ? 'rgba(99,102,241,0.1)' : 'var(--surface)', border: '1px solid ' + (row.win === 'A' ? 'rgba(99,102,241,0.22)' : 'var(--border)'), fontFamily: F_MONO, fontSize: '12px', color: row.win === 'A' ? COL_A : 'var(--text-3)', fontWeight: row.win === 'A' ? '700' : '500', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+                    <div style={{ padding: '8px', borderRadius: '8px', textAlign: 'center', background: row.win === 'A' ? 'transparent' : 'transparent', border: '1px solid ' + (row.win === 'A' ? 'transparent' : 'var(--border)'), fontFamily: F_MONO, fontSize: '12px', color: row.win === 'A' ? COL_A : 'var(--text-3)', fontWeight: row.win === 'A' ? '700' : '500', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
                       {row.vA}{row.win === 'A' ? <span style={{ color: COL_A, display: 'inline-flex' }}>{row.winIcon}</span> : null}
                     </div>
-                    <div style={{ padding: '8px', borderRadius: '8px', textAlign: 'center', background: row.win === 'B' ? 'rgba(16,185,129,0.1)' : 'var(--surface)', border: '1px solid ' + (row.win === 'B' ? 'rgba(16,185,129,0.22)' : 'var(--border)'), fontFamily: F_MONO, fontSize: '12px', color: row.win === 'B' ? COL_B : 'var(--text-3)', fontWeight: row.win === 'B' ? '700' : '500', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+                    <div style={{ padding: '8px', borderRadius: '8px', textAlign: 'center', background: row.win === 'B' ? 'transparent' : 'transparent', border: '1px solid ' + (row.win === 'B' ? 'transparent' : 'var(--border)'), fontFamily: F_MONO, fontSize: '12px', color: row.win === 'B' ? COL_B : 'var(--text-3)', fontWeight: row.win === 'B' ? '700' : '500', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
                       {row.vB}{row.win === 'B' ? <span style={{ color: COL_B, display: 'inline-flex' }}>{row.winIcon}</span> : null}
                     </div>
                   </motion.div>
@@ -664,7 +664,7 @@ function CertCompare({ salary, prefilledCert }) {
 
               {/* FIX: DataNote added — comparison table showed calculated numbers with no source attribution.
                   Users need to know where avgHike, avgCost, and timeMonths come from to trust the comparison. */}
-              <div style={{ marginTop: '14px', padding: '10px 12px', borderRadius: '8px', background: 'var(--surface)', border: '1px solid var(--border)', display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+              <div style={{ marginTop: '14px', padding: '10px 12px', borderRadius: '8px', background: 'transparent', border: '1px solid var(--border)', display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
                 <Info size={11} color="var(--text-4)" style={{ flexShrink: 0, marginTop: '2px' }} />
                 <span style={{ fontFamily: F_BODY, fontSize: '11px', color: 'var(--text-4)', lineHeight: '1.55' }}>
                   Data: NASSCOM 2026 · Naukri salary insights · AmbitionBox post-cert reports · cert provider pricing. All figures are India medians. Individual results vary.

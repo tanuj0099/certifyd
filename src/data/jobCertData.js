@@ -178,7 +178,7 @@ export const GOVT_DATA = [
   {
     org: 'IBPS / SBI / RBI',
     sector: 'Public Sector Banking',
-    color: '#818CF8',
+    color: 'var(--accent)',
     emoji: '🏦',
     description: 'Institute of Banking Personnel Selection recruits for all nationalised banks',
     roles: [

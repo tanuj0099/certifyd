@@ -4,7 +4,8 @@
 
 import { motion, useMotionValue, useSpring, AnimatePresence } from 'framer-motion'
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { Sun, Moon, Menu, X, User } from 'lucide-react'
+import { Menu, X, User } from 'lucide-react'
+import { useTheme as useThemeEngine, THEME_PRESETS } from '../hooks/useTheme'
 
 const F_SANS  = "'Inter', 'DM Sans', sans-serif"
 const F_MONO  = "'JetBrains Mono', 'IBM Plex Mono', monospace"
@@ -52,7 +53,7 @@ function NavItem({ label, pageId, isActive, onActivate, onNavigate, theme }) {
             transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
             style={{
               position: 'absolute', inset: 0, borderRadius: '100px',
-              background: t.name === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
+              background: t.name === 'dark' ? 'var(--border-subtle)' : 'transparent',
             }}
           />
         )}
@@ -86,30 +87,35 @@ function ThemeToggle({ isDark, onToggle, theme }) {
       onClick={onToggle}
       whileTap={{ scale: 0.9 }}
       style={{
-        width: '32px', height: '32px', borderRadius: '50%',
+        display: 'inline-flex', alignItems: 'center', gap: '6px',
+        height: '32px', padding: '0 12px', borderRadius: '100px',
         border: '1px solid ' + t.border,
-        background: t.name === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        cursor: 'pointer', color: t.text2, flexShrink: 0, transition: 'background 0.15s',
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.background = t.name === 'dark' ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.08)'
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.background = t.name === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)'
+        background: 'transparent',
+        cursor: 'pointer', color: t.text2, flexShrink: 0,
+        transition: 'background 0.15s, border-color 0.15s',
       }}
     >
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.div
-          key={isDark ? 'sun' : 'moon'}
-          initial={{ rotate: -30, opacity: 0, scale: 0.7 }}
-          animate={{ rotate: 0, opacity: 1, scale: 1 }}
-          exit={{ rotate: 30, opacity: 0, scale: 0.7 }}
-          transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+      {/* Color swatch */}
+      <div style={{
+        width: '8px', height: '8px', borderRadius: '50%',
+        background: t.gold,
+        transition: 'background 0.3s',
+      }} />
+      <AnimatePresence mode="wait">
+        <motion.span
+          key={t.name}
+          initial={{ opacity: 0, y: 3 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -3 }}
+          transition={{ duration: 0.12 }}
+          style={{
+            fontFamily: F_MONO, fontSize: '9px',
+            letterSpacing: '0.1em', textTransform: 'uppercase',
+            fontWeight: '600',
+          }}
         >
-          {isDark ? <Sun size={14} strokeWidth={2} /> : <Moon size={14} strokeWidth={2} />}
-        </motion.div>
+          {t.name}
+        </motion.span>
       </AnimatePresence>
     </motion.button>
   )
@@ -129,13 +135,13 @@ function MobileMenuPanel({ isOpen, onClose, activeHref, onActivate, isDark, onTo
           style={{
             position: 'fixed', top: '80px', left: '16px', right: '16px', zIndex: 9998,
             borderRadius: '20px',
-            background: t.name === 'dark' ? 'rgba(14,14,14,0.94)' : 'rgba(248,246,242,0.94)',
+            background: t.name === 'dark' ? 'transparent' : 'transparent',
             backdropFilter: 'blur(24px) saturate(180%)',
             WebkitBackdropFilter: 'blur(24px) saturate(180%)',
             border: '1px solid ' + t.borderMid,
             boxShadow: t.name === 'dark'
-              ? '0 24px 48px rgba(0,0,0,0.6)'
-              : '0 24px 48px rgba(0,0,0,0.18)',
+              ? '0 24px 48px transparent'
+              : '0 24px 48px transparent',
             padding: '8px', overflow: 'hidden',
           }}
         >
@@ -159,7 +165,7 @@ function MobileMenuPanel({ isOpen, onClose, activeHref, onActivate, isDark, onTo
                   style={{
                     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                     padding: '13px 16px', borderRadius: '12px', textDecoration: 'none',
-                    background: isActive ? (t.name === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)') : 'transparent',
+                    background: isActive ? (t.name === 'dark' ? 'var(--border-subtle)' : 'transparent') : 'transparent',
                     cursor: 'pointer', transition: 'background 0.15s',
                   }}
                 >
@@ -198,21 +204,30 @@ function MobileMenuPanel({ isOpen, onClose, activeHref, onActivate, isDark, onTo
 // MAIN EXPORT
 // ─────────────────────────────────────────────────────────
 export default function DynamicIslandNav({ isDark, toggleTheme, onNavigate, currentPage, user, onSignIn, onSignOut }) {
-  const DARK_THEME = {
-    name: 'dark',
-    text: '#EFEFEF', text2: '#999999', text3: '#5A5A5A', text4: '#2E2E2E',
-    gold: '#B8973A', goldL: '#D4AF55', silver: '#8A8A8A', silverL: '#B0B0B0',
-    border: 'rgba(255,255,255,0.055)', borderMid: 'rgba(255,255,255,0.10)',
-  }
-  const LIGHT_THEME = {
-    name: 'light',
-    text: '#111111', text2: '#555555', text3: '#878787', text4: '#ABABAB',
-    gold: '#9A7020', goldL: '#B89040', silver: '#6E6E6E', silverL: '#8E8E8E',
-    border: 'rgba(0,0,0,0.07)', borderMid: 'rgba(0,0,0,0.13)',
-  }
-  const theme = isDark ? DARK_THEME : LIGHT_THEME
+  // Pull from 5-theme engine
+  const { current: currentPreset, cycleTheme } = useThemeEngine()
 
-  const isAppMode = user || currentPage === 'app' || currentPage === 'features' || currentPage === 'pricing' ? false : false // Wait, if currentPage === 'app', we show APP_NAV_ITEMS
+  const theme = currentPreset ? {
+    name: currentPreset.id,
+    text: currentPreset.text,
+    text2: currentPreset.text2,
+    text3: currentPreset.text3,
+    text4: currentPreset.text4,
+    gold: currentPreset.accent,
+    goldL: currentPreset.accent,
+    silver: currentPreset.text3,
+    silverL: currentPreset.text2,
+    border: currentPreset.border,
+    borderMid: currentPreset.borderMid,
+  } : {
+    name: 'nordic',
+    text: '#F4F5F8', text2: '#A0A3AB', text3: '#6B6E76', text4: '#44474F',
+    gold: 'var(--accent)', goldL: 'var(--accent)', silver: '#6B6E76', silverL: '#A0A3AB',
+    border: 'rgba(255,255,255,0.08)', borderMid: 'rgba(255,255,255,0.14)',
+  }
+
+  const isLight = currentPreset?.isLight || false
+  const isAppMode = user || currentPage === 'app' || currentPage === 'features' || currentPage === 'pricing' ? false : false
   const activeNavItems = (user || currentPage === 'app') ? APP_NAV_ITEMS : MARKETING_NAV_ITEMS
 
   const [activeHref, setActiveHref] = useState('')
@@ -265,12 +280,12 @@ export default function DynamicIslandNav({ isDark, toggleTheme, onNavigate, curr
     rotX.set(0); rotY.set(0); lift.set(0)
   }, [rotX, rotY, lift])
 
-  const glassBg = isDark ? 'rgba(12,12,12,0.84)' : 'rgba(248,246,242,0.90)'
-  const borderColor = isDark ? 'rgba(255,255,255,0.09)' : 'rgba(0,0,0,0.09)'
-  const innerHL = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.7)'
+  const glassBg = isLight ? 'rgba(255,255,255,0.72)' : 'rgba(34,35,38,0.72)'
+  const borderColor = theme.border
+  const innerHL = theme.border
   const shadow = scrolled
-    ? (isDark ? '0 20px 60px rgba(0,0,0,0.55), 0 8px 24px rgba(0,0,0,0.35)' : '0 20px 60px rgba(0,0,0,0.18), 0 8px 24px rgba(0,0,0,0.10)')
-    : (isDark ? '0 8px 32px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.3)' : '0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)')
+    ? (isDark ? '0 20px 60px transparent, 0 8px 24px transparent' : '0 20px 60px transparent, 0 8px 24px transparent')
+    : (isDark ? '0 8px 32px transparent, 0 2px 8px transparent' : '0 8px 32px transparent, 0 2px 8px transparent')
 
   return (
     <>
@@ -321,7 +336,7 @@ export default function DynamicIslandNav({ isDark, toggleTheme, onNavigate, curr
               </div>
               <div style={{ width: '1px', height: '20px', background: borderColor, flexShrink: 0, margin: '0 4px' }} />
               <div style={{ padding: '0 4px', flexShrink: 0 }}>
-                <ThemeToggle isDark={isDark} onToggle={toggleTheme} theme={theme} />
+                <ThemeToggle isDark={isDark} onToggle={cycleTheme} theme={theme} />
               </div>
               <div style={{ width: '1px', height: '20px', background: borderColor, flexShrink: 0, margin: '0 4px' }} />
               <div style={{ padding: '0 4px', flexShrink: 0 }}>
@@ -329,10 +344,10 @@ export default function DynamicIslandNav({ isDark, toggleTheme, onNavigate, curr
                   onClick={user ? onSignOut : onSignIn}
                   style={{
                     display: 'flex', alignItems: 'center', gap: '6px',
-                    height: '32px', padding: '0 12px', borderRadius: '16px',
-                    background: user ? (isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)') : 'transparent',
+                    height: '32px', padding: '0 14px', borderRadius: '16px',
+                    background: user ? 'transparent' : '#F4F5F8',
                     border: '1px solid ' + borderColor,
-                    color: theme.text,
+                    color: user ? theme.text : '#222326',
                     fontFamily: F_SANS, fontSize: '12px', fontWeight: '600',
                     cursor: 'pointer', transition: 'all 0.15s', outline: 'none'
                   }}
@@ -361,7 +376,7 @@ export default function DynamicIslandNav({ isDark, toggleTheme, onNavigate, curr
                 onClick={user ? onSignOut : onSignIn}
                 style={{
                   width: '32px', height: '32px', borderRadius: '50%',
-                  background: user ? (isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)') : 'transparent',
+                  background: user ? (isDark ? 'var(--border-subtle)' : 'transparent') : 'transparent',
                   border: '1px solid ' + borderColor,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   cursor: 'pointer', color: theme.text2, flexShrink: 0,
@@ -375,7 +390,7 @@ export default function DynamicIslandNav({ isDark, toggleTheme, onNavigate, curr
                 style={{
                   width: '32px', height: '32px', borderRadius: '50%',
                   border: '1px solid ' + borderColor,
-                  background: menuOpen ? (isDark ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.08)') : (isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)'),
+                  background: menuOpen ? (isDark ? 'transparent' : 'transparent') : (isDark ? 'var(--border-subtle)' : 'transparent'),
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   cursor: 'pointer', color: theme.text2, flexShrink: 0,
                 }}

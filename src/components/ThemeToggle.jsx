@@ -1,25 +1,54 @@
-import { motion } from 'framer-motion'
-import { Sun, Moon } from 'lucide-react'
-import { useTheme } from '../hooks/useTheme.jsx'
+// ─────────────────────────────────────────────────────────
+// ThemeToggle.jsx — 5-Theme Cycler
+// Pill-shaped button that cycles: Nordic → Midnight → Ash → Dawn → Pale
+// ─────────────────────────────────────────────────────────
+import { motion, AnimatePresence } from 'framer-motion'
+import { useTheme, THEME_ORDER, THEME_PRESETS } from '../hooks/useTheme'
 
-const ThemeToggle = () => {
-  const { theme, toggle, isDark } = useTheme()
+const FM = "'JetBrains Mono', monospace"
+
+export default function ThemeToggle() {
+  const { themeId, cycleTheme } = useTheme()
+  const current = THEME_PRESETS[themeId]
 
   return (
-    <button
-      onClick={toggle}
-      className="theme-toggle"
-      title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-      aria-label="Toggle theme"
+    <motion.button
+      onClick={cycleTheme}
+      whileTap={{ scale: 0.94 }}
+      whileHover={{ scale: 1.04 }}
+      style={{
+        display: 'inline-flex', alignItems: 'center', gap: '8px',
+        padding: '6px 14px', borderRadius: '100px',
+        background: current.surface,
+        border: `1px solid ${current.border}`,
+        cursor: 'pointer',
+        transition: 'background 0.25s, border 0.25s',
+      }}
     >
-      <div className="theme-toggle-thumb">
-        {isDark
-          ? <Moon size={11} color="white" />
-          : <Sun size={11} color="white" />
-        }
-      </div>
-    </button>
+      {/* Color swatch */}
+      <div style={{
+        width: '10px', height: '10px', borderRadius: '50%',
+        background: current.bg,
+        border: `1.5px solid ${current.text}`,
+        transition: 'background 0.3s',
+      }} />
+      <AnimatePresence mode="wait">
+        <motion.span
+          key={themeId}
+          initial={{ opacity: 0, y: 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -4 }}
+          transition={{ duration: 0.15 }}
+          style={{
+            fontFamily: FM, fontSize: '10px',
+            letterSpacing: '0.12em', textTransform: 'uppercase',
+            color: current.text2,
+            fontWeight: '600',
+          }}
+        >
+          {current.label}
+        </motion.span>
+      </AnimatePresence>
+    </motion.button>
   )
 }
-
-export default ThemeToggle
