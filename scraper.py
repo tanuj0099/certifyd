@@ -1,46 +1,43 @@
 """
-CertifyROI Market Intelligence Scraper — V14 (SIMPLIFIED)
-==========================================================
+CertifyROI Market Intelligence Scraper — V22 (Simple & Working)
+===============================================================
 
-What all the screenshots told us:
-  ❌ Google     → reCAPTCHA
-  ❌ Bing       → Cloudflare challenge
-  ❌ DuckDuckGo → Glassdoor not indexed, no results
-  ❌ Glassdoor  → "Humans only" Cloudflare wall — DROPPED PERMANENTLY
-
-FINAL SIMPLE ARCHITECTURE:
-  SALARY  → Payscale India internal search API → navigate → extract
-  JOBS    → Naukri.com (unchanged, working)
-  DB      → Supabase upsert (unchanged)
-
-No search engines. No Glassdoor. No slug guessing.
-Just Payscale's own API giving us the exact URL, then we go get the data.
+SOLUTION: Remove all proxy complexity. Use AmbitionBox as primary source.
+          It works without proxies, blocks, or timeouts.
+          
+          Payscale and Glassdoor are REMOVED — they require paid proxies.
+          Naukri stays for job counts.
 """
 
 import time
 import re
-import json
 import random
-import threading
 import os
+import warnings
 from dotenv import load_dotenv
 from supabase import create_client
-from urllib.parse import quote_plus
-from playwright.sync_api import sync_playwright, Page, Response
-from supabase import create_client
+
+from playwright.sync_api import sync_playwright, Page
 from playwright_stealth import Stealth
 
+# ─────────────────────────────────────────────────────────────────────────────
+# 1. ENV & SUPABASE
+# ─────────────────────────────────────────────────────────────────────────────
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    load_dotenv()
 
-# ─────────────────────────────────────────────────────────────────────────────
-# 1. SUPABASE
-# ─────────────────────────────────────────────────────────────────────────────
-load_dotenv()
 SUPABASE_URL = "https://ejgadkswcjorkyzkqhfl.supabase.co"
-SUPABASE_KEY = os.getenv("SUPABASE_KEY") # <-- Now it's hidden!
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
-supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+if not SUPABASE_KEY:
+    print("WARNING: SUPABASE_KEY not found!")
+    supabase = None
+else:
+    supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+
 # ─────────────────────────────────────────────────────────────────────────────
-# 2. MASTER MANIFEST
+# 2. MASTER MANIFEST — 70 roles
 # ─────────────────────────────────────────────────────────────────────────────
 DOMAINS_TO_SCRAPE = [
     "Full Stack Developer", "Backend Engineer", "Frontend Developer", "DevOps Engineer", "Software Architect",
@@ -66,420 +63,209 @@ DOMAINS_TO_SCRAPE = [
 # ─────────────────────────────────────────────────────────────────────────────
 # 3. CONSTANTS
 # ─────────────────────────────────────────────────────────────────────────────
-NULL_SALARY = {"min_salary": 0, "max_salary": 0}
-
-USER_AGENTS = [
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-]
-
-VIEWPORTS = [
-    {"width": 1920, "height": 1080},
-    {"width": 1440, "height": 900},
-    {"width": 1536, "height": 864},
-]
-
+NULL_SALARY = {"min_salary": 0, "max_salary": 0, "source": None}
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 4. HELPERS
+# 4. CORE HELPERS
 # ─────────────────────────────────────────────────────────────────────────────
 def _clean_query(domain: str) -> str:
-    """'SRE (Site Reliability Engineer)' → 'SRE'"""
     return re.sub(r'\s*\(.*?\)\s*', ' ', domain).strip()
 
 
-def _to_rupees(val: float) -> float:
-    """Convert Lakhs to rupees if value looks like Lakhs (<500)."""
-    return val * 100_000 if val < 500 else val
+def _parse_inr(text: str) -> float | None:
+    text = text.strip().lower().replace(',', '').replace('₹', '')
+    
+    m = re.search(r'([\d.]+)\s*m\b', text)
+    if m:
+        return float(m.group(1)) * 1_000_000
+    
+    m = re.search(r'([\d.]+)\s*k\b', text)
+    if m:
+        return float(m.group(1)) * 1_000
+    
+    m = re.search(r'([\d.]+)\s*(?:l|lpa)\b', text)
+    if m:
+        return float(m.group(1)) * 100_000
+    
+    m = re.search(r'^([\d.]+)$', text)
+    if m:
+        val = float(m.group(1))
+        if val < 100:
+            return val * 100_000
+        return val
+    
+    return None
 
 
-def _validate_inr(lo: float, hi: float) -> dict | None:
-    """Only accept realistic Indian salary ranges."""
+def _validate_range(lo: float, hi: float) -> dict | None:
+    if not (lo and hi):
+        return None
+    lo, hi = float(lo), float(hi)
+    if lo > hi:
+        lo, hi = hi, lo
     if 100_000 <= lo <= 50_000_000 and 100_000 <= hi <= 50_000_000 and lo <= hi:
         return {"min": lo, "max": hi}
     return None
 
 
-def _parse_node(node) -> dict | None:
-    """
-    Try to extract a salary min/max from a dict node.
-    Handles the most common shapes returned by salary APIs.
-    """
-    if not isinstance(node, dict):
-        return None
-
-    MIN_KEYS = ("min", "minValue", "minimum", "low", "p10", "lowerBound", "salaryMin", "bottom")
-    MAX_KEYS = ("max", "maxValue", "maximum", "high", "p90", "upperBound", "salaryMax", "top")
-
-    # Shape 1: {min: X, max: Y}
-    for mk in MIN_KEYS:
-        for xk in MAX_KEYS:
-            if mk in node and xk in node:
-                try:
-                    lo = _to_rupees(float(node[mk]))
-                    hi = _to_rupees(float(node[xk]))
-                    r = _validate_inr(lo, hi)
-                    if r:
-                        return r
-                except (TypeError, ValueError):
-                    continue
-
-    # Shape 2: nested under sub-key
-    for sub in ("value", "salary", "annual", "base", "compensation", "range"):
-        if sub in node:
-            r = _parse_node(node[sub])
-            if r:
-                return r
-
-    # Shape 3: percentile array
-    for arr_key in ("percentiles", "distribution"):
-        arr = node.get(arr_key)
-        if isinstance(arr, list) and len(arr) >= 2:
-            vals = []
-            for item in arr:
-                if isinstance(item, dict):
-                    v = item.get("value") or item.get("salary") or item.get("amount")
-                    if v:
-                        rupees = _to_rupees(float(v))
-                        if 100_000 <= rupees <= 50_000_000:
-                            vals.append(rupees)
-            if len(vals) >= 2:
-                r = _validate_inr(min(vals), max(vals))
-                if r:
-                    return r
-
-    return None
-
-
-def _walk(obj, depth=0) -> dict | None:
-    """Recursively walk any JSON structure looking for salary data."""
-    if depth > 7:
-        return None
-    if isinstance(obj, dict):
-        r = _parse_node(obj)
-        if r:
-            return r
-        for v in obj.values():
-            r = _walk(v, depth + 1)
-            if r:
-                return r
-    if isinstance(obj, list):
-        for item in obj[:10]:
-            r = _walk(item, depth + 1)
-            if r:
-                return r
-    return None
-
-
 # ─────────────────────────────────────────────────────────────────────────────
-# 5. NETWORK INTERCEPTOR
-#    Attaches BEFORE navigation, catches all JSON responses as the page loads.
-#    Payscale fires background XHR calls to populate its salary chart.
+# 5. AMBITIONBOX — PRIMARY SOURCE (works without proxies)
 # ─────────────────────────────────────────────────────────────────────────────
-class SalaryInterceptor:
+AMBITIONBOX_SLUGS = {
+    "full stack developer": "full-stack-developer-salary",
+    "backend engineer": "backend-developer-salary",
+    "frontend developer": "front-end-developer-salary",  # FIXED: was "frontend-developer-salary"
+    "devops engineer": "devops-engineer-salary",
+    "software architect": "software-architect-salary",
+    "data scientist": "data-scientist-salary",
+    "data analyst": "data-analyst-salary",
+    "machine learning engineer": "machine-learning-engineer-salary",
+    "data engineer": "data-engineer-salary",
+    "product manager": "product-manager-salary",
+    "sre (site reliability engineer)": "site-reliability-engineer-salary",
+    "ios developer": "ios-developer-salary",
+    "android developer": "android-developer-salary",
+    "mobile app developer": "mobile-application-developer-salary",
+    "cloud architect (aws)": "cloud-architect-salary",
+    "qa automation engineer": "qa-automation-engineer-salary",
+    "business analyst": "business-analyst-salary",
+    "ui/ux designer": "ux-designer-salary",
+    "security architect": "security-architect-salary",
+    "cybersecurity analyst": "cyber-security-analyst-salary",
+    "network engineer": "network-engineer-salary",
+    "database administrator": "database-administrator-salary",
+    "scrum master": "scrum-master-salary",
+    "nlp engineer": "nlp-engineer-salary",
+    "computer vision engineer": "computer-vision-engineer-salary",
+    "big data engineer": "big-data-engineer-salary",
+    "ai researcher": "artificial-intelligence-engineer-salary",
+    "game developer": "game-developer-salary",
+    "blockchain developer": "blockchain-developer-salary",
+    "embedded systems engineer": "embedded-software-engineer-salary",
+    "golang developer": "golang-developer-salary",
+    "rust developer": "rust-developer-salary",
+    "financial analyst": "financial-analyst-salary",
+    "seo specialist": "seo-specialist-salary",
+    "digital marketing specialist": "digital-marketing-specialist-salary",
+    "graphic designer": "graphic-designer-salary",
+    "content strategist": "content-strategist-salary",
+    "penetration tester": "penetration-tester-salary",
+    "ethical hacker": "ethical-hacker-salary",
+    "information security manager": "information-security-manager-salary",
+    "soc analyst": "soc-analyst-salary",
+    "cloud security specialist": "cloud-security-engineer-salary",
+    "operations manager": "operations-manager-salary",
+    "program manager": "program-manager-salary",
+    "project manager": "project-manager-salary",
+    "management consultant": "management-consultant-salary",
+    "sap consultant": "sap-consultant-salary",
+    "supply chain analyst": "supply-chain-analyst-salary",
+    "strategy consultant": "strategy-consultant-salary",
+    "agile coach": "agile-coach-salary",
+    "management trainee": "management-trainee-salary",
+    "user researcher": "user-researcher-salary",
+    "product designer": "product-designer-salary",
+    "interaction designer": "interaction-designer-salary",
+    "motion designer": "motion-designer-salary",
+    "visual designer": "visual-designer-salary",
+    "service designer": "service-designer-salary",
+    "social media manager": "social-media-manager-salary",
+    "performance marketer": "performance-marketing-manager-salary",
+    "product marketing manager": "product-marketing-manager-salary",
+    "growth hacker": "growth-hacker-salary",
+    "sales development representative": "sales-development-representative-salary",
+    "fintech product manager": "product-manager-salary",
+    "ai product manager": "product-manager-salary",
+    "statistical analyst": "statistical-analyst-salary",
+    "business intelligence developer": "business-intelligence-developer-salary",
+    "gcp engineer": "cloud-engineer-salary",
+    "azure architect": "azure-architect-salary",
+    "risk manager": "risk-manager-salary",
+    "actuarial analyst": "actuarial-analyst-salary",
+    "quant researcher": "quantitative-researcher-salary",
+    "tax consultant": "tax-consultant-salary",
+    "audit associate": "auditor-salary",
+    "equity researcher": "equity-research-analyst-salary",
+    "investment banking analyst": "investment-banking-analyst-salary",
+}
 
-    SKIP = ["analytics", "gtm", "segment", "sentry", "datadog",
-            "hotjar", "doubleclick", "facebook", ".js", ".css",
-            ".png", ".jpg", ".svg", ".woff", "cloudfront"]
-
-    def __init__(self):
-        self._result: dict | None = None
-        self._lock   = threading.Lock()
-        self._active = True
-
-    @property
-    def result(self):
-        with self._lock:
-            return self._result
-
-    def attach(self, page: Page):
-        page.on("response", self._on_response)
-
-    def detach(self, page: Page):
-        self._active = False
-        try:
-            page.remove_listener("response", self._on_response)
-        except Exception:
-            pass
-
-    def _on_response(self, response: Response):
-        if not self._active or self.result:
-            return
-
-        ct  = response.headers.get("content-type", "")
-        url = response.url.lower()
-
-        if "json" not in ct:
-            return
-        if any(s in url for s in self.SKIP):
-            return
-
-        # Log API-looking endpoints for debugging
-        if any(x in url for x in ["/api/", "salary", "compensation", "research", "survey"]):
-            print(f"    [WIRE] {response.url[:100]}")
-
-        try:
-            body = response.json()
-        except Exception:
-            return
-
-        r = _walk(body)
-        if r:
-            with self._lock:
-                if not self._result:
-                    self._result = r
-                    print(f"    [WIRE] ✅ ₹{r['min']:,.0f} – ₹{r['max']:,.0f}")
+def _ambitionbox_slug(domain: str) -> str:
+    key = _clean_query(domain).lower()
+    return AMBITIONBOX_SLUGS.get(key, re.sub(r'[^a-z0-9]+', '-', key).strip('-') + "-salary")
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# 6. __NEXT_DATA__ EXTRACTOR (Tier 0 — fastest, no XHR needed)
-#    Payscale is Next.js. All server-side data lives in a <script id="__NEXT_DATA__">
-#    tag already embedded in the HTML. We parse that directly.
-# ─────────────────────────────────────────────────────────────────────────────
-def extract_next_data(page: Page) -> dict | None:
+def scrape_ambitionbox(page: Page, domain: str) -> dict:
+    """Fetch AmbitionBox via Playwright. No proxies needed."""
+    slug = _ambitionbox_slug(domain)
+    url = f"https://www.ambitionbox.com/profile/{slug}"
+    print(f"  [AmbitionBox] {url}")
+    
     try:
-        raw = page.evaluate("""
-            () => {
-                const el = document.getElementById('__NEXT_DATA__');
-                return el ? el.textContent : null;
-            }
-        """)
-        if not raw:
-            return None
-
-        data       = json.loads(raw)
-        page_props = (data.get("props") or {}).get("pageProps") or {}
-
-        # Walk every known key path Payscale has used
-        paths = [
-            ["salaryData"], ["salary"], ["compensationData"],
-            ["profileData", "salary"], ["profileData", "salaryRange"],
-            ["initialData", "salary"], ["serverProps", "salaryData"],
-            ["dehydratedState", "queries"],
-        ]
-
-        for path in paths:
-            node = page_props
-            for k in path:
-                node = (node or {}).get(k)
-            if not node:
-                continue
-            # React Query cache is a list of {state: {data: ...}}
-            if isinstance(node, list):
-                for item in node:
-                    candidate = (item.get("state") or {}).get("data") or item
-                    r = _walk(candidate)
-                    if r:
-                        print(f"    [NEXT_DATA] ✅ via {path} → ₹{r['min']:,.0f}–₹{r['max']:,.0f}")
-                        return r
-            else:
-                r = _walk(node)
-                if r:
-                    print(f"    [NEXT_DATA] ✅ via {path} → ₹{r['min']:,.0f}–₹{r['max']:,.0f}")
-                    return r
-
-        # Full tree walk as last resort
-        r = _walk(page_props)
-        if r:
-            print(f"    [NEXT_DATA] ✅ full walk → ₹{r['min']:,.0f}–₹{r['max']:,.0f}")
-            return r
-
+        page.goto(url, wait_until="domcontentloaded", timeout=30_000)
+        page.wait_for_timeout(3000)
+        
+        html = page.content()
+        title = page.title()
+        
+        # Check if page is valid
+        if "not found" in title.lower() or "404" in title.lower():
+            print(f"    ⚠️ Page not found: {title}")
+            return NULL_SALARY.copy()
+        
+        # Pattern 1: "₹ 4.0 Lakhs to ₹ 30.6 Lakhs per year"
+        m = re.search(r'₹\s*([\d.]+)\s*Lakhs?\s+to\s+₹\s*([\d.]+)\s*Lakhs?\s+per\s+year', html, re.I)
+        if m:
+            lo = float(m.group(1)) * 100_000
+            hi = float(m.group(2)) * 100_000
+            r = _validate_range(lo, hi)
+            if r:
+                print(f"    ✅ Range: ₹{r['min']:,.0f} - ₹{r['max']:,.0f}")
+                return {"min_salary": int(r["min"]), "max_salary": int(r["max"]), "source": "ambitionbox"}
+        
+        # Pattern 2: Experience table "Fresher ₹5.0 Lakhs to ₹6.4 Lakhs per year"
+        m = re.search(r'Fresher.*?₹\s*([\d.]+)\s*Lakhs?\s+to\s+₹\s*([\d.]+)\s*Lakhs?', html, re.I | re.S)
+        if m:
+            lo = float(m.group(1)) * 100_000
+            hi = float(m.group(2)) * 100_000
+            r = _validate_range(lo, hi)
+            if r:
+                print(f"    ✅ Fresher range: ₹{r['min']:,.0f} - ₹{r['max']:,.0f}")
+                return {"min_salary": int(r["min"]), "max_salary": int(r["max"]), "source": "ambitionbox"}
+        
+        # Pattern 3: Average salary
+        m = re.search(r'average salary.*?₹\s*([\d.]+)\s*Lakhs?\s+per\s+year', html, re.I)
+        if m:
+            avg = float(m.group(1)) * 100_000
+            r = _validate_range(avg * 0.6, avg * 1.8)
+            if r:
+                print(f"    ✅ Avg estimate: ₹{r['min']:,.0f} - ₹{r['max']:,.0f}")
+                return {"min_salary": int(r["min"]), "max_salary": int(r["max"]), "source": "ambitionbox"}
+        
+        print(f"    ❌ No salary data found")
+        
     except Exception as e:
-        print(f"    [NEXT_DATA] error: {e}")
-
-    return None
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# 7. PAYSCALE INTERNAL API — URL RESOLVER
-#    Calls Payscale's own search endpoint from inside the browser (same-origin).
-#    Returns a canonical /research/IN/Job=.../Salary URL.
-#    No external service. No CAPTCHA. This is literally what their search bar uses.
-# ─────────────────────────────────────────────────────────────────────────────
-def resolve_payscale_url(page: Page, domain: str) -> str | None:
-    query = quote_plus(_clean_query(domain))
-    api   = f"https://www.payscale.com/api/v2/search/jobs?term={query}&country=IN"
-    print(f"    [PS-API] Querying: {api}")
-
-    # Must be on payscale.com for same-origin fetch
-    if "payscale.com" not in page.url:
-        try:
-            page.goto(
-                "https://www.payscale.com/research/IN/Country=India/Salary",
-                wait_until="domcontentloaded",
-                timeout=25_000,
-            )
-            page.wait_for_timeout(random.randint(1500, 2500))
-        except Exception as e:
-            print(f"    [PS-API] Cannot load payscale.com: {e}")
-            return None
-
-    try:
-        result = page.evaluate(f"""
-            async () => {{
-                try {{
-                    const r = await fetch("{api}", {{
-                        headers: {{
-                            "Accept":           "application/json",
-                            "X-Requested-With": "XMLHttpRequest",
-                            "Referer":          "https://www.payscale.com/"
-                        }}
-                    }});
-                    if (!r.ok) return null;
-                    return await r.json();
-                }} catch(e) {{ return null; }}
-            }}
-        """)
-
-        if not result:
-            print(f"    [PS-API] Empty or failed response.")
-            return None
-
-        # Normalise response shape (list vs wrapped object)
-        items = result if isinstance(result, list) else (
-            result.get("data") or result.get("results") or result.get("jobs") or []
-        )
-
-        if not items:
-            print(f"    [PS-API] No items returned.")
-            return None
-
-        query_words = set(_clean_query(domain).lower().split())
-        best_url, best_score = None, -1
-
-        for item in items[:8]:
-            rel = (
-                item.get("url") or item.get("profileUrl") or
-                item.get("canonicalUrl") or item.get("path") or ""
-            )
-            # Only accept India salary pages
-            if "/IN/" not in rel or "/Salary" not in rel:
-                continue
-
-            label = (
-                item.get("name") or item.get("title") or
-                item.get("label") or item.get("jobTitle") or ""
-            ).lower()
-
-            score = len(query_words & set(re.findall(r'\w+', label)))
-            if score > best_score:
-                best_score = score
-                best_url   = f"https://www.payscale.com{rel}"
-
-        if best_url:
-            print(f"    [PS-API] ✅ → {best_url}")
-        else:
-            print(f"    [PS-API] No /IN/Salary URL in response.")
-
-        return best_url
-
-    except Exception as e:
-        print(f"    [PS-API] Exception: {e}")
-        return None
+        print(f"    ❌ Error: {e}")
+    
+    return NULL_SALARY.copy()
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 8. HUMAN SCROLL — triggers lazy-loaded XHR calls
+# 6. NAUKRI JOB COUNT
 # ─────────────────────────────────────────────────────────────────────────────
-def human_scroll(page: Page):
-    for y in [300, 600, 900, 1200, 800, 400]:
-        try:
-            page.evaluate(f"window.scrollTo({{top:{y}, behavior:'smooth'}})")
-            page.wait_for_timeout(random.randint(300, 700))
-        except Exception:
-            break
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# 9. PAYSCALE SALARY SCRAPER — the complete pipeline
-# ─────────────────────────────────────────────────────────────────────────────
-def scrape_payscale(page: Page, domain: str) -> dict:
-    """
-    Step 1: Call Payscale's own search API → get canonical URL
-    Step 2: Attach interceptor (must be before navigation)
-    Step 3: Navigate to the salary page
-    Step 4: Try __NEXT_DATA__ (fastest)
-    Step 5: Human scroll → wait for XHR interception
-    """
-    print(f"\n  [PAYSCALE] '{domain}'")
-
-    # Step 1: Resolve URL via Payscale's own API
-    url = resolve_payscale_url(page, domain)
-    if not url:
-        print(f"    [PS] Could not resolve URL. Returning 0.")
-        return NULL_SALARY
-
-    # Step 2: Attach interceptor BEFORE navigation
-    interceptor = SalaryInterceptor()
-    interceptor.attach(page)
-
-    # Step 3: Navigate
-    print(f"    [PS] Navigating → {url}")
-    try:
-        resp = page.goto(url, wait_until="domcontentloaded", timeout=35_000)
-        if resp and resp.status == 404:
-            print(f"    [PS] 404.")
-            interceptor.detach(page)
-            return NULL_SALARY
-    except Exception as e:
-        print(f"    [PS] Navigation error: {e}")
-        interceptor.detach(page)
-        return NULL_SALARY
-
-    # Soft-404 check
-    title = page.title().lower()
-    if any(x in title for x in ["not found", "error", "oops", "captcha", "blocked"]):
-        print(f"    [PS] Blocked/404: '{page.title()}'")
-        interceptor.detach(page)
-        return NULL_SALARY
-
-    page.wait_for_timeout(random.randint(2000, 3500))
-
-    # Step 4: __NEXT_DATA__ (Tier 0 — instant)
-    result = extract_next_data(page)
-    if result:
-        interceptor.detach(page)
-        return {"min_salary": int(result["min"]), "max_salary": int(result["max"])}
-
-    # Step 5: Scroll → wait for XHR interception (Tier 1)
-    print(f"    [PS] __NEXT_DATA__ empty — scrolling for XHR...")
-    human_scroll(page)
-
-    for _ in range(30):          # poll up to 15 seconds
-        page.wait_for_timeout(random.randint(400, 600))
-        if interceptor.result:
-            break
-
-    interceptor.detach(page)
-
-    r = interceptor.result
-    if not r:
-        print(f"    [PS] No salary data found after all tiers.")
-        return NULL_SALARY
-
-    return {"min_salary": int(r["min"]), "max_salary": int(r["max"])}
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# 10. NAUKRI JOB COUNT — unchanged, working
-# ─────────────────────────────────────────────────────────────────────────────
-def _slug(domain: str) -> str:
+def _naukri_slug(domain: str) -> str:
     base = re.sub(r'\(.*?\)', '', domain).strip().lower()
     return re.sub(r'[^a-z0-9]+', '-', base).strip('-')
 
 
-def scrape_naukri_jobs(page: Page, domain: str) -> int:
-    slug = _slug(domain)
-    print(f"\n  [Naukri] '{domain}' → /{slug}-jobs")
+def scrape_naukri(page: Page, domain: str) -> int:
+    slug = _naukri_slug(domain)
+    url = f"https://www.naukri.com/{slug}-jobs"
+    print(f"  [Naukri] {url}")
+    
     try:
-        page.goto(
-            f"https://www.naukri.com/{slug}-jobs",
-            wait_until="domcontentloaded",
-            timeout=30_000,
-        )
+        page.goto(url, wait_until="domcontentloaded", timeout=30_000)
         for attempt in range(2):
-            page.wait_for_timeout(4_000)
+            page.wait_for_timeout(4000)
             body = page.locator("body").inner_text()
             matches = (
                 re.findall(r'of\s+([\d,]+)\s+jobs', body, re.I) or
@@ -491,91 +277,116 @@ def scrape_naukri_jobs(page: Page, domain: str) -> int:
                 return count
             if attempt == 0:
                 print(f"    Retrying...")
-        print(f"    No job count found.")
     except Exception as e:
-        print(f"    [Naukri] Error: {e}")
+        print(f"    ❌ Error: {e}")
+    
     return 0
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 11. UNIFIED get_market_data
+# 7. MAIN ENGINE
 # ─────────────────────────────────────────────────────────────────────────────
 def get_market_data(page: Page, domain: str) -> dict:
-    salary = scrape_payscale(page, domain)
-    jobs   = scrape_naukri_jobs(page, domain)
+    """Simple: AmbitionBox for salary, Naukri for jobs."""
+    
+    # Salary from AmbitionBox
+    salary = scrape_ambitionbox(page, domain)
+    
+    # Job count from Naukri
+    jobs = scrape_naukri(page, domain)
+    
     return {
         "min_salary": salary["min_salary"],
         "max_salary": salary["max_salary"],
-        "job_count":  jobs,
+        "job_count": jobs,
+        "source": salary["source"],
     }
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# 12. THE ENGINE
-# ─────────────────────────────────────────────────────────────────────────────
 def run_engine():
     with Stealth().use_sync(sync_playwright()) as p:
-
         browser = p.chromium.launch(
             headless=False,
             args=["--disable-blink-features=AutomationControlled", "--no-sandbox"],
         )
+        
         context = browser.new_context(
-            user_agent=random.choice(USER_AGENTS),
-            viewport=random.choice(VIEWPORTS),
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+            viewport={"width": 1920, "height": 1080},
             locale="en-IN",
             timezone_id="Asia/Kolkata",
-            extra_http_headers={
-                "Accept-Language": "en-IN,en-GB;q=0.9,en;q=0.8",
-                "DNT": "1",
-            },
         )
-
-        page = context.new_page()
-
-        # Mask automation signals
-        page.add_init_script("""
-            Object.defineProperty(navigator, 'webdriver',  { get: () => undefined });
-            Object.defineProperty(navigator, 'plugins',    { get: () => [1, 2, 3] });
-            Object.defineProperty(navigator, 'languages',  { get: () => ['en-IN', 'en-GB', 'en'] });
+        context.add_init_script("""
+            Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
+            Object.defineProperty(navigator, 'plugins', { get: () => [1, 2, 3] });
+            Object.defineProperty(navigator, 'languages', { get: () => ['en-IN', 'en-GB', 'en'] });
             window.chrome = { runtime: {}, loadTimes: () => {}, csi: () => {}, app: {} };
         """)
-
-        # ── Change [:4] to [:] for a full production run ──
-        test_domains = DOMAINS_TO_SCRAPE[:4]
-
+        
+        page = context.new_page()
+        
+        # Test with first 4 roles (change [:4] to [:] for full run)
+        test_domains = DOMAINS_TO_SCRAPE
+        results_log = []
+        
         for i, domain in enumerate(test_domains):
             print(f"\n{'='*60}")
             print(f"[{i+1}/{len(test_domains)}] {domain}")
             print(f"{'='*60}")
-
+            
             stats = get_market_data(page, domain)
-            lo_l  = stats["min_salary"] / 100_000
-            hi_l  = stats["max_salary"] / 100_000
-
+            lo_l = stats["min_salary"] / 100_000 if stats["min_salary"] else 0
+            hi_l = stats["max_salary"] / 100_000 if stats["max_salary"] else 0
+            
             payload = {
-                "domain_name":      domain,
-                "min_salary":       stats["min_salary"],
-                "max_salary":       stats["max_salary"],
+                "domain_name": domain,
+                "min_salary": stats["min_salary"],
+                "max_salary": stats["max_salary"],
                 "job_count_naukri": stats["job_count"],
-                "updated_at":       "now()",
+                "updated_at": "now()",
             }
-
+            
             try:
-                supabase.table("market_intelligence").upsert(
-                    payload, on_conflict="domain_name"
-                ).execute()
-                print(f"\n  ✅ Saved — ₹{lo_l:.1f}L–₹{hi_l:.1f}L | {stats['job_count']} jobs")
+                if supabase:
+                    supabase.table("market_intelligence").upsert(
+                        payload, on_conflict="domain_name"
+                    ).execute()
+                    status = "SAVED"
+                else:
+                    status = "NO_DB"
             except Exception as e:
-                print(f"\n  ❌ DB Error: {e}")
-
-            # Wait between domains to avoid rate-limiting
-            time.sleep(random.uniform(5, 10))
-
+                print(f"\n  DB Error: {e}")
+                status = "DB_FAIL"
+            
+            results_log.append({
+                "domain": domain,
+                "min_lpa": f"{lo_l:.1f}",
+                "max_lpa": f"{hi_l:.1f}",
+                "jobs": stats["job_count"],
+                "status": status,
+                "source": stats.get("source", "none"),
+            })
+            
+            print(f"\n  [{status}] INR {lo_l:.1f}L-{hi_l:.1f}L | {stats['job_count']} jobs | Source: {stats.get('source', 'none')}")
+            
+            # Small delay between roles
+            if i < len(test_domains) - 1:
+                delay = random.uniform(3, 6)
+                print(f"  [Delay] {delay:.1f}s...")
+                time.sleep(delay)
+        
         browser.close()
-        print(f"\n{'='*60}")
-        print("DONE.")
-        print(f"{'='*60}")
+    
+    # Summary
+    print(f"\n{'='*60}")
+    print("RUN SUMMARY")
+    print(f"{'='*60}")
+    hits = sum(1 for r in results_log if float(r["min_lpa"]) > 0)
+    print(f"  Success rate: {hits}/{len(results_log)}")
+    for r in results_log:
+        flag = "✅" if float(r["min_lpa"]) > 0 else "❌"
+        print(f"  {flag} {r['domain']:<40} {r['min_lpa']}-{r['max_lpa']} LPA | {r['jobs']} jobs | {r['source']}")
+    print(f"{'='*60}\nDONE.")
 
 
 if __name__ == "__main__":

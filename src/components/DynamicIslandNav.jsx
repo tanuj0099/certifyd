@@ -84,7 +84,8 @@ function ThemeToggle({ isDark, onToggle, theme }) {
   const t = theme
   return (
     <motion.button
-      onClick={onToggle}
+  data-testid="theme-toggle"
+  onClick={onToggle}
       whileTap={{ scale: 0.9 }}
       style={{
         display: 'inline-flex', alignItems: 'center', gap: '6px',
