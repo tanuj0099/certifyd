@@ -562,10 +562,10 @@ function CertCompare({ salary, prefilledCert }) {
               {/* Confidence breakdown chips */}
               <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                 {[
-                  { label: '⚡ Faster',   ok: (winner === 'A' ? dataA : dataB).timeMonths <= (winner === 'A' ? dataB : dataA).timeMonths },
-                  { label: '💰 Cheaper',  ok: (winner === 'A' ? dataA : dataB).avgCost   <= (winner === 'A' ? dataB : dataA).avgCost },
-                  { label: '📈 Higher hike', ok: (winner === 'A' ? dataA : dataB).avgHike >= (winner === 'A' ? dataB : dataA).avgHike },
-                  { label: '🔥 Higher demand', ok: demandScore((winner === 'A' ? dataA : dataB).demand) >= demandScore((winner === 'A' ? dataB : dataA).demand) },
+                  { label: 'Faster',        ok: (winner === 'A' ? dataA : dataB).timeMonths <= (winner === 'A' ? dataB : dataA).timeMonths },
+                  { label: 'Cheaper',       ok: (winner === 'A' ? dataA : dataB).avgCost   <= (winner === 'A' ? dataB : dataA).avgCost },
+                  { label: 'Higher hike',   ok: (winner === 'A' ? dataA : dataB).avgHike >= (winner === 'A' ? dataB : dataA).avgHike },
+                  { label: 'Higher demand', ok: demandScore((winner === 'A' ? dataA : dataB).demand) >= demandScore((winner === 'A' ? dataB : dataA).demand) },
                 ].map(function(chip, i) {
                   var col = winner === 'A' ? COL_A : COL_B
                   return chip.ok ? (

@@ -1215,7 +1215,7 @@ function LiveMarketPulse() {
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '24px' }}>
           
           <div style={{ background: C.name === 'dark' ? '#141414' : '#F2F0EC', border: `1px solid ${C.name === 'dark' ? 'var(--border-subtle)' : 'transparent'}`, borderRadius: '4px', padding: '24px' }}>
-            <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.gold, letterSpacing: '0.1em', marginBottom: '20px' }}>🔥 TRENDING ROLES</div>
+            <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.gold, letterSpacing: '0.1em', marginBottom: '20px' }}>TRENDING ROLES</div>
             {data.trending.map((r, i) => (
               <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: i < data.trending.length - 1 ? `1px solid ${C.border}` : 'none' }}>
                 <span style={{ fontFamily: F_SANS, fontSize: '14px', color: C.text }}>{r.domain_name}</span>
@@ -1226,11 +1226,11 @@ function LiveMarketPulse() {
           </div>
 
           <div style={{ background: C.name === 'dark' ? '#141414' : '#F2F0EC', border: `1px solid ${C.name === 'dark' ? 'var(--border-subtle)' : 'transparent'}`, borderRadius: '4px', padding: '24px' }}>
-            <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.gold, letterSpacing: '0.1em', marginBottom: '20px' }}>📈 SALARY MOVERS (WoW)</div>
+            <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.gold, letterSpacing: '0.1em', marginBottom: '20px' }}>SALARY MOVERS (WoW)</div>
             {data.movers.map((r, i) => (
               <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: i < data.movers.length - 1 ? `1px solid ${C.border}` : 'none' }}>
                 <span style={{ fontFamily: F_SANS, fontSize: '14px', color: C.text }}>
-                  {r.percentChange > 0 ? '🟢 UP' : '🔴 DOWN'} {Math.abs(r.percentChange)}%: <span style={{ color: C.gold }}>{r.domain_name}</span>
+                  {r.percentChange > 0 ? 'UP' : 'DOWN'} {Math.abs(r.percentChange)}%: <span style={{ color: C.gold }}>{r.domain_name}</span>
                 </span>
                 <span style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3 }}>
                   {r.previous_min_salary}L → {r.min_salary}L

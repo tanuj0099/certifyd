@@ -66,11 +66,11 @@ function buildCopyText(bcase, certName, name) {
   return [
     `Reimbursement request — ${certName}`,
     '',
-    `💰 Cost: ${bcase.cost}`,
-    `🏢 Company benefit: ${bcase.companyGain}`,
-    `⏱ Time commitment: ${bcase.timeCommit}`,
-    `📈 ROI: ${bcase.roiStatement}`,
-    `📊 Market signal: ${bcase.demandNote}`,
+    `Cost: ${bcase.cost}`,
+    `Company benefit: ${bcase.companyGain}`,
+    `Time commitment: ${bcase.timeCommit}`,
+    `ROI: ${bcase.roiStatement}`,
+    `Market signal: ${bcase.demandNote}`,
     '',
     `— ${name || '[Your Name]'}`,
   ].join('\n')
@@ -200,11 +200,11 @@ const PitchBoss = ({ certName, salary, certCost, hikePercent, name, mode }) => {
                   </div>
 
                   {/* Bullets */}
-                  <BulletRow icon="💰" label="Cost"                 value={bcase.cost}         color={AMBER}   />
-                  <BulletRow icon="🏢" label="Company Benefit"      value={bcase.companyGain}  color={VIOLET}  />
-                  <BulletRow icon="⏱" label="Time Commitment"       value={bcase.timeCommit}   color="#94A3B8" />
-                  <BulletRow icon="📈" label="ROI"                  value={bcase.roiStatement} color={EMERALD} />
-                  <BulletRow icon="📊" label="Market Signal"        value={bcase.demandNote}   color={AMBER}   />
+                  <BulletRow icon="—" label="Cost"            value={bcase.cost}         color={AMBER}   />
+                  <BulletRow icon="—" label="Company Benefit" value={bcase.companyGain}  color={VIOLET}  />
+                  <BulletRow icon="—" label="Time Commitment" value={bcase.timeCommit}   color="#94A3B8" />
+                  <BulletRow icon="—" label="ROI"             value={bcase.roiStatement} color={EMERALD} />
+                  <BulletRow icon="—" label="Market Signal"   value={bcase.demandNote}   color={AMBER}   />
 
                   {/* Actions */}
                   <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>

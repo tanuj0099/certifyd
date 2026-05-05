@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, TrendingUp, ChevronDown } from 'lucide-react'
+import { X, TrendingUp, ChevronDown, Route } from 'lucide-react'
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceLine } from 'recharts'
 import { CERTIFICATIONS, CERT_DOMAINS } from '../tokens.js'
 
@@ -224,7 +224,7 @@ function CareerSimulator({ initialSalary }) {
         </AnimatePresence>
       ) : (
         <div style={{ textAlign: 'center', padding: '48px 24px', color: 'var(--text-4)', fontFamily: FB }}>
-          <div style={{ fontSize: '2.4rem', marginBottom: '12px' }}>🗺️</div>
+          <Route size={32} color="var(--text-4)" style={{ margin: '0 auto 14px', display: 'block', opacity: 0.4 }} />
           <div style={{ fontFamily: FH, fontWeight: '700', fontSize: '15px', color: 'var(--text-3)', marginBottom: '6px' }}>Build your career path</div>
           <div style={{ fontSize: '13px' }}>Pick up to 3 certs to see your salary trajectory over time</div>
         </div>

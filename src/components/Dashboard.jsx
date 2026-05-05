@@ -1,6 +1,13 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 
+function fmtLakh(v) {
+  const n = typeof v === 'number' ? v : Number(v)
+  if (!Number.isFinite(n)) return '—'
+  const lakh = n > 200 ? n / 100000 : n
+  return `₹${lakh.toFixed(1)}L`
+}
+
 export default function Dashboard() {
   const [marketData, setMarketData] = useState([])
   const [loading, setLoading] = useState(true)
@@ -11,7 +18,7 @@ export default function Dashboard() {
       const { data, error } = await supabase
         .from('market_intelligence')
         .select('*')
-        .order('avg_salary_max', { ascending: false })
+        .order('min_salary', { ascending: false })
         .limit(12)
 
       if (error) {
@@ -75,12 +82,12 @@ export default function Dashboard() {
               <h2 style={{ fontSize: '1.15rem', fontWeight: '600', letterSpacing: '-0.02em', marginBottom: '16px' }}>{job.domain_name}</h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '13px' }}>
-                  <span style={{ color: 'var(--text-3)' }}>Avg. Salary Limit</span>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontWeight: '500' }}>₹{(job.avg_salary_max / 100000).toFixed(1)}L</span>
+                  <span style={{ color: 'var(--text-3)' }}>Min salary floor</span>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontWeight: '500' }}>{fmtLakh(job.min_salary)}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '13px' }}>
                   <span style={{ color: 'var(--text-3)' }}>Active Demand</span>
-                  <span style={{ fontFamily: 'var(--font-mono)' }}>{job.job_count_naukri.toLocaleString()} jobs</span>
+                  <span style={{ fontFamily: 'var(--font-mono)' }}>{(job.job_count_naukri || 0).toLocaleString('en-IN')} jobs</span>
                 </div>
               </div>
             </div>

@@ -8,4 +8,7 @@ if (!supabaseUrl) {
   throw new Error('VITE_SUPABASE_URL is missing in .env.local')
 }
 
-export const supabase = createClient(supabaseUrl, supabaseKey)
+// Prevent multiple GoTrueClient instances in dev/HMR.
+const globalKey = '__croi_supabase__'
+export const supabase = globalThis[globalKey] || createClient(supabaseUrl, supabaseKey)
+globalThis[globalKey] = supabase

@@ -62,8 +62,8 @@ export default function ToolPageWrapper({
             animate={{ opacity: 1, y: 0 }}
             transition={T}
           >
-            <div style={{ borderTop: '1px solid var(--border)', paddingTop: '24px' }}>
-            {children}
+            <div className="tool-fabric" style={{ borderTop: '1px solid var(--border)', paddingTop: '24px' }}>
+              {children}
             </div>
           </motion.div>
         </div>

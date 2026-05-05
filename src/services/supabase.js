@@ -1,17 +1,7 @@
-import { createClient } from '@supabase/supabase-js'
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
-
-export const supabase = supabaseUrl && supabaseAnonKey
-  ? createClient(supabaseUrl, supabaseAnonKey, {
-      auth: {
-        persistSession: false,
-        autoRefreshToken: false,
-      },
-    })
-  : null
+// Single source of truth for Supabase client.
+// This file is kept for backwards compatibility with older imports.
+export { supabase } from '../lib/supabase'
 
 export function isSupabaseConfigured() {
-  return Boolean(supabase)
+  return true
 }

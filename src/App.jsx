@@ -1990,93 +1990,6 @@ const AppPage = function ({ onCertSelected }) {
               </span>
             </div>
 
-            {/* Tab Toggles */}
-            <div
-              style={{
-                display: "flex",
-                gap: "6px",
-                background: "#FFFFFF",
-                padding: "4px",
-                borderRadius: "10px",
-                border: "1px solid #E5E7EB",
-              }}
-            >
-              <button
-                onClick={() => onTabChange("dashboard")}
-                style={{
-                  padding: "8px 16px",
-                  borderRadius: "8px",
-                  border: "none",
-                  fontSize: "13px",
-                  fontWeight: "600",
-                  fontFamily: FH,
-                  background:
-                    activeTab === "dashboard"
-                      ? "linear-gradient(135deg, var(--accent) 0%, var(--accent) 100%)"
-                      : "transparent",
-                  color: activeTab === "dashboard" ? "#FFFFFF" : "#6B7280",
-                  cursor: "pointer",
-                  transition: "all 0.3s ease",
-                  boxShadow:
-                    activeTab === "dashboard"
-                      ? "0 4px 12px rgba(94, 106, 210, 0.3)"
-                      : "none",
-                  letterSpacing: "-0.01em",
-                }}
-                onMouseEnter={(e) => {
-                  if (activeTab !== "dashboard") {
-                    e.target.style.background = "#F3F4F6";
-                    e.target.style.color = "#111827";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (activeTab !== "dashboard") {
-                    e.target.style.background = "transparent";
-                    e.target.style.color = "#6B7280";
-                  }
-                }}
-              >
-                Market Pulse
-              </button>
-              <button
-                onClick={() => onTabChange("compare")}
-                style={{
-                  padding: "8px 16px",
-                  borderRadius: "8px",
-                  border: "none",
-                  fontSize: "13px",
-                  fontWeight: "600",
-                  fontFamily: FH,
-                  background:
-                    activeTab === "compare"
-                      ? "linear-gradient(135deg, var(--accent) 0%, var(--accent) 100%)"
-                      : "transparent",
-                  color: activeTab === "compare" ? "#FFFFFF" : "#6B7280",
-                  cursor: "pointer",
-                  transition: "all 0.3s ease",
-                  boxShadow:
-                    activeTab === "compare"
-                      ? "0 4px 12px rgba(94, 106, 210, 0.3)"
-                      : "none",
-                  letterSpacing: "-0.01em",
-                }}
-                onMouseEnter={(e) => {
-                  if (activeTab !== "compare") {
-                    e.target.style.background = "#F3F4F6";
-                    e.target.style.color = "#111827";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (activeTab !== "compare") {
-                    e.target.style.background = "transparent";
-                    e.target.style.color = "#6B7280";
-                  }
-                }}
-              >
-                Pivot Analysis
-              </button>
-            </div>
-
             {/* Spacer */}
             <div style={{ width: "100px" }} />
           </div>
@@ -2996,7 +2909,7 @@ function AppRoot() {
     const path = (location.pathname || "").toLowerCase();
     if (path === "/" || path === "") return "home";
     if (path === "/app") return "app";
-    if (path === "/tools" || path.startsWith("/tools/")) return "app";
+    if (path === "/tools" || path.startsWith("/tools/")) return path.slice(1);
     if (path.startsWith("/")) return path.slice(1);
     return "home";
   };

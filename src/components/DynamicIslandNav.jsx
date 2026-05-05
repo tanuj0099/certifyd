@@ -22,6 +22,7 @@ const MARKETING_NAV_ITEMS = [
 const APP_NAV_ITEMS = [
   { label: 'Home',           pageId: 'home'          },
   { label: 'Dashboard',      pageId: 'app'           },
+  { label: 'Market Pulse',   pageId: 'tools/market'  },
 ]
 
 function NavItem({ label, pageId, isActive, onActivate, onNavigate, theme }) {
@@ -228,7 +229,8 @@ export default function DynamicIslandNav({ isDark, toggleTheme, onNavigate, curr
   }
 
   const isLight = currentPreset?.isLight || false
-  const activeNavItems = (user || currentPage === 'app') ? APP_NAV_ITEMS : MARKETING_NAV_ITEMS
+  const isTools = typeof currentPage === 'string' && currentPage.startsWith('tools/')
+  const activeNavItems = (user || currentPage === 'app' || isTools) ? APP_NAV_ITEMS : MARKETING_NAV_ITEMS
 
   const [activeHref, setActiveHref] = useState('')
   const [menuOpen, setMenuOpen] = useState(false)
