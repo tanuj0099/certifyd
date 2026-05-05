@@ -28,7 +28,7 @@ export function PillButton({ children, href, onClick, type = 'button', wide = fa
         padding: wide ? '0 28px' : '0 24px',
         borderRadius: '9999px',
         border: '1px solid var(--border-accent)',
-        background: 'transparent, var(--text))',
+        background: 'var(--accent)',
         color: 'var(--bg)',
         textDecoration: 'none',
         fontFamily: FB,
@@ -108,7 +108,7 @@ export function MarketingFooter() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '24px', marginBottom: '28px' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
-              <div style={{ width: '26px', height: '26px', background: 'transparent,var(--gold))', borderRadius: '7px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ width: '26px', height: '26px', background: 'var(--accent)', borderRadius: '7px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <TrendingUp size={13} color="white" />
               </div>
               <span style={{ fontFamily: FH, fontWeight: '800', fontSize: '15px', color: 'var(--text)', letterSpacing: '-0.01em' }}>

@@ -8,18 +8,12 @@ export default function HeatmapToolPage() {
       subtitle="Heatmap"
       description="See which certifications are in high demand in your city. Based on live job posting data from Naukri and LinkedIn India."
     >
-      <div className="glass" style={{
-        padding: 'clamp(20px, 4vw, 32px)',
-        border: '1px solid var(--border)',
-        borderRadius: 'var(--radius-xl)',
-      }}>
-        <Heatmap
-          prefilledCity=""
-          prefilledDomain=""
-          certName=""
-          resumeName=""
-        />
-      </div>
+      <Heatmap
+        prefilledCity=""
+        prefilledDomain=""
+        certName=""
+        resumeName=""
+      />
     </ToolPageWrapper>
   )
 }

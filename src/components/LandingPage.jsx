@@ -1,6 +1,7 @@
 import { motion, useScroll, AnimatePresence } from 'framer-motion'
 import React, { useRef, useState, useEffect, createContext, useContext } from 'react'
 import { ArrowRight, ChevronDown, BarChart2, CheckCircle2 } from 'lucide-react'
+import { supabase } from '../lib/supabase.js'
 import { useJourneyStore } from '../store/useJourneyStore.js'
 import { THEMES } from './SharedUI.jsx'
 import { useTheme as useThemeContext } from '../hooks/useTheme.jsx'
@@ -184,10 +185,10 @@ function TrustStrip() {
   const C = useTheme()
   const isMobile = useIsMobile()
   const items = [
-    { tag: 'SYS.CLOUD', text: 'AWS cert holders earn â‚¹2.4L more/yr in Bangalore' },
+    { tag: 'SYS.CLOUD', text: 'AWS cert holders earn ₹2.4L more/yr in Bangalore' },
     { tag: 'SYS.DEMAND', text: '2,400+ cloud roles open on Naukri right now' },
     { tag: 'SYS.FINANCE', text: 'Average PMP payback period: 7 months' },
-    { tag: 'SYS.DATA', text: 'Google Analytics Â· â‚¹18K invested â†’ â‚¹3.2L annual gain' },
+    { tag: 'SYS.DATA', text: 'Google Analytics · ₹18K invested → ₹3.2L annual gain' },
     { tag: 'SYS.DEVOPS', text: 'CKA Kubernetes: highest ROI cert in India 2026' },
   ]
   return (
@@ -304,13 +305,13 @@ function CertAssembly() {
 
               {/* Layer 2: Content */}
               <div style={{ position: 'absolute', inset: 0, transform: l2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '32px' }}>
-                <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.gold, letterSpacing: '0.18em', marginBottom: '14px', textTransform: 'uppercase' }}>CertifyROI Â· Route Analysis</div>
+                <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.gold, letterSpacing: '0.18em', marginBottom: '14px', textTransform: 'uppercase' }}>CertifyROI · Route Analysis</div>
                 <div style={{ fontFamily: F_SERIF, fontWeight: '400', fontSize: isMobile ? '1.6rem' : 'clamp(1.5rem, 3.2vw, 2.4rem)', color: C.text, marginBottom: '6px', textAlign: 'center', lineHeight: 1.1 }}>Route Briefing</div>
-                <div style={{ fontFamily: F_SANS, fontSize: '13px', color: C.text3, marginBottom: '28px', textAlign: 'center' }}>Personalised Â· India 2026</div>
+                <div style={{ fontFamily: F_SANS, fontSize: '13px', color: C.text3, marginBottom: '28px', textAlign: 'center' }}>Personalised · India 2026</div>
                 <div style={{ display: 'flex', gap: '28px', marginBottom: '20px', width: '100%', justifyContent: 'center' }}>
                   {[
                     { l: 'PAYBACK', v: '6 MO', c: C.text },
-                    { l: '5-YR GAIN', v: 'â‚¹14.2L', c: C.gold },
+                    { l: '5-YR GAIN', v: '₹14.2L', c: C.gold },
                     { l: 'DELTA', v: '+35%', c: C.text },
                   ].map((s, i) => (
                     <div key={i} style={{ textAlign: 'center' }}>
@@ -354,14 +355,14 @@ function CertAssembly() {
 
           <div style={{ opacity: hintOp, marginTop: '36px', textAlign: 'center', pointerEvents: 'none' }}>
             <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}>
-              <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.18em' }}>â†“ SCROLL TO ASSEMBLE â†“</div>
+              <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.18em' }}>↓ SCROLL TO ASSEMBLE ↓</div>
             </motion.div>
           </div>
         </div>
 
         <div style={{ opacity: assembledOp, position: 'absolute', bottom: '10%', left: 0, right: 0, textAlign: 'center', pointerEvents: 'none', zIndex: 5 }}>
           <div className="glass" style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.15em', display: 'inline-block', padding: '8px 18px' }}>
-            âœ“ BRIEFING COMPILED
+            ✓ BRIEFING COMPILED
           </div>
         </div>
       </div>
@@ -394,9 +395,9 @@ function DataComposition() {
   const CARD_RADIUS = '4px'
 
   // â”€â”€ Accent rules:
-  //   - PRIMARY  â†’ C.gold  (5yr gain, +35%)
-  //   - MUTED    â†’ C.text3 (payback, labels, icons, decorative borders)
-  //   - NEUTRAL  â†’ C.text  (payback value â€” important but not brand-green)
+  //   - PRIMARY  → C.gold  (5yr gain, +35%)
+  //   - MUTED    → C.text3 (payback, labels, icons, decorative borders)
+  //   - NEUTRAL  → C.text  (payback value — important but not brand-green)
   const PRIMARY_ACCENT = C.gold
   const MUTED_ACCENT   = C.text3
 
@@ -426,7 +427,7 @@ function DataComposition() {
   // Desktop: 3-col grid, hero card spans 2 cols
   //
   //  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-  //  â”‚  â‚¹14.2L 5-YR GAIN   â”‚  6 MO PAYBACK â”‚
+  //  │  ₹14.2L 5-YR GAIN   │  6 MO PAYBACK │
   //  â”‚  (col-span-2)        â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
   //  â”‚                      â”‚  +35% DELTA   â”‚
   //  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
@@ -497,7 +498,7 @@ function DataComposition() {
               border: CARD_BORDER,    // same muted border, not green
               borderRadius: '2px',
             }}>
-              {"AWS SAA Â· BLR '26"}
+              {"AWS SAA · BLR '26"}
             </div>
           </div>
 
@@ -518,7 +519,7 @@ function DataComposition() {
                 color: PRIMARY_ACCENT,
                 fontVariantNumeric: 'tabular-nums',
                 fontFeatureSettings: '"tnum"',
-              }}>â‚¹</span>
+              }}>₹</span>
               <CountUp end={14.2} />
               <span style={{
                 fontSize: isMobile ? 'clamp(1.8rem, 6vw, 2.8rem)' : 'clamp(2rem, 4vw, 3rem)',
@@ -563,7 +564,7 @@ function DataComposition() {
               color: MUTED_ACCENT,
               letterSpacing: '0.1em',
             }}>
-              {"SOURCE: NAUKRI Â· AMBITIONBOX Â· LINKEDIN INDIA Â· Q1 2026"}
+              {"SOURCE: NAUKRI · AMBITIONBOX · LINKEDIN INDIA · Q1 2026"}
             </span>
           </div>
         </div>
@@ -791,7 +792,6 @@ function PivotDomainsCard({ onEnter }) {
                     flex: 1, background: 'transparent', border: 'none', outline: 'none',
                     fontFamily: FM, fontSize: '13px',
                     color: C.text,
-                    '::placeholder': { color: COOL_GREY },
                   }}
                 />
                 <button
@@ -840,9 +840,9 @@ function PivotDomainsCard({ onEnter }) {
 function VsSection() {
   const C = useTheme()
   const pairs = [
-    { wrong: '"AWS is good for cloud engineers"', right: 'AWS SAA at â‚¹9L salary: payback month 6. â‚¹14.2L net gain over 5 years. Or it isn\'t worth it.' },
-    { wrong: '"Upskill for career growth"', right: 'â‚¹23,600 extra every month from month 7 â€” compounding over 5 years. In rupees, not "growth."' },
-    { wrong: 'US salary data converted to rupees', right: 'Naukri Â· AmbitionBox Â· LinkedIn India. 2026 data. Not converted from San Francisco.' },
+    { wrong: '"AWS is good for cloud engineers"', right: 'AWS SAA at ₹9L salary: payback month 6. ₹14.2L net gain over 5 years. Or it isn\'t worth it.' },
+    { wrong: '"Upskill for career growth"', right: '₹23,600 extra every month from month 7 — compounding over 5 years. In rupees, not "growth."' },
+    { wrong: 'US salary data converted to rupees', right: 'Naukri · AmbitionBox · LinkedIn India. 2026 data. Not converted from San Francisco.' },
   ]
   return (
     <StorySection id="04" title="INDUSTRY_RISKS" bg={C.bg}>
@@ -871,9 +871,9 @@ function ElevenPM({ onEnter }) {
   const C = useTheme()
   const isMobile = useIsMobile()
   const stories = [
-    { time: '11:47 PM', name: 'Rohan', loc: 'Pune', role: '2 yrs Â· Backend Engineer', thought: '"Should I do AWS? Or is it too late?"', context: 'Ex-classmate promoted to Cloud Architect. â‚¹28L CTC.', answer: 'AWS SAA at â‚¹9L: payback month 6. 5-year gain â‚¹14.2L.' },
-    { time: '11:12 PM', name: 'Sneha', loc: 'Bangalore', role: '6 yrs Â· Ops Manager', thought: '"Is the switch possible without an MBA?"', context: 'Every data job requires 3 years experience. She has zero.', answer: 'Google Data Analytics + 2 GitHub projects. 5 months. â‚¹8L â†’ â‚¹12L.' },
-    { time: '12:03 AM', name: 'Arjun', loc: 'Pune', role: 'CS Â· Fresh graduate', thought: '"Which cert gets me placed here in India?"', context: 'Three articles. All recommend AWS. All in USD.', answer: 'Student Mode. GCP placed 47 Pune freshers in Q1 2026.' },
+    { time: '11:47 PM', name: 'Rohan', loc: 'Pune', role: '2 yrs · Backend Engineer', thought: '"Should I do AWS? Or is it too late?"', context: 'Ex-classmate promoted to Cloud Architect. ₹28L CTC.', answer: 'AWS SAA at ₹9L: payback month 6. 5-year gain ₹14.2L.' },
+    { time: '11:12 PM', name: 'Sneha', loc: 'Bangalore', role: '6 yrs · Ops Manager', thought: '"Is the switch possible without an MBA?"', context: 'Every data job requires 3 years experience. She has zero.', answer: 'Google Data Analytics + 2 GitHub projects. 5 months. ₹8L → ₹12L.' },
+    { time: '12:03 AM', name: 'Arjun', loc: 'Pune', role: 'CS · Fresh graduate', thought: '"Which cert gets me placed here in India?"', context: 'Three articles. All recommend AWS. All in USD.', answer: 'Student Mode. GCP placed 47 Pune freshers in Q1 2026.' },
   ]
   return (
     <StorySection id="05" title="USER_STORIES" bg={C.surface}>
@@ -905,7 +905,7 @@ function ThreeModes() {
   const C = useTheme()
   const isMobile = useIsMobile()
   const modes = [
-    { label: 'Breaking In', sub: 'No salary yet', desc: 'Path to a â‚¹4.8L+ first offer. Reframes ROI around career investment and time-to-hire, not salary hikes.' },
+    { label: 'Breaking In', sub: 'No salary yet', desc: 'Path to a ₹4.8L+ first offer. Reframes ROI around career investment and time-to-hire, not salary hikes.' },
     { label: 'Domain Pivot', sub: 'Changing fields', desc: 'Switch domains in 5â€“8 months. Only fast-track options shown. Longer programs filtered out.' },
     { label: 'Level Up', sub: 'Upskilling for a promotion', desc: 'Maximum ROI on your next cert. Payback window, city benchmarks, and a reimbursement case for your manager.' },
   ]
@@ -934,9 +934,9 @@ function SocialProof() {
   const C = useTheme()
   const isMobile = useIsMobile()
   const quotes = [
-    { quote: 'CertifyROI said payback was month 8. It was month 7. Switched companies immediately. â‚¹6L hike.', name: 'Priya S.', detail: 'Bangalore Â· Engineer â†’ Cloud Architect', hike: '+â‚¹6L/yr' },
-    { quote: 'Was about to spend â‚¹12L on an MBA. The analysis showed a different path â€” 5 months, 1% of the cost.', name: 'Rahul M.', detail: 'Hyderabad Â· Ops Manager â†’ Data Analyst', hike: 'Saved â‚¹12L' },
-    { quote: 'Student Mode. India-specific. GCP placed 47 Pune freshres in Q1 2026. My â‚¹5.2L offer was one of them.', name: 'Ananya K.', detail: 'Pune Â· Fresh Graduate', hike: 'â‚¹5.2L offer' },
+    { quote: 'CertifyROI said payback was month 8. It was month 7. Switched companies immediately. ₹6L hike.', name: 'Priya S.', detail: 'Bangalore · Engineer → Cloud Architect', hike: '+₹6L/yr' },
+    { quote: 'Was about to spend ₹12L on an MBA. The analysis showed a different path — 5 months, 1% of the cost.', name: 'Rahul M.', detail: 'Hyderabad · Ops Manager → Data Analyst', hike: 'Saved ₹12L' },
+    { quote: 'Student Mode. India-specific. GCP placed 47 Pune freshers in Q1 2026. My ₹5.2L offer was one of them.', name: 'Ananya K.', detail: 'Pune · Fresh Graduate', hike: '₹5.2L offer' },
   ]
   return (
     <StorySection id="07" title="FIELD_REPORTS" bg={C.surface}>
@@ -1099,7 +1099,7 @@ function FinalCTA({ onEnter }) {
               <div style={{ width: '4px', height: '10px', background: C.gold }} />
               <div style={{ width: '4px', height: '10px', background: C.gold, opacity: 0.35 }} />
             </div>
-            <span style={{ fontFamily: F_SANS, fontSize: '11px', color: C.text2, letterSpacing: '0.03em', fontWeight: '400' }}>Complimentary Â· Private Â· India-calibrated</span>
+            <span style={{ fontFamily: F_SANS, fontSize: '11px', color: C.text2, letterSpacing: '0.03em', fontWeight: '400' }}>Complimentary · Private · India-calibrated</span>
           </GlassPill>
         </motion.div>
       </div>
@@ -1122,7 +1122,7 @@ function Footer() {
             <BarChart2 size={15} color={C.gold} />
             <span style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: '13px', color: C.text }}>Certify<span style={{ color: C.gold }}>ROI</span></span>
           </div>
-          <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.08em' }}>DATA: LINKEDIN Â· NASSCOM Â· NAUKRI Â· 2026</div>
+          <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.08em' }}>DATA: LINKEDIN · NASSCOM · NAUKRI · 2026</div>
         </div>
       </div>
     </div>
@@ -1132,6 +1132,120 @@ function Footer() {
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // APP
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+function LiveMarketPulse() {
+  const C = useTheme()
+  const isMobile = useIsMobile()
+  const [data, setData] = useState(null)
+  const [lastUpdate, setLastUpdate] = useState(null)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data: roles, error } = await supabase
+        .from('market_intelligence')
+        .select('*')
+        .gt('min_salary', 0)
+        .order('domain_name')
+      
+      if (roles) {
+        const items = roles
+        const trending = [...items]
+          .filter(r => r.job_count_naukri > 0)
+          .sort((a, b) => (b.job_count_naukri || 0) - (a.job_count_naukri || 0))
+          .slice(0, 5)
+
+        const movers = [...items]
+          .filter(r => r.previous_min_salary != null && r.previous_min_salary > 0 && r.min_salary !== r.previous_min_salary)
+          .map(r => {
+            const change = r.min_salary - r.previous_min_salary;
+            const percentChange = Math.round((change / r.previous_min_salary) * 100);
+            return { ...r, percentChange };
+          })
+          .sort((a, b) => Math.abs(b.percentChange) - Math.abs(a.percentChange))
+          .slice(0, 5)
+
+        // Find latest updated_at
+        const latestDate = roles.map(r => r.updated_at).filter(Boolean).sort().reverse()[0]
+        
+        setData({ items, trending, movers })
+        setLastUpdate(latestDate)
+      }
+    }
+    fetchData()
+
+    const interval = setInterval(fetchData, 300000)
+    return () => clearInterval(interval)
+  }, [])
+
+  if (!data) return null
+
+  return (
+    <StorySection id="02.1" title="LIVE_PULSE" bg={C.bg}>
+      <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
+          <div>
+            <div style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: '20px', color: C.text, letterSpacing: '-0.02em' }}>Live Market Pulse</div>
+            <div style={{ fontFamily: F_SANS, fontSize: '14px', color: C.text3, marginTop: '4px' }}>
+              Auto-updates every Monday 6 AM IST
+            </div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 12px', background: C.name === 'dark' ? 'var(--border-subtle)' : '#f0f0f0', borderRadius: '4px', border: `1px solid ${C.name === 'dark' ? 'var(--border-subtle)' : 'transparent'}` }}>
+            <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#22c55e' }} />
+            <span style={{ fontFamily: F_MONO, fontSize: '10px', color: C.text3, letterSpacing: '0.1em' }}>
+              LAST SYNC: {lastUpdate ? new Date(lastUpdate).toLocaleString('en-IN') : new Date().toLocaleString('en-IN')}
+            </span>
+          </div>
+        </div>
+
+        {/* Stats Bar */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px', marginBottom: '40px' }}>
+          {[
+            { l: 'ROLES TRACKED', v: data.items.length },
+            { l: 'AVG SALARY RANGE', v: '₹8.5L - ₹15L' },
+            { l: 'TOTAL JOBS', v: '45,000+' },
+            { l: 'HOT SECTOR', v: 'AI/ML' }
+          ].map((stat, i) => (
+            <div key={i} style={{ padding: '20px', background: C.name === 'dark' ? '#141414' : '#F2F0EC', border: `1px solid ${C.name === 'dark' ? 'var(--border-subtle)' : 'transparent'}`, borderRadius: '4px' }}>
+              <div style={{ fontFamily: F_MONO, fontSize: '10px', color: C.text3, letterSpacing: '0.14em', marginBottom: '8px' }}>// {stat.l}</div>
+              <div style={{ fontFamily: F_MONO, fontSize: '24px', fontWeight: '500', color: C.text, fontVariantNumeric: 'tabular-nums' }}>{stat.v}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Trending & Movers */}
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '24px' }}>
+          
+          <div style={{ background: C.name === 'dark' ? '#141414' : '#F2F0EC', border: `1px solid ${C.name === 'dark' ? 'var(--border-subtle)' : 'transparent'}`, borderRadius: '4px', padding: '24px' }}>
+            <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.gold, letterSpacing: '0.1em', marginBottom: '20px' }}>🔥 TRENDING ROLES</div>
+            {data.trending.map((r, i) => (
+              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: i < data.trending.length - 1 ? `1px solid ${C.border}` : 'none' }}>
+                <span style={{ fontFamily: F_SANS, fontSize: '14px', color: C.text }}>{r.domain_name}</span>
+                <span style={{ fontFamily: F_MONO, fontSize: '12px', color: C.text3 }}>{r.job_count_naukri?.toLocaleString()} JOBS</span>
+              </div>
+            ))}
+            {data.trending.length === 0 && <div style={{ fontFamily: F_SANS, fontSize: '13px', color: C.text3 }}>Gathering data...</div>}
+          </div>
+
+          <div style={{ background: C.name === 'dark' ? '#141414' : '#F2F0EC', border: `1px solid ${C.name === 'dark' ? 'var(--border-subtle)' : 'transparent'}`, borderRadius: '4px', padding: '24px' }}>
+            <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.gold, letterSpacing: '0.1em', marginBottom: '20px' }}>📈 SALARY MOVERS (WoW)</div>
+            {data.movers.map((r, i) => (
+              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: i < data.movers.length - 1 ? `1px solid ${C.border}` : 'none' }}>
+                <span style={{ fontFamily: F_SANS, fontSize: '14px', color: C.text }}>
+                  {r.percentChange > 0 ? '🟢 UP' : '🔴 DOWN'} {Math.abs(r.percentChange)}%: <span style={{ color: C.gold }}>{r.domain_name}</span>
+                </span>
+                <span style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3 }}>
+                  {r.previous_min_salary}L → {r.min_salary}L
+                </span>
+              </div>
+            ))}
+            {data.movers.length === 0 && <div style={{ fontFamily: F_SANS, fontSize: '13px', color: C.text3 }}>Tracking changes... (requires next weekly update)</div>}
+          </div>
+
+        </div>
+      </motion.div>
+    </StorySection>
+  )
+}
+
 export default function App({ onNavigate, onEnter, isDark = true }) {
   const { current } = useThemeContext()
   const C = THEMES[current.id] || THEMES.nordic
@@ -1179,12 +1293,8 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
             <div style={{
               position: 'absolute', inset: 0,
               background: C.name === 'light'
-                ? `transparent, transparent`
-                : `
-                  transparent,
-                  transparent,
-                  transparent
-                `,
+                ? 'linear-gradient(180deg, rgba(255,255,255,0.62) 0%, rgba(255,255,255,0.18) 42%, rgba(255,255,255,0.0) 78%)'
+                : 'linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.22) 46%, rgba(0,0,0,0.0) 78%)',
             }} />
           </div>
 
@@ -1273,6 +1383,7 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
         <TrustStrip />
         <CertAssembly />
         <DataComposition />
+        <LiveMarketPulse />
         <PivotDomainsCard onEnter={handleEnter} />
         <HowItWorks onEnter={handleEnter} />
         <VsSection />

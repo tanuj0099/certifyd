@@ -1,19 +1,15 @@
-// ─────────────────────────────────────────────────────────
-// ThemeToggle.jsx — 5-Theme Cycler
-// Pill-shaped button that cycles: Nordic → Midnight → Ash → Dawn → Pale
-// ─────────────────────────────────────────────────────────
 import { motion, AnimatePresence } from 'framer-motion'
-import { useTheme, THEME_ORDER, THEME_PRESETS } from '../hooks/useTheme'
+import { useTheme, THEME_PRESETS } from '../hooks/useTheme'
 
 const FM = "'JetBrains Mono', monospace"
 
 export default function ThemeToggle() {
-  const { themeId, cycleTheme } = useTheme()
+  const { themeId, toggleTheme } = useTheme()
   const current = THEME_PRESETS[themeId]
 
   return (
     <motion.button
-      onClick={cycleTheme}
+      onClick={toggleTheme}
       whileTap={{ scale: 0.94 }}
       whileHover={{ scale: 1.04 }}
       style={{

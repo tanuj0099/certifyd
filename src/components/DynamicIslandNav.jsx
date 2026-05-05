@@ -5,7 +5,7 @@
 import { motion, useMotionValue, useSpring, AnimatePresence } from 'framer-motion'
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Menu, X, User } from 'lucide-react'
-import { useTheme as useThemeEngine, THEME_PRESETS } from '../hooks/useTheme'
+import { useTheme as useThemeEngine } from '../hooks/useTheme'
 
 const F_SANS  = "'Inter', 'DM Sans', sans-serif"
 const F_MONO  = "'JetBrains Mono', 'IBM Plex Mono', monospace"
@@ -205,8 +205,8 @@ function MobileMenuPanel({ isOpen, onClose, activeHref, onActivate, isDark, onTo
 // MAIN EXPORT
 // ─────────────────────────────────────────────────────────
 export default function DynamicIslandNav({ isDark, toggleTheme, onNavigate, currentPage, user, onSignIn, onSignOut }) {
-  // Pull from 5-theme engine
-  const { current: currentPreset, cycleTheme } = useThemeEngine()
+  // Pull from 2-theme engine
+  const { current: currentPreset, toggleTheme: toggleThemeEngine } = useThemeEngine()
 
   const theme = currentPreset ? {
     name: currentPreset.id,
@@ -228,7 +228,6 @@ export default function DynamicIslandNav({ isDark, toggleTheme, onNavigate, curr
   }
 
   const isLight = currentPreset?.isLight || false
-  const isAppMode = user || currentPage === 'app' || currentPage === 'features' || currentPage === 'pricing' ? false : false
   const activeNavItems = (user || currentPage === 'app') ? APP_NAV_ITEMS : MARKETING_NAV_ITEMS
 
   const [activeHref, setActiveHref] = useState('')
@@ -240,10 +239,11 @@ export default function DynamicIslandNav({ isDark, toggleTheme, onNavigate, curr
   const rotX = useMotionValue(0)
   const rotY = useMotionValue(0)
   const lift = useMotionValue(0)
-  const springCfg = { type: 'spring', stiffness: 320, damping: 32, mass: 0.6 }
+  // Strict motion spec: spring physics (stiffness: 100, damping: 20)
+  const springCfg = { type: 'spring', stiffness: 100, damping: 20, mass: 0.8 }
   const sRotX = useSpring(rotX, springCfg)
   const sRotY = useSpring(rotY, springCfg)
-  const sLift = useSpring(lift, { stiffness: 400, damping: 38 })
+  const sLift = useSpring(lift, { stiffness: 100, damping: 20 })
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
@@ -281,7 +281,7 @@ export default function DynamicIslandNav({ isDark, toggleTheme, onNavigate, curr
     rotX.set(0); rotY.set(0); lift.set(0)
   }, [rotX, rotY, lift])
 
-  const glassBg = isLight ? 'rgba(255,255,255,0.72)' : 'rgba(34,35,38,0.72)'
+  const glassBg = isLight ? 'rgba(255,255,255,0.78)' : 'rgba(34,35,38,0.78)'
   const borderColor = theme.border
   const innerHL = theme.border
   const shadow = scrolled
@@ -307,8 +307,8 @@ export default function DynamicIslandNav({ isDark, toggleTheme, onNavigate, curr
             padding: '0 14px',
             gap: '4px',
             background: glassBg,
-            backdropFilter: 'blur(20px) saturate(180%)',
-            WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+            backdropFilter: 'blur(16px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(16px) saturate(180%)',
             borderRadius: '100px',
             border: '1px solid ' + borderColor,
             boxShadow: shadow,
@@ -318,7 +318,7 @@ export default function DynamicIslandNav({ isDark, toggleTheme, onNavigate, curr
           }}
           initial={{ y: -64, opacity: 0, scale: 0.92 }}
           animate={{ y: 0, opacity: 1, scale: 1 }}
-          transition={{ type: 'spring', stiffness: 360, damping: 34, delay: 0.1 }}
+          transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.1 }}
         >
           {!isMobile && (
             <>
@@ -337,7 +337,7 @@ export default function DynamicIslandNav({ isDark, toggleTheme, onNavigate, curr
               </div>
               <div style={{ width: '1px', height: '20px', background: borderColor, flexShrink: 0, margin: '0 4px' }} />
               <div style={{ padding: '0 4px', flexShrink: 0 }}>
-                <ThemeToggle isDark={isDark} onToggle={cycleTheme} theme={theme} />
+                <ThemeToggle isDark={isDark} onToggle={toggleThemeEngine} theme={theme} />
               </div>
               <div style={{ width: '1px', height: '20px', background: borderColor, flexShrink: 0, margin: '0 4px' }} />
               <div style={{ padding: '0 4px', flexShrink: 0 }}>

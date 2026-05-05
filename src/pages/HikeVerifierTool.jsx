@@ -8,13 +8,7 @@ export default function HikeVerifierToolPage() {
       subtitle="Verifier"
       description="Verify if the salary increase you're offered after getting a certification aligns with market standards."
     >
-      <div className="glass" style={{
-        padding: 'clamp(20px, 4vw, 32px)',
-        border: '1px solid var(--border)',
-        borderRadius: 'var(--radius-xl)',
-      }}>
-        <HikeVerifier />
-      </div>
+      <HikeVerifier />
     </ToolPageWrapper>
   )
 }

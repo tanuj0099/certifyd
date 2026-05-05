@@ -62,6 +62,7 @@ import CareerSimulator from "./components/CareerSimulator.jsx";
 import JobCertMap from "./components/JobCertMap.jsx";
 import HikeVerifier from "./components/HikeVerifier.jsx";
 import Dashboard from "./components/Dashboard.jsx";
+import MarketIntelligenceTool from "./components/MarketIntelligenceTool.jsx";
 import { AppSection } from "./components/SharedUI.jsx";
 import { MarketingFooter } from "./components/MarketingPageShell.jsx";
 const FAQPage = lazy(() => import("./pages/FAQ.jsx"));
@@ -3071,6 +3072,7 @@ function AppRoot() {
                 <Route path="/tools/jobmap" element={<JobMapTool />} />
                 <Route path="/tools/college" element={<CollegeTool />} />
                 <Route path="/tools/hike" element={<HikeVerifierTool />} />
+                <Route path="/tools/market" element={<MarketIntelligenceTool />} />
                 <Route path="/terms" element={<TermsPage />} />
                 <Route path="/privacy" element={<PrivacyPage />} />
                 <Route path="/cookies" element={<CookiesPage />} />

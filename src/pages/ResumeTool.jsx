@@ -48,16 +48,10 @@ export default function ResumeToolPage() {
             <ModePill mode={mode} onReset={handleModeReset} />
           </div>
 
-          <div className="glass" style={{
-            padding: 'clamp(20px, 4vw, 32px)',
-            border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-xl)',
-          }}>
-            <ResumeAnalyzer
-              mode={mode}
-              onCertSelected={handleCertSelected}
-            />
-          </div>
+          <ResumeAnalyzer
+            mode={mode}
+            onCertSelected={handleCertSelected}
+          />
         </motion.div>
       )}
     </ToolPageWrapper>

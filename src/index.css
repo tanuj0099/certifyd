@@ -5,9 +5,14 @@
 @tailwind utilities;
 
 /* ═══════════════════════════════════════════════════════════
-   5-THEME CSS ENGINE — Linear Monochrome
-   Accent: Neutral White (dark) / Charcoal (light)
-   Gold: #C9A84C (editorial highlight only)
+   STRICT LINEAR SPEC — 2 themes only
+
+   Nordic (Dark): bg #222326, text/logo #F4F5F8
+   Ash (Light):   bg #FFFFFF, text #44494D
+
+   Borders:
+   - Nordic: rgba(255, 255, 255, 0.08)
+   - Ash:    #E5E5E5
    ═══════════════════════════════════════════════════════════ */
 
 @layer base {
@@ -98,72 +103,23 @@
     --font-serif: 'Inter', system-ui, sans-serif;
   }
 
-  /* ── MIDNIGHT ──────────────────────────────────────────── */
-  [data-theme="midnight"] {
-    --bg:         #0F0F10;
-    --bg-alt:     #161618;
-    --surface:    #161618;
-    --text:       #EEEFF1;
-    --text-2:     #8B8D95;
-    --text-3:     #5A5C63;
-    --text-4:     #3A3C42;
-    --accent:     #EEEFF1;
-    --border:     rgba(255,255,255,0.08);
-    --border-mid: rgba(255,255,255,0.14);
-    --is-light:   0;
-  }
-
   /* ── ASH (Light) ───────────────────────────────────────── */
   [data-theme="ash"] {
     --bg:         #FFFFFF;
-    --bg-alt:     #F8F8F9;
-    --surface:    #F8F8F9;
+    --bg-alt:     #FFFFFF;
+    --surface:    #FFFFFF;
     --text:       #44494D;
     --text-2:     #6B7075;
     --text-3:     #9CA0A5;
     --text-4:     #C4C7CB;
     --accent:     #222326;
-    --gold:       #9A7828;
-    --border:     rgba(0,0,0,0.05);
-    --border-mid: rgba(0,0,0,0.10);
+    --gold:       #222326;
+    --border:     #E5E5E5;
+    --border-mid: #D6D6D6;
     --is-light:   1;
     --err:        #C93636;
-    --scrollbar:  rgba(0,0,0,0.08);
+    --scrollbar:  rgba(0,0,0,0.10);
   }
-
-  /* ── DAWN ──────────────────────────────────────────────── */
-  [data-theme="dawn"] {
-    --bg:         #2A222E;
-    --bg-alt:     #322A36;
-    --surface:    #322A36;
-    --text:       #EEEFF1;
-    --text-2:     #A39AAB;
-    --text-3:     #6E6575;
-    --text-4:     #4A4252;
-    --accent:     #EEEFF1;
-    --border:     rgba(255,255,255,0.08);
-    --border-mid: rgba(255,255,255,0.14);
-    --is-light:   0;
-  }
-
-  /* ── PALE ──────────────────────────────────────────────── */
-  [data-theme="pale"] {
-    --bg:         #292D3E;
-    --bg-alt:     #313546;
-    --surface:    #313546;
-    --text:       #EEEFF1;
-    --text-2:     #9DA1B0;
-    --text-3:     #6A6E7E;
-    --text-4:     #454958;
-    --accent:     #EEEFF1;
-    --border:     rgba(255,255,255,0.08);
-    --border-mid: rgba(255,255,255,0.14);
-    --is-light:   0;
-  }
-
-  /* ── Legacy compat — map old "dark"/"light" to new system */
-  [data-theme="dark"]  { --bg:#222326; --bg-alt:#2A2A2E; --surface:#2A2A2E; --text:#F4F5F8; --text-2:#A0A3AB; --text-3:#6B6E76; --text-4:#44474F; --border:rgba(255,255,255,0.08); --border-mid:rgba(255,255,255,0.14); --is-light:0; }
-  [data-theme="light"] { --bg:#FFFFFF; --bg-alt:#F8F8F9; --surface:#F8F8F9; --text:#44494D; --text-2:#6B7075; --text-3:#9CA0A5; --text-4:#C4C7CB; --border:rgba(0,0,0,0.05); --border-mid:rgba(0,0,0,0.10); --is-light:1; --scrollbar:rgba(0,0,0,0.08); }
 
 
   /* ── Resets ─────────────────────────────────────────────── */
@@ -180,7 +136,14 @@
     overflow-x: hidden;
     line-height: 1.6;
     min-height: 100vh;
-    transition: background 0.35s ease, color 0.25s ease;
+    transition: background 280ms var(--ease-out), color 280ms var(--ease-out);
+  }
+
+  /* Inline-style-safe placeholder color (Linear-like) */
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--text-3);
+    opacity: 1;
   }
 
   body::before { display: none; }
