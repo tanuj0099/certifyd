@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabase'
 import SalaryCard from '@/components/SalaryCard'
+import EnvTest from '@/components/EnvTest'
 
 export const revalidate = 3600
 
@@ -59,6 +60,7 @@ export default async function Home() {
 
   return (
     <main style={{ maxWidth: 1200, margin: '0 auto', padding: 40, fontFamily: 'system-ui' }}>
+      <EnvTest />
       <header style={{ textAlign: 'center', marginBottom: 48 }}>
         <h1 style={{ fontSize: '2.5rem', marginBottom: 8 }}>💰 CertifyROI Market Intelligence</h1>
         <p style={{ color: '#666', fontSize: '1.1rem' }}>
