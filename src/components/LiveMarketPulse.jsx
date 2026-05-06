@@ -225,61 +225,35 @@ export default function LiveMarketPulse() {
   const [activeId,   setActiveId]   = useState('all')
   const [lastSync,   setLastSync]   = useState(null)
 
-  // ── Fetch from Supabase ──────────────────────────────────────────────────
   useEffect(() => {
-    if (!supabase) {
-      setError('Supabase not configured — check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env.local')
-      setLoading(false)
-      return
-    }
-
-    const load = async () => {
-      setLoading(true)
-      setError(null)
+    async function fetchMarketData() {
       try {
-        // Select only the columns we use — keeps payload small
-        const { data, error: sbErr } = await supabase
+        setLoading(true); // 1. Turn on spinner
+        
+        // 2. Fetch data (Notice we removed certification_cost)
+        const { data, error } = await supabase
           .from('market_intelligence')
-          .select('domain_name, min_salary, max_salary, job_count_naukri, updated_at')
-          .order('domain_name', { ascending: true })
+          .select('domain_name, min_salary, max_salary, job_count_naukri');
+          
+        // 3. THE TRUTH TEST: Check your browser console for these logs
+        console.log("✅ SUPABASE ERROR:", error);
+        console.log("✅ SUPABASE DATA:", data);
 
-        if (sbErr) throw sbErr
-
-        // FIX 1: Normalise data to an array before any access.
-        // Supabase v2 can return null (RLS with no matching rows, empty table,
-        // or a 200 with an empty body). Treat null/undefined as [].
-        const rows = Array.isArray(data) ? data : []
-
-        // FIX 2: setLoading(false) immediately after data is confirmed safe —
-        // before any secondary computation — so the UI unblocks as fast as
-        // possible. The finally block below is now a safety net only.
-        setRows(rows)
-        setLoading(false)
-
-        // Latest sync timestamp — safe because rows is guaranteed an array
-        const latest = rows
-          .map(r => r.updated_at)
-          .filter(Boolean)
-          .sort()
-          .at(-1)
-        if (latest) setLastSync(latest)
+        if (error) throw error;
+        
+        // 4. Safe state update
+        setRoles(data || []); 
 
       } catch (err) {
-        console.error('[MarketPulse] Supabase error:', err)
-        setError(err?.message || 'Failed to load market data')
-        // FIX 3: Ensure loading clears on error path too, without relying
-        // solely on finally (guards against double-invocation edge cases).
-        setLoading(false)
+        console.error("❌ CRASH:", err.message);
+      } finally {
+        // 5. THIS IS MANDATORY: Turn off spinner no matter what happens
+        setLoading(false); 
       }
     }
 
-    load()
-
-    // Re-fetch every 5 minutes
-    const iv = setInterval(load, 300_000)
-    return () => clearInterval(iv)
-  }, [])
-
+    fetchMarketData();
+  }, []);
   // ── Filter by active capsule ─────────────────────────────────────────────
   const capsule = CAPSULES.find(c => c.id === activeId) || CAPSULES[0]
 
