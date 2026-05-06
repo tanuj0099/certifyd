@@ -62,7 +62,7 @@ import CareerSimulator from "./components/CareerSimulator.jsx";
 import JobCertMap from "./components/JobCertMap.jsx";
 import HikeVerifier from "./components/HikeVerifier.jsx";
 import Dashboard from "./components/Dashboard.jsx";
-import MarketIntelligenceTool from "./components/Livemarketpulse.jsx";
+import MarketIntelligenceTool from "./components/LiveMarketPulse.jsx";
 import { AppSection } from "./components/SharedUI.jsx";
 import { MarketingFooter } from "./components/MarketingPageShell.jsx";
 const FAQPage = lazy(() => import("./pages/FAQ.jsx"));

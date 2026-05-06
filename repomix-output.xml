@@ -843,7 +843,7 @@ src/components/LandingPage.jsx
 src/components/Layout.jsx
 src/components/LiveDataViz.jsx
 src/components/MarketingPageShell.jsx
-src/components/Livemarketpulse.jsx
+src/components/LiveMarketPulse.jsx
 src/components/MarketPulseTicker.jsx
 src/components/ModeSelector.jsx
 src/components/Navigation.jsx
@@ -14505,7 +14505,7 @@ export function Sparkline({ data = [], width = 120, height = 28, color = ACCENT 
 }
 </file>
 
-<file path="src/components/Livemarketpulse.jsx">
+<file path="src/components/LiveMarketPulse.jsx">
 import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { supabase } from '../lib/supabase'
@@ -31367,7 +31367,7 @@ import CareerSimulator from "./components/CareerSimulator.jsx";
 import JobCertMap from "./components/JobCertMap.jsx";
 import HikeVerifier from "./components/HikeVerifier.jsx";
 import Dashboard from "./components/Dashboard.jsx";
-import MarketIntelligenceTool from "./components/Livemarketpulse.jsx";
+import MarketIntelligenceTool from "./components/LiveMarketPulse.jsx";
 import { AppSection } from "./components/SharedUI.jsx";
 import { MarketingFooter } from "./components/MarketingPageShell.jsx";
 const FAQPage = lazy(() => import("./pages/FAQ.jsx"));
