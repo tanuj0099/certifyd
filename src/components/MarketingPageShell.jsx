@@ -7,7 +7,7 @@ import { AppSection } from './SharedUI.jsx'
 const FH = "'EB Garamond','Cormorant Garamond',Georgia,serif"
 const FB = "'Inter','DM Sans',sans-serif"
 const FM = "'JetBrains Mono','IBM Plex Mono',monospace"
-const MotionLink = motion(Link)
+const MotionLink = motion.create(Link)
 
 const T = { duration: 0.34, ease: [0.16, 1, 0.3, 1] }
 

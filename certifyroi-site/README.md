@@ -24,8 +24,8 @@ A Next.js frontend for displaying CertifyROI market intelligence data.
 
 Required environment variables:
 
-- `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase project URL
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase anon key
+- `VITE_SUPABASE_URL`: Your Supabase project URL
+- `VITE_SUPABASE_ANON_KEY`: Your Supabase anon key
 
 ## Deployment
 

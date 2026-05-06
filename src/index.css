@@ -458,3 +458,68 @@
     .cert-assembly-track * { -webkit-backface-visibility:hidden; backface-visibility:hidden; }
   }
 }
+/* ═══════════════════════════════════════════════════════════════════════
+   FRAMELESS SURFACE SYSTEM — append to bottom of src/index.css
+   ═══════════════════════════════════════════════════════════════════════
+   These rules enforce the "single unified surface" editorial system.
+   No tool or section should render at a different background than --bg.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── Root elements always match the theme background ─────────────────── */
+html,
+body,
+#root {
+  background-color: var(--bg);
+  min-height: 100dvh;
+}
+
+/* ── tool-fabric: flatten all nested surfaces ────────────────────────── */
+.tool-fabric {
+  background: transparent;
+}
+
+/* Kill card shadows and elevated backgrounds inside tool areas */
+.tool-fabric .glass,
+.tool-fabric [class*="card"],
+.tool-fabric [class*="Card"],
+.tool-fabric .card-surface {
+  background:    transparent !important;
+  box-shadow:    none !important;
+  border-radius: var(--radius-sm, 4px) !important;
+}
+
+/* Tailwind utilities that fight the background */
+.tool-fabric .bg-white {
+  background-color: transparent !important;
+}
+
+.tool-fabric [class*="shadow-"] {
+  box-shadow: none !important;
+}
+
+/* ── StorySection inner container — transparent background ───────────── */
+/*
+ * Previously: background: d ? 'var(--border-subtle)' : 'transparent'
+ * That created a darker box in Nordic mode. Now always transparent.
+ */
+[data-story-section] > * {
+  background: transparent;
+}
+
+/* ── Live Market Pulse domain capsule active state ────────────────────── */
+.capsule-active {
+  background: var(--text);
+  color:      var(--bg);
+  border-color: var(--text);
+}
+
+/* ── Ensure recharts SVG backgrounds are transparent ─────────────────── */
+.recharts-wrapper,
+.recharts-surface {
+  background: transparent !important;
+}
+
+/* ── Prevent white flash on route transitions ────────────────────────── */
+#root > * {
+  background: var(--bg);
+}

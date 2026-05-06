@@ -2,6 +2,7 @@ import { motion, useScroll, AnimatePresence } from 'framer-motion'
 import React, { useRef, useState, useEffect, createContext, useContext } from 'react'
 import { ArrowRight, ChevronDown, BarChart2, CheckCircle2 } from 'lucide-react'
 import { supabase } from '../lib/supabase.js'
+import LiveMarketPulse from './LiveMarketPulse.jsx'
 import { useJourneyStore } from '../store/useJourneyStore.js'
 import { THEMES } from './SharedUI.jsx'
 import { useTheme as useThemeContext } from '../hooks/useTheme.jsx'
@@ -70,7 +71,7 @@ function CountUp({ end, prefix = '', suffix = '', duration = 1.8 }) {
 function PillBtn({ onClick = () => {}, children, large, primary = false }) {
   const C = useTheme()
   const [h, setH] = useState(false)
-  const d = C.name === 'dark'
+  const d = !C.isLight
   return (
     <motion.button
       onClick={onClick}
@@ -112,12 +113,12 @@ function PillBtn({ onClick = () => {}, children, large, primary = false }) {
 
 function GlassPill({ children }) {
   const C = useTheme()
-  const d = C.name === 'dark'
+  const d = !C.isLight
   return (
     <div style={{
       display: 'inline-flex', alignItems: 'center', gap: '10px',
       padding: '7px 16px', borderRadius: '9999px',
-      background: d ? 'var(--border-subtle)' : 'transparent',
+      background: 'transparent',
       backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
       border: `1px solid ${d ? 'var(--border-subtle)' : 'transparent'}`,
     }}>
@@ -132,7 +133,7 @@ function GlassPill({ children }) {
 function StorySection({ id = '', title = '', children, bg = '', noBorderTop = false }) {
   const C = useTheme()
   const isMobile = useIsMobile()
-  const d = C.name === 'dark'
+  const d = !C.isLight
   return (
     <div style={{ position: 'relative', padding: isMobile ? '16px' : '32px 24px' }}>
       <div style={{ 
@@ -140,7 +141,7 @@ function StorySection({ id = '', title = '', children, bg = '', noBorderTop = fa
         margin: '0 auto', 
         display: 'flex', 
         flexDirection: isMobile ? 'column' : 'row',
-        background: d ? 'var(--border-subtle)' : 'transparent',
+        background: 'transparent',
         backdropFilter: 'blur(16px)',
         WebkitBackdropFilter: 'blur(16px)',
         border: `1px solid ${d ? 'var(--border-subtle)' : 'transparent'}`,
@@ -388,8 +389,8 @@ function DataComposition() {
   const isMobile = useIsMobile()
 
   // â”€â”€ Flat card token â€” no glass, no blur, no shadow â”€â”€â”€â”€â”€â”€
-  const CARD_BG     = C.name === 'dark' ? '#141414' : '#F2F0EC'
-  const CARD_BORDER = C.name === 'dark'
+  const CARD_BG     = !C.isLight ? '#141414' : '#F2F0EC'
+  const CARD_BORDER = !C.isLight
     ? '1px solid var(--border-subtle)'
     : '1px solid transparent'
   const CARD_RADIUS = '4px'
@@ -777,8 +778,8 @@ function PivotDomainsCard({ onEnter }) {
                 display: 'flex', gap: '8px', alignItems: 'center',
                 padding: '4px 4px 4px 14px',
                 borderRadius: '8px',
-                border: '1px solid ' + (pivotFocus ? LINEAR_BLUE + '60' : (C.name === 'dark' ? 'var(--border-subtle)' : 'transparent')),
-                background: C.name === 'dark' ? 'var(--border-subtle)' : 'transparent',
+                border: '1px solid ' + (pivotFocus ? LINEAR_BLUE + '60' : (!C.isLight ? 'var(--border-subtle)' : 'transparent')),
+                background: !C.isLight ? 'var(--border-subtle)' : 'transparent',
                 transition: 'border-color 0.18s',
               }}>
                 <input
@@ -818,8 +819,8 @@ function PivotDomainsCard({ onEnter }) {
                   initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}
                   style={{
                     marginTop: '8px', padding: '8px 12px', borderRadius: '6px',
-                    background: C.name === 'dark' ? '#08090A' : '#F7F8F8',
-                    border: '1px solid ' + (C.name === 'dark' ? 'var(--border-subtle)' : 'transparent'),
+                    background: !C.isLight ? '#08090A' : '#F7F8F8',
+                    border: '1px solid ' + (!C.isLight ? 'var(--border-subtle)' : 'transparent'),
                     fontFamily: FM, fontSize: '10px', color: COOL_GREY, letterSpacing: '0.08em',
                   }}
                 >
@@ -1021,7 +1022,7 @@ function FAQ() {
 function FinalCTA({ onEnter }) {
   const C = useTheme()
   const isMobile = useIsMobile()
-  const d = C.name === 'dark'
+  const d = !C.isLight
 
   return (
     <div style={{
@@ -1129,122 +1130,6 @@ function Footer() {
   )
 }
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-// APP
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-function LiveMarketPulse() {
-  const C = useTheme()
-  const isMobile = useIsMobile()
-  const [data, setData] = useState(null)
-  const [lastUpdate, setLastUpdate] = useState(null)
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const { data: roles, error } = await supabase
-        .from('market_intelligence')
-        .select('*')
-        .gt('min_salary', 0)
-        .order('domain_name')
-      
-      if (roles) {
-        const items = roles
-        const trending = [...items]
-          .filter(r => r.job_count_naukri > 0)
-          .sort((a, b) => (b.job_count_naukri || 0) - (a.job_count_naukri || 0))
-          .slice(0, 5)
-
-        const movers = [...items]
-          .filter(r => r.previous_min_salary != null && r.previous_min_salary > 0 && r.min_salary !== r.previous_min_salary)
-          .map(r => {
-            const change = r.min_salary - r.previous_min_salary;
-            const percentChange = Math.round((change / r.previous_min_salary) * 100);
-            return { ...r, percentChange };
-          })
-          .sort((a, b) => Math.abs(b.percentChange) - Math.abs(a.percentChange))
-          .slice(0, 5)
-
-        // Find latest updated_at
-        const latestDate = roles.map(r => r.updated_at).filter(Boolean).sort().reverse()[0]
-        
-        setData({ items, trending, movers })
-        setLastUpdate(latestDate)
-      }
-    }
-    fetchData()
-
-    const interval = setInterval(fetchData, 300000)
-    return () => clearInterval(interval)
-  }, [])
-
-  if (!data) return null
-
-  return (
-    <StorySection id="02.1" title="LIVE_PULSE" bg={C.bg}>
-      <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
-          <div>
-            <div style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: '20px', color: C.text, letterSpacing: '-0.02em' }}>Live Market Pulse</div>
-            <div style={{ fontFamily: F_SANS, fontSize: '14px', color: C.text3, marginTop: '4px' }}>
-              Auto-updates every Monday 6 AM IST
-            </div>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 12px', background: C.name === 'dark' ? 'var(--border-subtle)' : '#f0f0f0', borderRadius: '4px', border: `1px solid ${C.name === 'dark' ? 'var(--border-subtle)' : 'transparent'}` }}>
-            <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#22c55e' }} />
-            <span style={{ fontFamily: F_MONO, fontSize: '10px', color: C.text3, letterSpacing: '0.1em' }}>
-              LAST SYNC: {lastUpdate ? new Date(lastUpdate).toLocaleString('en-IN') : new Date().toLocaleString('en-IN')}
-            </span>
-          </div>
-        </div>
-
-        {/* Stats Bar */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px', marginBottom: '40px' }}>
-          {[
-            { l: 'ROLES TRACKED', v: data.items.length },
-            { l: 'AVG SALARY RANGE', v: '₹8.5L - ₹15L' },
-            { l: 'TOTAL JOBS', v: '45,000+' },
-            { l: 'HOT SECTOR', v: 'AI/ML' }
-          ].map((stat, i) => (
-            <div key={i} style={{ padding: '20px', background: C.name === 'dark' ? '#141414' : '#F2F0EC', border: `1px solid ${C.name === 'dark' ? 'var(--border-subtle)' : 'transparent'}`, borderRadius: '4px' }}>
-              <div style={{ fontFamily: F_MONO, fontSize: '10px', color: C.text3, letterSpacing: '0.14em', marginBottom: '8px' }}>// {stat.l}</div>
-              <div style={{ fontFamily: F_MONO, fontSize: '24px', fontWeight: '500', color: C.text, fontVariantNumeric: 'tabular-nums' }}>{stat.v}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Trending & Movers */}
-        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '24px' }}>
-          
-          <div style={{ background: C.name === 'dark' ? '#141414' : '#F2F0EC', border: `1px solid ${C.name === 'dark' ? 'var(--border-subtle)' : 'transparent'}`, borderRadius: '4px', padding: '24px' }}>
-            <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.gold, letterSpacing: '0.1em', marginBottom: '20px' }}>TRENDING ROLES</div>
-            {data.trending.map((r, i) => (
-              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: i < data.trending.length - 1 ? `1px solid ${C.border}` : 'none' }}>
-                <span style={{ fontFamily: F_SANS, fontSize: '14px', color: C.text }}>{r.domain_name}</span>
-                <span style={{ fontFamily: F_MONO, fontSize: '12px', color: C.text3 }}>{r.job_count_naukri?.toLocaleString()} JOBS</span>
-              </div>
-            ))}
-            {data.trending.length === 0 && <div style={{ fontFamily: F_SANS, fontSize: '13px', color: C.text3 }}>Gathering data...</div>}
-          </div>
-
-          <div style={{ background: C.name === 'dark' ? '#141414' : '#F2F0EC', border: `1px solid ${C.name === 'dark' ? 'var(--border-subtle)' : 'transparent'}`, borderRadius: '4px', padding: '24px' }}>
-            <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.gold, letterSpacing: '0.1em', marginBottom: '20px' }}>SALARY MOVERS (WoW)</div>
-            {data.movers.map((r, i) => (
-              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: i < data.movers.length - 1 ? `1px solid ${C.border}` : 'none' }}>
-                <span style={{ fontFamily: F_SANS, fontSize: '14px', color: C.text }}>
-                  {r.percentChange > 0 ? 'UP' : 'DOWN'} {Math.abs(r.percentChange)}%: <span style={{ color: C.gold }}>{r.domain_name}</span>
-                </span>
-                <span style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3 }}>
-                  {r.previous_min_salary}L → {r.min_salary}L
-                </span>
-              </div>
-            ))}
-            {data.movers.length === 0 && <div style={{ fontFamily: F_SANS, fontSize: '13px', color: C.text3 }}>Tracking changes... (requires next weekly update)</div>}
-          </div>
-
-        </div>
-      </motion.div>
-    </StorySection>
-  )
-}
 
 export default function App({ onNavigate, onEnter, isDark = true }) {
   const { current } = useThemeContext()
@@ -1284,7 +1169,7 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
                 width: '100%', height: '100%',
                 objectFit: 'cover',
                 objectPosition: 'center 32%',
-                filter: C.name === 'dark'
+                filter: !C.isLight
                   ? 'brightness(0.38) contrast(1.12) saturate(0.6)'
                   : 'brightness(0.62) contrast(1.12) saturate(0.82)',
               }}
@@ -1292,7 +1177,7 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
             {/* Radial fade â€” more aggressive on light mode for readability */}
             <div style={{
               position: 'absolute', inset: 0,
-              background: C.name === 'light'
+              background: C.isLight
                 ? 'linear-gradient(180deg, rgba(255,255,255,0.62) 0%, rgba(255,255,255,0.18) 42%, rgba(255,255,255,0.0) 78%)'
                 : 'linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.22) 46%, rgba(0,0,0,0.0) 78%)',
             }} />

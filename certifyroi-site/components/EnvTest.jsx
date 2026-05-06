@@ -7,8 +7,8 @@ export default function EnvTest() {
 
   useEffect(() => {
     try {
-      const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-      const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+      const url = process.env.VITE_SUPABASE_URL
+      const key = process.env.VITE_SUPABASE_ANON_KEY
 
       setEnvStatus(`URL: ${url ? 'SET' : 'NOT SET'}, KEY: ${key ? 'SET' : 'NOT SET'}`)
     } catch (error) {
