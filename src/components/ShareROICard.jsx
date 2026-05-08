@@ -34,6 +34,29 @@ var DEMAND_COLORS = {
   'Low':       '#94A3B8',
 }
 
+// ── Cached pattern for dot grid ───────────────────────────
+var cachedDotPattern = null
+var cachedDotColor   = null
+
+function getDotPattern(ctx) {
+  var color = window.getComputedStyle(ctx.canvas).getPropertyValue('--border-subtle') || 'rgba(255,255,255,0.1)'
+  if (cachedDotPattern && cachedDotColor === color) return cachedDotPattern
+
+  var dotCanvas = document.createElement('canvas')
+  dotCanvas.width = 36; dotCanvas.height = 36
+  var dotCtx = dotCanvas.getContext('2d')
+  dotCtx.fillStyle = color
+  // Draw dot at corners of the tile to ensure seamless repeating grid
+  dotCtx.beginPath(); dotCtx.arc(0, 0, 1.2, 0, Math.PI * 2); dotCtx.fill()
+  dotCtx.beginPath(); dotCtx.arc(36, 0, 1.2, 0, Math.PI * 2); dotCtx.fill()
+  dotCtx.beginPath(); dotCtx.arc(0, 36, 1.2, 0, Math.PI * 2); dotCtx.fill()
+  dotCtx.beginPath(); dotCtx.arc(36, 36, 1.2, 0, Math.PI * 2); dotCtx.fill()
+
+  cachedDotPattern = ctx.createPattern(dotCanvas, 'repeat')
+  cachedDotColor   = color
+  return cachedDotPattern
+}
+
 // ── Domain accent colors (used for card glow) ─────────────
 var DOMAIN_ACCENTS = {
   tech:          ['var(--linear-blue)', 'var(--linear-blue)'],
@@ -111,12 +134,8 @@ function drawCardA(canvas, opts) {
   c.fillStyle = bg; c.fillRect(0, 0, W, H)
 
   // Dot grid — very subtle
-  c.fillStyle = 'var(--border-subtle)'
-  for (var xi = 0; xi <= W; xi += 36) {
-    for (var yi = 0; yi <= H; yi += 36) {
-      c.beginPath(); c.arc(xi, yi, 1.2, 0, Math.PI * 2); c.fill()
-    }
-  }
+  c.fillStyle = getDotPattern(c)
+  c.fillRect(0, 0, W, H)
 
   // Domain-specific radial glow — shifts based on domain color
   var g1 = c.createRadialGradient(W * 0.3, H * 0.4, 0, W * 0.3, H * 0.4, 480)
