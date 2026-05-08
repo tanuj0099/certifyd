@@ -65,6 +65,8 @@ import Dashboard from "./components/Dashboard.jsx";
 import MarketIntelligenceTool from "./components/MarketIntelligenceTool.jsx";
 import { AppSection } from "./components/SharedUI.jsx";
 import { MarketingFooter } from "./components/MarketingPageShell.jsx";
+import NotFound from "./pages/NotFound.jsx";
+import UserProfile from "./pages/UserProfile.jsx";
 const FAQPage = lazy(() => import("./pages/FAQ.jsx"));
 const AboutPage = lazy(() => import("./pages/About.jsx"));
 const FeaturesPage = lazy(() => import("./pages/Features.jsx"));
@@ -3105,16 +3107,8 @@ function AppRoot() {
                   path="/Privacy"
                   element={<Navigate to="/privacy" replace />}
                 />
-                <Route
-                  path="*"
-                  element={
-                    <LandingPage
-                      isDark={isDark}
-                      onEnter={() => goToApp("resume")}
-                      onNavigate={(p) => navigate(p === "home" ? "/" : "/" + p)}
-                    />
-                  }
-                />
+                <Route path="/profile" element={<UserProfile />} />
+                <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
           </motion.div>

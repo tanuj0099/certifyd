@@ -121,16 +121,16 @@ const CertAssemblyBentoGrid = () => {
   // content and does not modify the structural placement of that sidebar.
 
   return (
-    <div className="bg-gray-50 py-16 sm:py-24 lg:py-32"> {/* Global off-white background */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 text-center">
-          <h2 className="text-base font-semibold text-gray-500 tracking-wide uppercase font-mono">
+    <div style={{ background: 'var(--bg)', color: 'var(--text)', padding: '64px 0' }}>
+      <div style={{ maxWidth: '1120px', margin: '0 auto', padding: '0 24px' }}>
+        <div style={{ marginBottom: '48px', textAlign: 'center' }}>
+          <h2 style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', fontWeight: '600', color: 'var(--text-4)', letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: '8px' }}>
             // CERT_ASSEMBLY
           </h2>
-          <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <p style={{ fontSize: 'clamp(2.0rem, 4vw, 2.5rem)', fontFamily: 'var(--font-head)', fontWeight: '700', letterSpacing: '-0.04em', color: 'var(--text)' }}>
             High-Trust Enterprise Features
           </p>
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-gray-600">
+          <p style={{ maxWidth: '600px', margin: '16px auto 0', fontSize: '15px', color: 'var(--text-2)', lineHeight: '1.7', fontFamily: 'var(--font-body)' }}>
             Explore the core capabilities that power your career growth, built on a foundation of data integrity and robust architecture.
           </p>
         </div>

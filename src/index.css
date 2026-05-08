@@ -274,15 +274,20 @@
   /* ── Buttons ── */
   .btn-primary {
     background: var(--accent);
-    color: #fff; font-weight: 700;
+    color: var(--bg); font-weight: 700;
     padding: 0 26px; height: 48px; border-radius: 9999px;
-    border: 1px solid transparent;
+    border: 1px solid var(--accent);
     cursor: pointer; font-family: var(--font-body);
     font-size: 12px; letter-spacing: 0.07em; text-transform: uppercase;
     display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-    transition: opacity 160ms var(--ease-snap), transform 160ms var(--ease-snap);
+    transition: background-color 160ms var(--ease-snap), color 160ms var(--ease-snap), border-color 160ms var(--ease-snap), transform 160ms var(--ease-snap);
   }
-  .btn-primary:hover  { opacity: 0.88; transform: translateY(-1px); }
+  .btn-primary:hover  {
+    background: var(--bg);
+    color: var(--accent);
+    border-color: var(--accent);
+    transform: translateY(-1px);
+  }
   .btn-primary:active { transform: scale(0.985); }
   .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
 
@@ -294,7 +299,7 @@
     font-family: var(--font-body); display: inline-flex; align-items: center; justify-content: center; gap: 8px;
     transition: border-color 160ms var(--ease-snap), color 140ms linear, background 160ms var(--ease-snap);
   }
-  .btn-ghost:hover { border-color: var(--accent); color: var(--text); }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
 
   /* ── Slider visual ── */
   .slider-visual {

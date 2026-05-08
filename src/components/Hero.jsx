@@ -135,8 +135,8 @@ function ShareURLButton({ certName, salary, certCost, hikePercent, mode }) {
       whileTap={{ scale: 0.97 }}
       style={{
         padding: '8px 14px', borderRadius: '9px', cursor: 'pointer',
-        background: copied ? 'transparent' : 'transparent',
-        border: '1px solid ' + (copied ? 'transparent' : 'var(--border)'),
+        background: copied ? 'var(--bg)' : 'var(--bg)',
+        border: '1px solid ' + (copied ? EMERALD : 'var(--border)'),
         color: copied ? EMERALD : 'var(--text-3)',
         fontSize: '12px', fontFamily: FB, fontWeight: '600',
         display: 'flex', alignItems: 'center', gap: '5px',
@@ -1215,14 +1215,11 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
                 disabled={!canAnalyse}
                 whileHover={canAnalyse && !prefersReduced ? { y: -3, scale: 1.02 } : {}}
                 whileTap={canAnalyse && !prefersReduced ? { scale: 0.97 } : {}}
+                className="btn-primary"
                 style={{
                   width: '100%', padding: '14px 22px',
                   borderRadius: '9999px',
-                  background: cooldown > 0 ? 'transparent' : 'transparent',
-                  border: cooldown > 0 ? '1px solid var(--border)' : 'none',
-                  color: cooldown > 0 ? 'var(--text-4)' : 'white',
                   fontSize: '14px', fontWeight: '700',
-                  cursor: canAnalyse ? 'pointer' : 'not-allowed',
                   fontFamily: FH, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
                   opacity: !certName ? 0.45 : 1, letterSpacing: '-0.01em', transition: 'all 0.3s',
                   boxShadow: canAnalyse ? '0 10px 25px -5px transparent' : 'none',

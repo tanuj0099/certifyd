@@ -4,7 +4,7 @@
 
 import { motion, useMotionValue, useSpring, AnimatePresence } from 'framer-motion'
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { Menu, X, User } from 'lucide-react'
+import { Menu, X, User, LogOut } from 'lucide-react'
 import { useTheme as useThemeEngine } from '../hooks/useTheme'
 
 const F_SANS  = "'Inter', 'DM Sans', sans-serif"
@@ -20,21 +20,25 @@ const MARKETING_NAV_ITEMS = [
 ]
 
 const APP_NAV_ITEMS = [
-  { label: 'Home',           pageId: 'home'          },
-  { label: 'Dashboard',      pageId: 'app'           },
+  { label: 'Home',           pageId: 'home',       path: '/' },
+  { label: 'Market Pulse',   pageId: 'app',        path: '/tools/market' },
+  { label: 'Cert Compare',   pageId: 'compare',    path: '/tools/compare' },
 ]
 
-function NavItem({ label, pageId, isActive, onActivate, onNavigate, theme }) {
+function NavItem({ item, label, pageId, isActive, onActivate, onNavigate, theme }) {
   const [hovered, setHovered] = useState(false)
   const t = theme
 
   return (
     <a
-      href={'#' + pageId}
+      href={item?.path || '#' + pageId}
       onClick={(e) => {
         e.preventDefault()
         onActivate(pageId)
-        if (onNavigate) onNavigate(pageId)
+        if (onNavigate) {
+          if (item?.path) onNavigate(item.path)
+          else onNavigate(pageId)
+        }
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -147,7 +151,7 @@ function MobileMenuPanel({ isOpen, onClose, activeHref, onActivate, isDark, onTo
           }}
         >
           {navItems.map((item, i) => {
-            const isActive = activeHref === item.pageId
+            const isActive = activeHref === item.pageId || activeHref === item.path
             return (
               <motion.div
                 key={item.pageId}
@@ -156,11 +160,14 @@ function MobileMenuPanel({ isOpen, onClose, activeHref, onActivate, isDark, onTo
                 transition={{ delay: i * 0.04, duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               >
                 <a
-                  href={'#' + item.pageId}
+                  href={item?.path || '#' + item.pageId}
                   onClick={(e) => {
                     e.preventDefault()
                     onActivate(item.pageId)
-                    if (onNavigate) onNavigate(item.pageId)
+                    if (onNavigate) {
+                      if (item?.path) onNavigate(item.path)
+                      else onNavigate(item.pageId)
+                    }
                     onClose()
                   }}
                   style={{
@@ -195,6 +202,50 @@ function MobileMenuPanel({ isOpen, onClose, activeHref, onActivate, isDark, onTo
           >
             <ThemeToggle isDark={isDark} onToggle={onToggle} theme={t} />
           </motion.div>
+          {theme.user && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: navItems.length * 0.04 + 0.1, duration: 0.3 }}
+              style={{ padding: '8px', display: 'flex', justifyContent: 'flex-start' }}
+            >
+              <a
+                href="/profile"
+                onClick={(e) => { e.preventDefault(); if (onNavigate) onNavigate('/profile'); onClose(); }}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                  width: '100%', padding: '12px 16px', borderRadius: '12px', textDecoration: 'none',
+                  background: 'var(--accent)', color: 'var(--bg)', cursor: 'pointer', fontFamily: F_SANS, fontSize: '15px', fontWeight: '600'
+                }}
+              >
+                <User size={15} />
+                My Profile
+              </a>
+            </motion.div>
+          )}
+          {!theme.user && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: navItems.length * 0.04 + 0.1, duration: 0.3 }}
+              style={{ padding: '8px', display: 'flex', justifyContent: 'flex-start' }}
+            >
+              <button
+                onClick={(e) => {
+                  e.preventDefault()
+                  if (theme.onSignIn) theme.onSignIn()
+                  onClose()
+                }}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                  width: '100%', padding: '12px 16px', borderRadius: '12px', textDecoration: 'none',
+                  background: 'var(--accent)', color: 'var(--bg)', cursor: 'pointer', border: 'none', fontFamily: F_SANS, fontSize: '15px', fontWeight: '600'
+                }}
+              >
+                Sign In
+              </button>
+            </motion.div>
+          )}
         </motion.div>
       )}
     </AnimatePresence>
@@ -326,9 +377,10 @@ export default function DynamicIslandNav({ isDark, toggleTheme, onNavigate, curr
                 {activeNavItems.map((item) => (
                   <NavItem
                     key={item.pageId}
+                    item={item}
                     label={item.label}
                     pageId={item.pageId}
-                    isActive={activeHref === item.pageId}
+                    isActive={activeHref === item.pageId || activeHref === item.path}
                     onActivate={setActiveHref}
                     onNavigate={onNavigate}
                     theme={theme}
@@ -341,27 +393,66 @@ export default function DynamicIslandNav({ isDark, toggleTheme, onNavigate, curr
               </div>
               <div style={{ width: '1px', height: '20px', background: borderColor, flexShrink: 0, margin: '0 4px' }} />
               <div style={{ padding: '0 4px', flexShrink: 0 }}>
-                <button
-                  onClick={user ? onSignOut : onSignIn}
-                  style={{
-                    display: 'flex', alignItems: 'center', gap: '6px',
-                    height: '32px', padding: '0 14px', borderRadius: '16px',
-                    background: user ? 'transparent' : '#F4F5F8',
-                    border: '1px solid ' + borderColor,
-                    color: user ? theme.text : '#222326',
-                    fontFamily: F_SANS, fontSize: '12px', fontWeight: '600',
-                    cursor: 'pointer', transition: 'all 0.15s', outline: 'none'
-                  }}
-                  onMouseEnter={(e) => {
-                    if(!user) e.currentTarget.style.transform = 'scale(1.02)'
-                  }}
-                  onMouseLeave={(e) => {
-                    if(!user) e.currentTarget.style.transform = 'scale(1)'
-                  }}
-                >
-                  <User size={13} strokeWidth={2.5} />
-                  {user ? 'Sign Out' : 'Sign In'}
-                </button>
+                {user ? (
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <a
+                      href="/profile"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (onNavigate) onNavigate('profile');
+                      }}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: '6px',
+                        height: '32px', padding: '0 14px', borderRadius: '16px',
+                        background: 'transparent',
+                        border: '1px solid ' + borderColor,
+                        color: theme.text, textDecoration: 'none',
+                        fontFamily: F_SANS, fontSize: '12px', fontWeight: '600',
+                        cursor: 'pointer', transition: 'all 0.15s', outline: 'none'
+                      }}
+                    >
+                      <User size={13} strokeWidth={2.5} />
+                      Profile
+                    </a>
+                    <button
+                      onClick={theme.onSignOut || onSignOut}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: '6px',
+                        height: '32px', padding: '0 14px', borderRadius: '16px',
+                        background: 'transparent',
+                        border: '1px solid ' + borderColor,
+                        color: theme.text2,
+                        fontFamily: F_SANS, fontSize: '12px', fontWeight: '600',
+                        cursor: 'pointer', transition: 'all 0.15s', outline: 'none'
+                      }}
+                    >
+                      <LogOut size={13} strokeWidth={2.5} />
+                      Sign Out
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={theme.onSignIn || onSignIn}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: '6px',
+                      height: '32px', padding: '0 14px', borderRadius: '16px',
+                      background: 'var(--accent)',
+                      border: '1px solid var(--accent)',
+                      color: 'var(--bg)',
+                      fontFamily: F_SANS, fontSize: '12px', fontWeight: '600',
+                      cursor: 'pointer', transition: 'all 0.15s', outline: 'none'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'scale(1.02)'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)'
+                    }}
+                  >
+                    <User size={13} strokeWidth={2.5} />
+                    Sign In
+                  </button>
+                )}
               </div>
             </>
           )}
@@ -374,7 +465,7 @@ export default function DynamicIslandNav({ isDark, toggleTheme, onNavigate, curr
               </span>
               <div style={{ width: '1px', height: '16px', background: borderColor }} />
               <button
-                onClick={user ? onSignOut : onSignIn}
+                onClick={user ? (theme.onSignOut || onSignOut) : (theme.onSignIn || onSignIn)}
                 style={{
                   width: '32px', height: '32px', borderRadius: '50%',
                   background: user ? (isDark ? 'var(--border-subtle)' : 'transparent') : 'transparent',
@@ -416,13 +507,13 @@ export default function DynamicIslandNav({ isDark, toggleTheme, onNavigate, curr
 
       <MobileMenuPanel
         isOpen={isMobile && menuOpen}
+        theme={{...theme, user, onSignIn}}
         onClose={() => setMenuOpen(false)}
         activeHref={activeHref}
         onActivate={setActiveHref}
         isDark={isDark}
         onToggle={toggleTheme}
         onNavigate={onNavigate}
-        theme={theme}
         navItems={activeNavItems}
       />
     </>

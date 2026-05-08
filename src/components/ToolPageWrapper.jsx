@@ -56,7 +56,7 @@ export default function ToolPageWrapper({
           </motion.div>
         </div>
 
-        <div style={{ maxWidth: '1120px', margin: '0 auto', padding: '0 24px 0' }}>
+        <div style={{ maxWidth: '1120px', margin: '0 auto', padding: '0 24px 64px' }}>
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}

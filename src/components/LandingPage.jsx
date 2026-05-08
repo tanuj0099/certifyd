@@ -82,19 +82,19 @@ function PillBtn({ onClick = () => {}, children, large, primary = false }) {
         padding: large ? '0 30px' : '0 22px',
         height: large ? '54px' : '44px',
         background: primary 
-          ? (h ? 'var(--accent-light, #4A8C6A)' : 'var(--accent, #2D6A4F)')
+          ? (h ? 'var(--bg)' : 'var(--accent)')
           : (d
             ? `transparent`
             : `transparent`),
         border: primary 
-          ? `1px solid var(--accent-light, #4A8C6A)`
+          ? `1px solid var(--accent)`
           : `1px solid ${d ? `transparent` : `transparent`}`,
         borderRadius: '9999px',
         fontSize: large ? '12px' : '11px',
         fontFamily: F_SANS, fontWeight: '600',
         letterSpacing: '0.07em', textTransform: 'uppercase',
         cursor: 'pointer',
-        color: primary ? '#FFFFFF' : (d ? C.goldL : C.gold),
+        color: primary ? (h ? 'var(--accent)' : 'var(--bg)') : (d ? C.goldL : C.gold),
         boxShadow: primary 
           ? `0 4px 14px transparent`
           : (d
