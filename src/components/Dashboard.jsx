@@ -37,7 +37,7 @@ export default function Dashboard() {
   }, [])
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)', padding: '32px', fontFamily: 'var(--font-sans)' }}>
+    <div style={{ minHeight: '100vh', background: 'transparent', color: 'var(--text)', padding: '32px', fontFamily: 'var(--font-sans)' }}>
       <div style={{ maxWidth: '1152px', margin: '0 auto 48px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderBottom: '1px solid var(--border)', paddingBottom: '24px' }}>
         <div>
           <h1 style={{ fontSize: '2.25rem', fontWeight: '700', letterSpacing: '-0.04em', marginBottom: '8px' }}>Market Pulse</h1>
@@ -61,7 +61,7 @@ export default function Dashboard() {
             .map((_, i) => (
               <div
                 key={i}
-                style={{ height: '160px', border: '1px solid var(--border)', borderRadius: '12px', background: 'var(--surface)' }}
+                style={{ height: '160px', border: 'none', borderRadius: '12px', background: 'transparent' }}
                 className="animate-pulse"
               />
             ))
@@ -70,11 +70,11 @@ export default function Dashboard() {
             <div
               key={job.id}
               style={{
-                border: '1px solid var(--border)',
+                border: 'none',
                 borderRadius: '12px',
                 padding: '24px',
                 transition: 'border-color 0.3s',
-                background: 'var(--surface)',
+                background: 'transparent',
               }}
               onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--border-mid)'}
               onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--border)'}

@@ -294,7 +294,7 @@ var CleanLoader = function () {
   }, []) // stable — LOADER_STEPS is module-level constant
 
   return (
-    <div className="glass" style={{ padding: '22px', borderRadius: '13px' }}>
+    <div style={{ padding: '22px', borderRadius: '13px', background: 'transparent', border: 'none' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '18px' }}>
         <motion.div
           animate={{ rotate: 360 }}
@@ -1043,7 +1043,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
             transition={{ duration: 0.22 }} style={{ overflow: 'hidden' }}
           >
             <div className="glass" style={{ padding: '16px', borderRadius: '11px' }}>
-              <div className="micro-label" style={{ color: 'var(--text-4)', marginBottom: '14px' }}>
+              <div style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '14px' }}>
                 Tag skills you already have — pick at least 3
                 {pickedSkills.length > 0 && <span style={{ color: EMERALD, marginLeft: '8px' }}>{pickedSkills.length} selected</span>}
               </div>
@@ -1113,7 +1113,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
             transition={{ duration: 0.2 }}
             style={{ overflow: 'hidden' }}
           >
-            <div style={{
+            <div style={{ /* Removed glass class */
               borderRadius: '11px',
               border: '1.5px dashed ' + (dragging ? PICTON : hasFile ? EMERALD : 'var(--border)'),
               background: dragging ? PICTON + '08' : hasFile ? EMERALD + '06' : 'transparent',

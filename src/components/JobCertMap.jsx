@@ -39,7 +39,7 @@ const DataBadge = ({ verified, source }) => (
 const GovtCard = ({ org }) => {
   const [open, setOpen] = useState(false)
   return (
-    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={T}
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={T} /* Removed glass-border */
       style={{ borderRadius: '14px', background: 'transparent', border: '1px solid var(--glass-border)', overflow: 'hidden', marginBottom: '12px' }}>
 
       {/* Header */}
@@ -135,7 +135,7 @@ const GovtCard = ({ org }) => {
 const PrivateCard = ({ company }) => {
   const [open, setOpen] = useState(false)
   return (
-    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={T}
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={T} /* Removed glass-border */
       style={{ borderRadius: '14px', background: 'transparent', border: '1px solid var(--glass-border)', overflow: 'hidden', marginBottom: '12px' }}>
 
       {/* Header */}

@@ -136,7 +136,7 @@ function HikeVerifier({ certName, projectedHike, onClose }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={SPRING}
-      style={{ background: 'transparent', border: '1px solid transparent', borderRadius: '14px', overflow: 'hidden', marginTop: '14px', boxShadow: 'none' }}
+      style={{ background: 'transparent', border: 'none', borderRadius: '14px', overflow: 'hidden', marginTop: '14px', boxShadow: 'none' }}
     >
       {/* ── Header ─────────────────────────────────────── */}
       <div style={{ padding: '14px 18px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '10px' }}>

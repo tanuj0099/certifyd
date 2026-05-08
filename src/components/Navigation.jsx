@@ -11,7 +11,7 @@ const Navigation = () => {
 
   const handleSignIn = async () => {
     setSigningIn(true)
-    try { await signInGoogle() } catch {}
+    try { await signInGoogle() } catch { }
     setSigningIn(false)
   }
 
@@ -33,7 +33,7 @@ const Navigation = () => {
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div style={{
               width: '36px', height: '36px',
-              background: 'transparent, #4F46E5)',
+              background: 'var(--accent)',
               borderRadius: '10px',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
@@ -51,7 +51,7 @@ const Navigation = () => {
                   {user.photoURL ? (
                     <img src={user.photoURL} alt="" style={{ width: '30px', height: '30px', borderRadius: '50%', border: '2px solid transparent' }} />
                   ) : (
-                    <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: 'transparent, var(--linear-blue))', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <User size={14} color="white" />
                     </div>
                   )}
@@ -75,7 +75,7 @@ const Navigation = () => {
                   style={{
                     display: 'flex', alignItems: 'center', gap: '7px',
                     padding: '8px 18px',
-                    background: 'transparent, #4F46E5)',
+                    background: 'var(--accent)',
                     border: 'none', borderRadius: '10px', color: 'white',
                     fontSize: '14px', fontWeight: '600', cursor: 'pointer',
                     opacity: signingIn ? 0.7 : 1,

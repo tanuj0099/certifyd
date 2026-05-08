@@ -232,8 +232,8 @@ const TermsPage = function () {
           return (
             <div
               key={i}
-              style={{ 
-                padding: "18px 20px", 
+              style={{
+                padding: "18px 20px",
                 marginBottom: "10px",
                 background: "#FFFFFF",
                 border: "1px solid #E5E7EB"
@@ -323,8 +323,8 @@ const PrivacyPage = function () {
           return (
             <div
               key={i}
-              style={{ 
-                padding: "18px 20px", 
+              style={{
+                padding: "18px 20px",
                 marginBottom: "10px",
                 background: "#FFFFFF",
                 border: "1px solid #E5E7EB"
@@ -407,8 +407,8 @@ const CookiesPage = function () {
           return (
             <div
               key={i}
-              style={{ 
-                padding: "18px 20px", 
+              style={{
+                padding: "18px 20px",
                 marginBottom: "10px",
                 background: "#FFFFFF",
                 border: "1px solid #E5E7EB"
@@ -1064,8 +1064,8 @@ const _OldContactPage = function () {
         </p>
         {sent ? (
           <div
-            style={{ 
-              padding: "48px", 
+            style={{
+              padding: "48px",
               textAlign: "center",
               background: "#FFFFFF",
               border: "1px solid #E5E7EB"
@@ -1096,7 +1096,7 @@ const _OldContactPage = function () {
             </p>
           </div>
         ) : (
-          <div style={{ 
+          <div style={{
             padding: "clamp(20px,4vw,32px)",
             background: "#FFFFFF",
             border: "1px solid #E5E7EB"
@@ -1931,7 +1931,7 @@ const AppPage = function ({ onCertSelected }) {
       style={{
         paddingTop: NAV_H + "px",
         minHeight: "100vh",
-        background: "#F9FAFB",
+        background: "transparent",
         position: "relative",
       }}
     >
@@ -1942,8 +1942,8 @@ const AppPage = function ({ onCertSelected }) {
             position: "sticky",
             top: 0,
             zIndex: 100,
-            borderBottom: "1px solid #E5E7EB",
-            background: "#F9FAFB/80",
+            borderBottom: "1px solid var(--border)",
+            background: "transparent",
             backdropFilter: "blur(12px)",
             WebkitBackdropFilter: "blur(12px)",
           }}
@@ -1982,7 +1982,7 @@ const AppPage = function ({ onCertSelected }) {
                   fontWeight: "700",
                   fontSize: "13px",
                   letterSpacing: "0.05em",
-                  color: "#111827",
+                  color: "var(--text)",
                   textTransform: "uppercase",
                 }}
               >
@@ -2091,12 +2091,12 @@ const AppPage = function ({ onCertSelected }) {
                                 borderRadius: "100px",
                                 border: active
                                   ? "1px solid var(--border-accent)"
-                                  : "1px solid #E5E7EB",
+                                  : "1px solid var(--border)",
                                 background: active
-                                  ? "#FFFFFF"
-                                  : "#FFFFFF",
+                                  ? "var(--surface)"
+                                  : "transparent",
                                 color: active
-                                  ? "#10B981"
+                                  ? "var(--accent)"
                                   : isCompleted
                                     ? "var(--text-3)"
                                     : "var(--text-4)",
@@ -2114,11 +2114,12 @@ const AppPage = function ({ onCertSelected }) {
                                   height: "24px",
                                   borderRadius: "50%",
                                   background: active
-                                    ? "#10B981"
-                                    : "#F9FAFB",
+                                    ? "var(--accent)"
+                                    : "transparent",
+                                  border: active ? "none" : "1px solid var(--border)",
                                   color:
                                     active
-                                      ? "#FFF"
+                                      ? "var(--bg)"
                                       : isCompleted
                                         ? "var(--text-2)"
                                         : "var(--text-4)",
@@ -2161,15 +2162,15 @@ const AppPage = function ({ onCertSelected }) {
                     transition={T}
                   >
                     {activeTab === "dashboard" ? (
-                    <Dashboard />
-                  ) : null}
+                      <Dashboard />
+                    ) : null}
 
-                  {activeTab === "resume" ? (
+                    {activeTab === "resume" ? (
                       <div
-                        style={{ 
+                        style={{
                           padding: "clamp(16px,3vw,28px)",
-                          background: "#FFFFFF",
-                          border: "1px solid #E5E7EB"
+                          background: "transparent",
+                          border: "none"
                         }}
                       >
                         <ResumeAnalyzer
@@ -2218,9 +2219,9 @@ const AppPage = function ({ onCertSelected }) {
                               gap: "9px",
                               padding: "13px 24px",
                               borderRadius: "12px",
-                              background: "#10B981",
-                              border: "1px solid #10B981",
-                              color: "#FFFFFF",
+                              background: "var(--accent)",
+                              border: "1px solid var(--accent)",
+                              color: "var(--bg)",
                               fontSize: "14px",
                               fontFamily: FH,
                               fontWeight: "700",
@@ -2239,10 +2240,10 @@ const AppPage = function ({ onCertSelected }) {
                     {activeTab === "heatmap" ? (
                       <div>
                         <div
-                          style={{ 
+                          style={{
                             padding: "clamp(16px,3vw,28px)",
-                            background: "#FFFFFF",
-                            border: "1px solid #E5E7EB"
+                            background: "transparent",
+                            border: "none"
                           }}
                         >
                           <Heatmap
@@ -2270,8 +2271,8 @@ const AppPage = function ({ onCertSelected }) {
                               gap: "7px",
                               padding: "11px 18px",
                               borderRadius: "10px",
-                              background: "#FFFFFF",
-                              border: "1px solid #E5E7EB",
+                              background: "transparent",
+                              border: "1px solid var(--border)",
                               color: "var(--text-4)",
                               fontSize: "13px",
                               fontFamily: FH,
@@ -2287,10 +2288,10 @@ const AppPage = function ({ onCertSelected }) {
 
                     {activeTab === "compare" ? (
                       <div
-                        style={{ 
+                        style={{
                           padding: "clamp(16px,3vw,28px)",
-                          background: "#FFFFFF",
-                          border: "1px solid #E5E7EB"
+                          background: "transparent",
+                          border: "none"
                         }}
                       >
                         <CertCompare
@@ -2302,10 +2303,10 @@ const AppPage = function ({ onCertSelected }) {
 
                     {activeTab === "simulate" ? (
                       <div
-                        style={{ 
+                        style={{
                           padding: "clamp(16px,3vw,28px)",
-                          background: "#FFFFFF",
-                          border: "1px solid #E5E7EB"
+                          background: "transparent",
+                          border: "none"
                         }}
                       >
                         <CareerSimulator
@@ -2316,10 +2317,10 @@ const AppPage = function ({ onCertSelected }) {
 
                     {activeTab === "jobmap" ? (
                       <div
-                        style={{ 
+                        style={{
                           padding: "clamp(16px,3vw,28px)",
-                          background: "#FFFFFF",
-                          border: "1px solid #E5E7EB"
+                          background: "transparent",
+                          border: "none"
                         }}
                       >
                         <JobCertMap />
@@ -2328,10 +2329,10 @@ const AppPage = function ({ onCertSelected }) {
 
                     {activeTab === "college" ? (
                       <div
-                        style={{ 
+                        style={{
                           padding: "clamp(16px,3vw,28px)",
-                          background: "#FFFFFF",
-                          border: "1px solid #E5E7EB"
+                          background: "transparent",
+                          border: "none"
                         }}
                       >
                         <CollegeVsCorporate />
@@ -2340,10 +2341,10 @@ const AppPage = function ({ onCertSelected }) {
 
                     {activeTab === "hikeverifier" ? (
                       <div
-                        style={{ 
+                        style={{
                           padding: "clamp(16px,3vw,28px)",
-                          background: "#FFFFFF",
-                          border: "1px solid #E5E7EB"
+                          background: "transparent",
+                          border: "none"
                         }}
                       >
                         <HikeVerifier prefilledCert={prefilledCert} />
@@ -2368,7 +2369,7 @@ const AppPage = function ({ onCertSelected }) {
                       style={{
                         flex: 1,
                         height: "1px",
-                        background: "#E5E7EB",
+                        background: "var(--border)",
                       }}
                     />
                     <span
@@ -2385,7 +2386,7 @@ const AppPage = function ({ onCertSelected }) {
                       style={{
                         flex: 1,
                         height: "1px",
-                        background: "#E5E7EB",
+                        background: "var(--border)",
                       }}
                     />
                   </div>
@@ -2414,11 +2415,11 @@ const AppPage = function ({ onCertSelected }) {
                             borderRadius: "100px",
                             border: active
                               ? "1px solid var(--border)"
-                              : "1px solid #E5E7EB",
+                              : "1px solid var(--border)",
                             background: active
-                              ? "#FFFFFF"
-                              : "#FFFFFF",
-                            color: active ? "#111827" : "#6B7280",
+                              ? "var(--surface)"
+                              : "transparent",
+                            color: active ? "var(--text)" : "var(--text-4)",
                             fontSize: "12px",
                             fontWeight: active ? "600" : "500",
                             cursor: "pointer",
@@ -2427,12 +2428,12 @@ const AppPage = function ({ onCertSelected }) {
                           }}
                           onMouseEnter={(e) => {
                             if (!active)
-                              e.currentTarget.style.color = "#111827";
-                            e.currentTarget.style.background = "#F9FAFB";
+                              e.currentTarget.style.color = "var(--text)";
+                            e.currentTarget.style.background = "var(--surface)";
                           }}
                           onMouseLeave={(e) => {
                             if (!active)
-                              e.currentTarget.style.color = "#6B7280";
+                              e.currentTarget.style.color = "var(--text-4)";
                             e.currentTarget.style.background = "transparent";
                           }}
                         >

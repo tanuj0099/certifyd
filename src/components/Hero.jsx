@@ -931,7 +931,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
 
       {/* ── Market Pulse Ticker ─────────────────────────── */}
       <div style={{ marginBottom: 18, padding: '12px 16px', borderRadius: 12, border: '1px solid var(--border-subtle)', background: 'var(--border-subtle)' }}>
-        <MarketPulseTicker />
+        <MarketPulseTicker compact={true} />
       </div>
 
       {/* ── Personalisation banner ─────────────────────── */}
@@ -1027,7 +1027,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
       </AnimatePresence>
 
       {/* ── Sliders ─────────────────────────────────────── */}
-      <div className="glass" style={{ marginBottom: '20px', padding: '20px 18px', borderRadius: '13px' }}>
+      <div style={{ marginBottom: '20px', padding: '20px 18px', borderRadius: '13px', background: 'transparent', border: 'none' }}>
 
         {isStudent ? (
           <div style={{ marginBottom: '18px', padding: '11px 13px', borderRadius: '9px', background: 'transparent', border: '1px solid transparent' }}>
@@ -1110,17 +1110,17 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
           {isStudent ? (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '8px', marginBottom: '12px' }}>
               <StatCard label="Target Offer" value="₹4.8L+" color={VIOLET} delay={0} />
-              <StatCard label="Investment" value={'₹' + certCost + 'L'} color={AMBER} delay={0.05} />
+              <StatCard label="Investment" value={'₹' + certCost + 'L'} color={AMBER} delay={0.05} /> {/* Changed color to AMBER */}
             </div>
           ) : (
             <>
               {/* ── Financial Hero Metrics ──────────────────────── */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '8px', marginBottom: '12px' }}>
-                <div className="glass" style={{ padding: '24px 16px', textAlign: 'center', borderColor: 'var(--border-accent)', background: EMERALD + '08', minHeight: 110 }}>
+                <div style={{ padding: '24px 16px', textAlign: 'center', borderColor: 'var(--border-accent)', background: 'transparent', minHeight: 110, border: 'none' }}>
                   <div className="micro-label" style={{ color: 'var(--text-4)', marginBottom: '8px' }}>5-Yr Net Gain</div>
                   <RollNumber value={roi.fiveYearGainL} prefix="₹" suffix="L" color={EMERALD} />
                 </div>
-                <div className="glass" style={{ padding: '24px 16px', textAlign: 'center', borderColor: roi.roiPercent > 200 ? 'var(--border-accent)' : 'var(--border)', background: roi.roiPercent > 200 ? EMERALD + '08' : VIOLET + '08', minHeight: 110 }}>
+                <div style={{ padding: '24px 16px', textAlign: 'center', borderColor: roi.roiPercent > 200 ? 'var(--border-accent)' : 'var(--border)', background: 'transparent', minHeight: 110, border: 'none' }}>
                   <div className="micro-label" style={{ color: 'var(--text-4)', marginBottom: '8px' }}>Projected ROI</div>
                   <RollNumber value={roi.roiPercent} suffix="%" color={roi.roiPercent > 200 ? EMERALD : VIOLET} />
                 </div>
@@ -1171,7 +1171,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
       </AnimatePresence>
 
       {/* ── Chart ──────────────────────────────────────── */}
-      {!isStudent && roi.chartData && roi.chartData.length > 0 ? (
+      {!isStudent && roi.chartData && roi.chartData.length > 0 ? ( /* Removed glass class */
         <div className="glass" style={{ marginBottom: '20px', marginTop: '16px', padding: '16px', borderRadius: '13px' }}>
           <div style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '10px' }}>CUMULATIVE GAIN — 24 MONTHS</div>
           <ResponsiveContainer width="100%" height={150}>
@@ -1309,4 +1309,3 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
 }
 
 export default Hero
-

@@ -8,8 +8,8 @@ const F_MONO = "'Commit Mono', 'JetBrains Mono', monospace"
 const F_BODY = "'Inter', sans-serif"
 const T = { duration: 0.28, ease: [0.4, 0, 0.2, 1] }
 const EMERALD = 'var(--linear-blue)'
-const VIOLET  = 'var(--linear-blue)'
-const AMBER   = 'var(--cool-grey)'
+const VIOLET = 'var(--linear-blue)'
+const AMBER = 'var(--cool-grey)'
 
 // ── Build a structured JSON prompt ────────────────────────
 const buildCasePrompt = ({ certName, salary, certCost, hikePercent, name, company, role }) => `
@@ -77,13 +77,13 @@ function buildCopyText(bcase, certName, name) {
 }
 
 const PitchBoss = ({ certName, salary, certCost, hikePercent, name, mode }) => {
-  const [open,    setOpen]    = useState(false)
+  const [open, setOpen] = useState(false)
   const [company, setCompany] = useState('')
-  const [role,    setRole]    = useState('')
-  const [bcase,   setBcase]   = useState(null)
+  const [role, setRole] = useState('')
+  const [bcase, setBcase] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [copied,  setCopied]  = useState(false)
-  const [error,   setError]   = useState(null)
+  const [copied, setCopied] = useState(false)
+  const [error, setError] = useState(null)
 
   // Only show for professional track
   if (mode === 'student') return null
@@ -131,7 +131,7 @@ const PitchBoss = ({ certName, salary, certCost, hikePercent, name, mode }) => {
             transition={T} style={{ overflow: 'hidden' }}
           >
             <div style={{ padding: '16px', marginTop: '8px', borderRadius: '12px', background: 'transparent', border: '1px solid transparent' }}>
-
+              {/* Removed glass-border */}
               <div style={{ fontFamily: F_MONO, fontSize: '9px', color: VIOLET, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <Briefcase size={9} /> REIMBURSEMENT BUSINESS CASE · {certName?.toUpperCase()}
               </div>
@@ -152,7 +152,7 @@ const PitchBoss = ({ certName, salary, certCost, hikePercent, name, mode }) => {
                     placeholder="e.g. Infosys"
                     style={{ width: '100%', padding: '8px 10px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)', fontSize: '13px', fontFamily: F_BODY, outline: 'none', boxSizing: 'border-box' }}
                     onFocus={e => e.target.style.borderColor = VIOLET + '55'}
-                    onBlur={e  => e.target.style.borderColor = 'var(--border)'}
+                    onBlur={e => e.target.style.borderColor = 'var(--border)'}
                   />
                 </div>
                 <div>
@@ -162,7 +162,7 @@ const PitchBoss = ({ certName, salary, certCost, hikePercent, name, mode }) => {
                     placeholder="e.g. Senior Dev"
                     style={{ width: '100%', padding: '8px 10px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)', fontSize: '13px', fontFamily: F_BODY, outline: 'none', boxSizing: 'border-box' }}
                     onFocus={e => e.target.style.borderColor = VIOLET + '55'}
-                    onBlur={e  => e.target.style.borderColor = 'var(--border)'}
+                    onBlur={e => e.target.style.borderColor = 'var(--border)'}
                   />
                 </div>
               </div>
@@ -200,11 +200,11 @@ const PitchBoss = ({ certName, salary, certCost, hikePercent, name, mode }) => {
                   </div>
 
                   {/* Bullets */}
-                  <BulletRow icon="—" label="Cost"            value={bcase.cost}         color={AMBER}   />
-                  <BulletRow icon="—" label="Company Benefit" value={bcase.companyGain}  color={VIOLET}  />
-                  <BulletRow icon="—" label="Time Commitment" value={bcase.timeCommit}   color="#94A3B8" />
-                  <BulletRow icon="—" label="ROI"             value={bcase.roiStatement} color={EMERALD} />
-                  <BulletRow icon="—" label="Market Signal"   value={bcase.demandNote}   color={AMBER}   />
+                  <BulletRow icon="—" label="Cost" value={bcase.cost} color={AMBER} />
+                  <BulletRow icon="—" label="Company Benefit" value={bcase.companyGain} color={VIOLET} />
+                  <BulletRow icon="—" label="Time Commitment" value={bcase.timeCommit} color="#94A3B8" />
+                  <BulletRow icon="—" label="ROI" value={bcase.roiStatement} color={EMERALD} />
+                  <BulletRow icon="—" label="Market Signal" value={bcase.demandNote} color={AMBER} />
 
                   {/* Actions */}
                   <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>

@@ -17,7 +17,7 @@ function useLastSync() {
   const [label, setLabel] = useState('14 min ago');
   useEffect(() => {
     const anchors = [
-      '2 min ago','8 min ago','14 min ago','21 min ago','37 min ago',
+      '2 min ago', '8 min ago', '14 min ago', '21 min ago', '37 min ago',
     ];
     let i = 2;
     const t = setInterval(() => {
@@ -31,22 +31,22 @@ function useLastSync() {
 
 // ─── ticker items ────────────────────────────────────────────────────────────
 const ITEMS = [
-  { label: 'AWS-SAA',        value: '+28% YoY',  positive: true  },
-  { label: 'PMP',            value: '₹3.2L avg',  positive: true  },
-  { label: 'CISSP',          value: '+41% YoY',  positive: true  },
-  { label: 'Google Data',    value: '↑ Very High demand' },
-  { label: 'CFA L1',         value: '+19% YoY',  positive: true  },
-  { label: 'CPA',            value: '₹8.5L avg',  positive: true  },
-  { label: 'CISA',           value: '+33% YoY',  positive: true  },
-  { label: 'Scrum Master',   value: '↓ Saturating', positive: false },
-  { label: 'Azure AZ-900',   value: '+22% YoY',  positive: true  },
-  { label: 'CA Inter',       value: '₹5.1L avg',  positive: true  },
+  { label: 'AWS-SAA', value: '+28% YoY', positive: true },
+  { label: 'PMP', value: '₹3.2L avg', positive: true },
+  { label: 'CISSP', value: '+41% YoY', positive: true },
+  { label: 'Google Data', value: '↑ Very High demand' },
+  { label: 'CFA L1', value: '+19% YoY', positive: true },
+  { label: 'CPA', value: '₹8.5L avg', positive: true },
+  { label: 'CISA', value: '+33% YoY', positive: true },
+  { label: 'Scrum Master', value: '↓ Saturating', positive: false },
+  { label: 'Azure AZ-900', value: '+22% YoY', positive: true },
+  { label: 'CA Inter', value: '₹5.1L avg', positive: true },
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════
 export default function MarketPulseTicker({ compact = false }) {
-  const jobCount  = useLiveCounter(4200);
-  const lastSync  = useLastSync();
+  const jobCount = useLiveCounter(4200);
+  const lastSync = useLastSync();
 
   const F_MONO = "'JetBrains Mono','IBM Plex Mono',monospace";
 
@@ -89,7 +89,7 @@ export default function MarketPulseTicker({ compact = false }) {
         <div style={{
           overflow: 'hidden', width: '100%',
           borderTop: '1px solid var(--border-subtle)',
-          paddingTop: 6, marginTop: 4,
+          paddingTop: 6, marginTop: 4, /* Removed maskImage and WebkitMaskImage */
           maskImage: 'transparent',
           WebkitMaskImage: 'transparent',
         }}>
