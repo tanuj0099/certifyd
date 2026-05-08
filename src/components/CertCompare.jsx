@@ -25,15 +25,11 @@ function demandScore(d) {
 function CertSelector({ value, onChange, label, color, certifications, domains }) {
   var [open,   setOpen]   = useState(false)
   var [domain, setDomain] = useState('all')
-  // FIX: ref for outside-click detection
   var wrapRef = useRef(null)
 
   var filtered = certifications.filter(function(c) { return domain === 'all' || c.domain === domain })
   var selected = certifications.find(function(c) { return c.name === value })
 
-  // FIX: close dropdown on outside click.
-  // Previously the dropdown stayed open when user clicked elsewhere — broke focus and created
-  // confusing state where two dropdowns could be open simultaneously.
   useEffect(function() {
     if (!open) return
     function handleOutside(e) {
