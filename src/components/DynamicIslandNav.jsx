@@ -151,7 +151,7 @@ function MobileMenuPanel({ isOpen, onClose, activeHref, onActivate, isDark, onTo
           }}
         >
           {navItems.map((item, i) => {
-            const isActive = activeHref === item.pageId || activeHref === item.path
+            const isActive = activeHref === item.pageId
             return (
               <motion.div
                 key={item.pageId}
@@ -160,14 +160,11 @@ function MobileMenuPanel({ isOpen, onClose, activeHref, onActivate, isDark, onTo
                 transition={{ delay: i * 0.04, duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               >
                 <a
-                  href={item?.path || '#' + item.pageId}
+                  href={'#' + item.pageId}
                   onClick={(e) => {
                     e.preventDefault()
                     onActivate(item.pageId)
-                    if (onNavigate) {
-                      if (item?.path) onNavigate(item.path)
-                      else onNavigate(item.pageId)
-                    }
+                    if (onNavigate) onNavigate(item.pageId)
                     onClose()
                   }}
                   style={{
@@ -393,66 +390,27 @@ export default function DynamicIslandNav({ isDark, toggleTheme, onNavigate, curr
               </div>
               <div style={{ width: '1px', height: '20px', background: borderColor, flexShrink: 0, margin: '0 4px' }} />
               <div style={{ padding: '0 4px', flexShrink: 0 }}>
-                {user ? (
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <a
-                      href="/profile"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        if (onNavigate) onNavigate('profile');
-                      }}
-                      style={{
-                        display: 'flex', alignItems: 'center', gap: '6px',
-                        height: '32px', padding: '0 14px', borderRadius: '16px',
-                        background: 'transparent',
-                        border: '1px solid ' + borderColor,
-                        color: theme.text, textDecoration: 'none',
-                        fontFamily: F_SANS, fontSize: '12px', fontWeight: '600',
-                        cursor: 'pointer', transition: 'all 0.15s', outline: 'none'
-                      }}
-                    >
-                      <User size={13} strokeWidth={2.5} />
-                      Profile
-                    </a>
-                    <button
-                      onClick={theme.onSignOut || onSignOut}
-                      style={{
-                        display: 'flex', alignItems: 'center', gap: '6px',
-                        height: '32px', padding: '0 14px', borderRadius: '16px',
-                        background: 'transparent',
-                        border: '1px solid ' + borderColor,
-                        color: theme.text2,
-                        fontFamily: F_SANS, fontSize: '12px', fontWeight: '600',
-                        cursor: 'pointer', transition: 'all 0.15s', outline: 'none'
-                      }}
-                    >
-                      <LogOut size={13} strokeWidth={2.5} />
-                      Sign Out
-                    </button>
-                  </div>
-                ) : (
-                  <button
-                    onClick={theme.onSignIn || onSignIn}
-                    style={{
-                      display: 'flex', alignItems: 'center', gap: '6px',
-                      height: '32px', padding: '0 14px', borderRadius: '16px',
-                      background: 'var(--accent)',
-                      border: '1px solid var(--accent)',
-                      color: 'var(--bg)',
-                      fontFamily: F_SANS, fontSize: '12px', fontWeight: '600',
-                      cursor: 'pointer', transition: 'all 0.15s', outline: 'none'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'scale(1.02)'
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'scale(1)'
-                    }}
-                  >
-                    <User size={13} strokeWidth={2.5} />
-                    Sign In
-                  </button>
-                )}
+                <button
+                  onClick={user ? onSignOut : onSignIn}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: '6px',
+                    height: '32px', padding: '0 14px', borderRadius: '16px',
+                    background: user ? 'transparent' : '#F4F5F8',
+                    border: '1px solid ' + borderColor,
+                    color: user ? theme.text : '#222326',
+                    fontFamily: F_SANS, fontSize: '12px', fontWeight: '600',
+                    cursor: 'pointer', transition: 'all 0.15s', outline: 'none'
+                  }}
+                  onMouseEnter={(e) => {
+                    if(!user) e.currentTarget.style.transform = 'scale(1.02)'
+                  }}
+                  onMouseLeave={(e) => {
+                    if(!user) e.currentTarget.style.transform = 'scale(1)'
+                  }}
+                >
+                  <User size={13} strokeWidth={2.5} />
+                  {user ? 'Sign Out' : 'Sign In'}
+                </button>
               </div>
             </>
           )}
@@ -465,7 +423,7 @@ export default function DynamicIslandNav({ isDark, toggleTheme, onNavigate, curr
               </span>
               <div style={{ width: '1px', height: '16px', background: borderColor }} />
               <button
-                onClick={user ? (theme.onSignOut || onSignOut) : (theme.onSignIn || onSignIn)}
+                onClick={user ? onSignOut : onSignIn}
                 style={{
                   width: '32px', height: '32px', borderRadius: '50%',
                   background: user ? (isDark ? 'var(--border-subtle)' : 'transparent') : 'transparent',

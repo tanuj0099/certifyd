@@ -13,7 +13,6 @@ export default function UserProfile() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  // Sync state if profile loads slightly after mount
   React.useEffect(() => {
     if (profile?.display_name) {
       setDisplayName(profile.display_name);
@@ -23,7 +22,7 @@ export default function UserProfile() {
   if (!user) {
     return (
       <ToolPageWrapper eyebrow="ACCOUNT" title="Profile" subtitle="Restricted">
-        <div style={{ padding: '48px 24px', textAlign: 'center', background: 'var(--bg-alt)', borderRadius: '12px', border: '1px solid var(--border)' }}>
+        <div style={{ padding: '48px 24px', textAlign: 'center', background: 'var(--bg)', borderRadius: '12px', border: '1px solid var(--border)' }}>
           <p style={{ fontFamily: 'var(--font-body)', fontSize: '15px', color: 'var(--text-2)', marginBottom: '24px' }}>
             You need to be signed in to view this page.
           </p>
@@ -60,7 +59,7 @@ export default function UserProfile() {
           maxWidth: '600px'
         }}>
 
-          <div style={{ background: 'var(--bg-alt)', padding: '32px', borderRadius: '12px', border: '1px solid var(--border)' }}>
+          <div style={{ background: 'var(--bg)', padding: '32px', borderRadius: '12px', border: '1px solid var(--border)' }}>
             <h2 style={{ fontFamily: 'var(--font-head)', fontSize: '18px', fontWeight: '600', color: 'var(--text)', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <User size={18} /> Personal Details
             </h2>
@@ -109,7 +108,7 @@ export default function UserProfile() {
             )}
           </div>
 
-          <div style={{ background: 'var(--bg-alt)', padding: '32px', borderRadius: '12px', border: '1px solid var(--border)' }}>
+          <div style={{ background: 'var(--bg)', padding: '32px', borderRadius: '12px', border: '1px solid var(--border)' }}>
             <h2 style={{ fontFamily: 'var(--font-head)', fontSize: '18px', fontWeight: '600', color: 'var(--text)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Shield size={18} /> Authentication
             </h2>

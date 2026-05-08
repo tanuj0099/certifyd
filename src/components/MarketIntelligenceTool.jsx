@@ -66,7 +66,6 @@ export default function MarketIntelligenceTool() {
         const { data: roles, error: err } = await supabase
           .from('market_intelligence')
           .select('*')
-          .gt('min_salary', 0)
           .order('domain_name')
 
         if (err) throw err

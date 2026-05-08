@@ -239,7 +239,7 @@ export default function ContactPage() {
               </p>
             </GlassCard>
 
-            <GlassCard style={{ padding: '22px', background: 'var(--text)', borderColor: 'var(--border-accent)' }}>
+            <GlassCard style={{ padding: '22px', background: 'var(--bg)', borderColor: 'var(--border-accent)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
                 <Sparkles size={18} color="var(--bg)" />
                 <h3 style={{ fontFamily: FH, fontSize: '15px', fontWeight: '800', color: 'var(--bg)', margin: 0 }}>Need a faster answer?</h3>

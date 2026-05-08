@@ -95,7 +95,7 @@ function CertSelector({ value, onChange, label, color, certifications, domains }
                     style={{
                       padding: '3px 9px', borderRadius: '20px', fontSize: '11px',
                       cursor: 'pointer', fontFamily: F_BODY, fontWeight: '600',
-                      background: domain === d.id ? 'var(--indigo-dim)' : 'transparent',
+                      background: domain === d.id ? 'var(--accent)' : 'var(--bg)',
                       border: '1px solid ' + (domain === d.id ? 'var(--border-accent)' : 'var(--border)'),
                       color: domain === d.id ? 'var(--indigo-light)' : 'var(--text-4)',
                       whiteSpace: 'nowrap', transition: 'all 0.15s',

@@ -20,7 +20,7 @@ export default function NotFound() {
         style={{
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
           padding: '64px 24px', textAlign: 'center',
-          background: 'var(--bg-alt)', borderRadius: '12px',
+          background: 'var(--bg)', borderRadius: '12px',
           border: '1px solid var(--border)'
         }}
       >

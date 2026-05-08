@@ -105,7 +105,7 @@ export default function AboutPage() {
           </div>
         </div>
 
-        <GlassCard style={{ padding: 'clamp(20px, 4vw, 32px)', background: 'var(--text)', borderColor: 'var(--border-accent)' }}>
+        <GlassCard style={{ padding: 'clamp(20px, 4vw, 32px)', background: 'var(--bg)', borderColor: 'var(--border-accent)' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '18px', alignItems: 'center' }}>
             <div>
               <div style={{ fontFamily: FM, fontSize: '10px', color: 'var(--text-3)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '14px' }}>
