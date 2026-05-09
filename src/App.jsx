@@ -77,6 +77,7 @@ const ROITool = lazy(() => import("./pages/ROITool.jsx"));
 const HeatmapTool = lazy(() => import("./pages/HeatmapTool.jsx"));
 const CompareTool = lazy(() => import("./pages/CompareTool.jsx"));
 const SimulatorTool = lazy(() => import("./pages/SimulatorTool.jsx"));
+import NotFound from "./pages/NotFound.jsx";
 const JobMapTool = lazy(() => import("./pages/JobMapTool.jsx"));
 const CollegeTool = lazy(() => import("./pages/CollegeTool.jsx"));
 const HikeVerifierTool = lazy(() => import("./pages/HikeVerifierTool.jsx"));
@@ -235,7 +236,7 @@ const TermsPage = function () {
               style={{
                 padding: "18px 20px",
                 marginBottom: "10px",
-                background: "#FFFFFF",
+                background: "var(--bg-elevated)",
                 border: "1px solid #E5E7EB"
               }}
             >
@@ -326,7 +327,7 @@ const PrivacyPage = function () {
               style={{
                 padding: "18px 20px",
                 marginBottom: "10px",
-                background: "#FFFFFF",
+                background: "var(--bg-elevated)",
                 border: "1px solid #E5E7EB"
               }}
             >
@@ -410,7 +411,7 @@ const CookiesPage = function () {
               style={{
                 padding: "18px 20px",
                 marginBottom: "10px",
-                background: "#FFFFFF",
+                background: "var(--bg-elevated)",
                 border: "1px solid #E5E7EB"
               }}
             >
@@ -611,7 +612,7 @@ const _OldBlogPage = function () {
                   display: "flex",
                   flexDirection: "column",
                   cursor: "pointer",
-                  background: "#FFFFFF",
+                  background: "var(--bg-elevated)",
                   border: "1px solid #E5E7EB"
                 }}
                 onClick={function () {
@@ -933,7 +934,7 @@ const _OldFAQPage = function () {
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.04 }}
-                      style={{ overflow: "hidden", cursor: "pointer", background: "#FFFFFF", border: "1px solid #E5E7EB" }}
+                      style={{ overflow: "hidden", cursor: "pointer", background: "var(--bg-elevated)", border: "1px solid #E5E7EB" }}
                       onClick={function () {
                         setOpen(isOpen ? null : idx);
                       }}
@@ -1021,7 +1022,7 @@ const _OldContactPage = function () {
   var inputStyle = {
     width: "100%",
     padding: "11px 14px",
-    background: "#FFFFFF",
+    background: "var(--bg-elevated)",
     border: "1px solid #E5E7EB",
     borderRadius: "4px",
     color: "#111827",
@@ -1067,7 +1068,7 @@ const _OldContactPage = function () {
             style={{
               padding: "48px",
               textAlign: "center",
-              background: "#FFFFFF",
+              background: "var(--bg-elevated)",
               border: "1px solid #E5E7EB"
             }}
           >
@@ -1098,7 +1099,7 @@ const _OldContactPage = function () {
         ) : (
           <div style={{
             padding: "clamp(20px,4vw,32px)",
-            background: "#FFFFFF",
+            background: "var(--bg-elevated)",
             border: "1px solid #E5E7EB"
           }}>
             {[
@@ -1352,7 +1353,7 @@ const MobileDrawer = function ({
             style={{
               position: "fixed",
               inset: 0,
-              background: "transparent",
+              background: "rgba(0, 0, 0, 0.5)",
               zIndex: 298,
             }}
           />
@@ -1371,7 +1372,7 @@ const MobileDrawer = function ({
           bottom: 0,
           width: "min(300px,82vw)",
           zIndex: 299,
-          background: "#FFFFFF",
+          background: "var(--bg-elevated)",
           borderRight: "1px solid #E5E7EB",
           display: "flex",
           flexDirection: "column",
@@ -1431,7 +1432,7 @@ const MobileDrawer = function ({
           <button
             onClick={onClose}
             style={{
-              background: "#FFFFFF",
+              background: "var(--bg-elevated)",
               border: "1px solid #E5E7EB",
               borderRadius: "7px",
               padding: "7px",
@@ -1724,7 +1725,7 @@ const NavBar = function ({ currentPage, onNavigate, onTabChange }) {
           <div
             style={{
               borderTop: "1px solid #E5E7EB",
-              background: "#FFFFFF",
+              background: "var(--bg-elevated)",
             }}
           >
             <div
@@ -1845,7 +1846,7 @@ const NavBar = function ({ currentPage, onNavigate, onTabChange }) {
           <div
             style={{
               borderTop: "1px solid #E5E7EB",
-              background: "#FFFFFF",
+              background: "var(--bg-elevated)",
             }}
           >
             <div
@@ -1931,7 +1932,7 @@ const AppPage = function ({ onCertSelected }) {
       style={{
         paddingTop: NAV_H + "px",
         minHeight: "100vh",
-        background: "transparent",
+        background: "rgba(0, 0, 0, 0.5)",
         position: "relative",
       }}
     >
@@ -1943,7 +1944,7 @@ const AppPage = function ({ onCertSelected }) {
             top: 0,
             zIndex: 100,
             borderBottom: "1px solid var(--border)",
-            background: "transparent",
+            background: "rgba(0, 0, 0, 0.5)",
             backdropFilter: "blur(12px)",
             WebkitBackdropFilter: "blur(12px)",
           }}
@@ -2169,7 +2170,7 @@ const AppPage = function ({ onCertSelected }) {
                       <div
                         style={{
                           padding: "clamp(16px,3vw,28px)",
-                          background: "transparent",
+                          background: "rgba(0, 0, 0, 0.5)",
                           border: "none"
                         }}
                       >
@@ -2242,7 +2243,7 @@ const AppPage = function ({ onCertSelected }) {
                         <div
                           style={{
                             padding: "clamp(16px,3vw,28px)",
-                            background: "transparent",
+                            background: "rgba(0, 0, 0, 0.5)",
                             border: "none"
                           }}
                         >
@@ -2271,7 +2272,7 @@ const AppPage = function ({ onCertSelected }) {
                               gap: "7px",
                               padding: "11px 18px",
                               borderRadius: "10px",
-                              background: "transparent",
+                              background: "rgba(0, 0, 0, 0.5)",
                               border: "1px solid var(--border)",
                               color: "var(--text-4)",
                               fontSize: "13px",
@@ -2290,7 +2291,7 @@ const AppPage = function ({ onCertSelected }) {
                       <div
                         style={{
                           padding: "clamp(16px,3vw,28px)",
-                          background: "transparent",
+                          background: "rgba(0, 0, 0, 0.5)",
                           border: "none"
                         }}
                       >
@@ -2305,7 +2306,7 @@ const AppPage = function ({ onCertSelected }) {
                       <div
                         style={{
                           padding: "clamp(16px,3vw,28px)",
-                          background: "transparent",
+                          background: "rgba(0, 0, 0, 0.5)",
                           border: "none"
                         }}
                       >
@@ -2319,7 +2320,7 @@ const AppPage = function ({ onCertSelected }) {
                       <div
                         style={{
                           padding: "clamp(16px,3vw,28px)",
-                          background: "transparent",
+                          background: "rgba(0, 0, 0, 0.5)",
                           border: "none"
                         }}
                       >
@@ -2331,7 +2332,7 @@ const AppPage = function ({ onCertSelected }) {
                       <div
                         style={{
                           padding: "clamp(16px,3vw,28px)",
-                          background: "transparent",
+                          background: "rgba(0, 0, 0, 0.5)",
                           border: "none"
                         }}
                       >
@@ -2343,7 +2344,7 @@ const AppPage = function ({ onCertSelected }) {
                       <div
                         style={{
                           padding: "clamp(16px,3vw,28px)",
-                          background: "transparent",
+                          background: "rgba(0, 0, 0, 0.5)",
                           border: "none"
                         }}
                       >
@@ -2467,7 +2468,7 @@ const Footer = function ({ onNavigate }) {
         borderTop: "1px solid #E5E7EB",
         padding: "40px 16px 24px",
         marginTop: "auto",
-        background: "#FFFFFF",
+        background: "var(--bg-elevated)",
       }}
     >
       <div style={{ maxWidth: "1240px", margin: "0 auto" }}>
@@ -2777,7 +2778,7 @@ const SignInModal = function ({ isOpen, onClose, onSignIn, loading }) {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "transparent",
+        background: "rgba(0, 0, 0, 0.5)",
         padding: "24px",
       }}
     >
@@ -2786,7 +2787,7 @@ const SignInModal = function ({ isOpen, onClose, onSignIn, loading }) {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 10 }}
         style={{
-          background: "#FFFFFF",
+          background: "var(--bg-elevated)",
           border: "1px solid #E5E7EB",
           borderRadius: "8px",
           padding: "32px",
@@ -3022,11 +3023,7 @@ function AppRoot() {
                 <Route
                   path="*"
                   element={
-                    <LandingPage
-                      isDark={isDark}
-                      onEnter={() => goToApp("resume")}
-                      onNavigate={(p) => navigate(p === "home" ? "/" : "/" + p)}
-                    />
+                    <NotFound isDark={isDark} />
                   }
                 />
               </Routes>

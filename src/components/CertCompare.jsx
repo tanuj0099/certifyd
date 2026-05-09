@@ -621,7 +621,7 @@ function CertCompare({ salary, prefilledCert }) {
                   { axis: 'Job Market', desc: 'Demand + salary' },
                 ].map(function (item, i) {
                   return (
-                    <div key={i} style={{ padding: '7px 8px', borderRadius: '8px', background: 'var(--bg)', border: '1px solid var(--border)', textAlign: 'center' }}>
+                    <div key={i} style={{ padding: '7px 8px', borderRadius: '8px', background: 'transparent', border: '1px solid var(--border-mid)', textAlign: 'center' }}>
                       <div style={{ fontFamily: F_MONO, fontSize: '8px', color: 'transparent', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '2px' }}>{item.axis}</div>
                       <div style={{ fontFamily: F_BODY, fontSize: '10px', color: 'var(--text-4)', lineHeight: '1.3' }}>{item.desc}</div>
                     </div>
@@ -664,7 +664,7 @@ function CertCompare({ salary, prefilledCert }) {
 
               {/* FIX: DataNote added — comparison table showed calculated numbers with no source attribution.
                   Users need to know where avgHike, avgCost, and timeMonths come from to trust the comparison. */}
-              <div style={{ marginTop: '14px', padding: '10px 12px', borderRadius: '8px', background: 'transparent', border: '1px solid var(--border)', display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+              <div style={{ marginTop: '14px', padding: '10px 12px', borderRadius: '8px', background: 'transparent', border: '1px solid var(--border-mid)', display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
                 <Info size={11} color="var(--text-4)" style={{ flexShrink: 0, marginTop: '2px' }} />
                 <span style={{ fontFamily: F_BODY, fontSize: '11px', color: 'var(--text-4)', lineHeight: '1.55' }}>
                   Data: NASSCOM 2026 · Naukri salary insights · AmbitionBox post-cert reports · cert provider pricing. All figures are India medians. Individual results vary.

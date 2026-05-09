@@ -2,8 +2,9 @@
 // DynamicIslandNav.jsx — CertifyROI
 // ─────────────────────────────────────────────────────────
 
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, useMotionValue, useSpring, AnimatePresence } from 'framer-motion'
-import { useState, useEffect, useRef, useCallback } from 'react'
+
 import { Menu, X, User } from 'lucide-react'
 import { useTheme as useThemeEngine } from '../hooks/useTheme'
 
@@ -23,6 +24,7 @@ const APP_NAV_ITEMS = [
   { label: 'Home',           pageId: 'home'          },
   { label: 'Dashboard',      pageId: 'app'           },
   { label: 'Market Pulse',   pageId: 'tools/market'  },
+  { label: 'Cert Compare',   pageId: 'tools/compare'  },
 ]
 
 function NavItem({ label, pageId, isActive, onActivate, onNavigate, theme }) {
@@ -31,7 +33,7 @@ function NavItem({ label, pageId, isActive, onActivate, onNavigate, theme }) {
 
   return (
     <a
-      href={'#' + pageId}
+      href={'/' + (pageId === 'home' ? '' : pageId)}
       onClick={(e) => {
         e.preventDefault()
         onActivate(pageId)
@@ -157,7 +159,7 @@ function MobileMenuPanel({ isOpen, onClose, activeHref, onActivate, isDark, onTo
                 transition={{ delay: i * 0.04, duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               >
                 <a
-                  href={'#' + item.pageId}
+                  href={'/' + (item.pageId === 'home' ? '' : item.pageId)}
                   onClick={(e) => {
                     e.preventDefault()
                     onActivate(item.pageId)
@@ -205,7 +207,7 @@ function MobileMenuPanel({ isOpen, onClose, activeHref, onActivate, isDark, onTo
 // ─────────────────────────────────────────────────────────
 // MAIN EXPORT
 // ─────────────────────────────────────────────────────────
-export default function DynamicIslandNav({ isDark, toggleTheme, onNavigate, currentPage, user, onSignIn, onSignOut }) {
+const DynamicIslandNav = React.memo(({ isDark, toggleTheme, onNavigate, currentPage, user, onSignIn, onSignOut }) => {
   // Pull from 2-theme engine
   const { current: currentPreset, toggleTheme: toggleThemeEngine } = useThemeEngine()
 
@@ -429,4 +431,6 @@ export default function DynamicIslandNav({ isDark, toggleTheme, onNavigate, curr
       />
     </>
   )
-}
+})
+
+export default DynamicIslandNav;

@@ -729,7 +729,7 @@ function AIResult({ result, certName, onReset }) {
             {result.risks.map(function (r, i) {
               return (
                 <div key={i} className="callout-card" style={{ display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
-                  <div style={{ width: '44px', minWidth: '44px', height: '44px', borderRadius: '16px', background: 'var(--bg-surface)', display: 'grid', placeItems: 'center', boxShadow: 'none' }}>
+                  <div style={{ width: '44px', minWidth: '44px', height: '44px', borderRadius: '16px', background: 'transparent', display: 'grid', placeItems: 'center', boxShadow: 'none' }}>
                     <AlertTriangle size={18} color="var(--semantic-danger)" />
                   </div>
                   <div>
@@ -998,7 +998,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               transition={T}
-              style={{ marginBottom: '18px', borderRadius: '22px', background: 'var(--bg-surface)', boxShadow: 'none', overflow: 'hidden' }}
+              style={{ marginBottom: '18px', borderRadius: '22px', background: 'transparent', boxShadow: 'none', overflow: 'hidden' }}
             >
               <div style={{ padding: '18px 20px', display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center', borderBottom: notIdealNote ? '1px solid var(--border-subtle)' : 'none' }}>
                 <span style={{ fontFamily: FH, fontWeight: '700', fontSize: '12px', color: VIOLET }}>{selectedCert.name}</span>
@@ -1218,7 +1218,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
                 style={{
                   width: '100%', padding: '14px 22px',
                   borderRadius: '9999px',
-                  background: cooldown > 0 ? 'transparent' : 'transparent',
+                  background: cooldown > 0 ? 'transparent' : 'var(--accent)',
                   border: cooldown > 0 ? '1px solid var(--border)' : 'none',
                   color: cooldown > 0 ? 'var(--text-4)' : 'white',
                   fontSize: '14px', fontWeight: '700',
