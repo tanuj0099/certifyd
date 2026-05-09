@@ -949,7 +949,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
       {(targetDomain || domainOverride) && !domainValidationError && (
         <div style={{ padding: '10px 14px', borderRadius: '8px', background: 'transparent', border: '1px solid transparent', display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
           <span style={{ fontFamily: FM, fontSize: '9px', color: 'var(--linear-blue)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>TARGET PIVOT</span>
-          <span style={{ fontFamily: FM, fontSize: '12px', fontWeight: '700', color: '#F9FAFB', padding: '2px 10px', borderRadius: '4px', background: 'transparent', border: '1px solid transparent' }}>
+          <span style={{ fontFamily: FM, fontSize: '12px', fontWeight: '700', color: 'var(--text)', padding: '2px 10px', borderRadius: '4px', background: 'transparent', border: '1px solid transparent' }}>
             {domainOverride || targetDomain}
           </span>
           <span style={{ fontFamily: FM, fontSize: '9px', color: 'transparent', marginLeft: 'auto' }}>Analysis will prioritise this domain</span>
@@ -963,7 +963,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
             STATUS: DOMAIN NOT IDENTIFIED // ENTER VALID DOMAIN
           </div>
           <div style={{ fontFamily: FM, fontSize: '12px', color: '#8A8F98', marginBottom: '14px', lineHeight: 1.6 }}>
-            "<span style={{ color: '#F9FAFB' }}>{domainValidationError}</span>" is not a recognized professional domain.
+            "<span style={{ color: 'var(--text)' }}>{domainValidationError}</span>" is not a recognized professional domain.
           </div>
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
             <input
@@ -974,7 +974,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
                 flex: 1, padding: '9px 12px', borderRadius: '6px',
                 background: 'var(--border-subtle)',
                 border: '1px solid transparent',
-                color: '#F9FAFB', fontFamily: FM, fontSize: '13px',
+                color: 'var(--text)', fontFamily: FM, fontSize: '13px',
                 outline: 'none',
               }}
             />

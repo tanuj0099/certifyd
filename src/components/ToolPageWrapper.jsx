@@ -58,10 +58,10 @@ export default function ToolPageWrapper({
           {/* Title */}
           <h1 style={{
             fontFamily:    'var(--font-head)',
-            fontSize:      'clamp(2.0rem, 4vw, 2.8rem)',
+            fontSize:      '36px',
             fontWeight:    '700',
             color:         'var(--text)',
-            letterSpacing: '-0.04em',
+            letterSpacing: 0,
             lineHeight:    1.05,
             marginBottom:  description ? '16px' : 0,
           }}>

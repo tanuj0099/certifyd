@@ -5,8 +5,8 @@ const W1 = "M0,420 C200,375 400,465 600,415 C800,365 1000,450 1200,405 C1320,378
 const W2 = "M0,565 C180,530 360,600 540,562 C720,524 900,592 1080,552 C1220,522 1340,550 1440,538 L1440,900 L0,900 Z"
 const W3 = "M0,695 C200,668 400,722 600,692 C800,662 1000,708 1200,675 C1320,658 1380,672 1440,665 L1440,900 L0,900 Z"
 
-// Dark theme wave configs
-const DARK = {
+// Nordic theme wave configs
+const NORDIC = {
   landing: [
     { path: W1, c1: '#2D6A4F', c2: '#9A7235', c3: '#4A8C6A', o: 0.050, dur: 20, dy: 22, delay: 0   },
     { path: W2, c1: '#9A7235', c2: '#2D6A4F', c3: '#B89050', o: 0.038, dur: 25, dy: 16, delay: 1.5 },
@@ -19,8 +19,8 @@ const DARK = {
   ],
 }
 
-// Light theme wave configs
-const LIGHT = {
+// Ash theme wave configs
+const ASH = {
   landing: [
     { path: W1, c1: '#2D6A4F', c2: '#9A7235', c3: '#4A8C6A', o: 0.105, dur: 20, dy: 22, delay: 0   },
     { path: W2, c1: '#9A7235', c2: '#2D6A4F', c3: '#B89050', o: 0.082, dur: 25, dy: 16, delay: 1.5 },
@@ -34,20 +34,20 @@ const LIGHT = {
 }
 
 const WaveBg = ({ variant = 'landing' }) => {
-  const [isDark, setIsDark] = useState(
-    () => document.documentElement.getAttribute('data-theme') !== 'light'
+  const [isNordic, setIsNordic] = useState(
+    () => document.documentElement.getAttribute('data-theme') !== 'ash'
   )
 
   // Watch data-theme changes
   useEffect(() => {
     const obs = new MutationObserver(() => {
-      setIsDark(document.documentElement.getAttribute('data-theme') !== 'light')
+      setIsNordic(document.documentElement.getAttribute('data-theme') !== 'ash')
     })
     obs.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
     return () => obs.disconnect()
   }, [])
 
-  const waves = isDark ? DARK[variant] : LIGHT[variant]
+  const waves = isNordic ? NORDIC[variant] : ASH[variant]
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none', overflow: 'hidden' }}>
@@ -59,7 +59,7 @@ const WaveBg = ({ variant = 'landing' }) => {
       >
         <defs>
           {waves.map((w, i) => (
-            <linearGradient key={i} id={`wg-${variant}-${isDark ? 'd' : 'l'}-${i}`} x1="0%" y1="0%" x2="100%" y2="0%">
+            <linearGradient key={i} id={`wg-${variant}-${isNordic ? 'n' : 'a'}-${i}`} x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%"   stopColor={w.c1} stopOpacity={w.o} />
               <stop offset="45%"  stopColor={w.c2} stopOpacity={w.o * 1.3} />
               <stop offset="100%" stopColor={w.c3} stopOpacity={w.o * 0.7} />
@@ -68,9 +68,9 @@ const WaveBg = ({ variant = 'landing' }) => {
         </defs>
         {waves.map((w, i) => (
           <motion.path
-            key={`${isDark}-${i}`}
+            key={`${isNordic}-${i}`}
             d={w.path}
-            fill={`url(#wg-${variant}-${isDark ? 'd' : 'l'}-${i})`}
+            fill={`url(#wg-${variant}-${isNordic ? 'n' : 'a'}-${i})`}
             animate={{ y: [-w.dy / 2, w.dy / 2] }}
             transition={{ duration: w.dur, repeat: Infinity, ease: 'easeInOut', repeatType: 'mirror', delay: w.delay }}
           />

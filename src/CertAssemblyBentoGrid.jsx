@@ -145,7 +145,8 @@ const CertAssemblyBentoGrid = () => {
           {featureBoxesData.map((box) => (
             <motion.div
               key={box.id}
-              className="bg-white border border-gray-200 rounded-xl shadow-sm p-8 flex flex-col justify-between" // Bento box styling
+              className="border p-8 flex flex-col justify-between"
+              style={{ background: 'transparent', borderColor: 'var(--border)' }}
               variants={itemVariants}
               layout // Snappy layout expansion
               transition={{ type: "spring", stiffness: 300, damping: 30 }} // Snappy spring transition

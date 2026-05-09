@@ -22,7 +22,7 @@
   [data-theme="nordic"] {
     --bg:           #222326;
     --bg-alt:       #2A2A2E;
-    --surface:      #2A2A2E;
+    --surface:      #222326;
     --text:         #F4F5F8;
     --text-2:       #A0A3AB;
     --text-3:       #6B6E76;
@@ -35,7 +35,7 @@
 
     /* Derived */
     --bg-base:       var(--bg);
-    --bg-surface:    var(--surface);
+    --bg-surface:    var(--bg);
     --bg-elevated:   var(--bg-alt);
     --app-bg:        var(--bg);
     --bg-secondary:  var(--bg-alt);
@@ -261,7 +261,7 @@
 
   /* ── Premium card ── */
   .premium-card {
-    background: var(--surface);
+    background: transparent;
     border: 1px solid var(--border);
     border-radius: 12px;
     transition: border-color 0.2s ease, transform 0.2s ease;
@@ -381,7 +381,7 @@
   /* ── Shimmer ── */
   @keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
   .shimmer {
-    background: linear-gradient(90deg, var(--bg-alt) 0%, var(--surface) 50%, var(--bg-alt) 100%);
+    background: linear-gradient(90deg, var(--bg-alt) 0%, var(--bg) 50%, var(--bg-alt) 100%);
     background-size: 200% 100%;
     animation: shimmer 1.6s infinite;
     border-radius: var(--radius-sm);
@@ -489,14 +489,6 @@ body,
 }
 
 /* Tailwind utilities that fight the background */
-.tool-fabric .bg-white {
-  background-color: transparent !important;
-}
-
-.tool-fabric [class*="shadow-"] {
-  box-shadow: none !important;
-}
-
 /* ── StorySection inner container — transparent background ───────────── */
 /*
  * Previously: background: d ? 'var(--border-subtle)' : 'transparent'
@@ -522,4 +514,356 @@ body,
 /* ── Prevent white flash on route transitions ────────────────────────── */
 #root > * {
   background: var(--bg);
+}
+
+/* Cert Radar */
+.cert-radar {
+  width: 100%;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.cert-radar__shell {
+  width: min(100%, 1120px);
+  margin: 0 auto;
+}
+
+.cert-radar__intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: end;
+  margin-bottom: 28px;
+}
+
+.cert-radar__eyebrow,
+.cert-radar__provider,
+.cert-radar__stat span,
+.cert-radar__metrics dt,
+.cert-radar__sync {
+  font-family: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.cert-radar__eyebrow {
+  margin: 0 0 10px;
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.cert-radar__title {
+  margin: 0;
+  color: var(--text);
+  font-family: 'Inter', 'DM Sans', sans-serif;
+  font-size: 32px;
+  line-height: 1.08;
+  letter-spacing: 0;
+  font-weight: 800;
+}
+
+.cert-radar__copy {
+  max-width: 620px;
+  margin: 14px 0 0;
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.cert-radar__sync {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 9px;
+  color: var(--text-soft);
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.cert-radar__sync-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.cert-radar__sync-dot--error {
+  background: #d94848;
+}
+
+.cert-radar__stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+
+.cert-radar__stat {
+  min-width: 0;
+  padding: 18px 0;
+}
+
+.cert-radar__stat + .cert-radar__stat {
+  padding-left: 20px;
+  border-left: 1px solid var(--border);
+}
+
+.cert-radar__stat span {
+  display: block;
+  color: var(--text-soft);
+  font-size: 10px;
+}
+
+.cert-radar__stat strong {
+  display: block;
+  margin-top: 8px;
+  color: var(--text);
+  font-family: 'Inter', 'DM Sans', sans-serif;
+  font-size: 24px;
+  line-height: 1;
+  font-weight: 800;
+}
+
+.cert-radar__controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 340px);
+  gap: 16px;
+  align-items: start;
+  margin-bottom: 28px;
+}
+
+.cert-radar__capsules {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cert-radar__capsule {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 0 13px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: 'Inter', 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 650;
+  transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.cert-radar__capsule small {
+  color: var(--text-soft);
+  font-family: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+  font-size: 10px;
+}
+
+.cert-radar__capsule--active {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--bg);
+}
+
+.cert-radar__capsule--active small {
+  color: var(--bg);
+  opacity: 0.7;
+}
+
+.cert-radar__search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 42px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-soft);
+  background: transparent;
+}
+
+.cert-radar__search input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text);
+  font-family: 'Inter', 'DM Sans', sans-serif;
+  font-size: 14px;
+}
+
+.cert-radar__search input::placeholder {
+  color: var(--text-soft);
+}
+
+.cert-radar__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 28px;
+  row-gap: 0;
+}
+
+.cert-radar__item {
+  min-width: 0;
+  padding: 18px 0 20px;
+  border-top: 1px solid var(--border);
+  background: transparent;
+}
+
+.cert-radar__item-main {
+  min-width: 0;
+}
+
+.cert-radar__provider {
+  margin: 0 0 10px;
+  color: var(--text-soft);
+  font-size: 10px;
+}
+
+.cert-radar__item h3 {
+  margin: 0;
+  color: var(--text);
+  font-family: 'Inter', 'DM Sans', sans-serif;
+  font-size: 17px;
+  line-height: 1.25;
+  font-weight: 750;
+}
+
+.cert-radar__item-main > span {
+  display: inline-flex;
+  margin-top: 12px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.cert-radar__metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0 0;
+}
+
+.cert-radar__metrics div {
+  min-width: 0;
+}
+
+.cert-radar__metrics dt {
+  margin: 0 0 6px;
+  color: var(--text-soft);
+  font-size: 9px;
+}
+
+.cert-radar__metrics dd {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.35;
+  font-weight: 650;
+}
+
+.cert-radar__state {
+  border-top: 1px solid var(--border);
+  padding: 26px 0;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.cert-radar__state--error {
+  color: #d94848;
+}
+
+@media (max-width: 1024px) {
+  .cert-radar__intro {
+    grid-template-columns: 1fr;
+  }
+
+  .cert-radar__sync {
+    justify-content: flex-start;
+  }
+
+  .cert-radar__stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cert-radar__stat:nth-child(3) {
+    border-left: 0;
+  }
+
+  .cert-radar__stat:nth-child(n + 3) {
+    border-top: 1px solid var(--border);
+  }
+
+  .cert-radar__controls {
+    grid-template-columns: 1fr;
+  }
+
+  .cert-radar__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .cert-radar__title {
+    font-size: 28px;
+  }
+
+  .cert-radar__copy {
+    font-size: 14px;
+  }
+
+  .cert-radar__stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cert-radar__stat {
+    padding: 15px 0;
+  }
+
+  .cert-radar__stat strong {
+    font-size: 21px;
+  }
+
+  .cert-radar__capsules {
+    position: sticky;
+    top: 72px;
+    z-index: 4;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 8px 0;
+    margin: -8px 0 0;
+    background: var(--bg);
+    scrollbar-width: none;
+  }
+
+  .cert-radar__capsules::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cert-radar__capsule {
+    flex: 0 0 auto;
+  }
+
+  .cert-radar__search {
+    width: 100%;
+  }
+
+  .cert-radar__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cert-radar__item {
+    display: grid;
+    gap: 16px;
+  }
+
+  .cert-radar__metrics {
+    margin-top: 0;
+  }
 }

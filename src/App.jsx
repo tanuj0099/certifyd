@@ -76,6 +76,7 @@ const ResumeTool = lazy(() => import("./pages/ResumeTool.jsx"));
 const ROITool = lazy(() => import("./pages/ROITool.jsx"));
 const HeatmapTool = lazy(() => import("./pages/HeatmapTool.jsx"));
 const CompareTool = lazy(() => import("./pages/CompareTool.jsx"));
+const CertRadarTool = lazy(() => import("./pages/CertRadarTool.jsx"));
 const SimulatorTool = lazy(() => import("./pages/SimulatorTool.jsx"));
 import NotFound from "./pages/NotFound.jsx";
 const JobMapTool = lazy(() => import("./pages/JobMapTool.jsx"));
@@ -130,7 +131,7 @@ const PageWrapper = function ({
       style={{
         position: "relative",
         minHeight: "100vh",
-        backgroundColor: "var(--bg-elevated)",
+        backgroundColor: "var(--bg)",
         paddingTop: NAV_H + "px",
       }}
     >
@@ -536,7 +537,7 @@ const _OldBlogPage = function () {
                   fontWeight: "600",
                   transition: "all 0.18s",
                   background:
-                    filter === t ? "var(--indigo-dim)" : "var(--surface)",
+                    filter === t ? "var(--indigo-dim)" : "transparent",
                   border:
                     "1px solid " +
                     (filter === t ? "var(--border-accent)" : "var(--border)"),
@@ -572,10 +573,7 @@ const _OldBlogPage = function () {
                   fontFamily: FM,
                   letterSpacing: "0.03em",
                   transition: "all 0.18s",
-                  background:
-                    domainFilter === d
-                      ? "transparent"
-                      : "var(--surface)",
+                  background: "transparent",
                   border:
                     "1px solid " +
                     (domainFilter === d
@@ -1145,7 +1143,7 @@ const _OldContactPage = function () {
                     return { ...p, subject: e.target.value };
                   });
                 }}
-                style={{ ...inputStyle, background: "#FFFFFF" }}
+                style={{ ...inputStyle, background: "transparent" }}
               >
                 <option>General feedback</option>
                 <option>Data correction</option>
@@ -1353,7 +1351,7 @@ const MobileDrawer = function ({
             style={{
               position: "fixed",
               inset: 0,
-              background: "rgba(0, 0, 0, 0.5)",
+              background: "rgba(34, 35, 38, 0.58)",
               zIndex: 298,
             }}
           />
@@ -1485,7 +1483,7 @@ const MobileDrawer = function ({
                   borderRadius: "10px",
                   cursor: "pointer",
                   textAlign: "left",
-                  background: isActive ? "#F3F4F6" : "#FFFFFF",
+                  background: "transparent",
                   border:
                     "1px solid " +
                     (isActive ? "#10B981" : "#E5E7EB"),
@@ -1500,7 +1498,7 @@ const MobileDrawer = function ({
                     width: "22px",
                     height: "22px",
                     borderRadius: "50%",
-                    background: isActive ? "#10B981" : "#F9FAFB",
+                    background: isActive ? "var(--accent)" : "transparent",
                     border:
                       "1px solid " +
                       (isActive ? "#10B981" : "#E5E7EB"),
@@ -1521,7 +1519,7 @@ const MobileDrawer = function ({
                     style={{
                       fontSize: "13px",
                       fontWeight: "700",
-                      color: isActive ? "#10B981" : "#111827",
+                      color: isActive ? "var(--accent)" : "var(--text)",
                       fontFamily: FH,
                       letterSpacing: "-0.01em",
                     }}
@@ -1569,7 +1567,7 @@ const MobileDrawer = function ({
                   borderRadius: "10px",
                   cursor: "pointer",
                   textAlign: "left",
-                  background: isActive ? "#F3F4F6" : "#FFFFFF",
+                  background: "transparent",
                   border:
                     "1px solid " +
                     (isActive ? "#10B981" : "#E5E7EB"),
@@ -1589,7 +1587,7 @@ const MobileDrawer = function ({
                     style={{
                       fontSize: "13px",
                       fontWeight: "700",
-                      color: isActive ? "#10B981" : "#111827",
+                      color: isActive ? "var(--accent)" : "var(--text)",
                       fontFamily: FH,
                       letterSpacing: "-0.01em",
                     }}
@@ -1642,7 +1640,7 @@ const MobileDrawer = function ({
                   width: "100%",
                   padding: "11px 14px",
                   borderRadius: "4px",
-                  background: isActive ? "#F3F4F6" : "#FFFFFF",
+                  background: "transparent",
                   border:
                     "1px solid " +
                     (isActive ? "#10B981" : "#E5E7EB"),
@@ -1775,9 +1773,7 @@ const NavBar = function ({ currentPage, onNavigate, onTabChange }) {
                         border:
                           "1px solid " +
                           (active ? "#10B981" : "transparent"),
-                        background: active
-                          ? "#ECFDF5"
-                          : "transparent",
+                        background: "transparent",
                         color: active
                           ? "#10B981"
                           : isCompleted
@@ -1797,10 +1793,8 @@ const NavBar = function ({ currentPage, onNavigate, onTabChange }) {
                           height: "18px",
                           borderRadius: "50%",
                           background: active
-                            ? "#10B981"
-                            : isCompleted
-                              ? "#ECFDF5"
-                              : "#F9FAFB",
+                            ? "var(--accent)"
+                            : "transparent",
                           border:
                             "1px solid " +
                             (active
@@ -1883,7 +1877,7 @@ const NavBar = function ({ currentPage, onNavigate, onTabChange }) {
                       borderBottom:
                         "2px solid " +
                         (active ? "#10B981" : "transparent"),
-                      background: active ? "#ECFDF5" : "transparent",
+                      background: "transparent",
                       color: active ? "#10B981" : "#9CA3AF",
                       fontSize: "12px",
                       fontWeight: active ? "700" : "400",
@@ -1932,7 +1926,7 @@ const AppPage = function ({ onCertSelected }) {
       style={{
         paddingTop: NAV_H + "px",
         minHeight: "100vh",
-        background: "rgba(0, 0, 0, 0.5)",
+        background: "var(--bg)",
         position: "relative",
       }}
     >
@@ -1944,7 +1938,7 @@ const AppPage = function ({ onCertSelected }) {
             top: 0,
             zIndex: 100,
             borderBottom: "1px solid var(--border)",
-            background: "rgba(0, 0, 0, 0.5)",
+            background: "var(--bg)",
             backdropFilter: "blur(12px)",
             WebkitBackdropFilter: "blur(12px)",
           }}
@@ -2093,9 +2087,7 @@ const AppPage = function ({ onCertSelected }) {
                                 border: active
                                   ? "1px solid var(--border-accent)"
                                   : "1px solid var(--border)",
-                                background: active
-                                  ? "var(--surface)"
-                                  : "transparent",
+                                background: "transparent",
                                 color: active
                                   ? "var(--accent)"
                                   : isCompleted
@@ -2170,7 +2162,7 @@ const AppPage = function ({ onCertSelected }) {
                       <div
                         style={{
                           padding: "clamp(16px,3vw,28px)",
-                          background: "rgba(0, 0, 0, 0.5)",
+                          background: "transparent",
                           border: "none"
                         }}
                       >
@@ -2243,7 +2235,7 @@ const AppPage = function ({ onCertSelected }) {
                         <div
                           style={{
                             padding: "clamp(16px,3vw,28px)",
-                            background: "rgba(0, 0, 0, 0.5)",
+                            background: "transparent",
                             border: "none"
                           }}
                         >
@@ -2272,7 +2264,7 @@ const AppPage = function ({ onCertSelected }) {
                               gap: "7px",
                               padding: "11px 18px",
                               borderRadius: "10px",
-                              background: "rgba(0, 0, 0, 0.5)",
+                              background: "transparent",
                               border: "1px solid var(--border)",
                               color: "var(--text-4)",
                               fontSize: "13px",
@@ -2291,7 +2283,7 @@ const AppPage = function ({ onCertSelected }) {
                       <div
                         style={{
                           padding: "clamp(16px,3vw,28px)",
-                          background: "rgba(0, 0, 0, 0.5)",
+                          background: "transparent",
                           border: "none"
                         }}
                       >
@@ -2306,7 +2298,7 @@ const AppPage = function ({ onCertSelected }) {
                       <div
                         style={{
                           padding: "clamp(16px,3vw,28px)",
-                          background: "rgba(0, 0, 0, 0.5)",
+                          background: "transparent",
                           border: "none"
                         }}
                       >
@@ -2320,7 +2312,7 @@ const AppPage = function ({ onCertSelected }) {
                       <div
                         style={{
                           padding: "clamp(16px,3vw,28px)",
-                          background: "rgba(0, 0, 0, 0.5)",
+                          background: "transparent",
                           border: "none"
                         }}
                       >
@@ -2332,7 +2324,7 @@ const AppPage = function ({ onCertSelected }) {
                       <div
                         style={{
                           padding: "clamp(16px,3vw,28px)",
-                          background: "rgba(0, 0, 0, 0.5)",
+                          background: "transparent",
                           border: "none"
                         }}
                       >
@@ -2344,7 +2336,7 @@ const AppPage = function ({ onCertSelected }) {
                       <div
                         style={{
                           padding: "clamp(16px,3vw,28px)",
-                          background: "rgba(0, 0, 0, 0.5)",
+                          background: "transparent",
                           border: "none"
                         }}
                       >
@@ -2417,9 +2409,7 @@ const AppPage = function ({ onCertSelected }) {
                             border: active
                               ? "1px solid var(--border)"
                               : "1px solid var(--border)",
-                            background: active
-                              ? "var(--surface)"
-                              : "transparent",
+                            background: "transparent",
                             color: active ? "var(--text)" : "var(--text-4)",
                             fontSize: "12px",
                             fontWeight: active ? "600" : "500",
@@ -2430,7 +2420,7 @@ const AppPage = function ({ onCertSelected }) {
                           onMouseEnter={(e) => {
                             if (!active)
                               e.currentTarget.style.color = "var(--text)";
-                            e.currentTarget.style.background = "var(--surface)";
+                            e.currentTarget.style.background = "transparent";
                           }}
                           onMouseLeave={(e) => {
                             if (!active)
@@ -2468,7 +2458,7 @@ const Footer = function ({ onNavigate }) {
         borderTop: "1px solid #E5E7EB",
         padding: "40px 16px 24px",
         marginTop: "auto",
-        background: "var(--bg-elevated)",
+        background: "var(--bg)",
       }}
     >
       <div style={{ maxWidth: "1240px", margin: "0 auto" }}>
@@ -2698,7 +2688,7 @@ const Footer = function ({ onNavigate }) {
                 marginTop: "14px",
                 padding: "10px 12px",
                 borderRadius: "8px",
-                background: "#F9FAFB",
+                background: "transparent",
                 border: "1px solid #E5E7EB",
               }}
             >
@@ -2778,7 +2768,7 @@ const SignInModal = function ({ isOpen, onClose, onSignIn, loading }) {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "rgba(0, 0, 0, 0.5)",
+        background: "rgba(34, 35, 38, 0.58)",
         padding: "24px",
       }}
     >
@@ -2821,7 +2811,7 @@ const SignInModal = function ({ isOpen, onClose, onSignIn, loading }) {
             width: "48px",
             height: "48px",
             borderRadius: "50%",
-            background: "#ECFDF5",
+            background: "transparent",
             color: "#10B981",
             display: "flex",
             alignItems: "center",
@@ -2983,6 +2973,7 @@ function AppRoot() {
                 <Route path="/tools/roi" element={<ROITool />} />
                 <Route path="/tools/heatmap" element={<HeatmapTool />} />
                 <Route path="/tools/compare" element={<CompareTool />} />
+                <Route path="/tools/cert-radar" element={<CertRadarTool />} />
                 <Route path="/tools/simulator" element={<SimulatorTool />} />
                 <Route path="/tools/jobmap" element={<JobMapTool />} />
                 <Route path="/tools/college" element={<CollegeTool />} />

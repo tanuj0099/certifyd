@@ -1,39 +1,96 @@
-import React from 'react';
+const stats = [
+  {
+    label: 'Payback Period',
+    value: '6 mo',
+    copy: 'Approximate window to recover the certification investment.',
+  },
+  {
+    label: 'Salary Delta',
+    value: '35%',
+    copy: 'Estimated market lift compared with the current baseline.',
+  },
+]
 
-const StatsSection = () => {
+export default function StatsSection() {
   return (
-    <div className="relative w-full py-24 px-6 bg-gray-50 dark:bg-gray-900 overflow-hidden">
-      
-      {/* Section Title (Optional) */}
-      <div className="text-center mb-12">
-        <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Performance Metrics</h2>
-      </div>
-
-      {/* Stats Container */}
-      <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
-        
-        {/* CARD 1: PAYBACK */}
-        {/* Changed from rectangle to rounded-[2rem] for capsule/soft feel */}
-        <div className="relative p-10 bg-white/40 dark:bg-white/5 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-[2rem] shadow-sm hover:shadow-md transition-shadow duration-300">
-           <div className="text-sm text-gray-500 dark:text-gray-400 font-mono tracking-widest uppercase mb-2">// PAYBACK_PERIOD</div>
-           <div className="text-5xl font-bold text-gray-900 dark:text-white mb-4">6 MO</div>
-           <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-             You will recover your investment in approximately half a year.
-           </p>
+    <section
+      style={{
+        width: '100%',
+        padding: '96px 24px',
+        background: 'var(--bg)',
+        color: 'var(--text)',
+        borderTop: '1px solid var(--border)',
+      }}
+    >
+      <div style={{ width: 'min(100%, 960px)', margin: '0 auto' }}>
+        <p
+          style={{
+            margin: '0 0 32px',
+            color: 'var(--text-muted)',
+            fontFamily: "'Inter','DM Sans',sans-serif",
+            fontSize: '16px',
+          }}
+        >
+          Performance metrics
+        </p>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+            gap: '24px',
+          }}
+        >
+          {stats.map((stat) => (
+            <article
+              key={stat.label}
+              style={{
+                padding: '28px 0',
+                borderTop: '1px solid var(--border)',
+                background: 'transparent',
+              }}
+            >
+              <span
+                style={{
+                  display: 'block',
+                  marginBottom: '18px',
+                  color: 'var(--text-soft)',
+                  fontFamily: "'JetBrains Mono','IBM Plex Mono',monospace",
+                  fontSize: '11px',
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                {stat.label}
+              </span>
+              <strong
+                style={{
+                  display: 'block',
+                  marginBottom: '16px',
+                  color: 'var(--accent)',
+                  fontFamily: "'Inter','DM Sans',sans-serif",
+                  fontSize: '48px',
+                  lineHeight: 1,
+                  fontWeight: 800,
+                  textTransform: 'uppercase',
+                }}
+              >
+                {stat.value}
+              </strong>
+              <p
+                style={{
+                  margin: 0,
+                  color: 'var(--text-muted)',
+                  fontFamily: "'Inter','DM Sans',sans-serif",
+                  fontSize: '15px',
+                  lineHeight: 1.65,
+                }}
+              >
+                {stat.copy}
+              </p>
+            </article>
+          ))}
         </div>
-
-        {/* CARD 2: DELTA */}
-        <div className="relative p-10 bg-white/40 dark:bg-white/5 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-[2rem] shadow-sm hover:shadow-md transition-shadow duration-300">
-           <div className="text-sm text-gray-500 dark:text-gray-400 font-mono tracking-widest uppercase mb-2">// SALARY_DELTA</div>
-           <div className="text-5xl font-bold text-gray-900 dark:text-white mb-4">35%</div>
-           <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-             Instant jump in market value compared to your current baseline.
-           </p>
-        </div>
-
       </div>
-    </div>
-  );
-};
-
-export default StatsSection;
+    </section>
+  )
+}

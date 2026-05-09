@@ -24,7 +24,7 @@ const APP_NAV_ITEMS = [
   { label: 'Home',           pageId: 'home'          },
   { label: 'Dashboard',      pageId: 'app'           },
   { label: 'Market Pulse',   pageId: 'tools/market'  },
-  { label: 'Cert Compare',   pageId: 'tools/compare'  },
+  { label: 'Cert Radar',     pageId: 'tools/cert-radar' },
 ]
 
 function NavItem({ label, pageId, isActive, onActivate, onNavigate, theme }) {
@@ -56,7 +56,7 @@ function NavItem({ label, pageId, isActive, onActivate, onNavigate, theme }) {
             transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
             style={{
               position: 'absolute', inset: 0, borderRadius: '100px',
-              background: t.name === 'dark' ? 'var(--border-subtle)' : 'transparent',
+              background: t.name === 'nordic' ? 'var(--border-subtle)' : 'transparent',
             }}
           />
         )}
@@ -139,11 +139,11 @@ function MobileMenuPanel({ isOpen, onClose, activeHref, onActivate, isDark, onTo
           style={{
             position: 'fixed', top: '80px', left: '16px', right: '16px', zIndex: 9998,
             borderRadius: '20px',
-            background: t.name === 'dark' ? 'transparent' : 'transparent',
+            background: 'transparent',
             backdropFilter: 'blur(24px) saturate(180%)',
             WebkitBackdropFilter: 'blur(24px) saturate(180%)',
             border: '1px solid ' + t.borderMid,
-            boxShadow: t.name === 'dark'
+            boxShadow: t.name === 'nordic'
               ? '0 24px 48px transparent'
               : '0 24px 48px transparent',
             padding: '8px', overflow: 'hidden',
@@ -169,7 +169,7 @@ function MobileMenuPanel({ isOpen, onClose, activeHref, onActivate, isDark, onTo
                   style={{
                     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                     padding: '13px 16px', borderRadius: '12px', textDecoration: 'none',
-                    background: isActive ? (t.name === 'dark' ? 'var(--border-subtle)' : 'transparent') : 'transparent',
+                    background: isActive ? (t.name === 'nordic' ? 'var(--border-subtle)' : 'transparent') : 'transparent',
                     cursor: 'pointer', transition: 'background 0.15s',
                   }}
                 >
