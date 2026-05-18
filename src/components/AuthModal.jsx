@@ -1,4 +1,4 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Mail, User, X } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth.jsx'
@@ -120,7 +120,7 @@ export default function AuthModal({ isOpen, onClose, loading }) {
           alignItems: 'center',
           justifyContent: 'center',
           padding: '22px',
-          background: 'rgba(14, 15, 17, 0.72)',
+          background: 'rgba(0, 0, 0, 0.72)',
         }}
       >
         <motion.div
@@ -132,7 +132,7 @@ export default function AuthModal({ isOpen, onClose, loading }) {
             width: 'min(100%, 440px)',
             borderRadius: '24px',
             border: '1px solid var(--border-mid)',
-            background: '#222326',
+            background: 'var(--bg-elevated)',
             color: 'var(--text)',
             padding: '28px',
           }}
@@ -197,7 +197,7 @@ export default function AuthModal({ isOpen, onClose, loading }) {
                   borderRadius: '999px',
                   border: '1px solid var(--border)',
                   background: mode === id ? 'var(--text)' : 'transparent',
-                  color: mode === id ? '#222326' : 'var(--text-2)',
+                  color: mode === id ? 'var(--bg)' : 'var(--text-2)',
                   fontFamily: F_SANS,
                   fontSize: '12px',
                   fontWeight: 800,
@@ -259,7 +259,7 @@ export default function AuthModal({ isOpen, onClose, loading }) {
                   border: '1px solid var(--border)',
                   borderRadius: '12px',
                   padding: '12px',
-                  color: error || authError ? '#FCA5A5' : '#D1D5DB',
+                  color: error || authError ? 'var(--err)' : 'var(--text-2)',
                   fontFamily: F_SANS,
                   fontSize: '13px',
                   lineHeight: 1.5,

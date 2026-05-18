@@ -85,6 +85,7 @@ import NotFound from "./pages/NotFound.jsx";
 const JobMapTool = lazy(() => import("./pages/JobMapTool.jsx"));
 const CollegeTool = lazy(() => import("./pages/CollegeTool.jsx"));
 const HikeVerifierTool = lazy(() => import("./pages/HikeVerifierTool.jsx"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard.jsx"));
 
 const T = { duration: 0.32, ease: [0.4, 0, 0.2, 1] };
 const FM = "'JetBrains Mono','Commit Mono',monospace";
@@ -2961,6 +2962,7 @@ function AppRoot() {
                     />
                   }
                 />
+                <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/faq" element={<FAQPage />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/features" element={<FeaturesPage />} />

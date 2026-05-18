@@ -1,0 +1,5 @@
+# Codex Global Proxy Configuration Matrix
+provider = "openai"
+base_url = "https://api.freemodel.dev/v1"
+api_key = "fe_oa_b79610e0f0f1016023270b2ddce8fde0a6a82a2942db8409   "
+model = "gpt-5.5"

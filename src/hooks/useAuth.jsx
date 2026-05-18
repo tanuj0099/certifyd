@@ -41,25 +41,20 @@ export const AuthProvider = ({ children }) => {
   }, [])
 
   const signInGoogle = async () => {
-  setAuthError(null)
-  try {
-    const { signInWithGoogle } = await import('../firebase.jsx')
-    if (!signInWithGoogle) throw new Error('Firebase not configured — add VITE_FIREBASE_API_KEY to .env')
-    const result = await signInWithGoogle()
-    return result.user
-  } catch (e) {
-    // Silently ignore unconfigured Firebase — just don't sign in
-    if (e.message?.includes('YOUR_API_KEY') || e.message?.includes('not configured') || e.code === 'auth/invalid-api-key') {
-      setAuthError('Sign-in not available — Firebase not configured')
-      return null
+    setAuthError(null)
+    try {
+      const { signInWithGoogle } = await import('../firebase.jsx')
+      if (!signInWithGoogle) throw new Error('Firebase not configured — add VITE_FIREBASE_API_KEY to .env')
+      const result = await signInWithGoogle()
+      return result.user
+    } catch (e) {
+      const msg = e.code === 'auth/popup-closed-by-user'
+        ? 'Sign-in cancelled'
+        : e.message || 'Sign-in failed'
+      setAuthError(msg)
+      throw e
     }
-    const msg = e.code === 'auth/popup-closed-by-user'
-      ? 'Sign-in cancelled'
-      : e.message || 'Sign-in failed'
-    setAuthError(msg)
-    throw e
   }
-}
 
   const signInEmail = async (email, password) => {
     setAuthError(null)

@@ -595,7 +595,7 @@ var ResultDisplay = function ({ result, onCertSelected, mode, onClear, certDomai
           onClick={function () { handleSelect(primaryCert.name) }}
           initial={{ opacity: 0, y: 7 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.6, duration: 0.35 }}
           whileHover={{ scale: 1.02, y: -2 }} whileTap={{ scale: 0.97 }}
-          style={{ width: '100%', padding: '14px 18px', borderRadius: '11px', border: 'none', cursor: 'pointer', background: 'transparent', color: 'white', fontSize: '14px', fontWeight: '800', fontFamily: FH, letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '9px', boxShadow: 'none', marginBottom: '16px' }}
+          style={{ width: '100%', padding: '14px 18px', borderRadius: '11px', border: 'none', cursor: 'pointer', background: 'var(--text)', color: 'var(--bg)', fontSize: '14px', fontWeight: '800', fontFamily: FH, letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '9px', boxShadow: 'none', marginBottom: '16px' }}
         >
           <TrendingUp size={14} />
           Calculate ROI for {primaryCert.name.split(' ').slice(0, 3).join(' ')}
@@ -1230,11 +1230,11 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
             width: '100%', fontSize: '15px', padding: '14px',
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '9px',
             background: (text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3))
-              ? 'transparent'
+              ? 'var(--text)'
               : 'transparent',
             border: (text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3)) ? 'none' : '1px solid var(--border)',
             borderRadius: '12px',
-            color: (text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3)) ? 'white' : 'var(--text-4)',
+            color: (text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3)) ? 'var(--bg)' : 'var(--text-4)',
             fontFamily: FH, fontWeight: '800',
             cursor: (text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3)) ? 'pointer' : 'not-allowed',
             boxShadow: (text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3)) ? '0 4px 16px transparent' : 'none',

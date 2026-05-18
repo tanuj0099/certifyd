@@ -1,20 +1,18 @@
 ﻿import { motion, useScroll, AnimatePresence } from 'framer-motion'
-import React, { useRef, useState, useEffect, createContext, useContext } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { ArrowRight, ChevronDown, BarChart2, CheckCircle2 } from 'lucide-react'
 import FeaturesBentoGrid from './FeaturesBentoGrid.jsx'
 import { useJourneyStore } from '../store/useJourneyStore.js'
-import { THEMES } from './SharedUI.jsx'
-import { useTheme as useThemeContext } from '../hooks/useTheme.jsx'
+import { THEMES, useThemeContext } from './SharedUI.jsx'
+
+function useTheme() { 
+  const { current } = useThemeContext()
+  return current || THEMES.dark || THEMES.nordic
+}
 
 // ─────────────────────────────────────────────────────────
-// THEME — Read from 5-theme engine
-// ─────────────────────────────────────────────────────────
-const ThemeContext = createContext(THEMES.dark || THEMES.nordic)
-function useTheme() { return useContext(ThemeContext) || THEMES.dark || THEMES.nordic }
-
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // HOOKS
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────
 function useIsMobile() {
   const [m, setM] = useState(false)
   useEffect(() => {
@@ -25,9 +23,9 @@ function useIsMobile() {
   return m
 }
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ---------------------------------------------------------
 // TOKENS
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ---------------------------------------------------------
 const F_SERIF = "'EB Garamond', 'Cormorant Garamond', Georgia, serif"
 const F_SANS  = "'Inter', 'DM Sans', sans-serif"
 const F_MONO  = "'JetBrains Mono', 'IBM Plex Mono', monospace"
@@ -37,9 +35,9 @@ const RISE = {
   show: { y: 0, opacity: 1, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } }
 }
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ---------------------------------------------------------
 // PRIMITIVES
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ---------------------------------------------------------
 function CrosshairIcon({ color }) {
   return (
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -68,9 +66,7 @@ function CountUp({ end, prefix = '', suffix = '', duration = 1.8 }) {
 }
 
 function PillBtn({ onClick = () => {}, children, large, primary = false }) {
-  const C = useTheme()
   const [h, setH] = useState(false)
-  const d = !C.isLight
   return (
     <motion.button
       onClick={onClick}
@@ -81,25 +77,15 @@ function PillBtn({ onClick = () => {}, children, large, primary = false }) {
         display: 'inline-flex', alignItems: 'center', gap: '10px',
         padding: large ? '0 30px' : '0 22px',
         height: large ? '54px' : '44px',
-        background: primary 
-          ? (h ? 'var(--accent-light, #4A8C6A)' : 'var(--accent, #2D6A4F)')
-          : (d
-            ? `transparent`
-            : `transparent`),
-        border: primary 
-          ? `1px solid var(--accent-light, #4A8C6A)`
-          : `1px solid ${d ? `transparent` : `transparent`}`,
+        background: primary ? 'var(--text)' : 'var(--bg-elevated)',
+        border: primary ? '1px solid var(--text)' : '1px solid var(--border)',
         borderRadius: '9999px',
         fontSize: large ? '12px' : '11px',
         fontFamily: F_SANS, fontWeight: '600',
         letterSpacing: '0.07em', textTransform: 'uppercase',
         cursor: 'pointer',
-        color: primary ? 'var(--bg)' : (d ? C.goldL : C.gold),
-        boxShadow: primary 
-          ? `0 4px 14px transparent`
-          : (d
-            ? `0 2px 12px transparent`
-            : `0 2px 8px transparent`),
+        color: primary ? 'var(--bg)' : 'var(--text)',
+        boxShadow: primary ? `0 4px 14px transparent` : `0 2px 8px transparent`,
         transition: 'all 0.3s ease',
       }}
     >
@@ -107,6 +93,7 @@ function PillBtn({ onClick = () => {}, children, large, primary = false }) {
     </motion.button>
   )
 }
+
 
 function GlassPill({ children }) {
   const C = useTheme()
@@ -1126,13 +1113,11 @@ function Footer() {
 
 
 export default function App({ onNavigate, onEnter, isDark = true }) {
-  const { current } = useThemeContext()
-  const C = THEMES[current.id] || THEMES[current.id === 'light' ? 'light' : 'dark'] || THEMES.nordic
+  const C = useThemeContext()
   const isMobile = useIsMobile()
   const handleEnter = typeof onEnter === 'function' ? onEnter : function() {}
 
   return (
-    <ThemeContext.Provider value={C}>
       <div style={{
         minHeight: '100vh',
         background: C.bg,
@@ -1269,8 +1254,6 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
         <SocialProof />
         <FAQ />
         <FinalCTA onEnter={handleEnter} />
-        <Footer />
-      </div>
-    </ThemeContext.Provider>
+    </div>
   )
 }
