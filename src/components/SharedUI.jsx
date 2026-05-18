@@ -16,8 +16,10 @@ export const THEMES = Object.fromEntries(
     text2:     t.text2,
     text3:     t.text3,
     text4:     t.text4,
-    gold:      t.gold || '#C9A84C',
-    goldL:     t.gold || '#C9A84C',
+    gold:      t.isLight ? '#5a4a1a' : '#C9A84C',
+    goldL:     t.isLight ? '#7a6428' : '#D4A84C',
+    isLight:   t.isLight,
+    isDark:    !t.isLight,
     err:       '#D94848',
     line:      t.border,
     lineHeavy: t.borderMid,
@@ -26,6 +28,9 @@ export const THEMES = Object.fromEntries(
     certBg:    t.bg,
   }])
 )
+
+// Forward-compat aliases so any code doing THEMES.nordic still works
+if (!THEMES.nordic) Object.assign(THEMES, { nordic: THEMES.dark, ash: THEMES.light })
 
 export const F_SERIF = "'Inter', system-ui, sans-serif"
 export const F_SANS  = "'Inter', 'DM Sans', sans-serif"
@@ -49,7 +54,9 @@ export function useIsMobile() {
 
 export function useThemeContext() {
   const { current } = useGlobalTheme()
-  return THEMES[current.id] || THEMES.nordic
+  // Resolve: 'dark' → THEMES.dark, 'light' → THEMES.light
+  // Legacy fallback: 'nordic' → THEMES.dark, 'ash' → THEMES.light
+  return THEMES[current.id] || THEMES[current.id === 'light' ? 'light' : 'dark']
 }
 
 // ─────────────────────────────────────────────────────────

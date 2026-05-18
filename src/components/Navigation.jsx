@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { TrendingUp, LogIn, LogOut, User } from 'lucide-react'
 // Comment out useAuth for now - add later
@@ -37,7 +37,7 @@ const Navigation = () => {
               borderRadius: '10px',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
-              <TrendingUp size={18} color="white" />
+              <TrendingUp size={18} color="var(--bg)" />
             </div>
             <span style={{ fontFamily: 'Bebas Neue', fontSize: '22px', letterSpacing: '0.06em', color: '#F8FAFC' }}>
               Certify<span style={{ color: 'var(--linear-blue)' }}>ROI</span>
@@ -52,7 +52,7 @@ const Navigation = () => {
                     <img src={user.photoURL} alt="" style={{ width: '30px', height: '30px', borderRadius: '50%', border: '2px solid transparent' }} />
                   ) : (
                     <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <User size={14} color="white" />
+                      <User size={14} color="var(--bg)" />
                     </div>
                   )}
                   <button
@@ -76,7 +76,7 @@ const Navigation = () => {
                     display: 'flex', alignItems: 'center', gap: '7px',
                     padding: '8px 18px',
                     background: 'var(--accent)',
-                    border: 'none', borderRadius: '10px', color: 'white',
+                    border: 'none', borderRadius: '10px', color: 'var(--bg)',
                     fontSize: '14px', fontWeight: '600', cursor: 'pointer',
                     opacity: signingIn ? 0.7 : 1,
                   }}

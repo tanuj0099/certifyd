@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useAuth } from './useAuth.jsx'
+import { useAuth } from '../hooks/useAuth.jsx'
+import { upsertUserProfile } from '../services/userProfileService.js'
 
 // ── Local storage key ──────────────────────────────────────
 const LS_KEY = 'croi_profile'
@@ -79,6 +80,12 @@ export function useProfile() {
     setLocalProfile(updated)
 
     if (user) {
+      try {
+        await upsertUserProfile(user, updated)
+      } catch (e) {
+        console.warn('Supabase profile write failed - continuing with Firebase/local copy', e)
+      }
+
       try {
         const { db } = await import('../firebase.js')
         if (db) {

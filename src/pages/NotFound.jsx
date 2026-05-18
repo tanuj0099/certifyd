@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { motion } from 'framer-motion';
 import { AlertCircle, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -83,14 +83,14 @@ export default function NotFound({ isDark }) {
             padding: '14px 28px',
             borderRadius: '100px',
             backgroundColor: 'var(--accent)',
-            color: '#fff',
+            color: 'var(--bg)',
             fontSize: '16px',
             fontWeight: '600',
             fontFamily: 'var(--font-head)',
             border: 'none',
             cursor: 'pointer',
             transition: 'background 0.2s',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+            boxShadow: 'none',
           }}
         >
           <ArrowLeft size={18} />

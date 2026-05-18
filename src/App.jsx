@@ -8,6 +8,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import DynamicIslandNav from "./components/DynamicIslandNav";
+import AuthModal from "./components/AuthModal.jsx";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   TrendingUp,
@@ -72,6 +73,8 @@ const HowItWorksPage = lazy(() => import("./pages/HowItWorks.jsx"));
 const PricingPage = lazy(() => import("./pages/Pricing.jsx"));
 const ContactPage = lazy(() => import("./pages/Contact.jsx"));
 const BlogPage = lazy(() => import("./pages/Blog.jsx"));
+const ProfilePage = lazy(() => import("./pages/Profile.jsx"));
+const UnauthorizedPage = lazy(() => import("./pages/Unauthorized.jsx"));
 const ResumeTool = lazy(() => import("./pages/ResumeTool.jsx"));
 const ROITool = lazy(() => import("./pages/ROITool.jsx"));
 const HeatmapTool = lazy(() => import("./pages/HeatmapTool.jsx"));
@@ -2877,7 +2880,7 @@ function AppRoot() {
   const { isDark, toggle: toggleTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, signInGoogle, signOut, loading } = useAuth();
+  const { user, signOut, loading } = useAuth();
   const [showSignIn, setShowSignIn] = useState(false);
 
   // ── Journey state now lives in Zustand ────────────────
@@ -2912,13 +2915,9 @@ function AppRoot() {
       style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
     >
       <AnimatePresence>
-        <SignInModal
+        <AuthModal
           isOpen={showSignIn}
           onClose={() => setShowSignIn(false)}
-          onSignIn={() => {
-            signInGoogle();
-            setShowSignIn(false);
-          }}
           loading={loading}
         />
       </AnimatePresence>
@@ -2969,6 +2968,8 @@ function AppRoot() {
                 <Route path="/pricing" element={<PricingPage />} />
                 <Route path="/blog" element={<BlogPage />} />
                 <Route path="/contact" element={<ContactPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/unauthorized" element={<UnauthorizedPage />} />
                 <Route path="/tools/resume" element={<ResumeTool />} />
                 <Route path="/tools/roi" element={<ROITool />} />
                 <Route path="/tools/heatmap" element={<HeatmapTool />} />

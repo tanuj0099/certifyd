@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { useEffect, useMemo, useState } from 'react'
+import { Search, X, TrendingUp } from 'lucide-react'
+import { useEffect, useMemo, useState, useDeferredValue } from 'react'
 import { supabase } from '../lib/supabase.js'
 
 const FM = "'JetBrains Mono','IBM Plex Mono',monospace"
@@ -76,14 +77,15 @@ function calcPaybackMonths(row) {
 }
 
 function fmtLpa(rupees) {
-  if (!rupees || rupees <= 0) return '-'
+  if (!rupees || rupees <= 0) return '—'
   return `INR ${(rupees / 100_000).toFixed(1)}L`
 }
 
 function fmtJobs(value) {
-  return value > 0 ? value.toLocaleString('en-IN') : '-'
+  return value > 0 ? value.toLocaleString('en-IN') : '—'
 }
 
+// ── Capsule filter pill ────────────────────────────────────────────────────
 function Capsule({ active, label, onClick }) {
   return (
     <button
@@ -92,18 +94,19 @@ function Capsule({ active, label, onClick }) {
       style={{
         display: 'inline-flex',
         alignItems: 'center',
-        height: '34px',
+        height: '32px',
         padding: '0 14px',
         borderRadius: '999px',
         border: active ? '1px solid var(--text)' : '1px solid var(--border)',
         background: active ? 'var(--text)' : 'transparent',
-        color: active ? 'var(--bg)' : 'var(--text-muted)',
+        color: active ? 'var(--bg)' : 'var(--text-3)',
         fontFamily: FM,
-        fontSize: '11px',
+        fontSize: '10px',
         letterSpacing: '0.08em',
         whiteSpace: 'nowrap',
         cursor: 'pointer',
         transition: 'background 0.18s ease, color 0.18s ease, border-color 0.18s ease',
+        fontWeight: active ? 700 : 500,
       }}
     >
       {label}
@@ -111,28 +114,70 @@ function Capsule({ active, label, onClick }) {
   )
 }
 
+// ── Search input (enhanced, pill style) ───────────────────────────────────
+function SearchBar({ value, onChange }) {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '10px',
+        height: '42px',
+        padding: '0 16px',
+        borderRadius: '999px',
+        border: '1px solid var(--border-mid)',
+        background: 'transparent',
+        color: 'var(--text-3)',
+        transition: 'border-color 0.18s ease',
+        minWidth: '260px',
+        maxWidth: '360px',
+        flex: '1 1 260px',
+      }}
+    >
+      <Search size={15} strokeWidth={1.8} style={{ flexShrink: 0, opacity: 0.6 }} />
+      <input
+        type="search"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder="Search role or domain…"
+        aria-label="Search roles"
+        style={{
+          flex: 1,
+          border: 'none',
+          outline: 'none',
+          background: 'transparent',
+          color: 'var(--text)',
+          fontFamily: FS,
+          fontSize: '13px',
+          lineHeight: 1,
+        }}
+      />
+      {value && (
+        <button
+          type="button"
+          onClick={() => onChange('')}
+          aria-label="Clear search"
+          style={{
+            background: 'none',
+            border: 'none',
+            padding: 0,
+            cursor: 'pointer',
+            color: 'var(--text-3)',
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <X size={13} />
+        </button>
+      )}
+    </div>
+  )
+}
+
+// ── Table row ─────────────────────────────────────────────────────────────
 function RoleRow({ row, index, total, isPhone }) {
   const payback = calcPaybackMonths(row)
   const isLast = index === total - 1
-  const metricStyle = {
-    minWidth: 0,
-  }
-  const labelStyle = {
-    display: 'block',
-    marginBottom: '6px',
-    color: 'var(--text-soft)',
-    fontFamily: FM,
-    fontSize: '9px',
-    letterSpacing: '0.12em',
-    textTransform: 'uppercase',
-  }
-  const valueStyle = {
-    display: 'block',
-    color: 'var(--text)',
-    fontFamily: FM,
-    fontSize: '12px',
-    fontVariantNumeric: 'tabular-nums',
-  }
 
   if (isPhone) {
     return (
@@ -148,51 +193,57 @@ function RoleRow({ row, index, total, isPhone }) {
       >
         <h3
           style={{
-            margin: '0 0 16px',
+            margin: '0 0 14px',
             color: 'var(--text)',
             fontFamily: FS,
-            fontSize: '16px',
+            fontSize: '15px',
             lineHeight: 1.3,
             fontWeight: 750,
           }}
         >
           {row.domain_name}
         </h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '16px' }}>
-          <div style={metricStyle}>
-            <span style={labelStyle}>Entry</span>
-            <span style={valueStyle}>{fmtLpa(row.min_salary)}</span>
-          </div>
-          <div style={metricStyle}>
-            <span style={labelStyle}>Ceiling</span>
-            <span style={valueStyle}>{fmtLpa(row.max_salary)}</span>
-          </div>
-          <div style={metricStyle}>
-            <span style={labelStyle}>Jobs</span>
-            <span style={valueStyle}>{fmtJobs(row.job_count_naukri)}</span>
-          </div>
-          <div style={metricStyle}>
-            <span style={labelStyle}>ROI Months</span>
-            <span style={valueStyle}>{payback ? `${payback} mo` : '-'}</span>
-          </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '14px' }}>
+          {[
+            { label: 'Entry', val: fmtLpa(row.min_salary) },
+            { label: 'Ceiling', val: fmtLpa(row.max_salary) },
+            { label: 'Live Jobs', val: fmtJobs(row.job_count_naukri) },
+            { label: 'ROI Months', val: payback ? `${payback} mo` : '—' },
+          ].map(({ label, val }) => (
+            <div key={label}>
+              <span style={{
+                display: 'block', marginBottom: '5px',
+                color: 'var(--text-4)', fontFamily: FM, fontSize: '9px',
+                letterSpacing: '0.12em', textTransform: 'uppercase',
+              }}>{label}</span>
+              <span style={{
+                display: 'block', color: 'var(--text)', fontFamily: FM,
+                fontSize: '12px', fontVariantNumeric: 'tabular-nums',
+              }}>{val}</span>
+            </div>
+          ))}
         </div>
       </motion.article>
     )
   }
 
+  // Row hover highlight
   return (
     <motion.article
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.22, delay: Math.min(index * 0.025, 0.2) }}
+      whileHover={{ backgroundColor: 'rgba(255,255,255,0.02)' }}
       style={{
         display: 'grid',
-        gridTemplateColumns: 'minmax(0, 1.35fr) 104px 104px 92px 96px',
+        gridTemplateColumns: 'minmax(0, 1.6fr) 112px 112px 96px 96px',
         alignItems: 'center',
         gap: '10px',
-        padding: '15px 0',
+        padding: '14px 12px',
         borderBottom: isLast ? 'none' : '1px solid var(--border)',
         background: 'transparent',
+        borderRadius: '6px',
+        cursor: 'default',
       }}
     >
       <span
@@ -209,12 +260,12 @@ function RoleRow({ row, index, total, isPhone }) {
       >
         {row.domain_name}
       </span>
-      {[fmtLpa(row.min_salary), fmtLpa(row.max_salary), fmtJobs(row.job_count_naukri), payback ? `${payback} mo` : '-'].map(
-        (value) => (
+      {[fmtLpa(row.min_salary), fmtLpa(row.max_salary), fmtJobs(row.job_count_naukri), payback ? `${payback} mo` : '—'].map(
+        (value, i) => (
           <span
-            key={value}
+            key={`${value}-${i}`}
             style={{
-              color: 'var(--text-muted)',
+              color: 'var(--text-3)',
               fontFamily: FM,
               fontSize: '12px',
               fontVariantNumeric: 'tabular-nums',
@@ -235,6 +286,8 @@ export default function LiveMarketPulse() {
   const [error, setError] = useState('')
   const [activeId, setActiveId] = useState('all')
   const [lastSync, setLastSync] = useState(null)
+  const [searchQuery, setSearchQuery] = useState('')
+  const deferredQuery = useDeferredValue(searchQuery)
   const { isPhone, isTablet } = useViewportBand()
 
   useEffect(() => {
@@ -296,12 +349,25 @@ export default function LiveMarketPulse() {
   }, [])
 
   const activeCapsule = CAPSULES.find((capsule) => capsule.id === activeId) || CAPSULES[0]
+
   const filtered = useMemo(() => {
-    if (!activeCapsule.match) return rows
-    return rows.filter((row) =>
-      activeCapsule.match.some((keyword) => row.domain_name.toLowerCase().includes(keyword.toLowerCase()))
-    )
-  }, [activeCapsule, rows])
+    let result = rows
+
+    // Category filter
+    if (activeCapsule.match) {
+      result = result.filter((row) =>
+        activeCapsule.match.some((keyword) => row.domain_name.toLowerCase().includes(keyword.toLowerCase()))
+      )
+    }
+
+    // Search filter
+    const needle = deferredQuery.trim().toLowerCase()
+    if (needle) {
+      result = result.filter((row) => row.domain_name.toLowerCase().includes(needle))
+    }
+
+    return result
+  }, [activeCapsule, rows, deferredQuery])
 
   const stats = useMemo(() => {
     const rowsWithSalary = rows.filter((row) => row.min_salary > 0 && row.max_salary > 0)
@@ -315,15 +381,15 @@ export default function LiveMarketPulse() {
     const paybacks = rowsWithSalary.map(calcPaybackMonths).filter(Boolean)
     const avgPayback = paybacks.length
       ? `${Math.round(paybacks.reduce((sum, value) => sum + value, 0) / paybacks.length)} mo`
-      : '-'
+      : '—'
 
     return [
-      { label: 'Roles Tracked', value: rows.length || '-' },
-      { label: 'With Salary', value: rowsWithSalary.length || '-' },
+      { label: 'Roles Tracked', value: rows.length || '—' },
+      { label: 'With Salary', value: rowsWithSalary.length || '—' },
       { label: 'Avg Entry', value: fmtLpa(avgMin) },
       { label: 'Avg Ceiling', value: fmtLpa(avgMax) },
       { label: 'Avg ROI', value: avgPayback },
-      { label: 'Live Jobs', value: totalJobs ? totalJobs.toLocaleString('en-IN') : '-' },
+      { label: 'Live Jobs', value: totalJobs ? totalJobs.toLocaleString('en-IN') : '—' },
     ]
   }, [rows])
 
@@ -339,13 +405,15 @@ export default function LiveMarketPulse() {
       }}
     >
       <div style={{ width: 'min(100%, 1120px)', margin: '0 auto' }}>
+
+        {/* ── Header ───────────────────────────────────────────── */}
         <div
           style={{
             display: 'grid',
             gridTemplateColumns: isPhone ? '1fr' : 'minmax(0, 1fr) auto',
             gap: '18px',
             alignItems: 'end',
-            marginBottom: '30px',
+            marginBottom: '32px',
           }}
         >
           <div>
@@ -360,33 +428,33 @@ export default function LiveMarketPulse() {
                 textTransform: 'uppercase',
               }}
             >
-              Market intelligence
+              Market Intelligence
             </p>
             <h1
               style={{
                 margin: 0,
                 color: 'var(--text)',
                 fontFamily: FS,
-                fontSize: isPhone ? '28px' : '32px',
-                lineHeight: 1.08,
+                fontSize: isPhone ? '28px' : '36px',
+                lineHeight: 1.06,
                 fontWeight: 800,
-                letterSpacing: 0,
+                letterSpacing: '-0.02em',
               }}
             >
               Live Market Pulse
             </h1>
             <p
               style={{
-                maxWidth: '660px',
-                margin: '14px 0 0',
-                color: 'var(--text-muted)',
+                maxWidth: '600px',
+                margin: '12px 0 0',
+                color: 'var(--text-3)',
                 fontFamily: FS,
                 fontSize: isPhone ? '14px' : '15px',
                 lineHeight: 1.7,
               }}
             >
-              Domain-level salary bands, Naukri demand, and certification payback windows from the
-              market_intelligence table.
+              Domain-level salary bands, Naukri demand, and certification payback windows — updated live from the{' '}
+              <code style={{ fontFamily: FM, fontSize: '12px', color: 'var(--text-2)' }}>market_intelligence</code> table.
             </p>
           </div>
 
@@ -395,8 +463,8 @@ export default function LiveMarketPulse() {
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: isPhone ? 'flex-start' : 'flex-end',
-              gap: '9px',
-              color: 'var(--text-soft)',
+              gap: '8px',
+              color: 'var(--text-4)',
               fontFamily: FM,
               fontSize: '10px',
               letterSpacing: '0.12em',
@@ -409,13 +477,15 @@ export default function LiveMarketPulse() {
                 width: '7px',
                 height: '7px',
                 borderRadius: '999px',
-                background: error ? '#d94848' : rows.length ? 'var(--accent)' : 'var(--text-soft)',
+                background: error ? '#d94848' : rows.length ? 'var(--accent)' : 'var(--text-4)',
+                animation: rows.length && !error ? 'pdot 1.8s ease-in-out infinite' : 'none',
               }}
             />
-            {loading ? 'Syncing' : error ? 'Unavailable' : lastSync ? `Synced ${new Date(lastSync).toLocaleDateString('en-IN')}` : 'Live'}
+            {loading ? 'Syncing…' : error ? 'Unavailable' : lastSync ? `Synced ${new Date(lastSync).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}` : 'Live'}
           </div>
         </div>
 
+        {/* ── Stats bar ─────────────────────────────────────────── */}
         {!loading && rows.length > 0 && (
           <div
             style={{
@@ -423,7 +493,7 @@ export default function LiveMarketPulse() {
               gridTemplateColumns: statColumns,
               borderTop: '1px solid var(--border)',
               borderBottom: '1px solid var(--border)',
-              marginBottom: '24px',
+              marginBottom: '28px',
             }}
           >
             {stats.map((stat, index) => (
@@ -431,8 +501,8 @@ export default function LiveMarketPulse() {
                 key={stat.label}
                 style={{
                   minWidth: 0,
-                  padding: '17px 0',
-                  paddingLeft: index % (isPhone ? 2 : isTablet ? 3 : 6) === 0 ? 0 : '18px',
+                  padding: '18px 0',
+                  paddingLeft: index % (isPhone ? 2 : isTablet ? 3 : 6) === 0 ? 0 : '20px',
                   borderLeft: index % (isPhone ? 2 : isTablet ? 3 : 6) === 0 ? 'none' : '1px solid var(--border)',
                   borderTop: index >= (isPhone ? 2 : isTablet ? 3 : 6) ? '1px solid var(--border)' : 'none',
                 }}
@@ -441,10 +511,10 @@ export default function LiveMarketPulse() {
                   style={{
                     display: 'block',
                     marginBottom: '8px',
-                    color: 'var(--text-soft)',
+                    color: 'var(--text-4)',
                     fontFamily: FM,
                     fontSize: '9px',
-                    letterSpacing: '0.12em',
+                    letterSpacing: '0.14em',
                     textTransform: 'uppercase',
                   }}
                 >
@@ -455,9 +525,9 @@ export default function LiveMarketPulse() {
                     display: 'block',
                     color: 'var(--text)',
                     fontFamily: FM,
-                    fontSize: isPhone ? '17px' : '19px',
+                    fontSize: isPhone ? '17px' : '20px',
                     lineHeight: 1,
-                    fontWeight: 650,
+                    fontWeight: 700,
                     fontVariantNumeric: 'tabular-nums',
                   }}
                 >
@@ -468,38 +538,59 @@ export default function LiveMarketPulse() {
           </div>
         )}
 
+        {/* ── Filters: Capsules + Search ─────────────────────────── */}
         <div
           style={{
+            display: 'flex',
+            flexWrap: isPhone ? 'nowrap' : 'wrap',
+            alignItems: 'center',
+            gap: '10px',
+            overflowX: isPhone ? 'auto' : 'visible',
+            padding: isPhone ? '6px 0' : 0,
+            marginBottom: '24px',
+            background: 'var(--bg)',
+            scrollbarWidth: 'none',
             position: isPhone ? 'sticky' : 'static',
             top: isPhone ? '72px' : 'auto',
             zIndex: 4,
-            display: 'flex',
-            flexWrap: isPhone ? 'nowrap' : 'wrap',
-            gap: '8px',
-            overflowX: isPhone ? 'auto' : 'visible',
-            padding: isPhone ? '8px 0' : 0,
-            marginBottom: '28px',
-            background: 'var(--bg)',
-            scrollbarWidth: 'none',
           }}
         >
-          {CAPSULES.map((capsule) => (
-            <Capsule
-              key={capsule.id}
-              active={capsule.id === activeId}
-              label={capsule.label}
-              onClick={() => setActiveId(capsule.id)}
-            />
-          ))}
+          {/* Category capsules */}
+          <div style={{ display: 'flex', gap: '8px', flexWrap: isPhone ? 'nowrap' : 'wrap', flexShrink: 0 }}>
+            {CAPSULES.map((capsule) => (
+              <Capsule
+                key={capsule.id}
+                active={capsule.id === activeId}
+                label={capsule.label}
+                onClick={() => setActiveId(capsule.id)}
+              />
+            ))}
+          </div>
+
+          {/* Spacer */}
+          {!isPhone && <div style={{ flex: 1 }} />}
+
+          {/* Search */}
+          {!isPhone && (
+            <SearchBar value={searchQuery} onChange={setSearchQuery} />
+          )}
         </div>
 
+        {/* Mobile search */}
+        {isPhone && (
+          <div style={{ marginBottom: '18px' }}>
+            <SearchBar value={searchQuery} onChange={setSearchQuery} />
+          </div>
+        )}
+
+        {/* ── Table header ─────────────────────────────────────── */}
         {!isPhone && (
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'minmax(0, 1.35fr) 104px 104px 92px 96px',
+              gridTemplateColumns: 'minmax(0, 1.6fr) 112px 112px 96px 96px',
               gap: '10px',
-              paddingBottom: '11px',
+              padding: '0 12px 12px',
               borderBottom: '1px solid var(--border)',
             }}
           >
@@ -507,9 +598,9 @@ export default function LiveMarketPulse() {
               <span
                 key={label}
                 style={{
-                  color: 'var(--text-soft)',
+                  color: 'var(--text-4)',
                   fontFamily: FM,
-                  fontSize: '10px',
+                  fontSize: '9px',
                   letterSpacing: '0.14em',
                   textTransform: 'uppercase',
                   textAlign: index === 0 ? 'left' : 'right',
@@ -521,27 +612,35 @@ export default function LiveMarketPulse() {
           </div>
         )}
 
+        {/* ── Loading state ─────────────────────────────────────── */}
         {loading && (
           <div
             style={{
-              padding: '44px 0',
-              borderTop: isPhone ? '1px solid var(--border)' : 'none',
-              color: 'var(--text-soft)',
+              padding: '48px 0',
+              color: 'var(--text-4)',
               fontFamily: FM,
-              fontSize: '12px',
+              fontSize: '11px',
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
             }}
           >
-            Loading market rows...
+            <span style={{
+              width: '6px', height: '6px', borderRadius: '50%',
+              background: 'var(--text-4)',
+              animation: 'pdot 1.4s ease-in-out infinite',
+            }} />
+            Loading market rows…
           </div>
         )}
 
+        {/* ── Error state ────────────────────────────────────────── */}
         {!loading && error && (
           <div
             style={{
               padding: '34px 0',
-              borderTop: isPhone ? '1px solid var(--border)' : 'none',
               color: '#d94848',
               fontFamily: FS,
               fontSize: '14px',
@@ -552,25 +651,32 @@ export default function LiveMarketPulse() {
           </div>
         )}
 
+        {/* ── Empty state ───────────────────────────────────────── */}
         {!loading && !error && filtered.length === 0 && (
           <div
             style={{
-              padding: '44px 0',
-              borderTop: isPhone ? '1px solid var(--border)' : 'none',
-              color: 'var(--text-muted)',
+              padding: '48px 0',
+              color: 'var(--text-3)',
               fontFamily: FS,
               fontSize: '14px',
               lineHeight: 1.6,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '8px',
             }}
           >
-            No data for this capsule yet. The scraper is still building this slice of the dataset.
+            <TrendingUp size={18} style={{ opacity: 0.4 }} />
+            {searchQuery
+              ? `No roles match "${searchQuery}". Try a different search.`
+              : 'No data for this category yet. The scraper is still building this slice.'}
           </div>
         )}
 
+        {/* ── Data rows ─────────────────────────────────────────── */}
         {!loading && !error && filtered.length > 0 && (
           <AnimatePresence mode="wait">
             <motion.div
-              key={activeId}
+              key={`${activeId}-${deferredQuery}`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -589,22 +695,22 @@ export default function LiveMarketPulse() {
           </AnimatePresence>
         )}
 
+        {/* ── Footer note ────────────────────────────────────────── */}
         {!loading && rows.length > 0 && (
           <p
             style={{
               margin: '32px 0 0',
               paddingTop: '20px',
               borderTop: '1px solid var(--border)',
-              color: 'var(--text-soft)',
+              color: 'var(--text-4)',
               fontFamily: FM,
-              fontSize: '10px',
+              fontSize: '9px',
               lineHeight: 1.8,
-              letterSpacing: '0.08em',
+              letterSpacing: '0.09em',
               textTransform: 'uppercase',
             }}
           >
-            Data: market_intelligence. ROI months = cost / ((salary ceiling - entry salary) / 12).
-            Missing certification cost falls back to INR 25,000.
+            Source: market_intelligence table · ROI = cost ÷ ((ceiling − entry) ÷ 12) · Missing cost defaults to ₹25,000
           </p>
         )}
       </div>

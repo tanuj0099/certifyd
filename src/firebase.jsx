@@ -13,7 +13,18 @@
 // ============================================================
 
 import { initializeApp } from 'firebase/app'
-import { getAuth, GoogleAuthProvider, RecaptchaVerifier, signInWithPhoneNumber, signInWithPopup, signOut } from 'firebase/auth'
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  GoogleAuthProvider,
+  RecaptchaVerifier,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signInWithPhoneNumber,
+  signInWithPopup,
+  signOut,
+  updateProfile,
+} from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
 
 // TODO: Replace with your Firebase config from console.firebase.google.com
@@ -45,6 +56,25 @@ googleProvider.setCustomParameters({ prompt: 'select_account' })
 export const signInWithGoogle = async () => {
   if (!auth) throw new Error('Firebase not configured')
   return signInWithPopup(auth, googleProvider)
+}
+
+export const signInWithEmail = async (email, password) => {
+  if (!auth) throw new Error('Firebase not configured')
+  return signInWithEmailAndPassword(auth, email, password)
+}
+
+export const signUpWithEmail = async (email, password, displayName = '') => {
+  if (!auth) throw new Error('Firebase not configured')
+  const result = await createUserWithEmailAndPassword(auth, email, password)
+  if (displayName) {
+    await updateProfile(result.user, { displayName })
+  }
+  return result
+}
+
+export const sendPasswordReset = async (email) => {
+  if (!auth) throw new Error('Firebase not configured')
+  return sendPasswordResetEmail(auth, email)
 }
 
 // Setup reCAPTCHA for phone auth (call this once, passing the button element ID)

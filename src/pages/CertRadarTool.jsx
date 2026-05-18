@@ -1,14 +1,13 @@
 import CertRadar from '../components/CertRadar.jsx'
-import ToolPageWrapper from '../components/ToolPageWrapper.jsx'
+import { MarketingFooter } from '../components/MarketingPageShell.jsx'
 
+// CertRadar now manages its own full-page layout (header + stats + grid).
+// We just need a thin shell for the footer.
 export default function CertRadarTool() {
   return (
-    <ToolPageWrapper
-      title="Cert Radar"
-      subtitle="Pipeline Intelligence"
-      description="Browse the live certification catalogue collected by the pipeline, filtered by domain and provider."
-    >
+    <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
       <CertRadar />
-    </ToolPageWrapper>
+      <MarketingFooter />
+    </div>
   )
 }

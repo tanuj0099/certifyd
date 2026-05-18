@@ -1,8 +1,7 @@
-import { motion, useScroll, AnimatePresence } from 'framer-motion'
+﻿import { motion, useScroll, AnimatePresence } from 'framer-motion'
 import React, { useRef, useState, useEffect, createContext, useContext } from 'react'
 import { ArrowRight, ChevronDown, BarChart2, CheckCircle2 } from 'lucide-react'
-import { supabase } from '../lib/supabase.js'
-import LiveMarketPulse from './LiveMarketPulse.jsx'
+import FeaturesBentoGrid from './FeaturesBentoGrid.jsx'
 import { useJourneyStore } from '../store/useJourneyStore.js'
 import { THEMES } from './SharedUI.jsx'
 import { useTheme as useThemeContext } from '../hooks/useTheme.jsx'
@@ -10,8 +9,8 @@ import { useTheme as useThemeContext } from '../hooks/useTheme.jsx'
 // ─────────────────────────────────────────────────────────
 // THEME — Read from 5-theme engine
 // ─────────────────────────────────────────────────────────
-const ThemeContext = createContext(THEMES.nordic)
-function useTheme() { return useContext(ThemeContext) || THEMES.nordic }
+const ThemeContext = createContext(THEMES.dark || THEMES.nordic)
+function useTheme() { return useContext(ThemeContext) || THEMES.dark || THEMES.nordic }
 
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // HOOKS
@@ -95,14 +94,12 @@ function PillBtn({ onClick = () => {}, children, large, primary = false }) {
         fontFamily: F_SANS, fontWeight: '600',
         letterSpacing: '0.07em', textTransform: 'uppercase',
         cursor: 'pointer',
-        color: primary ? '#FFFFFF' : (d ? C.goldL : C.gold),
+        color: primary ? 'var(--bg)' : (d ? C.goldL : C.gold),
         boxShadow: primary 
           ? `0 4px 14px transparent`
           : (d
             ? `0 2px 12px transparent`
             : `0 2px 8px transparent`),
-        backdropFilter: 'blur(10px)',
-        WebkitBackdropFilter: 'blur(10px)',
         transition: 'all 0.3s ease',
       }}
     >
@@ -119,7 +116,6 @@ function GlassPill({ children }) {
       display: 'inline-flex', alignItems: 'center', gap: '10px',
       padding: '7px 16px', borderRadius: '9999px',
       background: 'transparent',
-      backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
       border: `1px solid ${d ? 'var(--border-subtle)' : 'transparent'}`,
     }}>
       {children}
@@ -142,8 +138,6 @@ function StorySection({ id = '', title = '', children, bg = '', noBorderTop = fa
         display: 'flex', 
         flexDirection: isMobile ? 'column' : 'row',
         background: 'transparent',
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)',
         border: `1px solid ${d ? 'var(--border-subtle)' : 'transparent'}`,
         boxShadow: 'none',
         borderRadius: '16px',
@@ -389,7 +383,7 @@ function DataComposition() {
   const isMobile = useIsMobile()
 
   // â”€â”€ Flat card token â€” no glass, no blur, no shadow â”€â”€â”€â”€â”€â”€
-  const CARD_BG     = !C.isLight ? '#141414' : '#F2F0EC'
+  const CARD_BG = C.surface
   const CARD_BORDER = !C.isLight
     ? '1px solid var(--border-subtle)'
     : '1px solid transparent'
@@ -802,7 +796,7 @@ function PivotDomainsCard({ onEnter }) {
                     padding: '9px 16px', borderRadius: '6px',
                     background: domain.trim() ? LINEAR_BLUE : 'transparent',
                     border: '1px solid ' + (domain.trim() ? LINEAR_BLUE : 'var(--border-subtle)'),
-                    color: domain.trim() ? '#fff' : COOL_GREY,
+                    color: domain.trim() ? C.text : C.text3,
                     fontFamily: FM, fontSize: '11px', fontWeight: '700',
                     cursor: domain.trim() ? 'pointer' : 'not-allowed',
                     letterSpacing: '0.06em', whiteSpace: 'nowrap',
@@ -819,12 +813,12 @@ function PivotDomainsCard({ onEnter }) {
                   initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}
                   style={{
                     marginTop: '8px', padding: '8px 12px', borderRadius: '6px',
-                    background: !C.isLight ? '#08090A' : '#F7F8F8',
+                    background: C.bgAlt,
                     border: '1px solid ' + (!C.isLight ? 'var(--border-subtle)' : 'transparent'),
                     fontFamily: FM, fontSize: '10px', color: COOL_GREY, letterSpacing: '0.08em',
                   }}
                 >
-                  GROQ VALIDATION WILL RUN ON ANALYSIS // {domain.trim().toUpperCase()}
+                  VALIDATION WILL RUN ON ANALYSIS // {domain.trim().toUpperCase()}
                 </motion.div>
               )}
             </div>
@@ -1133,7 +1127,7 @@ function Footer() {
 
 export default function App({ onNavigate, onEnter, isDark = true }) {
   const { current } = useThemeContext()
-  const C = THEMES[current.id] || THEMES.nordic
+  const C = THEMES[current.id] || THEMES[current.id === 'light' ? 'light' : 'dark'] || THEMES.nordic
   const isMobile = useIsMobile()
   const handleEnter = typeof onEnter === 'function' ? onEnter : function() {}
 
@@ -1177,9 +1171,7 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
             {/* Radial fade â€” more aggressive on light mode for readability */}
             <div style={{
               position: 'absolute', inset: 0,
-              background: C.isLight
-                ? 'linear-gradient(180deg, rgba(255,255,255,0.62) 0%, rgba(255,255,255,0.18) 42%, rgba(255,255,255,0.0) 78%)'
-                : 'linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.22) 46%, rgba(0,0,0,0.0) 78%)',
+              background: 'transparent',
             }} />
           </div>
 
@@ -1268,7 +1260,7 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
         <TrustStrip />
         <CertAssembly />
         <DataComposition />
-        <LiveMarketPulse />
+        <FeaturesBentoGrid onEnter={handleEnter} />
         <PivotDomainsCard onEnter={handleEnter} />
         <HowItWorks onEnter={handleEnter} />
         <VsSection />

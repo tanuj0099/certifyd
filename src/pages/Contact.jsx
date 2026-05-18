@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight, Clock3, Mail, MapPin, MessageSquare, Sparkles } from 'lucide-react'
 import MarketingPageShell, { GlassCard, PillButton } from '../components/MarketingPageShell.jsx'
+import { supabase } from '../lib/supabase.js'
 
 const FB = "'Inter','DM Sans',sans-serif"
 const FH = "'EB Garamond','Cormorant Garamond',Georgia,serif"
@@ -11,10 +12,31 @@ const T = { duration: 0.34, ease: [0.16, 1, 0.3, 1] }
 export default function ContactPage() {
   const [formState, setFormState] = useState({ name: '', email: '', subject: 'General feedback', message: '' })
   const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [submitNote, setSubmitNote] = useState('')
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    setSubmitting(true)
+    setSubmitNote('')
+    try {
+      if (supabase) {
+        const { error } = await supabase.from('feedback_messages').insert({
+          name: formState.name,
+          email: formState.email,
+          subject: formState.subject,
+          message: formState.message,
+          source: 'contact_page',
+          created_at: new Date().toISOString(),
+        })
+        if (error) throw error
+      }
+      setSubmitNote('Saved to Supabase.')
+    } catch (error) {
+      setSubmitNote(error?.message || 'Supabase feedback table is not available yet.')
+    }
     setSubmitted(true)
+    setSubmitting(false)
     window.setTimeout(() => {
       setSubmitted(false)
       setFormState({ name: '', email: '', subject: 'General feedback', message: '' })
@@ -53,7 +75,7 @@ export default function ContactPage() {
                   Message received
                 </div>
                 <p style={{ fontFamily: FB, fontSize: '14px', color: 'var(--text-3)', lineHeight: '1.8', margin: 0 }}>
-                  Thanks. We will get back to you at the email you provided.
+                  Thanks. We will get back to you at the email you provided. {submitNote}
                 </p>
               </div>
             ) : (
@@ -192,7 +214,7 @@ export default function ContactPage() {
 
                 <div style={{ display: 'flex', justifyContent: 'flex-start', paddingTop: '4px' }}>
                   <PillButton type="submit">
-                    Send Message <ArrowRight size={15} />
+                    {submitting ? 'Sending...' : 'Send Message'} <ArrowRight size={15} />
                   </PillButton>
                 </div>
               </form>
