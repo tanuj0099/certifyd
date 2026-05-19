@@ -1,4 +1,4 @@
-﻿import { motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Mail, MapPin, TrendingUp } from 'lucide-react'
 import WaveBg from './WaveBg.jsx'
@@ -124,7 +124,6 @@ export function MarketingFooter() {
               {[
                 { label: 'Home', to: '/' },
                 { label: 'Tools', to: '/app' },
-                { label: 'Profile', to: '/profile' },
                 { label: 'About', to: '/about' },
                 { label: 'FAQ', to: '/faq' },
                 { label: 'Contact', to: '/contact' },

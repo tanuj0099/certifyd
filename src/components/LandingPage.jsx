@@ -1,13 +1,12 @@
-﻿import { motion, useScroll, AnimatePresence } from 'framer-motion'
+import { motion, useScroll, AnimatePresence } from 'framer-motion'
 import React, { useRef, useState, useEffect } from 'react'
 import { ArrowRight, ChevronDown, BarChart2, CheckCircle2 } from 'lucide-react'
 import FeaturesBentoGrid from './FeaturesBentoGrid.jsx'
 import { useJourneyStore } from '../store/useJourneyStore.js'
 import { THEMES, useThemeContext } from './SharedUI.jsx'
 
-function useTheme() { 
-  const { current } = useThemeContext()
-  return current || THEMES.dark || THEMES.nordic
+function useTheme() {
+  return useThemeContext()
 }
 
 // ─────────────────────────────────────────────────────────
@@ -96,14 +95,12 @@ function PillBtn({ onClick = () => {}, children, large, primary = false }) {
 
 
 function GlassPill({ children }) {
-  const C = useTheme()
-  const d = !C.isLight
   return (
     <div style={{
       display: 'inline-flex', alignItems: 'center', gap: '10px',
       padding: '7px 16px', borderRadius: '9999px',
-      background: 'transparent',
-      border: `1px solid ${d ? 'var(--border-subtle)' : 'transparent'}`,
+      background: 'var(--bg-alt)',
+      border: '1px solid var(--border)',
     }}>
       {children}
     </div>
@@ -116,19 +113,21 @@ function GlassPill({ children }) {
 function StorySection({ id = '', title = '', children, bg = '', noBorderTop = false }) {
   const C = useTheme()
   const isMobile = useIsMobile()
-  const d = !C.isLight
   return (
-    <div style={{ position: 'relative', padding: isMobile ? '16px' : '32px 24px' }}>
+    <div style={{
+      position: 'relative',
+      padding: isMobile ? '16px' : '32px 24px',
+      borderTop: noBorderTop ? 'none' : '1px solid var(--border)',
+    }}>
       <div style={{ 
         maxWidth: '1400px', 
         margin: '0 auto', 
         display: 'flex', 
         flexDirection: isMobile ? 'column' : 'row',
         background: 'transparent',
-        border: `1px solid ${d ? 'var(--border-subtle)' : 'transparent'}`,
-        boxShadow: 'none',
-        borderRadius: '16px',
-        overflow: 'hidden'
+        border: 'none',
+        borderRadius: 0,
+        overflow: 'visible'
       }}>
         {!isMobile && (
           <div style={{ width: '140px', flexShrink: 0, borderRight: `1px solid ${C.border}`, position: 'relative' }}>
@@ -145,9 +144,9 @@ function StorySection({ id = '', title = '', children, bg = '', noBorderTop = fa
             </div>
           </div>
         )}
-        <div style={{ flex: 1, padding: isMobile ? '56px 24px' : '100px 6vw', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ flex: 1, padding: isMobile ? '32px 16px' : '64px 4vw', position: 'relative', overflow: 'visible' }}>
           {isMobile && (
-            <div style={{ marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px' }}>
               <span style={{ fontFamily: F_MONO, fontSize: '11px', color: C.gold, fontWeight: '700', letterSpacing: '0.12em' }}>{id}</span>
               <div style={{ height: '1px', flex: 1, background: C.border }} />
               <span style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.12em' }}>{title}</span>
@@ -371,9 +370,7 @@ function DataComposition() {
 
   // â”€â”€ Flat card token â€” no glass, no blur, no shadow â”€â”€â”€â”€â”€â”€
   const CARD_BG = C.surface
-  const CARD_BORDER = !C.isLight
-    ? '1px solid var(--border-subtle)'
-    : '1px solid transparent'
+  const CARD_BORDER = '1px solid var(--border)'
   const CARD_RADIUS = '4px'
 
   // â”€â”€ Accent rules:
@@ -721,7 +718,7 @@ function PivotDomainsCard({ onEnter }) {
 
   const FM = F_MONO
   const LINEAR_BLUE = 'var(--accent)'
-  const COOL_GREY   = '#8A8F98'
+  const COOL_GREY   = C.text3
 
   function handleStartSwitching() {
     setTargetDomain(domain)
@@ -1153,10 +1150,12 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
                   : 'brightness(0.62) contrast(1.12) saturate(0.82)',
               }}
             />
-            {/* Radial fade â€” more aggressive on light mode for readability */}
+            {/* Theme-aware overlay for hero text readability */}
             <div style={{
               position: 'absolute', inset: 0,
-              background: 'transparent',
+              background: C.isLight
+                ? 'linear-gradient(to bottom, rgba(0,0,0,0.42) 0%, rgba(0,0,0,0.28) 50%, rgba(0,0,0,0.38) 100%)'
+                : 'linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.5) 100%)',
             }} />
           </div>
 
@@ -1199,10 +1198,10 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
                   : 'clamp(4rem, 7.5vw, 7.5rem)',
                 lineHeight: 0.88,
                 letterSpacing: '-0.03em',
-                color: '#FFFFFF',
+                color: '#F4F5F8',
                 marginBottom: '28px',
                 maxWidth: '13ch',
-                textShadow: '0 2px 32px transparent, 0 4px 80px transparent',
+                textShadow: '0 2px 24px rgba(0,0,0,0.45)',
               }}
             >
               Your next cert<br />
@@ -1220,8 +1219,8 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
               transition={{ duration: 0.8, delay: 0.18 }}
               style={{
                 fontFamily: F_SANS, fontSize: isMobile ? '14px' : '16px',
-                color: '#FFFFFF',
-                opacity: 0.88,
+                color: 'rgba(244,245,248,0.92)',
+                opacity: 1,
                 maxWidth: '380px', lineHeight: '1.6',
                 margin: '0 0 36px',
                 textShadow: '0 1px 20px transparent',
@@ -1254,6 +1253,7 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
         <SocialProof />
         <FAQ />
         <FinalCTA onEnter={handleEnter} />
-    </div>
+        <Footer />
+      </div>
   )
 }

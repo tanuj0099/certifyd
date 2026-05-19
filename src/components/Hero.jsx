@@ -1220,7 +1220,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
                   borderRadius: '9999px',
                   background: cooldown > 0 ? 'transparent' : 'var(--accent)',
                   border: cooldown > 0 ? '1px solid var(--border)' : 'none',
-                  color: cooldown > 0 ? 'var(--text-4)' : 'white',
+                  color: cooldown > 0 ? 'var(--text-4)' : 'var(--bg)',
                   fontSize: '14px', fontWeight: '700',
                   cursor: canAnalyse ? 'pointer' : 'not-allowed',
                   fontFamily: FH, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',

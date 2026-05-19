@@ -1,250 +1,367 @@
 /**
- * PathGraphic — FIG 0.3 // ROI CALCULATOR / ROUTE ANALYSIS
+ * PathGraphic — FIG 0.3 // THE PATH
  *
- * Isometric network of grey wireframe nodes + connectors.
- * A bright tracer beam follows the single optimal path.
- * Dead-end branches are dimmer. Final node pulses on arrival.
- * Theme-aware.
+ * Linear-style isometric wireframe network.
+ * Crisp node circles + connector lines on an iso plane.
+ * A bright tracer dot races the single optimal path — dead-end branches stay dim.
+ * Final destination node pulses with a slow-expanding ring on arrival.
+ * Pure wireframe — no fills, ultra-thin strokes, monochrome.
  */
 import { useEffect, useRef, useState } from 'react';
 
-// Node positions in isometric local space (before SVG iso-transform)
+// ─── Node layout in iso-local space ─────────────────────────
+// Deliberately spread across the iso plane for a balanced composition
 const NODES = [
-  { id: 'S',   x: -85, y: 40,  role: 'start' },
-  { id: 'A',   x: -55, y: 10,  role: 'path' },
-  { id: 'B1',  x: -30, y: -20, role: 'path' },
-  { id: 'B2',  x: -25, y: 30,  role: 'dead' },
-  { id: 'C',   x: 5,   y: -45, role: 'path' },
-  { id: 'D1',  x: 25,  y: 5,   role: 'dead' },
-  { id: 'D2',  x: 40,  y: -70, role: 'path' },
-  { id: 'E1',  x: 55,  y: -30, role: 'dead' },
-  { id: 'D',   x: 75,  y: -90, role: 'end' },
+  { id: 'S',  x: -85, y:  35,  role: 'start' },
+  { id: 'A',  x: -52, y:   2,  role: 'path'  },
+  { id: 'B',  x: -24, y: -22,  role: 'path'  },
+  { id: 'X1', x: -28, y:  26,  role: 'dead'  },
+  { id: 'C',  x:   8, y: -48,  role: 'path'  },
+  { id: 'X2', x:  14, y:   4,  role: 'dead'  },
+  { id: 'X3', x: -46, y: -50,  role: 'dead'  },
+  { id: 'D',  x:  40, y: -70,  role: 'path'  },
+  { id: 'X4', x:  44, y: -28,  role: 'dead'  },
+  { id: 'X5', x:  64, y: -46,  role: 'dead'  },
+  { id: 'E',  x:  82, y: -88,  role: 'end'   },
 ];
 
-// All edges
+// ─── All edges ───────────────────────────────────────────────
 const EDGES = [
   ['S',  'A'],
-  ['A',  'B1'],
-  ['A',  'B2'],  // dead end branch
-  ['B1', 'C'],
-  ['B1', 'D1'],  // dead end branch
-  ['C',  'D2'],
-  ['C',  'E1'],  // dead end branch
-  ['D2', 'D'],
+  ['A',  'B'],
+  ['A',  'X1'],   // dead end
+  ['A',  'X3'],   // dead end
+  ['B',  'C'],
+  ['B',  'X2'],   // dead end
+  ['C',  'D'],
+  ['C',  'X4'],   // dead end
+  ['D',  'E'],
+  ['D',  'X5'],   // dead end
 ];
 
-// Optimal path (sequence of node IDs)
-const PATH = ['S', 'A', 'B1', 'C', 'D2', 'D'];
+// ─── Optimal path ────────────────────────────────────────────
+const PATH = ['S', 'A', 'B', 'C', 'D', 'E'];
 
+// ─── Helpers ─────────────────────────────────────────────────
 function nodeById(id) { return NODES.find(n => n.id === id); }
 
-// Interpolate between two nodes at t (0..1)
 function lerp(a, b, t) {
   return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
 }
 
-// Get tracer position along PATH at progress p (0..1)
 function tracerPos(p) {
-  const totalSegs = PATH.length - 1;
-  const seg = p * totalSegs;
-  const i = Math.min(Math.floor(seg), totalSegs - 1);
-  const t = seg - i;
-  const a = nodeById(PATH[i]);
-  const b = nodeById(PATH[i + 1]);
-  return lerp(a, b, t);
+  const segs = PATH.length - 1;
+  const s    = p * segs;
+  const i    = Math.min(Math.floor(s), segs - 1);
+  const a    = nodeById(PATH[i]);
+  const b    = nodeById(PATH[i + 1]);
+  return lerp(a, b, s - i);
 }
 
-// Which path nodes have been visited at progress p
-function visitedNodes(p) {
-  const totalSegs = PATH.length - 1;
-  const seg = p * totalSegs;
-  const visited = new Set();
-  for (let i = 0; i <= Math.floor(seg); i++) visited.add(PATH[i]);
-  return visited;
+function visitedSet(p) {
+  const segs = PATH.length - 1;
+  const s    = p * segs;
+  const set  = new Set();
+  for (let i = 0; i <= Math.floor(s); i++) set.add(PATH[i]);
+  return set;
 }
 
-export default function PathGraphic({ isDark = true }) {
-  const [tracerP, setTracerP] = useState(0); // 0..1 progress along path
-  const [arrived, setArrived] = useState(false);
-  const [destPulse, setDestPulse] = useState(0); // 0..1 dest pulse
-  const rafRef = useRef(null);
+function isPathEdge(a, b) {
+  for (let i = 0; i < PATH.length - 1; i++) {
+    if ((PATH[i] === a && PATH[i+1] === b) ||
+        (PATH[i] === b && PATH[i+1] === a)) return true;
+  }
+  return false;
+}
+
+function easeInOutCubic(t) {
+  return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2;
+}
+
+const PATH_SET = new Set(PATH);
+
+// ─── Component ───────────────────────────────────────────────
+export default function PathGraphic() {
+  const [tracerP,    setTracerP]    = useState(0);
+  const [arrived,    setArrived]    = useState(false);
+  const [pulseT,     setPulseT]     = useState(0);   // 0..1 arrival pulse
+  const [trailPts,   setTrailPts]   = useState([]);
+  const rafRef   = useRef(null);
   const startRef = useRef(null);
 
-  const EDGE_DIM  = isDark ? 'rgba(255,255,255,0.09)' : 'rgba(0,0,0,0.09)';
-  const EDGE_PATH = isDark ? 'rgba(255,255,255,0.6)'  : 'rgba(34,35,38,0.6)';
-  const NODE_DIM  = isDark ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.14)';
-  const NODE_PATH = isDark ? 'rgba(255,255,255,0.85)' : 'rgba(34,35,38,0.85)';
-  const NODE_END  = isDark ? '#ffffff' : '#222326';
-  const TRACER    = isDark ? '#ffffff' : '#222326';
-  const DEAD_NODE = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
-
   useEffect(() => {
-    const TRACE_DUR = 2800;   // ms to traverse path
-    const HOLD_AT_END = 1200; // ms at destination
-    const PULSE_DUR = 800;    // ms for final pulse
-    const IDLE = 1000;        // ms before restarting
-
-    let pulseStart = null;
+    const TRACE_DUR  = 3200;  // ms
+    const PULSE_DUR  = 1200;  // ms
+    const HOLD       = 1400;  // ms at destination
+    const IDLE       = 800;   // ms before restart
+    let phase     = 'tracing';
+    let phaseStart = null;
     let arrivedFlag = false;
 
-    function animate(ts) {
-      if (!startRef.current) startRef.current = ts;
-      const elapsed = ts - startRef.current;
+    function tick(ts) {
+      if (!phaseStart) phaseStart = ts;
+      const el = ts - phaseStart;
 
-      if (!arrivedFlag) {
-        const p = Math.min(elapsed / TRACE_DUR, 1);
-        setTracerP(p);
-        if (p >= 1) {
-          arrivedFlag = true;
-          setArrived(true);
-          pulseStart = ts;
+      if (phase === 'tracing') {
+        const raw = Math.min(el / TRACE_DUR, 1);
+        const t   = easeInOutCubic(raw);
+        setTracerP(t);
+
+        // Trail: last 8 positions
+        const trail = [];
+        for (let i = 8; i >= 0; i--) {
+          const tt = Math.max(0, raw - i * 0.015);
+          trail.push(tracerPos(easeInOutCubic(tt)));
         }
-      } else {
-        // Pulse phase
-        const sinceArrived = ts - pulseStart;
-        const pulse = Math.min(sinceArrived / PULSE_DUR, 1);
-        setDestPulse(pulse);
+        setTrailPts(trail);
 
-        if (sinceArrived > HOLD_AT_END + IDLE) {
-          // Reset
-          arrivedFlag = false;
-          startRef.current = ts;
+        if (raw >= 1) {
+          phase = 'arrived';
+          phaseStart = ts;
+          setArrived(true);
+        }
+      } else if (phase === 'arrived') {
+        const t = Math.min(el / PULSE_DUR, 1);
+        setPulseT(t);
+        if (el > HOLD) {
+          phase = 'idle';
+          phaseStart = ts;
+        }
+      } else if (phase === 'idle') {
+        if (el > IDLE) {
+          phase = 'tracing';
+          phaseStart = ts;
           setTracerP(0);
           setArrived(false);
-          setDestPulse(0);
-          pulseStart = null;
+          setPulseT(0);
+          setTrailPts([]);
         }
       }
 
-      rafRef.current = requestAnimationFrame(animate);
+      rafRef.current = requestAnimationFrame(tick);
     }
 
-    rafRef.current = requestAnimationFrame(animate);
-    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
+    rafRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafRef.current);
   }, []);
 
-  const pos = tracerPos(tracerP);
-  const visited = visitedNodes(tracerP);
-  const pathSet = new Set(PATH);
-
-  // Is an edge on the optimal path?
-  function isPathEdge(a, b) {
-    for (let i = 0; i < PATH.length - 1; i++) {
-      if ((PATH[i] === a && PATH[i + 1] === b) || (PATH[i] === b && PATH[i + 1] === a)) return true;
-    }
-    return false;
-  }
-
-  // Dest pulse ring
-  const destNode = nodeById('D');
-  const pulseR = destPulse * 18;
+  const pos     = tracerPos(tracerP);
+  const visited = visitedSet(tracerP);
+  const destNode = nodeById('E');
+  const pulseR   = pulseT * 22;
+  const pulseOp  = Math.max(0, (1 - pulseT) * 0.85);
 
   return (
     <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <svg viewBox="0 0 220 210" style={{ width: '100%', height: '100%', overflow: 'visible' }}>
         <defs>
-          <filter id="pg-glow" x="-60%" y="-60%" width="220%" height="220%">
+          <filter id="pg2-glow" x="-80%" y="-80%" width="260%" height="260%">
             <feGaussianBlur stdDeviation="2.5" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
           </filter>
-          <filter id="pg-glow-soft" x="-100%" y="-100%" width="300%" height="300%">
+          <filter id="pg2-glow-sm" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="1.2" result="blur" />
+            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
+          <filter id="pg2-glow-lg" x="-150%" y="-150%" width="400%" height="400%">
             <feGaussianBlur stdDeviation="5" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
           </filter>
         </defs>
 
-        <g transform="translate(80, 150) scale(1, 0.5) rotate(45)">
+        {/* ── Iso transform — same as other graphics for visual consistency ── */}
+        <g transform="translate(78, 152) scale(1, 0.5) rotate(45)">
 
-          {/* Edges */}
+          {/* ── Edges ── */}
           {EDGES.map(([a, b]) => {
-            const na = nodeById(a), nb = nodeById(b);
-            const onPath = isPathEdge(a, b);
-            const aVisited = visited.has(a);
-            const bVisited = visited.has(b);
-            const lit = onPath && aVisited;
-            return (
-              <line
-                key={`${a}-${b}`}
-                x1={na.x} y1={na.y}
-                x2={nb.x} y2={nb.y}
-                stroke={lit ? EDGE_PATH : onPath ? (isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.15)') : EDGE_DIM}
-                strokeWidth={lit ? 1.5 : onPath ? 0.8 : 0.6}
-                strokeDasharray={onPath ? undefined : '3 3'}
-                filter={lit ? 'url(#pg-glow)' : undefined}
-              />
-            );
-          })}
-
-          {/* Nodes */}
-          {NODES.map(node => {
-            const isEnd = node.role === 'end';
-            const isStart = node.role === 'start';
-            const isDead = node.role === 'dead';
-            const onPath = pathSet.has(node.id);
-            const isVisited = visited.has(node.id);
-
-            const r = isEnd ? 5 : isStart ? 4 : isDead ? 2 : 3;
-            const fill = isDead
-              ? DEAD_NODE
-              : isEnd
-              ? (arrived ? NODE_END : NODE_DIM)
-              : (isVisited ? NODE_PATH : onPath ? NODE_DIM : DEAD_NODE);
-            const glowFilter = (isEnd && arrived) || (onPath && isVisited) ? 'url(#pg-glow)' : undefined;
+            const na = nodeById(a);
+            const nb = nodeById(b);
+            const onPath  = isPathEdge(a, b);
+            const aVis    = visited.has(a);
+            const lit     = onPath && aVis;
+            const isDead  = !onPath;
 
             return (
-              <g key={node.id}>
-                {/* Halo for path nodes */}
-                {onPath && !isDead && (
-                  <circle
-                    cx={node.x} cy={node.y}
-                    r={r + 4}
-                    fill="none"
-                    stroke={isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.08)'}
-                    strokeWidth="0.6"
+              <g key={`${a}-${b}`}>
+                {/* Glow layer for lit edges */}
+                {lit && (
+                  <line
+                    x1={na.x} y1={na.y}
+                    x2={nb.x} y2={nb.y}
+                    stroke="var(--text)"
+                    strokeWidth="3"
+                    opacity="0.08"
+                    strokeLinecap="round"
+                    filter="url(#pg2-glow)"
                   />
                 )}
-                <circle
-                  cx={node.x} cy={node.y}
-                  r={r}
-                  fill={fill}
-                  filter={glowFilter}
+                {/* Main edge */}
+                <line
+                  x1={na.x} y1={na.y}
+                  x2={nb.x} y2={nb.y}
+                  stroke={lit ? 'var(--text)' : isDead ? 'var(--border)' : 'var(--border-mid)'}
+                  strokeWidth={lit ? 1.2 : isDead ? 0.5 : 0.7}
+                  strokeDasharray={isDead ? '3 4' : undefined}
+                  strokeLinecap="round"
+                  opacity={lit ? 1 : isDead ? 0.4 : 0.55}
+                  filter={lit ? 'url(#pg2-glow-sm)' : undefined}
                 />
               </g>
             );
           })}
 
-          {/* Destination arrival pulse ring */}
+          {/* ── Nodes ── */}
+          {NODES.map(node => {
+            const isEnd   = node.role === 'end';
+            const isStart = node.role === 'start';
+            const isDead  = node.role === 'dead';
+            const onPath  = PATH_SET.has(node.id);
+            const isVis   = visited.has(node.id);
+            const isArr   = isEnd && arrived;
+
+            // Node size
+            const r = isEnd ? 5 : isStart ? 4.5 : isDead ? 1.8 : 3;
+
+            // Stroke brightness
+            const strokeOp = isDead ? 0.25
+              : isArr       ? 1
+              : isVis       ? 0.95
+              : onPath      ? 0.45
+              : 0.3;
+
+            const stroke = isDead
+              ? 'var(--border)'
+              : (isVis || isArr)
+              ? 'var(--text)'
+              : 'var(--border-mid)';
+
+            return (
+              <g key={node.id}>
+                {/* Double ring for path nodes */}
+                {onPath && !isDead && (
+                  <circle
+                    cx={node.x} cy={node.y}
+                    r={r + 3.5}
+                    fill="none"
+                    stroke="var(--border)"
+                    strokeWidth="0.5"
+                    opacity={isVis ? 0.4 : 0.2}
+                  />
+                )}
+                {/* Main node circle */}
+                <circle
+                  cx={node.x} cy={node.y}
+                  r={r}
+                  fill="none"
+                  stroke={stroke}
+                  strokeWidth={isEnd || isStart ? 0.9 : 0.7}
+                  opacity={strokeOp}
+                  filter={(isVis || isArr) && !isDead ? 'url(#pg2-glow-sm)' : undefined}
+                />
+                {/* Inner fill dot for visited/arrived */}
+                {(isVis || isArr) && !isDead && (
+                  <circle
+                    cx={node.x} cy={node.y}
+                    r={r * 0.38}
+                    fill="var(--text)"
+                    opacity={isArr ? 0.9 : 0.6}
+                  />
+                )}
+                {/* Start node marker — small square inside circle */}
+                {isStart && (
+                  <rect
+                    x={node.x - 1.5} y={node.y - 1.5}
+                    width={3} height={3}
+                    fill="var(--text)"
+                    opacity="0.5"
+                  />
+                )}
+              </g>
+            );
+          })}
+
+          {/* ── Destination arrival pulse rings ── */}
           {arrived && pulseR > 0 && (
             <>
               <circle
                 cx={destNode.x} cy={destNode.y}
                 r={pulseR}
                 fill="none"
-                stroke={NODE_END}
-                strokeWidth="1"
-                opacity={Math.max(0, 1 - destPulse * 1.1)}
-                filter="url(#pg-glow-soft)"
+                stroke="var(--text)"
+                strokeWidth="0.8"
+                opacity={pulseOp}
+                filter="url(#pg2-glow-lg)"
               />
               <circle
                 cx={destNode.x} cy={destNode.y}
-                r={pulseR * 0.5}
+                r={pulseR * 0.6}
                 fill="none"
-                stroke={NODE_END}
-                strokeWidth="0.7"
-                opacity={Math.max(0, 1 - destPulse)}
+                stroke="var(--text)"
+                strokeWidth="0.5"
+                opacity={pulseOp * 0.65}
+              />
+              <circle
+                cx={destNode.x} cy={destNode.y}
+                r={pulseR * 0.28}
+                fill="none"
+                stroke="var(--text)"
+                strokeWidth="0.4"
+                opacity={pulseOp * 0.4}
               />
             </>
           )}
 
-          {/* Tracer dot */}
+          {/* ── Tracer trail ── */}
+          {!arrived && trailPts.length > 1 && trailPts.map((p, i) => (
+            i < trailPts.length - 1 && (
+              <line
+                key={i}
+                x1={trailPts[i].x}   y1={trailPts[i].y}
+                x2={trailPts[i+1].x} y2={trailPts[i+1].y}
+                stroke="var(--text)"
+                strokeWidth={0.5}
+                opacity={(i / trailPts.length) * 0.3}
+                strokeLinecap="round"
+              />
+            )
+          ))}
+
+          {/* ── Tracer dot ── */}
           {!arrived && (
-            <circle
-              cx={pos.x} cy={pos.y}
-              r={3.5}
-              fill={TRACER}
-              filter="url(#pg-glow)"
-              opacity={0.9}
-            />
+            <>
+              {/* Outer halo */}
+              <circle
+                cx={pos.x} cy={pos.y}
+                r={5.5}
+                fill="none"
+                stroke="var(--text)"
+                strokeWidth="0.5"
+                opacity="0.18"
+                filter="url(#pg2-glow)"
+              />
+              {/* Core */}
+              <circle
+                cx={pos.x} cy={pos.y}
+                r={2.8}
+                fill="var(--text)"
+                opacity="0.95"
+                filter="url(#pg2-glow)"
+              />
+            </>
+          )}
+
+          {/* ── Path label: subtle "OPTIMAL" text along the route ── */}
+          {/* Shown as a faint dotted midpoint connector label */}
+          {visited.size >= 3 && (
+            <g opacity="0.2">
+              <line
+                x1={nodeById('A').x} y1={nodeById('A').y}
+                x2={nodeById('D').x} y2={nodeById('D').y}
+                stroke="var(--text)"
+                strokeWidth="0.35"
+                strokeDasharray="1.5 5"
+              />
+            </g>
           )}
 
         </g>

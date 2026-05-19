@@ -258,7 +258,7 @@ var NotAResumeError = function ({ rejectedBy, onDismiss }) {
   }
   var msg = messages[rejectedBy] || messages.default
   var isTooShort = rejectedBy === 'too short'
-  var tone = isTooShort ? 'var(--cool-grey)' : '#FCA5A5'
+  var tone = isTooShort ? 'var(--text-3)' : 'var(--err)'
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
@@ -959,10 +959,10 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
       {/* ── Domain validation error UI (Linear/Vercel palette) ── */}
       {domainValidationError && (
         <div style={{ padding: '16px 18px', borderRadius: '8px', background: 'var(--border-subtle)', border: '1px solid transparent' }}>
-          <div style={{ fontFamily: FM, fontSize: '10px', letterSpacing: '0.14em', color: '#8A8F98', marginBottom: '10px' }}>
+          <div style={{ fontFamily: FM, fontSize: '10px', letterSpacing: '0.14em', color: 'var(--text-3)', marginBottom: '10px' }}>
             STATUS: DOMAIN NOT IDENTIFIED // ENTER VALID DOMAIN
           </div>
-          <div style={{ fontFamily: FM, fontSize: '12px', color: '#8A8F98', marginBottom: '14px', lineHeight: 1.6 }}>
+          <div style={{ fontFamily: FM, fontSize: '12px', color: 'var(--text-3)', marginBottom: '14px', lineHeight: 1.6 }}>
             "<span style={{ color: 'var(--text)' }}>{domainValidationError}</span>" is not a recognized professional domain.
           </div>
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
@@ -980,7 +980,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
             />
             <button
               onClick={function () { setDomainValidationError(null); if (domainOverride) setTargetDomain(domainOverride) }}
-              style={{ padding: '9px 16px', borderRadius: '6px', background: 'var(--accent)', border: 'none', color: '#fff', fontFamily: FM, fontSize: '12px', fontWeight: '700', cursor: 'pointer', letterSpacing: '0.04em', whiteSpace: 'nowrap' }}
+              style={{ padding: '9px 16px', borderRadius: '6px', background: 'var(--accent)', border: 'none', color: 'var(--bg)', fontFamily: FM, fontSize: '12px', fontWeight: '700', cursor: 'pointer', letterSpacing: '0.04em', whiteSpace: 'nowrap' }}
             >
               RETRY →
             </button>
@@ -989,7 +989,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
       )}
 
       {domainValidating && (
-        <div style={{ padding: '10px 14px', borderRadius: '8px', background: 'var(--border-subtle)', border: '1px solid var(--border-subtle)', fontFamily: FM, fontSize: '10px', color: '#8A8F98', letterSpacing: '0.1em' }}>
+        <div style={{ padding: '10px 14px', borderRadius: '8px', background: 'var(--border-subtle)', border: '1px solid var(--border-subtle)', fontFamily: FM, fontSize: '10px', color: 'var(--text-3)', letterSpacing: '0.1em' }}>
           ANALYZING TARGET DOMAIN VIA GROQ... [Validation logic running]
         </div>
       )}
@@ -1246,7 +1246,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
           {pdfLoading ? (
             <>
               <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                style={{ width: 14, height: 14, borderRadius: '50%', border: '2px solid transparent', borderTopColor: 'white' }} />
+                style={{ width: 14, height: 14, borderRadius: '50%', border: '2px solid transparent', borderTopColor: 'var(--bg)' }} />
               Analyse Profile
               <span style={{ fontSize: '11px', opacity: 0.75, marginLeft: '4px' }}>(reading file...)</span>
             </>
@@ -1262,7 +1262,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
       {loading && <CleanLoader />}
 
       {error && (
-        <div style={{ padding: '11px 13px', borderRadius: '10px', background: 'transparent', border: '1px solid transparent', fontSize: '13px', color: '#FCA5A5', display: 'flex', gap: '8px', fontFamily: FB }}>
+        <div style={{ padding: '11px 13px', borderRadius: '10px', background: 'transparent', border: '1px solid var(--border)', fontSize: '13px', color: 'var(--err)', display: 'flex', gap: '8px', fontFamily: FB }}>
           <AlertTriangle size={14} style={{ flexShrink: 0, marginTop: '1px' }} /><span>{error}</span>
         </div>
       )}

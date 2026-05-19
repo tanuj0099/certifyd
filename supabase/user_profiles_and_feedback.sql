@@ -8,7 +8,7 @@ create table if not exists public.user_profiles (
   avatar_url text,
   provider text,
   city text,
-  current_role text,
+  job_role text,
   current_salary numeric,
   target_domain text,
   preferences jsonb not null default '{}'::jsonb,
@@ -32,7 +32,27 @@ create table if not exists public.feedback_messages (
 
 create index if not exists feedback_messages_created_at_idx on public.feedback_messages (created_at desc);
 
--- Security note:
--- This app currently authenticates users with Firebase while Supabase is used as a data plane.
--- If Row Level Security is enabled, write profile/feedback rows through a server/Edge Function
--- that verifies the Firebase ID token, then writes with SUPABASE_SERVICE_ROLE_KEY.
+-- Optional RLS policies for client-side Firebase + Supabase data plane.
+-- Review before production; prefer Edge Functions with service role for stricter security.
+
+alter table public.user_profiles enable row level security;
+alter table public.feedback_messages enable row level security;
+
+drop policy if exists "user_profiles_anon_all" on public.user_profiles;
+create policy "user_profiles_anon_all"
+  on public.user_profiles for all
+  to anon, authenticated
+  using (true)
+  with check (true);
+
+drop policy if exists "feedback_messages_anon_insert" on public.feedback_messages;
+create policy "feedback_messages_anon_insert"
+  on public.feedback_messages for insert
+  to anon, authenticated
+  with check (true);
+
+drop policy if exists "feedback_messages_anon_select" on public.feedback_messages;
+create policy "feedback_messages_anon_select"
+  on public.feedback_messages for select
+  to anon, authenticated
+  using (true);

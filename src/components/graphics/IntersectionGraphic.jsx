@@ -1,234 +1,318 @@
 /**
- * IntersectionGraphic — FIG 0.2 // ROI CALCULATOR
+ * IntersectionGraphic — FIG 0.2 // THE INTERSECTION · "Calculate the payback"
  *
- * Two bold isometric lines: dashed grey (cost), bright solid (gain).
- * A pulsing light travels along the gain line.
- * At intersection (break-even), a sustained glowing ripple radiates outward.
- * Theme-aware.
+ * Concept: 5 stacked isometric rectangular slabs that mechanically breathe apart —
+ * separating to reveal glowing inner geometry/circuit traces between layers.
+ * Represents the layers of salary, cost, and payback "opening up" for inspection.
+ * Inspired by Linear's stacked-layers FIG 0.2 illustration.
+ *
+ * Pure wireframe. No fills. Theme-aware via CSS vars.
+ * Works on both light (#FFFFFF) and dark (#222326) backgrounds.
  */
 import { useEffect, useRef, useState } from 'react';
 
-// All points in isometric space, then projected via g transform="translate(110,110) scale(1,0.5) rotate(45)"
-// Cost line: dashed, dim — goes diagonally downward-left
-// Gain line: solid, bright — crosses cost, rises steeply
+const VW = 220;
+const VH = 210;
 
-// In screen (post-transform) coordinates, we define the two lines:
-// We work in the SVG local space (before iso transform) and let SVG do it.
+// ── Slab definitions ─────────────────────────────────────────
+const SLABS = [
+  { id: 0, hw: 52, hd: 24, detail: true,  label: '5YR GAIN'   },
+  { id: 1, hw: 44, hd: 20, detail: false, label: null          },
+  { id: 2, hw: 58, hd: 28, detail: true,  label: 'BREAK-EVEN' },
+  { id: 3, hw: 40, hd: 18, detail: false, label: null          },
+  { id: 4, hw: 48, hd: 22, detail: false, label: 'CERT COST'  },
+];
 
-function IntersectionGraphic({ isDark = true }) {
-  const [pulseT, setPulseT] = useState(0);     // 0..1 position along gain line
-  const [rippleScale, setRippleScale] = useState(0); // 0..1+ expanding ring
-  const [rippleOpacity, setRippleOpacity] = useState(0);
-  const [nodeGlow, setNodeGlow] = useState(0); // 0..1 intersection node brightness
+const SLAB_THICK = 9;   // side-wall height px
+const REST_GAP   = 2;   // px gap between slabs at rest
+const MAX_SPREAD = 26;  // extra px gap at full explode
+
+// ── Iso slab geometry ─────────────────────────────────────────
+// Top face: diamond parallelogram. Left + right side walls.
+function buildSlab(cx, cy, hw, hd, thick) {
+  // Top face corners
+  const top   = { x: cx,      y: cy - hd };
+  const right = { x: cx + hw, y: cy - hd * 0.5 + hd * 0.5 };
+  const bot   = { x: cx,      y: cy };
+  const left  = { x: cx - hw, y: cy - hd * 0.5 + hd * 0.5 };
+
+  // Use proper iso: top-face is a rhombus
+  // 4 corners: N (back), E (right), S (front), W (left)
+  const N = { x: cx,      y: cy - hd };
+  const E = { x: cx + hw, y: cy - hd * 0.5 };
+  const S = { x: cx,      y: cy };
+  const W = { x: cx - hw, y: cy - hd * 0.5 };
+
+  const topFace  = [N, E, S, W];
+
+  // Left wall: W → S → S+thick → W+thick
+  const leftFace = [
+    W,
+    S,
+    { x: S.x, y: S.y + thick },
+    { x: W.x, y: W.y + thick },
+  ];
+
+  // Right wall: S → E → E+thick → S+thick
+  const rightFace = [
+    S,
+    E,
+    { x: E.x, y: E.y + thick },
+    { x: S.x, y: S.y + thick },
+  ];
+
+  return { topFace, leftFace, rightFace, N, E, S, W };
+}
+
+function pts(arr) {
+  return arr.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+}
+
+// ── Easing ────────────────────────────────────────────────────
+function easeOutExpo(t) {
+  return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t);
+}
+function easeInOutCubic(t) {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
+// ── Component ─────────────────────────────────────────────────
+export default function IntersectionGraphic() {
+  const [explodeT, setExplodeT] = useState(0);
   const rafRef = useRef(null);
-  const startRef = useRef(null);
-  const phaseRef = useRef('pulse'); // 'pulse' | 'ripple'
-
-  const GAIN_COLOR = isDark ? 'rgba(255,255,255,0.95)' : 'rgba(34,35,38,0.95)';
-  const COST_COLOR = isDark ? 'rgba(255,255,255,0.22)' : 'rgba(0,0,0,0.18)';
-  const GRID_COLOR = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
-  const NODE_COLOR = isDark ? '#ffffff' : '#222326';
-  const RIPPLE_COLOR = isDark ? 'rgba(255,255,255,' : 'rgba(34,35,38,';
-  const PULSE_COLOR = isDark ? '#ffffff' : '#222326';
-
-  // Gain line points (in iso-local space before transform)
-  const gainPts = [
-    { x: -80, y: 80 },   // bottom-left start
-    { x: -20, y: 20 },   // midway up
-    { x: 40,  y: -40 },  // intersection region
-    { x: 90,  y: -90 },  // top-right end
-  ];
-
-  // Cost line: straighter, flatter, dashed
-  const costPts = [
-    { x: -90, y: 30 },
-    { x: 0,   y: -10 },
-    { x: 90,  y: -50 },
-  ];
-
-  // Intersection point (approximate midpoint where they visually cross)
-  const IX = 30, IY = -38;
-
-  // Interpolate along gain line
-  function gainPos(t) {
-    const total = gainPts.length - 1;
-    const seg = t * total;
-    const i = Math.min(Math.floor(seg), total - 1);
-    const f = seg - i;
-    const a = gainPts[i], b = gainPts[i + 1];
-    return { x: a.x + (b.x - a.x) * f, y: a.y + (b.y - a.y) * f };
-  }
 
   useEffect(() => {
-    const PULSE_DUR = 2200;  // ms for pulse to traverse
-    const HOLD_AT_END = 400;
-    const RIPPLE_DUR = 1400;
-    const PAUSE = 900;
+    const EXPLODE_DUR  = 1800;
+    const HOLD_DUR     = 2400;
+    const COLLAPSE_DUR = 1400;
+    const PAUSE_DUR    = 900;
+    const WAIT_DUR     = 500;
 
-    function animate(ts) {
-      if (!startRef.current) startRef.current = ts;
-      const elapsed = ts - startRef.current;
+    let phase = 'wait';
+    let phaseStart = null;
 
-      if (phaseRef.current === 'pulse') {
-        const t = Math.min(elapsed / PULSE_DUR, 1);
-        setPulseT(t);
+    function tick(ts) {
+      if (!phaseStart) phaseStart = ts;
+      const el = ts - phaseStart;
 
-        // When pulse hits intersection region (~t=0.55-0.7), grow node glow
-        if (t > 0.5 && t < 0.8) {
-          setNodeGlow((t - 0.5) / 0.3);
-        }
-
-        if (t >= 1) {
-          // Switch to ripple
-          phaseRef.current = 'ripple';
-          startRef.current = ts + HOLD_AT_END;
-          setNodeGlow(1);
-        }
-      } else if (phaseRef.current === 'ripple') {
-        if (elapsed < 0) {
-          rafRef.current = requestAnimationFrame(animate);
-          return;
-        }
-        const t = Math.min((elapsed) / RIPPLE_DUR, 1);
-        setRippleScale(t);
-        setRippleOpacity(Math.max(0, 1 - t * 1.1));
-
-        if (t >= 1) {
-          // Reset
-          phaseRef.current = 'pulse';
-          startRef.current = null;
-          setPulseT(0);
-          setRippleScale(0);
-          setRippleOpacity(0);
-          setNodeGlow(0.3); // keep node slightly glowing
-        }
+      if (phase === 'wait') {
+        if (el > WAIT_DUR) { phase = 'exploding'; phaseStart = ts; }
+      } else if (phase === 'exploding') {
+        const t = Math.min(el / EXPLODE_DUR, 1);
+        setExplodeT(easeOutExpo(t));
+        if (t >= 1) { phase = 'hold'; phaseStart = ts; }
+      } else if (phase === 'hold') {
+        if (el > HOLD_DUR) { phase = 'collapsing'; phaseStart = ts; }
+      } else if (phase === 'collapsing') {
+        const t = Math.min(el / COLLAPSE_DUR, 1);
+        setExplodeT(1 - easeInOutCubic(t));
+        if (t >= 1) { setExplodeT(0); phase = 'pause'; phaseStart = ts; }
+      } else if (phase === 'pause') {
+        if (el > PAUSE_DUR) { phase = 'wait'; phaseStart = ts; }
       }
 
-      rafRef.current = requestAnimationFrame(animate);
+      rafRef.current = requestAnimationFrame(tick);
     }
 
-    rafRef.current = requestAnimationFrame(animate);
-    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
+    rafRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafRef.current);
   }, []);
 
-  const pulsePos = gainPos(pulseT);
-  const gainPolyline = gainPts.map(p => `${p.x},${p.y}`).join(' ');
-  const costPolyline = costPts.map(p => `${p.x},${p.y}`).join(' ');
-  const rippleR = rippleScale * 70;
+  // ── Layout: slabs spread upward as explodeT → 1 ───────────
+  const CX      = VW * 0.5;
+  const BASE_CY = VH * 0.72;
+
+  const slabData = SLABS.map((slab, i) => {
+    const spread = i * (MAX_SPREAD * explodeT);
+    const cy = BASE_CY - i * (SLAB_THICK + REST_GAP) - spread;
+    const geom = buildSlab(CX, cy, slab.hw, slab.hd, SLAB_THICK);
+    const gapAbove = i > 0 ? MAX_SPREAD * explodeT - REST_GAP : 0;
+    return { ...slab, cy, geom, gapAbove, i };
+  });
 
   return (
     <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <svg viewBox="0 0 220 210" style={{ width: '100%', height: '100%', overflow: 'visible' }}>
+      <svg viewBox={`0 0 ${VW} ${VH}`} style={{ width: '100%', height: '100%', overflow: 'visible' }}>
         <defs>
-          <filter id="ig-glow" x="-80%" y="-80%" width="260%" height="260%">
-            <feGaussianBlur stdDeviation="3" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+          <filter id="ig3-glow" x="-80%" y="-80%" width="260%" height="260%">
+            <feGaussianBlur stdDeviation="2" result="b" />
+            <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
           </filter>
-          <filter id="ig-glow-hard" x="-30%" y="-30%" width="160%" height="160%">
-            <feGaussianBlur stdDeviation="1.5" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+          <filter id="ig3-glow-lg" x="-140%" y="-140%" width="380%" height="380%">
+            <feGaussianBlur stdDeviation="4.5" result="b" />
+            <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
           </filter>
         </defs>
 
-        {/* Isometric transform group */}
-        <g transform="translate(110, 118) scale(1, 0.5) rotate(45)">
+        {/* Draw bottom → top (painter's algorithm) */}
+        {[...slabData].map((slab) => {
+          const { geom, hw, hd, cy, gapAbove, i } = slab;
+          const isTop       = i === SLABS.length - 1;
+          const gapVisible  = gapAbove > 3;
+          const innerReveal = Math.max(0, Math.min(1, (gapAbove - 6) / 14));
+          const hasLabel    = slab.label && explodeT > 0.35;
+          const labelOp     = Math.min(1, (explodeT - 0.35) / 0.5);
 
-          {/* Subtle ground grid */}
-          <g stroke={GRID_COLOR} strokeWidth="0.8">
-            {[-90, -60, -30, 0, 30, 60, 90].map(v => (
-              <g key={v}>
-                <line x1={v} y1={-90} x2={v} y2={90} />
-                <line x1={-90} y1={v} x2={90} y2={v} />
-              </g>
-            ))}
-          </g>
+          return (
+            <g key={slab.id}>
 
-          {/* Cost line — dashed, dim */}
-          <polyline
-            points={costPolyline}
-            fill="none"
-            stroke={COST_COLOR}
-            strokeWidth="2"
-            strokeDasharray="6 4"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
+              {/* Right wall */}
+              <polygon
+                points={pts(geom.rightFace)}
+                fill="none"
+                stroke="var(--text)"
+                strokeWidth="0.6"
+                strokeLinejoin="round"
+                opacity="0.5"
+              />
 
-          {/* Gain line — bold, solid */}
-          <polyline
-            points={gainPolyline}
-            fill="none"
-            stroke={GAIN_COLOR}
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            filter="url(#ig-glow-hard)"
-          />
+              {/* Left wall */}
+              <polygon
+                points={pts(geom.leftFace)}
+                fill="none"
+                stroke="var(--text)"
+                strokeWidth="0.6"
+                strokeLinejoin="round"
+                opacity="0.38"
+              />
 
-          {/* Ripple rings at intersection */}
-          {rippleR > 0 && (
+              {/* Top face */}
+              <polygon
+                points={pts(geom.topFace)}
+                fill="none"
+                stroke="var(--text)"
+                strokeWidth={isTop ? 1.1 : 0.85}
+                strokeLinejoin="round"
+                filter={isTop && explodeT > 0.5 ? 'url(#ig3-glow)' : undefined}
+              />
+
+              {/* Detail cross on top face */}
+              {slab.detail && (
+                <g opacity="0.22">
+                  <line
+                    x1={geom.W.x + hw * 0.15} y1={geom.W.y + hd * 0.05}
+                    x2={geom.E.x - hw * 0.15} y2={geom.E.y + hd * 0.05}
+                    stroke="var(--text)" strokeWidth="0.4"
+                  />
+                  <line
+                    x1={geom.N.x} y1={geom.N.y + hd * 0.15}
+                    x2={geom.S.x} y2={geom.S.y - hd * 0.15}
+                    stroke="var(--text)" strokeWidth="0.4"
+                  />
+                </g>
+              )}
+
+              {/* ── Gap interior: circuit traces between layers ── */}
+              {gapVisible && innerReveal > 0 && (
+                <g opacity={innerReveal * 0.75}>
+                  {/* Horizontal trace lines inside the gap */}
+                  {[0.3, 0.6].map((frac, li) => {
+                    // gap sits between bottom of this slab and top of slab below
+                    const gapTopY    = geom.S.y + SLAB_THICK;
+                    const gapBotY    = gapTopY + gapAbove - REST_GAP;
+                    const traceY     = gapTopY + (gapBotY - gapTopY) * frac;
+                    const traceW     = hw * (0.55 + li * 0.1);
+                    // Constrain x to the iso diamond shape at this y (approx)
+                    const x1 = CX - traceW;
+                    const x2 = CX + traceW * (0.6 + li * 0.2);
+                    // Mid jog
+                    const mx = CX + traceW * (li === 0 ? -0.1 : 0.2);
+                    return (
+                      <g key={li}>
+                        <polyline
+                          points={`${x1},${traceY} ${mx},${traceY} ${mx},${traceY + (li === 0 ? 3 : -3)} ${x2},${traceY + (li === 0 ? 3 : -3)}`}
+                          fill="none"
+                          stroke="var(--text)"
+                          strokeWidth="0.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        {/* Node dot at jog */}
+                        <circle
+                          cx={mx} cy={traceY}
+                          r={1.2}
+                          fill="none"
+                          stroke="var(--text)"
+                          strokeWidth="0.55"
+                          filter="url(#ig3-glow)"
+                        />
+                      </g>
+                    );
+                  })}
+                </g>
+              )}
+
+              {/* Gap seam dashes */}
+              {gapVisible && (
+                <g opacity={Math.min(0.3, innerReveal * 0.5)}>
+                  <line
+                    x1={geom.leftFace[2].x}  y1={geom.leftFace[2].y}
+                    x2={geom.leftFace[3].x}  y2={geom.leftFace[3].y}
+                    stroke="var(--border-mid)" strokeWidth="0.4"
+                    strokeDasharray="2 2"
+                  />
+                  <line
+                    x1={geom.rightFace[2].x} y1={geom.rightFace[2].y}
+                    x2={geom.rightFace[3].x} y2={geom.rightFace[3].y}
+                    stroke="var(--border-mid)" strokeWidth="0.4"
+                    strokeDasharray="2 2"
+                  />
+                </g>
+              )}
+
+              {/* Label leader + text */}
+              {hasLabel && (
+                <g opacity={labelOp * 0.7}>
+                  <line
+                    x1={geom.E.x}     y1={geom.E.y}
+                    x2={geom.E.x + 8} y2={geom.E.y - 3}
+                    stroke="var(--border-mid)" strokeWidth="0.5"
+                  />
+                  <text
+                    x={geom.E.x + 10} y={geom.E.y - 1}
+                    fontSize="5"
+                    fill="var(--text-3)"
+                    fontFamily="'JetBrains Mono', 'IBM Plex Mono', monospace"
+                    letterSpacing="0.07em"
+                  >
+                    {slab.label}
+                  </text>
+                </g>
+              )}
+            </g>
+          );
+        })}
+
+        {/* ── Top apex node — glows when exploded ── */}
+        {(() => {
+          const top = slabData[slabData.length - 1];
+          const n   = top.geom.N;
+          return (
             <>
               <circle
-                cx={IX} cy={IY}
-                r={rippleR}
+                cx={n.x} cy={n.y} r={3.5}
                 fill="none"
-                stroke={`${RIPPLE_COLOR}${(rippleOpacity * 0.6).toFixed(3)})`}
-                strokeWidth="1"
+                stroke="var(--text)"
+                strokeWidth="0.7"
+                opacity={0.3 + explodeT * 0.65}
+                filter={explodeT > 0.4 ? 'url(#ig3-glow)' : undefined}
               />
               <circle
-                cx={IX} cy={IY}
-                r={rippleR * 0.6}
-                fill="none"
-                stroke={`${RIPPLE_COLOR}${(rippleOpacity * 0.45).toFixed(3)})`}
-                strokeWidth="0.8"
+                cx={n.x} cy={n.y} r={1.2}
+                fill="var(--text)"
+                opacity={0.4 + explodeT * 0.55}
               />
             </>
-          )}
+          );
+        })()}
 
-          {/* Intersection node — stays glowing */}
-          {nodeGlow > 0 && (
-            <>
-              <circle
-                cx={IX} cy={IY}
-                r={5 + nodeGlow * 3}
-                fill="none"
-                stroke={NODE_COLOR}
-                strokeWidth="0.8"
-                opacity={nodeGlow * 0.3}
-                filter="url(#ig-glow)"
-              />
-              <circle
-                cx={IX} cy={IY} r={3}
-                fill={NODE_COLOR}
-                opacity={0.4 + nodeGlow * 0.6}
-                filter="url(#ig-glow)"
-              />
-            </>
-          )}
-
-          {/* Intersection node — always visible small dot */}
-          <circle cx={IX} cy={IY} r={2} fill={NODE_COLOR} opacity={0.35 + nodeGlow * 0.5} />
-
-          {/* Pulse dot traveling along gain line */}
-          <circle
-            cx={pulsePos.x}
-            cy={pulsePos.y}
-            r={3.5}
-            fill={PULSE_COLOR}
-            filter="url(#ig-glow)"
-            opacity={0.7 + Math.sin(pulseT * Math.PI) * 0.3}
-          />
-
-          {/* Start and end nodes */}
-          {gainPts.map((p, i) => (
-            <circle key={i} cx={p.x} cy={p.y} r={i === 0 || i === gainPts.length - 1 ? 2.5 : 1.5}
-              fill={NODE_COLOR} opacity={0.4} />
-          ))}
-
-        </g>
+        {/* ── Base shadow line ── */}
+        <line
+          x1={CX - 52} y1={BASE_CY + SLAB_THICK + 5}
+          x2={CX + 52} y2={BASE_CY + SLAB_THICK + 5}
+          stroke="var(--border)" strokeWidth="0.5" opacity="0.45"
+        />
       </svg>
     </div>
   );
 }
-
-export default IntersectionGraphic;

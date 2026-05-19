@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Menu, User, X } from 'lucide-react'
+import { useTheme } from '../hooks/useTheme.jsx'
+import UserAccountMenu from './UserAccountMenu.jsx'
 
 const F_SANS = "'Inter', 'DM Sans', sans-serif"
 const F_MONO = "'JetBrains Mono', 'IBM Plex Mono', monospace"
@@ -8,7 +10,6 @@ const F_MONO = "'JetBrains Mono', 'IBM Plex Mono', monospace"
 const CORE_NAV = [
   { label: 'Home', pageId: 'home' },
   { label: 'Tools', pageId: 'app' },
-  { label: 'Pricing', pageId: 'pricing' },
 ]
 
 const TOOL_NAV = [
@@ -434,8 +435,11 @@ function MobileMenu({ open, currentPage, onNavigate, onActivate, onClose, user, 
           <button
             type="button"
             onClick={() => {
-              if (user) onSignOut?.()
-              else onSignIn?.()
+              if (user) {
+                onNavigate?.('profile')
+              } else {
+                onSignIn?.()
+              }
               onClose()
             }}
             style={{
@@ -443,15 +447,15 @@ function MobileMenu({ open, currentPage, onNavigate, onActivate, onClose, user, 
               minHeight: '44px',
               borderRadius: '999px',
               border: '1px solid var(--border)',
-              background: user ? 'transparent' : 'var(--text)',
-              color: user ? 'var(--text)' : 'var(--bg)',
+              background: user ? 'var(--text)' : 'var(--text)',
+              color: 'var(--bg)',
               fontFamily: F_SANS,
               fontSize: '14px',
               fontWeight: 800,
               cursor: 'pointer',
             }}
           >
-            {user ? 'Sign Out' : 'Sign In'}
+            {user ? 'My profile' : 'Sign In'}
           </button>
         </motion.div>
       ) : null}
@@ -459,34 +463,11 @@ function MobileMenu({ open, currentPage, onNavigate, onActivate, onClose, user, 
   )
 }
 
-// Try to read theme mode from the hook if available, fallback to local storage
-function useThemeMode() {
-  const [mode, setMode] = useState(() => {
-    try {
-      const s = localStorage.getItem('croi_theme_v2')
-      if (s === 'light' || s === 'dark' || s === 'system') return s
-    } catch {}
-    return 'system'
-  })
-
-  const cycle = (id) => {
-    setMode(id)
-    try { localStorage.setItem('croi_theme_v2', id) } catch {}
-    // Apply to DOM
-    const resolved = id === 'system'
-      ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-      : id
-    document.documentElement.setAttribute('data-theme', resolved === 'dark' ? 'nordic' : 'ash')
-  }
-
-  return [mode, cycle]
-}
-
 const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, onSignOut }) => {
   const [activeHref, setActiveHref] = useState(currentPage || 'home')
   const [menuOpen, setMenuOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
-  const [themeMode, cycleTheme] = useThemeMode()
+  const { mode: themeMode, setThemeMode: cycleTheme } = useTheme()
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 820)
@@ -499,7 +480,7 @@ const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, 
     if (currentPage) setActiveHref(currentPage)
   }, [currentPage])
 
-  const desktopItems = user ? [...CORE_NAV, { label: 'Profile', pageId: 'profile' }] : CORE_NAV
+  const desktopItems = CORE_NAV
 
   return (
     <>
@@ -556,8 +537,8 @@ const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, 
               <div style={{ width: '1px', height: '18px', background: 'var(--border)' }} />
               <button
                 type="button"
-                onClick={() => (user ? onSignOut?.() : onSignIn?.())}
-                aria-label={user ? 'Sign out' : 'Sign in'}
+                onClick={() => (user ? onNavigate?.('profile') : onSignIn?.())}
+                aria-label={user ? 'Open profile' : 'Sign in'}
                 style={{
                   width: '34px',
                   height: '34px',
@@ -623,29 +604,33 @@ const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, 
               <div style={{ width: '1px', height: '22px', background: 'var(--border)', margin: '0 6px' }} />
               {/* Theme Toggle — replaces broken Nordic/Ash badge */}
               <ThemeToggle mode={themeMode} onCycle={cycleTheme} />
-              <button
-                type="button"
-                onClick={() => (user ? onSignOut?.() : onSignIn?.())}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '7px',
-                  height: '34px',
-                  padding: '0 15px',
-                  borderRadius: '999px',
-                  border: '1px solid var(--border)',
-                  background: user ? 'transparent' : 'var(--text)',
-                  color: user ? 'var(--text)' : 'var(--bg)',
-                  fontFamily: F_SANS,
-                  fontSize: '12px',
-                  fontWeight: 800,
-                  cursor: 'pointer',
-                }}
-              >
-                <User size={13} />
-                {user ? 'Sign Out' : 'Sign In'}
-              </button>
+              {user ? (
+                <UserAccountMenu user={user} onNavigate={onNavigate} onSignOut={onSignOut} />
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => onSignIn?.()}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '7px',
+                    height: '34px',
+                    padding: '0 15px',
+                    borderRadius: '999px',
+                    border: '1px solid var(--border)',
+                    background: 'var(--text)',
+                    color: 'var(--bg)',
+                    fontFamily: F_SANS,
+                    fontSize: '12px',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                  }}
+                >
+                  <User size={13} />
+                  Sign In
+                </button>
+              )}
             </>
           )}
         </motion.nav>

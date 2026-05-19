@@ -433,7 +433,7 @@ export default function CertRadar() {
               letterSpacing: '0.14em',
               textTransform: 'uppercase',
             }}>
-              Tools
+              Platform
             </p>
             <h1 id="cert-radar-heading" style={{
               margin: 0,
@@ -477,7 +477,7 @@ export default function CertRadar() {
           }}>
             <span style={{
               width: '7px', height: '7px', borderRadius: '999px',
-              background: error ? '#d94848' : certs.length ? 'var(--accent)' : 'var(--text-4)',
+              background: error ? 'var(--err)' : certs.length ? 'var(--accent)' : 'var(--text-4)',
               animation: certs.length && !error ? 'pdot 1.8s ease-in-out infinite' : 'none',
             }} />
             {loading ? 'Syncing certificates' : error ? 'Pipeline unavailable' : 'Live from Supabase'}
@@ -526,32 +526,25 @@ export default function CertRadar() {
           </div>
         )}
 
-        {/* ── Filters: Domain capsules + Search ─────────────── */}
-        <div style={{
-          display: 'flex',
-          alignItems: isPhone ? 'flex-start' : 'center',
-          justifyContent: 'space-between',
-          gap: '14px',
-          marginBottom: '28px',
-          flexDirection: isPhone ? 'column' : 'row',
-          flexWrap: isPhone ? 'nowrap' : 'wrap',
-        }}>
-          {/* Capsules */}
-          <div
-            style={{
-              display: 'flex',
-              flexWrap: isPhone ? 'nowrap' : 'wrap',
-              gap: '8px',
-              overflowX: isPhone ? 'auto' : 'visible',
-              scrollbarWidth: 'none',
-              position: isPhone ? 'sticky' : 'static',
-              top: isPhone ? '72px' : 'auto',
-              zIndex: 4,
-              background: isPhone ? 'var(--bg)' : 'transparent',
-              padding: isPhone ? '6px 0' : 0,
-              flex: 1,
-            }}
-          >
+        {/* ── Filters: Capsules + Search ─────────────────────────── */}
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: isPhone ? 'nowrap' : 'wrap',
+            alignItems: 'center',
+            gap: '10px',
+            overflowX: isPhone ? 'auto' : 'visible',
+            padding: isPhone ? '6px 0' : 0,
+            marginBottom: '24px',
+            background: 'var(--bg)',
+            scrollbarWidth: 'none',
+            position: isPhone ? 'sticky' : 'static',
+            top: isPhone ? '72px' : 'auto',
+            zIndex: 4,
+          }}
+        >
+          {/* Category capsules */}
+          <div style={{ display: 'flex', gap: '8px', flexWrap: isPhone ? 'nowrap' : 'wrap', flexShrink: 0 }}>
             {domains.map((domain) => (
               <DomainCapsule
                 key={domain.name}
@@ -562,9 +555,21 @@ export default function CertRadar() {
             ))}
           </div>
 
+          {/* Spacer */}
+          {!isPhone && <div style={{ flex: 1 }} />}
+
           {/* Search */}
-          <SearchBar value={query} onChange={setQuery} />
+          {!isPhone && (
+            <SearchBar value={query} onChange={setQuery} />
+          )}
         </div>
+
+        {/* Mobile search */}
+        {isPhone && (
+          <div style={{ marginBottom: '18px' }}>
+            <SearchBar value={query} onChange={setQuery} />
+          </div>
+        )}
 
         {/* ── Loading ────────────────────────────────────────── */}
         {loading && (
@@ -587,7 +592,7 @@ export default function CertRadar() {
         {/* ── Error ─────────────────────────────────────────── */}
         {!loading && error && (
           <div style={{
-            padding: '34px 0', color: '#d94848',
+            padding: '34px 0', color: 'var(--err)',
             fontFamily: FS, fontSize: '14px', lineHeight: 1.6,
           }}>
             {error}

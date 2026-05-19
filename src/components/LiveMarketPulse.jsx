@@ -233,7 +233,7 @@ function RoleRow({ row, index, total, isPhone }) {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.22, delay: Math.min(index * 0.025, 0.2) }}
-      whileHover={{ backgroundColor: 'rgba(255,255,255,0.02)' }}
+      whileHover={{ backgroundColor: 'color-mix(in srgb, var(--text) 5%, transparent)' }}
       style={{
         display: 'grid',
         gridTemplateColumns: 'minmax(0, 1.6fr) 112px 112px 96px 96px',
@@ -419,16 +419,15 @@ export default function LiveMarketPulse() {
           <div>
             <p
               style={{
-                margin: '0 0 10px',
-                color: 'var(--accent)',
+                margin: '0 0 4px',
+                color: 'var(--text-4)',
                 fontFamily: FM,
-                fontSize: '11px',
-                fontWeight: 700,
-                letterSpacing: '0.12em',
+                fontSize: '10px',
+                letterSpacing: '0.14em',
                 textTransform: 'uppercase',
               }}
             >
-              Market Intelligence
+              Platform
             </p>
             <h1
               style={{
@@ -439,9 +438,14 @@ export default function LiveMarketPulse() {
                 lineHeight: 1.06,
                 fontWeight: 800,
                 letterSpacing: '-0.02em',
+                display: 'flex',
+                alignItems: 'baseline',
+                gap: '10px',
+                flexWrap: 'wrap',
               }}
             >
               Live Market Pulse
+              <span style={{ color: 'var(--text-3)', fontWeight: 400 }}>— Salary Intelligence</span>
             </h1>
             <p
               style={{
@@ -477,7 +481,7 @@ export default function LiveMarketPulse() {
                 width: '7px',
                 height: '7px',
                 borderRadius: '999px',
-                background: error ? '#d94848' : rows.length ? 'var(--accent)' : 'var(--text-4)',
+                background: error ? 'var(--err)' : rows.length ? 'var(--accent)' : 'var(--text-4)',
                 animation: rows.length && !error ? 'pdot 1.8s ease-in-out infinite' : 'none',
               }}
             />
@@ -641,7 +645,7 @@ export default function LiveMarketPulse() {
           <div
             style={{
               padding: '34px 0',
-              color: '#d94848',
+              color: 'var(--err)',
               fontFamily: FS,
               fontSize: '14px',
               lineHeight: 1.6,

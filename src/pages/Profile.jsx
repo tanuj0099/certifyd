@@ -1,49 +1,38 @@
 ﻿import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
-import { ArrowRight, Save, ShieldCheck, User } from 'lucide-react'
+import { Save, Send, Sparkles } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth.jsx'
+import { useTheme } from '../hooks/useTheme.jsx'
 import { fetchUserProfile, upsertUserProfile } from '../services/userProfileService.js'
+import { submitFeedback } from '../services/feedbackService.js'
+import DashboardShell, {
+  DashPanel,
+  DashField,
+  DashInput,
+  DashTextarea,
+  DashButton,
+} from '../components/DashboardShell.jsx'
 import { MarketingFooter } from '../components/MarketingPageShell.jsx'
 
-const F_SANS = "'Inter', 'DM Sans', sans-serif"
-const F_MONO = "'JetBrains Mono', 'IBM Plex Mono', monospace"
-
-function Field({ label, value, onChange, type = 'text', placeholder }) {
-  return (
-    <label style={{ display: 'grid', gap: '8px' }}>
-      <span style={{ color: 'var(--text-4)', fontFamily: F_MONO, fontSize: '10px', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-        {label}
-      </span>
-      <input
-        type={type}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        placeholder={placeholder}
-        style={{
-          minHeight: '46px',
-          borderRadius: '12px',
-          border: '1px solid var(--border)',
-          background: 'transparent',
-          color: 'var(--text)',
-          padding: '0 14px',
-          fontFamily: F_SANS,
-          fontSize: '14px',
-          outline: 'none',
-        }}
-      />
-    </label>
-  )
-}
+const TABS = [
+  { id: 'preferences', label: 'Preferences' },
+  { id: 'suggestions', label: 'Suggestions' },
+  { id: 'account', label: 'Account' },
+]
 
 export default function ProfilePage() {
-  const { user, loading, signInGoogle, signOut } = useAuth()
+  const { user, signOut } = useAuth()
+  const { mode, setThemeMode } = useTheme()
+  const [activeTab, setActiveTab] = useState('preferences')
   const [profile, setProfile] = useState({
     full_name: '',
     city: '',
-    current_role: '',
+    job_role: '',
     current_salary: '',
     target_domain: '',
+    notify_product_updates: true,
+    notify_roi_alerts: false,
   })
+  const [suggestion, setSuggestion] = useState({ subject: 'Product suggestion', message: '' })
   const [syncState, setSyncState] = useState('idle')
   const [message, setMessage] = useState('')
 
@@ -57,19 +46,22 @@ export default function ProfilePage() {
       try {
         const saved = await fetchUserProfile(user.uid)
         if (cancelled) return
+        const prefs = saved?.preferences || {}
         setProfile({
           full_name: saved?.full_name || user.displayName || '',
           city: saved?.city || '',
-          current_role: saved?.current_role || '',
-          current_salary: saved?.current_salary || '',
+          job_role: saved?.job_role || '',
+          current_salary: saved?.current_salary ?? '',
           target_domain: saved?.target_domain || '',
+          notify_product_updates: prefs.notify_product_updates !== false,
+          notify_roi_alerts: Boolean(prefs.notify_roi_alerts),
         })
         setSyncState('ready')
       } catch (error) {
         if (cancelled) return
         setProfile((prev) => ({ ...prev, full_name: user.displayName || prev.full_name }))
         setSyncState('error')
-        setMessage(error?.message || 'Could not read Supabase profile yet.')
+        setMessage(error?.message || 'Could not load profile from Supabase.')
       }
     }
 
@@ -85,145 +77,182 @@ export default function ProfilePage() {
     setSyncState('saving')
     setMessage('')
     try {
-      await upsertUserProfile(user, profile)
+      await upsertUserProfile(user, {
+        ...profile,
+        preferences: {
+          theme_mode: mode,
+          notify_product_updates: profile.notify_product_updates,
+          notify_roi_alerts: profile.notify_roi_alerts,
+        },
+      })
       setSyncState('ready')
-      setMessage('Profile synced to Supabase.')
+      setMessage('Profile saved and synced to Supabase.')
     } catch (error) {
       setSyncState('error')
-      setMessage(error?.message || 'Could not sync profile to Supabase.')
+      setMessage(error?.message || 'Could not save profile.')
+    }
+  }
+
+  async function handleSuggestion(event) {
+    event.preventDefault()
+    if (!user) return
+    setSyncState('saving')
+    setMessage('')
+    try {
+      await submitFeedback({
+        name: profile.full_name || user.displayName || 'User',
+        email: user.email,
+        subject: suggestion.subject,
+        message: suggestion.message,
+        source: 'profile_dashboard',
+      })
+      setSuggestion({ subject: 'Product suggestion', message: '' })
+      setSyncState('ready')
+      setMessage('Thanks — your suggestion was sent to our team.')
+    } catch (error) {
+      setSyncState('error')
+      setMessage(error?.message || 'Could not send suggestion.')
     }
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)' }}>
-      <main style={{ width: 'min(100%, 1120px)', margin: '0 auto', padding: '128px 24px 72px' }}>
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.28 }}>
-          <div style={{ maxWidth: '680px', marginBottom: '42px' }}>
-            <p style={{ margin: '0 0 12px', color: 'var(--text-4)', fontFamily: F_MONO, fontSize: '11px', letterSpacing: '0.16em', textTransform: 'uppercase' }}>
-              Account surface
+    <>
+      <DashboardShell
+        eyebrow="Your account"
+        title={`Welcome${profile.full_name ? `, ${profile.full_name.split(' ')[0]}` : ''}`}
+        subtitle="Manage career preferences, product settings, and feedback. Everything syncs to your Supabase profile."
+        tabs={TABS}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+      >
+        {message ? (
+          <DashPanel>
+            <p style={{ margin: 0, color: syncState === 'error' ? 'var(--err)' : 'var(--text-2)', fontSize: 14 }}>
+              {message}
             </p>
-            <h1 style={{ margin: 0, color: 'var(--text)', fontFamily: F_SANS, fontSize: '36px', lineHeight: 1.08, letterSpacing: 0, fontWeight: 900 }}>
-              Profile and preferences
-            </h1>
-            <p style={{ margin: '14px 0 0', color: 'var(--text-2)', fontFamily: F_SANS, fontSize: '15px', lineHeight: 1.75 }}>
-              Firebase handles authentication. This page syncs user details and career preferences into Supabase so your admin view can see who is using CertifyROI.
-            </p>
-          </div>
+          </DashPanel>
+        ) : null}
 
-          {!user && !loading ? (
-            <section style={{ borderTop: '1px solid var(--border)', paddingTop: '28px', maxWidth: '620px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '14px' }}>
-                <User size={20} />
-                <h2 style={{ margin: 0, fontFamily: F_SANS, fontSize: '20px', letterSpacing: 0 }}>Sign in required</h2>
-              </div>
-              <p style={{ margin: '0 0 22px', color: 'var(--text-2)', fontFamily: F_SANS, fontSize: '14px', lineHeight: 1.7 }}>
-                Sign in to create or update your Supabase-backed profile.
-              </p>
-              <button
-                type="button"
-                onClick={signInGoogle}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  minHeight: '48px',
-                  padding: '0 22px',
-                  borderRadius: '999px',
-                  border: '1px solid var(--text)',
-                  background: 'var(--text)',
-                  color: 'var(--bg)',
-                  fontFamily: F_SANS,
-                  fontSize: '13px',
-                  fontWeight: 900,
-                  cursor: 'pointer',
-                }}
-              >
-                Continue with Google <ArrowRight size={15} />
-              </button>
-            </section>
-          ) : null}
-
-          {user ? (
-            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 320px', gap: '34px', alignItems: 'start' }} className="profile-grid">
-              <form onSubmit={handleSave} style={{ display: 'grid', gap: '18px', borderTop: '1px solid var(--border)', paddingTop: '26px' }}>
-                <Field label="Full name" value={profile.full_name} onChange={(value) => setProfile((prev) => ({ ...prev, full_name: value }))} placeholder="Your name" />
-                <Field label="City" value={profile.city} onChange={(value) => setProfile((prev) => ({ ...prev, city: value }))} placeholder="Bangalore" />
-                <Field label="Current role" value={profile.current_role} onChange={(value) => setProfile((prev) => ({ ...prev, current_role: value }))} placeholder="Product analyst" />
-                <Field label="Current salary INR" type="number" value={profile.current_salary} onChange={(value) => setProfile((prev) => ({ ...prev, current_salary: value }))} placeholder="1200000" />
-                <Field label="Target domain" value={profile.target_domain} onChange={(value) => setProfile((prev) => ({ ...prev, target_domain: value }))} placeholder="Cloud, Data, Finance..." />
-
-                {message ? (
-                  <div style={{ border: '1px solid var(--border)', borderRadius: '12px', padding: '12px', color: syncState === 'error' ? '#FCA5A5' : 'var(--text-2)', fontFamily: F_SANS, fontSize: '13px', lineHeight: 1.5 }}>
-                    {message}
-                  </div>
-                ) : null}
-
-                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                  <button
-                    type="submit"
-                    disabled={syncState === 'saving'}
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '9px',
-                      minHeight: '48px',
-                      padding: '0 22px',
-                      borderRadius: '999px',
-                      border: '1px solid var(--text)',
-                      background: 'var(--text)',
-                      color: 'var(--bg)',
-                      fontFamily: F_SANS,
-                      fontSize: '13px',
-                      fontWeight: 900,
-                      cursor: syncState === 'saving' ? 'not-allowed' : 'pointer',
-                    }}
-                  >
-                    <Save size={15} />
-                    {syncState === 'saving' ? 'Syncing...' : 'Save Profile'}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={signOut}
-                    style={{
-                      minHeight: '48px',
-                      padding: '0 22px',
-                      borderRadius: '999px',
-                      border: '1px solid var(--border)',
-                      background: 'transparent',
-                      color: 'var(--text)',
-                      fontFamily: F_SANS,
-                      fontSize: '13px',
-                      fontWeight: 800,
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Sign Out
-                  </button>
+        {activeTab === 'preferences' ? (
+          <div className="profile-dashboard-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 300px', gap: 20 }}>
+            <DashPanel>
+              <form onSubmit={handleSave} style={{ display: 'grid', gap: 16 }}>
+                <DashField label="Full name">
+                  <DashInput value={profile.full_name} onChange={(e) => setProfile((p) => ({ ...p, full_name: e.target.value }))} placeholder="Your name" />
+                </DashField>
+                <div className="dash-grid-2">
+                  <DashField label="City">
+                    <DashInput value={profile.city} onChange={(e) => setProfile((p) => ({ ...p, city: e.target.value }))} placeholder="Bangalore" />
+                  </DashField>
+                  <DashField label="Current role">
+                    <DashInput value={profile.job_role} onChange={(e) => setProfile((p) => ({ ...p, job_role: e.target.value }))} placeholder="Cloud engineer" />
+                  </DashField>
                 </div>
+                <div className="dash-grid-2">
+                  <DashField label="Current salary (INR / year)">
+                    <DashInput type="number" value={profile.current_salary} onChange={(e) => setProfile((p) => ({ ...p, current_salary: e.target.value }))} placeholder="1200000" />
+                  </DashField>
+                  <DashField label="Target domain">
+                    <DashInput value={profile.target_domain} onChange={(e) => setProfile((p) => ({ ...p, target_domain: e.target.value }))} placeholder="Cloud & DevOps" />
+                  </DashField>
+                </div>
+                <DashButton type="submit" variant="primary" disabled={syncState === 'saving'}>
+                  <Save size={15} />
+                  {syncState === 'saving' ? 'Saving...' : 'Save preferences'}
+                </DashButton>
               </form>
+            </DashPanel>
 
-              <aside style={{ borderTop: '1px solid var(--border)', paddingTop: '26px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-                  <ShieldCheck size={18} />
-                  <h2 style={{ margin: 0, fontFamily: F_SANS, fontSize: '18px', letterSpacing: 0 }}>Account state</h2>
-                </div>
+            <DashPanel>
+              <h3 style={{ margin: '0 0 14px', fontSize: 15, fontWeight: 800, color: 'var(--text)' }}>Appearance</h3>
+              <div style={{ display: 'grid', gap: 8 }}>
                 {[
-                  ['Email', user.email || 'Not available'],
-                  ['Firebase UID', user.uid],
-                  ['Provider', user.providerData?.[0]?.providerId || 'password'],
-                  ['Supabase', syncState === 'ready' ? 'Connected' : syncState],
-                ].map(([label, value]) => (
-                  <div key={label} style={{ padding: '14px 0', borderTop: '1px solid var(--border)' }}>
-                    <div style={{ color: 'var(--text-4)', fontFamily: F_MONO, fontSize: '10px', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '6px' }}>{label}</div>
-                    <div style={{ color: 'var(--text-2)', fontFamily: F_SANS, fontSize: '13px', lineHeight: 1.5, wordBreak: 'break-word' }}>{value}</div>
-                  </div>
+                  ['light', 'Light'],
+                  ['dark', 'Dark'],
+                  ['system', 'System'],
+                ].map(([id, label]) => (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => setThemeMode(id)}
+                    className={`dash-tab${mode === id ? ' dash-tab--active' : ''}`}
+                    style={{ width: '100%', textAlign: 'center' }}
+                  >
+                    {label}
+                  </button>
                 ))}
-              </aside>
+              </div>
+              <h3 style={{ margin: '22px 0 12px', fontSize: 15, fontWeight: 800, color: 'var(--text)' }}>Notifications</h3>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10, color: 'var(--text-2)', fontSize: 13 }}>
+                <input
+                  type="checkbox"
+                  checked={profile.notify_product_updates}
+                  onChange={(e) => setProfile((p) => ({ ...p, notify_product_updates: e.target.checked }))}
+                />
+                Product updates & new tools
+              </label>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 10, color: 'var(--text-2)', fontSize: 13 }}>
+                <input
+                  type="checkbox"
+                  checked={profile.notify_roi_alerts}
+                  onChange={(e) => setProfile((p) => ({ ...p, notify_roi_alerts: e.target.checked }))}
+                />
+                ROI alerts for saved certifications
+              </label>
+            </DashPanel>
+          </div>
+        ) : null}
+
+        {activeTab === 'suggestions' ? (
+          <DashPanel>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+              <Sparkles size={18} style={{ color: 'var(--text-3)' }} />
+              <h2 style={{ margin: 0, fontSize: 16, fontWeight: 800 }}>Share feedback</h2>
             </div>
-          ) : null}
-        </motion.div>
-      </main>
+            <form onSubmit={handleSuggestion} style={{ display: 'grid', gap: 14, maxWidth: 640 }}>
+              <DashField label="Subject">
+                <DashInput value={suggestion.subject} onChange={(e) => setSuggestion((s) => ({ ...s, subject: e.target.value }))} />
+              </DashField>
+              <DashField label="Your suggestion">
+                <DashTextarea
+                  value={suggestion.message}
+                  onChange={(e) => setSuggestion((s) => ({ ...s, message: e.target.value }))}
+                  placeholder="Tell us what would make CertifyROI more useful for your career decisions..."
+                  required
+                />
+              </DashField>
+              <DashButton type="submit" variant="primary" disabled={syncState === 'saving' || !suggestion.message.trim()}>
+                <Send size={15} />
+                Submit suggestion
+              </DashButton>
+            </form>
+          </DashPanel>
+        ) : null}
+
+        {activeTab === 'account' ? (
+          <DashPanel>
+            <div style={{ display: 'grid', gap: 14, maxWidth: 520 }}>
+              {[
+                ['Email', user?.email],
+                ['User ID', user?.uid],
+                ['Provider', user?.providerData?.[0]?.providerId || 'password'],
+                ['Supabase sync', syncState],
+              ].map(([label, value]) => (
+                <div key={label} style={{ paddingBottom: 12, borderBottom: '1px solid var(--border)' }}>
+                  <div style={{ color: 'var(--text-3)', fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 6 }}>
+                    {label}
+                  </div>
+                  <div style={{ color: 'var(--text)', fontSize: 14, wordBreak: 'break-word' }}>{value}</div>
+                </div>
+              ))}
+              <DashButton type="button" variant="ghost" onClick={signOut} style={{ marginTop: 8, width: 'fit-content' }}>
+                Sign out
+              </DashButton>
+            </div>
+          </DashPanel>
+        ) : null}
+      </DashboardShell>
       <MarketingFooter />
-    </div>
+    </>
   )
 }

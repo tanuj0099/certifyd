@@ -1,4 +1,5 @@
-﻿import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { ArrowRight, MapPin } from 'lucide-react'
 import IntersectionGraphic from './graphics/IntersectionGraphic.jsx'
 import FilterGraphic from './graphics/FilterGraphic.jsx'
@@ -38,20 +39,24 @@ function TeaserLink({ to, children }) {
 
 function BoxShell({ label, title, copy, children, linkTo, linkLabel, isLast }) {
   return (
-    <article
+    <motion.article
       className="features-bento__box"
+      whileHover={{ backgroundColor: 'var(--card-hover)' }}
+      transition={{ duration: 0.2 }}
       style={{
         minWidth: 0,
-        padding: '0 34px',
+        padding: '40px 34px',
         borderRight: isLast ? 'none' : '1px solid var(--border)',
         background: 'transparent',
+        cursor: 'pointer',
       }}
+      onClick={() => window.location.href = linkTo}
     >
       <div
         style={{
           fontFamily: F_MONO,
           fontSize: '10px',
-          color: 'var(--text-4)',
+          color: 'var(--text-3)',
           letterSpacing: '0.14em',
           textTransform: 'uppercase',
           marginBottom: '34px',
@@ -85,7 +90,7 @@ function BoxShell({ label, title, copy, children, linkTo, linkLabel, isLast }) {
         {copy}
       </p>
       <TeaserLink to={linkTo}>{linkLabel}</TeaserLink>
-    </article>
+    </motion.article>
   )
 }
 
@@ -129,18 +134,18 @@ function MarketPulseMock() {
   )
 }
 
-function CertRadarMock({ isDark }) {
+function CertRadarMock() {
   return (
     <div style={{ width: '100%', height: '232px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <FilterGraphic isDark={isDark} />
+      <FilterGraphic />
     </div>
   )
 }
 
-function DashboardMock({ isDark }) {
+function DashboardMock() {
   return (
     <div style={{ width: '100%', position: 'relative' }}>
-      <IntersectionGraphic isDark={isDark} />
+      <IntersectionGraphic />
       <div
         style={{
           display: 'inline-flex',
@@ -161,18 +166,15 @@ function DashboardMock({ isDark }) {
   )
 }
 
-function RouteAnalysisMock({ isDark }) {
+function PathMock() {
   return (
     <div style={{ width: '100%', height: '232px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <PathGraphic isDark={isDark} />
+      <PathGraphic />
     </div>
   )
 }
 
 export default function FeaturesBentoGrid() {
-  const { current } = useTheme()
-  const isDark = current.id !== 'light'
-
   return (
     <section
       style={{
@@ -187,7 +189,7 @@ export default function FeaturesBentoGrid() {
         <div style={{ maxWidth: '640px', marginBottom: '46px' }}>
           <div
             style={{
-              color: 'var(--text-4)',
+              color: 'var(--text-3)',
               fontFamily: F_MONO,
               fontSize: '11px',
               letterSpacing: '0.16em',
@@ -228,7 +230,7 @@ export default function FeaturesBentoGrid() {
             linkTo="/tools/market"
             linkLabel="View Market Pulse"
           >
-            <CertRadarMock isDark={isDark} />
+            <CertRadarMock />
           </BoxShell>
           {/* FIG 0.2 — ROI Calculator */}
           <BoxShell
@@ -238,7 +240,7 @@ export default function FeaturesBentoGrid() {
             linkTo="/app"
             linkLabel="Calculate ROI"
           >
-            <DashboardMock isDark={isDark} />
+            <DashboardMock />
           </BoxShell>
           {/* FIG 0.3 — Route Analysis */}
           <BoxShell
@@ -249,7 +251,7 @@ export default function FeaturesBentoGrid() {
             linkLabel="Route Analysis"
             isLast
           >
-            <RouteAnalysisMock isDark={isDark} />
+            <PathMock />
           </BoxShell>
         </div>
       </div>

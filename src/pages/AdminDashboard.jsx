@@ -1,222 +1,148 @@
-import React from "react";
-import PageWrapper from './SharedUI'; // Removed the curly braces // Wait, PageWrapper is in App.jsx and not exported, let me create a simple wrapper or import AppSection
-import { AppSection } from "../components/SharedUI";
-import { motion } from "framer-motion";
-import { Database, Activity, LayoutGrid, Eye, EyeOff, Trash2, Key } from "lucide-react";
+import { useCallback, useEffect, useState } from 'react'
+import { MessageSquare, RefreshCw, Users, Database } from 'lucide-react'
+import { useAuth } from '../hooks/useAuth.jsx'
+import { fetchAdminDashboard } from '../services/adminService.js'
+import DashboardShell, { DashPanel, DashStat } from '../components/DashboardShell.jsx'
 
-const FM = "'JetBrains Mono','Commit Mono',monospace";
-const FH = "'Plus Jakarta Sans','Bricolage Grotesque',sans-serif";
-const FB = "'Inter',sans-serif";
+const F_MONO = "'JetBrains Mono', monospace"
 
-const T = { duration: 0.32, ease: [0.4, 0, 0.2, 1] };
-
-const activeAssets = [
-  { id: "cert_v3_gold", status: "active", type: "gltf", size: "2.4MB" },
-  { id: "cert_v3_neon", status: "paused", type: "spln", size: "4.1MB" },
-  { id: "cert_v4_mesh", status: "active", type: "gltf", size: "1.8MB" },
-];
-
-const telemetryLogs = [
-  "[21:14:02] -> HASH_VERIFY_SUCCESS -> id: 0x9f2a...",
-  "[21:14:15] -> ASSET_FETCH_LATENCY -> 412ms -> IP: 106.51.x.x",
-  "[21:15:00] -> BULK_GENERATE_REQUEST -> Institution: ChristUniv_Node01 -> Payload: 42 units"
-];
+function formatDate(value) {
+  if (!value) return '—'
+  try {
+    return new Date(value).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })
+  } catch {
+    return value
+  }
+}
 
 export default function AdminDashboard() {
+  const { user } = useAuth()
+  const [data, setData] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  const load = useCallback(async () => {
+    if (!user) return
+    setLoading(true)
+    setError('')
+    try {
+      const payload = await fetchAdminDashboard(user)
+      setData(payload)
+    } catch (err) {
+      setError(err?.message || 'Could not load admin data')
+    } finally {
+      setLoading(false)
+    }
+  }, [user])
+
+  useEffect(() => {
+    load()
+  }, [load])
+
+  const stats = data?.stats || {}
+
   return (
-    <div style={{ paddingTop: "100px", minHeight: "100vh", backgroundColor: "var(--bg)", color: "var(--text)" }}>
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px" }}>
-        
-        {/* Header Section */}
-        <div style={{
-          border: "1px solid var(--border)",
-          padding: "16px 24px",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          fontFamily: FM,
-          fontSize: "13px",
-          textTransform: "uppercase",
-          letterSpacing: "0.05em",
-          marginBottom: "32px",
-          background: "var(--bg-elevated)"
-        }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <Database size={16} color="var(--indigo)" />
-            <span>CERTIFYROI // ADMIN PORTAL</span>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#10B981" }}>
-            <div style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#10B981" }} />
-            <span>[STATUS: SYSTEM_ALIGNED_OK]</span>
-          </div>
-        </div>
+    <DashboardShell
+      eyebrow="Admin console"
+      title="CertifyROI operations"
+      subtitle="Live user profiles and feedback from Supabase. Access is restricted to allowlisted admin emails."
+      actions={
+        <button type="button" className="dash-btn dash-btn--ghost" onClick={load} disabled={loading}>
+          <RefreshCw size={14} />
+          Refresh
+        </button>
+      }
+    >
+      {error ? (
+        <DashPanel>
+          <p style={{ margin: 0, color: 'var(--err)', fontFamily: F_MONO, fontSize: 13 }}>{error}</p>
+        </DashPanel>
+      ) : null}
 
-        {/* Top Grid: Telemetry & Assets */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))",
-          gap: "32px",
-          marginBottom: "32px",
-        }}>
-          
-          {/* Metric Telemetry */}
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <div style={{
-              borderBottom: "1px solid var(--border)",
-              paddingBottom: "12px",
-              marginBottom: "16px",
-              fontFamily: FM,
-              fontSize: "12px",
-              color: "var(--text-3)",
-              display: "flex",
-              alignItems: "center",
-              gap: "8px"
-            }}>
-              <Activity size={14} /> METRIC TELEMETRY
-            </div>
-            <div style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "12px",
-              fontFamily: FB,
-              fontSize: "14px"
-            }}>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ color: "var(--text-2)" }}>Avg Load Time:</span>
-                <span style={{ color: "var(--text)", fontWeight: "600" }}>1.2s <span style={{ color: "#10B981", fontSize: "12px", marginLeft: "4px" }}>(Optimal)</span></span>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ color: "var(--text-2)" }}>Active 3D Sessions:</span>
-                <span style={{ color: "var(--text)", fontWeight: "600" }}>142</span>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ color: "var(--text-2)" }}>Verification API Success:</span>
-                <span style={{ color: "var(--text)", fontWeight: "600" }}>99.8%</span>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ color: "var(--text-2)" }}>Global Engine Rate:</span>
-                <span style={{ color: "var(--text)", fontWeight: "600" }}>60 FPS</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Active 3D Assets */}
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <div style={{
-              borderBottom: "1px solid var(--border)",
-              paddingBottom: "12px",
-              marginBottom: "16px",
-              fontFamily: FM,
-              fontSize: "12px",
-              color: "var(--text-3)",
-              display: "flex",
-              alignItems: "center",
-              gap: "8px"
-            }}>
-              <LayoutGrid size={14} /> ACTIVE 3D ASSETS
-            </div>
-            <div style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "8px",
-              fontFamily: FM,
-              fontSize: "12px"
-            }}>
-              {activeAssets.map(asset => (
-                <div key={asset.id} style={{
-                  display: "grid",
-                  gridTemplateColumns: "1.5fr 1fr 1fr",
-                  padding: "10px 12px",
-                  border: "1px solid var(--border)",
-                  background: asset.status === 'active' ? "transparent" : "var(--bg-elevated)",
-                  opacity: asset.status === 'active' ? 1 : 0.6,
-                  alignItems: "center"
-                }}>
-                  <span style={{ color: "var(--text)" }}>id: {asset.id}</span>
-                  <span style={{ color: asset.status === 'active' ? "#10B981" : "var(--text-4)" }}>
-                    status: {asset.status}
-                  </span>
-                  <span style={{ color: "var(--text-3)", textAlign: "right" }}>{asset.type} | {asset.size}</span>
-                </div>
-              ))}
-            </div>
-            
-            {/* Quick Action Input */}
-            <div style={{ marginTop: "16px", display: "flex", gap: "8px" }}>
-              <input 
-                type="text" 
-                placeholder="LOAD_ASSET_ID..." 
-                style={{
-                  flex: 1,
-                  background: "transparent",
-                  border: "1px solid var(--border)",
-                  padding: "10px 12px",
-                  color: "var(--text)",
-                  fontFamily: FM,
-                  fontSize: "12px",
-                  outline: "none",
-                  borderRadius: 0
-                }}
-              />
-              <button style={{
-                background: "var(--text)",
-                color: "var(--bg)",
-                border: "none",
-                padding: "0 20px",
-                fontFamily: FM,
-                fontSize: "12px",
-                fontWeight: "bold",
-                cursor: "pointer",
-                borderRadius: 0
-              }}>
-                DEPLOY
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Section: Pipeline Logs */}
-        <div style={{
-          borderTop: "1px solid var(--border)",
-          paddingTop: "24px",
-          marginTop: "32px",
-          fontFamily: FM
-        }}>
-          <div style={{
-            fontSize: "12px",
-            color: "var(--text-3)",
-            marginBottom: "16px",
-            display: "flex",
-            alignItems: "center",
-            gap: "8px"
-          }}>
-            <Key size={14} /> LIVE EVENT ROUTING PIPELINE
-          </div>
-          <div style={{
-            background: "var(--bg-elevated)",
-            border: "1px solid var(--border)",
-            padding: "16px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "10px",
-            fontSize: "12px",
-            color: "var(--text-2)",
-            height: "200px",
-            overflowY: "auto"
-          }}>
-            {telemetryLogs.map((log, i) => (
-              <div key={i} style={{ borderBottom: i !== telemetryLogs.length - 1 ? "1px dashed var(--border)" : "none", paddingBottom: i !== telemetryLogs.length - 1 ? "8px" : 0 }}>
-                {log}
-              </div>
-            ))}
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "8px", color: "var(--text-4)" }}>
-              <span className="animate-pulse" style={{ display: "inline-block", width: "8px", height: "12px", background: "var(--text-4)" }}></span>
-              LISTENING_ON_PORT_8080...
-            </div>
-          </div>
-        </div>
-
+      <div className="dash-grid-4">
+        <DashStat label="Registered users" value={loading ? '…' : stats.totalUsers ?? 0} />
+        <DashStat label="Active (7 days)" value={loading ? '…' : stats.recentUsers7d ?? 0} />
+        <DashStat label="With salary data" value={loading ? '…' : stats.usersWithSalary ?? 0} />
+        <DashStat label="Feedback messages" value={loading ? '…' : stats.totalFeedback ?? 0} />
       </div>
-    </div>
-  );
+
+      <DashPanel>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18 }}>
+          <Users size={16} style={{ color: 'var(--text-3)' }} />
+          <h2 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: 'var(--text)' }}>User profiles</h2>
+        </div>
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: F_MONO, fontSize: 11 }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text-3)', textAlign: 'left' }}>
+                {['Name', 'Email', 'City', 'Role', 'Domain', 'Updated'].map((h) => (
+                  <th key={h} style={{ padding: '10px 8px', fontWeight: 600, letterSpacing: '0.06em' }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {(data?.profiles || []).map((row) => (
+                <tr key={row.user_id} style={{ borderBottom: '1px solid var(--border)' }}>
+                  <td style={{ padding: '10px 8px', color: 'var(--text)' }}>{row.full_name || '—'}</td>
+                  <td style={{ padding: '10px 8px', color: 'var(--text-2)' }}>{row.email || '—'}</td>
+                  <td style={{ padding: '10px 8px', color: 'var(--text-2)' }}>{row.city || '—'}</td>
+                  <td style={{ padding: '10px 8px', color: 'var(--text-2)' }}>{row.job_role || '—'}</td>
+                  <td style={{ padding: '10px 8px', color: 'var(--text-2)' }}>{row.target_domain || '—'}</td>
+                  <td style={{ padding: '10px 8px', color: 'var(--text-3)' }}>{formatDate(row.updated_at)}</td>
+                </tr>
+              ))}
+              {!loading && !(data?.profiles?.length) ? (
+                <tr>
+                  <td colSpan={6} style={{ padding: 20, color: 'var(--text-3)', textAlign: 'center' }}>
+                    No profiles in Supabase yet.
+                  </td>
+                </tr>
+              ) : null}
+            </tbody>
+          </table>
+        </div>
+      </DashPanel>
+
+      <DashPanel>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18 }}>
+          <MessageSquare size={16} style={{ color: 'var(--text-3)' }} />
+          <h2 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: 'var(--text)' }}>Feedback & suggestions</h2>
+        </div>
+        <div style={{ display: 'grid', gap: 12 }}>
+          {(data?.feedback || []).map((row) => (
+            <div
+              key={row.id}
+              style={{
+                padding: 14,
+                borderRadius: 12,
+                border: '1px solid var(--border)',
+                background: 'var(--bg)',
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap', marginBottom: 8 }}>
+                <span style={{ color: 'var(--text)', fontWeight: 700, fontSize: 13 }}>{row.subject}</span>
+                <span style={{ color: 'var(--text-4)', fontSize: 10, fontFamily: F_MONO }}>{row.source} · {formatDate(row.created_at)}</span>
+              </div>
+              <div style={{ color: 'var(--text-3)', fontSize: 12, marginBottom: 8 }}>
+                {row.name} ({row.email})
+              </div>
+              <p style={{ margin: 0, color: 'var(--text-2)', fontSize: 13, lineHeight: 1.6 }}>{row.message}</p>
+            </div>
+          ))}
+          {!loading && !(data?.feedback?.length) ? (
+            <p style={{ margin: 0, color: 'var(--text-3)', fontSize: 13 }}>No feedback messages yet.</p>
+          ) : null}
+        </div>
+      </DashPanel>
+
+      <DashPanel>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <Database size={16} style={{ color: 'var(--text-3)' }} />
+          <p style={{ margin: 0, color: 'var(--text-3)', fontFamily: F_MONO, fontSize: 11 }}>
+            Signed in as {user?.email} · Data via service role API
+          </p>
+        </div>
+      </DashPanel>
+    </DashboardShell>
+  )
 }

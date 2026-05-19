@@ -9,6 +9,8 @@ import {
 } from "react-router-dom";
 import DynamicIslandNav from "./components/DynamicIslandNav";
 import AuthModal from "./components/AuthModal.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import AdminRoute from "./components/AdminRoute.jsx";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   TrendingUp,
@@ -178,9 +180,9 @@ const DataFreshnessBadge = function () {
         style={{
           fontFamily: FM,
           fontSize: "10px",
-          color: "#374151",
+          color: "var(--text-3)",
           letterSpacing: "0.06em",
-          opacity: 0.72,
+          opacity: 1,
         }}
       >
         Data: Q1 2026 · LinkedIn India · NASSCOM · Naukri · AmbitionBox
@@ -242,7 +244,7 @@ const TermsPage = function () {
                 padding: "18px 20px",
                 marginBottom: "10px",
                 background: "var(--bg-elevated)",
-                border: "1px solid #E5E7EB"
+                border: "1px solid var(--border)"
               }}
             >
               <h3
@@ -333,7 +335,7 @@ const PrivacyPage = function () {
                 padding: "18px 20px",
                 marginBottom: "10px",
                 background: "var(--bg-elevated)",
-                border: "1px solid #E5E7EB"
+                border: "1px solid var(--border)"
               }}
             >
               <h3
@@ -417,7 +419,7 @@ const CookiesPage = function () {
                 padding: "18px 20px",
                 marginBottom: "10px",
                 background: "var(--bg-elevated)",
-                border: "1px solid #E5E7EB"
+                border: "1px solid var(--border)"
               }}
             >
               <h3
@@ -615,7 +617,7 @@ const _OldBlogPage = function () {
                   flexDirection: "column",
                   cursor: "pointer",
                   background: "var(--bg-elevated)",
-                  border: "1px solid #E5E7EB"
+                  border: "1px solid var(--border)"
                 }}
                 onClick={function () {
                   setExpandedPost(isExpanded ? null : post.id);
@@ -936,7 +938,7 @@ const _OldFAQPage = function () {
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.04 }}
-                      style={{ overflow: "hidden", cursor: "pointer", background: "var(--bg-elevated)", border: "1px solid #E5E7EB" }}
+                      style={{ overflow: "hidden", cursor: "pointer", background: "var(--bg-elevated)", border: "1px solid var(--border)" }}
                       onClick={function () {
                         setOpen(isOpen ? null : idx);
                       }}
@@ -1025,9 +1027,9 @@ const _OldContactPage = function () {
     width: "100%",
     padding: "11px 14px",
     background: "var(--bg-elevated)",
-    border: "1px solid #E5E7EB",
+    border: "1px solid var(--border)",
     borderRadius: "4px",
-    color: "#111827",
+    color: "var(--text)",
     fontSize: "14px",
     fontFamily: FB,
     outline: "none",
@@ -1071,7 +1073,7 @@ const _OldContactPage = function () {
               padding: "48px",
               textAlign: "center",
               background: "var(--bg-elevated)",
-              border: "1px solid #E5E7EB"
+              border: "1px solid var(--border)"
             }}
           >
             <div style={{ fontSize: "3.5rem", marginBottom: "16px" }}>✅</div>
@@ -1102,7 +1104,7 @@ const _OldContactPage = function () {
           <div style={{
             padding: "clamp(20px,4vw,32px)",
             background: "var(--bg-elevated)",
-            border: "1px solid #E5E7EB"
+            border: "1px solid var(--border)"
           }}>
             {[
               { key: "name", label: "Name", type: "text", ph: "Your name" },
@@ -1132,7 +1134,7 @@ const _OldContactPage = function () {
                       e.target.style.borderColor = "#10B981";
                     }}
                     onBlur={function (e) {
-                      e.target.style.borderColor = "#E5E7EB";
+                      e.target.style.borderColor = "var(--border)";
                     }}
                   />
                 </div>
@@ -1172,7 +1174,7 @@ const _OldContactPage = function () {
                   e.target.style.borderColor = "#10B981";
                 }}
                 onBlur={function (e) {
-                  e.target.style.borderColor = "#E5E7EB";
+                      e.target.style.borderColor = "var(--border)";
                 }}
               />
             </div>
@@ -1355,7 +1357,7 @@ const MobileDrawer = function ({
             style={{
               position: "fixed",
               inset: 0,
-              background: "rgba(34, 35, 38, 0.58)",
+              background: "var(--overlay-scrim, rgba(0, 0, 0, 0.55))",
               zIndex: 298,
             }}
           />
@@ -1386,7 +1388,7 @@ const MobileDrawer = function ({
         <div
           style={{
             padding: "16px 20px",
-            borderBottom: "1px solid #E5E7EB",
+            borderBottom: "1px solid var(--border)",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -1410,14 +1412,14 @@ const MobileDrawer = function ({
               style={{
                 width: "28px",
                 height: "28px",
-                background: "transparent,#4338CA)",
+                background: "var(--accent)",
                 borderRadius: "8px",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
               }}
             >
-              <TrendingUp size={13} color="white" />
+              <TrendingUp size={13} color="var(--bg)" />
             </div>
             <span
               style={{
@@ -1435,7 +1437,7 @@ const MobileDrawer = function ({
             onClick={onClose}
             style={{
               background: "var(--bg-elevated)",
-              border: "1px solid #E5E7EB",
+              border: "1px solid var(--border)",
               borderRadius: "7px",
               padding: "7px",
               cursor: "pointer",
@@ -1490,7 +1492,7 @@ const MobileDrawer = function ({
                   background: "transparent",
                   border:
                     "1px solid " +
-                    (isActive ? "#10B981" : "#E5E7EB"),
+                    (isActive ? "var(--border-accent)" : "var(--border)"),
                   display: "flex",
                   alignItems: "center",
                   gap: "10px",
@@ -1505,7 +1507,7 @@ const MobileDrawer = function ({
                     background: isActive ? "var(--accent)" : "transparent",
                     border:
                       "1px solid " +
-                      (isActive ? "#10B981" : "#E5E7EB"),
+                      (isActive ? "var(--border-accent)" : "var(--border)"),
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -1574,7 +1576,7 @@ const MobileDrawer = function ({
                   background: "transparent",
                   border:
                     "1px solid " +
-                    (isActive ? "#10B981" : "#E5E7EB"),
+                    (isActive ? "var(--border-accent)" : "var(--border)"),
                   display: "flex",
                   alignItems: "center",
                   gap: "10px",
@@ -1647,12 +1649,12 @@ const MobileDrawer = function ({
                   background: "transparent",
                   border:
                     "1px solid " +
-                    (isActive ? "#10B981" : "#E5E7EB"),
+                    (isActive ? "var(--border-accent)" : "var(--border)"),
                   cursor: "pointer",
                   display: "flex",
                   alignItems: "center",
                   gap: "10px",
-                  color: isActive ? "#10B981" : "#374151",
+                  color: isActive ? "var(--text)" : "var(--text-3)",
                   fontSize: "13px",
                   fontFamily: FB,
                   minHeight: "44px",
@@ -1661,7 +1663,7 @@ const MobileDrawer = function ({
               >
                 <item.icon
                   size={14}
-                  color={isActive ? "#10B981" : "#9CA3AF"}
+                  color={isActive ? "var(--text)" : "var(--text-4)"}
                 />
                 {item.label}
               </button>
@@ -1672,7 +1674,7 @@ const MobileDrawer = function ({
         <div
           style={{
             padding: "16px 20px",
-            borderTop: "1px solid #E5E7EB",
+            borderTop: "1px solid var(--border)",
             flexShrink: 0,
           }}
         >
@@ -1802,10 +1804,10 @@ const NavBar = function ({ currentPage, onNavigate, onTabChange }) {
                           border:
                             "1px solid " +
                             (active
-                              ? "#10B981"
+                              ? "var(--border-accent)"
                               : isCompleted
-                                ? "#10B981"
-                                : "#E5E7EB"),
+                                ? "var(--border-accent)"
+                                : "var(--border)"),
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
@@ -1843,7 +1845,7 @@ const NavBar = function ({ currentPage, onNavigate, onTabChange }) {
           {/* Row 2: Tools — CENTERED */}
           <div
             style={{
-              borderTop: "1px solid #E5E7EB",
+              borderTop: "1px solid var(--border)",
               background: "var(--bg-elevated)",
             }}
           >
@@ -2459,7 +2461,7 @@ const Footer = function ({ onNavigate }) {
   return (
     <footer
       style={{
-        borderTop: "1px solid #E5E7EB",
+        borderTop: "1px solid var(--border)",
         padding: "40px 16px 24px",
         marginTop: "auto",
         background: "var(--bg)",
@@ -2487,14 +2489,14 @@ const Footer = function ({ onNavigate }) {
                 style={{
                   width: "26px",
                   height: "26px",
-                  background: "transparent,#4338CA)",
+                  background: "var(--accent)",
                   borderRadius: "7px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                 }}
               >
-                <TrendingUp size={13} color="white" />
+                <TrendingUp size={13} color="var(--bg)" />
               </div>
               <span
                 style={{
@@ -2693,7 +2695,7 @@ const Footer = function ({ onNavigate }) {
                 padding: "10px 12px",
                 borderRadius: "8px",
                 background: "transparent",
-                border: "1px solid #E5E7EB",
+                border: "1px solid var(--border)",
               }}
             >
               <div
@@ -2723,7 +2725,7 @@ const Footer = function ({ onNavigate }) {
 
         <div
           style={{
-            borderTop: "1px solid #E5E7EB",
+            borderTop: "1px solid var(--border)",
             paddingTop: "16px",
             display: "flex",
             justifyContent: "space-between",
@@ -2772,7 +2774,7 @@ const SignInModal = function ({ isOpen, onClose, onSignIn, loading }) {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "rgba(34, 35, 38, 0.58)",
+        background: "var(--overlay-scrim, rgba(0, 0, 0, 0.55))",
         padding: "24px",
       }}
     >
@@ -2782,7 +2784,7 @@ const SignInModal = function ({ isOpen, onClose, onSignIn, loading }) {
         exit={{ opacity: 0, scale: 0.95, y: 10 }}
         style={{
           background: "var(--bg-elevated)",
-          border: "1px solid #E5E7EB",
+          border: "1px solid var(--border)",
           borderRadius: "8px",
           padding: "32px",
           width: "100%",
@@ -2884,6 +2886,13 @@ function AppRoot() {
   const { user, signOut, loading } = useAuth();
   const [showSignIn, setShowSignIn] = useState(false);
 
+  useEffect(() => {
+    if (location.state?.authRequired) {
+      setShowSignIn(true)
+      navigate(location.pathname, { replace: true, state: {} })
+    }
+  }, [location.state, location.pathname, navigate])
+
   // ── Journey state now lives in Zustand ────────────────
   const activeTab = useJourneyStore((s) => s.activeTab);
   const setActiveTab = useJourneyStore((s) => s.setActiveTab);
@@ -2962,7 +2971,14 @@ function AppRoot() {
                     />
                   }
                 />
-                <Route path="/admin" element={<AdminDashboard />} />
+                <Route
+                  path="/admin"
+                  element={
+                    <AdminRoute>
+                      <AdminDashboard />
+                    </AdminRoute>
+                  }
+                />
                 <Route path="/faq" element={<FAQPage />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/features" element={<FeaturesPage />} />
@@ -2970,7 +2986,7 @@ function AppRoot() {
                 <Route path="/pricing" element={<PricingPage />} />
                 <Route path="/blog" element={<BlogPage />} />
                 <Route path="/contact" element={<ContactPage />} />
-                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
                 <Route path="/unauthorized" element={<UnauthorizedPage />} />
                 <Route path="/tools/resume" element={<ResumeTool />} />
                 <Route path="/tools/roi" element={<ROITool />} />

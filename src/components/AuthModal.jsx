@@ -2,6 +2,9 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Mail, User, X } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth.jsx'
+import { useTheme } from '../hooks/useTheme.jsx'
+import TurnstileWidget, { isTurnstileEnabled } from './TurnstileWidget.jsx'
+import { verifyTurnstileToken } from '../services/turnstileService.js'
 
 const F_SANS = "'Inter', 'DM Sans', sans-serif"
 const F_MONO = "'JetBrains Mono', 'IBM Plex Mono', monospace"
@@ -45,6 +48,7 @@ function Field({ label, type = 'text', value, onChange, placeholder, autoComplet
 
 export default function AuthModal({ isOpen, onClose, loading }) {
   const { signInGoogle, signInEmail, signUpEmail, resetPassword, authError } = useAuth()
+  const { isDark } = useTheme()
   const [mode, setMode] = useState('signin')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -52,6 +56,13 @@ export default function AuthModal({ isOpen, onClose, loading }) {
   const [busy, setBusy] = useState(false)
   const [notice, setNotice] = useState('')
   const [error, setError] = useState('')
+  const [turnstileToken, setTurnstileToken] = useState(isTurnstileEnabled() ? '' : 'turnstile-disabled')
+
+  async function ensureHumanCheck() {
+    if (!isTurnstileEnabled()) return
+    if (!turnstileToken) throw new Error('Complete the human verification check.')
+    await verifyTurnstileToken(turnstileToken)
+  }
 
   if (!isOpen) return null
 
@@ -74,6 +85,7 @@ export default function AuthModal({ isOpen, onClose, loading }) {
     setError('')
     setNotice('')
     try {
+      await ensureHumanCheck()
       await signInGoogle()
       onClose()
     } catch (err) {
@@ -89,6 +101,7 @@ export default function AuthModal({ isOpen, onClose, loading }) {
     setError('')
     setNotice('')
     try {
+      await ensureHumanCheck()
       if (mode === 'reset') {
         await resetPassword(email)
         setNotice('Password reset email sent. Check your inbox.')
@@ -112,6 +125,7 @@ export default function AuthModal({ isOpen, onClose, loading }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
+        onClick={onClose}
         style={{
           position: 'fixed',
           inset: 0,
@@ -120,7 +134,7 @@ export default function AuthModal({ isOpen, onClose, loading }) {
           alignItems: 'center',
           justifyContent: 'center',
           padding: '22px',
-          background: 'rgba(0, 0, 0, 0.72)',
+          background: isDark ? 'rgba(0, 0, 0, 0.72)' : 'rgba(26, 26, 26, 0.45)',
         }}
       >
         <motion.div
@@ -128,11 +142,12 @@ export default function AuthModal({ isOpen, onClose, loading }) {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 12, scale: 0.98 }}
           transition={{ type: 'spring', stiffness: 260, damping: 28 }}
+          onClick={(event) => event.stopPropagation()}
           style={{
             width: 'min(100%, 440px)',
             borderRadius: '24px',
             border: '1px solid var(--border-mid)',
-            background: 'var(--bg-elevated)',
+            background: 'var(--bg)',
             color: 'var(--text)',
             padding: '28px',
           }}
@@ -209,10 +224,16 @@ export default function AuthModal({ isOpen, onClose, loading }) {
             ))}
           </div>
 
+          <TurnstileWidget
+            onVerify={setTurnstileToken}
+            onExpire={() => setTurnstileToken('')}
+            onError={() => setTurnstileToken('')}
+          />
+
           <button
             type="button"
             onClick={handleGoogle}
-            disabled={busy || loading}
+            disabled={busy || loading || (isTurnstileEnabled() && !turnstileToken)}
             style={{
               width: '100%',
               minHeight: '46px',
@@ -271,7 +292,7 @@ export default function AuthModal({ isOpen, onClose, loading }) {
 
             <button
               type="submit"
-              disabled={busy || loading || !email || (mode !== 'reset' && !password)}
+              disabled={busy || loading || !email || (mode !== 'reset' && !password) || (isTurnstileEnabled() && !turnstileToken)}
               style={{
                 width: '100%',
                 minHeight: '48px',

@@ -72,7 +72,7 @@ THEMES = {
     },
     "nordic": {
         "label":   "Nordic",
-        "bg_hex":  "#222326",   # confirmed dark
+        "bg_hex":  "#0b0b0f",   # confirmed dark
         "is_light": False,
     },
     "midnight": {

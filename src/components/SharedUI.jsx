@@ -113,6 +113,31 @@ export function GlassPill({ children, style = {} }) {
   )
 }
 
+export function PageWrapper({ children, className = '', maxWidth }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -12 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      className={className}
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        backgroundColor: 'var(--bg)',
+        color: 'var(--text)',
+      }}
+    >
+      <div style={{ flex: 1, paddingTop: '64px', maxWidth: maxWidth || '100%', margin: '0 auto', width: '100%' }}>
+        {children}
+      </div>
+    </motion.div>
+  )
+}
+
+export default PageWrapper
+
 export function AppSection({ id = '', title = '', children, bg = '', noBorderTop = false }) {
   const C = useThemeContext()
   const isMobile = useIsMobile()
