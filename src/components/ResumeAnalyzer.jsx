@@ -595,7 +595,8 @@ var ResultDisplay = function ({ result, onCertSelected, mode, onClear, certDomai
           onClick={function () { handleSelect(primaryCert.name) }}
           initial={{ opacity: 0, y: 7 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.6, duration: 0.35 }}
           whileHover={{ scale: 1.02, y: -2 }} whileTap={{ scale: 0.97 }}
-          style={{ width: '100%', padding: '14px 18px', borderRadius: '11px', border: 'none', cursor: 'pointer', background: 'transparent', color: 'white', fontSize: '14px', fontWeight: '800', fontFamily: FH, letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '9px', boxShadow: 'none', marginBottom: '16px' }}
+          className="btn-primary"
+          style={{ width: '100%', padding: '14px 18px', borderRadius: '11px', fontSize: '14px', fontWeight: '800', fontFamily: FH, letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '9px', boxShadow: 'none', marginBottom: '16px', height: 'auto' }}
         >
           <TrendingUp size={14} />
           Calculate ROI for {primaryCert.name.split(' ').slice(0, 3).join(' ')}

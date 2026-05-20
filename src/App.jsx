@@ -8,6 +8,8 @@ import {
   useLocation,
 } from "react-router-dom";
 import DynamicIslandNav from "./components/DynamicIslandNav";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import AdminRoute from "./hooks/AdminRoute.jsx";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   TrendingUp,
@@ -44,14 +46,6 @@ import { BLOG_POSTS, DOMAIN_FILTERS } from "./data/blogPosts.js";
 import { FAQ_ITEMS, FAQ_CATEGORIES } from "./data/faqItems.js";
 import LandingPage from "./components/LandingPage.jsx";
 import ResumeAnalyzer from "./components/ResumeAnalyzer.jsx";
-
-/*
-  [STAFF ENGINEER NOTE]
-  The `CertAssemblyBentoGrid` component has been created as requested.
-  To complete the refactor, open `src/components/LandingPage.jsx`, import this component,
-  and replace the old "Cert Assembly" feature box section with `<CertAssemblyBentoGrid />`.
-*/
-import CertAssemblyBentoGrid from "./CertAssemblyBentoGrid.jsx";
 import Hero from "./components/Hero.jsx";
 import Heatmap from "./components/Heatmap.jsx";
 import ModeSelector, { ModePill } from "./components/ModeSelector.jsx";
@@ -72,14 +66,19 @@ const HowItWorksPage = lazy(() => import("./pages/HowItWorks.jsx"));
 const PricingPage = lazy(() => import("./pages/Pricing.jsx"));
 const ContactPage = lazy(() => import("./pages/Contact.jsx"));
 const BlogPage = lazy(() => import("./pages/Blog.jsx"));
+const ProfilePage = lazy(() => import("./pages/UserProfile.jsx"));
+const UnauthorizedPage = lazy(() => import("./pages/Unauthorized.jsx"));
 const ResumeTool = lazy(() => import("./pages/ResumeTool.jsx"));
 const ROITool = lazy(() => import("./pages/ROITool.jsx"));
 const HeatmapTool = lazy(() => import("./pages/HeatmapTool.jsx"));
 const CompareTool = lazy(() => import("./pages/CompareTool.jsx"));
+const CertRadarTool = lazy(() => import("./pages/CertRadarTool.jsx"));
 const SimulatorTool = lazy(() => import("./pages/SimulatorTool.jsx"));
+import NotFound from "./pages/NotFound.jsx";
 const JobMapTool = lazy(() => import("./pages/JobMapTool.jsx"));
 const CollegeTool = lazy(() => import("./pages/CollegeTool.jsx"));
 const HikeVerifierTool = lazy(() => import("./pages/HikeVerifierTool.jsx"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard.jsx"));
 
 const T = { duration: 0.32, ease: [0.4, 0, 0.2, 1] };
 const FM = "'JetBrains Mono','Commit Mono',monospace";
@@ -129,7 +128,7 @@ const PageWrapper = function ({
       style={{
         position: "relative",
         minHeight: "100vh",
-        backgroundColor: "var(--bg-elevated)",
+        backgroundColor: "var(--bg)",
         paddingTop: NAV_H + "px",
       }}
     >
@@ -172,9 +171,9 @@ const DataFreshnessBadge = function () {
         style={{
           fontFamily: FM,
           fontSize: "10px",
-          color: "#374151",
+          color: "var(--text-3)",
           letterSpacing: "0.06em",
-          opacity: 0.72,
+          opacity: 1,
         }}
       >
         Data: Q1 2026 · LinkedIn India · NASSCOM · Naukri · AmbitionBox
@@ -235,8 +234,8 @@ const TermsPage = function () {
               style={{
                 padding: "18px 20px",
                 marginBottom: "10px",
-                background: "#FFFFFF",
-                border: "1px solid #E5E7EB"
+                background: "var(--bg-elevated)",
+                border: "1px solid var(--border)"
               }}
             >
               <h3
@@ -326,8 +325,8 @@ const PrivacyPage = function () {
               style={{
                 padding: "18px 20px",
                 marginBottom: "10px",
-                background: "#FFFFFF",
-                border: "1px solid #E5E7EB"
+                background: "var(--bg-elevated)",
+                border: "1px solid var(--border)"
               }}
             >
               <h3
@@ -410,8 +409,8 @@ const CookiesPage = function () {
               style={{
                 padding: "18px 20px",
                 marginBottom: "10px",
-                background: "#FFFFFF",
-                border: "1px solid #E5E7EB"
+                background: "var(--bg-elevated)",
+                border: "1px solid var(--border)"
               }}
             >
               <h3
@@ -451,739 +450,6 @@ const CookiesPage = function () {
         >
           Last updated: March 2026
         </p>
-      </motion.div>
-    </PageWrapper>
-  );
-};
-
-// ─────────────────────────────────────────────────────────
-// BLOG data → src/data/blogPosts.js  (BLOG_POSTS, DOMAIN_FILTERS)
-// FAQ data  → src/data/faqItems.js   (FAQ_ITEMS, FAQ_CATEGORIES)
-// ─────────────────────────────────────────────────────────
-
-const _OldBlogPage = function () {
-  var [filter, setFilter] = useState("All");
-  var [expandedPost, setExpandedPost] = useState(null);
-  var [domainFilter, setDomainFilter] = useState("All");
-  var _DOMAIN_FILTERS_LOCAL = [
-    "All",
-    "Cloud & Tech",
-    "Data & AI",
-    "Cybersecurity",
-    "Finance",
-    "Management",
-    "Govt & PSU",
-    "Medical",
-    "Architecture",
-    "Engineering",
-    "Marketing",
-    "HR & People",
-  ];
-  var filtered = BLOG_POSTS.filter(function (p) {
-    var modeOk = filter === "All" || p.forWho === filter;
-    var domainOk = domainFilter === "All" || p.tag === domainFilter;
-    return modeOk && domainOk;
-  });
-  return (
-    <PageWrapper maxWidth="1060px">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={T}
-      >
-        <h1 style={{ ...hs, fontSize: "clamp(2rem,5.5vw,3.8rem)" }}>
-          THE CERTIFYROI
-          <br />
-          <span style={{ color: "var(--indigo)" }}>BLOG</span>
-        </h1>
-        <p
-          style={{
-            fontSize: "15px",
-            color: "var(--text-3)",
-            marginBottom: "6px",
-            fontFamily: FB,
-          }}
-        >
-          {BLOG_POSTS.length} data-driven career guides. No affiliate links. No
-          sponsored recommendations. Just numbers.
-        </p>
-        {/* Phase C: data freshness */}
-        <div style={{ marginBottom: "20px" }}>
-          <DataFreshnessBadge />
-        </div>
-        <div
-          style={{
-            display: "flex",
-            gap: "8px",
-            marginBottom: "12px",
-            flexWrap: "wrap",
-          }}
-        >
-          {["All", "Student", "Switcher", "Professional"].map(function (t) {
-            return (
-              <button
-                key={t}
-                onClick={function () {
-                  setFilter(t);
-                }}
-                style={{
-                  padding: "6px 14px",
-                  borderRadius: "20px",
-                  fontSize: "12px",
-                  cursor: "pointer",
-                  fontFamily: FB,
-                  fontWeight: "600",
-                  transition: "all 0.18s",
-                  background:
-                    filter === t ? "var(--indigo-dim)" : "var(--surface)",
-                  border:
-                    "1px solid " +
-                    (filter === t ? "var(--border-accent)" : "var(--border)"),
-                  color: filter === t ? "var(--indigo-light)" : "var(--text-4)",
-                  minHeight: "36px",
-                }}
-              >
-                {t}
-              </button>
-            );
-          })}
-        </div>
-        <div
-          style={{
-            display: "flex",
-            gap: "6px",
-            marginBottom: "28px",
-            flexWrap: "wrap",
-          }}
-        >
-          {DOMAIN_FILTERS.map(function (d) {
-            return (
-              <button
-                key={d}
-                onClick={function () {
-                  setDomainFilter(d);
-                }}
-                style={{
-                  padding: "4px 10px",
-                  borderRadius: "6px",
-                  fontSize: "11px",
-                  cursor: "pointer",
-                  fontFamily: FM,
-                  letterSpacing: "0.03em",
-                  transition: "all 0.18s",
-                  background:
-                    domainFilter === d
-                      ? "transparent"
-                      : "var(--surface)",
-                  border:
-                    "1px solid " +
-                    (domainFilter === d
-                      ? "transparent"
-                      : "var(--border)"),
-                  color: domainFilter === d ? "var(--accent)" : "var(--text-4)",
-                  minHeight: "32px",
-                }}
-              >
-                {d}
-              </button>
-            );
-          })}
-        </div>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns:
-              "repeat(auto-fill,minmax(min(300px,100%),1fr))",
-            gap: "16px",
-          }}
-        >
-          {filtered.map(function (post, i) {
-            var isExpanded = expandedPost === post.id;
-            var paragraphs = post.excerpt.split("\n\n");
-            return (
-              <motion.div
-                key={post.id}
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.04 }}
-                style={{
-                  padding: "22px",
-                  display: "flex",
-                  flexDirection: "column",
-                  cursor: "pointer",
-                  background: "#FFFFFF",
-                  border: "1px solid #E5E7EB"
-                }}
-                onClick={function () {
-                  setExpandedPost(isExpanded ? null : post.id);
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: "10px",
-                    fontWeight: "700",
-                    padding: "3px 8px",
-                    borderRadius: "6px",
-                    background: post.tagColor + "18",
-                    color: post.tagColor,
-                    display: "inline-block",
-                    marginBottom: "12px",
-                    fontFamily: FM,
-                    letterSpacing: "0.06em",
-                  }}
-                >
-                  {post.tag}
-                </div>
-                <h3
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: "700",
-                    color: "var(--text)",
-                    marginBottom: "10px",
-                    lineHeight: "1.45",
-                    fontFamily: FH,
-                    flex: 1,
-                    marginTop: "0",
-                  }}
-                >
-                  {post.title}
-                </h3>
-                <p
-                  style={{
-                    fontSize: "13px",
-                    color: "var(--text-3)",
-                    lineHeight: "1.7",
-                    marginBottom: "12px",
-                    fontFamily: FB,
-                  }}
-                >
-                  {paragraphs[0]}
-                </p>
-                <AnimatePresence>
-                  {isExpanded ? (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.25 }}
-                      style={{ overflow: "hidden" }}
-                    >
-                      {paragraphs.slice(1).map(function (para, pi) {
-                        return (
-                          <p
-                            key={pi}
-                            style={{
-                              fontSize: "13px",
-                              color: "var(--text-3)",
-                              lineHeight: "1.75",
-                              marginBottom: "12px",
-                              fontFamily: FB,
-                            }}
-                          >
-                            {para}
-                          </p>
-                        );
-                      })}
-                    </motion.div>
-                  ) : null}
-                </AnimatePresence>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginTop: "auto",
-                    paddingTop: "10px",
-                    borderTop: "1px solid var(--border)",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: "11px",
-                      color: "var(--text-4)",
-                      fontFamily: FB,
-                    }}
-                  >
-                    {post.date} · {post.readTime} read
-                  </span>
-                  <span
-                    style={{
-                      fontSize: "12px",
-                      color: "var(--indigo)",
-                      fontWeight: "700",
-                      fontFamily: FH,
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "3px",
-                    }}
-                  >
-                    {isExpanded ? "Close" : "Read more"}
-                    <motion.span
-                      animate={{ rotate: isExpanded ? 90 : 0 }}
-                      transition={{ duration: 0.2 }}
-                      style={{ display: "inline-flex" }}
-                    >
-                      <ChevronRight size={12} />
-                    </motion.span>
-                  </span>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-        {filtered.length === 0 && (
-          <div
-            style={{
-              textAlign: "center",
-              padding: "60px 24px",
-              color: "var(--text-4)",
-              fontFamily: FB,
-            }}
-          >
-            No posts match your current filters.
-          </div>
-        )}
-      </motion.div>
-    </PageWrapper>
-  );
-};
-
-// ─────────────────────────────────────────────────────────
-// FAQ — 20 questions, Phase B: specific not generic
-// ─────────────────────────────────────────────────────────
-const _OldFAQPage = function () {
-  var [open, setOpen] = useState(null);
-  var faqs = [
-    {
-      category: "Product",
-      q: "Is CertifyROI free?",
-      a: "Yes. The ROI calculator, city demand heatmap, cert comparison, career simulator, and job-cert map are all free with no account required. You get 3 free AI analyses as a guest. Sign in with Google for unlimited free AI analyses.",
-    },
-    {
-      category: "Product",
-      q: "What is the difference between Resume AI and the ROI Calculator?",
-      a: "Resume AI (Step 1) is for discovery — you don't know which cert to pursue. You upload your resume and the AI reads your background and recommends the top 3 certifications. ROI Calculator (Step 2) is for validation — you already know which cert and want the exact financial numbers: break-even to the month, 5-year net gain, monthly salary delta, and an AI verdict.",
-    },
-    {
-      category: "Product",
-      q: "Why does Student Mode exist?",
-      a: "Standard ROI calculators assume you have a salary to compare against. Students don't. Student Mode removes salary sliders entirely and reframes the calculation around time-to-first-offer, fresher benchmarks in your city, and career investment ROI. The cert recommendations also shift — Student Mode prioritises certs with strong fresher hiring signals over certs that maximise salary hikes for experienced professionals.",
-    },
-    {
-      category: "Product",
-      q: "What is Pitch Your Boss?",
-      a: "Pitch Your Boss generates a professional email for professionals who need to justify a certification to their manager for company sponsorship. You enter the cert name, your current role, and expected ROI, and it produces a data-backed email you can send or adapt. Only available in Professional mode because that's the context where this conversation actually happens.",
-    },
-    {
-      category: "Product",
-      q: "What is the Cert to Job Map?",
-      a: "The Job-Cert Map shows which certifications are required or preferred for specific roles across government positions (UPSC, SSC, PSU exams) and private sector roles at major Indian employers. Government data is from official recruitment notifications. Private sector data is employee-reported via LinkedIn and AmbitionBox.",
-    },
-    {
-      category: "Product",
-      q: "How is Career Simulator different from the ROI Calculator?",
-      a: "ROI Calculator analyses one certification: what does THIS cert do to your salary over 5 years. Career Simulator models a multi-cert trajectory: if you do AWS SAA now, then CKA in 18 months, then AWS DevOps Pro after that, what does your salary curve look like at each milestone. It's for planning a 3–5 year path, not evaluating a single decision.",
-    },
-    {
-      category: "Data & Accuracy",
-      q: "How accurate are the salary figures?",
-      a: "Salary data is sourced from LinkedIn Economic Graph India, NASSCOM 2026 talent survey, Naukri salary insights, and AmbitionBox self-reported data. All figures are medians — half of earners are above, half below. Individual results vary based on company tier, negotiation skill, and market conditions. We update quarterly. We do not guarantee these numbers will match your specific situation.",
-    },
-    {
-      category: "Data & Accuracy",
-      q: "Is my resume stored anywhere?",
-      a: "No. Resume text is processed in real-time via Groq inference and is not stored, logged, or retained. The text goes in, analysis comes out, and the data is gone. We do not have access to your resume after the analysis completes — this is how the system is architecturally designed, not just a policy statement.",
-    },
-    {
-      category: "Data & Accuracy",
-      q: "My city isn't one of the 8. What happens?",
-      a: "We have city-specific data for Bangalore, Hyderabad, Pune, Mumbai, Delhi NCR, Chennai, Kolkata, and Ahmedabad. If your city isn't in our database, we use the Haversine formula — a geographic distance calculation using latitude and longitude — to find the nearest city and show that data with a clear disclosure. India national median is also shown below for comparison.",
-    },
-    {
-      category: "Data & Accuracy",
-      q: "How often is the cert database updated?",
-      a: "The certification list is reviewed quarterly. New certs are added when they appear in 50+ job postings on Naukri in a 30-day period. Salary hike data updates quarterly. Demand data (job posting counts) updates monthly. The last full update was Q1 2026.",
-    },
-    {
-      category: "Career Questions",
-      q: "I have no tech background. Can I still use CertifyROI?",
-      a: "Yes. CertifyROI covers finance (CFA, FMVA, CMA, CA, NISM), management (PMP, CSM, Six Sigma), marketing (Google, HubSpot, Meta), HR (SHRM, People Analytics), product management, architecture (LEED), medical (DNB, USMLE, ACRP), law, civil and mechanical engineering, and government exam prep (GATE, UPSC, SSC, IBPS). Tech is one of 17 domains.",
-    },
-    {
-      category: "Career Questions",
-      q: "I want to switch careers completely. Where do I start?",
-      a: "Upload your resume in Step 1 and select Switcher mode. The AI will identify your transferable skills and suggest the fastest viable certification path to your target domain. The fastest ROI switches we've seen data on: ops/finance → data analytics (IBM Data Science, 5 months), backend dev → cloud (AWS SAA, 3 months), MBBS → clinical research (ACRP CRA, 4 months).",
-    },
-    {
-      category: "Career Questions",
-      q: "For switchers and professionals, are long-term certs like CA or CFA shown?",
-      a: 'For Switchers and Professionals, fast-track certifications (completable in under 6 months) are shown first by default. Long-term programs (CA, CFA, ACCA) are hidden unless you explicitly toggle "Show long-term options." Someone looking to move in the next 6 months shouldn\'t be pushed toward a 3-year program.',
-    },
-    {
-      category: "Career Questions",
-      q: "Can CertifyROI help with government exam planning?",
-      a: "We can show you the ROI profile of government exams — starting salaries, allowances, career trajectories, prep costs, and realistic success rates. We can't help with actual exam preparation content. Use us to decide if a government path makes sense for your profile and situation — not to prepare for it.",
-    },
-    {
-      category: "Technical",
-      q: "The AI analysis gave me a weird result. What should I do?",
-      a: "AI responses vary slightly each time. If the result looks wrong, refresh and re-run. If you're getting consistently poor results, the issue is likely the resume input: very short resumes (under 150 words), PDF extraction errors, or heavily formatted PDFs with tables produce poor analysis. Try pasting your resume text directly into the text area.",
-    },
-    {
-      category: "Technical",
-      q: "My PDF isn't being read correctly. Why?",
-      a: "PDF text extraction works on standard text-based PDFs. Issues occur with: scanned PDFs (image-based, no text layer), complex table layouts, custom embedded fonts, and password-protected files. If extraction fails, paste your resume text directly — same results, none of the PDF issues.",
-    },
-    {
-      category: "Technical",
-      q: "Why does the app ask me to choose Student, Switcher, or Professional?",
-      a: "Your mode changes how the tool works fundamentally, not just cosmetically. Student Mode removes salary assumptions and focuses on first-offer benchmarks. Switcher Mode surfaces fast-track certs and filters long programs. Professional Mode enables Pitch Your Boss and shows full hike data. Wrong mode = inaccurate recommendations. Pick the one that honestly describes where you are.",
-    },
-    {
-      category: "Technical",
-      q: "Is there a mobile app?",
-      a: "CertifyROI is a mobile-optimised web app. Open certifyroi.vercel.app in your mobile browser — all tools work fully on any screen size. You can add it to your home screen from Safari or Chrome for an app-like experience without an App Store install.",
-    },
-    {
-      category: "Technical",
-      q: "Why does my session reset when I close the tab?",
-      a: "Guest preferences are stored in localStorage and persist across sessions on the same device. Guest AI analysis count resets if you clear browser data. Sign in with Google to save your analysis history, cert preferences, and profile across all devices permanently.",
-    },
-    {
-      category: "Technical",
-      q: "I found incorrect salary data. How do I report it?",
-      a: "We want to know. Use the Contact page and include: the cert name, your city, the figure you saw on CertifyROI, and a link to a data source you believe is more accurate. We review all reported corrections and update the database quarterly. Your correction may help thousands of other professionals make a better decision.",
-    },
-  ];
-  var categories = [
-    "Product",
-    "Data & Accuracy",
-    "Career Questions",
-    "Technical",
-  ];
-  return (
-    <PageWrapper maxWidth="760px">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={T}
-      >
-        <h1 style={{ ...hs, fontSize: "clamp(2rem,5.5vw,3.8rem)" }}>
-          FREQUENTLY
-          <br />
-          <span style={{ color: "var(--indigo)" }}>ASKED</span>
-        </h1>
-        <p
-          style={{
-            fontSize: "15px",
-            color: "var(--text-3)",
-            marginBottom: "12px",
-            fontFamily: FB,
-          }}
-        >
-          {faqs.length} questions answered. No corporate speak.
-        </p>
-        <div style={{ marginBottom: "28px" }}>
-          <DataFreshnessBadge />
-        </div>
-        {categories.map(function (cat) {
-          var catFaqs = faqs.filter(function (f) {
-            return f.category === cat;
-          });
-          return (
-            <div key={cat} style={{ marginBottom: "32px" }}>
-              <div
-                style={{
-                  fontFamily: FM,
-                  fontSize: "10px",
-                  color: "var(--text-4)",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.12em",
-                  marginBottom: "12px",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "10px",
-                }}
-              >
-                <div
-                  style={{
-                    height: "1px",
-                    width: "24px",
-                    background: "var(--border)",
-                  }}
-                />
-                {cat}
-                <div
-                  style={{
-                    height: "1px",
-                    flex: 1,
-                    background: "var(--border)",
-                  }}
-                />
-              </div>
-              <div
-                style={{ display: "flex", flexDirection: "column", gap: "8px" }}
-              >
-                {catFaqs.map(function (faq, i) {
-                  var idx = cat + "-" + i;
-                  var isOpen = open === idx;
-                  return (
-                    <motion.div
-                      key={idx}
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.04 }}
-                      style={{ overflow: "hidden", cursor: "pointer", background: "#FFFFFF", border: "1px solid #E5E7EB" }}
-                      onClick={function () {
-                        setOpen(isOpen ? null : idx);
-                      }}
-                    >
-                      <div
-                        style={{
-                          padding: "16px 20px",
-                          display: "flex",
-                          alignItems: "flex-start",
-                          justifyContent: "space-between",
-                          gap: "14px",
-                          minHeight: "52px",
-                        }}
-                      >
-                        <span
-                          style={{
-                            fontSize: "14px",
-                            fontWeight: "600",
-                            color: isOpen
-                              ? "var(--indigo-light)"
-                              : "var(--text)",
-                            fontFamily: FH,
-                            lineHeight: "1.45",
-                            flex: 1,
-                          }}
-                        >
-                          {faq.q}
-                        </span>
-                        <motion.div
-                          animate={{ rotate: isOpen ? 90 : 0 }}
-                          transition={{ duration: 0.2 }}
-                          style={{ flexShrink: 0, marginTop: "2px" }}
-                        >
-                          <ChevronRight size={15} color="var(--text-4)" />
-                        </motion.div>
-                      </div>
-                      <AnimatePresence>
-                        {isOpen ? (
-                          <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: "auto", opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.22 }}
-                            style={{ overflow: "hidden" }}
-                          >
-                            <div
-                              style={{
-                                padding: "0 20px 18px",
-                                paddingTop: "14px",
-                                fontSize: "14px",
-                                color: "var(--text-2)",
-                                borderTop: "1px solid var(--border)",
-                                fontFamily: FB,
-                                lineHeight: "1.8",
-                              }}
-                            >
-                              {faq.a}
-                            </div>
-                          </motion.div>
-                        ) : null}
-                      </AnimatePresence>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </div>
-          );
-        })}
-      </motion.div>
-    </PageWrapper>
-  );
-};
-
-// ─────────────────────────────────────────────────────────
-// CONTACT
-// ─────────────────────────────────────────────────────────
-const _OldContactPage = function () {
-  var [sent, setSent] = useState(false);
-  var [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    subject: "General feedback",
-    message: "",
-  });
-  var inputStyle = {
-    width: "100%",
-    padding: "11px 14px",
-    background: "#FFFFFF",
-    border: "1px solid #E5E7EB",
-    borderRadius: "4px",
-    color: "#111827",
-    fontSize: "14px",
-    fontFamily: FB,
-    outline: "none",
-    boxSizing: "border-box",
-    transition: "border-color 0.18s",
-  };
-  var labelStyle = {
-    fontSize: "11px",
-    color: "var(--text-4)",
-    display: "block",
-    marginBottom: "6px",
-    textTransform: "uppercase",
-    letterSpacing: "0.08em",
-    fontFamily: FM,
-  };
-  return (
-    <PageWrapper maxWidth="600px">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={T}
-      >
-        <h1 style={{ ...hs, fontSize: "clamp(2rem,5.5vw,3.8rem)" }}>
-          CONTACT
-          <br />
-          <span style={{ color: "var(--indigo)" }}>US</span>
-        </h1>
-        <p
-          style={{
-            fontSize: "15px",
-            color: "var(--text-3)",
-            marginBottom: "28px",
-            fontFamily: FB,
-          }}
-        >
-          Feedback, data corrections, bug reports, or partnership enquiries.
-        </p>
-        {sent ? (
-          <div
-            style={{
-              padding: "48px",
-              textAlign: "center",
-              background: "#FFFFFF",
-              border: "1px solid #E5E7EB"
-            }}
-          >
-            <div style={{ fontSize: "3.5rem", marginBottom: "16px" }}>✅</div>
-            <h3
-              style={{
-                fontSize: "1.4rem",
-                color: "var(--text)",
-                fontFamily: FH,
-                fontWeight: "800",
-                marginBottom: "8px",
-                marginTop: "0",
-              }}
-            >
-              Sent.
-            </h3>
-            <p
-              style={{
-                fontSize: "14px",
-                color: "var(--text-3)",
-                fontFamily: FB,
-                lineHeight: "1.6",
-              }}
-            >
-              We\'ll reply within 48 hours at the email you provided.
-            </p>
-          </div>
-        ) : (
-          <div style={{
-            padding: "clamp(20px,4vw,32px)",
-            background: "#FFFFFF",
-            border: "1px solid #E5E7EB"
-          }}>
-            {[
-              { key: "name", label: "Name", type: "text", ph: "Your name" },
-              {
-                key: "email",
-                label: "Email",
-                type: "email",
-                ph: "you@email.com",
-              },
-            ].map(function (f) {
-              return (
-                <div key={f.key} style={{ marginBottom: "16px" }}>
-                  <label style={labelStyle}>{f.label}</label>
-                  <input
-                    type={f.type}
-                    placeholder={f.ph}
-                    value={formData[f.key]}
-                    onChange={function (e) {
-                      setFormData(function (p) {
-                        var n = { ...p };
-                        n[f.key] = e.target.value;
-                        return n;
-                      });
-                    }}
-                    style={inputStyle}
-                    onFocus={function (e) {
-                      e.target.style.borderColor = "#10B981";
-                    }}
-                    onBlur={function (e) {
-                      e.target.style.borderColor = "#E5E7EB";
-                    }}
-                  />
-                </div>
-              );
-            })}
-            <div style={{ marginBottom: "16px" }}>
-              <label style={labelStyle}>Subject</label>
-              <select
-                value={formData.subject}
-                onChange={function (e) {
-                  setFormData(function (p) {
-                    return { ...p, subject: e.target.value };
-                  });
-                }}
-                style={{ ...inputStyle, background: "#FFFFFF" }}
-              >
-                <option>General feedback</option>
-                <option>Data correction</option>
-                <option>Bug report</option>
-                <option>Partnership / B2B</option>
-                <option>Press enquiry</option>
-              </select>
-            </div>
-            <div style={{ marginBottom: "24px" }}>
-              <label style={labelStyle}>Message</label>
-              <textarea
-                rows={5}
-                placeholder="Tell us what's on your mind..."
-                value={formData.message}
-                onChange={function (e) {
-                  setFormData(function (p) {
-                    return { ...p, message: e.target.value };
-                  });
-                }}
-                style={{ ...inputStyle, resize: "vertical", lineHeight: "1.6" }}
-                onFocus={function (e) {
-                  e.target.style.borderColor = "#10B981";
-                }}
-                onBlur={function (e) {
-                  e.target.style.borderColor = "#E5E7EB";
-                }}
-              />
-            </div>
-            <button
-              className="btn-primary"
-              style={{ width: "100%", padding: "14px" }}
-              onClick={function () {
-                setSent(true);
-              }}
-            >
-              Send Message
-            </button>
-          </div>
-        )}
       </motion.div>
     </PageWrapper>
   );
@@ -1352,7 +618,7 @@ const MobileDrawer = function ({
             style={{
               position: "fixed",
               inset: 0,
-              background: "transparent",
+              background: "var(--overlay-scrim, rgba(0, 0, 0, 0.55))",
               zIndex: 298,
             }}
           />
@@ -1371,7 +637,7 @@ const MobileDrawer = function ({
           bottom: 0,
           width: "min(300px,82vw)",
           zIndex: 299,
-          background: "#FFFFFF",
+          background: "var(--bg-elevated)",
           borderRight: "1px solid #E5E7EB",
           display: "flex",
           flexDirection: "column",
@@ -1383,7 +649,7 @@ const MobileDrawer = function ({
         <div
           style={{
             padding: "16px 20px",
-            borderBottom: "1px solid #E5E7EB",
+            borderBottom: "1px solid var(--border)",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -1407,14 +673,14 @@ const MobileDrawer = function ({
               style={{
                 width: "28px",
                 height: "28px",
-                background: "transparent,#4338CA)",
+                background: "var(--accent)",
                 borderRadius: "8px",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
               }}
             >
-              <TrendingUp size={13} color="white" />
+              <TrendingUp size={13} color="var(--bg)" />
             </div>
             <span
               style={{
@@ -1431,8 +697,8 @@ const MobileDrawer = function ({
           <button
             onClick={onClose}
             style={{
-              background: "#FFFFFF",
-              border: "1px solid #E5E7EB",
+              background: "var(--bg-elevated)",
+              border: "1px solid var(--border)",
               borderRadius: "7px",
               padding: "7px",
               cursor: "pointer",
@@ -1484,10 +750,10 @@ const MobileDrawer = function ({
                   borderRadius: "10px",
                   cursor: "pointer",
                   textAlign: "left",
-                  background: isActive ? "#F3F4F6" : "#FFFFFF",
+                  background: "transparent",
                   border:
                     "1px solid " +
-                    (isActive ? "#10B981" : "#E5E7EB"),
+                    (isActive ? "var(--border-accent)" : "var(--border)"),
                   display: "flex",
                   alignItems: "center",
                   gap: "10px",
@@ -1499,10 +765,10 @@ const MobileDrawer = function ({
                     width: "22px",
                     height: "22px",
                     borderRadius: "50%",
-                    background: isActive ? "#10B981" : "#F9FAFB",
+                    background: isActive ? "var(--accent)" : "transparent",
                     border:
                       "1px solid " +
-                      (isActive ? "#10B981" : "#E5E7EB"),
+                      (isActive ? "var(--border-accent)" : "var(--border)"),
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -1520,7 +786,7 @@ const MobileDrawer = function ({
                     style={{
                       fontSize: "13px",
                       fontWeight: "700",
-                      color: isActive ? "#10B981" : "#111827",
+                      color: isActive ? "var(--accent)" : "var(--text)",
                       fontFamily: FH,
                       letterSpacing: "-0.01em",
                     }}
@@ -1568,10 +834,10 @@ const MobileDrawer = function ({
                   borderRadius: "10px",
                   cursor: "pointer",
                   textAlign: "left",
-                  background: isActive ? "#F3F4F6" : "#FFFFFF",
+                  background: "transparent",
                   border:
                     "1px solid " +
-                    (isActive ? "#10B981" : "#E5E7EB"),
+                    (isActive ? "var(--border-accent)" : "var(--border)"),
                   display: "flex",
                   alignItems: "center",
                   gap: "10px",
@@ -1588,7 +854,7 @@ const MobileDrawer = function ({
                     style={{
                       fontSize: "13px",
                       fontWeight: "700",
-                      color: isActive ? "#10B981" : "#111827",
+                      color: isActive ? "var(--accent)" : "var(--text)",
                       fontFamily: FH,
                       letterSpacing: "-0.01em",
                     }}
@@ -1641,15 +907,15 @@ const MobileDrawer = function ({
                   width: "100%",
                   padding: "11px 14px",
                   borderRadius: "4px",
-                  background: isActive ? "#F3F4F6" : "#FFFFFF",
+                  background: "transparent",
                   border:
                     "1px solid " +
-                    (isActive ? "#10B981" : "#E5E7EB"),
+                    (isActive ? "var(--border-accent)" : "var(--border)"),
                   cursor: "pointer",
                   display: "flex",
                   alignItems: "center",
                   gap: "10px",
-                  color: isActive ? "#10B981" : "#374151",
+                  color: isActive ? "var(--text)" : "var(--text-3)",
                   fontSize: "13px",
                   fontFamily: FB,
                   minHeight: "44px",
@@ -1658,7 +924,7 @@ const MobileDrawer = function ({
               >
                 <item.icon
                   size={14}
-                  color={isActive ? "#10B981" : "#9CA3AF"}
+                  color={isActive ? "var(--text)" : "var(--text-4)"}
                 />
                 {item.label}
               </button>
@@ -1669,7 +935,7 @@ const MobileDrawer = function ({
         <div
           style={{
             padding: "16px 20px",
-            borderTop: "1px solid #E5E7EB",
+            borderTop: "1px solid var(--border)",
             flexShrink: 0,
           }}
         >
@@ -1724,7 +990,7 @@ const NavBar = function ({ currentPage, onNavigate, onTabChange }) {
           <div
             style={{
               borderTop: "1px solid #E5E7EB",
-              background: "#FFFFFF",
+              background: "var(--bg-elevated)",
             }}
           >
             <div
@@ -1774,9 +1040,7 @@ const NavBar = function ({ currentPage, onNavigate, onTabChange }) {
                         border:
                           "1px solid " +
                           (active ? "#10B981" : "transparent"),
-                        background: active
-                          ? "#ECFDF5"
-                          : "transparent",
+                        background: "transparent",
                         color: active
                           ? "#10B981"
                           : isCompleted
@@ -1796,17 +1060,15 @@ const NavBar = function ({ currentPage, onNavigate, onTabChange }) {
                           height: "18px",
                           borderRadius: "50%",
                           background: active
-                            ? "#10B981"
-                            : isCompleted
-                              ? "#ECFDF5"
-                              : "#F9FAFB",
+                            ? "var(--accent)"
+                            : "transparent",
                           border:
                             "1px solid " +
                             (active
-                              ? "#10B981"
+                              ? "var(--border-accent)"
                               : isCompleted
-                                ? "#10B981"
-                                : "#E5E7EB"),
+                                ? "var(--border-accent)"
+                                : "var(--border)"),
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
@@ -1844,8 +1106,8 @@ const NavBar = function ({ currentPage, onNavigate, onTabChange }) {
           {/* Row 2: Tools — CENTERED */}
           <div
             style={{
-              borderTop: "1px solid #E5E7EB",
-              background: "#FFFFFF",
+              borderTop: "1px solid var(--border)",
+              background: "var(--bg-elevated)",
             }}
           >
             <div
@@ -1882,7 +1144,7 @@ const NavBar = function ({ currentPage, onNavigate, onTabChange }) {
                       borderBottom:
                         "2px solid " +
                         (active ? "#10B981" : "transparent"),
-                      background: active ? "#ECFDF5" : "transparent",
+                      background: "transparent",
                       color: active ? "#10B981" : "#9CA3AF",
                       fontSize: "12px",
                       fontWeight: active ? "700" : "400",
@@ -1931,7 +1193,7 @@ const AppPage = function ({ onCertSelected }) {
       style={{
         paddingTop: NAV_H + "px",
         minHeight: "100vh",
-        background: "transparent",
+        background: "var(--bg)",
         position: "relative",
       }}
     >
@@ -1943,7 +1205,7 @@ const AppPage = function ({ onCertSelected }) {
             top: 0,
             zIndex: 100,
             borderBottom: "1px solid var(--border)",
-            background: "transparent",
+            background: "var(--bg)",
             backdropFilter: "blur(12px)",
             WebkitBackdropFilter: "blur(12px)",
           }}
@@ -2092,9 +1354,7 @@ const AppPage = function ({ onCertSelected }) {
                                 border: active
                                   ? "1px solid var(--border-accent)"
                                   : "1px solid var(--border)",
-                                background: active
-                                  ? "var(--surface)"
-                                  : "transparent",
+                                background: "transparent",
                                 color: active
                                   ? "var(--accent)"
                                   : isCompleted
@@ -2416,9 +1676,7 @@ const AppPage = function ({ onCertSelected }) {
                             border: active
                               ? "1px solid var(--border)"
                               : "1px solid var(--border)",
-                            background: active
-                              ? "var(--surface)"
-                              : "transparent",
+                            background: "transparent",
                             color: active ? "var(--text)" : "var(--text-4)",
                             fontSize: "12px",
                             fontWeight: active ? "600" : "500",
@@ -2429,7 +1687,7 @@ const AppPage = function ({ onCertSelected }) {
                           onMouseEnter={(e) => {
                             if (!active)
                               e.currentTarget.style.color = "var(--text)";
-                            e.currentTarget.style.background = "var(--surface)";
+                            e.currentTarget.style.background = "transparent";
                           }}
                           onMouseLeave={(e) => {
                             if (!active)
@@ -2464,10 +1722,10 @@ const Footer = function ({ onNavigate }) {
   return (
     <footer
       style={{
-        borderTop: "1px solid #E5E7EB",
+        borderTop: "1px solid var(--border)",
         padding: "40px 16px 24px",
         marginTop: "auto",
-        background: "#FFFFFF",
+        background: "var(--bg)",
       }}
     >
       <div style={{ maxWidth: "1240px", margin: "0 auto" }}>
@@ -2492,14 +1750,14 @@ const Footer = function ({ onNavigate }) {
                 style={{
                   width: "26px",
                   height: "26px",
-                  background: "transparent,#4338CA)",
+                  background: "var(--accent)",
                   borderRadius: "7px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                 }}
               >
-                <TrendingUp size={13} color="white" />
+                <TrendingUp size={13} color="var(--bg)" />
               </div>
               <span
                 style={{
@@ -2697,8 +1955,8 @@ const Footer = function ({ onNavigate }) {
                 marginTop: "14px",
                 padding: "10px 12px",
                 borderRadius: "8px",
-                background: "#F9FAFB",
-                border: "1px solid #E5E7EB",
+                background: "transparent",
+                border: "1px solid var(--border)",
               }}
             >
               <div
@@ -2728,7 +1986,7 @@ const Footer = function ({ onNavigate }) {
 
         <div
           style={{
-            borderTop: "1px solid #E5E7EB",
+            borderTop: "1px solid var(--border)",
             paddingTop: "16px",
             display: "flex",
             justifyContent: "space-between",
@@ -2763,7 +2021,7 @@ const Footer = function ({ onNavigate }) {
 // ─────────────────────────────────────────────────────────
 // APP ROOT
 // ─────────────────────────────────────────────────────────
-const SignInModal = function ({ isOpen, onClose, onSignIn, loading }) {
+const AuthModal = function ({ isOpen, onClose, onSignIn, loading }) {
   if (!isOpen) return null;
   return (
     <div
@@ -2777,7 +2035,7 @@ const SignInModal = function ({ isOpen, onClose, onSignIn, loading }) {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "transparent",
+        background: "var(--overlay-scrim, rgba(0, 0, 0, 0.55))",
         padding: "24px",
       }}
     >
@@ -2786,8 +2044,8 @@ const SignInModal = function ({ isOpen, onClose, onSignIn, loading }) {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 10 }}
         style={{
-          background: "#FFFFFF",
-          border: "1px solid #E5E7EB",
+          background: "var(--bg-elevated)",
+          border: "1px solid var(--border)",
           borderRadius: "8px",
           padding: "32px",
           width: "100%",
@@ -2820,7 +2078,7 @@ const SignInModal = function ({ isOpen, onClose, onSignIn, loading }) {
             width: "48px",
             height: "48px",
             borderRadius: "50%",
-            background: "#ECFDF5",
+            background: "transparent",
             color: "#10B981",
             display: "flex",
             alignItems: "center",
@@ -2886,8 +2144,15 @@ function AppRoot() {
   const { isDark, toggle: toggleTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, signInGoogle, signOut, loading } = useAuth();
+  const { user, signOut, loading, signInGoogle } = useAuth();
   const [showSignIn, setShowSignIn] = useState(false);
+
+  useEffect(() => {
+    if (location.state?.authRequired) {
+      setShowSignIn(true)
+      navigate(location.pathname, { replace: true, state: {} })
+    }
+  }, [location.state, location.pathname, navigate])
 
   // ── Journey state now lives in Zustand ────────────────
   const activeTab = useJourneyStore((s) => s.activeTab);
@@ -2921,13 +2186,10 @@ function AppRoot() {
       style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
     >
       <AnimatePresence>
-        <SignInModal
+        <AuthModal
           isOpen={showSignIn}
           onClose={() => setShowSignIn(false)}
-          onSignIn={() => {
-            signInGoogle();
-            setShowSignIn(false);
-          }}
+          onSignIn={signInGoogle}
           loading={loading}
         />
       </AnimatePresence>
@@ -2956,7 +2218,7 @@ function AppRoot() {
                 <Route
                   path="/"
                   element={
-                    <LandingPage
+                    <LandingPage // This was pointing to a component, now points to a page
                       isDark={isDark}
                       onEnter={() => goToApp("resume")}
                       onNavigate={(p) => navigate(p === "home" ? "/" : "/" + p)}
@@ -2971,6 +2233,14 @@ function AppRoot() {
                     />
                   }
                 />
+                <Route
+                  path="/admin"
+                  element={
+                    <AdminRoute>
+                      <AdminDashboard />
+                    </AdminRoute>
+                  }
+                />
                 <Route path="/faq" element={<FAQPage />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/features" element={<FeaturesPage />} />
@@ -2978,10 +2248,13 @@ function AppRoot() {
                 <Route path="/pricing" element={<PricingPage />} />
                 <Route path="/blog" element={<BlogPage />} />
                 <Route path="/contact" element={<ContactPage />} />
+                <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+                <Route path="/unauthorized" element={<UnauthorizedPage />} />
                 <Route path="/tools/resume" element={<ResumeTool />} />
                 <Route path="/tools/roi" element={<ROITool />} />
                 <Route path="/tools/heatmap" element={<HeatmapTool />} />
                 <Route path="/tools/compare" element={<CompareTool />} />
+                <Route path="/tools/cert-radar" element={<CertRadarTool />} />
                 <Route path="/tools/simulator" element={<SimulatorTool />} />
                 <Route path="/tools/jobmap" element={<JobMapTool />} />
                 <Route path="/tools/college" element={<CollegeTool />} />
@@ -3022,11 +2295,7 @@ function AppRoot() {
                 <Route
                   path="*"
                   element={
-                    <LandingPage
-                      isDark={isDark}
-                      onEnter={() => goToApp("resume")}
-                      onNavigate={(p) => navigate(p === "home" ? "/" : "/" + p)}
-                    />
+                    <NotFound isDark={isDark} />
                   }
                 />
               </Routes>

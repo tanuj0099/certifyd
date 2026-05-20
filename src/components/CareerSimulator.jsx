@@ -1,21 +1,22 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, TrendingUp, ChevronDown, Route } from 'lucide-react'
+import { X, TrendingUp, ChevronDown, Route, Star } from 'lucide-react'
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceLine } from 'recharts'
-import { CERTIFICATIONS, CERT_DOMAINS } from '../tokens.js'
+import { supabase } from '../services/supabase.js'
+import { useAuth } from '../hooks/useAuth.jsx'
 
 const FH = "'Bricolage Grotesque','Plus Jakarta Sans',sans-serif"
 const FM = "'Commit Mono','JetBrains Mono',monospace"
 const FB = "'Inter',sans-serif"
 const COLORS = ['var(--linear-blue)', 'var(--linear-blue)', 'var(--cool-grey)', 'var(--cool-grey)']
 
-function CertPicker({ value, onChange, exclude, index }) {
+function CertPicker({ value, onChange, exclude, index, certifications, certDomains }) {
   const [open, setOpen] = useState(false)
   const [domain, setDomain] = useState('all')
-  const selected = CERTIFICATIONS.find(function (c) { return c.name === value })
-  const filtered = CERTIFICATIONS.filter(function (c) {
-    return (domain === 'all' || c.domain === domain) && !exclude.includes(c.name)
-  })
+  const CERTIFICATIONS = certifications || []
+  const CERT_DOMAINS = certDomains || []
+  const selected = CERTIFICATIONS.find(c => c.name === value)
+  const filtered = CERTIFICATIONS.filter(c => (domain === 'all' || c.domain === domain) && !exclude.includes(c.name))
   const color = COLORS[index] || 'var(--linear-blue)'
   return (
     <div style={{ position: 'relative' }}>
@@ -80,13 +81,29 @@ function ChartTip({ active, payload, label }) {
 }
 
 function CareerSimulator({ initialSalary }) {
+  const [certifications, setCertifications] = useState([])
+  const [certDomains, setCertDomains] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchData() {
+      const { data: certsData } = await supabase.from('certifications').select('*')
+      const { data: domainsData } = await supabase.from('domains').select('*')
+      setCertifications(certsData || [])
+      setCertDomains(domainsData || [])
+      setLoading(false)
+    }
+    fetchData()
+  }, [])
+
+  const CERTIFICATIONS = certifications
+
   initialSalary = initialSalary || 8
   const [salary, setSalary] = useState(initialSalary)
   const [certs, setCerts] = useState(['', '', ''])
+  const { isPro } = useAuth()
 
-  const selectedCerts = certs.map(function (n) {
-    return CERTIFICATIONS.find(function (c) { return c.name === n })
-  }).filter(Boolean)
+  const selectedCerts = certs.map(n => CERTIFICATIONS.find(c => c.name === n)).filter(Boolean)
 
   const buildTrajectory = useCallback(function () {
     if (selectedCerts.length === 0) return []
@@ -114,9 +131,24 @@ function CareerSimulator({ initialSalary }) {
   var trajectory = buildTrajectory()
   var finalSalary = trajectory.length > 0 ? trajectory[trajectory.length - 1].salary : salary
   var totalGain = parseFloat((finalSalary - salary).toFixed(1))
-  var totalMonths = selectedCerts.reduce(function (s, c) { return s + c.timeMonths }, 0)
-  var totalCost = selectedCerts.reduce(function (s, c) { return s + c.avgCost / 100000 }, 0).toFixed(1)
-  var milestones = trajectory.filter(function (p) { return p.event })
+  var totalMonths = selectedCerts.reduce((s, c) => s + c.timeMonths, 0)
+  var totalCost = selectedCerts.reduce((s, c) => s + (c.avgCost || c.examCostL || 0) / 100000, 0).toFixed(1)
+  var milestones = trajectory.filter(p => p.event)
+
+  const isGated = selectedCerts.length > 1 && !isPro
+
+  const handleCertChange = (index, value) => {
+    if (index > 0 && !isPro) return
+    setCerts(prev => {
+      const newCerts = [...prev]
+      newCerts[index] = value
+      return newCerts
+    })
+  }
+
+  if (loading) {
+    return <div style={{ padding: '40px', textAlign: 'center', fontFamily: FB, color: 'var(--text-3)' }}>Loading simulator...</div>
+  }
 
   return (
     <div>
@@ -143,13 +175,15 @@ function CareerSimulator({ initialSalary }) {
               <div style={{ flex: 1 }}>
                 <CertPicker
                   value={cert}
-                  onChange={function (v) { setCerts(function (prev) { var n = prev.slice(); n[i] = v; return n }) }}
-                  exclude={certs.filter(function (_, j) { return j !== i })}
+                  onChange={v => handleCertChange(i, v)}
+                  exclude={certs.filter((_, j) => j !== i)}
                   index={i}
+                  certifications={certifications}
+                  certDomains={certDomains}
                 />
               </div>
               {cert ? (
-                <button onClick={function () { setCerts(function (prev) { var n = prev.slice(); n[i] = ''; return n }) }}
+                <button onClick={() => handleCertChange(i, '')}
                   style={{ background: 'none', border: 'none', color: 'var(--text-4)', cursor: 'pointer', padding: '4px', flexShrink: 0 }}>
                   <X size={14} />
                 </button>
@@ -159,7 +193,19 @@ function CareerSimulator({ initialSalary }) {
         })}
       </div>
 
-      {selectedCerts.length > 0 && trajectory.length > 0 ? (
+      {isGated && (
+        <div style={{ marginTop: '8px', padding: '12px 16px', borderRadius: '11px', background: 'var(--amber-dim)', border: '1px solid var(--border-accent)', display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+          <div style={{ width: '26px', height: '26px', borderRadius: '7px', background: 'var(--amber)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <Star size={13} color="var(--bg)" />
+          </div>
+          <div>
+            <div style={{ fontFamily: FH, fontWeight: '700', fontSize: '13px', color: 'var(--amber)' }}>Multi-Cert Planning</div>
+            <div style={{ fontFamily: FB, fontSize: '12px', color: 'var(--text-3)' }}>Planning more than one certification is a Pro feature. <a href="/pricing" style={{ color: 'var(--amber)', textDecoration: 'underline' }}>Upgrade to unlock.</a></div>
+          </div>
+        </div>
+      )}
+
+      {selectedCerts.length > 0 && trajectory.length > 0 && !isGated ? (
         <AnimatePresence>
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(110px,1fr))', gap: '8px', marginBottom: '16px' }}>

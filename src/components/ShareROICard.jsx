@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Download, Copy, Check, Linkedin, LayoutTemplate } from 'lucide-react'
+import { Download, Copy, Check, Linkedin, LayoutTemplate, Star } from 'lucide-react'
+import { useAuth } from '../hooks/useAuth.jsx'
 
 const FM = "'JetBrains Mono','Commit Mono',monospace"
 const FH = "'Plus Jakarta Sans','Bricolage Grotesque',sans-serif"
@@ -28,30 +29,30 @@ var DOMAIN_LABELS = {
 
 // ── Demand colors ─────────────────────────────────────────
 var DEMAND_COLORS = {
-  'Very High': 'var(--linear-blue)',
-  'High':      'var(--linear-blue)',
-  'Medium':    'var(--cool-grey)',
+  'Very High': '#10B981', // Emerald
+  'High':      '#51B1E7', // Picton
+  'Medium':    '#F59E0B', // Amber
   'Low':       '#94A3B8',
 }
 
 // ── Domain accent colors (used for card glow) ─────────────
 var DOMAIN_ACCENTS = {
-  tech:          ['var(--linear-blue)', 'var(--linear-blue)'],
+  tech:          ['#51B1E7', '#6366F1'], // Picton -> Indigo
   data:          ['#8B5CF6', '#06B6D4'],
-  cybersecurity: ['var(--cool-grey)', 'var(--cool-grey)'],
-  management:    ['var(--linear-blue)', 'var(--linear-blue)'],
-  finance:       ['var(--linear-blue)', 'var(--cool-grey)'],
-  marketing:     ['#EC4899', 'var(--cool-grey)'],
-  hr:            ['var(--cool-grey)', 'var(--linear-blue)'],
-  product:       ['var(--linear-blue)', '#EC4899'],
+  cybersecurity: ['#94A3B8', '#64748B'], // Slate
+  management:    ['#51B1E7', '#10B981'], // Picton -> Emerald
+  finance:       ['#10B981', '#94A3B8'], // Emerald -> Slate
+  marketing:     ['#EC4899', '#F59E0B'], // Pink -> Amber
+  hr:            ['#94A3B8', '#51B1E7'], // Slate -> Picton
+  product:       ['#6366F1', '#EC4899'], // Indigo -> Pink
   design:        ['#EC4899', '#8B5CF6'],
-  medical:       ['var(--linear-blue)', '#06B6D4'],
-  law:           ['#94A3B8', 'var(--linear-blue)'],
-  architecture:  ['var(--cool-grey)', 'var(--linear-blue)'],
-  engineering:   ['var(--linear-blue)', 'var(--linear-blue)'],
-  government:    ['var(--linear-blue)', 'var(--cool-grey)'],
-  mba:           ['var(--linear-blue)', 'var(--cool-grey)'],
-  business:      ['var(--linear-blue)', 'var(--linear-blue)'],
+  medical:       ['#51B1E7', '#06B6D4'],
+  law:           ['#94A3B8', '#6366F1'], // Slate -> Indigo
+  architecture:  ['#F59E0B', '#94A3B8'], // Amber -> Slate
+  engineering:   ['#51B1E7', '#F59E0B'], // Picton -> Amber
+  government:    ['#6366F1', '#94A3B8'], // Indigo -> Slate
+  mba:           ['#10B981', '#6366F1'], // Emerald -> Indigo
+  business:      ['#F59E0B', '#10B981'], // Amber -> Emerald
 }
 
 // ── Rounded rect helper ───────────────────────────────────
@@ -97,21 +98,30 @@ function drawCardA(canvas, opts) {
   canvas.style.width = W + 'px'; canvas.style.height = H + 'px'
   var c = canvas.getContext('2d')
   c.scale(SC, SC)
+  
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  const C = {
+    bg: isLight ? '#F0EDE8' : '#0B0E14',
+    text: isLight ? '#0F172A' : '#F8FAFC',
+    text2: isLight ? '#334155' : '#CBD5E1',
+    border: isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.08)',
+    accent: '#5DCAA5', // CertifyROI Green
+  }
 
-  var accents  = DOMAIN_ACCENTS[domain] || ['var(--linear-blue)', 'var(--linear-blue)']
+  var accents  = DOMAIN_ACCENTS[domain] || ['#51B1E7', '#6366F1']
   var accent1  = accents[0]
   var accent2  = accents[1]
   var demColor = DEMAND_COLORS[demand] || '#94A3B8'
 
   // ── Background ───────────────────────────────────────────
   var bg = c.createLinearGradient(0, 0, W, H)
-  bg.addColorStop(0,   '#080E1E')
-  bg.addColorStop(0.6, '#0C1628')
-  bg.addColorStop(1,   '#060C18')
+  bg.addColorStop(0,   isLight ? '#FDFCFB' : '#080E1E')
+  bg.addColorStop(0.6, isLight ? '#F8F6F2' : '#0C1628')
+  bg.addColorStop(1,   isLight ? '#F4F1EC' : '#060C18')
   c.fillStyle = bg; c.fillRect(0, 0, W, H)
 
   // Dot grid — very subtle
-  c.fillStyle = 'var(--border-subtle)'
+  c.fillStyle = C.border
   for (var xi = 0; xi <= W; xi += 36) {
     for (var yi = 0; yi <= H; yi += 36) {
       c.beginPath(); c.arc(xi, yi, 1.2, 0, Math.PI * 2); c.fill()
@@ -132,12 +142,12 @@ function drawCardA(canvas, opts) {
 
   // ── Scan lines — very subtle horizontal texture ───────────
   for (var si = 0; si < H; si += 3) {
-    c.fillStyle = 'transparent'
+    c.fillStyle = isLight ? 'rgba(0,0,0,0.015)' : 'rgba(255,255,255,0.015)'
     c.fillRect(0, si, W, 1)
   }
 
   // ── Inset border frame ───────────────────────────────────
-  c.strokeStyle = 'var(--border-subtle)'
+  c.strokeStyle = C.border
   c.lineWidth = 1
   rr(c, 12, 12, W - 24, H - 24, 6)
   c.stroke()
@@ -159,34 +169,34 @@ function drawCardA(canvas, opts) {
 
   // ── Logo ─────────────────────────────────────────────────
   var lgGrad = c.createLinearGradient(44, 34, 82, 72)
-  lgGrad.addColorStop(0, 'var(--linear-blue)'); lgGrad.addColorStop(1, '#4338CA')
+  lgGrad.addColorStop(0, C.accent); lgGrad.addColorStop(1, '#059669')
   c.fillStyle = lgGrad; rr(c, 44, 34, 40, 40, 10); c.fill()
   c.fillStyle = 'white'; c.font = 'bold 22px Arial'; c.textAlign = 'center'
   c.fillText('↗', 64, 62)
   c.textAlign = 'left'
-  c.fillStyle = 'white'; c.font = 'bold 20px Arial'; c.fillText('Certify', 94, 62)
+  c.fillStyle = C.text; c.font = 'bold 20px Arial'; c.fillText('Certify', 94, 62)
   var cw = c.measureText('Certify').width
-  c.fillStyle = 'var(--accent)'; c.font = 'bold 20px Arial'; c.fillText('ROI', 94 + cw, 62)
+  c.fillStyle = C.accent; c.font = 'bold 20px Arial'; c.fillText('ROI', 94 + cw, 62)
 
   // ── "INDIA · 2026" badge ─────────────────────────────────
   c.font = '11px "Courier New", monospace'
   var bt = 'INDIA · 2026', btw = c.measureText(bt).width
   var bW = btw + 28, bH = 26, bX = W - bW - 44, bY = 36
-  c.fillStyle = 'transparent'
+  c.fillStyle = isLight ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.04)'
   rr(c, bX, bY, bW, bH, 7); c.fill()
-  c.strokeStyle = 'transparent'; c.lineWidth = 1
+  c.strokeStyle = C.border; c.lineWidth = 1
   rr(c, bX, bY, bW, bH, 7); c.stroke()
-  c.fillStyle = 'var(--accent)'; c.textAlign = 'center'
+  c.fillStyle = C.text2; c.textAlign = 'center'
   c.fillText(bt, bX + bW / 2, bY + 17)
 
   // ── Header divider ───────────────────────────────────────
-  c.strokeStyle = 'var(--border-subtle)'; c.lineWidth = 1
+  c.strokeStyle = C.border; c.lineWidth = 1
   c.beginPath(); c.moveTo(44, 90); c.lineTo(W - 44, 90); c.stroke()
 
   // ── Eyebrow ──────────────────────────────────────────────
   var midY = 308
   c.font = '12px "Courier New", monospace'
-  c.fillStyle = 'transparent'
+  c.fillStyle = C.text2
   c.textAlign = 'center'
   c.fillText('MY  2026  CERTIFICATION  MOVE', W / 2, midY - 122)
 
@@ -210,9 +220,9 @@ function drawCardA(canvas, opts) {
 
   // Gradient text effect — white → light steel
   var tGrad = c.createLinearGradient(W / 2 - 400, 0, W / 2 + 400, 0)
-  tGrad.addColorStop(0,   'transparent')
-  tGrad.addColorStop(0.5, '#FFFFFF')
-  tGrad.addColorStop(1,   'transparent')
+  tGrad.addColorStop(0,   isLight ? C.text : '#E2E8F0')
+  tGrad.addColorStop(0.5, isLight ? C.text : '#FFFFFF')
+  tGrad.addColorStop(1,   isLight ? C.text : '#E2E8F0')
 
   // Glow under text
   c.shadowColor = accent1 + '55'
@@ -242,7 +252,7 @@ function drawCardA(canvas, opts) {
   // Domain pill
   c.fillStyle = accent1 + '22'; rr(c, p1x, pillY - pH / 2, p1w, pH, pRad); c.fill()
   c.strokeStyle = accent1 + '50'; c.lineWidth = 1; rr(c, p1x, pillY - pH / 2, p1w, pH, pRad); c.stroke()
-  c.fillStyle = 'var(--accent)'; c.textAlign = 'center'
+  c.fillStyle = accent1; c.textAlign = 'center'
   c.fillText(p1t, p1x + p1w / 2, pillY + 5)
 
   // Demand pill
@@ -254,7 +264,7 @@ function drawCardA(canvas, opts) {
   // ── Year progress arc — bottom right decorative element ──
   var arcX = W - 80, arcY = H - 80, arcR = 36
   // Track ring
-  c.strokeStyle = 'var(--border-subtle)'
+  c.strokeStyle = C.border
   c.lineWidth = 3
   c.beginPath(); c.arc(arcX, arcY, arcR, 0, Math.PI * 2); c.stroke()
   // Progress arc (roughly Q1 of year = ~0.25 of circle)
@@ -268,23 +278,23 @@ function drawCardA(canvas, opts) {
   c.lineCap = 'butt'
   // "2026" inside arc
   c.font = 'bold 11px "Courier New", monospace'
-  c.fillStyle = 'transparent'; c.textAlign = 'center'
+  c.fillStyle = C.text2; c.textAlign = 'center'
   c.fillText('2026', arcX, arcY + 4)
 
   // ── Footer divider ───────────────────────────────────────
   var fY = H - 58
-  c.strokeStyle = 'var(--border-subtle)'; c.lineWidth = 1
+  c.strokeStyle = C.border; c.lineWidth = 1
   c.beginPath(); c.moveTo(44, fY); c.lineTo(W - 130, fY); c.stroke()
 
   // ── Footer — tagline left ────────────────────────────────
-  c.fillStyle = 'transparent'
+  c.fillStyle = C.text2
   c.font = '13px Arial, sans-serif'; c.textAlign = 'left'
   c.fillText('Backed by data. Decided with clarity.', 44, H - 28)
 
   // ── Footer — URL (not in arc zone) ───────────────────────
-  c.fillStyle = 'transparent'
+  c.fillStyle = C.text2
   c.font = 'bold 13px "Courier New", monospace'; c.textAlign = 'right'
-  c.fillText('certifyroi.vercel.app', W - 140, H - 28)
+  c.fillText('certifyroi.in', W - 140, H - 28)
 
   // ── Corner accents ───────────────────────────────────────
   var aLen = 40, aA = 'transparent'
@@ -311,8 +321,17 @@ function drawCardB(canvas, opts) {
   canvas.style.width = W + 'px'; canvas.style.height = H + 'px'
   var c = canvas.getContext('2d')
   c.scale(SC, SC)
+  
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  const C = {
+    bg: isLight ? '#F0EDE8' : '#0B0E14',
+    text: isLight ? '#0F172A' : '#F8FAFC',
+    text2: isLight ? '#334155' : '#CBD5E1',
+    border: isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.08)',
+    accent: '#5DCAA5', // CertifyROI Green
+  }
 
-  var accents  = DOMAIN_ACCENTS[domain] || ['var(--linear-blue)', 'var(--linear-blue)']
+  var accents  = DOMAIN_ACCENTS[domain] || ['#51B1E7', '#6366F1']
   var accent1  = accents[0]
   var accent2  = accents[1]
   var demColor = DEMAND_COLORS[demand] || '#94A3B8'
@@ -320,16 +339,16 @@ function drawCardB(canvas, opts) {
 
   // ── Background ───────────────────────────────────────────
   var bg = c.createLinearGradient(0, 0, 0, H)
-  bg.addColorStop(0, '#0A0F20')
-  bg.addColorStop(1, '#070B18')
+  bg.addColorStop(0, isLight ? '#FDFCFB' : '#0A0F20')
+  bg.addColorStop(1, isLight ? '#F4F1EC' : '#070B18')
   c.fillStyle = bg; c.fillRect(0, 0, W, H)
 
   // Left panel background — slightly lighter
-  c.fillStyle = 'var(--border-subtle)'
+  c.fillStyle = isLight ? 'rgba(0,0,0,0.02)' : 'rgba(255,255,255,0.02)'
   c.fillRect(0, 0, 420, H)
 
   // Left panel border line
-  c.strokeStyle = 'var(--border-subtle)'; c.lineWidth = 1
+  c.strokeStyle = C.border; c.lineWidth = 1
   c.beginPath(); c.moveTo(420, 0); c.lineTo(420, H); c.stroke()
 
   // Left panel domain glow
@@ -347,11 +366,11 @@ function drawCardB(canvas, opts) {
 
   // Scan lines
   for (var si = 0; si < H; si += 3) {
-    c.fillStyle = 'transparent'; c.fillRect(0, si, W, 1)
+    c.fillStyle = isLight ? 'rgba(0,0,0,0.015)' : 'rgba(255,255,255,0.015)'; c.fillRect(0, si, W, 1)
   }
 
   // Inset frame
-  c.strokeStyle = 'var(--border-subtle)'; c.lineWidth = 1
+  c.strokeStyle = C.border; c.lineWidth = 1
   rr(c, 12, 12, W - 24, H - 24, 8); c.stroke()
 
   // ── Left accent bar (vertical) ───────────────────────────
@@ -367,7 +386,7 @@ function drawCardB(canvas, opts) {
 
   // Big domain letter — giant background character
   c.font = 'bold 280px Arial'
-  c.fillStyle = 'var(--border-subtle)'
+  c.fillStyle = isLight ? 'rgba(0,0,0,0.03)' : 'rgba(255,255,255,0.03)'
   c.textAlign = 'center'
   c.fillText(domLabel.charAt(0).toUpperCase(), 210, lMid + 90)
 
@@ -391,11 +410,11 @@ function drawCardB(canvas, opts) {
 
   // CertifyROI badge — bottom of left panel
   var lgGrad = c.createLinearGradient(170, H - 100, 250, H - 50)
-  lgGrad.addColorStop(0, 'var(--linear-blue)'); lgGrad.addColorStop(1, '#4338CA')
+  lgGrad.addColorStop(0, C.accent); lgGrad.addColorStop(1, '#059669')
   c.fillStyle = lgGrad; rr(c, 170, H - 98, 36, 36, 9); c.fill()
   c.fillStyle = 'white'; c.font = 'bold 18px Arial'; c.textAlign = 'center'
   c.fillText('↗', 188, H - 73)
-  c.fillStyle = 'transparent'; c.font = '11px Arial'; c.textAlign = 'center'
+  c.fillStyle = C.text2; c.font = '11px Arial'; c.textAlign = 'center'
   c.fillText('CertifyROI', 210, H - 50)
 
   // ── RIGHT PANEL CONTENT ──────────────────────────────────
@@ -404,12 +423,12 @@ function drawCardB(canvas, opts) {
 
   // Eyebrow
   c.font = '11px "Courier New", monospace'
-  c.fillStyle = 'transparent'
+  c.fillStyle = C.text2
   c.textAlign = 'left'
   c.fillText('CERT PATH  ·  MAPPED  ·  2026', rx, ry - 40)
 
   // Eyebrow underline
-  c.strokeStyle = 'transparent'; c.lineWidth = 1
+  c.strokeStyle = C.border; c.lineWidth = 1
   c.beginPath(); c.moveTo(rx, ry - 28); c.lineTo(rx + 300, ry - 28); c.stroke()
 
   // Cert name
@@ -422,9 +441,9 @@ function drawCardB(canvas, opts) {
 
   c.shadowColor = accent1 + '40'; c.shadowBlur = 28
   var tGrad = c.createLinearGradient(rx, 0, rx + rw, 0)
-  tGrad.addColorStop(0,   '#FFFFFF')
-  tGrad.addColorStop(0.6, '#E2E8F0')
-  tGrad.addColorStop(1,   '#C7D2FE')
+  tGrad.addColorStop(0,   isLight ? C.text : '#FFFFFF')
+  tGrad.addColorStop(0.6, isLight ? C.text2 : '#E2E8F0')
+  tGrad.addColorStop(1,   isLight ? C.text2 : '#C7D2FE')
   c.fillStyle = tGrad
   cLines.forEach(function(line, i) {
     c.fillText(line, rx, ry + i * lH)
@@ -435,19 +454,19 @@ function drawCardB(canvas, opts) {
 
   // Subtitle line
   c.font = '16px Arial, sans-serif'
-  c.fillStyle = 'transparent'
+  c.fillStyle = C.text2
   c.textAlign = 'left'
   c.fillText('Analysed · Data-backed · India Market', rx, afterCert + 28)
 
   // 3 micro verification dots
   var dotsY = afterCert + 60
-  var dots = ['Data-backed decision', 'India market 2026', 'certifyroi.vercel.app']
+  var dots = ['Data-backed decision', 'India market 2026', 'certifyroi.in']
   dots.forEach(function(dot, i) {
     var dx = rx + i * 220
     c.fillStyle = accent1 + 'CC'
     c.beginPath(); c.arc(dx, dotsY, 3, 0, Math.PI * 2); c.fill()
     c.font = '11px "Courier New", monospace'
-    c.fillStyle = 'transparent'
+    c.fillStyle = C.text2
     c.textAlign = 'left'
     c.fillText(dot, dx + 10, dotsY + 4)
   })
@@ -456,11 +475,11 @@ function drawCardB(canvas, opts) {
   c.font = '11px "Courier New", monospace'
   var bt = 'INDIA · 2026', btw = c.measureText(bt).width
   var bW = btw + 24, bH = 24, bX = W - bW - 24, bY = H - bH - 24
-  c.fillStyle = 'transparent'
+  c.fillStyle = isLight ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.04)'
   rr(c, bX, bY, bW, bH, 6); c.fill()
-  c.strokeStyle = 'transparent'; c.lineWidth = 1
+  c.strokeStyle = C.border; c.lineWidth = 1
   rr(c, bX, bY, bW, bH, 6); c.stroke()
-  c.fillStyle = 'transparent'; c.textAlign = 'center'
+  c.fillStyle = C.text2; c.textAlign = 'center'
   c.fillText(bt, bX + bW / 2, bY + 16)
 }
 
@@ -483,6 +502,7 @@ function ShareROICard({ certName, domain, demand, name }) {
   var [done,    setDone]    = useState(false)
   var [copied,  setCopied]  = useState(false)
 
+  const { isPro } = useAuth()
   // ── Draw ─────────────────────────────────────────────────
   var render = useCallback(async function() {
     var canvas = canvasRef.current
@@ -497,6 +517,7 @@ function ShareROICard({ certName, domain, demand, name }) {
       demand:   demand || 'High',
       name:     name   || '',
     })
+    posthog.capture('share_card_generated', { cert_name: certName, variant: variant });
     setDrawing(false); setDone(true)
   }, [certName, domain, demand, name, variant])
 
@@ -539,7 +560,21 @@ function ShareROICard({ certName, domain, demand, name }) {
     if (!next) { setDone(false); setDrawing(false) }
   }
 
-  if (!certName) return null
+  if (!certName) return null;
+
+  if (!isPro) {
+    return (
+      <div style={{ marginTop: '8px', padding: '12px 16px', borderRadius: '11px', background: 'var(--amber-dim)', border: '1px solid var(--border-accent)', display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ width: '26px', height: '26px', borderRadius: '7px', background: 'var(--amber)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <Star size={13} color="var(--bg)" />
+        </div>
+        <div>
+          <div style={{ fontFamily: FH, fontWeight: '700', fontSize: '13px', color: 'var(--amber)' }}>Shareable LinkedIn Card</div>
+          <div style={{ fontFamily: FB, fontSize: '12px', color: 'var(--text-3)' }}>This is a Pro feature. <a href="/pricing" style={{ color: 'var(--amber)', textDecoration: 'underline' }}>Upgrade to unlock.</a></div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div style={{ marginTop: '8px' }}>

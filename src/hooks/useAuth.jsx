@@ -1,71 +1,87 @@
 import { useState, useEffect, createContext, useContext } from 'react'
+import { supabase } from '../lib/supabase.js'
 
 // Auth context
 const AuthContext = createContext(null)
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
+  const [isPro, setIsPro] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
   const [loading, setLoading] = useState(true)
   const [authError, setAuthError] = useState(null)
 
   useEffect(() => {
-    let unsubscribe = () => {}
+    // 1. Check for initial session
+    const getInitialSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      setUser(session?.user ?? null)
 
-    const initAuth = async () => {
-      try {
-        const { auth } = await import('../firebase.js')
-        if (!auth) {
-          setLoading(false)
-          return
-        }
-        const { onAuthStateChanged } = await import('firebase/auth')
-        unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-          setUser(firebaseUser)
-          setLoading(false)
-        })
-      } catch (e) {
-        console.warn('Auth init failed — Firebase not configured')
-        setLoading(false)
+      if (session?.user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('is_pro, role')
+          .eq('id', session.user.id)
+          .single()
+        setIsPro(profile?.is_pro || false)
+        setIsAdmin(profile?.role === 'admin')
       }
+      setLoading(false)
     }
+    getInitialSession()
 
-    initAuth()
-    return () => unsubscribe()
+    // 2. Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      setUser(session?.user ?? null)
+      if (session?.user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('is_pro, role')
+          .eq('id', session.user.id)
+          .single()
+        setIsPro(profile?.is_pro || false)
+        setIsAdmin(profile?.role === 'admin')
+      } else {
+        setIsPro(false)
+        setIsAdmin(false)
+      }
+      setLoading(false)
+    })
+
+    return () => {
+      subscription?.unsubscribe()
+    }
   }, [])
 
   const signInGoogle = async () => {
-  setAuthError(null)
-  try {
-    const { signInWithGoogle } = await import('../firebase.jsx')
-    if (!signInWithGoogle) throw new Error('Firebase not configured — add VITE_FIREBASE_API_KEY to .env')
-    const result = await signInWithGoogle()
-    return result.user
-  } catch (e) {
-    // Silently ignore unconfigured Firebase — just don't sign in
-    if (e.message?.includes('YOUR_API_KEY') || e.message?.includes('not configured') || e.code === 'auth/invalid-api-key') {
-      setAuthError('Sign-in not available — Firebase not configured')
-      return null
+    setAuthError(null)
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin,
+      },
+    })
+    if (error) {
+      setAuthError(error.message)
+      throw error
     }
-    const msg = e.code === 'auth/popup-closed-by-user'
-      ? 'Sign-in cancelled'
-      : e.message || 'Sign-in failed'
-    setAuthError(msg)
-    throw e
   }
-}
 
   const signOut = async () => {
-    try {
-      const { signOutUser } = await import('../firebase.jsx')
-      await signOutUser()
+    const { error } = await supabase.auth.signOut()
+    if (error) {
+      console.error('Sign out error:', error)
+    } else {
       setUser(null)
-    } catch (e) {
-      console.error('Sign out error:', e)
+      setIsPro(false)
+      setIsAdmin(false)
     }
   }
 
+  const value = { user, isPro, isAdmin, loading, authError, signInGoogle, signOut }
+
   return (
-    <AuthContext.Provider value={{ user, loading, authError, signInGoogle, signOut }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   )
