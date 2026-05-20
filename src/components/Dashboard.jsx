@@ -48,7 +48,7 @@ export default function Dashboard() {
           fontSize: '11px', fontFamily: 'var(--font-mono)',
           color: 'var(--text-2)',
           padding: '4px 12px', borderRadius: '9999px',
-          border: '1px solid var(--border)',
+          border: 'none',
         }}>
           <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--text-2)' }} />
           <span>SYNCED: {loading ? 'Fetching...' : lastSync}</span>

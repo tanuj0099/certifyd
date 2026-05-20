@@ -121,16 +121,16 @@ const CertAssemblyBentoGrid = () => {
   // content and does not modify the structural placement of that sidebar.
 
   return (
-    <div className="bg-gray-50 py-16 sm:py-24 lg:py-32"> {/* Global off-white background */}
+    <div style={{ background: 'var(--bg-base, #0b0b0f)' }} className="py-16 sm:py-24 lg:py-32"> {/* Global off-white background */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-12 text-center">
-          <h2 className="text-base font-semibold text-gray-500 tracking-wide uppercase font-mono">
+          <h2 style={{ color: 'var(--text-muted, #94a3b8)' }} className="text-base font-semibold tracking-wide uppercase font-mono">
             // CERT_ASSEMBLY
           </h2>
-          <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <p style={{ color: 'var(--text-primary, #f8fafc)' }} className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
             High-Trust Enterprise Features
           </p>
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-gray-600">
+          <p style={{ color: 'var(--text-secondary, #cbd5e1)' }} className="mx-auto mt-6 max-w-2xl text-lg leading-8">
             Explore the core capabilities that power your career growth, built on a foundation of data integrity and robust architecture.
           </p>
         </div>
@@ -145,7 +145,8 @@ const CertAssemblyBentoGrid = () => {
           {featureBoxesData.map((box) => (
             <motion.div
               key={box.id}
-              className="bg-white border border-gray-200 rounded-xl shadow-sm p-8 flex flex-col justify-between" // Bento box styling
+              className="border p-8 flex flex-col justify-between"
+              style={{ background: 'transparent', borderColor: 'var(--border)' }}
               variants={itemVariants}
               layout // Snappy layout expansion
               transition={{ type: "spring", stiffness: 300, damping: 30 }} // Snappy spring transition

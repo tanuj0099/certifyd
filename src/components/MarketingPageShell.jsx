@@ -51,8 +51,6 @@ export function GlassCard({ children, style }) {
       className="glass"
       style={{
         background: 'transparent',
-        backdropFilter: 'blur(14px)',
-        WebkitBackdropFilter: 'blur(14px)',
         border: '1px solid var(--border)',
         borderRadius: 'var(--radius-xl)',
         ...style,
@@ -109,7 +107,7 @@ export function MarketingFooter() {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
               <div style={{ width: '26px', height: '26px', background: 'var(--accent)', borderRadius: '7px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <TrendingUp size={13} color="white" />
+                <TrendingUp size={13} color="var(--bg)" />
               </div>
               <span style={{ fontFamily: FH, fontWeight: '800', fontSize: '15px', color: 'var(--text)', letterSpacing: '-0.01em' }}>
                 Certify<span style={{ color: 'var(--accent)' }}>ROI</span>

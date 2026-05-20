@@ -31,7 +31,7 @@ export default function ToolPageWrapper({
     }}>
 
       {/* ── Page heading — zero elevation, no card ─────────────────── */}
-      <div style={{ maxWidth: '100%', margin: '0', padding: '108px 0 0' }}>
+      <div style={{ maxWidth: '100%', margin: '0', padding: '108px 24px 0' }}>
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
@@ -58,10 +58,10 @@ export default function ToolPageWrapper({
           {/* Title */}
           <h1 style={{
             fontFamily:    'var(--font-head)',
-            fontSize:      'clamp(2.0rem, 4vw, 2.8rem)',
+            fontSize:      '36px',
             fontWeight:    '700',
             color:         'var(--text)',
-            letterSpacing: '-0.04em',
+            letterSpacing: 0,
             lineHeight:    1.05,
             marginBottom:  description ? '16px' : 0,
           }}>
@@ -86,7 +86,7 @@ export default function ToolPageWrapper({
       </div>
 
       {/* ── Tool content — directly on background, hairline above ──── */}
-      <div style={{ maxWidth: '100%', margin: '0', padding: '0 0 80px' }}>
+      <div style={{ maxWidth: '100%', margin: '0', padding: '0 24px 80px' }}>
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}

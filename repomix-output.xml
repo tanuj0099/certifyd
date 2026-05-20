@@ -22313,9 +22313,9 @@ export const CERTIFICATIONS = Array.from(allCerts).sort()
 
 html[data-theme='dark'], .dark {
   --bg-base: #0f172a;
-  --bg-surface: #111827;
+  --bg-surface: #222326;
   --bg-elevated: #161d2f;
-  --bg-muted: #111827;
+  --bg-muted: #222326;
   --text-primary: #f8fafc;
   --text-secondary: #cbd5e1;
   --text-muted: #94a3b8;
@@ -32329,7 +32329,7 @@ const _OldContactPage = function () {
     background: "#FFFFFF",
     border: "1px solid #E5E7EB",
     borderRadius: "4px",
-    color: "#111827",
+    color: "#222326",
     fontSize: "14px",
     fontFamily: FB,
     outline: "none",
@@ -32825,7 +32825,7 @@ const MobileDrawer = function ({
                     style={{
                       fontSize: "13px",
                       fontWeight: "700",
-                      color: isActive ? "#10B981" : "#111827",
+                      color: isActive ? "#10B981" : "#222326",
                       fontFamily: FH,
                       letterSpacing: "-0.01em",
                     }}
@@ -32893,7 +32893,7 @@ const MobileDrawer = function ({
                     style={{
                       fontSize: "13px",
                       fontWeight: "700",
-                      color: isActive ? "#10B981" : "#111827",
+                      color: isActive ? "#10B981" : "#222326",
                       fontFamily: FH,
                       letterSpacing: "-0.01em",
                     }}
@@ -33287,7 +33287,7 @@ const AppPage = function ({ onCertSelected }) {
                   fontWeight: "700",
                   fontSize: "13px",
                   letterSpacing: "0.05em",
-                  color: "#111827",
+                  color: "#222326",
                   textTransform: "uppercase",
                 }}
               >
@@ -33723,7 +33723,7 @@ const AppPage = function ({ onCertSelected }) {
                             background: active
                               ? "#FFFFFF"
                               : "#FFFFFF",
-                            color: active ? "#111827" : "#6B7280",
+                            color: active ? "#222326" : "#6B7280",
                             fontSize: "12px",
                             fontWeight: active ? "600" : "500",
                             cursor: "pointer",
@@ -33732,7 +33732,7 @@ const AppPage = function ({ onCertSelected }) {
                           }}
                           onMouseEnter={(e) => {
                             if (!active)
-                              e.currentTarget.style.color = "#111827";
+                              e.currentTarget.style.color = "#222326";
                             e.currentTarget.style.background = "#F9FAFB";
                           }}
                           onMouseLeave={(e) => {

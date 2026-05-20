@@ -1,19 +1,16 @@
 import { useState, useEffect, createContext, useContext, useCallback } from 'react'
 
 // ═══════════════════════════════════════════════════════════
-// 2-THEME ENGINE — Linear "Nordic/Ash"
+// 3-THEME ENGINE — Light / Dark / System
 // ═══════════════════════════════════════════════════════════
-// Source of truth:
-// - Nordic (Dark): bg #222326, text/logo #F4F5F8, border rgba(255,255,255,0.08)
-// - Ash (Light):   bg #FFFFFF, text #44494D,     border #E5E5E5
-// Components should prefer CSS variables. The JS preset exists
-// for inline styles where needed.
+// System mode auto-detects prefers-color-scheme and follows the OS.
+// Light = bg #FFFFFF, Dark = bg #222326
 // ═══════════════════════════════════════════════════════════
 
 export const THEME_PRESETS = {
-  nordic: {
-    id: 'nordic',
-    label: 'Nordic',
+  dark: {
+    id: 'dark',
+    label: 'Dark',
     bg: '#222326',
     bgAlt: '#2A2A2E',
     surface: '#2A2A2E',
@@ -26,67 +23,99 @@ export const THEME_PRESETS = {
     borderMid: 'rgba(255,255,255,0.14)',
     isLight: false,
   },
-  ash: {
-    id: 'ash',
-    label: 'Ash',
+  light: {
+    id: 'light',
+    label: 'Light',
     bg: '#FFFFFF',
-    bgAlt: '#FFFFFF',
-    surface: '#FFFFFF',
-    text: '#44494D',
-    text2: '#6B7075',
-    text3: '#9CA0A5',
-    text4: '#C4C7CB',
-    accent: '#222326',
+    bgAlt: '#F8F8F8',
+    surface: '#F4F4F4',
+    text: '#1a1a1a',
+    text2: '#4a4d52',
+    text3: '#7a7d82',
+    text4: '#aaaaaa',
+    accent: '#1a1a1a',
     border: '#E5E5E5',
-    borderMid: '#D6D6D6',
+    borderMid: '#D0D0D0',
     isLight: true,
   },
 }
 
-export const THEME_ORDER = ['nordic', 'ash']
+// Backward compat aliases
+export const THEME_ORDER = ['dark', 'light', 'system']
+// Legacy aliases kept for any code referencing nordic/ash
+export const THEME_PRESETS_COMPAT = {
+  ...THEME_PRESETS,
+  nordic: THEME_PRESETS.dark,
+  ash: THEME_PRESETS.light,
+}
+
+const STORAGE_KEY = 'croi_theme_v2'
+
+function getSystemDark() {
+  return typeof window !== 'undefined'
+    ? window.matchMedia('(prefers-color-scheme: dark)').matches
+    : true
+}
+
+function resolveTheme(mode) {
+  if (mode === 'light') return 'light'
+  if (mode === 'dark') return 'dark'
+  return getSystemDark() ? 'dark' : 'light'
+}
 
 const ThemeContext = createContext(null)
 
 export const ThemeProvider = ({ children }) => {
-  const [themeId, setThemeId] = useState(() => {
+  const [mode, setMode] = useState(() => {
     try {
-      const stored = localStorage.getItem('croi_theme')
-      if (stored === 'dark') return 'nordic'
-      if (stored === 'light') return 'ash'
-      if (stored && THEME_PRESETS[stored]) return stored
-      return 'nordic'
-    } catch {
-      return 'nordic'
-    }
+      const saved = localStorage.getItem(STORAGE_KEY)
+      if (saved === 'light' || saved === 'dark' || saved === 'system') return saved
+    } catch {}
+    return 'system'
   })
 
+  const [resolvedId, setResolvedId] = useState(() => resolveTheme(mode))
+
+  // Apply the data-theme attribute whenever mode or system preference changes
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', themeId)
-    try {
-      localStorage.setItem('croi_theme', themeId)
-    } catch {}
-  }, [themeId])
+    const apply = () => {
+      const id = resolveTheme(mode)
+      setResolvedId(id)
+      document.documentElement.setAttribute('data-theme', id === 'dark' ? 'nordic' : 'ash')
+    }
 
-  const setTheme = useCallback((id) => {
-    if (THEME_PRESETS[id]) setThemeId(id)
+    apply()
+
+    if (mode === 'system') {
+      const mq = window.matchMedia('(prefers-color-scheme: dark)')
+      mq.addEventListener('change', apply)
+      return () => mq.removeEventListener('change', apply)
+    }
+  }, [mode])
+
+  const setThemeMode = useCallback((newMode) => {
+    setMode(newMode)
+    try { localStorage.setItem(STORAGE_KEY, newMode) } catch {}
   }, [])
 
+  // Legacy toggleTheme — cycles dark → light → dark
   const toggleTheme = useCallback(() => {
-    setThemeId((prev) => (prev === 'ash' ? 'nordic' : 'ash'))
-  }, [])
+    setThemeMode(resolvedId === 'dark' ? 'light' : 'dark')
+  }, [resolvedId, setThemeMode])
 
-  const current = THEME_PRESETS[themeId] || THEME_PRESETS.nordic
+  const current = THEME_PRESETS[resolvedId] || THEME_PRESETS.dark
   const isDark = !current.isLight
 
   return (
     <ThemeContext.Provider value={{
-      theme: themeId,
-      themeId,
+      mode,            // 'light' | 'dark' | 'system'
+      theme: resolvedId,
+      themeId: resolvedId,
       current,
       isDark,
-      setTheme,
+      setThemeMode,
+      setTheme: setThemeMode,
       toggleTheme,
-      // Backward compat: some components call cycleTheme/toggle
       cycleTheme: toggleTheme,
       toggle: toggleTheme,
     }}>
