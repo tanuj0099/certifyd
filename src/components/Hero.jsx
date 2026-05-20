@@ -18,6 +18,7 @@ import AILoadingState from './AILoadingState.jsx'
 import HikeVerifier from './HikeVerifier.jsx'
 import PitchBoss from './PitchBoss.jsx'
 import ShareROICard from './ShareROICard.jsx'
+import TrackJourneyCTA from './TrackJourneyCTA.jsx'
 import { useJourneyStore } from '../store/useJourneyStore.js'
 import MarketPulseTicker from './MarketPulseTicker.jsx'
 import { HeroSkeleton, AIResultSkeleton, ConsensusGauge, RollNumber, resolveVerdictStatus, DataSyncBadge } from './PremiumDataViz.jsx'
@@ -1265,6 +1266,20 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
           ) : null}
         </AnimatePresence>
       </div>
+
+      {/* ── Post-result CTA: Track Your Journey ──────── */}
+      {aiResult ? (
+        <TrackJourneyCTA
+          certName={certName}
+          salary={salary}
+          certCost={certCost}
+          hikePercent={hikePercent}
+          mode={mode}
+          breakEven={aiResult.breakEven}
+          fiveYearGain={aiResult.projection}
+          isStudent={isStudent}
+        />
+      ) : null}
 
       {/* ── Tools row ──────────────────────────────────── */}
       {certName ? (
