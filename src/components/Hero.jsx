@@ -1,12 +1,10 @@
 import { supabase } from '../services/supabase.js';
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
-import posthog from 'posthog-js'
 import {
   Zap, AlertTriangle, CheckCircle, RefreshCw,
   TrendingUp, MapPin, User, Star, ArrowRight,
-  Info, ShieldCheck, Clock, Wifi, Building2,
-  Heart,
+  Info, ShieldCheck, Clock, Wifi, Building2
 } from 'lucide-react'
 import {
   LineChart, Line, XAxis, YAxis, Tooltip,
@@ -15,17 +13,16 @@ import {
 import { useROICalc, useGuestCounter } from '../hooks/hooks.jsx'
 import { useAuth } from '../hooks/useAuth.jsx'
 import { analyzeROI } from '../services/aiService.jsx'
+import { fetchCertifications, fetchDomains } from '../services/dataService.jsx'
 import AILoadingState from './AILoadingState.jsx'
 import HikeVerifier from './HikeVerifier.jsx'
 import PitchBoss from './PitchBoss.jsx'
 import ShareROICard from './ShareROICard.jsx'
 import { useJourneyStore } from '../store/useJourneyStore.js'
 import MarketPulseTicker from './MarketPulseTicker.jsx'
-import BurnRate from './BurnRate.jsx'
 import { HeroSkeleton, AIResultSkeleton, ConsensusGauge, RollNumber, resolveVerdictStatus, DataSyncBadge } from './PremiumDataViz.jsx'
 
-const GUEST_FREE_LIMIT = 3;
-const FREE_USER_LIMIT = 5; // Per month
+const GUEST_FREE_LIMIT = parseInt(import.meta.env.VITE_GUEST_FREE_LIMIT || '3', 10)
 
 // ── Font constants ────────────────────────────────────────
 const FH = 'var(--font-head)'
@@ -838,7 +835,6 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
   const [aiError, setAiError] = useState(null);
   const [showVerifier, setShowVerifier] = useState(false);
   const [cooldown, setCooldown] = useState(0);
-  const [showTracker, setShowTracker] = useState(false);
   const [showAll, setShowAll] = useState(false);
 
   // ── Derived state ───────────────────────────────────────
@@ -846,7 +842,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
   const selectedCert = storeSelectedCert || null;
 
   const { user } = useAuth();
-  const guest = useGuestCounter(user ? FREE_USER_LIMIT : GUEST_FREE_LIMIT);
+  const guest = useGuestCounter(GUEST_FREE_LIMIT);
 
   const firstName = resumeName ? resumeName.split(' ')[0] : '';
   const displayCity = resumeCity;
@@ -879,7 +875,6 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
 
   const pickCert = useCallback(function (cert) {
     storeSetSelected(cert);
-    posthog.capture('cert_selected', { cert_name: cert.name, cert_id: cert.id });
     setAiResult(null);
     setAiError(null);
   }, [storeSetSelected]);
@@ -893,7 +888,6 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
     setAiError(null);
     try {
       var r = await analyzeROI({ certName, currentSalary: salary, certCost, hikePercent, isStudent });
-      posthog.capture('ai_analysis_run', { cert_name: certName, salary, cert_cost: certCost, hike_percent: hikePercent, is_student: isStudent });
       setAiResult(r);
       if (!user) guest.increment();
       setCooldown(10);
@@ -903,11 +897,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
     setAiLoading(false);
   }, [certName, salary, certCost, hikePercent, isStudent, user, guest, cooldown]);
 
-  // Gating logic for AI analysis
-  const { isPro } = useAuth();
-  const hasAnalysesLeft = isPro || !guest.exceeded;
-  const canAnalyse = certName && hasAnalysesLeft && cooldown === 0;
-  const analysisButtonText = isPro ? 'Get AI ROI Assessment' : `Get AI ROI Assessment (${guest.remaining} left)`;
+  const canAnalyse = certName && (user || !guest.exceeded) && cooldown === 0;
 
   const demandScore = function (d) {
     return d === 'Very High' ? 4 : d === 'High' ? 3 : d === 'Medium' ? 2 : 1;
@@ -938,7 +928,6 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
   // ── Main UI Return ──────────────────────────────────────
   return (
     <div style={{ position: 'relative' }}>
-      <AnimatePresence>{showTracker && <BurnRate certName={certName} breakEvenMonths={roi.breakEvenMonths} />}</AnimatePresence>
 
       {/* ── Market Pulse Ticker ─────────────────────────── */}
       <div style={{ marginBottom: 18, padding: '12px 16px', borderRadius: 12, border: '1px solid var(--border-subtle)', background: 'var(--border-subtle)' }}>
@@ -974,12 +963,11 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
       ) : null}
 
       {/* ── Guest counter ──────────────────────────────── */}
-      {!isPro ? (
+      {!user ? (
         <div style={{ marginBottom: '12px', padding: '8px 12px', borderRadius: '9px', background: guest.exceeded ? 'transparent' : 'transparent', border: '1px solid ' + (guest.exceeded ? 'transparent' : 'transparent'), display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
-          <span style={{ fontSize: '12px', color: guest.exceeded ? 'var(--cool-grey)' : VIOLET, fontFamily: FB, flex: 1 }}>
-            {guest.exceeded ? 'Monthly AI analyses used.' : `${guest.remaining} free AI analyses left this month.`}
+          <span style={{ fontSize: '12px', color: guest.exceeded ? 'var(--cool-grey)' : VIOLET, fontFamily: FB }}>
+            {guest.exceeded ? 'Free AI analyses used — sign in to continue' : guest.remaining + ' free AI analyses left'}
           </span>
-          <a href="/pricing" style={{ fontFamily: FM, fontSize: '11px', color: 'var(--accent)', textDecoration: 'underline', letterSpacing: '0.04em' }}>Upgrade for Unlimited</a>
         </div>
       ) : null}
 
@@ -1118,7 +1106,6 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: prefersReduced ? 0 : 0.18 }}
-          onAnimationComplete={() => posthog.capture('roi_calculated', { cert_name: certName, five_year_gain: roi.fiveYearGainL, payback_months: roi.breakEvenMonths })}
         >
           {isStudent ? (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '8px', marginBottom: '12px' }}>
@@ -1246,7 +1233,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
                 ) : (
                   <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <Zap size={15} />
-                    {analysisButtonText}
+                    Get AI ROI Assessment
                   </span>
                 )}
               </motion.button>
@@ -1278,21 +1265,6 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
           ) : null}
         </AnimatePresence>
       </div>
-
-      {/* ── Track Journey Button ───────────────────────── */}
-      {certName && (
-        <div style={{ marginBottom: '16px' }}>
-          <motion.button
-            onClick={() => setShowTracker(v => !v)}
-            style={{
-              width: '100%', padding: '12px', borderRadius: '11px', background: showTracker ? 'var(--bg-elevated)' : 'transparent', border: '1px solid var(--border)', color: 'var(--text-2)', fontSize: '13px', cursor: 'pointer', fontFamily: FH, fontWeight: '700', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
-            }}
-          >
-            <Heart size={14} />
-            {showTracker ? 'Close Journey Tracker' : 'Track This Cert Journey'}
-          </motion.button>
-        </div>
-      )}
 
       {/* ── Tools row ──────────────────────────────────── */}
       {certName ? (

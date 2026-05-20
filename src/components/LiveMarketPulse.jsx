@@ -1,144 +1,112 @@
-/**
- * LiveMarketPulse — Domain Capsule Edition
- *
- * Changes vs previous version:
- *  1. Domain capsule row replaces the old table — horizontal pill buttons
- *     grouped by sector that filter the data from market_intelligence.
- *  2. Correct Supabase field mapping:
- *       domain_name, min_salary, max_salary, job_count_naukri
- *  3. ROI payback formula: months = cert_cost / (new_salary - current_salary)
- *     with ₹25,000 fallback when certification_cost is missing.
- *  4. All motion() → motion.create() (framer-motion v11+)
- *  5. WebkitBackdropFilter → WebkitBackdropFilter (React prop casing)
- *  6. Only Nordic and Ash themes — no legacy theme guards needed.
- *  7. No wrapping boxes — content renders on var(--bg) directly.
- */
-
-import { useState, useEffect, useCallback } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
+import { Search, X, TrendingUp } from 'lucide-react'
+import { useEffect, useMemo, useState, useDeferredValue } from 'react'
 import { supabase } from '../lib/supabase.js'
 
-// ─── Typography tokens ──────────────────────────────────────────────────────
 const FM = "'JetBrains Mono','IBM Plex Mono',monospace"
 const FS = "'Inter','DM Sans',sans-serif"
+const DEFAULT_CERT_COST = 25_000
+const BASE_COLUMNS = 'domain_name, min_salary, max_salary, job_count_naukri, updated_at'
+const COST_COLUMNS = `${BASE_COLUMNS}, certification_cost`
 
-// ─── Domain taxonomy ────────────────────────────────────────────────────────
-// Maps capsule label → array of domain_name substrings to match.
 const CAPSULES = [
-  {
-    id: 'all',
-    label: 'All Roles',
-    match: null, // null = show everything
-  },
-  {
-    id: 'cloud',
-    label: 'Cloud & DevOps',
-    match: ['Cloud', 'DevOps', 'SRE', 'GCP', 'Azure', 'AWS', 'Kubernetes'],
-  },
+  { id: 'all', label: 'All Roles', match: null },
+  { id: 'cloud', label: 'Cloud & DevOps', match: ['Cloud', 'DevOps', 'SRE', 'GCP', 'Azure', 'AWS', 'Kubernetes'] },
   {
     id: 'data',
     label: 'Data & AI',
-    match: [
-      'Data', 'Machine Learning', 'AI', 'NLP', 'Computer Vision',
-      'Big Data', 'Business Intelligence', 'Statistical',
-    ],
+    match: ['Data', 'Machine Learning', 'AI', 'NLP', 'Computer Vision', 'Big Data', 'Business Intelligence'],
   },
-  {
-    id: 'security',
-    label: 'Security',
-    match: [
-      'Cybersecurity', 'Security', 'Hacker', 'Penetration',
-      'SOC', 'Information Security',
-    ],
-  },
+  { id: 'security', label: 'Security', match: ['Cybersecurity', 'Security', 'Hacker', 'Penetration', 'SOC'] },
   {
     id: 'software',
     label: 'Engineering',
-    match: [
-      'Full Stack', 'Backend', 'Frontend', 'Mobile', 'iOS',
-      'Android', 'Blockchain', 'Embedded', 'Game', 'QA',
-      'Rust', 'Golang', 'Software Architect',
-    ],
+    match: ['Full Stack', 'Backend', 'Frontend', 'Mobile', 'iOS', 'Android', 'Blockchain', 'QA', 'Software'],
   },
   {
     id: 'product',
     label: 'Product & PM',
-    match: [
-      'Product Manager', 'Project Manager', 'Scrum', 'Agile',
-      'Business Analyst', 'Operations', 'Program Manager',
-      'Management', 'SAP', 'Strategy', 'Supply Chain',
-    ],
+    match: ['Product Manager', 'Project Manager', 'Scrum', 'Agile', 'Business Analyst', 'Program Manager'],
   },
-  {
-    id: 'design',
-    label: 'Design',
-    match: [
-      'UI', 'UX', 'Designer', 'Interaction', 'Motion',
-      'Visual', 'Service Designer', 'User Research',
-    ],
-  },
-  {
-    id: 'finance',
-    label: 'Finance',
-    match: [
-      'Financial', 'Investment', 'Risk', 'Actuarial',
-      'Equity', 'Tax', 'Audit', 'Quant', 'Fintech',
-    ],
-  },
-  {
-    id: 'marketing',
-    label: 'Marketing & Sales',
-    match: [
-      'Marketing', 'SEO', 'Growth', 'Social Media',
-      'Content', 'Performance', 'Sales Development',
-    ],
-  },
+  { id: 'finance', label: 'Finance', match: ['Financial', 'Investment', 'Risk', 'Actuarial', 'Equity', 'Tax', 'Audit'] },
+  { id: 'marketing', label: 'Marketing & Sales', match: ['Marketing', 'SEO', 'Growth', 'Content', 'Sales'] },
 ]
 
-// ─── ROI payback formula ─────────────────────────────────────────────────────
-const DEFAULT_CERT_COST = 25_000 // ₹ — fallback per spec
+function useViewportBand() {
+  const [width, setWidth] = useState(() => (typeof window === 'undefined' ? 1200 : window.innerWidth))
 
-/**
- * paybackMonths = cert_cost / ((new_salary - current_salary) / 12)
- * current_salary = min_salary from DB (the "before cert" baseline)
- * new_salary     = max_salary from DB (the "after cert" target)
- */
-function calcPayback(row) {
-  const cost = Number(row.certification_cost) || DEFAULT_CERT_COST
-  const salaryDiff = (row.max_salary || 0) - (row.min_salary || 0)
-  if (salaryDiff <= 0) return null
-  const monthlyGain = salaryDiff / 12
-  return Math.ceil(cost / monthlyGain)
+  useEffect(() => {
+    const onResize = () => setWidth(window.innerWidth)
+    onResize()
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
+
+  return {
+    isPhone: width <= 640,
+    isTablet: width > 640 && width <= 1024,
+  }
 }
 
-function fmtLPA(rupees) {
+function normalizeText(value, fallback = 'Unmapped role') {
+  const text = typeof value === 'string' ? value.trim() : ''
+  return text || fallback
+}
+
+function normalizeAnnualSalary(value) {
+  const number = Number(value)
+  if (!Number.isFinite(number) || number <= 0) return 0
+  return number < 1000 ? number * 100_000 : number
+}
+
+function normalizeMarketRow(row) {
+  return {
+    domain_name: normalizeText(row.domain_name),
+    min_salary: normalizeAnnualSalary(row.min_salary),
+    max_salary: normalizeAnnualSalary(row.max_salary),
+    job_count_naukri: Math.max(0, Math.round(Number(row.job_count_naukri) || 0)),
+    updated_at: row.updated_at || null,
+    certification_cost: Math.max(0, Number(row.certification_cost) || DEFAULT_CERT_COST),
+  }
+}
+
+function calcPaybackMonths(row) {
+  const annualGain = row.max_salary - row.min_salary
+  if (annualGain <= 0) return null
+  return Math.ceil(row.certification_cost / (annualGain / 12))
+}
+
+function fmtLpa(rupees) {
   if (!rupees || rupees <= 0) return '—'
-  return `₹${(rupees / 100_000).toFixed(1)}L`
+  return `INR ${(rupees / 100_000).toFixed(1)}L`
 }
 
-// ─── Capsule button ─────────────────────────────────────────────────────────
-function Capsule({ label, active, onClick }) {
+function fmtJobs(value) {
+  return value > 0 ? value.toLocaleString('en-IN') : '—'
+}
+
+// ── Capsule filter pill ────────────────────────────────────────────────────
+function Capsule({ active, label, onClick }) {
   return (
     <button
+      type="button"
       onClick={onClick}
       style={{
         display: 'inline-flex',
         alignItems: 'center',
-        padding: '6px 14px',
         height: '32px',
-        border: active
-          ? '1px solid var(--text)'
-          : '1px solid var(--border)',
-        borderRadius: '9999px',
+        padding: '0 14px',
+        borderRadius: '999px',
+        border: active ? '1px solid var(--text)' : '1px solid var(--border)',
         background: active ? 'var(--text)' : 'transparent',
         color: active ? 'var(--bg)' : 'var(--text-3)',
         fontFamily: FM,
-        fontSize: '11px',
+        fontSize: '10px',
         letterSpacing: '0.08em',
-        cursor: 'pointer',
-        transition: 'all 0.15s ease',
         whiteSpace: 'nowrap',
-        fontWeight: active ? '600' : '400',
+        cursor: 'pointer',
+        transition: 'background 0.18s ease, color 0.18s ease, border-color 0.18s ease',
+        fontWeight: active ? 700 : 500,
       }}
     >
       {label}
@@ -146,400 +114,608 @@ function Capsule({ label, active, onClick }) {
   )
 }
 
-// ─── Role row ───────────────────────────────────────────────────────────────
-function RoleRow({ row, index, total }) {
-  const payback = calcPayback(row)
-  const isLast = index === total - 1
-
+// ── Search input (enhanced, pill style) ───────────────────────────────────
+function SearchBar({ value, onChange }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.22, delay: index * 0.03 }}
+    <div
       style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 96px 96px 80px',
+        display: 'flex',
         alignItems: 'center',
-        gap: '8px',
-        padding: '14px 0',
-        borderBottom: isLast ? 'none' : '1px solid var(--border)',
+        gap: '10px',
+        height: '42px',
+        padding: '0 16px',
+        borderRadius: '999px',
+        border: '1px solid var(--border-mid)',
+        background: 'transparent',
+        color: 'var(--text-3)',
+        transition: 'border-color 0.18s ease',
+        minWidth: '260px',
+        maxWidth: '360px',
+        flex: '1 1 260px',
       }}
     >
-      {/* Role name */}
-      <span style={{
-        fontFamily: FS,
-        fontSize: '14px',
-        color: 'var(--text)',
-        letterSpacing: '-0.01em',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
-      }}>
-        {row.domain_name}
-      </span>
-
-      {/* Salary range */}
-      <span style={{
-        fontFamily: FM,
-        fontSize: '12px',
-        color: 'var(--text-2)',
-        letterSpacing: '0.02em',
-        fontVariantNumeric: 'tabular-nums',
-        textAlign: 'right',
-      }}>
-        {fmtLPA(row.min_salary)}
-      </span>
-      <span style={{
-        fontFamily: FM,
-        fontSize: '12px',
-        color: 'var(--text)',
-        letterSpacing: '0.02em',
-        fontVariantNumeric: 'tabular-nums',
-        textAlign: 'right',
-      }}>
-        {fmtLPA(row.max_salary)}
-      </span>
-
-      {/* Jobs */}
-      <span style={{
-        fontFamily: FM,
-        fontSize: '11px',
-        color: row.job_count_naukri > 1000 ? 'var(--text)' : 'var(--text-3)',
-        letterSpacing: '0.04em',
-        fontVariantNumeric: 'tabular-nums',
-        textAlign: 'right',
-      }}>
-        {row.job_count_naukri > 0
-          ? row.job_count_naukri.toLocaleString('en-IN')
-          : '—'}
-      </span>
-    </motion.div>
+      <Search size={15} strokeWidth={1.8} style={{ flexShrink: 0, opacity: 0.6 }} />
+      <input
+        type="search"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder="Search role or domain…"
+        aria-label="Search roles"
+        style={{
+          flex: 1,
+          border: 'none',
+          outline: 'none',
+          background: 'transparent',
+          color: 'var(--text)',
+          fontFamily: FS,
+          fontSize: '13px',
+          lineHeight: 1,
+        }}
+      />
+      {value && (
+        <button
+          type="button"
+          onClick={() => onChange('')}
+          aria-label="Clear search"
+          style={{
+            background: 'none',
+            border: 'none',
+            padding: 0,
+            cursor: 'pointer',
+            color: 'var(--text-3)',
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <X size={13} />
+        </button>
+      )}
+    </div>
   )
 }
 
-// ─── Main component ─────────────────────────────────────────────────────────
+// ── Table row ─────────────────────────────────────────────────────────────
+function RoleRow({ row, index, total, isPhone }) {
+  const payback = calcPaybackMonths(row)
+  const isLast = index === total - 1
+
+  if (isPhone) {
+    return (
+      <motion.article
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.22, delay: Math.min(index * 0.025, 0.2) }}
+        style={{
+          padding: '18px 0',
+          borderBottom: isLast ? 'none' : '1px solid var(--border)',
+          background: 'transparent',
+        }}
+      >
+        <h3
+          style={{
+            margin: '0 0 14px',
+            color: 'var(--text)',
+            fontFamily: FS,
+            fontSize: '15px',
+            lineHeight: 1.3,
+            fontWeight: 750,
+          }}
+        >
+          {row.domain_name}
+        </h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '14px' }}>
+          {[
+            { label: 'Entry', val: fmtLpa(row.min_salary) },
+            { label: 'Ceiling', val: fmtLpa(row.max_salary) },
+            { label: 'Live Jobs', val: fmtJobs(row.job_count_naukri) },
+            { label: 'ROI Months', val: payback ? `${payback} mo` : '—' },
+          ].map(({ label, val }) => (
+            <div key={label}>
+              <span style={{
+                display: 'block', marginBottom: '5px',
+                color: 'var(--text-4)', fontFamily: FM, fontSize: '9px',
+                letterSpacing: '0.12em', textTransform: 'uppercase',
+              }}>{label}</span>
+              <span style={{
+                display: 'block', color: 'var(--text)', fontFamily: FM,
+                fontSize: '12px', fontVariantNumeric: 'tabular-nums',
+              }}>{val}</span>
+            </div>
+          ))}
+        </div>
+      </motion.article>
+    )
+  }
+
+  // Row hover highlight
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.22, delay: Math.min(index * 0.025, 0.2) }}
+      whileHover={{ backgroundColor: 'color-mix(in srgb, var(--text) 5%, transparent)' }}
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'minmax(0, 1.6fr) 112px 112px 96px 96px',
+        alignItems: 'center',
+        gap: '10px',
+        padding: '14px 12px',
+        borderBottom: isLast ? 'none' : '1px solid var(--border)',
+        background: 'transparent',
+        borderRadius: '6px',
+        cursor: 'default',
+      }}
+    >
+      <span
+        style={{
+          minWidth: 0,
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          color: 'var(--text)',
+          fontFamily: FS,
+          fontSize: '14px',
+          fontWeight: 650,
+        }}
+      >
+        {row.domain_name}
+      </span>
+      {[fmtLpa(row.min_salary), fmtLpa(row.max_salary), fmtJobs(row.job_count_naukri), payback ? `${payback} mo` : '—'].map(
+        (value, i) => (
+          <span
+            key={`${value}-${i}`}
+            style={{
+              color: 'var(--text-3)',
+              fontFamily: FM,
+              fontSize: '12px',
+              fontVariantNumeric: 'tabular-nums',
+              textAlign: 'right',
+            }}
+          >
+            {value}
+          </span>
+        )
+      )}
+    </motion.article>
+  )
+}
+
 export default function LiveMarketPulse() {
   const [rows, setRows] = useState([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState('')
   const [activeId, setActiveId] = useState('all')
   const [lastSync, setLastSync] = useState(null)
+  const [searchQuery, setSearchQuery] = useState('')
+  const deferredQuery = useDeferredValue(searchQuery)
+  const { isPhone, isTablet } = useViewportBand()
 
-  // ── Fetch from Supabase ──────────────────────────────────────────────────
   useEffect(() => {
-    if (!supabase) {
-      setError('Supabase not configured — check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env.local')
-      setLoading(false)
-      return
-    }
+    let cancelled = false
 
-    const load = async () => {
+    async function load() {
       setLoading(true)
-      setError(null)
+      setError('')
+
+      if (!supabase) {
+        setRows([])
+        setError('Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.')
+        setLoading(false)
+        return
+      }
+
       try {
-        // Select only the columns we use — keeps payload small
-        const { data, error: sbErr } = await supabase
+        let response = await supabase
           .from('market_intelligence')
-          .select('domain_name, min_salary, max_salary, job_count_naukri, updated_at')
+          .select(COST_COLUMNS)
           .order('domain_name', { ascending: true })
 
-        console.log("🚨 TRUTH TEST - DATA:", data, "ERROR:", sbErr);
-        if (sbErr) throw sbErr
+        if (response.error && /certification_cost/i.test(response.error.message || '')) {
+          response = await supabase
+            .from('market_intelligence')
+            .select(BASE_COLUMNS)
+            .order('domain_name', { ascending: true })
+        }
 
-        // FIX 1: Normalise data to an array before any access.
-        // Supabase v2 can return null (RLS with no matching rows, empty table,
-        // or a 200 with an empty body). Treat null/undefined as [].
-        const rows = Array.isArray(data) ? data : []
+        if (cancelled) return
+        if (response.error) throw response.error
 
-        // FIX 2: setLoading(false) immediately after data is confirmed safe —
-        // before any secondary computation — so the UI unblocks as fast as
-        // possible. The finally block below is now a safety net only.
-        setRows(rows)
-        setLoading(false)
+        const normalized = (Array.isArray(response.data) ? response.data : []).map(normalizeMarketRow)
+        setRows(normalized)
 
-        // Latest sync timestamp — safe because rows is guaranteed an array
-        const latest = rows
-          .map(r => r.updated_at)
+        const latest = normalized
+          .map((row) => row.updated_at)
           .filter(Boolean)
           .sort()
           .at(-1)
-        if (latest) setLastSync(latest)
-
+        setLastSync(latest || null)
       } catch (err) {
-        console.error('[MarketPulse] Supabase error:', err)
-        setError(err?.message || 'Failed to load market data')
-        // FIX 3: Ensure loading clears on error path too, without relying
-        // solely on finally (guards against double-invocation edge cases).
-        setLoading(false)
+        if (!cancelled) {
+          setRows([])
+          setError(err?.message || 'Failed to load market data.')
+        }
+      } finally {
+        if (!cancelled) setLoading(false)
       }
     }
 
     load()
+    const interval = setInterval(load, 300_000)
 
-    // Re-fetch every 5 minutes
-    const iv = setInterval(load, 300_000)
-    return () => clearInterval(iv)
+    return () => {
+      cancelled = true
+      clearInterval(interval)
+    }
   }, [])
 
-  // ── Filter by active capsule ─────────────────────────────────────────────
-  const capsule = CAPSULES.find(c => c.id === activeId) || CAPSULES[0]
+  const activeCapsule = CAPSULES.find((capsule) => capsule.id === activeId) || CAPSULES[0]
 
-  // FIX 4: Guard against rows being null/undefined at render time.
-  // useState initialises to [] but an external mutation or a future refactor
-  // could break that. Array.isArray check costs nothing and prevents a
-  // TypeError from crashing the whole component tree.
-  const safeRows = Array.isArray(rows) ? rows : []
+  const filtered = useMemo(() => {
+    let result = rows
 
-  const filtered = capsule.match
-    ? safeRows.filter(row =>
-      capsule.match.some(keyword =>
-        row.domain_name?.toLowerCase().includes(keyword.toLowerCase())
+    // Category filter
+    if (activeCapsule.match) {
+      result = result.filter((row) =>
+        activeCapsule.match.some((keyword) => row.domain_name.toLowerCase().includes(keyword.toLowerCase()))
       )
-    )
-    : safeRows
+    }
 
-  // ── Summary stats from live data ─────────────────────────────────────────
-  const rolesWithSalary = safeRows.filter(r => r.min_salary > 0)
-  const totalJobs = safeRows.reduce((s, r) => s + (r.job_count_naukri || 0), 0)
-  const avgMin = rolesWithSalary.length
-    ? Math.round(rolesWithSalary.reduce((s, r) => s + r.min_salary, 0) / rolesWithSalary.length)
-    : 0
-  const avgMax = rolesWithSalary.length
-    ? Math.round(rolesWithSalary.reduce((s, r) => s + r.max_salary, 0) / rolesWithSalary.length)
-    : 0
+    // Search filter
+    const needle = deferredQuery.trim().toLowerCase()
+    if (needle) {
+      result = result.filter((row) => row.domain_name.toLowerCase().includes(needle))
+    }
+
+    return result
+  }, [activeCapsule, rows, deferredQuery])
+
+  const stats = useMemo(() => {
+    const rowsWithSalary = rows.filter((row) => row.min_salary > 0 && row.max_salary > 0)
+    const totalJobs = rows.reduce((sum, row) => sum + row.job_count_naukri, 0)
+    const avgMin = rowsWithSalary.length
+      ? Math.round(rowsWithSalary.reduce((sum, row) => sum + row.min_salary, 0) / rowsWithSalary.length)
+      : 0
+    const avgMax = rowsWithSalary.length
+      ? Math.round(rowsWithSalary.reduce((sum, row) => sum + row.max_salary, 0) / rowsWithSalary.length)
+      : 0
+    const paybacks = rowsWithSalary.map(calcPaybackMonths).filter(Boolean)
+    const avgPayback = paybacks.length
+      ? `${Math.round(paybacks.reduce((sum, value) => sum + value, 0) / paybacks.length)} mo`
+      : '—'
+
+    return [
+      { label: 'Roles Tracked', value: rows.length || '—' },
+      { label: 'With Salary', value: rowsWithSalary.length || '—' },
+      { label: 'Avg Entry', value: fmtLpa(avgMin) },
+      { label: 'Avg Ceiling', value: fmtLpa(avgMax) },
+      { label: 'Avg ROI', value: avgPayback },
+      { label: 'Live Jobs', value: totalJobs ? totalJobs.toLocaleString('en-IN') : '—' },
+    ]
+  }, [rows])
+
+  const statColumns = isPhone ? 'repeat(2, minmax(0, 1fr))' : isTablet ? 'repeat(3, minmax(0, 1fr))' : 'repeat(6, minmax(0, 1fr))'
 
   return (
-    <section style={{ padding: '80px 0' }}>
-      <div style={{ maxWidth: '1120px', margin: '0 auto', padding: '0 24px' }}>
+    <section
+      style={{
+        minHeight: '100vh',
+        padding: isPhone ? '104px 18px 56px' : '128px 24px 72px',
+        background: 'var(--bg)',
+        color: 'var(--text)',
+      }}
+    >
+      <div style={{ width: 'min(100%, 1120px)', margin: '0 auto' }}>
 
-        {/* ── Section header ─────────────────────────────────────────────── */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'flex-end',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: '16px',
-          marginBottom: '40px',
-        }}>
+        {/* ── Header ───────────────────────────────────────────── */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: isPhone ? '1fr' : 'minmax(0, 1fr) auto',
+            gap: '18px',
+            alignItems: 'end',
+            marginBottom: '32px',
+          }}
+        >
           <div>
-            <div style={{
-              fontFamily: FM,
-              fontSize: '10px',
-              color: 'var(--text-4)',
-              letterSpacing: '0.2em',
-              textTransform: 'uppercase',
-              marginBottom: '10px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-            }}>
-              <div style={{ width: '20px', height: '1px', background: 'var(--border)' }} />
-              02.1 — LIVE_PULSE
-            </div>
-            <h2 style={{
-              fontFamily: FS,
-              fontWeight: '700',
-              fontSize: 'clamp(1.4rem, 3vw, 1.8rem)',
-              letterSpacing: '-0.04em',
-              color: 'var(--text)',
-              margin: 0,
-            }}>
+            <p
+              style={{
+                margin: '0 0 4px',
+                color: 'var(--text-4)',
+                fontFamily: FM,
+                fontSize: '10px',
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+              }}
+            >
+              Platform
+            </p>
+            <h1
+              style={{
+                margin: 0,
+                color: 'var(--text)',
+                fontFamily: FS,
+                fontSize: isPhone ? '28px' : '36px',
+                lineHeight: 1.06,
+                fontWeight: 800,
+                letterSpacing: '-0.02em',
+                display: 'flex',
+                alignItems: 'baseline',
+                gap: '10px',
+                flexWrap: 'wrap',
+              }}
+            >
               Live Market Pulse
-            </h2>
-            <p style={{
-              fontFamily: FS,
-              fontSize: '14px',
-              color: 'var(--text-3)',
-              margin: '6px 0 0',
-            }}>
-              Salary ranges and open roles — updated weekly from Naukri
+              <span style={{ color: 'var(--text-3)', fontWeight: 400 }}>— Salary Intelligence</span>
+            </h1>
+            <p
+              style={{
+                maxWidth: '600px',
+                margin: '12px 0 0',
+                color: 'var(--text-3)',
+                fontFamily: FS,
+                fontSize: isPhone ? '14px' : '15px',
+                lineHeight: 1.7,
+              }}
+            >
+              Domain-level salary bands, Naukri demand, and certification payback windows — updated live from the{' '}
+              <code style={{ fontFamily: FM, fontSize: '12px', color: 'var(--text-2)' }}>market_intelligence</code> table.
             </p>
           </div>
 
-          {/* Sync badge */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '7px',
-            padding: '5px 12px',
-            border: '1px solid var(--border)',
-            borderRadius: '4px',
-          }}>
-            <div style={{
-              width: '6px',
-              height: '6px',
-              borderRadius: '50%',
-              background: safeRows.length > 0 ? '#22c55e' : 'var(--text-4)',
-            }} />
-            <span style={{
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: isPhone ? 'flex-start' : 'flex-end',
+              gap: '8px',
+              color: 'var(--text-4)',
               fontFamily: FM,
               fontSize: '10px',
-              color: 'var(--text-3)',
-              letterSpacing: '0.1em',
-            }}>
-              {lastSync
-                ? `SYNCED ${new Date(lastSync).toLocaleDateString('en-IN')}`
-                : 'LOADING'}
-            </span>
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            <span
+              style={{
+                width: '7px',
+                height: '7px',
+                borderRadius: '999px',
+                background: error ? 'var(--err)' : rows.length ? 'var(--accent)' : 'var(--text-4)',
+                animation: rows.length && !error ? 'pdot 1.8s ease-in-out infinite' : 'none',
+              }}
+            />
+            {loading ? 'Syncing…' : error ? 'Unavailable' : lastSync ? `Synced ${new Date(lastSync).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}` : 'Live'}
           </div>
         </div>
 
-        {/* ── Summary stats ─────────────────────────────────────────────── */}
-        {!loading && safeRows.length > 0 && (
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
-            gap: '1px',
-            background: 'var(--border)',
-            border: '1px solid var(--border)',
-            marginBottom: '40px',
-          }}>
-            {[
-              { label: 'ROLES TRACKED', value: rows.length },
-              { label: 'WITH SALARY DATA', value: rolesWithSalary.length },
-              { label: 'AVG ENTRY', value: fmtLPA(avgMin) },
-              { label: 'AVG CEILING', value: fmtLPA(avgMax) },
-              { label: 'TOTAL LIVE JOBS', value: totalJobs > 0 ? totalJobs.toLocaleString('en-IN') : '—' },
-            ].map(stat => (
-              <div key={stat.label} style={{
-                padding: '20px 16px',
-                background: 'transparent',
-              }}>
-                <div style={{
-                  fontFamily: FM,
-                  fontSize: '10px',
-                  color: 'var(--text-4)',
-                  letterSpacing: '0.14em',
-                  marginBottom: '8px',
-                }}>
+        {/* ── Stats bar ─────────────────────────────────────────── */}
+        {!loading && rows.length > 0 && (
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: statColumns,
+              borderTop: '1px solid var(--border)',
+              borderBottom: '1px solid var(--border)',
+              marginBottom: '28px',
+            }}
+          >
+            {stats.map((stat, index) => (
+              <div
+                key={stat.label}
+                style={{
+                  minWidth: 0,
+                  padding: '18px 0',
+                  paddingLeft: index % (isPhone ? 2 : isTablet ? 3 : 6) === 0 ? 0 : '20px',
+                  borderLeft: index % (isPhone ? 2 : isTablet ? 3 : 6) === 0 ? 'none' : '1px solid var(--border)',
+                  borderTop: index >= (isPhone ? 2 : isTablet ? 3 : 6) ? '1px solid var(--border)' : 'none',
+                }}
+              >
+                <span
+                  style={{
+                    display: 'block',
+                    marginBottom: '8px',
+                    color: 'var(--text-4)',
+                    fontFamily: FM,
+                    fontSize: '9px',
+                    letterSpacing: '0.14em',
+                    textTransform: 'uppercase',
+                  }}
+                >
                   {stat.label}
-                </div>
-                <div style={{
-                  fontFamily: FM,
-                  fontSize: '20px',
-                  fontWeight: '500',
-                  color: 'var(--text)',
-                  fontVariantNumeric: 'tabular-nums',
-                }}>
+                </span>
+                <strong
+                  style={{
+                    display: 'block',
+                    color: 'var(--text)',
+                    fontFamily: FM,
+                    fontSize: isPhone ? '17px' : '20px',
+                    lineHeight: 1,
+                    fontWeight: 700,
+                    fontVariantNumeric: 'tabular-nums',
+                  }}
+                >
                   {stat.value}
-                </div>
+                </strong>
               </div>
             ))}
           </div>
         )}
 
-        {/* ── Domain capsule row ────────────────────────────────────────── */}
-        <div style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '8px',
-          marginBottom: '32px',
-        }}>
-          {CAPSULES.map(c => (
-            <Capsule
-              key={c.id}
-              label={c.label}
-              active={c.id === activeId}
-              onClick={() => setActiveId(c.id)}
-            />
-          ))}
+        {/* ── Filters: Capsules + Search ─────────────────────────── */}
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: isPhone ? 'nowrap' : 'wrap',
+            alignItems: 'center',
+            gap: '10px',
+            overflowX: isPhone ? 'auto' : 'visible',
+            padding: isPhone ? '6px 0' : 0,
+            marginBottom: '24px',
+            background: 'var(--bg)',
+            scrollbarWidth: 'none',
+            position: isPhone ? 'sticky' : 'static',
+            top: isPhone ? '72px' : 'auto',
+            zIndex: 4,
+          }}
+        >
+          {/* Category capsules */}
+          <div style={{ display: 'flex', gap: '8px', flexWrap: isPhone ? 'nowrap' : 'wrap', flexShrink: 0 }}>
+            {CAPSULES.map((capsule) => (
+              <Capsule
+                key={capsule.id}
+                active={capsule.id === activeId}
+                label={capsule.label}
+                onClick={() => setActiveId(capsule.id)}
+              />
+            ))}
+          </div>
+
+          {/* Spacer */}
+          {!isPhone && <div style={{ flex: 1 }} />}
+
+          {/* Search */}
+          {!isPhone && (
+            <SearchBar value={searchQuery} onChange={setSearchQuery} />
+          )}
         </div>
 
-        {/* ── Table header ─────────────────────────────────────────────── */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 96px 96px 80px',
-          gap: '8px',
-          padding: '0 0 10px',
-          borderBottom: '1px solid var(--border)',
-          marginBottom: '4px',
-        }}>
-          {['ROLE', 'ENTRY', 'CEILING', 'JOBS'].map((col, i) => (
-            <div key={col} style={{
-              fontFamily: FM,
-              fontSize: '10px',
-              color: 'var(--text-4)',
-              letterSpacing: '0.14em',
-              textAlign: i === 0 ? 'left' : 'right',
-            }}>
-              {col}
-            </div>
-          ))}
-        </div>
-
-        {/* ── Body ─────────────────────────────────────────────────────── */}
-        {loading && (
-          <div style={{
-            padding: '48px 0',
-            textAlign: 'center',
-            fontFamily: FM,
-            fontSize: '12px',
-            color: 'var(--text-4)',
-            letterSpacing: '0.1em',
-          }}>
-            LOADING DATA...
+        {/* Mobile search */}
+        {isPhone && (
+          <div style={{ marginBottom: '18px' }}>
+            <SearchBar value={searchQuery} onChange={setSearchQuery} />
           </div>
         )}
 
-        {error && (
-          <div style={{
-            padding: '32px 0',
-            fontFamily: FS,
-            fontSize: '14px',
-            color: 'var(--err, #D94848)',
-          }}>
+        {/* ── Table header ─────────────────────────────────────── */}
+        {!isPhone && (
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'minmax(0, 1.6fr) 112px 112px 96px 96px',
+              gap: '10px',
+              padding: '0 12px 12px',
+              borderBottom: '1px solid var(--border)',
+            }}
+          >
+            {['Role', 'Entry', 'Ceiling', 'Jobs', 'ROI Mo'].map((label, index) => (
+              <span
+                key={label}
+                style={{
+                  color: 'var(--text-4)',
+                  fontFamily: FM,
+                  fontSize: '9px',
+                  letterSpacing: '0.14em',
+                  textTransform: 'uppercase',
+                  textAlign: index === 0 ? 'left' : 'right',
+                }}
+              >
+                {label}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* ── Loading state ─────────────────────────────────────── */}
+        {loading && (
+          <div
+            style={{
+              padding: '48px 0',
+              color: 'var(--text-4)',
+              fontFamily: FM,
+              fontSize: '11px',
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+            }}
+          >
+            <span style={{
+              width: '6px', height: '6px', borderRadius: '50%',
+              background: 'var(--text-4)',
+              animation: 'pdot 1.4s ease-in-out infinite',
+            }} />
+            Loading market rows…
+          </div>
+        )}
+
+        {/* ── Error state ────────────────────────────────────────── */}
+        {!loading && error && (
+          <div
+            style={{
+              padding: '34px 0',
+              color: 'var(--err)',
+              fontFamily: FS,
+              fontSize: '14px',
+              lineHeight: 1.6,
+            }}
+          >
             {error}
           </div>
         )}
 
+        {/* ── Empty state ───────────────────────────────────────── */}
         {!loading && !error && filtered.length === 0 && (
-          <div style={{
-            padding: '48px 0',
-            textAlign: 'center',
-            fontFamily: FS,
-            fontSize: '14px',
-            color: 'var(--text-3)',
-          }}>
-            No data for this sector yet — the scraper is still building the dataset.
+          <div
+            style={{
+              padding: '48px 0',
+              color: 'var(--text-3)',
+              fontFamily: FS,
+              fontSize: '14px',
+              lineHeight: 1.6,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '8px',
+            }}
+          >
+            <TrendingUp size={18} style={{ opacity: 0.4 }} />
+            {searchQuery
+              ? `No roles match "${searchQuery}". Try a different search.`
+              : 'No data for this category yet. The scraper is still building this slice.'}
           </div>
         )}
 
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeId}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.18 }}
-          >
-            {filtered.map((row, i) => (
-              <RoleRow
-                key={row.domain_name}
-                row={row}
-                index={i}
-                total={filtered.length}
-              />
-            ))}
-          </motion.div>
-        </AnimatePresence>
+        {/* ── Data rows ─────────────────────────────────────────── */}
+        {!loading && !error && filtered.length > 0 && (
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`${activeId}-${deferredQuery}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.18 }}
+            >
+              {filtered.map((row, index) => (
+                <RoleRow
+                  key={`${row.domain_name}-${index}`}
+                  row={row}
+                  index={index}
+                  total={filtered.length}
+                  isPhone={isPhone}
+                />
+              ))}
+            </motion.div>
+          </AnimatePresence>
+        )}
 
-        {/* ── Methodology footnote ─────────────────────────────────────── */}
-        {!loading && safeRows.length > 0 && (
-          <div style={{
-            marginTop: '32px',
-            paddingTop: '20px',
-            borderTop: '1px solid var(--border)',
-            fontFamily: FM,
-            fontSize: '10px',
-            color: 'var(--text-4)',
-            letterSpacing: '0.08em',
-            lineHeight: 1.8,
-          }}>
-            DATA: Naukri job counts · Payscale / IndiaTechSalaries salary bands ·
-            Entry = p25 (₹/yr) · Ceiling = p75 (₹/yr) ·
-            Payback formula: <em>months = cert_cost ÷ (ceiling − entry) × 12</em> ·
-            Default cert cost ₹25,000 when not specified.
-          </div>
+        {/* ── Footer note ────────────────────────────────────────── */}
+        {!loading && rows.length > 0 && (
+          <p
+            style={{
+              margin: '32px 0 0',
+              paddingTop: '20px',
+              borderTop: '1px solid var(--border)',
+              color: 'var(--text-4)',
+              fontFamily: FM,
+              fontSize: '9px',
+              lineHeight: 1.8,
+              letterSpacing: '0.09em',
+              textTransform: 'uppercase',
+            }}
+          >
+            Source: market_intelligence table · ROI = cost ÷ ((ceiling − entry) ÷ 12) · Missing cost defaults to ₹25,000
+          </p>
         )}
       </div>
     </section>

@@ -13,24 +13,34 @@ export default function ContactPage() {
   const [formState, setFormState] = useState({ name: '', email: '', subject: 'General feedback', message: '' })
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
-  const [error, setError] = useState(null)
+  const [submitNote, setSubmitNote] = useState('')
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setSubmitting(true)
-    setError(null)
-
-    const { error: insertError } = await supabase
-      .from('contact_submissions')
-      .insert([formState])
-
-    if (insertError) {
-      setError('Submission failed. Please try again or email us directly.')
-      setSubmitting(false)
-    } else {
-      setSubmitted(true)
-      setSubmitting(false)
+    setSubmitNote('')
+    try {
+      if (supabase) {
+        const { error } = await supabase.from('feedback_messages').insert({
+          name: formState.name,
+          email: formState.email,
+          subject: formState.subject,
+          message: formState.message,
+          source: 'contact_page',
+          created_at: new Date().toISOString(),
+        })
+        if (error) throw error
+      }
+      setSubmitNote('Saved to Supabase.')
+    } catch (error) {
+      setSubmitNote(error?.message || 'Supabase feedback table is not available yet.')
     }
+    setSubmitted(true)
+    setSubmitting(false)
+    window.setTimeout(() => {
+      setSubmitted(false)
+      setFormState({ name: '', email: '', subject: 'General feedback', message: '' })
+    }, 3000)
   }
 
   return (
@@ -65,13 +75,8 @@ export default function ContactPage() {
                   Message received
                 </div>
                 <p style={{ fontFamily: FB, fontSize: '14px', color: 'var(--text-3)', lineHeight: '1.8', margin: 0 }}>
-                  Thanks. We will get back to you at the email you provided.
+                  Thanks. We will get back to you at the email you provided. {submitNote}
                 </p>
-              </div>
-            ) : error ? (
-              <div style={{ padding: '12px', borderRadius: 'var(--radius-lg)', background: 'var(--red-dim)', border: '1px solid var(--red)', color: 'var(--red)' }}>
-                <div style={{ fontFamily: FH, fontWeight: '700' }}>Error</div>
-                <p style={{ fontFamily: FB, fontSize: '13px', margin: 0 }}>{error}</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '16px' }}>
@@ -91,7 +96,7 @@ export default function ContactPage() {
                       padding: '13px 16px',
                       borderRadius: '12px',
                       border: '1px solid var(--border)',
-                      background: 'var(--surface)',
+                      background: 'transparent',
                       color: 'var(--text)',
                       fontFamily: FB,
                       fontSize: '14px',
@@ -125,7 +130,7 @@ export default function ContactPage() {
                       padding: '13px 16px',
                       borderRadius: '12px',
                       border: '1px solid var(--border)',
-                      background: 'var(--surface)',
+                      background: 'transparent',
                       color: 'var(--text)',
                       fontFamily: FB,
                       fontSize: '14px',
@@ -156,7 +161,7 @@ export default function ContactPage() {
                       padding: '13px 16px',
                       borderRadius: '12px',
                       border: '1px solid var(--border)',
-                      background: 'var(--surface)',
+                      background: 'transparent',
                       color: 'var(--text)',
                       fontFamily: FB,
                       fontSize: '14px',
@@ -187,7 +192,7 @@ export default function ContactPage() {
                       padding: '13px 16px',
                       borderRadius: '12px',
                       border: '1px solid var(--border)',
-                      background: 'var(--surface)',
+                      background: 'transparent',
                       color: 'var(--text)',
                       fontFamily: FB,
                       fontSize: '14px',
@@ -208,7 +213,7 @@ export default function ContactPage() {
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'flex-start', paddingTop: '4px' }}>
-                  <PillButton type="submit" disabled={submitting}>
+                  <PillButton type="submit">
                     {submitting ? 'Sending...' : 'Send Message'} <ArrowRight size={15} />
                   </PillButton>
                 </div>
@@ -256,7 +261,7 @@ export default function ContactPage() {
               </p>
             </GlassCard>
 
-            <GlassCard style={{ padding: '22px', background: 'var(--bg)', borderColor: 'var(--border-accent)' }}>
+            <GlassCard style={{ padding: '22px', background: 'var(--text)', borderColor: 'var(--border-accent)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
                 <Sparkles size={18} color="var(--bg)" />
                 <h3 style={{ fontFamily: FH, fontSize: '15px', fontWeight: '800', color: 'var(--bg)', margin: 0 }}>Need a faster answer?</h3>

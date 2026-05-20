@@ -149,9 +149,8 @@ export default function BlogPage() {
               whileHover={{ y: -4 }}
               style={{
                 padding: '24px',
-                borderRadius: 'var(--radius-xl)',
                 border: '1px solid var(--border)',
-                background: 'var(--surface)',
+                background: 'transparent',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
               }}

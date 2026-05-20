@@ -16,8 +16,10 @@ export const THEMES = Object.fromEntries(
     text2:     t.text2,
     text3:     t.text3,
     text4:     t.text4,
-    gold:      t.gold || '#C9A84C',
-    goldL:     t.gold || '#C9A84C',
+    gold:      t.isLight ? '#5a4a1a' : '#C9A84C',
+    goldL:     t.isLight ? '#7a6428' : '#D4A84C',
+    isLight:   t.isLight,
+    isDark:    !t.isLight,
     err:       '#D94848',
     line:      t.border,
     lineHeavy: t.borderMid,
@@ -27,9 +29,8 @@ export const THEMES = Object.fromEntries(
   }])
 )
 
-// Legacy compat: dark/light aliases
-THEMES.dark  = THEMES.nordic
-THEMES.light = THEMES.ash
+// Forward-compat aliases so any code doing THEMES.nordic still works
+if (!THEMES.nordic) Object.assign(THEMES, { nordic: THEMES.dark, ash: THEMES.light })
 
 export const F_SERIF = "'Inter', system-ui, sans-serif"
 export const F_SANS  = "'Inter', 'DM Sans', sans-serif"
@@ -53,7 +54,9 @@ export function useIsMobile() {
 
 export function useThemeContext() {
   const { current } = useGlobalTheme()
-  return THEMES[current.id] || THEMES.nordic
+  // Resolve: 'dark' → THEMES.dark, 'light' → THEMES.light
+  // Legacy fallback: 'nordic' → THEMES.dark, 'ash' → THEMES.light
+  return THEMES[current.id] || THEMES[current.id === 'light' ? 'light' : 'dark']
 }
 
 // ─────────────────────────────────────────────────────────
@@ -110,20 +113,53 @@ export function GlassPill({ children, style = {} }) {
   )
 }
 
+export function PageWrapper({ children, className = '', maxWidth }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -12 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      className={className}
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        backgroundColor: 'var(--bg)',
+        color: 'var(--text)',
+      }}
+    >
+      <div style={{ flex: 1, paddingTop: '64px', maxWidth: maxWidth || '100%', margin: '0 auto', width: '100%' }}>
+        {children}
+      </div>
+    </motion.div>
+  )
+}
+
+export default PageWrapper
+
 export function AppSection({ id = '', title = '', children, bg = '', noBorderTop = false }) {
   const C = useThemeContext()
   const isMobile = useIsMobile()
   return (
-    <div style={{ position: 'relative', padding: isMobile ? '16px' : '32px 24px' }}>
+    <div
+      style={{
+        position: 'relative',
+        padding: isMobile ? '16px' : '32px 24px',
+        background: bg || 'var(--bg)',
+        color: 'var(--text)',
+        borderTop: noBorderTop ? 'none' : '1px solid var(--border)',
+      }}
+    >
       <div style={{ 
         maxWidth: '1400px', 
         margin: '0 auto', 
         display: 'flex', 
         flexDirection: isMobile ? 'column' : 'row',
-        background: 'var(--surface)',
-        border: '1px solid var(--border)',
-        borderRadius: '12px',
-        overflow: 'hidden'
+        background: 'transparent',
+        border: 'none',
+        borderRadius: 0,
+        overflow: 'visible'
       }}>
         {!isMobile && (
           <div style={{ width: '140px', flexShrink: 0, borderRight: `1px solid ${C.border}`, position: 'relative' }}>
@@ -140,7 +176,7 @@ export function AppSection({ id = '', title = '', children, bg = '', noBorderTop
             </div>
           </div>
         )}
-        <div style={{ flex: 1, padding: isMobile ? '32px 16px' : '64px 4vw', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ flex: 1, padding: isMobile ? '32px 16px' : '64px 4vw', position: 'relative', overflow: 'visible' }}>
           {isMobile && (
             <div style={{ marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px' }}>
               <span style={{ fontFamily: F_MONO, fontSize: '11px', color: C.gold, fontWeight: '700', letterSpacing: '0.12em' }}>{id}</span>

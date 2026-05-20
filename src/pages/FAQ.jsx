@@ -80,7 +80,7 @@ function FAQItem({ q, a, index }) {
       >
         <div style={{
           width: '24px', height: '24px', borderRadius: '50%',
-          background: 'var(--accent)', color: 'var(--bg)',
+          background: 'var(--text)', color: 'var(--bg)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           flexShrink: 0, marginTop: '2px',
         }}>
@@ -147,7 +147,7 @@ export default function FAQPage() {
           className="glass"
           style={{
             marginTop: '48px', padding: '28px 32px',
-            background: 'var(--bg-alt)',
+            background: 'var(--bg-secondary)',
             border: '1px solid var(--border)',
             borderRadius: 'var(--radius-xl)',
           }}
@@ -163,7 +163,7 @@ export default function FAQPage() {
             style={{
               display: 'inline-flex', alignItems: 'center', gap: '8px',
               padding: '12px 20px', borderRadius: 'var(--radius-md)',
-              background: 'var(--accent)', color: 'var(--bg)',
+              background: 'var(--text)', color: 'var(--bg)',
               fontFamily: F_HEAD, fontSize: '13px', fontWeight: '600',
               textDecoration: 'none',
             }}

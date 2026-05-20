@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { CERTIFICATIONS } from '../tokens.js'
 
 // ─────────────────────────────────────────────────────────
 // useJourneyStore — single source of truth for:
@@ -65,12 +66,29 @@ export const useJourneyStore = create(
       setTargetDomain: (v) => set({ targetDomain: v || '' }),
 
       setResumeContext: ({ certName, city, domain, name }) => {
+        const found = certName
+          ? CERTIFICATIONS.find((c) =>
+              c.name.toLowerCase().includes(certName.toLowerCase()) ||
+              certName.toLowerCase().includes(c.name.toLowerCase())
+            )
+          : null
+
         set({
           prefilledCert: certName || '',
           resumeCity:    city    || '',
           resumeDomain:  domain  || '',
           resumeName:    name    || '',
         })
+
+        // Auto-select the matched cert so Hero doesn't need to search again
+        if (found) {
+          set({
+            selectedCert: found,
+            certName:     found.name,
+            certCost:     found.examCostL ?? get().certCost,
+            hikePercent:  found.avgHike   ?? get().hikePercent,
+          })
+        }
       },
 
       clearResumeContext: () => set({

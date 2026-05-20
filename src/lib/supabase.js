@@ -1,8 +1,18 @@
 import { createClient } from '@supabase/supabase-js'
 
-// Vite-specific environment variables
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-// This singleton prevents the "Multiple GoTrueClient instances" error
-export const supabase = createClient(supabaseUrl, supabaseKey)
+const SUPABASE_SINGLETON_KEY = '__certifyroi_supabase_client__'
+
+if (!supabaseUrl || !supabaseKey) {
+  console.warn(
+    'Missing Supabase env vars. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in the root .env file.'
+  )
+}
+
+export const supabase =
+  supabaseUrl && supabaseKey
+    ? globalThis[SUPABASE_SINGLETON_KEY] ||
+      (globalThis[SUPABASE_SINGLETON_KEY] = createClient(supabaseUrl, supabaseKey))
+    : null

@@ -10,7 +10,6 @@ const F_MONO = "'JetBrains Mono', 'IBM Plex Mono', monospace"
 const CORE_NAV = [
   { label: 'Home', pageId: 'home' },
   { label: 'Tools', pageId: 'app' },
-  { label: 'Pricing', pageId: 'pricing' },
 ]
 
 const TOOL_NAV = [
@@ -227,16 +226,14 @@ function ThemeToggle({ mode, onCycle }) {
 
       <AnimatePresence>
         {open && (
-          <div
-            key="backdrop"
-            style={{ position: 'fixed', inset: 0, zIndex: 9997 }}
-            onClick={() => setOpen(false)}
-          />
-        )}
-        {open && (
-          <motion.div
-            key="dropdown"
-            initial={{ opacity: 0, y: -6, scale: 0.96 }}
+          <>
+            {/* Backdrop to close */}
+            <div
+              style={{ position: 'fixed', inset: 0, zIndex: 9997 }}
+              onClick={() => setOpen(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, y: -6, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -4, scale: 0.96 }}
               transition={{ type: 'spring', stiffness: 400, damping: 30 }}
@@ -301,6 +298,7 @@ function ThemeToggle({ mode, onCycle }) {
                 )
               })}
             </motion.div>
+          </>
         )}
       </AnimatePresence>
     </div>
@@ -329,7 +327,6 @@ function MobileMenu({ open, currentPage, onNavigate, onActivate, onClose, user, 
     <AnimatePresence>
       {open ? (
         <motion.div
-          key="mobile-menu"
           initial={{ opacity: 0, y: -10, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -8, scale: 0.98 }}

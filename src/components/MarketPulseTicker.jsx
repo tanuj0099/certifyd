@@ -69,7 +69,7 @@ export default function MarketPulseTicker({ compact = false }) {
         <span style={{ color: 'transparent' }}>|</span>
 
         <span style={{ color: '#9CA3AF', letterSpacing: '0.08em' }}>
-          <span style={{ color: '#F9FAFB', fontWeight: 600 }}>
+          <span style={{ color: 'var(--text)', fontWeight: 600 }}>
             {jobCount.toLocaleString('en-IN')}+
           </span>
           {' '}JOBS ANALYZED
@@ -100,7 +100,7 @@ export default function MarketPulseTicker({ compact = false }) {
                 display: 'inline-flex', alignItems: 'center', gap: 6,
                 fontSize: 10, letterSpacing: '0.07em', color: '#6B7280',
               }}>
-                <span style={{ color: '#F9FAFB', fontWeight: 600 }}>{item.label}</span>
+                <span style={{ color: 'var(--text)', fontWeight: 600 }}>{item.label}</span>
                 <span style={{
                   color: item.positive === false ? 'var(--cool-grey)' : 'var(--linear-blue)',
                   fontWeight: 500,

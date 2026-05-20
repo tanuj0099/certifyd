@@ -5,11 +5,12 @@
  * The heading area uses the same --bg surface; no card, no shadow, no rounded box.
  * The only visual separation is a single hairline border-top above the tool content.
  */
-import React from 'react'
 import { motion } from 'framer-motion'
 import { MarketingFooter } from './MarketingPageShell.jsx'
 
+const FM = "'JetBrains Mono','IBM Plex Mono',monospace"
 const T  = { type: 'spring', stiffness: 120, damping: 22 }
+
 export default function ToolPageWrapper({
   title,
   subtitle,
@@ -43,7 +44,7 @@ export default function ToolPageWrapper({
             alignItems:     'center',
             gap:            '12px',
             marginBottom:   '20px',
-            fontFamily:     'var(--font-mono)',
+            fontFamily:     FM,
             fontSize:       '11px',
             color:          'var(--text-4)',
             letterSpacing:  '0.18em',

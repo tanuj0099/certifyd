@@ -42,6 +42,17 @@ const REMOTE_FLAG_CONFIG = {
   'city-dependent': { label: 'City-dependent',      color: AMBER,     Icon: Building2, tip: 'Most roles require metro presence' },
 }
 
+const DEMAND = {
+  tech:       { bangalore: 5, hyderabad: 5, pune: 5, mumbai: 4, delhi: 4, chennai: 4, kolkata: 3, ahmedabad: 3, insight: 'AWS/Cloud certs drive 35% higher salaries. 2,400+ open roles on Naukri.', yoy: '+34%', avgHike: '35%', topHirers: ['Infosys', 'TCS', 'Wipro', 'Amazon India'] },
+  data:       { bangalore: 5, hyderabad: 5, pune: 4, mumbai: 5, delhi: 4, chennai: 4, kolkata: 3, ahmedabad: 3, insight: 'Data Science roles growing fastest in Bangalore and Mumbai. ML engineers command ₹20L+.', yoy: '+42%', avgHike: '38%', topHirers: ['Flipkart', 'Swiggy', 'Zomato', 'Microsoft'] },
+  management: { bangalore: 4, hyderabad: 4, pune: 4, mumbai: 5, delhi: 5, chennai: 3, kolkata: 3, ahmedabad: 4, insight: 'PMP certified PMs earn 30% more. Delhi NCR and Mumbai have highest PM demand.', yoy: '+18%', avgHike: '30%', topHirers: ['Accenture', 'Deloitte', 'KPMG', 'IBM'] },
+  business:   { bangalore: 3, hyderabad: 3, pune: 4, mumbai: 4, delhi: 4, chennai: 3, kolkata: 3, ahmedabad: 5, insight: 'Six Sigma and supply chain certs in high demand in manufacturing hubs like Pune and Ahmedabad.', yoy: '+15%', avgHike: '25%', topHirers: ['Mahindra', 'Tata Motors', 'L&T', 'Asian Paints'] },
+  finance:    { bangalore: 3, hyderabad: 3, pune: 3, mumbai: 5, delhi: 4, chennai: 3, kolkata: 4, ahmedabad: 4, insight: "CFA Level 1 opens doors in Mumbai's financial district. 1,200+ openings this quarter.", yoy: '+22%', avgHike: '35%', topHirers: ['HDFC', 'ICICI', 'Goldman Sachs', 'JP Morgan'] },
+  marketing:  { bangalore: 4, hyderabad: 3, pune: 4, mumbai: 5, delhi: 5, chennai: 3, kolkata: 3, ahmedabad: 3, insight: 'Digital Marketing certs most valued in Delhi NCR and Mumbai. D2C boom driving demand.', yoy: '+28%', avgHike: '22%', topHirers: ['Nykaa', 'Meesho', 'Dentsu', 'WPP India'] },
+  product:    { bangalore: 5, hyderabad: 4, pune: 4, mumbai: 4, delhi: 3, chennai: 3, kolkata: 2, ahmedabad: 2, insight: 'Product Management certs most valued in Bangalore startup ecosystem. ₹25–40L roles.', yoy: '+35%', avgHike: '35%', topHirers: ['PhonePe', 'Razorpay', 'CRED', 'Freshworks'] },
+  hr:         { bangalore: 3, hyderabad: 3, pune: 3, mumbai: 4, delhi: 4, chennai: 3, kolkata: 3, ahmedabad: 3, insight: 'SHRM-CP adds 25% to HR salaries. Demand highest in large corporates in Mumbai and Delhi.', yoy: '+12%', avgHike: '25%', topHirers: ['HCL', 'Tech Mahindra', 'Infosys HR', 'Capgemini'] },
+}
+
 const LEVEL_CONFIG = {
   5: { label: 'Very High', color: EMERALD,   bg: 'transparent',  border: 'transparent', bar: '100%' },
   4: { label: 'High',      color: PICTON,    bg: 'transparent',  border: 'transparent', bar: '80%'  },
@@ -112,8 +123,6 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
   const [certificationsData, setCertificationsData] = useState([]);
   const [domainsData, setDomainsData] = useState([]);
   const [dbLoading, setDbLoading] = useState(true);
-  const [demandData, setDemandData] = useState({});
-  const [heatmapLoading, setHeatmapLoading] = useState(true);
 
   // ── The "Once and For All" Alias Fix ────────────────────
   const CERTIFICATIONS = certificationsData;
@@ -125,27 +134,10 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
   useEffect(() => {
     async function fetchDatabase() {
       try {
-        const [certsResponse, domainsResponse, demandResponse] = await Promise.all([
+        const [certsResponse, domainsResponse] = await Promise.all([
           supabase.from('certifications').select('*'),
-          supabase.from('domains').select('*'),
-          supabase.from('demand_scores').select('*'),
+          supabase.from('domains').select('*')
         ]);
-
-        if (demandResponse.data) {
-          const processedDemand = demandResponse.data.reduce((acc, item) => {
-            if (!acc[item.domain]) {
-              acc[item.domain] = {
-                insight: item.insight || '',
-                yoy: item.yoy_growth || '',
-                avgHike: item.avg_hike || '',
-                topHirers: item.top_hirers || [],
-              };
-            }
-            acc[item.domain][item.city] = item.score;
-            return acc;
-          }, {});
-          setDemandData(processedDemand);
-        }
 
         if (certsResponse.data) setCertificationsData(certsResponse.data);
         if (domainsResponse.data) setDomainsData(domainsResponse.data);
@@ -154,13 +146,12 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
       } finally {
         setDbLoading(false);
       }
-      setHeatmapLoading(false);
     }
     fetchDatabase();
   }, []);
 
   // ── Loading Fallback ────────────────────────────────────
-
+  
 
   const [selectedDomain, setSelectedDomain] = useState('tech')
   const [selectedCity,   setSelectedCity]   = useState('')
@@ -181,18 +172,18 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
     }
   }, [prefilledCity, prefilledDomain])
 
-  const domainData   = demandData[selectedDomain] || (Object.keys(demandData).length > 0 ? demandData.tech : {})
+  const domainData   = DEMAND[selectedDomain]      || DEMAND.tech
   const categoryInfo = CERT_CATEGORIES.find(c => c.id === selectedDomain) || CERT_CATEGORIES[0]
   const cityDemand   = selectedCity ? (domainData[selectedCity] || 3) : null
   const cityInfo     = CITIES.find(c => c.id === selectedCity)
-  const sortedCities = [...CITIES].sort((a, b) => (domainData?.[b.id] || 0) - (domainData?.[a.id] || 0))
+  const sortedCities = [...CITIES].sort((a, b) => (domainData[b.id] || 0) - (domainData[a.id] || 0))
 
   const headingText  = firstName ? (firstName.toUpperCase() + "'S CERT DEMAND BY") : 'CERT DEMAND BY'
   const subtitleText = firstName
     ? (firstName + ', here is the demand map for your field across India.')
     : 'Pick a domain and see where demand is highest across India.'
 
-    if (dbLoading || heatmapLoading) {
+    if (dbLoading) {
     return <div style={{ padding: '40px', textAlign: 'center', fontFamily: 'var(--font-body)', color: 'var(--text-3)' }}>Connecting to live database...</div>;
   }
 
@@ -283,7 +274,7 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
               <div style={{ display: 'flex', gap: '24px', flexShrink: 0 }}>
                 <div style={{ textAlign: 'right' }}>
                   <div style={{ fontFamily: F_MONO, fontSize: '1.4rem', color: categoryInfo.color, letterSpacing: '-0.03em', fontWeight: '700', lineHeight: 1 }}>
-                    {domainData?.yoy}
+                    {domainData.yoy}
                   </div>
                   <div style={{ fontFamily: F_MONO, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: '4px' }}>
                     YoY growth
@@ -291,7 +282,7 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
                 </div>
                 <div style={{ textAlign: 'right' }}>
                   <div style={{ fontFamily: F_MONO, fontSize: '1.4rem', color: EMERALD, letterSpacing: '-0.03em', fontWeight: '700', lineHeight: 1 }}>
-                    {domainData?.avgHike}
+                    {domainData.avgHike}
                   </div>
                   <div style={{ fontFamily: F_MONO, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: '4px' }}>
                     Avg hike
@@ -305,7 +296,7 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
                 Top hirers in India
               </div>
               <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                {domainData?.topHirers?.map((h, i) => (
+                {domainData.topHirers.map((h, i) => (
                   <span key={i} style={{ fontSize: '11px', padding: '3px 9px', borderRadius: '5px', background: categoryInfo.color + '0e', border: '1px solid ' + categoryInfo.color + '20', color: categoryInfo.color, fontFamily: F_MONO, letterSpacing: '0.02em' }}>
                     {h}
                   </span>
@@ -380,8 +371,8 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
                 {'All domains in ' + (cityInfo?.label || '') + ' — ranked'}
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '7px' }}>
-                {[...CERT_CATEGORIES].sort((a, b) => (demandData[b.id]?.[selectedCity] || 0) - (demandData[a.id]?.[selectedCity] || 0)).map((cat, i) => {
-                  const level  = demandData[cat.id]?.[selectedCity] || 3
+                {[...CERT_CATEGORIES].sort((a, b) => (DEMAND[b.id]?.[selectedCity] || 0) - (DEMAND[a.id]?.[selectedCity] || 0)).map((cat, i) => {
+                  const level  = DEMAND[cat.id]?.[selectedCity] || 3
                   const cfg    = LEVEL_CONFIG[level]
                   const active = selectedDomain === cat.id
                   const rankLabel = i === 0 ? '#1' : i === 1 ? '#2' : i === 2 ? '#3' : ('#' + (i + 1))

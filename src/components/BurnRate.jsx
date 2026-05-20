@@ -1,8 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Flame, CheckCircle, Clock, Target, RotateCcw } from 'lucide-react'
-import { useAuth } from '../hooks/useAuth.jsx'
-import { supabase } from '../services/supabase.js'
 
 const PICTON  = 'var(--linear-blue)'
 const EMERALD = 'var(--linear-blue)'
@@ -19,61 +17,26 @@ const CERT_MODULES = {
 
 const getDayKey = (date = new Date()) => date.toISOString().split('T')[0]
 
-const initialData = { completed: [], startDate: getDayKey(), lastStudyDate: null, streak: 0, totalSessions: 0 }
-
 const BurnRate = ({ certName = 'Your Certification', breakEvenMonths = 6 }) => {
-  const { user } = useAuth()
-  const [data, setData] = useState(initialData)
-  const [loading, setLoading] = useState(true)
+  const storageKey = `croi_burnrate_${certName.replace(/\s/g, '_').toLowerCase()}`
+
+  const [data, setData] = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(storageKey) || 'null')
+      if (saved) return saved
+    } catch {}
+    return { completed: [], startDate: getDayKey(), lastStudyDate: null, streak: 0, totalSessions: 0 }
+  })
+
   const [justChecked, setJustChecked] = useState(false)
   const [showReset,   setShowReset]   = useState(false)
 
   const modules = CERT_MODULES[certName] || CERT_MODULES.default
   const totalModules = modules.length
 
-  // Fetch from Supabase on mount
   useEffect(() => {
-    if (!user) {
-      setLoading(false)
-      return
-    }
-
-    const fetchJourney = async () => {
-      setLoading(true)
-      const { data: journeyData, error } = await supabase
-        .from('journey_tracking')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('cert_name', certName)
-        .single()
-
-      if (journeyData) {
-        setData(journeyData.progress_data || initialData)
-      }
-      setLoading(false)
-    }
-
-    fetchJourney()
-  }, [user, certName])
-
-  // Save to Supabase on data change
-  useEffect(() => {
-    if (!user || loading) return
-
-    const saveJourney = async () => {
-      await supabase
-        .from('journey_tracking')
-        .upsert({
-          user_id: user.id,
-          cert_name: certName,
-          progress_data: data,
-          completed_at: data.completed.length === totalModules ? new Date().toISOString() : null,
-        }, { onConflict: 'user_id, cert_name' })
-    }
-
-    const debounce = setTimeout(saveJourney, 1000)
-    return () => clearTimeout(debounce)
-  }, [data, user, certName, loading, totalModules])
+    localStorage.setItem(storageKey, JSON.stringify(data))
+  }, [data, storageKey])
 
   const stats = useMemo(() => {
     const today         = getDayKey()
@@ -118,14 +81,10 @@ const BurnRate = ({ certName = 'Your Certification', breakEvenMonths = 6 }) => {
   }
 
   const reset = () => {
-    setData(initialData)
+    const fresh = { completed: [], startDate: getDayKey(), lastStudyDate: null, streak: 0, totalSessions: 0 }
+    setData(fresh)
     setShowReset(false)
   }
-
-  if (loading) {
-    return <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-3)' }}>Loading your journey...</div>
-  }
-
 
   return (
     <div>

@@ -1,11 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Briefcase, Copy, Check, ChevronDown, RefreshCw, Zap, Star } from 'lucide-react'
+import { Briefcase, Copy, Check, ChevronDown, RefreshCw, Zap } from 'lucide-react'
 import { callGroqForPitch } from '../services/aiService.jsx'
-import { useAuth } from '../hooks/useAuth.jsx'
-
-// Mock, replace with actual import
-// const useAuth = () => ({ user: { id: '123' }, isPro: false });
 
 const F_HEAD = "'Bricolage Grotesque', 'Plus Jakarta Sans', sans-serif"
 const F_MONO = "'Commit Mono', 'JetBrains Mono', monospace"
@@ -89,24 +85,8 @@ const PitchBoss = ({ certName, salary, certCost, hikePercent, name, mode }) => {
   const [copied, setCopied] = useState(false)
   const [error, setError] = useState(null)
 
-  const { isPro } = useAuth()
-
   // Only show for professional track
   if (mode === 'student') return null
-
-  if (!isPro) {
-    return (
-      <div style={{ marginTop: '8px', padding: '12px 16px', borderRadius: '11px', background: 'var(--amber-dim)', border: '1px solid var(--border-accent)', display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <div style={{ width: '26px', height: '26px', borderRadius: '7px', background: 'var(--amber)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <Star size={13} color="var(--bg)" />
-        </div>
-        <div>
-          <div style={{ fontFamily: F_HEAD, fontWeight: '700', fontSize: '13px', color: 'var(--amber)' }}>AI Reimbursement Case</div>
-          <div style={{ fontFamily: F_BODY, fontSize: '12px', color: 'var(--text-3)' }}>This is a Pro feature. <a href="/pricing" style={{ color: 'var(--amber)', textDecoration: 'underline' }}>Upgrade to unlock.</a></div>
-        </div>
-      </div>
-    )
-  }
 
   const handleGenerate = async () => {
     setLoading(true); setError(null); setBcase(null)

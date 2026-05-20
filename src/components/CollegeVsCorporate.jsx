@@ -251,7 +251,7 @@ const CollegeVsCorporate = () => {
       {/* Pros/Cons toggle */}
       <button
         onClick={() => setShowDetails(v => !v)}
-        style={{ width: '100%', padding: '12px', borderRadius: '10px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-3)', fontSize: '13px', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: '600', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', transition: 'all 0.18s', marginBottom: '12px' }} /* Removed background: var(--surface) */
+        style={{ width: '100%', padding: '12px', borderRadius: '10px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-3)', fontSize: '13px', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: '600', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', transition: 'all 0.18s', marginBottom: '12px' }}
         onMouseEnter={e => { e.currentTarget.style.borderColor = PICTON + '44'; e.currentTarget.style.color = PICTON }}
         onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-3)' }}
       >

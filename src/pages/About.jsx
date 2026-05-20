@@ -105,7 +105,7 @@ export default function AboutPage() {
           </div>
         </div>
 
-        <GlassCard style={{ padding: 'clamp(20px, 4vw, 32px)', background: 'var(--bg)', borderColor: 'var(--border-accent)' }}>
+        <GlassCard style={{ padding: 'clamp(20px, 4vw, 32px)', background: 'var(--text)', borderColor: 'var(--border-accent)' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '18px', alignItems: 'center' }}>
             <div>
               <div style={{ fontFamily: FM, fontSize: '10px', color: 'var(--text-3)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '14px' }}>
@@ -131,15 +131,15 @@ export default function AboutPage() {
         </GlassCard>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 14px', borderRadius: '9999px', border: '1px solid var(--border)', background: 'var(--surface)' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 14px', borderRadius: '9999px', border: '1px solid var(--border)', background: 'transparent' }}>
             <ShieldCheck size={14} color="var(--indigo)" />
             <span style={{ fontFamily: FB, fontSize: '12px', color: 'var(--text-3)' }}>No affiliate links. No sponsored picks.</span>
           </div>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 14px', borderRadius: '9999px', border: '1px solid var(--border)', background: 'var(--surface)' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 14px', borderRadius: '9999px', border: '1px solid var(--border)', background: 'transparent' }}>
             <Sparkles size={14} color="var(--gold)" />
             <span style={{ fontFamily: FB, fontSize: '12px', color: 'var(--text-3)' }}>Built for clarity, not noise.</span>
           </div>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 14px', borderRadius: '9999px', border: '1px solid var(--border)', background: 'var(--surface)' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 14px', borderRadius: '9999px', border: '1px solid var(--border)', background: 'transparent' }}>
             <Database size={14} color="var(--indigo)" />
             <span style={{ fontFamily: FB, fontSize: '12px', color: 'var(--text-3)' }}>Median-based India data.</span>
           </div>

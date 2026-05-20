@@ -1,4 +1,4 @@
-import { Component } from 'react'
+﻿import { Component } from 'react'
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -31,7 +31,7 @@ class ErrorBoundary extends Component {
             </p>
             <button
               onClick={() => { this.setState({ hasError: false, error: null }); window.location.reload() }}
-              style={{ padding: '11px 28px', borderRadius: '10px', background: 'transparent, #3B8CC7)', border: 'none', color: 'white', fontSize: '14px', fontWeight: '700', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans, sans-serif', boxShadow: 'none' }}
+              style={{ padding: '11px 28px', borderRadius: '999px', background: 'var(--text)', border: '1px solid var(--text)', color: 'var(--bg)', fontSize: '14px', fontWeight: '800', cursor: 'pointer', fontFamily: 'Inter, sans-serif', boxShadow: 'none' }}
             >
               Reload App
             </button>

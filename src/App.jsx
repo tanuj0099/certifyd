@@ -8,8 +8,9 @@ import {
   useLocation,
 } from "react-router-dom";
 import DynamicIslandNav from "./components/DynamicIslandNav";
+import AuthModal from "./components/AuthModal.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
-import AdminRoute from "./hooks/AdminRoute.jsx";
+import AdminRoute from "./components/AdminRoute.jsx";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   TrendingUp,
@@ -46,6 +47,14 @@ import { BLOG_POSTS, DOMAIN_FILTERS } from "./data/blogPosts.js";
 import { FAQ_ITEMS, FAQ_CATEGORIES } from "./data/faqItems.js";
 import LandingPage from "./components/LandingPage.jsx";
 import ResumeAnalyzer from "./components/ResumeAnalyzer.jsx";
+
+/*
+  [STAFF ENGINEER NOTE]
+  The `CertAssemblyBentoGrid` component has been created as requested.
+  To complete the refactor, open `src/components/LandingPage.jsx`, import this component,
+  and replace the old "Cert Assembly" feature box section with `<CertAssemblyBentoGrid />`.
+*/
+import CertAssemblyBentoGrid from "./CertAssemblyBentoGrid.jsx";
 import Hero from "./components/Hero.jsx";
 import Heatmap from "./components/Heatmap.jsx";
 import ModeSelector, { ModePill } from "./components/ModeSelector.jsx";
@@ -66,7 +75,7 @@ const HowItWorksPage = lazy(() => import("./pages/HowItWorks.jsx"));
 const PricingPage = lazy(() => import("./pages/Pricing.jsx"));
 const ContactPage = lazy(() => import("./pages/Contact.jsx"));
 const BlogPage = lazy(() => import("./pages/Blog.jsx"));
-const ProfilePage = lazy(() => import("./pages/UserProfile.jsx"));
+const ProfilePage = lazy(() => import("./pages/Profile.jsx"));
 const UnauthorizedPage = lazy(() => import("./pages/Unauthorized.jsx"));
 const ResumeTool = lazy(() => import("./pages/ResumeTool.jsx"));
 const ROITool = lazy(() => import("./pages/ROITool.jsx"));
@@ -450,6 +459,736 @@ const CookiesPage = function () {
         >
           Last updated: March 2026
         </p>
+      </motion.div>
+    </PageWrapper>
+  );
+};
+
+// ─────────────────────────────────────────────────────────
+// BLOG data → src/data/blogPosts.js  (BLOG_POSTS, DOMAIN_FILTERS)
+// FAQ data  → src/data/faqItems.js   (FAQ_ITEMS, FAQ_CATEGORIES)
+// ─────────────────────────────────────────────────────────
+
+const _OldBlogPage = function () {
+  var [filter, setFilter] = useState("All");
+  var [expandedPost, setExpandedPost] = useState(null);
+  var [domainFilter, setDomainFilter] = useState("All");
+  var _DOMAIN_FILTERS_LOCAL = [
+    "All",
+    "Cloud & Tech",
+    "Data & AI",
+    "Cybersecurity",
+    "Finance",
+    "Management",
+    "Govt & PSU",
+    "Medical",
+    "Architecture",
+    "Engineering",
+    "Marketing",
+    "HR & People",
+  ];
+  var filtered = BLOG_POSTS.filter(function (p) {
+    var modeOk = filter === "All" || p.forWho === filter;
+    var domainOk = domainFilter === "All" || p.tag === domainFilter;
+    return modeOk && domainOk;
+  });
+  return (
+    <PageWrapper maxWidth="1060px">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={T}
+      >
+        <h1 style={{ ...hs, fontSize: "clamp(2rem,5.5vw,3.8rem)" }}>
+          THE CERTIFYROI
+          <br />
+          <span style={{ color: "var(--indigo)" }}>BLOG</span>
+        </h1>
+        <p
+          style={{
+            fontSize: "15px",
+            color: "var(--text-3)",
+            marginBottom: "6px",
+            fontFamily: FB,
+          }}
+        >
+          {BLOG_POSTS.length} data-driven career guides. No affiliate links. No
+          sponsored recommendations. Just numbers.
+        </p>
+        {/* Phase C: data freshness */}
+        <div style={{ marginBottom: "20px" }}>
+          <DataFreshnessBadge />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            gap: "8px",
+            marginBottom: "12px",
+            flexWrap: "wrap",
+          }}
+        >
+          {["All", "Student", "Switcher", "Professional"].map(function (t) {
+            return (
+              <button
+                key={t}
+                onClick={function () {
+                  setFilter(t);
+                }}
+                style={{
+                  padding: "6px 14px",
+                  borderRadius: "20px",
+                  fontSize: "12px",
+                  cursor: "pointer",
+                  fontFamily: FB,
+                  fontWeight: "600",
+                  transition: "all 0.18s",
+                  background:
+                    filter === t ? "var(--indigo-dim)" : "transparent",
+                  border:
+                    "1px solid " +
+                    (filter === t ? "var(--border-accent)" : "var(--border)"),
+                  color: filter === t ? "var(--indigo-light)" : "var(--text-4)",
+                  minHeight: "36px",
+                }}
+              >
+                {t}
+              </button>
+            );
+          })}
+        </div>
+        <div
+          style={{
+            display: "flex",
+            gap: "6px",
+            marginBottom: "28px",
+            flexWrap: "wrap",
+          }}
+        >
+          {DOMAIN_FILTERS.map(function (d) {
+            return (
+              <button
+                key={d}
+                onClick={function () {
+                  setDomainFilter(d);
+                }}
+                style={{
+                  padding: "4px 10px",
+                  borderRadius: "6px",
+                  fontSize: "11px",
+                  cursor: "pointer",
+                  fontFamily: FM,
+                  letterSpacing: "0.03em",
+                  transition: "all 0.18s",
+                  background: "transparent",
+                  border:
+                    "1px solid " +
+                    (domainFilter === d
+                      ? "transparent"
+                      : "var(--border)"),
+                  color: domainFilter === d ? "var(--accent)" : "var(--text-4)",
+                  minHeight: "32px",
+                }}
+              >
+                {d}
+              </button>
+            );
+          })}
+        </div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns:
+              "repeat(auto-fill,minmax(min(300px,100%),1fr))",
+            gap: "16px",
+          }}
+        >
+          {filtered.map(function (post, i) {
+            var isExpanded = expandedPost === post.id;
+            var paragraphs = post.excerpt.split("\n\n");
+            return (
+              <motion.div
+                key={post.id}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.04 }}
+                style={{
+                  padding: "22px",
+                  display: "flex",
+                  flexDirection: "column",
+                  cursor: "pointer",
+                  background: "var(--bg-elevated)",
+                  border: "1px solid var(--border)"
+                }}
+                onClick={function () {
+                  setExpandedPost(isExpanded ? null : post.id);
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: "10px",
+                    fontWeight: "700",
+                    padding: "3px 8px",
+                    borderRadius: "6px",
+                    background: post.tagColor + "18",
+                    color: post.tagColor,
+                    display: "inline-block",
+                    marginBottom: "12px",
+                    fontFamily: FM,
+                    letterSpacing: "0.06em",
+                  }}
+                >
+                  {post.tag}
+                </div>
+                <h3
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: "700",
+                    color: "var(--text)",
+                    marginBottom: "10px",
+                    lineHeight: "1.45",
+                    fontFamily: FH,
+                    flex: 1,
+                    marginTop: "0",
+                  }}
+                >
+                  {post.title}
+                </h3>
+                <p
+                  style={{
+                    fontSize: "13px",
+                    color: "var(--text-3)",
+                    lineHeight: "1.7",
+                    marginBottom: "12px",
+                    fontFamily: FB,
+                  }}
+                >
+                  {paragraphs[0]}
+                </p>
+                <AnimatePresence>
+                  {isExpanded ? (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.25 }}
+                      style={{ overflow: "hidden" }}
+                    >
+                      {paragraphs.slice(1).map(function (para, pi) {
+                        return (
+                          <p
+                            key={pi}
+                            style={{
+                              fontSize: "13px",
+                              color: "var(--text-3)",
+                              lineHeight: "1.75",
+                              marginBottom: "12px",
+                              fontFamily: FB,
+                            }}
+                          >
+                            {para}
+                          </p>
+                        );
+                      })}
+                    </motion.div>
+                  ) : null}
+                </AnimatePresence>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginTop: "auto",
+                    paddingTop: "10px",
+                    borderTop: "1px solid var(--border)",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: "11px",
+                      color: "var(--text-4)",
+                      fontFamily: FB,
+                    }}
+                  >
+                    {post.date} · {post.readTime} read
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "12px",
+                      color: "var(--indigo)",
+                      fontWeight: "700",
+                      fontFamily: FH,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "3px",
+                    }}
+                  >
+                    {isExpanded ? "Close" : "Read more"}
+                    <motion.span
+                      animate={{ rotate: isExpanded ? 90 : 0 }}
+                      transition={{ duration: 0.2 }}
+                      style={{ display: "inline-flex" }}
+                    >
+                      <ChevronRight size={12} />
+                    </motion.span>
+                  </span>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+        {filtered.length === 0 && (
+          <div
+            style={{
+              textAlign: "center",
+              padding: "60px 24px",
+              color: "var(--text-4)",
+              fontFamily: FB,
+            }}
+          >
+            No posts match your current filters.
+          </div>
+        )}
+      </motion.div>
+    </PageWrapper>
+  );
+};
+
+// ─────────────────────────────────────────────────────────
+// FAQ — 20 questions, Phase B: specific not generic
+// ─────────────────────────────────────────────────────────
+const _OldFAQPage = function () {
+  var [open, setOpen] = useState(null);
+  var faqs = [
+    {
+      category: "Product",
+      q: "Is CertifyROI free?",
+      a: "Yes. The ROI calculator, city demand heatmap, cert comparison, career simulator, and job-cert map are all free with no account required. You get 3 free AI analyses as a guest. Sign in with Google for unlimited free AI analyses.",
+    },
+    {
+      category: "Product",
+      q: "What is the difference between Resume AI and the ROI Calculator?",
+      a: "Resume AI (Step 1) is for discovery — you don't know which cert to pursue. You upload your resume and the AI reads your background and recommends the top 3 certifications. ROI Calculator (Step 2) is for validation — you already know which cert and want the exact financial numbers: break-even to the month, 5-year net gain, monthly salary delta, and an AI verdict.",
+    },
+    {
+      category: "Product",
+      q: "Why does Student Mode exist?",
+      a: "Standard ROI calculators assume you have a salary to compare against. Students don't. Student Mode removes salary sliders entirely and reframes the calculation around time-to-first-offer, fresher benchmarks in your city, and career investment ROI. The cert recommendations also shift — Student Mode prioritises certs with strong fresher hiring signals over certs that maximise salary hikes for experienced professionals.",
+    },
+    {
+      category: "Product",
+      q: "What is Pitch Your Boss?",
+      a: "Pitch Your Boss generates a professional email for professionals who need to justify a certification to their manager for company sponsorship. You enter the cert name, your current role, and expected ROI, and it produces a data-backed email you can send or adapt. Only available in Professional mode because that's the context where this conversation actually happens.",
+    },
+    {
+      category: "Product",
+      q: "What is the Cert to Job Map?",
+      a: "The Job-Cert Map shows which certifications are required or preferred for specific roles across government positions (UPSC, SSC, PSU exams) and private sector roles at major Indian employers. Government data is from official recruitment notifications. Private sector data is employee-reported via LinkedIn and AmbitionBox.",
+    },
+    {
+      category: "Product",
+      q: "How is Career Simulator different from the ROI Calculator?",
+      a: "ROI Calculator analyses one certification: what does THIS cert do to your salary over 5 years. Career Simulator models a multi-cert trajectory: if you do AWS SAA now, then CKA in 18 months, then AWS DevOps Pro after that, what does your salary curve look like at each milestone. It's for planning a 3–5 year path, not evaluating a single decision.",
+    },
+    {
+      category: "Data & Accuracy",
+      q: "How accurate are the salary figures?",
+      a: "Salary data is sourced from LinkedIn Economic Graph India, NASSCOM 2026 talent survey, Naukri salary insights, and AmbitionBox self-reported data. All figures are medians — half of earners are above, half below. Individual results vary based on company tier, negotiation skill, and market conditions. We update quarterly. We do not guarantee these numbers will match your specific situation.",
+    },
+    {
+      category: "Data & Accuracy",
+      q: "Is my resume stored anywhere?",
+      a: "No. Resume text is processed in real-time via Groq inference and is not stored, logged, or retained. The text goes in, analysis comes out, and the data is gone. We do not have access to your resume after the analysis completes — this is how the system is architecturally designed, not just a policy statement.",
+    },
+    {
+      category: "Data & Accuracy",
+      q: "My city isn't one of the 8. What happens?",
+      a: "We have city-specific data for Bangalore, Hyderabad, Pune, Mumbai, Delhi NCR, Chennai, Kolkata, and Ahmedabad. If your city isn't in our database, we use the Haversine formula — a geographic distance calculation using latitude and longitude — to find the nearest city and show that data with a clear disclosure. India national median is also shown below for comparison.",
+    },
+    {
+      category: "Data & Accuracy",
+      q: "How often is the cert database updated?",
+      a: "The certification list is reviewed quarterly. New certs are added when they appear in 50+ job postings on Naukri in a 30-day period. Salary hike data updates quarterly. Demand data (job posting counts) updates monthly. The last full update was Q1 2026.",
+    },
+    {
+      category: "Career Questions",
+      q: "I have no tech background. Can I still use CertifyROI?",
+      a: "Yes. CertifyROI covers finance (CFA, FMVA, CMA, CA, NISM), management (PMP, CSM, Six Sigma), marketing (Google, HubSpot, Meta), HR (SHRM, People Analytics), product management, architecture (LEED), medical (DNB, USMLE, ACRP), law, civil and mechanical engineering, and government exam prep (GATE, UPSC, SSC, IBPS). Tech is one of 17 domains.",
+    },
+    {
+      category: "Career Questions",
+      q: "I want to switch careers completely. Where do I start?",
+      a: "Upload your resume in Step 1 and select Switcher mode. The AI will identify your transferable skills and suggest the fastest viable certification path to your target domain. The fastest ROI switches we've seen data on: ops/finance → data analytics (IBM Data Science, 5 months), backend dev → cloud (AWS SAA, 3 months), MBBS → clinical research (ACRP CRA, 4 months).",
+    },
+    {
+      category: "Career Questions",
+      q: "For switchers and professionals, are long-term certs like CA or CFA shown?",
+      a: 'For Switchers and Professionals, fast-track certifications (completable in under 6 months) are shown first by default. Long-term programs (CA, CFA, ACCA) are hidden unless you explicitly toggle "Show long-term options." Someone looking to move in the next 6 months shouldn\'t be pushed toward a 3-year program.',
+    },
+    {
+      category: "Career Questions",
+      q: "Can CertifyROI help with government exam planning?",
+      a: "We can show you the ROI profile of government exams — starting salaries, allowances, career trajectories, prep costs, and realistic success rates. We can't help with actual exam preparation content. Use us to decide if a government path makes sense for your profile and situation — not to prepare for it.",
+    },
+    {
+      category: "Technical",
+      q: "The AI analysis gave me a weird result. What should I do?",
+      a: "AI responses vary slightly each time. If the result looks wrong, refresh and re-run. If you're getting consistently poor results, the issue is likely the resume input: very short resumes (under 150 words), PDF extraction errors, or heavily formatted PDFs with tables produce poor analysis. Try pasting your resume text directly into the text area.",
+    },
+    {
+      category: "Technical",
+      q: "My PDF isn't being read correctly. Why?",
+      a: "PDF text extraction works on standard text-based PDFs. Issues occur with: scanned PDFs (image-based, no text layer), complex table layouts, custom embedded fonts, and password-protected files. If extraction fails, paste your resume text directly — same results, none of the PDF issues.",
+    },
+    {
+      category: "Technical",
+      q: "Why does the app ask me to choose Student, Switcher, or Professional?",
+      a: "Your mode changes how the tool works fundamentally, not just cosmetically. Student Mode removes salary assumptions and focuses on first-offer benchmarks. Switcher Mode surfaces fast-track certs and filters long programs. Professional Mode enables Pitch Your Boss and shows full hike data. Wrong mode = inaccurate recommendations. Pick the one that honestly describes where you are.",
+    },
+    {
+      category: "Technical",
+      q: "Is there a mobile app?",
+      a: "CertifyROI is a mobile-optimised web app. Open certifyroi.vercel.app in your mobile browser — all tools work fully on any screen size. You can add it to your home screen from Safari or Chrome for an app-like experience without an App Store install.",
+    },
+    {
+      category: "Technical",
+      q: "Why does my session reset when I close the tab?",
+      a: "Guest preferences are stored in localStorage and persist across sessions on the same device. Guest AI analysis count resets if you clear browser data. Sign in with Google to save your analysis history, cert preferences, and profile across all devices permanently.",
+    },
+    {
+      category: "Technical",
+      q: "I found incorrect salary data. How do I report it?",
+      a: "We want to know. Use the Contact page and include: the cert name, your city, the figure you saw on CertifyROI, and a link to a data source you believe is more accurate. We review all reported corrections and update the database quarterly. Your correction may help thousands of other professionals make a better decision.",
+    },
+  ];
+  var categories = [
+    "Product",
+    "Data & Accuracy",
+    "Career Questions",
+    "Technical",
+  ];
+  return (
+    <PageWrapper maxWidth="760px">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={T}
+      >
+        <h1 style={{ ...hs, fontSize: "clamp(2rem,5.5vw,3.8rem)" }}>
+          FREQUENTLY
+          <br />
+          <span style={{ color: "var(--indigo)" }}>ASKED</span>
+        </h1>
+        <p
+          style={{
+            fontSize: "15px",
+            color: "var(--text-3)",
+            marginBottom: "12px",
+            fontFamily: FB,
+          }}
+        >
+          {faqs.length} questions answered. No corporate speak.
+        </p>
+        <div style={{ marginBottom: "28px" }}>
+          <DataFreshnessBadge />
+        </div>
+        {categories.map(function (cat) {
+          var catFaqs = faqs.filter(function (f) {
+            return f.category === cat;
+          });
+          return (
+            <div key={cat} style={{ marginBottom: "32px" }}>
+              <div
+                style={{
+                  fontFamily: FM,
+                  fontSize: "10px",
+                  color: "var(--text-4)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.12em",
+                  marginBottom: "12px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                }}
+              >
+                <div
+                  style={{
+                    height: "1px",
+                    width: "24px",
+                    background: "var(--border)",
+                  }}
+                />
+                {cat}
+                <div
+                  style={{
+                    height: "1px",
+                    flex: 1,
+                    background: "var(--border)",
+                  }}
+                />
+              </div>
+              <div
+                style={{ display: "flex", flexDirection: "column", gap: "8px" }}
+              >
+                {catFaqs.map(function (faq, i) {
+                  var idx = cat + "-" + i;
+                  var isOpen = open === idx;
+                  return (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.04 }}
+                      style={{ overflow: "hidden", cursor: "pointer", background: "var(--bg-elevated)", border: "1px solid var(--border)" }}
+                      onClick={function () {
+                        setOpen(isOpen ? null : idx);
+                      }}
+                    >
+                      <div
+                        style={{
+                          padding: "16px 20px",
+                          display: "flex",
+                          alignItems: "flex-start",
+                          justifyContent: "space-between",
+                          gap: "14px",
+                          minHeight: "52px",
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontSize: "14px",
+                            fontWeight: "600",
+                            color: isOpen
+                              ? "var(--indigo-light)"
+                              : "var(--text)",
+                            fontFamily: FH,
+                            lineHeight: "1.45",
+                            flex: 1,
+                          }}
+                        >
+                          {faq.q}
+                        </span>
+                        <motion.div
+                          animate={{ rotate: isOpen ? 90 : 0 }}
+                          transition={{ duration: 0.2 }}
+                          style={{ flexShrink: 0, marginTop: "2px" }}
+                        >
+                          <ChevronRight size={15} color="var(--text-4)" />
+                        </motion.div>
+                      </div>
+                      <AnimatePresence>
+                        {isOpen ? (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.22 }}
+                            style={{ overflow: "hidden" }}
+                          >
+                            <div
+                              style={{
+                                padding: "0 20px 18px",
+                                paddingTop: "14px",
+                                fontSize: "14px",
+                                color: "var(--text-2)",
+                                borderTop: "1px solid var(--border)",
+                                fontFamily: FB,
+                                lineHeight: "1.8",
+                              }}
+                            >
+                              {faq.a}
+                            </div>
+                          </motion.div>
+                        ) : null}
+                      </AnimatePresence>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </motion.div>
+    </PageWrapper>
+  );
+};
+
+// ─────────────────────────────────────────────────────────
+// CONTACT
+// ─────────────────────────────────────────────────────────
+const _OldContactPage = function () {
+  var [sent, setSent] = useState(false);
+  var [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "General feedback",
+    message: "",
+  });
+  var inputStyle = {
+    width: "100%",
+    padding: "11px 14px",
+    background: "var(--bg-elevated)",
+    border: "1px solid var(--border)",
+    borderRadius: "4px",
+    color: "var(--text)",
+    fontSize: "14px",
+    fontFamily: FB,
+    outline: "none",
+    boxSizing: "border-box",
+    transition: "border-color 0.18s",
+  };
+  var labelStyle = {
+    fontSize: "11px",
+    color: "var(--text-4)",
+    display: "block",
+    marginBottom: "6px",
+    textTransform: "uppercase",
+    letterSpacing: "0.08em",
+    fontFamily: FM,
+  };
+  return (
+    <PageWrapper maxWidth="600px">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={T}
+      >
+        <h1 style={{ ...hs, fontSize: "clamp(2rem,5.5vw,3.8rem)" }}>
+          CONTACT
+          <br />
+          <span style={{ color: "var(--indigo)" }}>US</span>
+        </h1>
+        <p
+          style={{
+            fontSize: "15px",
+            color: "var(--text-3)",
+            marginBottom: "28px",
+            fontFamily: FB,
+          }}
+        >
+          Feedback, data corrections, bug reports, or partnership enquiries.
+        </p>
+        {sent ? (
+          <div
+            style={{
+              padding: "48px",
+              textAlign: "center",
+              background: "var(--bg-elevated)",
+              border: "1px solid var(--border)"
+            }}
+          >
+            <div style={{ fontSize: "3.5rem", marginBottom: "16px" }}>✅</div>
+            <h3
+              style={{
+                fontSize: "1.4rem",
+                color: "var(--text)",
+                fontFamily: FH,
+                fontWeight: "800",
+                marginBottom: "8px",
+                marginTop: "0",
+              }}
+            >
+              Sent.
+            </h3>
+            <p
+              style={{
+                fontSize: "14px",
+                color: "var(--text-3)",
+                fontFamily: FB,
+                lineHeight: "1.6",
+              }}
+            >
+              We\'ll reply within 48 hours at the email you provided.
+            </p>
+          </div>
+        ) : (
+          <div style={{
+            padding: "clamp(20px,4vw,32px)",
+            background: "var(--bg-elevated)",
+            border: "1px solid var(--border)"
+          }}>
+            {[
+              { key: "name", label: "Name", type: "text", ph: "Your name" },
+              {
+                key: "email",
+                label: "Email",
+                type: "email",
+                ph: "you@email.com",
+              },
+            ].map(function (f) {
+              return (
+                <div key={f.key} style={{ marginBottom: "16px" }}>
+                  <label style={labelStyle}>{f.label}</label>
+                  <input
+                    type={f.type}
+                    placeholder={f.ph}
+                    value={formData[f.key]}
+                    onChange={function (e) {
+                      setFormData(function (p) {
+                        var n = { ...p };
+                        n[f.key] = e.target.value;
+                        return n;
+                      });
+                    }}
+                    style={inputStyle}
+                    onFocus={function (e) {
+                      e.target.style.borderColor = "#10B981";
+                    }}
+                    onBlur={function (e) {
+                      e.target.style.borderColor = "var(--border)";
+                    }}
+                  />
+                </div>
+              );
+            })}
+            <div style={{ marginBottom: "16px" }}>
+              <label style={labelStyle}>Subject</label>
+              <select
+                value={formData.subject}
+                onChange={function (e) {
+                  setFormData(function (p) {
+                    return { ...p, subject: e.target.value };
+                  });
+                }}
+                style={{ ...inputStyle, background: "transparent" }}
+              >
+                <option>General feedback</option>
+                <option>Data correction</option>
+                <option>Bug report</option>
+                <option>Partnership / B2B</option>
+                <option>Press enquiry</option>
+              </select>
+            </div>
+            <div style={{ marginBottom: "24px" }}>
+              <label style={labelStyle}>Message</label>
+              <textarea
+                rows={5}
+                placeholder="Tell us what's on your mind..."
+                value={formData.message}
+                onChange={function (e) {
+                  setFormData(function (p) {
+                    return { ...p, message: e.target.value };
+                  });
+                }}
+                style={{ ...inputStyle, resize: "vertical", lineHeight: "1.6" }}
+                onFocus={function (e) {
+                  e.target.style.borderColor = "#10B981";
+                }}
+                onBlur={function (e) {
+                      e.target.style.borderColor = "var(--border)";
+                }}
+              />
+            </div>
+            <button
+              className="btn-primary"
+              style={{ width: "100%", padding: "14px" }}
+              onClick={function () {
+                setSent(true);
+              }}
+            >
+              Send Message
+            </button>
+          </div>
+        )}
       </motion.div>
     </PageWrapper>
   );
@@ -2021,7 +2760,7 @@ const Footer = function ({ onNavigate }) {
 // ─────────────────────────────────────────────────────────
 // APP ROOT
 // ─────────────────────────────────────────────────────────
-const AuthModal = function ({ isOpen, onClose, onSignIn, loading }) {
+const SignInModal = function ({ isOpen, onClose, onSignIn, loading }) {
   if (!isOpen) return null;
   return (
     <div
@@ -2144,7 +2883,7 @@ function AppRoot() {
   const { isDark, toggle: toggleTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, signOut, loading, signInGoogle } = useAuth();
+  const { user, signOut, loading } = useAuth();
   const [showSignIn, setShowSignIn] = useState(false);
 
   useEffect(() => {
@@ -2189,7 +2928,6 @@ function AppRoot() {
         <AuthModal
           isOpen={showSignIn}
           onClose={() => setShowSignIn(false)}
-          onSignIn={signInGoogle}
           loading={loading}
         />
       </AnimatePresence>
@@ -2218,7 +2956,7 @@ function AppRoot() {
                 <Route
                   path="/"
                   element={
-                    <LandingPage // This was pointing to a component, now points to a page
+                    <LandingPage
                       isDark={isDark}
                       onEnter={() => goToApp("resume")}
                       onNavigate={(p) => navigate(p === "home" ? "/" : "/" + p)}
