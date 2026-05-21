@@ -36,3 +36,17 @@ yarn-error.log*
 
 .env
 .env.local
+
+.venv/
+venv/
+pycache/
+*.pyc
+
+# Node dependencies & builds
+node_modules/
+.next/
+dist/
+
+# AI Tools (Aider) and Environment files
+.aider*
+.env
