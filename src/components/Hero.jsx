@@ -21,6 +21,7 @@ import ShareROICard from './ShareROICard.jsx'
 import { useJourneyStore } from '../store/useJourneyStore.js'
 import MarketPulseTicker from './MarketPulseTicker.jsx'
 import { HeroSkeleton, AIResultSkeleton, ConsensusGauge, RollNumber, resolveVerdictStatus, DataSyncBadge } from './PremiumDataViz.jsx'
+import BurnRate from './BurnRate.jsx'
 
 const GUEST_FREE_LIMIT = parseInt(import.meta.env.VITE_GUEST_FREE_LIMIT || '3', 10)
 
@@ -1261,6 +1262,12 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
               transition={prefersReduced ? { duration: 0 } : { type: 'spring', duration: 0.45, bounce: 0 }}
             >
               <AIResult result={aiResult} certName={certName} onReset={function () { setAiResult(null) }} />
+              <div style={{ marginTop: '24px' }}>
+                <BurnRate
+                  certName={certName}
+                  breakEvenMonths={roi.breakEvenMonths > 0 ? Math.round(roi.breakEvenMonths) : 6}
+                />
+              </div>
             </motion.div>
           ) : null}
         </AnimatePresence>

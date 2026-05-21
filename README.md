@@ -118,4 +118,4 @@ npm run build && netlify deploy --prod --dir=dist
 
 ---
 
-Made with ❤️ for Bangalore tech professionals who hate wasting money on the wrong certs.
+Made with ❤️ for Bangalore tech professionals who hate wasting money on the wrong certs. (Updated via Manus AI during testing)
