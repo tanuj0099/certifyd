@@ -117,7 +117,8 @@ function StorySection({ id = '', title = '', children, bg = '', noBorderTop = fa
     <div style={{
       position: 'relative',
       padding: isMobile ? '16px' : '32px 24px',
-      borderTop: noBorderTop ? 'none' : '1px solid var(--border)',
+      background: bg || C.bg,
+      borderTop: noBorderTop ? 'none' : `1px solid ${C.border}`,
     }}>
       <div style={{ 
         maxWidth: '1400px', 
@@ -173,8 +174,8 @@ function TrustStrip() {
     { tag: 'SYS.DEVOPS', text: 'CKA Kubernetes: highest ROI cert in India 2026' },
   ]
   return (
-    <div style={{ borderBottom: `1px solid ${C.border}`, background: C.bgAlt, position: 'relative', zIndex: 10, height: '48px', display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, background: C.bgAlt, zIndex: 11, borderRight: `1px solid ${C.border}`, display: 'flex', alignItems: 'center', padding: '0 20px', boxShadow: `20px 0 20px -10px ${C.bgAlt}` }}>
+    <div style={{ borderBottom: `1px solid ${C.border}`, background: C.bg, position: 'relative', zIndex: 10, height: '48px', display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, background: C.bg, zIndex: 11, borderRight: `1px solid ${C.border}`, display: 'flex', alignItems: 'center', padding: '0 20px', boxShadow: `20px 0 20px -10px ${C.bg}` }}>
         <span style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.18em' }}>MARKET_DATA</span>
       </div>
       <div style={{ flex: 1, paddingLeft: isMobile ? '140px' : '150px' }}>
@@ -997,6 +998,9 @@ function FAQ() {
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // FINAL CTA â€” centered, bold, clean, no sidebar
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ——————————————————————————————————————————————————
+// FINAL CTA — centered, bold, clean, no sidebar
+// ——————————————————————————————————————————————————
 function FinalCTA({ onEnter }) {
   const C = useTheme()
   const isMobile = useIsMobile()
@@ -1015,7 +1019,7 @@ function FinalCTA({ onEnter }) {
       justifyContent: 'center',
       textAlign: 'center',
     }}>
-      {/* Topographic circles â€” subtle */}
+      {/* Topographic circles — subtle */}
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: d ? 0.12 : 0.08 }}>
         <svg width="100%" height="100%" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice">
           <circle cx="400" cy="300" r="120" fill="none" stroke={C.lineHeavy} strokeWidth="0.8" />
@@ -1134,17 +1138,19 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
           justifyContent: 'center',
           borderBottom: `1px solid ${C.border}`,
           overflow: 'hidden',
+          /* ensure hero content clears fixed Dynamic Island capsule */
+          paddingTop: isMobile ? '72px' : '0',
         }}>
 
           {/* Mountain â€” centered, full bleed */}
-          <div style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
+          <div style={{ position: 'absolute', inset: 0, zIndex: 1, background: C.bg }}>
             <img
               src="/mountain.png"
               alt=""
               style={{
-                width: '100%', height: '100%',
+                width: '100%', height: '100%', minWidth: '100%', minHeight: '100%',
                 objectFit: 'cover',
-                objectPosition: 'center 32%',
+                objectPosition: isMobile ? 'center 42%' : 'center 32%',
                 filter: !C.isLight
                   ? 'brightness(0.38) contrast(1.12) saturate(0.6)'
                   : 'brightness(0.62) contrast(1.12) saturate(0.82)',
@@ -1165,7 +1171,8 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
             display: 'flex', flexDirection: 'column',
             alignItems: 'center', justifyContent: 'center',
             textAlign: 'center',
-            padding: '0 24px',
+            /* 16px side padding on phones, 24px on larger */
+            padding: isMobile ? '0 16px' : '0 24px',
             maxWidth: '820px',
             width: '100%',
           }}>
@@ -1218,7 +1225,8 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.18 }}
               style={{
-                fontFamily: F_SANS, fontSize: isMobile ? '14px' : '16px',
+                fontFamily: F_SANS,
+                fontSize: isMobile ? '13px' : '16px',
                 color: 'rgba(244,245,248,0.92)',
                 opacity: 1,
                 maxWidth: '380px', lineHeight: '1.6',

@@ -11,6 +11,7 @@ import DynamicIslandNav from "./components/DynamicIslandNav";
 import AuthModal from "./components/AuthModal.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import AdminRoute from "./components/AdminRoute.jsx";
+import OnboardingGate from "./components/OnboardingGate.jsx";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   TrendingUp,
@@ -47,14 +48,6 @@ import { BLOG_POSTS, DOMAIN_FILTERS } from "./data/blogPosts.js";
 import { FAQ_ITEMS, FAQ_CATEGORIES } from "./data/faqItems.js";
 import LandingPage from "./components/LandingPage.jsx";
 import ResumeAnalyzer from "./components/ResumeAnalyzer.jsx";
-
-/*
-  [STAFF ENGINEER NOTE]
-  The `CertAssemblyBentoGrid` component has been created as requested.
-  To complete the refactor, open `src/components/LandingPage.jsx`, import this component,
-  and replace the old "Cert Assembly" feature box section with `<CertAssemblyBentoGrid />`.
-*/
-import CertAssemblyBentoGrid from "./CertAssemblyBentoGrid.jsx";
 import Hero from "./components/Hero.jsx";
 import Heatmap from "./components/Heatmap.jsx";
 import ModeSelector, { ModePill } from "./components/ModeSelector.jsx";
@@ -68,13 +61,10 @@ import Dashboard from "./components/Dashboard.jsx";
 import MarketIntelligenceTool from "./components/LiveMarketPulse.jsx";
 import { AppSection } from "./components/SharedUI.jsx";
 import { MarketingFooter } from "./components/MarketingPageShell.jsx";
-const FAQPage = lazy(() => import("./pages/FAQ.jsx"));
 const AboutPage = lazy(() => import("./pages/About.jsx"));
 const FeaturesPage = lazy(() => import("./pages/Features.jsx"));
 const HowItWorksPage = lazy(() => import("./pages/HowItWorks.jsx"));
 const PricingPage = lazy(() => import("./pages/Pricing.jsx"));
-const ContactPage = lazy(() => import("./pages/Contact.jsx"));
-const BlogPage = lazy(() => import("./pages/Blog.jsx"));
 const ProfilePage = lazy(() => import("./pages/Profile.jsx"));
 const UnauthorizedPage = lazy(() => import("./pages/Unauthorized.jsx"));
 const ResumeTool = lazy(() => import("./pages/ResumeTool.jsx"));
@@ -88,6 +78,16 @@ const JobMapTool = lazy(() => import("./pages/JobMapTool.jsx"));
 const CollegeTool = lazy(() => import("./pages/CollegeTool.jsx"));
 const HikeVerifierTool = lazy(() => import("./pages/HikeVerifierTool.jsx"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard.jsx"));
+const DashboardPage = lazy(() => import("./pages/DashboardPage.jsx"));
+const CertificationPage = lazy(() => import("./pages/CertificationPage.jsx"));
+const OfferAnalysisPage = lazy(() => import("./pages/OfferAnalysisPage.jsx"));
+const BlogPage = lazy(() => import("./pages/Blog.jsx"));
+const FAQPage = lazy(() => import("./pages/FAQ.jsx"));
+const ContactPage = lazy(() => import("./pages/Contact.jsx"));
+const LoginPage = lazy(() => import("./pages/LoginPage.jsx"));
+const SignupPage = lazy(() => import("./pages/SignupPage.jsx"));
+const OnboardingPage = lazy(() => import("./pages/Onboarding.jsx"));
+const ToolsIndex = lazy(() => import("./pages/ToolsIndex.jsx"));
 
 const T = { duration: 0.32, ease: [0.4, 0, 0.2, 1] };
 const FM = "'JetBrains Mono','Commit Mono',monospace";
@@ -2352,95 +2352,8 @@ const AppPage = function ({ onCertSelected }) {
                   </motion.div>
                 </AnimatePresence>
 
-                {/* Secondary Tools Separator - Moved Below Step 1/2/3 */}
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: "40px" }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      width: "100%",
-                      maxWidth: "600px",
-                      gap: "16px",
-                      marginBottom: "24px",
-                    }}
-                  >
-                    <div
-                      style={{
-                        flex: 1,
-                        height: "1px",
-                        background: "var(--border)",
-                      }}
-                    />
-                    <span
-                      style={{
-                        fontFamily: FM,
-                        fontSize: "10px",
-                        color: "var(--text-3)",
-                        letterSpacing: "0.15em",
-                      }}
-                    >
-                      EXPLORE MORE TOOLS
-                    </span>
-                    <div
-                      style={{
-                        flex: 1,
-                        height: "1px",
-                        background: "var(--border)",
-                      }}
-                    />
-                  </div>
-
-                  {/* Secondary Tools */}
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: "12px",
-                      flexWrap: "wrap",
-                    }}
-                  >
-                    {TOOL_TABS.map((tab) => {
-                      const active = activeTab === tab.id;
-                      return (
-                        <button
-                          key={tab.id}
-                          onClick={() => onTabChange(tab.id)}
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "8px",
-                            padding: "8px 16px",
-                            borderRadius: "100px",
-                            border: active
-                              ? "1px solid var(--border)"
-                              : "1px solid var(--border)",
-                            background: "transparent",
-                            color: active ? "var(--text)" : "var(--text-4)",
-                            fontSize: "12px",
-                            fontWeight: active ? "600" : "500",
-                            cursor: "pointer",
-                            fontFamily: FB,
-                            transition: "all 0.2s ease",
-                          }}
-                          onMouseEnter={(e) => {
-                            if (!active)
-                              e.currentTarget.style.color = "var(--text)";
-                            e.currentTarget.style.background = "transparent";
-                          }}
-                          onMouseLeave={(e) => {
-                            if (!active)
-                              e.currentTarget.style.color = "var(--text-4)";
-                            e.currentTarget.style.background = "transparent";
-                          }}
-                        >
-                          <tab.icon size={13} />
-                          {tab.label}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
+                {/* Secondary Tools removed — keep a subtle micro divider */}
+                <div style={{ marginTop: '40px', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '28px' }} />
               </div>
             </AppSection>
           </div>
@@ -2886,6 +2799,11 @@ function AppRoot() {
   const { user, signOut, loading } = useAuth();
   const [showSignIn, setShowSignIn] = useState(false);
 
+  // ── Journey state now lives in Zustand ────────────────
+  const activeTab = useJourneyStore((s) => s.activeTab);
+  const setActiveTab = useJourneyStore((s) => s.setActiveTab);
+  const setResumeContext = useJourneyStore((s) => s.setResumeContext);
+
   useEffect(() => {
     if (location.state?.authRequired) {
       setShowSignIn(true)
@@ -2893,10 +2811,11 @@ function AppRoot() {
     }
   }, [location.state, location.pathname, navigate])
 
-  // ── Journey state now lives in Zustand ────────────────
-  const activeTab = useJourneyStore((s) => s.activeTab);
-  const setActiveTab = useJourneyStore((s) => s.setActiveTab);
-  const setResumeContext = useJourneyStore((s) => s.setResumeContext);
+  useEffect(() => {
+    if (location.pathname === '/dashboard') {
+      setActiveTab('dashboard')
+    }
+  }, [location.pathname, setActiveTab])
 
   var goToApp = function (tab) {
     setActiveTab(tab || "dashboard");
@@ -2939,7 +2858,7 @@ function AppRoot() {
         }
         currentPage={currentPage}
         user={user}
-        onSignIn={() => setShowSignIn(true)}
+        onSignIn={() => navigate('/login')}
         onSignOut={signOut}
       />
       <main style={{ flex: 1 }}>
@@ -2951,7 +2870,19 @@ function AppRoot() {
             exit={{ opacity: 0 }}
             transition={T}
           >
-            <Suspense fallback={<div style={{ minHeight: "40vh" }} />}>
+            <Suspense fallback={
+              <div style={{
+                minHeight: '60vh', display: 'flex', alignItems: 'center',
+                justifyContent: 'center', flexDirection: 'column', gap: '14px',
+                background: 'var(--bg)',
+              }}>
+                <div style={{
+                  width: '7px', height: '7px', borderRadius: '50%',
+                  background: 'var(--text-4)',
+                  animation: 'pdot 1.4s ease-in-out infinite',
+                }} />
+              </div>
+            }>
               <Routes location={location} key={location.pathname}>
                 <Route
                   path="/"
@@ -2998,6 +2929,18 @@ function AppRoot() {
                 <Route path="/tools/college" element={<CollegeTool />} />
                 <Route path="/tools/hike" element={<HikeVerifierTool />} />
                 <Route path="/tools/market" element={<MarketIntelligenceTool />} />
+                <Route path="/dashboard" element={
+                  <OnboardingGate>
+                    <DashboardPage />
+                  </OnboardingGate>
+                } />
+                <Route path="/cert/:slug" element={<CertificationPage />} />
+                <Route path="/certification/:slug" element={<CertificationPage />} />
+                <Route path="/offer-analysis" element={<OfferAnalysisPage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/signup" element={<SignupPage />} />
+                <Route path="/onboarding" element={<OnboardingPage />} />
+                <Route path="/tools" element={<ToolsIndex />} />
                 <Route path="/terms" element={<TermsPage />} />
                 <Route path="/privacy" element={<PrivacyPage />} />
                 <Route path="/cookies" element={<CookiesPage />} />

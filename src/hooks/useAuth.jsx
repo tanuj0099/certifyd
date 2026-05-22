@@ -60,6 +60,37 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
+  const signInGithub = async () => {
+    setAuthError(null)
+    try {
+      const { signInWithGithub } = await import('../firebase.jsx')
+      const result = await signInWithGithub()
+      return result.user
+    } catch (e) {
+      const msg = e.code === 'auth/popup-closed-by-user'
+        ? 'Sign-in cancelled'
+        : e.code === 'auth/account-exists-with-different-credential'
+          ? 'An account with this email already exists via a different sign-in method.'
+          : friendlyAuthError(e)
+      setAuthError(msg)
+      throw new Error(msg)
+    }
+  }
+
+  const signInPhone = async (phoneNumber, recaptchaContainerId) => {
+    setAuthError(null)
+    try {
+      const { setupRecaptcha, sendPhoneOTP } = await import('../firebase.jsx')
+      const verifier = setupRecaptcha(recaptchaContainerId)
+      const confirmationResult = await sendPhoneOTP(phoneNumber, verifier)
+      return confirmationResult   // caller must call .confirm(otp)
+    } catch (e) {
+      const msg = friendlyAuthError(e)
+      setAuthError(msg)
+      throw new Error(msg)
+    }
+  }
+
   const signInEmail = async (email, password) => {
     setAuthError(null)
     try {
@@ -116,6 +147,8 @@ export const AuthProvider = ({ children }) => {
       authError,
       configured,
       signInGoogle,
+      signInGithub,
+      signInPhone,
       signInEmail,
       signUpEmail,
       resetPassword,

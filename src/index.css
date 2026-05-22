@@ -7,12 +7,15 @@
 /* ═══════════════════════════════════════════════════════════
    STRICT LINEAR SPEC — 2 themes only
 
-   Nordic (Dark): bg #222326, text/logo #F4F5F8
-   Ash (Light):   bg #FFFFFF, text #44494D
+   Nordic (Dark): bg #0b0b0f, card #16161a, text #F4F5F8
+   Ash (Light):   bg #F4F5F6, card #FFFFFF, text #121212
 
    Borders:
-   - Nordic: rgba(255, 255, 255, 0.08)
-   - Ash:    #E5E5E5
+   - Nordic: #222326 (solid, not rgba — prevents JS/CSS mismatch)
+   - Ash:    rgba(0,0,0,0.07)
+
+   JS THEME_PRESETS in useTheme.jsx MUST match these values exactly.
+   Do not edit one without editing the other.
    ═══════════════════════════════════════════════════════════ */
 
 @layer base {
@@ -97,6 +100,16 @@
     --shadow-3: none;
     --shadow:   none;
 
+    /* ── Marketing / brand surface tokens ─────────────────── */
+    --color-bg-marketing: var(--bg);
+    --color-brand-bg:     transparent;
+    --text-soft:          var(--text-3);
+    --text-muted-alt:     var(--text-4);
+    --surface-tint:       var(--bg-alt);
+    --card-hover:         var(--bg-alt);
+    --border-translucent-strong: var(--border-mid);
+    --color-border-translucent-strong: var(--border-mid);
+
     --radius-sm: 4px;
     --radius-md: 8px;
     --radius-lg: 12px;
@@ -111,94 +124,105 @@
     --font-serif: 'Inter', system-ui, sans-serif;
   }
 
-  /* ── ASH (Light) ───────────────────────────────────────── */
+  /* ── ASH (Light) — Premium silver-grey workspace ──────── */
   [data-theme="ash"],
   [data-theme="light"] {
-    --bg:         #FFFFFF;
-    --bg-alt:     #F8F8F8;
-    --surface:    #F4F4F4;
-    --text:       #1a1a1a;
-    --text-2:     #4a4d52;
-    --text-3:     #7a7d82;
-    --text-4:     #aaaaaa;
-    --accent:     #1a1a1a;
+    /* Global body = soft silver-grey, not blinding white */
+    --bg:         #F4F5F6;
+    --bg-alt:     #FFFFFF;
+    --surface:    #FFFFFF;
+    --text:       #121212;
+    --text-2:     #3a3d42;
+    --text-3:     #62666D;
+    --text-4:     #9a9ea6;
+    --accent:     #121212;
     --gold:       #8a6d2f;
-    --border:     #E5E5E5;
-    --border-mid: #D0D0D0;
+    --border:     rgba(0,0,0,0.07);
+    --border-mid: rgba(0,0,0,0.12);
     --is-light:   1;
     --err:        #C93636;
     --scrollbar:  rgba(0,0,0,0.10);
     --cool-grey:  var(--text-3);
-    --overlay-scrim: rgba(26, 26, 26, 0.45);
+    --overlay-scrim: rgba(18, 18, 18, 0.45);
 
-    /* Derived */
-    --bg-base:       #FFFFFF;
-    --bg-surface:    #F8F8F8;
-    --bg-elevated:   #F4F4F4;
-    --app-bg:        #FFFFFF;
-    --bg-secondary:  #F8F8F8;
-    --surface-high:  #F4F4F4;
-    --bg-page:       #FFFFFF;
-    --text-primary:  #1a1a1a;
-    --text-secondary:#4a4d52;
-    --text-muted:    #7a7d82;
+    /* Derived — cards are white panels on the grey body */
+    --bg-base:       #F4F5F6;
+    --bg-surface:    #FFFFFF;
+    --bg-elevated:   #FFFFFF;
+    --app-bg:        #F4F5F6;
+    --bg-secondary:  #FFFFFF;
+    --surface-high:  #FAFAFA;
+    --bg-page:       #F4F5F6;
+    --text-primary:  #121212;
+    --text-secondary:#3a3d42;
+    --text-muted:    #62666D;
     --accent-light:  #222326;
     --gold-val:      #8a6d2f;
     --gold-light:    #a07830;
-    --border-subtle: #E5E5E5;
-    --border-strong: #D0D0D0;
-    --border-accent: #1a1a1a;
-    --glass-bg:      rgba(255,255,255,0.85);
-    --glass-border:  #E5E5E5;
-    --card-border:   #E5E5E5;
-    --indigo:        #1a1a1a;
+    --border-subtle: rgba(0,0,0,0.07);
+    --border-strong: rgba(0,0,0,0.12);
+    --border-accent: #121212;
+    /* Translucent white pill for the Dynamic Island in light mode */
+    --glass-bg:      rgba(244,245,246,0.88);
+    --glass-border:  rgba(0,0,0,0.08);
+    --card-border:   rgba(0,0,0,0.07);
+    --indigo:        #121212;
     --indigo-light:  #222326;
     --indigo-dim:    #F0F0F0;
-    --linear-blue:   #1a1a1a;
-    --linear-bg:     #FFFFFF;
-    --linear-surface:#F8F8F8;
-    --linear-border: #E5E5E5;
-    --linear-border-mid:#D0D0D0;
-    --linear-text:   #1a1a1a;
-    --linear-text-dim:#7a7d82;
-    --linear-text-mute:#aaaaaa;
-    --shadow-1:      0 1px 3px rgba(0,0,0,0.08);
-    --shadow-2:      0 4px 12px rgba(0,0,0,0.08);
-    --shadow:        0 2px 8px rgba(0,0,0,0.06);
+    --linear-blue:   #121212;
+    --linear-bg:     #F4F5F6;
+    --linear-surface:#FFFFFF;
+    --linear-border: rgba(0,0,0,0.07);
+    --linear-border-mid:rgba(0,0,0,0.12);
+    --linear-text:   #121212;
+    --linear-text-dim:#62666D;
+    --linear-text-mute:#9a9ea6;
+    --shadow-1:      0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-2:      0 4px 16px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
+    --shadow:        0 2px 10px rgba(0,0,0,0.06);
+
+    /* ── Marketing / brand surface tokens ─────────────────── */
+    --color-bg-marketing: #F4F5F6;
+    --color-brand-bg:     transparent;
+    --text-soft:          var(--text-3);
+    --text-muted-alt:     var(--text-4);
+    --surface-tint:       #FFFFFF;
+    --border-translucent-strong: rgba(0,0,0,0.12);
+    --color-border-translucent-strong: rgba(0,0,0,0.12);
   }
 
   /* ── System auto-theme ─────────────────────────────────── */
   @media (prefers-color-scheme: light) {
     :root:not([data-theme]) {
-      --bg:         #FFFFFF;
-      --bg-alt:     #F8F8F8;
-      --surface:    #F4F4F4;
-      --text:       #1a1a1a;
-      --text-2:     #4a4d52;
-      --text-3:     #7a7d82;
-      --text-4:     #aaaaaa;
-      --accent:     #1a1a1a;
+      --bg:         #F4F5F6;
+      --bg-alt:     #FFFFFF;
+      --surface:    #FFFFFF;
+      --text:       #121212;
+      --text-2:     #3a3d42;
+      --text-3:     #62666D;
+      --text-4:     #9a9ea6;
+      --accent:     #121212;
       --gold:       #8a6d2f;
-      --border:     #E5E5E5;
-      --border-mid: #D0D0D0;
+      --border:     rgba(0,0,0,0.07);
+      --border-mid: rgba(0,0,0,0.12);
       --is-light:   1;
       --err:        #C93636;
       --scrollbar:  rgba(0,0,0,0.10);
-      --bg-base:    #FFFFFF;
-      --bg-surface: #F8F8F8;
-      --bg-elevated:#F4F4F4;
-      --app-bg:     #FFFFFF;
-      --bg-secondary:#F8F8F8;
-      --surface-high:#F4F4F4;
-      --bg-page:    #FFFFFF;
-      --text-primary:#1a1a1a;
-      --text-secondary:#4a4d52;
-      --text-muted: #7a7d82;
+      --bg-base:    #F4F5F6;
+      --bg-surface: #FFFFFF;
+      --bg-elevated:#FFFFFF;
+      --app-bg:     #F4F5F6;
+      --bg-secondary:#FFFFFF;
+      --surface-high:#FAFAFA;
+      --bg-page:    #F4F5F6;
+      --text-primary:#121212;
+      --text-secondary:#3a3d42;
+      --text-muted: #62666D;
       --accent-light:#222326;
-      --border-subtle:#E5E5E5;
-      --border-strong:#D0D0D0;
-      --glass-border:#E5E5E5;
-      --glass-bg:   rgba(255,255,255,0.85);
+      --border-subtle:rgba(0,0,0,0.07);
+      --border-strong:rgba(0,0,0,0.12);
+      --glass-border:rgba(0,0,0,0.08);
+      --glass-bg:   rgba(244,245,246,0.88);
     }
   }
 
@@ -544,6 +568,18 @@
   }
   @supports (-webkit-touch-callout:none) {
     .cert-assembly-track * { -webkit-backface-visibility:hidden; backface-visibility:hidden; }
+  }
+
+  /* ── Nav clearance utility — all top-level pages use this ── */
+  /* The Dynamic Island nav is ~52-54px tall, fixed at top:14px */
+  /* We need at minimum 14+54+24 = 92px clearance; use 104px base */
+  .page-top-pad {
+    padding-top: 104px;
+  }
+  @media (min-width: 768px) {
+    .page-top-pad {
+      padding-top: 112px;
+    }
   }
 
   /* ── Dashboard shell (profile / admin) ─────────────────────────────── */

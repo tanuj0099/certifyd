@@ -11,17 +11,17 @@ export const THEME_PRESETS = {
   dark: {
     id: 'dark',
     label: 'Dark',
-    bg: '#222326',
-    bgAlt: '#2A2A2E',
-    surface: '#2A2A2E',
-    text: '#F4F5F8',
-    text2: '#A0A3AB',
-    text3: '#6B6E76',
-    text4: '#44474F',
-    accent: '#F4F5F8',
-    border: 'rgba(255,255,255,0.08)',
+    bg:        '#0b0b0f',   // matches --background in index.css
+    bgAlt:     '#16161a',   // matches --card / --bg-alt
+    surface:   '#16161a',   // matches --bg-alt
+    text:      '#F4F5F8',
+    text2:     '#A0A3AB',
+    text3:     '#6B6E76',
+    text4:     '#44474F',
+    accent:    '#F4F5F8',
+    border:    '#222326',   // matches --border token (solid, not rgba for JS color mixing)
     borderMid: 'rgba(255,255,255,0.14)',
-    isLight: false,
+    isLight:   false,
   },
   light: {
     id: 'light',

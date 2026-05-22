@@ -6,6 +6,7 @@ import { initializeApp } from 'firebase/app'
 import {
   createUserWithEmailAndPassword,
   getAuth,
+  GithubAuthProvider,
   GoogleAuthProvider,
   RecaptchaVerifier,
   sendPasswordResetEmail,
@@ -70,6 +71,10 @@ if (hasValidConfig()) {
 const googleProvider = new GoogleAuthProvider()
 googleProvider.setCustomParameters({ prompt: 'select_account' })
 
+const githubProvider = new GithubAuthProvider()
+githubProvider.addScope('read:user')
+githubProvider.addScope('user:email')
+
 function assertAuth() {
   if (!auth) {
     throw new Error(
@@ -81,6 +86,11 @@ function assertAuth() {
 export const signInWithGoogle = async () => {
   assertAuth()
   return signInWithPopup(auth, googleProvider)
+}
+
+export const signInWithGithub = async () => {
+  assertAuth()
+  return signInWithPopup(auth, githubProvider)
 }
 
 export const signInWithEmail = async (email, password) => {
