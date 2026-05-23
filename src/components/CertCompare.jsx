@@ -21,6 +21,24 @@ function demandScore(d) {
   return d === 'Very High' ? 4 : d === 'High' ? 3 : d === 'Medium' ? 2 : 1
 }
 
+// ── Normalize raw Supabase row → consistent camelCase shape ──
+// certifications table schema:
+//   id, name, avg_cost, avg_hike, time_months, demand, link, affiliate, tags, domain_id, for_who
+function normalizeCert(row) {
+  return {
+    id:         row.id,
+    name:       row.name || row.cert_name || '',
+    avgHike:    Number(row.avg_hike  ?? row.avgHike  ?? 0),
+    avgCost:    Number(row.avg_cost  ?? row.avgCost  ?? 0),
+    timeMonths: Number(row.time_months ?? row.timeMonths ?? row.prep_time_months ?? 0),
+    demand:     row.demand || row.difficulty_level || 'Medium',
+    domain:     row.domain_id   || row.domain      || row.domain_name || '',
+    forWho:     row.for_who     || row.forWho       || row.description || '',
+    tags:       Array.isArray(row.tags) ? row.tags : [],
+    link:       row.link        || row.url          || '',
+  }
+}
+
 // ── Cert selector dropdown ────────────────────────────────
 function CertSelector({ value, onChange, label, color, certifications, domains }) {
   var [open, setOpen] = useState(false)
@@ -28,7 +46,9 @@ function CertSelector({ value, onChange, label, color, certifications, domains }
   // FIX: ref for outside-click detection
   var wrapRef = useRef(null)
 
-  var filtered = certifications.filter(function (c) { return domain === 'all' || c.domain === domain })
+  var filtered = certifications.filter(function (c) {
+    return domain === 'all' || c.domain === domain
+  })
   var selected = certifications.find(function (c) { return c.name === value })
 
   // FIX: close dropdown on outside click.
@@ -207,13 +227,15 @@ function RadarChartSVG({ data, nameA, nameB, animate }) {
 
   function polar(i, r) {
     var angle = (2 * Math.PI * i / N) - Math.PI / 2
-    return { x: CX + r * Math.cos(angle), y: CY + r * Math.sin(angle) }
+    var rSafe = isFinite(r) ? r : 0
+    return { x: CX + rSafe * Math.cos(angle), y: CY + rSafe * Math.sin(angle) }
   }
 
   function toPoints(scores) {
     return scores.map(function (s, i) {
-      var p = polar(i, (s / 100) * R)
-      return p.x + ',' + p.y
+      var sSafe = isFinite(s) ? s : 0
+      var p = polar(i, (sSafe / 100) * R)
+      return p.x.toFixed(4) + ',' + p.y.toFixed(4)
     }).join(' ')
   }
 
@@ -463,10 +485,22 @@ function CertCompare({ salary, prefilledCert }) {
           supabase.from('domains').select('*')
         ]);
 
-        if (certsResponse.data) setCertificationsData(certsResponse.data);
-        if (domainsResponse.data) setDomainsData(domainsResponse.data);
+        if (certsResponse.data) {
+          // Normalize all rows to camelCase with defaults so no field is ever undefined
+          setCertificationsData(certsResponse.data.map(normalizeCert));
+        }
+        if (domainsResponse.data) {
+          // Domains table can have varied shapes — normalize to { id, label }
+          const normalized = domainsResponse.data.map(function(d) {
+            return {
+              id:    d.id    || d.domain_id || d.slug || String(d.name || d.label || ''),
+              label: d.label || d.name      || d.id   || 'Unknown',
+            }
+          })
+          setDomainsData(normalized);
+        }
       } catch (error) {
-        console.error("Failed to fetch Supabase data:", error);
+        console.error("CertCompare: Failed to fetch Supabase data:", error);
       } finally {
         setDbLoading(false);
       }
@@ -517,7 +551,23 @@ function CertCompare({ salary, prefilledCert }) {
   ] : []
 
   if (dbLoading) {
-    return <div>Connecting to live database...</div>;
+    return (
+      <div style={{ padding: '48px 24px', textAlign: 'center' }}>
+        <div style={{ display: 'inline-flex', gap: '6px', alignItems: 'center' }}>
+          {[0,1,2].map(i => (
+            <div key={i} style={{
+              width: '6px', height: '6px', borderRadius: '50%',
+              background: 'var(--text-4)',
+              animation: 'pdot 1.2s ease-in-out infinite',
+              animationDelay: i * 0.18 + 's',
+            }} />
+          ))}
+        </div>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-4)', letterSpacing: '0.14em', marginTop: '12px' }}>
+          LOADING CERTIFICATIONS…
+        </div>
+      </div>
+    );
   }
 
   return (
