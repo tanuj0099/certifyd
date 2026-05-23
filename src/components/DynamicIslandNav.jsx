@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
   Menu, User, X, Home, Wrench, BarChart2,
-  LayoutDashboard, Activity, Radio, ChevronRight,
+  LayoutDashboard, Radio, ChevronRight,
 } from 'lucide-react'
 import { useTheme } from '../hooks/useTheme.jsx'
 import UserAccountMenu from './UserAccountMenu.jsx'
@@ -34,19 +34,22 @@ const AUTH_NAV = [
 ]
 
 // ── Mobile bottom tab bar config ───────────────────────────
+// Home | Cert Radar | ROI | Tools hub | Sign In / Profile
+// Tools hub (/tools) contains: Market Pulse, Offer Analysis, Resume Analyzer,
+// Cert Compare, CKA Roadmap etc. — all tool pages in one place.
 const MOBILE_TABS_ANON = [
-  { label: 'Home',         pageId: 'home',             Icon: Home },
-  { label: 'Cert Radar',  pageId: 'tools/cert-radar', Icon: Radio },
-  { label: 'ROI',         pageId: 'app',              Icon: BarChart2, isRoi: true },
-  { label: 'Market',      pageId: 'tools/market',     Icon: Activity },
-  { label: 'Sign In',     pageId: '__signin__',        Icon: User },
+  { label: 'Home',      pageId: 'home',             Icon: Home },
+  { label: 'Cert Radar',pageId: 'tools/cert-radar', Icon: Radio },
+  { label: 'ROI',       pageId: 'app',              Icon: BarChart2, isRoi: true },
+  { label: 'Tools',     pageId: 'tools',            Icon: Wrench },
+  { label: 'Sign In',   pageId: '__signin__',        Icon: User },
 ]
 const MOBILE_TABS_AUTH = [
-  { label: 'Home',         pageId: 'home',             Icon: Home },
-  { label: 'Cert Radar',  pageId: 'tools/cert-radar', Icon: Radio },
-  { label: 'ROI',         pageId: 'app',              Icon: BarChart2, isRoi: true },
-  { label: 'Market',      pageId: 'tools/market',     Icon: Activity },
-  { label: 'Profile',     pageId: 'profile',           Icon: User },
+  { label: 'Home',      pageId: 'home',             Icon: Home },
+  { label: 'Cert Radar',pageId: 'tools/cert-radar', Icon: Radio },
+  { label: 'ROI',       pageId: 'app',              Icon: BarChart2, isRoi: true },
+  { label: 'Tools',     pageId: 'tools',            Icon: Wrench },
+  { label: 'Profile',   pageId: 'profile',           Icon: User },
 ]
 
 // ── Helpers ────────────────────────────────────────────────

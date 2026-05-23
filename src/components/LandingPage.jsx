@@ -193,7 +193,7 @@ function TrustStrip() {
 }
 
 // ─────────────────────────────────────────────────────────
-// CERT ASSEMBLY — metallic border + swoosh
+// CERT INTELLIGENCE — metallic border + swoosh
 // ─────────────────────────────────────────────────────────
 function CertAssembly() {
   const C = useTheme()
@@ -247,7 +247,7 @@ function CertAssembly() {
           style={{ width: cardW }}
         >
           <div style={{ fontFamily: F_MONO, fontSize: '10px', color: C.text4, letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: '20px', textAlign: 'center' }}>
-            // CERT ASSEMBLY
+            // CERT INTELLIGENCE
           </div>
           <div style={{ position: 'relative', width: '100%', aspectRatio: '480/340', borderRadius: '6px', overflow: 'hidden', border: `1px solid ${C.borderMid}`, background: C.certBg, boxShadow: '0 24px 64px rgba(0,0,0,0.28)' }}>
             <svg viewBox="0 0 480 340" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block', pointerEvents: 'none' }}>
@@ -264,7 +264,7 @@ function CertAssembly() {
             </svg>
             <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '28px 24px' }}>
               <div style={{ fontFamily: F_MONO, fontSize: '10px', color: C.gold, letterSpacing: '0.18em', marginBottom: '12px', textTransform: 'uppercase' }}>
-                CertifyROI · Route Analysis
+                CertifyROI · Cert Intelligence
               </div>
               <div style={{ fontFamily: F_SERIF, fontWeight: '400', fontSize: '1.5rem', color: C.text, marginBottom: '4px', textAlign: 'center', lineHeight: 1.1 }}>
                 Route Briefing
@@ -301,7 +301,7 @@ function CertAssembly() {
             style={{ marginTop: '16px', textAlign: 'center' }}
           >
             <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text4, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
-              ✓ Briefing compiled
+              ✓ Analysis complete
             </div>
           </motion.div>
         </motion.div>
@@ -350,9 +350,9 @@ function CertAssembly() {
               </div>
 
               <div style={{ position: 'absolute', inset: 0, transform: l2Desktop, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '32px' }}>
-                <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.gold, letterSpacing: '0.18em', marginBottom: '14px', textTransform: 'uppercase' }}>CertifyROI · Route Analysis</div>
-                <div style={{ fontFamily: F_SERIF, fontWeight: '400', fontSize: 'clamp(1.5rem, 3.2vw, 2.4rem)', color: C.text, marginBottom: '6px', textAlign: 'center', lineHeight: 1.1 }}>Route Briefing</div>
-                <div style={{ fontFamily: F_SANS, fontSize: '13px', color: C.text3, marginBottom: '28px', textAlign: 'center' }}>Personalised · India 2026</div>
+                <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.gold, letterSpacing: '0.18em', marginBottom: '14px', textTransform: 'uppercase' }}>CertifyROI · Cert Intelligence</div>
+                <div style={{ fontFamily: F_SERIF, fontWeight: '400', fontSize: 'clamp(1.5rem, 3.2vw, 2.4rem)', color: C.text, marginBottom: '6px', textAlign: 'center', lineHeight: 1.1 }}>ROI Briefing</div>
+                <div style={{ fontFamily: F_SANS, fontSize: '13px', color: C.text3, marginBottom: '28px', textAlign: 'center' }}>Live Data · India 2026</div>
                 <div style={{ display: 'flex', gap: '28px', marginBottom: '20px', width: '100%', justifyContent: 'center' }}>
                   {[
                     { l: 'PAYBACK',   v: '6 MO',    c: C.text },
@@ -398,14 +398,14 @@ function CertAssembly() {
 
           <div style={{ opacity: hintOp, marginTop: '36px', textAlign: 'center', pointerEvents: 'none' }}>
             <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}>
-              <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.18em' }}>↓ SCROLL TO ASSEMBLE ↓</div>
+              <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.18em' }}>↓ SCROLL TO BUILD ↓</div>
             </motion.div>
           </div>
         </div>
 
         <div style={{ opacity: assembledOp, position: 'absolute', bottom: '10%', left: 0, right: 0, textAlign: 'center', pointerEvents: 'none', zIndex: 5 }}>
           <div className="glass" style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.15em', display: 'inline-block', padding: '8px 18px' }}>
-            ✓ BRIEFING COMPILED
+            ✓ ANALYSIS COMPLETE
           </div>
         </div>
       </div>
@@ -1203,19 +1203,38 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
 
           {/* Mountain â€” centered, full bleed */}
           <div style={{ position: 'absolute', inset: 0, zIndex: 1, background: C.bg }}>
-            {!isMobile && <img
-              src="/mountain.png"
-              alt=""
-              style={{
-                width: '100%', height: '100%', minWidth: '100%', minHeight: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center center',
-                filter: !C.isLight
-                  ? 'brightness(0.38) contrast(1.12) saturate(0.6)'
-                  : 'brightness(0.62) contrast(1.12) saturate(0.82)',
-              }}
-            />}
-            {/* Overlay for text readability */}
+            {isMobile ? (
+              <img
+                src="/mountain.png"
+                alt=""
+                style={{
+                  position: 'absolute',
+                  bottom: 0, left: 0,
+                  width: '100%',
+                  height: 'auto',
+                  objectFit: 'contain',
+                  objectPosition: 'center bottom',
+                  filter: !C.isLight
+                    ? 'brightness(0.42) contrast(1.08) saturate(0.55)'
+                    : 'brightness(0.62) contrast(1.12) saturate(0.82)',
+                  maskImage: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.45) 55%, transparent 100%)',
+                  WebkitMaskImage: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.45) 55%, transparent 100%)',
+                }}
+              />
+            ) : (
+              <img
+                src="/mountain.png"
+                alt=""
+                style={{
+                  width: '100%', height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'center center',
+                  filter: !C.isLight
+                    ? 'brightness(0.38) contrast(1.12) saturate(0.6)'
+                    : 'brightness(0.62) contrast(1.12) saturate(0.82)',
+                }}
+              />
+            )}            {/* Overlay for text readability */}
             <div style={{
               position: 'absolute', inset: 0,
               background: C.isLight
@@ -1309,6 +1328,7 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
 
         {/* â•â•â•â•â•â•â•â•â•â• SECTIONS â•â•â•â•â•â•â•â•â•â• */}
         <TrustStrip />
+        <CertAssembly />
         <DataComposition />
         <FeaturesBentoGrid onEnter={handleEnter} />
         <PivotDomainsCard onEnter={handleEnter} />
