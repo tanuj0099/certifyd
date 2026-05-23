@@ -99,29 +99,24 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -4, scale: 0.98 }}
               transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+              className="bg-[#0b0b0c] border border-white/[0.08] shadow-2xl rounded-xl p-2 z-[9999]"
               style={{
                 position: 'absolute',
                 top: 'calc(100% + 12px)',
                 right: 0,
-                zIndex: 9999,
                 overflow: 'visible',
                 width: '12rem',
-                padding: '0.5rem',
-                borderRadius: '0.75rem',
-                border: '1px solid rgba(255,255,255,0.08)',
-                background: '#09090b',
-                boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)',
               }}
             >
               <motion.div
-                style={{ padding: '10px 12px 12px', borderBottom: '1px solid var(--border)' }}
+                className="px-3 pb-3 pt-2 border-b border-white/[0.08]"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
               >
-                <motion.div className="text-white font-medium" style={{ fontSize: '13px' }}>
+                <motion.div className="text-white font-medium text-sm">
                   {user?.user_metadata?.full_name || 'Tanuj Rajdev'}
                 </motion.div>
-                <motion.div className="text-zinc-400 text-xs" style={{ marginTop: 4, wordBreak: 'break-all' }}>
+                <motion.div className="text-zinc-400 text-xs mt-1 break-all">
                   {user?.email || ''}
                 </motion.div>
               </motion.div>
@@ -137,23 +132,9 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
                     type="button"
                     role="menuitem"
                     onClick={() => go(item.id)}
-                    className="text-zinc-300 hover:text-white hover:bg-white/[0.04] transition-colors"
-                    style={{
-                      width: '100%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '10px',
-                      padding: '10px 12px',
-                      border: 'none',
-                      borderRadius: '10px',
-                      fontFamily: F_SANS,
-                      fontSize: '13px',
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                      textAlign: 'left',
-                    }}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 border-none rounded-lg bg-transparent text-zinc-200 hover:text-white hover:bg-white/[0.05] transition-all text-left font-sans text-[13px] font-semibold cursor-pointer"
                   >
-                    <Icon size={15} style={{ color: 'var(--text-3)' }} />
+                    <Icon size={15} className="text-zinc-400" />
                     {item.label}
                   </button>
                 )
@@ -167,14 +148,7 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
                   setOpen(false)
                   onSignOut?.()
                 }}
-                className="text-red-400 hover:text-red-300 hover:bg-red-500/[0.06] transition-colors"
-                style={{
-                  width: '100%', display: 'flex', alignItems: 'center', gap: '10px',
-                  padding: '10px 12px', marginTop: '4px',
-                  border: 'none', borderRadius: '10px',
-                  fontFamily: F_SANS, fontSize: '13px', fontWeight: 600,
-                  cursor: 'pointer', textAlign: 'left',
-                }}
+                className="w-full flex items-center gap-2.5 px-3 py-2 mt-1 border-none rounded-lg bg-transparent text-red-400 hover:text-red-300 hover:bg-red-500/[0.08] transition-all text-left font-sans text-[13px] font-semibold cursor-pointer"
               >
                 <LogOut size={15} />
                 Sign out

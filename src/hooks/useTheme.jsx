@@ -81,22 +81,7 @@ export const ThemeProvider = ({ children }) => {
     const apply = () => {
       const id = resolveTheme(mode)
       setResolvedId(id)
-      
-      if (typeof window !== 'undefined') {
-        const root = window.document.documentElement
-        root.setAttribute('data-theme', id === 'dark' ? 'nordic' : 'ash')
-        
-        root.classList.remove('light', 'dark')
-        
-        if (mode === 'dark') {
-          root.classList.add('dark')
-        } else if (mode === 'light') {
-          root.classList.add('light')
-        } else {
-          const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-          root.classList.add(systemTheme)
-        }
-      }
+      document.documentElement.setAttribute('data-theme', id === 'dark' ? 'nordic' : 'ash')
     }
 
     apply()
