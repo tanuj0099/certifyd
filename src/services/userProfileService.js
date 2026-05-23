@@ -3,13 +3,13 @@ import { supabase } from '../lib/supabase.js'
 const PROFILE_TABLE = 'user_profiles'
 
 export function buildUserProfilePayload(user, values = {}) {
-  const provider = user?.providerData?.[0]?.providerId || 'password'
+  const provider = user?.app_metadata?.provider || user?.providerData?.[0]?.providerId || 'password'
   const now = new Date().toISOString()
   const payload = {
-    user_id: user?.uid,
+    user_id: user?.id || user?.uid,
     email: values.email || user?.email || '',
-    full_name: values.full_name || values.name || user?.displayName || '',
-    avatar_url: values.avatar_url || user?.photoURL || '',
+    full_name: values.full_name || values.name || user?.user_metadata?.full_name || user?.displayName || '',
+    avatar_url: values.avatar_url || user?.user_metadata?.avatar_url || user?.photoURL || '',
     provider,
     last_seen_at: now,
     updated_at: now,
@@ -25,7 +25,7 @@ export function buildUserProfilePayload(user, values = {}) {
 }
 
 export async function upsertUserProfile(user, values = {}) {
-  if (!user?.uid) throw new Error('No authenticated user available.')
+  if (!user?.id && !user?.uid) throw new Error('No authenticated user available.')
   if (!supabase) throw new Error('Supabase is not configured.')
 
   const payload = buildUserProfilePayload(user, values)
@@ -54,6 +54,6 @@ export async function fetchUserProfile(userId) {
 }
 
 export async function syncUserProfile(user) {
-  if (!user?.uid || !supabase) return null
+  if ((!user?.id && !user?.uid) || !supabase) return null
   return upsertUserProfile(user)
 }

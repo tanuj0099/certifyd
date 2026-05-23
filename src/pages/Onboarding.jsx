@@ -119,18 +119,23 @@ export default function Onboarding() {
   }, [user])
 
   async function handleComplete() {
-    if (!user) return
     setSubmitting(true)
     setError('')
     try {
-      // Detect auth provider dynamically from Firebase user object
-      const provider = user.providerData?.[0]?.providerId || 'password'
+      const { data: { user: activeUser }, error: authError } = await supabase.auth.getUser()
+      if (authError || !activeUser) {
+        console.error("Auth state missing inside onboarding dispatcher")
+        setError('No authenticated session found. Please sign in again.')
+        return
+      }
+
+      const provider = activeUser.app_metadata?.provider || 'password'
 
       // Upsert into user_profiles via the service
-      await upsertUserProfile(user, {
-        email: user.email || '',
-        full_name: workspaceName.trim() || user.displayName || '',
-        avatar_url: user.photoURL || '',
+      await upsertUserProfile(activeUser, {
+        email: activeUser.email || user?.email || '',
+        full_name: workspaceName.trim() || activeUser.user_metadata?.full_name || user?.displayName || '',
+        avatar_url: activeUser.user_metadata?.avatar_url || user?.photoURL || '',
         job_role: careerFocus || 'Student',
         city: city || 'Bangalore',
         current_salary: currentSalary ? Number(currentSalary) : null,
@@ -144,7 +149,7 @@ export default function Onboarding() {
           id: user.uid,
           email: user.email,
           workspace_name: workspaceName.trim() || 'My Workspace',
-          workspace_slug: workspaceSlug.trim() || slugify(workspaceName) || user.uid,
+          workspace_slug: workspaceSlug.trim() || slugify(workspaceName) || activeUser.id,
           career_focus: careerFocus || 'Student',
           city: city || 'Bangalore',
           avatar_initials: initials,
@@ -170,26 +175,18 @@ export default function Onboarding() {
   const canAdvanceStep1 = !!careerFocus
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: '#010102',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '24px',
-      fontFamily: FS,
-    }}>
-      <div style={{ width: '100%', maxWidth: '480px' }}>
+    <div className="min-h-screen bg-white dark:bg-[#010102] transition-colors flex items-center justify-center p-6 font-sans">
+      <div className="w-full max-w-[480px]">
 
         {/* Brand mark */}
-        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <div style={{ fontFamily: FM, fontSize: '11px', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.22em', textTransform: 'uppercase', marginBottom: '8px' }}>
+        <div className="text-center mb-10">
+          <div className="font-mono text-[11px] text-zinc-500 dark:text-white/30 tracking-[0.22em] uppercase mb-2">
             CertifyROI
           </div>
-          <div style={{ fontFamily: FS, fontSize: '22px', fontWeight: 800, color: '#f4f5f8', letterSpacing: '-0.02em' }}>
+          <div className="font-sans text-[22px] font-extrabold text-zinc-900 dark:text-[#f4f5f8] tracking-tight">
             Set up your workspace
           </div>
-          <div style={{ fontFamily: FS, fontSize: '13px', color: 'rgba(255,255,255,0.38)', marginTop: '6px' }}>
+          <div className="font-sans text-[13px] text-zinc-500 dark:text-white/40 mt-1.5">
             Takes under 60 seconds
           </div>
         </div>
@@ -204,23 +201,18 @@ export default function Onboarding() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
-            style={{
-              background: '#0d0d10',
-              border: '1px solid rgba(255,255,255,0.08)',
-              borderRadius: '20px',
-              padding: '32px',
-            }}
+            className="bg-zinc-50 dark:bg-[#0d0d10] border border-zinc-200 dark:border-white/[0.08] rounded-[20px] p-8"
           >
             {/* ── STEP 0: Workspace creation ────────────────────── */}
             {step === 0 && (
               <>
-                <div style={{ fontFamily: FM, fontSize: '9px', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '20px' }}>
+                <div className="font-mono text-[9px] text-zinc-500 dark:text-white/30 tracking-[0.2em] uppercase mb-5">
                   Step 1 of 3 — Workspace
                 </div>
-                <h2 style={{ margin: '0 0 8px', fontSize: '18px', fontWeight: 800, color: '#f4f5f8', letterSpacing: '-0.02em' }}>
+                <h2 className="m-0 mb-2 text-[18px] font-extrabold text-zinc-900 dark:text-[#f4f5f8] tracking-tight">
                   Name your workspace
                 </h2>
-                <p style={{ margin: '0 0 28px', fontSize: '13px', color: 'rgba(255,255,255,0.4)', lineHeight: 1.6 }}>
+                <p className="m-0 mb-7 text-[13px] text-zinc-600 dark:text-white/40 leading-[1.6]">
                   This is your personal career tracking hub. You can always change it later.
                 </p>
 

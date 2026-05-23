@@ -55,7 +55,6 @@ import CertCompare from "./components/CertCompare.jsx";
 import CareerSimulator from "./components/CareerSimulator.jsx";
 import JobCertMap from "./components/JobCertMap.jsx";
 import HikeVerifier from "./components/HikeVerifier.jsx";
-import Dashboard from "./components/Dashboard.jsx";
 import MarketIntelligenceTool from "./components/LiveMarketPulse.jsx";
 import { AppSection } from "./components/SharedUI.jsx";
 import { MarketingFooter } from "./components/MarketingPageShell.jsx";
@@ -1730,20 +1729,10 @@ const NavBar = function ({ currentPage, onNavigate, onTabChange }) {
             }}
           >
             <div
+              className="flex flex-col md:flex-row items-start md:items-center md:justify-center w-full max-w-[1240px] mx-auto px-4 py-5 md:py-0 md:h-[46px] gap-3 md:gap-2 overflow-x-auto no-scrollbar"
               style={{
-                maxWidth: "1240px",
-                margin: "0 auto",
-                padding: "0 12px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                height: "46px",
-                overflowX: "auto",
-                scrollbarWidth: "none",
                 WebkitOverflowScrolling: "touch",
-                gap: "2px",
               }}
-              className="tab-row-scroll"
             >
               {STEP_TABS.map(function (tab, i) {
                 var active = activeTab === tab.id;
@@ -1754,11 +1743,7 @@ const NavBar = function ({ currentPage, onNavigate, onTabChange }) {
                 return (
                   <div
                     key={tab.id}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      flexShrink: 0,
-                    }}
+                    className="flex items-center w-full md:w-auto flex-shrink-0"
                   >
                     {i > 0 ? (
                       <StepArrow active={isCompleted || active} />
@@ -1923,6 +1908,13 @@ const AppPage = function ({ onCertSelected }) {
   const resumeDomain = useJourneyStore((s) => s.resumeDomain);
   const resumeName = useJourneyStore((s) => s.resumeName);
   const currentStepNum = STEP_TABS.findIndex((t) => t.id === activeTab);
+  const isMobile = useIsMobile();
+
+  useEffect(() => {
+    if (currentStepNum === -1) {
+      onTabChange("resume");
+    }
+  }, [activeTab, currentStepNum, onTabChange]);
 
   return (
     <div
@@ -2021,10 +2013,10 @@ const AppPage = function ({ onCertSelected }) {
                     <div
                       style={{
                         display: "flex",
-                        alignItems: "center",
+                        alignItems: isMobile ? "stretch" : "center",
                         justifyContent: "center",
-                        gap: "16px",
-                        flexWrap: "wrap",
+                        gap: isMobile ? "12px" : "16px",
+                        flexDirection: isMobile ? "column" : "row",
                         marginBottom: "32px",
                       }}
                     >
@@ -2037,10 +2029,11 @@ const AppPage = function ({ onCertSelected }) {
                             style={{
                               display: "flex",
                               alignItems: "center",
-                              gap: "16px",
+                              gap: isMobile ? "0" : "16px",
+                              flexDirection: isMobile ? "column" : "row",
                             }}
                           >
-                            {i > 0 && (
+                            {i > 0 && !isMobile && (
                               <div
                                 style={{
                                   display: "flex",
@@ -2144,11 +2137,7 @@ const AppPage = function ({ onCertSelected }) {
                     exit={{ opacity: 0, y: -10 }}
                     transition={T}
                   >
-                    {activeTab === "dashboard" ? (
-                      <Dashboard />
-                    ) : null}
-
-                    {activeTab === "resume" ? (
+                    {/* Tab routes handled sequentially below */}                    {activeTab === "resume" ? (
                       <div
                         style={{
                           padding: "clamp(16px,3vw,28px)",
@@ -2795,13 +2784,11 @@ function AppRoot() {
   }, [location.state, location.pathname, navigate])
 
   useEffect(() => {
-    if (location.pathname === '/dashboard') {
-      setActiveTab('dashboard')
-    }
-  }, [location.pathname, setActiveTab])
+    // (Removed aggressive activeTab override)
+  }, [location.pathname])
 
   var goToApp = function (tab) {
-    setActiveTab(tab || "dashboard");
+    setActiveTab(tab || "resume");
     navigate("/app");
   };
 
@@ -2876,15 +2863,15 @@ function AppRoot() {
                 />
                 <Route
                   path="/app"
-                  element={
-                    <AppPage
-                      onCertSelected={handleCertSelected}
-                    />
-                  }
+                  element={<AppPage onCertSelected={handleCertSelected} />}
                 />
                 <Route
-                  path="/admin"
-                  element={<Navigate to="/dashboard" replace />}
+                  path="/roi-calculator"
+                  element={<ROITool />}
+                />
+                <Route
+                  path="/market-pulse"
+                  element={<MarketIntelligenceTool />}
                 />
                 <Route path="/faq" element={<FAQPage />} />
                 <Route path="/about" element={<AboutPage />} />
@@ -2952,7 +2939,7 @@ function AppRoot() {
                 <Route
                   path="*"
                   element={
-                    <NotFound isDark={isDark} />
+                    <Navigate to="/dashboard" replace />
                   }
                 />
               </Routes>

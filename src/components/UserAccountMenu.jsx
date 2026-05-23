@@ -99,7 +99,7 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -4, scale: 0.98 }}
               transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-              className="bg-[#0b0b0c] border border-white/[0.08] shadow-2xl rounded-xl p-2 z-[9999]"
+              className="bg-white dark:bg-[#010102] border border-zinc-200 dark:border-white/[0.08] shadow-2xl rounded-xl p-2 z-[9999]"
               style={{
                 position: 'absolute',
                 top: 'calc(100% + 12px)',
@@ -109,14 +109,14 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
               }}
             >
               <motion.div
-                className="px-3 pb-3 pt-2 border-b border-white/[0.08]"
+                className="px-3 pb-3 pt-2 border-b border-zinc-200 dark:border-white/[0.08]"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
               >
-                <motion.div className="text-white font-medium text-sm">
+                <motion.div className="text-zinc-900 dark:text-white font-medium text-sm">
                   {user?.user_metadata?.full_name || 'Tanuj Rajdev'}
                 </motion.div>
-                <motion.div className="text-zinc-400 text-xs mt-1 break-all">
+                <motion.div className="text-zinc-500 dark:text-zinc-400 text-xs mt-1 break-all">
                   {user?.email || ''}
                 </motion.div>
               </motion.div>
@@ -132,9 +132,9 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
                     type="button"
                     role="menuitem"
                     onClick={() => go(item.id)}
-                    className="w-full flex items-center gap-2.5 px-3 py-2 border-none rounded-lg bg-transparent text-zinc-200 hover:text-white hover:bg-white/[0.05] transition-all text-left font-sans text-[13px] font-semibold cursor-pointer"
+                    className="w-full flex items-center gap-2.5 px-3 py-2 border-none rounded-lg bg-transparent text-zinc-700 dark:text-zinc-200 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-white/[0.05] transition-all text-left font-sans text-[13px] font-semibold cursor-pointer"
                   >
-                    <Icon size={15} className="text-zinc-400" />
+                    <Icon size={15} className="text-zinc-500 dark:text-zinc-400" />
                     {item.label}
                   </button>
                 )
@@ -148,7 +148,7 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
                   setOpen(false)
                   onSignOut?.()
                 }}
-                className="w-full flex items-center gap-2.5 px-3 py-2 mt-1 border-none rounded-lg bg-transparent text-red-400 hover:text-red-300 hover:bg-red-500/[0.08] transition-all text-left font-sans text-[13px] font-semibold cursor-pointer"
+                className="w-full flex items-center gap-2.5 px-3 py-2 mt-1 border-none rounded-lg bg-transparent text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-500/[0.08] transition-all text-left font-sans text-[13px] font-semibold cursor-pointer"
               >
                 <LogOut size={15} />
                 Sign out

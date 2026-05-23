@@ -79,7 +79,10 @@ export default function OnboardingGate({ children }) {
     }
 
     checkProfile()
-    return () => { cancelled = true }
+    return () => {
+      cancelled = true
+      lastCheckedRef.current = null
+    }
   }, [userId, authLoading]) // stable primitives only — no object references
 
   // Auth still loading

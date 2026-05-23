@@ -8,6 +8,7 @@ import {
 import { useTheme } from '../hooks/useTheme.jsx'
 import UserAccountMenu from './UserAccountMenu.jsx'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { useJourneyStore } from '../store/useJourneyStore.js'
 
 const F_SANS = "'Inter', 'DM Sans', sans-serif"
 const F_MONO = "'JetBrains Mono', 'IBM Plex Mono', monospace"
@@ -73,6 +74,11 @@ function isActivePage(currentPage, pageId) {
 
 function doNavigate(event, item, onNavigate, onActivate, onClose, navigate, onSignIn) {
   event.preventDefault()
+  if (item.label === 'ROI Calculator') {
+    const s = useJourneyStore.getState();
+    if (s.resetMode) s.resetMode();
+    if (s.setActiveTab) s.setActiveTab('resume');
+  }
   if (item.pageId === '__signin__') { onSignIn?.(); onClose?.(); return }
   if (item.isRoi) { navigate('/app'); onActivate?.('app'); onClose?.(); return }
   if (item.href) {

@@ -4,6 +4,7 @@ import { useAuth } from '../hooks/useAuth.jsx'
 import { supabase } from '../lib/supabase.js'
 import slugify from '../utils/slugify.js'
 import SkeletonLoader from '../components/SkeletonLoader.jsx'
+import { useJourneyStore } from '../store/useJourneyStore.js'
 
 const FM = "'JetBrains Mono','IBM Plex Mono',monospace"
 const FS = "'Inter','DM Sans',sans-serif"
@@ -39,17 +40,7 @@ function CareerCard({ title, details, updatedAt, status, certSlug }) {
 
   const content = (
     <div
-      style={{
-        padding: '16px 18px',
-        borderRadius: 12,
-        background: 'var(--bg-alt)',
-        border: '1px solid var(--border)',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
-        gap: 16,
-        transition: 'border-color 0.18s ease',
-      }}
+      className="p-4 rounded-xl flex justify-between items-start gap-4 transition-all bg-[var(--surface)] border border-[var(--border)]"
     >
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontWeight: 750, fontSize: 14, color: 'var(--text)', marginBottom: 4, lineHeight: 1.35 }}>
@@ -156,9 +147,7 @@ export default function DashboardPage() {
       } catch (err) {
         console.error("Critical dashboard initialization exception handle:", err)
       } finally {
-        if (!cancelled) {
-          setLoading(false) // Drop the skeleton animation layer flawlessly
-        }
+        setLoading(false) // Drop the skeleton animation layer flawlessly
       }
     }
 
@@ -243,7 +232,7 @@ export default function DashboardPage() {
         return (
           <div style={{ display: 'grid', gap: 14 }}>
             {userProfile ? (
-              <div style={{ padding: 20, borderRadius: 14, border: '1px solid var(--border)', background: 'var(--bg-alt)' }}>
+              <div className="p-5 rounded-2xl bg-[var(--surface)] border border-[var(--border)]">
                 <div style={{ fontSize: 10, color: 'var(--text-4)', fontFamily: FM, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 14 }}>
                   Your Career Profile
                 </div>
@@ -299,10 +288,7 @@ export default function DashboardPage() {
         return (
           <div style={{ display: 'grid', gap: 10 }}>
             {milestones.map((m, idx) => (
-              <div key={m.id || idx} style={{
-                padding: '14px 18px', borderRadius: 12, border: '1px solid var(--border)',
-                background: 'var(--bg-alt)', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-              }}>
+              <div key={m.id || idx} className="p-4 rounded-xl flex justify-between items-center bg-[var(--surface)] border border-[var(--border)]">
                 <div>
                   <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)', marginBottom: 4 }}>{m.title}</div>
                   {m.target_date && (
@@ -351,13 +337,9 @@ export default function DashboardPage() {
               <Link
                 key={item.id || idx}
                 to={`/cert/${item.cert_name ? slugify(item.cert_name) : ''}`}
-                style={{ textDecoration: 'none', color: 'inherit' }}
+                className="no-underline"
               >
-                <div style={{
-                  padding: '14px 18px', borderRadius: 12, border: '1px solid var(--border)',
-                  background: 'var(--bg-alt)', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  transition: 'border-color 0.15s ease',
-                }}>
+                <div className="p-4 rounded-xl flex justify-between items-center transition-all bg-[var(--surface)] border border-[var(--border)]">
                   <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)' }}>{item.cert_name}</div>
                   {item.saved_at && (
                     <div style={{ fontSize: 11, color: 'var(--text-4)', fontFamily: FM }}>
@@ -381,15 +363,15 @@ export default function DashboardPage() {
   }
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      paddingTop: isMobile ? '112px' : '128px',
-      paddingRight: '24px',
-      paddingBottom: '40px',
-      paddingLeft: '24px',
-      color: 'var(--text)',
-      background: 'var(--bg)',
-    }}>
+    <div 
+      className="min-h-screen transition-colors"
+      style={{
+        paddingTop: isMobile ? '112px' : '128px',
+        paddingRight: '24px',
+        paddingBottom: '40px',
+        paddingLeft: '24px',
+      }}
+    >
       <div style={{
         maxWidth: '1400px',
         margin: '0 auto',
@@ -400,7 +382,7 @@ export default function DashboardPage() {
 
         {/* ── Left sidebar: Career Hub nav ──────────────────────── */}
         <aside style={{ display: isMobile ? 'none' : 'block', position: 'relative' }}>
-          <div style={{ padding: '14px', borderRadius: '14px', background: 'var(--bg-alt)', border: '1px solid var(--border)', position: 'sticky', top: '120px' }}>
+          <div className="p-4 rounded-2xl sticky top-[120px] bg-[var(--surface)] border border-[var(--border)]">
             {/* User avatar */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
               <div style={{
@@ -495,7 +477,7 @@ export default function DashboardPage() {
 
         {/* ── Right: metrics + quick actions ───────────────────── */}
         <aside style={{ display: isMobile ? 'none' : 'block' }}>
-          <div style={{ padding: '16px', borderRadius: 14, background: 'var(--bg-alt)', border: '1px solid var(--border)' }}>
+          <div className="p-4 rounded-2xl bg-[var(--surface)] border border-[var(--border)]">
             <div style={{ fontSize: 10, color: 'var(--text-4)', marginBottom: 4, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
               Milestone Moats
             </div>
@@ -511,7 +493,11 @@ export default function DashboardPage() {
                 Quick Actions
               </div>
               <div style={{ display: 'grid', gap: 8 }}>
-                <Link to="/app" style={{ textDecoration: 'none' }}>
+                <Link to="/app" onClick={() => {
+                  const s = useJourneyStore.getState();
+                  if (s.resetMode) s.resetMode();
+                  if (s.setActiveTab) s.setActiveTab('resume');
+                }} style={{ textDecoration: 'none' }}>
                   <button style={{
                     width: '100%', padding: '10px 12px', borderRadius: 9,
                     background: 'transparent', border: '1px solid var(--border-mid)',
