@@ -1150,7 +1150,7 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
               style={{
                 width: '100%', height: '100%', minWidth: '100%', minHeight: '100%',
                 objectFit: 'cover',
-                objectPosition: isMobile ? 'center 42%' : 'center 32%',
+                objectPosition: isMobile ? 'center 18%' : 'center 32%',
                 filter: !C.isLight
                   ? 'brightness(0.38) contrast(1.12) saturate(0.6)'
                   : 'brightness(0.62) contrast(1.12) saturate(0.82)',

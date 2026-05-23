@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Award, ChevronDown, Scale, Info, Zap, DollarSign, TrendingUp } from 'lucide-react'
-import { supabase } from '../services/supabase.js'
+import { supabase } from '../lib/supabase.js'
 
 // ── Font tokens → CSS variables ───────────────────────────
 // NOTE: SVG text elements cannot use CSS variables in presentation attributes.
@@ -82,10 +82,10 @@ function CertSelector({ value, onChange, label, color, certifications, domains }
             style={{
               position: 'absolute', top: '100%', left: 0, right: 0,
               zIndex: 60, marginTop: '6px', borderRadius: '12px',
-              background: 'transparent',
-              border: '1px solid ' + color + '33',
+              background: 'var(--bg)',
+              border: '1px solid ' + color + '44',
               overflow: 'hidden',
-              boxShadow: 'none',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
             }}
           >
             <div style={{ display: 'flex', gap: '4px', padding: '8px', flexWrap: 'wrap', borderBottom: '1px solid var(--border)' }}>
@@ -122,7 +122,7 @@ function CertSelector({ value, onChange, label, color, certifications, domains }
                       display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                       gap: '8px', transition: 'background 0.12s',
                     }}
-                    onMouseEnter={function (e) { if (value !== cert.name) e.currentTarget.style.background = 'transparent' }}
+                    onMouseEnter={function (e) { e.currentTarget.style.background = 'rgba(255,255,255,0.05)' }}
                     onMouseLeave={function (e) { if (value !== cert.name) e.currentTarget.style.background = 'transparent' }}
                   >
                     <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
