@@ -192,9 +192,9 @@ function TrustStrip() {
   )
 }
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-// CERT ASSEMBLY â€” metallic border + swoosh
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────
+// CERT ASSEMBLY — metallic border + swoosh
+// ─────────────────────────────────────────────────────────
 function CertAssembly() {
   const C = useTheme()
   const isMobile = useIsMobile()
@@ -216,89 +216,152 @@ function CertAssembly() {
     return unsub
   }, [scrollY])
 
-  // Trigger swoosh once when fully assembled
   useEffect(() => {
-    if (prog > 0.86 && !showSwoosh) {
+    if (!isMobile && prog > 0.86 && !showSwoosh) {
       const timer = setTimeout(() => setShowSwoosh(true), 200)
       return () => clearTimeout(timer)
     }
-  }, [prog, showSwoosh])
+  }, [prog, showSwoosh, isMobile])
 
   const rm = (p, a, b, c, d) => c + (d - c) * Math.max(0, Math.min(1, (p - a) / (b - a)))
   const p8 = rm(prog, 0, 0.8, 0, 1)
 
-  let l1, l2
-  if (isMobile) {
-    l1 = `translateY(${rm(p8, 0, 1, -28, 0)}px) scale(${rm(p8, 0, 1, 0.93, 1)})`
-    l2 = `translateY(${rm(p8, 0, 1, 28, 0)}px) scale(${rm(p8, 0, 1, 0.93, 1)})`
-  } else {
-    l1 = `perspective(1200px) translateZ(${rm(p8, 0, 1, -220, 0)}px) translateY(${rm(p8, 0, 1, -55, 0)}px) rotateY(${rm(p8, 0, 1, 26, 0)}deg) rotateX(${rm(p8, 0, 1, 11, 0)}deg)`
-    l2 = `perspective(1200px) translateZ(${rm(p8, 0, 1, 220, 0)}px) translateY(${rm(p8, 0, 1, 55, 0)}px) rotateY(${rm(p8, 0, 1, -20, 0)}deg) rotateX(${rm(p8, 0, 1, -8, 0)}deg)`
-  }
+  const l1Desktop = `perspective(1200px) translateZ(${rm(p8, 0, 1, -220, 0)}px) translateY(${rm(p8, 0, 1, -55, 0)}px) rotateY(${rm(p8, 0, 1, 26, 0)}deg) rotateX(${rm(p8, 0, 1, 11, 0)}deg)`
+  const l2Desktop = `perspective(1200px) translateZ(${rm(p8, 0, 1, 220, 0)}px) translateY(${rm(p8, 0, 1, 55, 0)}px) rotateY(${rm(p8, 0, 1, -20, 0)}deg) rotateX(${rm(p8, 0, 1, -8, 0)}deg)`
 
   const certScale = prog < 0.8 ? rm(prog, 0, 0.8, 0.64, 1.0) : rm(prog, 0.8, 1.0, 1.0, 0.9)
   const certOpacity = prog < 0.05 ? rm(prog, 0, 0.05, 0, 1) : prog > 0.9 ? rm(prog, 0.9, 1.0, 1, 0.4) : 1
   const hintOp = prog > 0.16 ? 0 : prog > 0.06 ? rm(prog, 0.06, 0.16, 1, 0) : 1
   const assembledOp = rm(prog, 0.8, 0.88, 0, 1)
-  const cardW = isMobile ? 'min(300px, 88vw)' : 'min(440px, 76vw)'
+
+  const cardW = isMobile ? 'min(320px, 90vw)' : 'min(440px, 76vw)'
+
+  if (isMobile) {
+    return (
+      <div style={{ background: C.bg, borderBottom: `1px solid ${C.border}`, padding: '48px 24px 56px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <motion.div
+          initial={{ opacity: 0, y: 24, scale: 0.94 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          style={{ width: cardW }}
+        >
+          <div style={{ fontFamily: F_MONO, fontSize: '10px', color: C.text4, letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: '20px', textAlign: 'center' }}>
+            // CERT ASSEMBLY
+          </div>
+          <div style={{ position: 'relative', width: '100%', aspectRatio: '480/340', borderRadius: '6px', overflow: 'hidden', border: `1px solid ${C.borderMid}`, background: C.certBg, boxShadow: '0 24px 64px rgba(0,0,0,0.28)' }}>
+            <svg viewBox="0 0 480 340" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block', pointerEvents: 'none' }}>
+              <defs>
+                <linearGradient id="metalGradM" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%"   stopColor="#333" />
+                  <stop offset="35%"  stopColor="#aaa" />
+                  <stop offset="55%"  stopColor="#b0b0b0" />
+                  <stop offset="100%" stopColor="#444" />
+                </linearGradient>
+              </defs>
+              <rect x="1.5" y="1.5" width="477" height="337" fill="none" stroke="url(#metalGradM)" strokeWidth="1.5" />
+              <rect x="12" y="12" width="456" height="316" fill="none" stroke="#2a2a2a" strokeWidth="0.8" />
+            </svg>
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '28px 24px' }}>
+              <div style={{ fontFamily: F_MONO, fontSize: '10px', color: C.gold, letterSpacing: '0.18em', marginBottom: '12px', textTransform: 'uppercase' }}>
+                CertifyROI · Route Analysis
+              </div>
+              <div style={{ fontFamily: F_SERIF, fontWeight: '400', fontSize: '1.5rem', color: C.text, marginBottom: '4px', textAlign: 'center', lineHeight: 1.1 }}>
+                Route Briefing
+              </div>
+              <div style={{ fontFamily: F_SANS, fontSize: '12px', color: C.text3, marginBottom: '24px', textAlign: 'center' }}>
+                Personalised · India 2026
+              </div>
+              <div style={{ display: 'flex', gap: '24px', marginBottom: '20px', justifyContent: 'center', width: '100%' }}>
+                {[
+                  { l: 'PAYBACK',   v: '6 MO',    c: C.text },
+                  { l: '5-YR GAIN', v: '₹14.2L',  c: C.gold },
+                  { l: 'DELTA',     v: '+35%',     c: C.text },
+                ].map((s, i) => (
+                  <div key={i} style={{ textAlign: 'center' }}>
+                    <div style={{ fontFamily: F_MONO, fontSize: '10px', color: C.text3, letterSpacing: '0.1em', marginBottom: '5px' }}>{s.l}</div>
+                    <div style={{ fontFamily: F_MONO, fontSize: '1.1rem', color: s.c, fontWeight: '600', letterSpacing: '-0.02em' }}>{s.v}</div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ width: '70%', height: '1px', background: C.borderMid, marginBottom: '12px' }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <CheckCircle2 size={11} color={C.gold} />
+                <span style={{ fontFamily: F_MONO, fontSize: '10px', color: C.text3, letterSpacing: '0.08em' }}>
+                  CALCULATED FROM YOUR INPUTS
+                </span>
+              </div>
+            </div>
+          </div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+            style={{ marginTop: '16px', textAlign: 'center' }}
+          >
+            <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text4, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+              ✓ Briefing compiled
+            </div>
+          </motion.div>
+        </motion.div>
+      </div>
+    )
+  }
 
   return (
     <div ref={trackRef} style={{
-      height: isMobile ? '180vh' : '280vh',
+      height: '280vh',
       position: 'relative',
       borderBottom: `1px solid ${C.border}`,
       background: C.bg,
     }}>
-      {!isMobile && (
-        <div style={{ position: 'absolute', width: '100%', height: '100%', pointerEvents: 'none' }}>
-          <div style={{ maxWidth: '1400px', margin: '0 auto', position: 'relative', height: '100%' }}>
-            <div style={{ position: 'absolute', left: '140px', top: 0, bottom: 0, width: '1px', background: C.border }} />
-          </div>
+      <div style={{ position: 'absolute', width: '100%', height: '100%', pointerEvents: 'none' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', position: 'relative', height: '100%' }}>
+          <div style={{ position: 'absolute', left: '140px', top: 0, bottom: 0, width: '1px', background: C.border }} />
         </div>
-      )}
+      </div>
 
       <div style={{ position: 'sticky', top: 0, height: '100vh', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, zIndex: 2, pointerEvents: 'none', background: C.bg, opacity: 0.95 }} />
 
         <div style={{ position: 'relative', zIndex: 4 }}>
           <div style={{ transform: `scale(${certScale})`, opacity: certOpacity }}>
-            <div style={{ position: 'relative', width: cardW, height: `calc(${cardW} / 1.414)`, transformStyle: isMobile ? 'flat' : 'preserve-3d' }}>
+            <div style={{ position: 'relative', width: cardW, height: `calc(${cardW} / 1.414)`, transformStyle: 'preserve-3d' }}>
 
-              {/* Layer 1: METALLIC border frame */}
-              <div style={{ position: 'absolute', inset: 0, transform: l1 }}>
+              <div style={{ position: 'absolute', inset: 0, transform: l1Desktop }}>
                 <svg viewBox="0 0 480 340" width="100%" height="100%" style={{ position: 'absolute', inset: 0, display: 'block' }}>
                   <defs>
                     <linearGradient id="metalGrad" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor="#333" />
-                      <stop offset="18%" stopColor="#777" />
-                      <stop offset="35%" stopColor="#aaa" />
-                      <stop offset="48%" stopColor="#c8c8c8" />
-                      <stop offset="55%" stopColor="#b0b0b0" />
-                      <stop offset="70%" stopColor="#888" />
-                      <stop offset="85%" stopColor="#666" />
+                      <stop offset="0%"   stopColor="#333" />
+                      <stop offset="18%"  stopColor="#777" />
+                      <stop offset="35%"  stopColor="#aaa" />
+                      <stop offset="48%"  stopColor="#c8c8c8" />
+                      <stop offset="55%"  stopColor="#b0b0b0" />
+                      <stop offset="70%"  stopColor="#888" />
+                      <stop offset="85%"  stopColor="#666" />
                       <stop offset="100%" stopColor="#444" />
                     </linearGradient>
                   </defs>
-                  <rect x="0" y="0" width="480" height="340" fill={C.certBg} style={{ filter: 'drop-shadow(0 28px 56px transparent)' }} />
+                  <rect x="0" y="0" width="480" height="340" fill={C.certBg} />
                   <rect x="1.5" y="1.5" width="477" height="337" fill="none" stroke="url(#metalGrad)" strokeWidth="1.5" />
                   <rect x="12" y="12" width="456" height="316" fill="none" stroke="#2a2a2a" strokeWidth="0.8" />
                 </svg>
               </div>
 
-              {/* Layer 2: Content */}
-              <div style={{ position: 'absolute', inset: 0, transform: l2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '32px' }}>
+              <div style={{ position: 'absolute', inset: 0, transform: l2Desktop, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '32px' }}>
                 <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.gold, letterSpacing: '0.18em', marginBottom: '14px', textTransform: 'uppercase' }}>CertifyROI · Route Analysis</div>
-                <div style={{ fontFamily: F_SERIF, fontWeight: '400', fontSize: isMobile ? '1.6rem' : 'clamp(1.5rem, 3.2vw, 2.4rem)', color: C.text, marginBottom: '6px', textAlign: 'center', lineHeight: 1.1 }}>Route Briefing</div>
+                <div style={{ fontFamily: F_SERIF, fontWeight: '400', fontSize: 'clamp(1.5rem, 3.2vw, 2.4rem)', color: C.text, marginBottom: '6px', textAlign: 'center', lineHeight: 1.1 }}>Route Briefing</div>
                 <div style={{ fontFamily: F_SANS, fontSize: '13px', color: C.text3, marginBottom: '28px', textAlign: 'center' }}>Personalised · India 2026</div>
                 <div style={{ display: 'flex', gap: '28px', marginBottom: '20px', width: '100%', justifyContent: 'center' }}>
                   {[
-                    { l: 'PAYBACK', v: '6 MO', c: C.text },
-                    { l: '5-YR GAIN', v: '₹14.2L', c: C.gold },
-                    { l: 'DELTA', v: '+35%', c: C.text },
+                    { l: 'PAYBACK',   v: '6 MO',    c: C.text },
+                    { l: '5-YR GAIN', v: '₹14.2L',  c: C.gold },
+                    { l: 'DELTA',     v: '+35%',     c: C.text },
                   ].map((s, i) => (
                     <div key={i} style={{ textAlign: 'center' }}>
                       <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.1em', marginBottom: '6px' }}>{s.l}</div>
-                      <div style={{ fontFamily: F_MONO, fontSize: isMobile ? '1.1rem' : 'clamp(1rem, 2.6vw, 1.5rem)', color: s.c, fontWeight: '600', letterSpacing: '-0.02em' }}>{s.v}</div>
+                      <div style={{ fontFamily: F_MONO, fontSize: 'clamp(1rem, 2.6vw, 1.5rem)', color: s.c, fontWeight: '600', letterSpacing: '-0.02em' }}>{s.v}</div>
                     </div>
                   ))}
                 </div>
@@ -309,11 +372,9 @@ function CertAssembly() {
                 </div>
               </div>
 
-              {/* SWOOSH â€” metallic light sweep */}
               <AnimatePresence>
                 {showSwoosh && (
-                  <motion.div
-                    key="swoosh"
+                  <motion.div key="swoosh"
                     initial={{ left: '-40%', opacity: 0 }}
                     animate={{ left: '140%', opacity: [0, 1, 1, 1, 0] }}
                     exit={{ opacity: 0 }}
