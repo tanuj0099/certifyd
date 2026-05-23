@@ -69,6 +69,7 @@ const ROITool = lazy(() => import("./pages/ROITool.jsx"));
 const HeatmapTool = lazy(() => import("./pages/HeatmapTool.jsx"));
 const CompareTool = lazy(() => import("./pages/CompareTool.jsx"));
 const CertRadarTool = lazy(() => import("./pages/CertRadarTool.jsx"));
+const CertDetail = lazy(() => import("./components/CertDetail.jsx"));
 const SimulatorTool = lazy(() => import("./pages/SimulatorTool.jsx"));
 import NotFound from "./pages/NotFound.jsx";
 const JobMapTool = lazy(() => import("./pages/JobMapTool.jsx"));
@@ -2887,6 +2888,7 @@ function AppRoot() {
                 <Route path="/tools/heatmap" element={<HeatmapTool />} />
                 <Route path="/tools/compare" element={<CompareTool />} />
                 <Route path="/tools/cert-radar" element={<CertRadarTool />} />
+                <Route path="/cert-radar/:slug" element={<CertDetail />} />
                 <Route path="/tools/simulator" element={<SimulatorTool />} />
                 <Route path="/tools/jobmap" element={<JobMapTool />} />
                 <Route path="/tools/college" element={<CollegeTool />} />
