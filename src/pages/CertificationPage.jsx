@@ -12,6 +12,17 @@ import slugify from '../utils/slugify.js'
 const FS = "'Inter', 'DM Sans', sans-serif"
 const FM = "'JetBrains Mono', 'IBM Plex Mono', monospace"
 
+// ── isMobile hook ────────────────────────────────────
+function useIsMobile() {
+  const [m, setM] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768)
+  useEffect(() => {
+    const fn = () => setM(window.innerWidth < 768)
+    window.addEventListener('resize', fn)
+    return () => window.removeEventListener('resize', fn)
+  }, [])
+  return m
+}
+
 // ── Formatters ─────────────────────────────────────────────
 function formatCurrency(value) {
   const n = Number(value)
@@ -113,9 +124,10 @@ function Breadcrumb({ items }) {
   )
 }
 
-// ── Main page ──────────────────────────────────────────────
+// ── Main page ──────────────────────────────────────────
 export default function CertificationPage() {
   const { slug } = useParams()
+  const isMobile = useIsMobile()
   const [cert, setCert] = useState(null)
   const [certLoading, setCertLoading] = useState(true)
   const [certError, setCertError] = useState(null)
@@ -215,15 +227,15 @@ export default function CertificationPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)', fontFamily: FS }}>
-      {/* ── Top bar ─────────────────────────────────────────── */}
+      {/* ── Top bar ────────────────────────────────────────── */}
       <div style={{
         position: 'sticky', top: 0, zIndex: 50,
         borderBottom: '1px solid var(--border)',
         background: 'var(--bg)',
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
-        padding: '0 24px',
-        paddingTop: 'max(env(safe-area-inset-top), 64px)',
+        padding: isMobile ? '0 16px' : '0 24px',
+        paddingTop: isMobile ? '12px' : 'max(env(safe-area-inset-top), 64px)',
       }}>
         <div style={{ maxWidth: '1080px', margin: '0 auto', padding: '12px 0' }}>
           <Breadcrumb items={[
@@ -234,12 +246,12 @@ export default function CertificationPage() {
         </div>
       </div>
 
-      <div style={{ maxWidth: '1080px', margin: '0 auto', padding: '40px 24px 80px' }}>
+      <div style={{ maxWidth: '1080px', margin: '0 auto', padding: isMobile ? '24px 16px 100px' : '40px 24px 80px' }}>
 
-        {/* ── Hero ────────────────────────────────────────── */}
-        <div style={{ marginBottom: '40px' }}>
+        {/* ── Hero ──────────────────────────────────── */}
+        <div style={{ marginBottom: isMobile ? '28px' : '40px' }}>
           {/* Tags row */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', marginBottom: '16px' }}>
             {provider && (
               <span style={{ fontFamily: FM, fontSize: '9px', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--text-4)', border: '1px solid var(--border)', padding: '3px 10px', borderRadius: '999px' }}>
                 {provider}
@@ -263,73 +275,72 @@ export default function CertificationPage() {
             )}
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '24px', alignItems: 'flex-start' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr auto', gap: isMobile ? '20px' : '24px', alignItems: 'flex-start' }}>
             <div>
-              <h1 style={{ margin: 0, fontSize: 'clamp(1.8rem, 4vw, 3rem)', lineHeight: 1.06, letterSpacing: '-0.03em', color: 'var(--text)', fontWeight: 900, maxWidth: '18ch' }}>
+              <h1 style={{ margin: 0, fontSize: isMobile ? 'clamp(1.5rem,6vw,2.2rem)' : 'clamp(1.8rem, 4vw, 3rem)', lineHeight: 1.06, letterSpacing: '-0.03em', color: 'var(--text)', fontWeight: 900, maxWidth: '18ch' }}>
                 {cert.name}
               </h1>
               {(cert.forWho || cert.description) && (
-                <p style={{ margin: '16px 0 0', maxWidth: '62ch', fontSize: '15px', lineHeight: 1.75, color: 'var(--text-3)' }}>
+                <p style={{ margin: '12px 0 0', maxWidth: '62ch', fontSize: isMobile ? '13px' : '15px', lineHeight: 1.75, color: 'var(--text-3)' }}>
                   {cert.forWho || cert.description}
                 </p>
               )}
             </div>
 
             {/* CTA cluster */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', flexShrink: 0 }}>
+            <div style={{ display: 'flex', flexDirection: isMobile ? 'row' : 'column', gap: '10px', flexShrink: 0, flexWrap: 'wrap' }}>
               <Link to="/dashboard" style={{
                 display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
-                padding: '12px 20px', borderRadius: '12px',
+                padding: isMobile ? '10px 14px' : '12px 20px', borderRadius: '12px',
                 background: 'var(--text)', color: 'var(--bg)',
                 textDecoration: 'none', fontWeight: 800, fontSize: '13px', whiteSpace: 'nowrap',
                 transition: 'opacity 150ms',
               }}>
-                Track this plan <ArrowRight size={14} />
+                Track <ArrowRight size={14} />
               </Link>
               <Link to="/app" style={{
                 display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
-                padding: '12px 20px', borderRadius: '12px',
+                padding: isMobile ? '10px 14px' : '12px 20px', borderRadius: '12px',
                 border: '1px solid var(--border)', background: 'transparent', color: 'var(--text)',
                 textDecoration: 'none', fontWeight: 700, fontSize: '13px', whiteSpace: 'nowrap',
               }}>
-                Calculate ROI <BarChart2 size={14} />
+                ROI <BarChart2 size={14} />
               </Link>
               {cert.link && (
                 <a href={cert.link} target="_blank" rel="noreferrer noopener" style={{
                   display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
-                  padding: '8px 14px', borderRadius: '10px',
+                  padding: isMobile ? '10px 12px' : '8px 14px', borderRadius: '10px',
                   border: '1px solid var(--border)', background: 'transparent', color: 'var(--text-3)',
                   textDecoration: 'none', fontWeight: 600, fontSize: '12px', whiteSpace: 'nowrap',
                 }}>
-                  Official page <ExternalLink size={11} />
+                  Official <ExternalLink size={11} />
                 </a>
               )}
             </div>
           </div>
         </div>
 
-        {/* ── Stats grid ─────────────────────────────────── */}
+        {/* ── Stats grid ──────────────────────────────── */}
         {demandLoading ? (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '14px', marginBottom: '32px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(auto-fill, minmax(180px, 1fr))', gap: isMobile ? '10px' : '14px', marginBottom: '28px' }}>
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} style={{ padding: '20px', border: '1px solid var(--border)', borderRadius: '14px', display: 'grid', gap: '10px' }}>
+              <div key={i} style={{ padding: '16px', border: '1px solid var(--border)', borderRadius: '14px', display: 'grid', gap: '10px' }}>
                 <ShimmerBox width="55%" height={10} />
                 <ShimmerBox width="75%" height={26} />
               </div>
             ))}
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '14px', marginBottom: '40px' }}>
-            <StatCard icon={DollarSign}  label="Certification Cost"  value={formatCurrency(costValue)}  accent="#2db87a" />
-            <StatCard icon={TrendingUp}  label="Median ROI Hike"    value={formatPercent(roiPercent)}  accent="#4f8ef7" />
-            <StatCard icon={Calendar}    label="Time to Complete"   value={formatMonths(timeMonths)}   accent="#a78bfa" />
-            <StatCard icon={DollarSign}  label="Monthly Budget"     value={monthlyCost ? formatCurrency(monthlyCost) : '—'} accent="#f59e0b" />
-            <StatCard icon={Target}      label="Entry Salary"       value={formatCurrency(salaryFloor)} accent="#10b981" />
-            <StatCard icon={TrendingUp}  label="Salary Ceiling"     value={formatCurrency(salaryCeiling)} accent="#f43f5e" />
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(auto-fill, minmax(180px, 1fr))', gap: isMobile ? '10px' : '14px', marginBottom: isMobile ? '28px' : '40px' }}>
+            <StatCard icon={DollarSign}  label="Cert Cost"       value={formatCurrency(costValue)}  accent="#2db87a" />
+            <StatCard icon={TrendingUp}  label="Median Hike"     value={formatPercent(roiPercent)}  accent="#4f8ef7" />
+            <StatCard icon={Calendar}    label="Study Time"      value={formatMonths(timeMonths)}   accent="#a78bfa" />
+            <StatCard icon={DollarSign}  label="Monthly Budget"  value={monthlyCost ? formatCurrency(monthlyCost) : '—'} accent="#f59e0b" />
+            <StatCard icon={Target}      label="Entry Salary"    value={formatCurrency(salaryFloor)} accent="#10b981" />
+            <StatCard icon={TrendingUp}  label="Salary Ceiling"  value={formatCurrency(salaryCeiling)} accent="#f43f5e" />
           </div>
         )}
 
-        {/* ── Horizontal divider line ─────────────────────── */}
         <div style={{ height: '1px', background: 'var(--border)', marginBottom: '40px' }} />
 
         {/* ── Two-col content panel ──────────────────────── */}
