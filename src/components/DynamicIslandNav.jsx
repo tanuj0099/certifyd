@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
   Menu, User, X, Home, Wrench, BarChart2,
-  LayoutDashboard, BookOpen, ChevronRight,
+  LayoutDashboard, Activity, Radio, ChevronRight,
 } from 'lucide-react'
 import { useTheme } from '../hooks/useTheme.jsx'
 import UserAccountMenu from './UserAccountMenu.jsx'
@@ -35,18 +35,18 @@ const AUTH_NAV = [
 
 // ── Mobile bottom tab bar config ───────────────────────────
 const MOBILE_TABS_ANON = [
-  { label: 'Home',      pageId: 'home',      Icon: Home },
-  { label: 'Tools',     pageId: 'tools',     Icon: Wrench },
-  { label: 'ROI',       pageId: 'app',       Icon: BarChart2, isRoi: true },
-  { label: 'Blog',      pageId: 'blog',      Icon: BookOpen },
-  { label: 'Sign In',   pageId: '__signin__',Icon: User },
+  { label: 'Home',         pageId: 'home',             Icon: Home },
+  { label: 'Cert Radar',  pageId: 'tools/cert-radar', Icon: Radio },
+  { label: 'ROI',         pageId: 'app',              Icon: BarChart2, isRoi: true },
+  { label: 'Market',      pageId: 'tools/market',     Icon: Activity },
+  { label: 'Sign In',     pageId: '__signin__',        Icon: User },
 ]
 const MOBILE_TABS_AUTH = [
-  { label: 'Home',      pageId: 'home',      Icon: Home },
-  { label: 'Tools',     pageId: 'tools',     Icon: Wrench },
-  { label: 'ROI',       pageId: 'app',       Icon: BarChart2, isRoi: true },
-  { label: 'Dashboard', pageId: 'dashboard', Icon: LayoutDashboard },
-  { label: 'Profile',   pageId: 'profile',   Icon: User },
+  { label: 'Home',         pageId: 'home',             Icon: Home },
+  { label: 'Cert Radar',  pageId: 'tools/cert-radar', Icon: Radio },
+  { label: 'ROI',         pageId: 'app',              Icon: BarChart2, isRoi: true },
+  { label: 'Market',      pageId: 'tools/market',     Icon: Activity },
+  { label: 'Profile',     pageId: 'profile',           Icon: User },
 ]
 
 // ── Helpers ────────────────────────────────────────────────
@@ -380,78 +380,57 @@ const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, 
 
   return (
     <>
-      {/* ── Top capsule ────────────────────────────────── */}
-      <div style={{ position:'fixed', top:'14px', left:'50%', transform:'translateX(-50%)', zIndex:9999, pointerEvents:'none', width:'min(calc(100vw - 24px), 920px)', display:'flex', justifyContent:'center' }}>
-        <motion.nav
-          layout
-          initial={{ y:-56, opacity:0, scale:0.96 }}
-          animate={{ y:0, opacity:1, scale:1 }}
-          transition={{ type:'spring', stiffness:150, damping:24 }}
-          style={{
-            pointerEvents: 'auto',
-            display: 'inline-flex', alignItems:'center', justifyContent:'center',
-            height: isMobile ? '52px' : '52px',
-            maxWidth: 'min(calc(100vw - 24px), 920px)',
-            padding: isMobile ? '0 14px' : '0 8px 0 14px',
-            gap: isMobile ? '10px' : '4px',
-            borderRadius: '999px',
-            border: '1px solid var(--border-mid)',
-            outline: '1px solid var(--border)',
-            outlineOffset: '-3px',
-            background: 'var(--glass-bg)',
-            backdropFilter: 'blur(18px) saturate(160%)',
-            WebkitBackdropFilter: 'blur(18px) saturate(160%)',
-            boxSizing: 'border-box',
-          }}
-          aria-label="Primary navigation"
-        >
-          {isMobile ? (
-            // Mobile: just logo + theme toggle (bottom bar handles the rest)
-            <>
-              <button type="button" aria-label="Go to home"
-                onClick={() => { user ? navigate('/dashboard') : navigate('/') }}
-                style={{ background:'none', border:'none', padding:'0 4px', cursor:'pointer', color:'var(--text)', fontFamily:F_SANS, fontSize:'14px', fontWeight:850, letterSpacing:0 }}>
-                CertifyROI
-              </button>
-              <div style={{ flex: 1 }} />
+      {/* ── Top capsule — DESKTOP ONLY ─────────────────────────────── */}
+      {!isMobile && (
+        <div style={{ position:'fixed', top:'14px', left:'50%', transform:'translateX(-50%)', zIndex:9999, pointerEvents:'none', width:'min(calc(100vw - 24px), 920px)', display:'flex', justifyContent:'center' }}>
+          <motion.nav
+            layout
+            initial={{ y:-56, opacity:0, scale:0.96 }}
+            animate={{ y:0, opacity:1, scale:1 }}
+            transition={{ type:'spring', stiffness:150, damping:24 }}
+            style={{
+              pointerEvents: 'auto',
+              display: 'inline-flex', alignItems:'center', justifyContent:'center',
+              height: '52px',
+              maxWidth: 'min(calc(100vw - 24px), 920px)',
+              padding: '0 8px 0 14px',
+              gap: '4px',
+              borderRadius: '999px',
+              border: '1px solid var(--border-mid)',
+              outline: '1px solid var(--border)',
+              outlineOffset: '-3px',
+              background: 'var(--glass-bg)',
+              backdropFilter: 'blur(18px) saturate(160%)',
+              WebkitBackdropFilter: 'blur(18px) saturate(160%)',
+              boxSizing: 'border-box',
+            }}
+            aria-label="Primary navigation"
+          >
+            <button type="button" aria-label="Go to home"
+              onClick={() => { user ? navigate('/dashboard') : navigate('/') }}
+              style={{ background:'none', border:'none', padding:'0 10px 0 6px', cursor:'pointer', color:'var(--text)', fontFamily:F_SANS, fontSize:'13px', fontWeight:800, letterSpacing:'-0.01em', flexShrink:0 }}>
+              CertifyROI
+            </button>
+            <div style={{ width:'1px', height:'18px', background:'var(--border)', flexShrink:0 }} />
+            <div style={{ display:'flex', alignItems:'center', gap:'2px' }}>
+              {navItems.map(item => (
+                <NavLink key={item.pageId||item.label} item={item} active={isActivePage(activeHref, item.pageId)} onNavigate={onNavigate} onActivate={setActiveHref} navigate={navigate} />
+              ))}
+            </div>
+            <div style={{ display:'flex', alignItems:'center', gap:'4px', marginLeft:'4px' }}>
+              <div style={{ width:'1px', height:'22px', background:'var(--border)' }} />
               <ThemeToggle mode={themeMode} onCycle={cycleTheme} />
-              <div style={{ width:'1px', height:'18px', background:'var(--border)' }} />
-              {/* Hamburger — only for theme / extra items, primary nav is bottom bar */}
-              <button type="button" onClick={() => setMenuOpen(v => !v)}
-                aria-expanded={menuOpen} aria-label="More options"
-                style={{ width:'34px', height:'34px', borderRadius:'999px', border:'1px solid var(--border)', background: menuOpen ? 'var(--text)':'transparent', color: menuOpen ? 'var(--bg)':'var(--text-2)', display:'inline-flex', alignItems:'center', justifyContent:'center', cursor:'pointer' }}>
-                {menuOpen ? <X size={15} /> : <Menu size={15} />}
-              </button>
-            </>
-          ) : (
-            // Desktop: full nav links
-            <>
-              <button type="button" aria-label="Go to home"
-                onClick={() => { user ? navigate('/dashboard') : navigate('/') }}
-                style={{ background:'none', border:'none', padding:'0 10px 0 6px', cursor:'pointer', color:'var(--text)', fontFamily:F_SANS, fontSize:'13px', fontWeight:800, letterSpacing:'-0.01em', flexShrink:0 }}>
-                CertifyROI
-              </button>
-              <div style={{ width:'1px', height:'18px', background:'var(--border)', flexShrink:0 }} />
-              <div style={{ display:'flex', alignItems:'center', gap:'2px' }}>
-                {navItems.map(item => (
-                  <NavLink key={item.pageId||item.label} item={item} active={isActivePage(activeHref, item.pageId)} onNavigate={onNavigate} onActivate={setActiveHref} navigate={navigate} />
-                ))}
-              </div>
-              <div style={{ display:'flex', alignItems:'center', gap:'4px', marginLeft:'4px' }}>
-                <div style={{ width:'1px', height:'22px', background:'var(--border)' }} />
-                <ThemeToggle mode={themeMode} onCycle={cycleTheme} />
-                {user
-                  ? <UserAccountMenu user={user} onNavigate={onNavigate} onSignOut={onSignOut} />
-                  : <button type="button" onClick={() => onSignIn?.()}
-                      style={{ display:'inline-flex', alignItems:'center', justifyContent:'center', gap:'7px', height:'34px', padding:'0 15px', borderRadius:'999px', border:'1px solid var(--border)', background:'var(--text)', color:'var(--bg)', fontFamily:F_SANS, fontSize:'12px', fontWeight:800, cursor:'pointer' }}>
-                      <User size={13} />Sign In
-                    </button>
-                }
-              </div>
-            </>
-          )}
-        </motion.nav>
-      </div>
+              {user
+                ? <UserAccountMenu user={user} onNavigate={onNavigate} onSignOut={onSignOut} />
+                : <button type="button" onClick={() => onSignIn?.()}
+                    style={{ display:'inline-flex', alignItems:'center', justifyContent:'center', gap:'7px', height:'34px', padding:'0 15px', borderRadius:'999px', border:'1px solid var(--border)', background:'var(--text)', color:'var(--bg)', fontFamily:F_SANS, fontSize:'12px', fontWeight:800, cursor:'pointer' }}>
+                    <User size={13} />Sign In
+                  </button>
+              }
+            </div>
+          </motion.nav>
+        </div>
+      )}
 
       {/* ── Mobile hamburger overlay ─────────────────── */}
       <MobileMenu

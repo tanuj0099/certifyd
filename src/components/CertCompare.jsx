@@ -678,19 +678,30 @@ function CertCompare({ salary, prefilledCert }) {
               style={{ marginTop: '16px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}
             >
               {[{ cert: dataA, color: COL_A }, { cert: dataB, color: COL_B }].map(function (item, i) {
+                var tags = Array.isArray(item.cert.tags) ? item.cert.tags : []
+                var domain = item.cert.domain_name || item.cert.domain || item.cert.provider || null
                 return (
                   <div key={i} style={{ padding: '14px', borderRadius: '10px', background: item.color + '07', border: '1px solid ' + item.color + '20' }}>
                     <div style={{ fontFamily: F_MONO, fontSize: '9px', color: item.color, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '7px' }}>Best for</div>
-                    <div style={{ fontSize: '12px', color: 'var(--text-3)', fontFamily: F_BODY, lineHeight: '1.55', marginBottom: '9px' }}>{item.cert.forWho}</div>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
-                      {item.cert.tags.map(function (tag, j) {
-                        return (
-                          <span key={j} style={{ fontSize: '10px', padding: '2px 7px', borderRadius: '5px', background: item.color + '12', color: item.color, fontFamily: F_MONO, border: '1px solid ' + item.color + '22' }}>
-                            {tag}
-                          </span>
-                        )
-                      })}
+                    <div style={{ fontSize: '12px', color: 'var(--text-3)', fontFamily: F_BODY, lineHeight: '1.55', marginBottom: '9px' }}>
+                      {item.cert.forWho || item.cert.description || 'Professionals seeking career growth in ' + (domain || 'tech')}
                     </div>
+                    {tags.length > 0 && (
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                        {tags.map(function (tag, j) {
+                          return (
+                            <span key={j} style={{ fontSize: '10px', padding: '2px 7px', borderRadius: '5px', background: item.color + '12', color: item.color, fontFamily: F_MONO, border: '1px solid ' + item.color + '22' }}>
+                              {tag}
+                            </span>
+                          )
+                        })}
+                      </div>
+                    )}
+                    {tags.length === 0 && domain && (
+                      <span style={{ fontSize: '10px', padding: '2px 7px', borderRadius: '5px', background: item.color + '12', color: item.color, fontFamily: F_MONO, border: '1px solid ' + item.color + '22' }}>
+                        {domain}
+                      </span>
+                    )}
                   </div>
                 )
               })}

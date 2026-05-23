@@ -1,4 +1,4 @@
-import { motion, useScroll, AnimatePresence } from 'framer-motion'
+﻿import { motion, useScroll, AnimatePresence } from 'framer-motion'
 import React, { useRef, useState, useEffect } from 'react'
 import { ArrowRight, ChevronDown, BarChart2, CheckCircle2 } from 'lucide-react'
 import FeaturesBentoGrid from './FeaturesBentoGrid.jsx'
@@ -1199,25 +1199,23 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
           justifyContent: 'center',
           borderBottom: `1px solid ${C.border}`,
           overflow: 'hidden',
-          /* ensure hero content clears fixed Dynamic Island capsule */
-          paddingTop: isMobile ? '72px' : '0',
         }}>
 
           {/* Mountain â€” centered, full bleed */}
           <div style={{ position: 'absolute', inset: 0, zIndex: 1, background: C.bg }}>
-            <img
+            {!isMobile && <img
               src="/mountain.png"
               alt=""
               style={{
                 width: '100%', height: '100%', minWidth: '100%', minHeight: '100%',
                 objectFit: 'cover',
-                objectPosition: isMobile ? 'center 18%' : 'center 32%',
+                objectPosition: 'center center',
                 filter: !C.isLight
                   ? 'brightness(0.38) contrast(1.12) saturate(0.6)'
                   : 'brightness(0.62) contrast(1.12) saturate(0.82)',
               }}
-            />
-            {/* Theme-aware overlay for hero text readability */}
+            />}
+            {/* Overlay for text readability */}
             <div style={{
               position: 'absolute', inset: 0,
               background: C.isLight
@@ -1311,7 +1309,6 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
 
         {/* â•â•â•â•â•â•â•â•â•â• SECTIONS â•â•â•â•â•â•â•â•â•â• */}
         <TrustStrip />
-        <CertAssembly />
         <DataComposition />
         <FeaturesBentoGrid onEnter={handleEnter} />
         <PivotDomainsCard onEnter={handleEnter} />
