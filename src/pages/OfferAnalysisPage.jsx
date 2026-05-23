@@ -237,7 +237,7 @@ export default function OfferAnalysisPage() {
     : `https://www.naukri.com/jobs-in-${encodeURIComponent(city)}?experience=${yoe}`
 
   return (
-    <div style={{ paddingTop: NAV_H + 'px', minHeight: '100vh', background: 'var(--bg)' }}>
+    <div style={{ paddingTop: '128px', minHeight: '100vh', background: 'var(--bg)' }}>
       <div style={{ maxWidth: '820px', margin: '0 auto', padding: 'clamp(20px, 3vw, 40px) 16px' }}>
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={T}>
           <h1 style={{

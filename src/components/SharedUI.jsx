@@ -138,7 +138,7 @@ export function PageWrapper({ children, className = '', maxWidth }) {
 
 export default PageWrapper
 
-export function AppSection({ id = '', title = '', children, bg = '', noBorderTop = false }) {
+export function AppSection({ id = '', title = '', children, bg = '', noBorderTop = false, showSidebar = false }) {
   const C = useThemeContext()
   const isMobile = useIsMobile()
   return (
@@ -148,7 +148,7 @@ export function AppSection({ id = '', title = '', children, bg = '', noBorderTop
         padding: isMobile ? '16px' : '32px 24px',
         background: bg || 'var(--bg)',
         color: 'var(--text)',
-        borderTop: noBorderTop ? 'none' : '1px solid var(--border)',
+        borderTop: noBorderTop ? 'none' : '1px solid rgba(255,255,255,0.08)',
       }}
     >
       <div style={{ 
@@ -161,17 +161,17 @@ export function AppSection({ id = '', title = '', children, bg = '', noBorderTop
         borderRadius: 0,
         overflow: 'visible'
       }}>
-        {!isMobile && (
-          <div style={{ width: '140px', flexShrink: 0, borderRight: `1px solid ${C.border}`, position: 'relative' }}>
+        {!isMobile && showSidebar && (
+          <div style={{ width: '140px', flexShrink: 0, borderRight: `1px solid rgba(255,255,255,0.08)`, position: 'relative' }}>
             <div style={{ position: 'sticky', top: '120px', padding: '32px 0', display: 'flex', alignItems: 'center', flexDirection: 'column', height: '360px' }}>
               <CrosshairIcon color={C.text4} />
-              <div style={{ width: '1px', flex: 1, background: C.border, margin: '16px 0' }} />
+              <div style={{ width: '1px', flex: 1, background: 'rgba(255,255,255,0.08)', margin: '16px 0' }} />
               <div style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)', fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.18em' }}>
                 <span style={{ color: C.gold, fontWeight: '700' }}>{id}</span>{' '}
                 <span style={{ opacity: 0.5 }}>//</span>{' '}
                 {title}
               </div>
-              <div style={{ width: '1px', flex: 1, background: C.border, margin: '16px 0' }} />
+              <div style={{ width: '1px', flex: 1, background: 'rgba(255,255,255,0.08)', margin: '16px 0' }} />
               <CrosshairIcon color={C.text4} />
             </div>
           </div>

@@ -1,7 +1,8 @@
-﻿import { useEffect, useState } from 'react'
-import { Save, Send, Sparkles } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Save, Send, Sparkles, Trash2 } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth.jsx'
 import { useTheme } from '../hooks/useTheme.jsx'
+import { supabase } from '../lib/supabase.js'
 import { fetchUserProfile, upsertUserProfile } from '../services/userProfileService.js'
 import { submitFeedback } from '../services/feedbackService.js'
 import DashboardShell, {
@@ -35,6 +36,9 @@ export default function ProfilePage() {
   const [suggestion, setSuggestion] = useState({ subject: 'Product suggestion', message: '' })
   const [syncState, setSyncState] = useState('idle')
   const [message, setMessage] = useState('')
+  const [confirmDelete, setConfirmDelete] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState('')
 
   useEffect(() => {
     let cancelled = false
@@ -248,6 +252,79 @@ export default function ProfilePage() {
               <DashButton type="button" variant="ghost" onClick={signOut} style={{ marginTop: 8, width: 'fit-content' }}>
                 Sign out
               </DashButton>
+
+              {/* ── Secure Delete Account Cascade ── */}
+              <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)' }}>
+                <h3 style={{ margin: '0 0 8px', fontSize: 13, fontWeight: 700, color: 'var(--err)' }}>Danger Zone</h3>
+                {!confirmDelete ? (
+                  <button
+                    type="button"
+                    onClick={() => { setConfirmDelete(true); setDeleteError('') }}
+                    style={{
+                      display: 'inline-flex', alignItems: 'center', gap: 8,
+                      padding: '8px 14px', borderRadius: 8, border: '1px solid rgba(217,72,72,0.3)',
+                      background: 'transparent', color: 'rgba(217,72,72,0.8)',
+                      fontSize: 12, fontWeight: 600, fontFamily: 'inherit', cursor: 'pointer',
+                    }}
+                  >
+                    <Trash2 size={14} />
+                    Delete Account & Profile Context
+                  </button>
+                ) : (
+                  <div style={{ padding: 16, borderRadius: 12, border: '1px solid rgba(217,72,72,0.4)', background: 'rgba(217,72,72,0.04)', display: 'grid', gap: 12 }}>
+                    <div style={{ fontSize: 12, color: 'var(--text-2)', lineHeight: 1.5 }}>
+                      This will permanently flush your profile row from 'public.user_profiles', clear your localized storage tokens, and destroy your authentication record. This action cannot be undone.
+                    </div>
+                    {deleteError && (
+                      <div style={{ fontSize: 12, color: 'var(--err)', lineHeight: 1.4 }}>{deleteError}</div>
+                    )}
+                    <div style={{ display: 'flex', gap: 10 }}>
+                      <button
+                        type="button"
+                        disabled={deleting}
+                        onClick={async () => {
+                          setDeleting(true)
+                          setDeleteError('')
+                          try {
+                            const userId = user?.uid || user?.id
+                            if (supabase && userId) {
+                              await supabase.from('user_profiles').delete().eq('user_id', userId)
+                            }
+                            if (supabase) {
+                              await supabase.auth.signOut()
+                            }
+                            try { localStorage.clear() } catch (_) {}
+                            signOut()
+                          } catch (err) {
+                            setDeleteError(err?.message || 'Deletion failed. Please try again.')
+                            setDeleting(false)
+                          }
+                        }}
+                        style={{
+                          padding: '8px 16px', borderRadius: 8, border: '1px solid rgba(217,72,72,0.5)',
+                          background: 'rgba(217,72,72,0.1)', color: 'var(--err)',
+                          fontSize: 12, fontWeight: 700, cursor: deleting ? 'not-allowed' : 'pointer',
+                          opacity: deleting ? 0.6 : 1,
+                        }}
+                      >
+                        {deleting ? 'Deleting...' : 'Yes, securely delete my account'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => { setConfirmDelete(false); setDeleteError('') }}
+                        style={{
+                          padding: '8px 16px', borderRadius: 8, border: '1px solid var(--border)',
+                          background: 'transparent', color: 'var(--text-3)',
+                          fontSize: 12, fontWeight: 600, cursor: 'pointer',
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
             </div>
           </DashPanel>
         ) : null}

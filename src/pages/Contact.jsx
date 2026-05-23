@@ -17,30 +17,53 @@ export default function ContactPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setSubmitting(true)
     setSubmitNote('')
+
+    const name = formState.name.trim()
+    const email = formState.email.trim().toLowerCase()
+    const subject = formState.subject.trim() || 'General feedback'
+    const message = formState.message.trim()
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+    if (!name || !email || !message) {
+      setSubmitNote('Please complete all required fields before sending.')
+      return
+    }
+
+    if (!emailPattern.test(email)) {
+      setSubmitNote('Please enter a valid email address.')
+      return
+    }
+
+    if (message.length > 1200) {
+      setSubmitNote('Your message is too long. Please keep it under 1200 characters.')
+      return
+    }
+
+    setSubmitting(true)
     try {
       if (supabase) {
-        const { error } = await supabase.from('feedback_messages').insert({
-          name: formState.name,
-          email: formState.email,
-          subject: formState.subject,
-          message: formState.message,
+        const { error } = await supabase.from('contact_submissions').insert({
+          name,
+          email,
+          subject,
+          message,
           source: 'contact_page',
           created_at: new Date().toISOString(),
         })
         if (error) throw error
       }
       setSubmitNote('Saved to Supabase.')
+      setSubmitted(true)
+      window.setTimeout(() => {
+        setSubmitted(false)
+      }, 3000)
+      setFormState({ name: '', email: '', subject: 'General feedback', message: '' })
     } catch (error) {
       setSubmitNote(error?.message || 'Supabase feedback table is not available yet.')
+    } finally {
+      setSubmitting(false)
     }
-    setSubmitted(true)
-    setSubmitting(false)
-    window.setTimeout(() => {
-      setSubmitted(false)
-      setFormState({ name: '', email: '', subject: 'General feedback', message: '' })
-    }, 3000)
   }
 
   return (

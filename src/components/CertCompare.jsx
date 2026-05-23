@@ -22,18 +22,22 @@ function demandScore(d) {
 }
 
 // ── Normalize raw Supabase row → consistent camelCase shape ──
-// certifications table schema:
-//   id, name, avg_cost, avg_hike, time_months, demand, link, affiliate, tags, domain_id, for_who
+// certifications table schema (public.certifications):
+//   id, name, provider, cost_inr, difficulty, time_commitment_months,
+//   median_roi_percent, description, slug
 function normalizeCert(row) {
   return {
     id:         row.id,
     name:       row.name || row.cert_name || '',
-    avgHike:    Number(row.avg_hike  ?? row.avgHike  ?? 0),
-    avgCost:    Number(row.avg_cost  ?? row.avgCost  ?? 0),
-    timeMonths: Number(row.time_months ?? row.timeMonths ?? row.prep_time_months ?? 0),
-    demand:     row.demand || row.difficulty_level || 'Medium',
+    // Salary uplift: median_roi_percent is the primary Supabase column
+    avgHike:    Number(row.median_roi_percent ?? row.avg_hike ?? row.avgHike) || 0,
+    // Certification cost: cost_inr is the primary Supabase column (stored in full INR, not lakhs)
+    avgCost:    Number(row.cost_inr ?? row.avg_cost ?? row.avgCost) || 0,
+    // Prep time: time_commitment_months is the primary Supabase column
+    timeMonths: Number(row.time_commitment_months ?? row.time_months ?? row.timeMonths ?? row.prep_time_months) || 0,
+    demand:     row.difficulty || row.demand || row.difficulty_level || 'Medium',
     domain:     row.domain_id   || row.domain      || row.domain_name || '',
-    forWho:     row.for_who     || row.forWho       || row.description || '',
+    forWho:     row.description || row.for_who     || row.forWho       || '',
     tags:       Array.isArray(row.tags) ? row.tags : [],
     link:       row.link        || row.url          || '',
   }
@@ -408,7 +412,7 @@ function RadarChartSVG({ data, nameA, nameB, animate }) {
                 dominantBaseline="middle"
                 fontSize="10"
                 style={{ fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}
-                fill="transparent"
+                fill="var(--text-4)"
                 letterSpacing="0.06em"
               >
                 {lb.axis}
@@ -539,14 +543,15 @@ function CertCompare({ salary, prefilledCert }) {
     ? (parseFloat(roiA.fiveYearNet) > parseFloat(roiB.fiveYearNet) ? 'A' : 'B')
     : null
 
+  const INR_FMT = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 })
   var TABLE_ROWS = bothReady ? [
-    { label: 'Expected Hike', vA: '+' + dataA.avgHike + '%', vB: '+' + dataB.avgHike + '%', win: dataA.avgHike > dataB.avgHike ? 'A' : 'B', winIcon: <TrendingUp size={10} /> },
-    { label: 'Cert Cost', vA: '₹' + (dataA.avgCost / 100000).toFixed(1) + 'L', vB: '₹' + (dataB.avgCost / 100000).toFixed(1) + 'L', win: dataA.avgCost < dataB.avgCost ? 'A' : 'B', winIcon: <DollarSign size={10} /> },
-    { label: 'Study Time', vA: dataA.timeMonths + ' mo', vB: dataB.timeMonths + ' mo', win: dataA.timeMonths < dataB.timeMonths ? 'A' : 'B', winIcon: <Zap size={10} /> },
-    { label: '5-Yr Net Gain', vA: '₹' + roiA.fiveYearNet + 'L', vB: '₹' + roiB.fiveYearNet + 'L', win: parseFloat(roiA.fiveYearNet) > parseFloat(roiB.fiveYearNet) ? 'A' : 'B', winIcon: <TrendingUp size={10} /> },
-    { label: '5-Yr ROI %', vA: roiA.roiPct + '%', vB: roiB.roiPct + '%', win: roiA.roiPct > roiB.roiPct ? 'A' : 'B', winIcon: <TrendingUp size={10} /> },
-    { label: 'Break-even', vA: roiA.breakEven + ' mo', vB: roiB.breakEven + ' mo', win: roiA.breakEven < roiB.breakEven ? 'A' : 'B', winIcon: <Zap size={10} /> },
-    { label: 'Market Demand', vA: dataA.demand, vB: dataB.demand, win: demandScore(dataA.demand) >= demandScore(dataB.demand) ? 'A' : 'B', winIcon: <TrendingUp size={10} /> },
+    { label: 'Expected Hike',   vA: '+' + dataA.avgHike + '%', vB: '+' + dataB.avgHike + '%', win: dataA.avgHike > dataB.avgHike ? 'A' : 'B', winIcon: <TrendingUp size={10} /> },
+    { label: 'Cert Cost',       vA: dataA.avgCost > 0 ? INR_FMT.format(dataA.avgCost) : '—', vB: dataB.avgCost > 0 ? INR_FMT.format(dataB.avgCost) : '—', win: (dataA.avgCost || Infinity) < (dataB.avgCost || Infinity) ? 'A' : 'B', winIcon: <DollarSign size={10} /> },
+    { label: 'Study Time',      vA: dataA.timeMonths + ' mo', vB: dataB.timeMonths + ' mo', win: dataA.timeMonths < dataB.timeMonths ? 'A' : 'B', winIcon: <Zap size={10} /> },
+    { label: '5-Yr Net Gain',   vA: '₹' + roiA.fiveYearNet + 'L', vB: '₹' + roiB.fiveYearNet + 'L', win: parseFloat(roiA.fiveYearNet) > parseFloat(roiB.fiveYearNet) ? 'A' : 'B', winIcon: <TrendingUp size={10} /> },
+    { label: '5-Yr ROI %',      vA: roiA.roiPct + '%', vB: roiB.roiPct + '%', win: roiA.roiPct > roiB.roiPct ? 'A' : 'B', winIcon: <TrendingUp size={10} /> },
+    { label: 'Break-even',      vA: roiA.breakEven + ' mo', vB: roiB.breakEven + ' mo', win: roiA.breakEven < roiB.breakEven ? 'A' : 'B', winIcon: <Zap size={10} /> },
+    { label: 'Market Demand',   vA: dataA.demand, vB: dataB.demand, win: demandScore(dataA.demand) >= demandScore(dataB.demand) ? 'A' : 'B', winIcon: <TrendingUp size={10} /> },
     { label: 'Annual Salary +', vA: '₹' + roiA.annualGain + 'L', vB: '₹' + roiB.annualGain + 'L', win: parseFloat(roiA.annualGain) > parseFloat(roiB.annualGain) ? 'A' : 'B', winIcon: <DollarSign size={10} /> },
   ] : []
 

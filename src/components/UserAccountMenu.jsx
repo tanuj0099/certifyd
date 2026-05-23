@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ChevronDown, LogOut, Settings, Shield } from 'lucide-react'
-import { isAdminEmail } from '../utils/admin.js'
+import { ChevronDown, LogOut, Settings, ShieldCheck, Trash2 } from 'lucide-react'
+import { supabase } from '../lib/supabase.js'
 
 const F_SANS = "'Inter', 'DM Sans', sans-serif"
 
 function initialsFromUser(user) {
-  const name = user?.displayName || user?.email || 'U'
+  const name = user?.user_metadata?.full_name || user?.email || 'U'
   const parts = name.trim().split(/\s+/).filter(Boolean)
   if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase()
   return name.slice(0, 2).toUpperCase()
@@ -14,8 +14,10 @@ function initialsFromUser(user) {
 
 export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
   const [open, setOpen] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState('')
   const rootRef = useRef(null)
-  const isAdmin = isAdminEmail(user?.email)
 
   useEffect(() => {
     function handleClick(event) {
@@ -40,7 +42,7 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
     >
       <button
         type="button"
-        onClick={() => setOpen((value) => !value)}
+        onClick={() => setOpen(!open)}
         aria-expanded={open}
         aria-haspopup="menu"
         style={{
@@ -57,9 +59,9 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
           fontFamily: F_SANS,
         }}
       >
-        {user.photoURL ? (
+        {user?.user_metadata?.avatar_url ? (
           <img
-            src={user.photoURL}
+            src={user.user_metadata.avatar_url}
             alt=""
             style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover' }}
           />
@@ -82,7 +84,7 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
           </span>
         )}
         <span style={{ fontSize: '12px', fontWeight: 700, maxWidth: 120, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-          {user.displayName?.split(' ')[0] || user.email?.split('@')[0] || 'Account'}
+          {user?.user_metadata?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || 'Tanuj Rajdev'}
         </span>
         <ChevronDown size={14} style={{ color: 'var(--text-3)', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 180ms ease' }} />
       </button>
@@ -99,15 +101,16 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
               transition={{ type: 'spring', stiffness: 400, damping: 30 }}
               style={{
                 position: 'absolute',
-                top: '42px',
+                top: 'calc(100% + 12px)',
                 right: 0,
                 zIndex: 9999,
-                minWidth: '220px',
-                padding: '6px',
-                borderRadius: '16px',
-                border: '1px solid var(--border-mid)',
-                background: 'var(--bg)',
-                boxShadow: '0 12px 40px var(--overlay-scrim, rgba(0,0,0,0.2))',
+                overflow: 'visible',
+                width: '12rem',
+                padding: '0.5rem',
+                borderRadius: '0.75rem',
+                border: '1px solid rgba(255,255,255,0.08)',
+                background: '#09090b',
+                boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)',
               }}
             >
               <motion.div
@@ -115,17 +118,17 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
               >
-                <motion.div style={{ fontSize: '13px', fontWeight: 800, color: 'var(--text)' }}>
-                  {user.displayName || 'Your account'}
+                <motion.div className="text-white font-medium" style={{ fontSize: '13px' }}>
+                  {user?.user_metadata?.full_name || 'Tanuj Rajdev'}
                 </motion.div>
-                <motion.div style={{ fontSize: '11px', color: 'var(--text-3)', marginTop: 4, wordBreak: 'break-all' }}>
-                  {user.email}
+                <motion.div className="text-zinc-400 text-xs" style={{ marginTop: 4, wordBreak: 'break-all' }}>
+                  {user?.email || ''}
                 </motion.div>
               </motion.div>
 
               {[
-                { id: 'profile', label: 'Profile & preferences', icon: Settings },
-                ...(isAdmin ? [{ id: 'admin', label: 'Admin console', icon: Shield }] : []),
+                { id: 'dashboard', label: 'Dashboard',           icon: ShieldCheck },
+                { id: 'profile',   label: 'Profile \u0026 preferences', icon: Settings },
               ].map((item) => {
                 const Icon = item.icon
                 return (
@@ -134,6 +137,7 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
                     type="button"
                     role="menuitem"
                     onClick={() => go(item.id)}
+                    className="text-zinc-300 hover:text-white hover:bg-white/[0.04] transition-colors"
                     style={{
                       width: '100%',
                       display: 'flex',
@@ -142,8 +146,6 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
                       padding: '10px 12px',
                       border: 'none',
                       borderRadius: '10px',
-                      background: 'transparent',
-                      color: 'var(--text)',
                       fontFamily: F_SANS,
                       fontSize: '13px',
                       fontWeight: 600,
@@ -157,6 +159,7 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
                 )
               })}
 
+              {/* ── Sign out ──────────────────────────────── */}
               <button
                 type="button"
                 role="menuitem"
@@ -164,27 +167,19 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
                   setOpen(false)
                   onSignOut?.()
                 }}
+                className="text-red-400 hover:text-red-300 hover:bg-red-500/[0.06] transition-colors"
                 style={{
-                  width: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  padding: '10px 12px',
-                  marginTop: '4px',
-                  border: 'none',
-                  borderRadius: '10px',
-                  background: 'transparent',
-                  color: 'var(--err)',
-                  fontFamily: F_SANS,
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  textAlign: 'left',
+                  width: '100%', display: 'flex', alignItems: 'center', gap: '10px',
+                  padding: '10px 12px', marginTop: '4px',
+                  border: 'none', borderRadius: '10px',
+                  fontFamily: F_SANS, fontSize: '13px', fontWeight: 600,
+                  cursor: 'pointer', textAlign: 'left',
                 }}
               >
                 <LogOut size={15} />
                 Sign out
               </button>
+
             </motion.div>
           </>
         ) : null}

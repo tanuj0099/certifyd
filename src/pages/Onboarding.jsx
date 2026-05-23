@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { supabase } from '../lib/supabase.js'
+import { upsertUserProfile } from '../services/userProfileService.js'
 import { useAuth } from '../hooks/useAuth.jsx'
 
 const FS = "'Inter', 'DM Sans', sans-serif"
@@ -34,6 +35,17 @@ const CITIES = [
   'Chennai',
   'Kolkata',
   'Remote',
+]
+
+const TARGET_DOMAINS = [
+  'Cloud & DevOps',
+  'Data & Analytics',
+  'Cybersecurity',
+  'Software Engineering',
+  'Product Management',
+  'Finance & Accounting',
+  'AI / Machine Learning',
+  'Networking',
 ]
 
 function slugify(str) {
@@ -78,11 +90,13 @@ export default function Onboarding() {
   // Step 2 state
   const [careerFocus, setCareerFocus] = useState('')
   const [city, setCity] = useState('Bangalore')
+  const [currentSalary, setCurrentSalary] = useState('')
+  const [targetDomain, setTargetDomain] = useState('')
 
   // Step 3 — avatar is derived from user name / email
   const initials = (() => {
     if (!user) return '?'
-    const name = user.user_metadata?.full_name || user.email || ''
+    const name = user.displayName || user.email || ''
     const parts = name.split(/[\s@]/)
     return parts[0]?.[0]?.toUpperCase() || '?'
   })()
@@ -99,7 +113,7 @@ export default function Onboarding() {
   // Prefill workspace name from user metadata
   useEffect(() => {
     if (user && !workspaceName) {
-      const name = user.user_metadata?.full_name || ''
+      const name = user.displayName || ''
       if (name) setWorkspaceName(name)
     }
   }, [user])
@@ -109,21 +123,40 @@ export default function Onboarding() {
     setSubmitting(true)
     setError('')
     try {
-      const profileData = {
-        id: user.id,
-        email: user.email,
-        workspace_name: workspaceName.trim() || 'My Workspace',
-        workspace_slug: workspaceSlug.trim() || slugify(workspaceName) || user.id,
-        career_focus: careerFocus || 'Student',
+      // Detect auth provider dynamically from Firebase user object
+      const provider = user.providerData?.[0]?.providerId || 'password'
+
+      // Upsert into user_profiles via the service
+      await upsertUserProfile(user, {
+        email: user.email || '',
+        full_name: workspaceName.trim() || user.displayName || '',
+        avatar_url: user.photoURL || '',
+        job_role: careerFocus || 'Student',
         city: city || 'Bangalore',
-        avatar_initials: initials,
-        onboarding_complete: true,
-        updated_at: new Date().toISOString(),
+        current_salary: currentSalary ? Number(currentSalary) : null,
+        target_domain: targetDomain || '',
+        provider,
+      })
+
+      // Also upsert into profiles table for onboarding gate compatibility
+      if (supabase) {
+        const profileData = {
+          id: user.uid,
+          email: user.email,
+          workspace_name: workspaceName.trim() || 'My Workspace',
+          workspace_slug: workspaceSlug.trim() || slugify(workspaceName) || user.uid,
+          career_focus: careerFocus || 'Student',
+          city: city || 'Bangalore',
+          avatar_initials: initials,
+          onboarding_complete: true,
+          updated_at: new Date().toISOString(),
+        }
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .upsert(profileData, { onConflict: 'id' })
+        if (profileError) console.warn('profiles upsert warning:', profileError.message)
       }
-      const { error: upsertError } = await supabase
-        .from('profiles')
-        .upsert(profileData, { onConflict: 'id' })
-      if (upsertError) throw upsertError
+
       navigate('/dashboard', { replace: true })
     } catch (err) {
       console.error('Onboarding save failed:', err)
@@ -255,7 +288,7 @@ export default function Onboarding() {
               </>
             )}
 
-            {/* ── STEP 1: Career focus ──────────────────────────── */}
+            {/* ── STEP 1: Career focus + domain + salary ────────────── */}
             {step === 1 && (
               <>
                 <div style={{ fontFamily: FM, fontSize: '9px', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '20px' }}>
@@ -268,7 +301,7 @@ export default function Onboarding() {
                   We use this to tailor cert recommendations and salary benchmarks.
                 </p>
 
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '24px' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '20px' }}>
                   {CAREER_FOCUSES.map((focus) => (
                     <button
                       key={focus}
@@ -287,7 +320,33 @@ export default function Onboarding() {
                   ))}
                 </div>
 
-                <div style={{ marginBottom: '28px' }}>
+                {/* Target Domain */}
+                <div style={{ marginBottom: '20px' }}>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'rgba(255,255,255,0.4)', fontFamily: FM, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '8px' }}>
+                    Target Domain
+                  </label>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                    {TARGET_DOMAINS.map((d) => (
+                      <button
+                        key={d}
+                        onClick={() => setTargetDomain(d)}
+                        style={{
+                          padding: '6px 12px', borderRadius: '999px',
+                          border: targetDomain === d ? '1px solid rgba(255,255,255,0.5)' : '1px solid rgba(255,255,255,0.08)',
+                          background: targetDomain === d ? 'rgba(255,255,255,0.08)' : 'transparent',
+                          color: targetDomain === d ? '#f4f5f8' : 'rgba(255,255,255,0.4)',
+                          fontFamily: FS, fontSize: '12px', fontWeight: targetDomain === d ? 700 : 400,
+                          cursor: 'pointer', transition: 'all 0.15s ease',
+                        }}
+                      >
+                        {d}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Base City */}
+                <div style={{ marginBottom: '20px' }}>
                   <label style={{ display: 'block', fontSize: '11px', color: 'rgba(255,255,255,0.4)', fontFamily: FM, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '8px' }}>
                     Base City
                   </label>
@@ -309,6 +368,29 @@ export default function Onboarding() {
                       </button>
                     ))}
                   </div>
+                </div>
+
+                {/* Current Salary */}
+                <div style={{ marginBottom: '28px' }}>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'rgba(255,255,255,0.4)', fontFamily: FM, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '8px' }}>
+                    Current Annual Salary (INR, optional)
+                  </label>
+                  <input
+                    type="number"
+                    value={currentSalary}
+                    onChange={(e) => setCurrentSalary(e.target.value)}
+                    placeholder="e.g. 800000"
+                    style={{
+                      width: '100%', boxSizing: 'border-box',
+                      padding: '12px 14px',
+                      borderRadius: '10px',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      background: 'rgba(255,255,255,0.04)',
+                      color: '#f4f5f8',
+                      fontFamily: FM, fontSize: '14px',
+                      outline: 'none',
+                    }}
+                  />
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '10px' }}>
@@ -378,8 +460,11 @@ export default function Onboarding() {
                 <div style={{ display: 'grid', gap: '8px', marginBottom: '28px' }}>
                   {[
                     { label: 'Focus', value: careerFocus || '—' },
+                    { label: 'Target Domain', value: targetDomain || '—' },
                     { label: 'City', value: city || '—' },
+                    { label: 'Current Salary', value: currentSalary ? `₹${Number(currentSalary).toLocaleString('en-IN')}` : 'Not provided' },
                     { label: 'Email', value: user?.email || '—' },
+                    { label: 'Provider', value: user?.providerData?.[0]?.providerId || 'password' },
                   ].map(({ label, value }) => (
                     <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', borderRadius: '9px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
                       <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.3)', fontFamily: FM, letterSpacing: '0.1em', textTransform: 'uppercase' }}>{label}</span>

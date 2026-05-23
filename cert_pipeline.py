@@ -5,6 +5,7 @@ import random
 from supabase import create_client, Client
 from playwright.sync_api import sync_playwright, Page
 from playwright_stealth import Stealth
+import posthog_client
 
 # ─────────────────────────────────────────────────────────────────────────────
 # CONFIG
@@ -1021,6 +1022,11 @@ def run_engine():
     print(f"Scraping {total} certs (SCRAPE_SLICE={SCRAPE_SLICE})")
     print(f"Total in manifest: {len(CERT_MANIFEST)}")
 
+    posthog_client.capture("cert_pipeline", "cert_scrape_run_started", {
+        "total_certs": total,
+        "scrape_slice": SCRAPE_SLICE,
+    })
+
     with Stealth().use_sync(sync_playwright()) as p:
         browser = p.chromium.launch(
             headless=False,
@@ -1069,6 +1075,15 @@ def run_engine():
 
             print(f"  Result: ₹{pricing['cost_inr']:,} | source: {pricing.get('source')}")
 
+            posthog_client.capture("cert_pipeline", "cert_scraped", {
+                "cert_name": cert["name"],
+                "provider": cert["provider"],
+                "domain": cert["domain"],
+                "cost_inr": pricing["cost_inr"],
+                "source": pricing.get("source"),
+                "success": pricing["cost_inr"] > 0,
+            })
+
             if i < total - 1:
                 delay = random.uniform(3, 6)
                 print(f"  [Delay] {delay:.1f}s")
@@ -1089,6 +1104,13 @@ def run_engine():
         flag = "✅" if r["cost"] > 0 else "❌"
         print(f"  {flag} [{r['domain']:<20}] {r['cert']:<55} ₹{r['cost']:,}")
     print(f"{'='*60}\nDONE")
+
+    posthog_client.capture("cert_pipeline", "cert_scrape_run_completed", {
+        "total_certs": total,
+        "success_count": hits,
+        "failure_count": total - hits,
+    })
+    posthog_client.shutdown()
 
 
 if __name__ == "__main__":

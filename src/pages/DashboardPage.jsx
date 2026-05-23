@@ -1,15 +1,25 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth.jsx'
 import { supabase } from '../lib/supabase.js'
+import slugify from '../utils/slugify.js'
+import SkeletonLoader from '../components/SkeletonLoader.jsx'
+
+const FM = "'JetBrains Mono','IBM Plex Mono',monospace"
+const FS = "'Inter','DM Sans',sans-serif"
 
 // ── Career Hub navigation vocabulary ─────────────────────────────────────────
 const NAV_ITEMS = [
   { id: 'active-paths',   label: 'Active Paths' },
-  { id: 'target-roles',   label: 'Target Roles' },
+  { id: 'target-profiles', label: 'Target Profiles' },
   { id: 'milestones',     label: 'Milestone Moats' },
-  { id: 'saved',          label: 'Saved Explorations' },
+  { id: 'saved',          label: 'Saved Future Explorations' },
 ]
+
+// ── Status resolver — handles schema variations (status / stage / current_status) ──
+function resolveStatus(row) {
+  return row?.status || row?.stage || row?.current_status || null
+}
 
 // ── Status badge helper ───────────────────────────────────────────────────────
 function statusColor(status) {
@@ -17,36 +27,17 @@ function statusColor(status) {
   const s = status.toLowerCase()
   if (s === 'complete' || s === 'done') return '#2db87a'
   if (s === 'in_progress' || s === 'active') return 'var(--accent)'
+  if (s === 'paused' || s === 'saved') return '#f59e0b'
   return 'var(--text-4)'
 }
 
 // ── Career card ───────────────────────────────────────────────────────────────
-function CareerCard({ title, details, updatedAt, status, index }) {
+function CareerCard({ title, details, updatedAt, status, certSlug }) {
   const dateLabel = updatedAt
     ? new Date(updatedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })
     : null
 
-  // Derive a synthetic payback hint from title keywords
-  const paybackHint = (() => {
-    const t = (title || '').toLowerCase()
-    if (t.includes('aws') || t.includes('cloud')) return '~6 mo payback'
-    if (t.includes('pmp') || t.includes('project')) return '~7 mo payback'
-    if (t.includes('azure')) return '~5 mo payback'
-    if (t.includes('data') || t.includes('sql')) return '~4 mo payback'
-    return null
-  })()
-
-  // Step indicator
-  const stepLabel = (() => {
-    const t = (title || '').toLowerCase()
-    if (t.includes('run') || t.includes('roi')) return '→ Run ROI analysis'
-    if (t.includes('explore') || t.includes('cert')) return '→ Browse Cert Radar'
-    if (t.includes('resume')) return '→ Upload resume'
-    if (t.includes('familiar') || t.includes('dashboard')) return '→ Complete profile'
-    return '→ Take next step'
-  })()
-
-  return (
+  const content = (
     <div
       style={{
         padding: '16px 18px',
@@ -61,24 +52,16 @@ function CareerCard({ title, details, updatedAt, status, index }) {
       }}
     >
       <div style={{ flex: 1, minWidth: 0 }}>
-        {/* Title */}
         <div style={{ fontWeight: 750, fontSize: 14, color: 'var(--text)', marginBottom: 4, lineHeight: 1.35 }}>
-          {title}
+          {title || 'Untitled Path'}
         </div>
-        {/* Details or payback hint */}
-        {details ? (
+        {details && (
           <div style={{ color: 'var(--text-3)', fontSize: 12, lineHeight: 1.5 }}>{details}</div>
-        ) : paybackHint ? (
-          <div style={{ color: 'var(--text-4)', fontSize: 11, fontFamily: "'JetBrains Mono','IBM Plex Mono',monospace", letterSpacing: '0.06em' }}>
-            {paybackHint}
-          </div>
-        ) : null}
-        {/* Actionable step */}
+        )}
         <div style={{ marginTop: 8, fontSize: 11, color: 'var(--accent)', fontWeight: 700, letterSpacing: '0.04em' }}>
-          {stepLabel}
+          → Take next step
         </div>
       </div>
-      {/* Right meta */}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, flexShrink: 0 }}>
         {status && (
           <div style={{
@@ -87,7 +70,7 @@ function CareerCard({ title, details, updatedAt, status, index }) {
             background: statusColor(status) + '14',
             border: '1px solid ' + statusColor(status) + '28',
             fontSize: 10, fontWeight: 700, color: statusColor(status),
-            fontFamily: "'JetBrains Mono','IBM Plex Mono',monospace",
+            fontFamily: FM,
             letterSpacing: '0.08em', textTransform: 'uppercase',
           }}>
             {status}
@@ -99,24 +82,32 @@ function CareerCard({ title, details, updatedAt, status, index }) {
       </div>
     </div>
   )
-}
 
-// ── Placeholder cards when Supabase has no data ───────────────────────────────
-const PLACEHOLDER_PATHS = [
-  { title: 'AWS Certified Solutions Architect', details: 'Cloud architecture · Bangalore', status: 'active', payback: '~6 mo payback' },
-  { title: 'Run your first ROI analysis', details: 'Get your cert payback window in seconds', status: null },
-  { title: 'Explore cert recommendations', details: 'Tailored to your domain and city', status: null },
-  { title: 'Connect your resume for insights', details: 'Auto-map skills and certifications', status: null },
-]
+  // Make clickable if we have a cert slug
+  if (certSlug) {
+    return (
+      <Link to={`/cert/${certSlug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+        {content}
+      </Link>
+    )
+  }
+  return content
+}
 
 export default function DashboardPage() {
   const { user } = useAuth()
+  const navigate = useNavigate()
   const [isMobile, setIsMobile] = useState(() =>
     typeof window !== 'undefined' ? window.innerWidth < 768 : false
   )
   const [activeTab, setActiveTab] = useState('active-paths')
-  const [activity, setActivity] = useState([])
-  const [planItems, setPlanItems] = useState([])
+
+  // Dynamic data from Supabase
+  const [journeyPaths, setJourneyPaths] = useState([])
+  const [userProfile, setUserProfile] = useState(null)
+  const [milestones, setMilestones] = useState([])
+  const [savedItems, setSavedItems] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     function check() { setIsMobile(window.innerWidth < 768) }
@@ -124,50 +115,275 @@ export default function DashboardPage() {
     return () => window.removeEventListener('resize', check)
   }, [])
 
+  // Load all dashboard data from Supabase
   useEffect(() => {
-    if (!supabase || !user) return
+    if (!supabase || !user) {
+      setLoading(false)
+      return
+    }
     let cancelled = false
 
-    async function loadActivity() {
+    async function loadDashboardData() {
       try {
-        const { data, error } = await supabase
-          .from('user_activity')
-          .select('title, details, updated_at')
-          .eq('user_id', user.id)
-          .order('updated_at', { ascending: false })
-          .limit(12)
-        if (error) throw error
-        if (!cancelled) setActivity(Array.isArray(data) ? data : [])
-      } catch {
-        if (!cancelled) setActivity([])
+        setLoading(true)
+        const userId = user.uid || user.id
+
+        // Load journey tracking (Active Paths)
+        try {
+          const { data: journeys, error: journeyErr } = await supabase
+            .from('journey_tracking')
+            .select('id, cert_name, status, stage, current_status, domain, started_at, updated_at, notes, milestone_log')
+            .eq('user_id', userId)
+            .order('updated_at', { ascending: false })
+            .limit(20)
+          if (journeyErr) throw journeyErr
+          if (!cancelled) setJourneyPaths(Array.isArray(journeys) ? journeys : [])
+        } catch (err) {
+          console.warn('journey_tracking load:', err?.message || err)
+          if (!cancelled) setJourneyPaths([])
+        }
+
+        // Load user profile (Target Profiles / domain insights)
+        const { data: profile, error } = await supabase.from('user_profiles').select('*').eq('user_id', userId).single()
+        if (error && error.code !== 'PGRST116') throw error
+        
+        if (!profile) {
+          navigate('/onboarding')
+          return
+        }
+        
+        if (!cancelled) setUserProfile(profile)
+      } catch (err) {
+        console.error("Critical dashboard initialization exception handle:", err)
+      } finally {
+        if (!cancelled) {
+          setLoading(false) // Drop the skeleton animation layer flawlessly
+        }
       }
     }
 
-    async function loadPlan() {
-      try {
-        const { data, error } = await supabase
-          .from('user_plan')
-          .select('title, status')
-          .eq('user_id', user.id)
-          .limit(20)
-        if (error) throw error
-        if (!cancelled) setPlanItems(Array.isArray(data) ? data : [])
-      } catch {
-        if (!cancelled) setPlanItems([])
-      }
-    }
-
-    loadActivity()
-    loadPlan()
+    loadDashboardData()
     return () => { cancelled = true }
   }, [user])
 
-  const displayItems = activity.length ? activity : PLACEHOLDER_PATHS
+  // Derive milestones from journey_tracking.milestone_log JSONB arrays
+  // (public.milestones table does not exist in this schema)
+  useEffect(() => {
+    if (journeyPaths.length === 0) {
+      setMilestones([])
+      return
+    }
+    const derived = []
+    journeyPaths.forEach((jp) => {
+      const log = jp.milestone_log
+      if (Array.isArray(log)) {
+        log.forEach((entry) => {
+          if (entry && typeof entry === 'object') {
+            derived.push({
+              id: entry.id || `${jp.id}-${derived.length}`,
+              title: entry.title || entry.name || jp.cert_name,
+              status: entry.status || resolveStatus(jp) || 'in_progress',
+              target_date: entry.target_date || entry.date || null,
+            })
+          }
+        })
+      }
+    })
+    setMilestones(derived)
+    // savedItems: no saved_explorations table — keep as empty array
+    setSavedItems([])
+  }, [journeyPaths])
+
+  // ── Derive display content per active tab ─────────────────────────
+  function renderTabContent() {
+    switch (activeTab) {
+      case 'active-paths': {
+        if (journeyPaths.length === 0) {
+          return (
+            <div style={{ padding: '40px 0', color: 'var(--text-4)', fontSize: 14, lineHeight: 1.7, fontFamily: FS }}>
+              <div style={{ marginBottom: 12, fontSize: 16, fontWeight: 700, color: 'var(--text-3)' }}>
+                No active certification paths yet
+              </div>
+              <p style={{ margin: 0 }}>Start by exploring certifications on Cert Radar, or run an ROI analysis to find your best path.</p>
+              <div style={{ display: 'flex', gap: 10, marginTop: 18 }}>
+                <Link to="/tools/cert-radar" style={{
+                  padding: '10px 16px', borderRadius: 10, background: 'var(--text)', color: 'var(--bg)',
+                  textDecoration: 'none', fontWeight: 700, fontSize: 13,
+                }}>
+                  Browse Cert Radar
+                </Link>
+                <Link to="/app" style={{
+                  padding: '10px 16px', borderRadius: 10, border: '1px solid var(--border)',
+                  background: 'transparent', color: 'var(--text)',
+                  textDecoration: 'none', fontWeight: 600, fontSize: 13,
+                }}>
+                  ROI Calculator
+                </Link>
+              </div>
+            </div>
+          )
+        }
+        return (
+          <div style={{ display: 'grid', gap: 10 }}>
+            {journeyPaths.map((jp, idx) => (
+              <CareerCard
+                key={jp.id || idx}
+                title={jp.cert_name}
+                details={jp.domain ? `${jp.domain}${jp.notes ? ' · ' + jp.notes : ''}` : jp.notes}
+                updatedAt={jp.updated_at || jp.started_at}
+                status={resolveStatus(jp)}
+                certSlug={jp.cert_name ? slugify(jp.cert_name) : null}
+              />
+            ))}
+          </div>
+        )
+      }
+
+      case 'target-profiles': {
+        return (
+          <div style={{ display: 'grid', gap: 14 }}>
+            {userProfile ? (
+              <div style={{ padding: 20, borderRadius: 14, border: '1px solid var(--border)', background: 'var(--bg-alt)' }}>
+                <div style={{ fontSize: 10, color: 'var(--text-4)', fontFamily: FM, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 14 }}>
+                  Your Career Profile
+                </div>
+                <div style={{ display: 'grid', gap: 10 }}>
+                  {[
+                    { label: 'Job Role', value: userProfile.job_role },
+                    { label: 'Target Domain', value: userProfile.target_domain },
+                    { label: 'City', value: userProfile.city },
+                    { label: 'Current Salary', value: userProfile.current_salary ? new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(userProfile.current_salary) : null },
+                    { label: 'Provider', value: userProfile.provider },
+                  ].filter(r => r.value).map(({ label, value }) => (
+                    <div key={label} style={{
+                      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                      padding: '10px 14px', borderRadius: 9,
+                      background: 'color-mix(in srgb, var(--text) 3%, transparent)',
+                      border: '1px solid var(--border)',
+                    }}>
+                      <span style={{ fontSize: 11, color: 'var(--text-4)', fontFamily: FM, letterSpacing: '0.1em', textTransform: 'uppercase' }}>{label}</span>
+                      <span style={{ fontSize: 13, color: 'var(--text)', fontWeight: 600 }}>{value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div style={{ padding: '40px 0', color: 'var(--text-4)', fontSize: 14, lineHeight: 1.7 }}>
+                <div style={{ marginBottom: 12, fontSize: 16, fontWeight: 700, color: 'var(--text-3)' }}>
+                  No profile data found
+                </div>
+                <p style={{ margin: 0 }}>Complete onboarding to set up your target domain and career profile.</p>
+                <Link to="/onboarding" style={{
+                  display: 'inline-block', marginTop: 14, padding: '10px 16px', borderRadius: 10,
+                  background: 'var(--text)', color: 'var(--bg)', textDecoration: 'none', fontWeight: 700, fontSize: 13,
+                }}>
+                  Complete Profile
+                </Link>
+              </div>
+            )}
+          </div>
+        )
+      }
+
+      case 'milestones': {
+        if (milestones.length === 0) {
+          return (
+            <div style={{ padding: '40px 0', color: 'var(--text-4)', fontSize: 14, lineHeight: 1.7 }}>
+              <div style={{ marginBottom: 12, fontSize: 16, fontWeight: 700, color: 'var(--text-3)' }}>
+                No milestones tracked yet
+              </div>
+              <p style={{ margin: 0 }}>Milestones are created as you progress through certification paths — exam dates, prep checkpoints, and completion markers.</p>
+            </div>
+          )
+        }
+        return (
+          <div style={{ display: 'grid', gap: 10 }}>
+            {milestones.map((m, idx) => (
+              <div key={m.id || idx} style={{
+                padding: '14px 18px', borderRadius: 12, border: '1px solid var(--border)',
+                background: 'var(--bg-alt)', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+              }}>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)', marginBottom: 4 }}>{m.title}</div>
+                  {m.target_date && (
+                    <div style={{ fontSize: 11, color: 'var(--text-4)', fontFamily: FM }}>
+                      Target: {new Date(m.target_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    </div>
+                  )}
+                </div>
+                {m.status && (
+                  <div style={{
+                    padding: '3px 9px', borderRadius: 999,
+                    background: statusColor(m.status) + '14',
+                    border: '1px solid ' + statusColor(m.status) + '28',
+                    fontSize: 10, fontWeight: 700, color: statusColor(m.status),
+                    fontFamily: FM, letterSpacing: '0.08em', textTransform: 'uppercase',
+                  }}>
+                    {m.status}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )
+      }
+
+      case 'saved': {
+        if (savedItems.length === 0) {
+          return (
+            <div style={{ padding: '40px 0', color: 'var(--text-4)', fontSize: 14, lineHeight: 1.7 }}>
+              <div style={{ marginBottom: 12, fontSize: 16, fontWeight: 700, color: 'var(--text-3)' }}>
+                No saved explorations
+              </div>
+              <p style={{ margin: 0 }}>Save certifications you want to explore later from Cert Radar or individual certification pages.</p>
+              <Link to="/tools/cert-radar" style={{
+                display: 'inline-block', marginTop: 14, padding: '10px 16px', borderRadius: 10,
+                background: 'var(--text)', color: 'var(--bg)', textDecoration: 'none', fontWeight: 700, fontSize: 13,
+              }}>
+                Explore Certifications
+              </Link>
+            </div>
+          )
+        }
+        return (
+          <div style={{ display: 'grid', gap: 10 }}>
+            {savedItems.map((item, idx) => (
+              <Link
+                key={item.id || idx}
+                to={`/cert/${item.cert_name ? slugify(item.cert_name) : ''}`}
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                <div style={{
+                  padding: '14px 18px', borderRadius: 12, border: '1px solid var(--border)',
+                  background: 'var(--bg-alt)', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                  transition: 'border-color 0.15s ease',
+                }}>
+                  <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)' }}>{item.cert_name}</div>
+                  {item.saved_at && (
+                    <div style={{ fontSize: 11, color: 'var(--text-4)', fontFamily: FM }}>
+                      {new Date(item.saved_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+                    </div>
+                  )}
+                </div>
+              </Link>
+            ))}
+          </div>
+        )
+      }
+
+      default:
+        return null
+    }
+  }
+
+  if (loading) {
+    return <SkeletonLoader type="dashboard" />
+  }
 
   return (
     <div style={{
       minHeight: '100vh',
-      paddingTop: isMobile ? '104px' : '112px',
+      paddingTop: isMobile ? '112px' : '128px',
       paddingRight: '24px',
       paddingBottom: '40px',
       paddingLeft: '24px',
@@ -197,7 +413,7 @@ export default function DashboardPage() {
               </div>
               <div>
                 <div style={{ fontSize: 13, fontWeight: 800, color: 'var(--text)' }}>
-                  {user?.email?.split('@')[0] || 'Your workspace'}
+                  {user?.displayName || user?.email?.split('@')[0] || 'Your workspace'}
                 </div>
                 <div style={{ fontSize: 11, color: 'var(--text-4)', letterSpacing: '0.06em' }}>Career Hub</div>
               </div>
@@ -225,90 +441,56 @@ export default function DashboardPage() {
               ))}
             </div>
 
-            {/* Target roles section */}
-            <div style={{ marginTop: 14, borderTop: '1px solid var(--border)', paddingTop: 12 }}>
-              <div style={{ fontSize: 10, color: 'var(--text-4)', marginBottom: 8, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-                Target Roles
+            {/* Target domain from profile */}
+            {userProfile?.target_domain && (
+              <div style={{ marginTop: 14, borderTop: '1px solid var(--border)', paddingTop: 12 }}>
+                <div style={{ fontSize: 10, color: 'var(--text-4)', marginBottom: 8, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+                  Target Domain
+                </div>
+                <div style={{
+                  padding: '8px 10px', borderRadius: 8, border: '1px solid var(--border)',
+                  fontSize: 12, color: 'var(--text-2)', lineHeight: 1.3,
+                }}>
+                  {userProfile.target_domain}
+                </div>
               </div>
-              <div style={{ display: 'grid', gap: 4 }}>
-                {['Cloud DevOps Engineer', 'Software Architect', 'Data Lead'].map((role) => (
-                  <button
-                    key={role}
-                    style={{
-                      padding: '8px 10px', borderRadius: 8,
-                      border: '1px solid transparent', background: 'transparent',
-                      color: 'var(--text-3)', textAlign: 'left',
-                      fontSize: 12, cursor: 'pointer', lineHeight: 1.3,
-                    }}
-                  >
-                    {role}
-                  </button>
-                ))}
-              </div>
-            </div>
+            )}
           </div>
         </aside>
 
-        {/* ── Center: Career paths list ─────────────────────────── */}
+        {/* ── Center: Tab content ─────────────────────────────── */}
         <main>
+          {/* Mobile tab bar */}
+          {isMobile && (
+            <div style={{ display: 'flex', gap: 6, overflowX: 'auto', marginBottom: 16, scrollbarWidth: 'none' }}>
+              {NAV_ITEMS.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  style={{
+                    padding: '7px 14px', borderRadius: 999,
+                    border: activeTab === item.id ? '1px solid var(--text)' : '1px solid var(--border)',
+                    background: activeTab === item.id ? 'var(--text)' : 'transparent',
+                    color: activeTab === item.id ? 'var(--bg)' : 'var(--text-3)',
+                    fontWeight: activeTab === item.id ? 700 : 500,
+                    fontSize: 12, cursor: 'pointer', whiteSpace: 'nowrap',
+                    transition: 'all 0.15s ease',
+                  }}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          )}
+
           {/* Header row */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: 18, flexWrap: 'wrap' }}>
             <h1 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 800, letterSpacing: '-0.02em', color: 'var(--text)' }}>
               {NAV_ITEMS.find(n => n.id === activeTab)?.label ?? 'Active Paths'}
             </h1>
-
-            <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-              {['All', 'In Progress', 'Saved'].map((t) => (
-                <button
-                  key={t}
-                  style={{
-                    padding: '5px 13px', borderRadius: 999,
-                    border: '1px solid var(--border-mid)',
-                    background: 'transparent', color: 'var(--text-3)',
-                    fontWeight: 600, fontSize: 12, cursor: 'pointer',
-                    transition: 'all 0.15s ease',
-                  }}
-                >
-                  {t}
-                </button>
-              ))}
-            </div>
-
-            <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
-              <input
-                placeholder="Search certifications…"
-                style={{
-                  padding: '7px 12px', borderRadius: 10,
-                  border: '1px solid var(--border-mid)',
-                  background: 'transparent', color: 'var(--text)',
-                  minWidth: isMobile ? 140 : 200, fontSize: 12, outline: 'none',
-                }}
-              />
-              <button
-                style={{
-                  padding: '7px 15px', borderRadius: 10,
-                  background: 'var(--accent)', color: 'var(--bg)',
-                  fontWeight: 800, fontSize: 12, border: 'none', cursor: 'pointer',
-                }}
-              >
-                + Add Path
-              </button>
-            </div>
           </div>
 
-          {/* Cards */}
-          <div style={{ display: 'grid', gap: 10 }}>
-            {displayItems.map((it, idx) => (
-              <CareerCard
-                key={idx}
-                title={it.title}
-                details={it.details}
-                updatedAt={it.updated_at}
-                status={it.status}
-                index={idx}
-              />
-            ))}
-          </div>
+          {renderTabContent()}
         </main>
 
         {/* ── Right: metrics + quick actions ───────────────────── */}
@@ -318,7 +500,7 @@ export default function DashboardPage() {
               Milestone Moats
             </div>
             <div style={{ fontWeight: 800, fontSize: '2rem', marginBottom: 4, color: 'var(--accent)', lineHeight: 1 }}>
-              {planItems.length || displayItems.length}
+              {journeyPaths.length}
             </div>
             <div style={{ fontSize: 11, color: 'var(--text-3)', marginBottom: 16 }}>
               active cert paths tracked
@@ -368,16 +550,34 @@ export default function DashboardPage() {
                 Saved Future Explorations
               </div>
               <div style={{ display: 'grid', gap: 6 }}>
-                {['Google Cloud Professional', 'CKA Kubernetes', 'CFA Level 1'].map((cert) => (
-                  <div key={cert} style={{
+                {savedItems.length > 0 ? (
+                  savedItems.slice(0, 5).map((item, idx) => (
+                    <Link
+                      key={item.id || idx}
+                      to={`/cert/${item.cert_name ? slugify(item.cert_name) : ''}`}
+                      style={{ textDecoration: 'none', color: 'inherit' }}
+                    >
+                      <div style={{
+                        padding: '8px 10px', borderRadius: 8,
+                        background: 'color-mix(in srgb, var(--text) 3%, transparent)',
+                        border: '1px solid var(--border)',
+                        fontSize: 12, color: 'var(--text-3)', lineHeight: 1.3,
+                        transition: 'border-color 0.15s ease',
+                      }}>
+                        {item.cert_name}
+                      </div>
+                    </Link>
+                  ))
+                ) : (
+                  <div style={{
                     padding: '8px 10px', borderRadius: 8,
                     background: 'color-mix(in srgb, var(--text) 3%, transparent)',
                     border: '1px solid var(--border)',
-                    fontSize: 12, color: 'var(--text-3)', lineHeight: 1.3,
+                    fontSize: 12, color: 'var(--text-4)', lineHeight: 1.3,
                   }}>
-                    {cert}
+                    No saved certs yet
                   </div>
-                ))}
+                )}
               </div>
             </div>
           </div>

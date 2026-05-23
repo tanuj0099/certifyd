@@ -8,9 +8,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import DynamicIslandNav from "./components/DynamicIslandNav";
-import AuthModal from "./components/AuthModal.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
-import AdminRoute from "./components/AdminRoute.jsx";
 import OnboardingGate from "./components/OnboardingGate.jsx";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -77,7 +75,6 @@ import NotFound from "./pages/NotFound.jsx";
 const JobMapTool = lazy(() => import("./pages/JobMapTool.jsx"));
 const CollegeTool = lazy(() => import("./pages/CollegeTool.jsx"));
 const HikeVerifierTool = lazy(() => import("./pages/HikeVerifierTool.jsx"));
-const AdminDashboard = lazy(() => import("./pages/AdminDashboard.jsx"));
 const DashboardPage = lazy(() => import("./pages/DashboardPage.jsx"));
 const CertificationPage = lazy(() => import("./pages/CertificationPage.jsx"));
 const OfferAnalysisPage = lazy(() => import("./pages/OfferAnalysisPage.jsx"));
@@ -1930,10 +1927,10 @@ const AppPage = function ({ onCertSelected }) {
   return (
     <div
       style={{
-        paddingTop: NAV_H + "px",
-        minHeight: "100vh",
-        background: "var(--bg)",
-        position: "relative",
+        paddingTop: typeof window !== 'undefined' && window.innerWidth < 768 ? '112px' : '128px',
+        minHeight: '100vh',
+        background: 'var(--bg)',
+        position: 'relative',
       }}
     >
       {/* ─── PREMIUM FLOATING NAVIGATION BAR ─── */}
@@ -2002,26 +1999,13 @@ const AppPage = function ({ onCertSelected }) {
       </AnimatePresence>
 
       {modeLocked ? (
-        <div style={{ position: "relative", zIndex: 1 }}>
-          <div style={{ maxWidth: "1400px", margin: "0 auto" }}>
-            <AppSection id="APP" title="TOOL FLOW" noBorderTop>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "32px",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <ModePill mode={mode} onReset={onModeReset} />
-                  <DataFreshnessBadge />
-                </div>
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 24px 64px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <ModePill mode={mode} onReset={onModeReset} />
+                <DataFreshnessBadge />
+              </div>
 
                 {/* Modern Flow Header */}
                 <div
@@ -2352,10 +2336,9 @@ const AppPage = function ({ onCertSelected }) {
                   </motion.div>
                 </AnimatePresence>
 
-                {/* Secondary Tools removed — keep a subtle micro divider */}
-                <div style={{ marginTop: '40px', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '28px' }} />
-              </div>
-            </AppSection>
+              {/* Subtle section divider */}
+              <div style={{ marginTop: '40px', borderTop: '1px solid rgba(255,255,255,0.06)' }} />
+            </div>
           </div>
         </div>
       ) : null}
@@ -2838,29 +2821,26 @@ function AppRoot() {
     return "home";
   };
   const currentPage = getPageFromPath();
+  // Full-page auth routes are detached from the shell — suppress nav and modal overlays
+  const isAuthPage = ['/login', '/signup'].includes(location.pathname)
 
   return (
     <div
       style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
     >
-      <AnimatePresence>
-        <AuthModal
-          isOpen={showSignIn}
-          onClose={() => setShowSignIn(false)}
-          loading={loading}
+      {!isAuthPage && (
+        <DynamicIslandNav
+          isDark={isDark}
+          toggleTheme={toggleTheme}
+          onNavigate={(pageId) =>
+            navigate(pageId === "home" ? "/" : "/" + pageId)
+          }
+          currentPage={currentPage}
+          user={user}
+          onSignIn={() => navigate('/login')}
+          onSignOut={signOut}
         />
-      </AnimatePresence>
-      <DynamicIslandNav
-        isDark={isDark}
-        toggleTheme={toggleTheme}
-        onNavigate={(pageId) =>
-          navigate(pageId === "home" ? "/" : "/" + pageId)
-        }
-        currentPage={currentPage}
-        user={user}
-        onSignIn={() => navigate('/login')}
-        onSignOut={signOut}
-      />
+      )}
       <main style={{ flex: 1 }}>
         <AnimatePresence mode="wait">
           <motion.div
@@ -2904,11 +2884,7 @@ function AppRoot() {
                 />
                 <Route
                   path="/admin"
-                  element={
-                    <AdminRoute>
-                      <AdminDashboard />
-                    </AdminRoute>
-                  }
+                  element={<Navigate to="/dashboard" replace />}
                 />
                 <Route path="/faq" element={<FAQPage />} />
                 <Route path="/about" element={<AboutPage />} />

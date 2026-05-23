@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
-  Menu, User, X, Home, Wrench, BarChart2,
-  LayoutDashboard, Radio, ChevronRight,
+  Menu, User, X, Home, BookOpen,
+  LayoutDashboard, ChevronRight,
+  Radio, BarChart2, Wrench,
 } from 'lucide-react'
 import { useTheme } from '../hooks/useTheme.jsx'
 import UserAccountMenu from './UserAccountMenu.jsx'
@@ -22,6 +23,7 @@ const ANON_NAV = [
   { label: 'Blog',           pageId: 'blog' },
 ]
 
+// Auth users see all core features alongside their Dashboard
 const AUTH_NAV = [
   { label: 'Home',           pageId: 'home' },
   { label: 'Tools',          pageId: 'tools' },
@@ -45,11 +47,10 @@ const MOBILE_TABS_ANON = [
   { label: 'Sign In',   pageId: '__signin__',        Icon: User },
 ]
 const MOBILE_TABS_AUTH = [
-  { label: 'Home',      pageId: 'home',             Icon: Home },
-  { label: 'Cert Radar',pageId: 'tools/cert-radar', Icon: Radio },
-  { label: 'ROI',       pageId: 'app',              Icon: BarChart2, isRoi: true },
-  { label: 'Tools',     pageId: 'tools',            Icon: Wrench },
-  { label: 'Profile',   pageId: 'profile',           Icon: User },
+  { label: 'Home',      pageId: 'home',      Icon: Home },
+  { label: 'Blog',      pageId: 'blog',      Icon: BookOpen },
+  { label: 'Dashboard', pageId: 'dashboard', Icon: LayoutDashboard },
+  { label: 'Profile',   pageId: 'profile',   Icon: User },
 ]
 
 // ── Helpers ────────────────────────────────────────────────
@@ -95,12 +96,12 @@ function NavLink({ item, active, onNavigate, onActivate, navigate }) {
       style={{
         position: 'relative',
         display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-        minHeight: '34px', padding: '0 12px', borderRadius: '999px',
+        minHeight: '34px', padding: '0 8px', borderRadius: '999px',
         border: '1px solid transparent',
         background: active ? 'var(--text)' : 'transparent',
         color: active ? 'var(--bg)' : 'var(--text-2)',
         textDecoration: 'none', fontFamily: F_SANS,
-        fontSize: '13px', fontWeight: active ? 800 : 600,
+        fontSize: '12px', fontWeight: 500, letterSpacing: '0.025em',
         whiteSpace: 'nowrap',
         transition: 'background 180ms ease, color 180ms ease',
       }}
@@ -168,7 +169,12 @@ function SystemIcon({ size = 16 }) {
 
 // ── Theme toggle ───────────────────────────────────────────
 function ThemeToggle({ mode, onCycle }) {
-  const [open, setOpen] = useState(false)
+  const handleCycle = () => {
+    if (mode === 'dark') onCycle('light')
+    else if (mode === 'light') onCycle('system')
+    else onCycle('dark')
+  }
+  
   const options = [
     { id: 'light',  label: 'Light',    Icon: SunIcon },
     { id: 'dark',   label: 'Dark',     Icon: MoonIcon },
@@ -178,36 +184,14 @@ function ThemeToggle({ mode, onCycle }) {
   const CurrentIcon = current.Icon
   return (
     <div style={{ position: 'relative' }}>
-      <button type="button" aria-label={`Theme: ${current.label}`} onClick={() => setOpen(v => !v)}
-        style={{ display:'inline-flex', alignItems:'center', gap:'6px', height:'32px', padding:'0 11px', borderRadius:'999px', border:'1px solid var(--border)', background: open ? 'var(--border)':'transparent', color:'var(--text-2)', fontFamily:F_MONO, fontSize:'9px', fontWeight:700, letterSpacing:'0.10em', textTransform:'uppercase', cursor:'pointer', transition:'background 180ms ease' }}>
+      <button type="button" aria-label={`Theme: ${current.label}`} onClick={handleCycle}
+        style={{ display:'inline-flex', alignItems:'center', justifyContent:'center', width:'34px', height:'34px', borderRadius:'50%', border:'1px solid var(--border)', background:'transparent', color:'var(--text-2)', cursor:'pointer', transition:'all 180ms ease' }}>
         <AnimatePresence mode="wait">
           <motion.span key={current.id} initial={{opacity:0,scale:0.7,rotate:-15}} animate={{opacity:1,scale:1,rotate:0}} exit={{opacity:0,scale:0.7,rotate:15}} transition={{duration:0.22}} style={{display:'flex',alignItems:'center'}}>
-            <CurrentIcon size={13} />
+            <CurrentIcon size={14} />
           </motion.span>
         </AnimatePresence>
-        {current.label}
       </button>
-      <AnimatePresence>
-        {open && (
-          <>
-            <div style={{ position:'fixed', inset:0, zIndex:9997 }} onClick={() => setOpen(false)} />
-            <motion.div initial={{opacity:0,y:-6,scale:0.96}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:-4,scale:0.96}} transition={{type:'spring',stiffness:400,damping:30}}
-              style={{ position:'absolute', top:'40px', right:0, zIndex:9998, padding:'6px', borderRadius:'16px', border:'1px solid var(--border-mid)', background:'var(--bg)', backdropFilter:'blur(18px)', WebkitBackdropFilter:'blur(18px)', minWidth:'130px', boxShadow:'0 12px 40px rgba(0,0,0,0.25)' }}>
-              {options.map(opt => {
-                const Icon = opt.Icon
-                const active = mode === opt.id
-                return (
-                  <button key={opt.id} type="button" onClick={() => { onCycle(opt.id); setOpen(false) }}
-                    style={{ width:'100%', display:'flex', alignItems:'center', gap:'10px', padding:'9px 12px', borderRadius:'10px', border:'none', background: active ? 'var(--text)':'transparent', color: active ? 'var(--bg)':'var(--text-2)', fontFamily:F_SANS, fontSize:'13px', fontWeight: active ? 700:500, cursor:'pointer', textAlign:'left', transition:'background 140ms, color 140ms' }}>
-                    <Icon size={14} />
-                    {opt.label}
-                  </button>
-                )
-              })}
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
     </div>
   )
 }
@@ -369,6 +353,7 @@ const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, 
   const [isMobile, setIsMobile] = useState(false)
   const { mode: themeMode, setThemeMode: cycleTheme } = useTheme()
   const navigate = useNavigate()
+  const location = useLocation()
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 820)
@@ -377,7 +362,17 @@ const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, 
     return () => window.removeEventListener('resize', check)
   }, [])
 
-  useEffect(() => { if (currentPage) setActiveHref(currentPage) }, [currentPage])
+  // Sync active page from prop OR from live URL path
+  useEffect(() => {
+    if (currentPage) {
+      setActiveHref(currentPage)
+    } else {
+      const path = (location.pathname || '').toLowerCase()
+      if (path === '/' || path === '') setActiveHref('home')
+      else if (path.startsWith('/tools/')) setActiveHref(path.slice(1))
+      else setActiveHref(path.slice(1) || 'home')
+    }
+  }, [currentPage, location.pathname])
 
   const navItems = useMemo(() => (user ? AUTH_NAV : ANON_NAV), [user])
 
@@ -385,19 +380,18 @@ const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, 
     <>
       {/* ── Top capsule — DESKTOP ONLY ─────────────────────────────── */}
       {!isMobile && (
-        <div style={{ position:'fixed', top:'14px', left:'50%', transform:'translateX(-50%)', zIndex:9999, pointerEvents:'none', width:'min(calc(100vw - 24px), 920px)', display:'flex', justifyContent:'center' }}>
+        <div style={{ position:'fixed', top:'14px', left:'50%', transform:'translateX(-50%)', zIndex:9999, pointerEvents:'none', display:'flex', justifyContent:'center' }}>
           <motion.nav
             layout
             initial={{ y:-56, opacity:0, scale:0.96 }}
             animate={{ y:0, opacity:1, scale:1 }}
             transition={{ type:'spring', stiffness:150, damping:24 }}
+            className="transition-all duration-300 ease-in-out flex items-center justify-between"
             style={{
               pointerEvents: 'auto',
-              display: 'inline-flex', alignItems:'center', justifyContent:'center',
-              height: '52px',
-              maxWidth: 'min(calc(100vw - 24px), 920px)',
-              padding: '0 8px 0 14px',
-              gap: '4px',
+              width: 'auto',
+              maxWidth: '100%',
+              padding: '10px 24px',
               borderRadius: '999px',
               border: '1px solid var(--border-mid)',
               outline: '1px solid var(--border)',
@@ -406,16 +400,18 @@ const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, 
               backdropFilter: 'blur(18px) saturate(160%)',
               WebkitBackdropFilter: 'blur(18px) saturate(160%)',
               boxSizing: 'border-box',
+              overflow: 'visible',
+              whiteSpace: 'nowrap'
             }}
             aria-label="Primary navigation"
           >
             <button type="button" aria-label="Go to home"
-              onClick={() => { user ? navigate('/dashboard') : navigate('/') }}
-              style={{ background:'none', border:'none', padding:'0 10px 0 6px', cursor:'pointer', color:'var(--text)', fontFamily:F_SANS, fontSize:'13px', fontWeight:800, letterSpacing:'-0.01em', flexShrink:0 }}>
+              onClick={() => { try { navigate(user ? '/dashboard' : '/') } catch (e) { window.location.href = user ? '/dashboard' : '/' } }}
+              style={{ background:'none', border:'none', padding:'0 10px 0 0', cursor:'pointer', color:'var(--text)', fontFamily:F_SANS, fontSize:'13px', fontWeight:800, letterSpacing:'-0.01em', flexShrink:0 }}>
               CertifyROI
             </button>
             <div style={{ width:'1px', height:'18px', background:'var(--border)', flexShrink:0 }} />
-            <div style={{ display:'flex', alignItems:'center', gap:'2px' }}>
+            <div style={{ display:'flex', alignItems:'center', gap:'16px', padding: '0 16px' }}>
               {navItems.map(item => (
                 <NavLink key={item.pageId||item.label} item={item} active={isActivePage(activeHref, item.pageId)} onNavigate={onNavigate} onActivate={setActiveHref} navigate={navigate} />
               ))}

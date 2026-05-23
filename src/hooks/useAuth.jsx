@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext, useContext } from 'react'
-import { auth, isFirebaseConfigured } from '../firebase.jsx'
+import { supabase } from '../lib/supabase.js'
 
 const AuthContext = createContext(null)
 
@@ -7,54 +7,64 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const [authError, setAuthError] = useState(null)
-  const [configured, setConfigured] = useState(isFirebaseConfigured())
+  const configured = !!supabase
 
   useEffect(() => {
-    if (!configured || !auth) {
+    if (!configured) {
+      setAuthError('Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to .env.local.')
       setLoading(false)
-      if (!configured) {
-        setAuthError('Firebase is not configured. Add VITE_FIREBASE_* keys to .env.local.')
-      }
-      return undefined
+      return
     }
 
-    let unsubscribe = () => {}
-
-    const initAuth = async () => {
+    // Get initial session safely
+    const initializeAuth = async () => {
       try {
-        const { onAuthStateChanged } = await import('firebase/auth')
-        unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-          setUser(firebaseUser)
-          setLoading(false)
-          if (firebaseUser) {
-            import('../services/userProfileService.js')
-              .then(({ syncUserProfile }) => syncUserProfile(firebaseUser))
-              .catch((error) => {
-                console.warn('Supabase profile sync failed', error)
-              })
-          }
-        })
-      } catch (error) {
-        console.warn('Auth init failed', error)
-        setAuthError('Authentication could not be initialized.')
+        const { data: { session }, error } = await supabase.auth.getSession()
+        if (error) {
+          console.warn('Supabase session error:', error.message)
+          setAuthError(error.message)
+        }
+        setUser(session?.user || null)
+      } catch (err) {
+        console.warn('Auth initialization exception:', err)
+        setAuthError(err.message)
+      } finally {
         setLoading(false)
       }
     }
+    initializeAuth()
 
-    initAuth()
-    return () => unsubscribe()
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user || null)
+      setLoading(false)
+      
+      // Auto-sync profile to Supabase on login
+      if (session?.user) {
+        import('../services/userProfileService.js')
+          .then(({ syncUserProfile }) => syncUserProfile(session.user))
+          .catch((error) => console.warn('Supabase profile sync failed', error))
+      }
+    })
+
+    return () => {
+      subscription?.unsubscribe()
+    }
   }, [configured])
 
   const signInGoogle = async () => {
     setAuthError(null)
+    if (!configured) throw new Error('Supabase not configured')
     try {
-      const { signInWithGoogle } = await import('../firebase.jsx')
-      const result = await signInWithGoogle()
-      return result.user
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/dashboard`
+        }
+      })
+      if (error) throw error
     } catch (e) {
-      const msg = e.code === 'auth/popup-closed-by-user'
-        ? 'Sign-in cancelled'
-        : friendlyAuthError(e)
+      const msg = e?.message || 'Google sign-in failed.'
       setAuthError(msg)
       throw new Error(msg)
     }
@@ -62,30 +72,17 @@ export const AuthProvider = ({ children }) => {
 
   const signInGithub = async () => {
     setAuthError(null)
+    if (!configured) throw new Error('Supabase not configured')
     try {
-      const { signInWithGithub } = await import('../firebase.jsx')
-      const result = await signInWithGithub()
-      return result.user
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'github',
+        options: {
+          redirectTo: `${window.location.origin}/dashboard`
+        }
+      })
+      if (error) throw error
     } catch (e) {
-      const msg = e.code === 'auth/popup-closed-by-user'
-        ? 'Sign-in cancelled'
-        : e.code === 'auth/account-exists-with-different-credential'
-          ? 'An account with this email already exists via a different sign-in method.'
-          : friendlyAuthError(e)
-      setAuthError(msg)
-      throw new Error(msg)
-    }
-  }
-
-  const signInPhone = async (phoneNumber, recaptchaContainerId) => {
-    setAuthError(null)
-    try {
-      const { setupRecaptcha, sendPhoneOTP } = await import('../firebase.jsx')
-      const verifier = setupRecaptcha(recaptchaContainerId)
-      const confirmationResult = await sendPhoneOTP(phoneNumber, verifier)
-      return confirmationResult   // caller must call .confirm(otp)
-    } catch (e) {
-      const msg = friendlyAuthError(e)
+      const msg = e?.message || 'GitHub sign-in failed.'
       setAuthError(msg)
       throw new Error(msg)
     }
@@ -93,47 +90,63 @@ export const AuthProvider = ({ children }) => {
 
   const signInEmail = async (email, password) => {
     setAuthError(null)
+    if (!configured) throw new Error('Supabase not configured')
     try {
-      const { signInWithEmail } = await import('../firebase.jsx')
-      const result = await signInWithEmail(email, password)
-      return result.user
+      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      if (error) throw error
     } catch (e) {
-      const msg = friendlyAuthError(e)
+      const msg = e?.message || 'Email sign-in failed.'
       setAuthError(msg)
       throw new Error(msg)
     }
   }
 
-  const signUpEmail = async (email, password, displayName) => {
+  const signUpEmail = async (email, password) => {
     setAuthError(null)
+    if (!configured) throw new Error('Supabase not configured')
     try {
-      const { signUpWithEmail } = await import('../firebase.jsx')
-      const result = await signUpWithEmail(email, password, displayName)
-      return result.user
+      const { error } = await supabase.auth.signUp({ email, password })
+      if (error) throw error
     } catch (e) {
-      const msg = friendlyAuthError(e)
+      const msg = e?.message || 'Email sign-up failed.'
       setAuthError(msg)
       throw new Error(msg)
     }
   }
 
-  const resetPassword = async (email) => {
+  const signInPhone = async (phone) => {
     setAuthError(null)
+    if (!configured) throw new Error('Supabase not configured')
     try {
-      const { sendPasswordReset } = await import('../firebase.jsx')
-      await sendPasswordReset(email)
-      return true
+      const { error } = await supabase.auth.signInWithOtp({ phone })
+      if (error) throw error
     } catch (e) {
-      const msg = friendlyAuthError(e)
+      const msg = e?.message || 'Phone OTP generation failed.'
       setAuthError(msg)
       throw new Error(msg)
     }
   }
+
+  const verifyPhoneOtp = async (phone, token) => {
+    setAuthError(null)
+    if (!configured) throw new Error('Supabase not configured')
+    try {
+      const { error } = await supabase.auth.verifyOtp({ phone, token, type: 'sms' })
+      if (error) throw error
+    } catch (e) {
+      const msg = e?.message || 'OTP verification failed.'
+      setAuthError(msg)
+      throw new Error(msg)
+    }
+  }
+
+  const resetPassword = async () => { throw new Error('Password reset is not implemented.') }
 
   const signOut = async () => {
     try {
-      const { signOutUser } = await import('../firebase.jsx')
-      await signOutUser()
+      if (supabase) {
+        await supabase.auth.signOut()
+      }
       setUser(null)
     } catch (e) {
       console.error('Sign out error:', e)
@@ -149,6 +162,7 @@ export const AuthProvider = ({ children }) => {
       signInGoogle,
       signInGithub,
       signInPhone,
+      verifyPhoneOtp,
       signInEmail,
       signUpEmail,
       resetPassword,
@@ -157,28 +171,6 @@ export const AuthProvider = ({ children }) => {
       {children}
     </AuthContext.Provider>
   )
-}
-
-function friendlyAuthError(error) {
-  const code = error?.code || ''
-  if (code.includes('invalid-api-key')) {
-    return 'Firebase API key is invalid. Check VITE_FIREBASE_API_KEY in .env.local.'
-  }
-  if (code.includes('unauthorized-domain')) {
-    return 'This domain is not authorized in Firebase Console.'
-  }
-  if (code.includes('operation-not-allowed')) {
-    return 'This sign-in method is disabled in Firebase Console.'
-  }
-  if (code.includes('invalid-email')) return 'Enter a valid email address.'
-  if (code.includes('weak-password')) return 'Use at least 6 characters for your password.'
-  if (code.includes('email-already-in-use')) return 'That email already has an account. Try signing in.'
-  if (code.includes('user-not-found') || code.includes('wrong-password') || code.includes('invalid-credential')) {
-    return 'Email or password is incorrect.'
-  }
-  if (code.includes('too-many-requests')) return 'Too many attempts. Please wait and try again.'
-  if (code.includes('popup-blocked')) return 'Popup was blocked. Allow popups for this site and try again.'
-  return error?.message || 'Authentication failed.'
 }
 
 export const useAuth = () => {

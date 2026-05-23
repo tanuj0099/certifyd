@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Download, Copy, Check, Linkedin, LayoutTemplate } from 'lucide-react'
+import { useCanvasTheme } from '../hooks/useCanvasTheme'
+import { trackShareCardGenerated } from '../lib/analytics.js'
 
 const FM = "'JetBrains Mono','Commit Mono',monospace"
 const FH = "'Plus Jakarta Sans','Bricolage Grotesque',sans-serif"
@@ -28,30 +30,30 @@ var DOMAIN_LABELS = {
 
 // ── Demand colors ─────────────────────────────────────────
 var DEMAND_COLORS = {
-  'Very High': 'var(--linear-blue)',
-  'High':      'var(--linear-blue)',
-  'Medium':    'var(--cool-grey)',
+  'Very High': '#4F7CF8',
+  'High':      '#4F7CF8',
+  'Medium':    '#94A3B8',
   'Low':       '#94A3B8',
 }
 
 // ── Domain accent colors (used for card glow) ─────────────
 var DOMAIN_ACCENTS = {
-  tech:          ['var(--linear-blue)', 'var(--linear-blue)'],
+  tech:          ['#4F7CF8', '#4F7CF8'],
   data:          ['#8B5CF6', '#06B6D4'],
-  cybersecurity: ['var(--cool-grey)', 'var(--cool-grey)'],
-  management:    ['var(--linear-blue)', 'var(--linear-blue)'],
-  finance:       ['var(--linear-blue)', 'var(--cool-grey)'],
-  marketing:     ['#EC4899', 'var(--cool-grey)'],
-  hr:            ['var(--cool-grey)', 'var(--linear-blue)'],
-  product:       ['var(--linear-blue)', '#EC4899'],
+  cybersecurity: ['#94A3B8', '#94A3B8'],
+  management:    ['#4F7CF8', '#4F7CF8'],
+  finance:       ['#4F7CF8', '#94A3B8'],
+  marketing:     ['#EC4899', '#94A3B8'],
+  hr:            ['#94A3B8', '#4F7CF8'],
+  product:       ['#4F7CF8', '#EC4899'],
   design:        ['#EC4899', '#8B5CF6'],
-  medical:       ['var(--linear-blue)', '#06B6D4'],
-  law:           ['#94A3B8', 'var(--linear-blue)'],
-  architecture:  ['var(--cool-grey)', 'var(--linear-blue)'],
-  engineering:   ['var(--linear-blue)', 'var(--linear-blue)'],
-  government:    ['var(--linear-blue)', 'var(--cool-grey)'],
-  mba:           ['var(--linear-blue)', 'var(--cool-grey)'],
-  business:      ['var(--linear-blue)', 'var(--linear-blue)'],
+  medical:       ['#4F7CF8', '#06B6D4'],
+  law:           ['#94A3B8', '#4F7CF8'],
+  architecture:  ['#94A3B8', '#4F7CF8'],
+  engineering:   ['#4F7CF8', '#4F7CF8'],
+  government:    ['#4F7CF8', '#94A3B8'],
+  mba:           ['#4F7CF8', '#94A3B8'],
+  business:      ['#4F7CF8', '#4F7CF8'],
 }
 
 // ── Rounded rect helper ───────────────────────────────────
@@ -98,20 +100,22 @@ function drawCardA(canvas, opts) {
   var c = canvas.getContext('2d')
   c.scale(SC, SC)
 
-  var accents  = DOMAIN_ACCENTS[domain] || ['var(--linear-blue)', 'var(--linear-blue)']
+  var accents  = DOMAIN_ACCENTS[domain] || ['#4F7CF8', '#4F7CF8']
   var accent1  = accents[0]
   var accent2  = accents[1]
   var demColor = DEMAND_COLORS[demand] || '#94A3B8'
+  var theme    = opts.theme || {}
+  var isDark   = theme.mode !== 'light'
 
   // ── Background ───────────────────────────────────────────
   var bg = c.createLinearGradient(0, 0, W, H)
-  bg.addColorStop(0,   '#080E1E')
-  bg.addColorStop(0.6, '#0C1628')
-  bg.addColorStop(1,   '#060C18')
+  bg.addColorStop(0,   isDark ? '#080E1E' : '#F8FAFC')
+  bg.addColorStop(0.6, isDark ? '#0C1628' : '#E2E8F0')
+  bg.addColorStop(1,   isDark ? '#060C18' : '#FFFFFF')
   c.fillStyle = bg; c.fillRect(0, 0, W, H)
 
   // Dot grid — very subtle
-  c.fillStyle = 'var(--border-subtle)'
+  c.fillStyle = 'rgba(148,163,184,0.12)'
   for (var xi = 0; xi <= W; xi += 36) {
     for (var yi = 0; yi <= H; yi += 36) {
       c.beginPath(); c.arc(xi, yi, 1.2, 0, Math.PI * 2); c.fill()
@@ -137,7 +141,7 @@ function drawCardA(canvas, opts) {
   }
 
   // ── Inset border frame ───────────────────────────────────
-  c.strokeStyle = 'var(--border-subtle)'
+  c.strokeStyle = 'rgba(148,163,184,0.12)'
   c.lineWidth = 1
   rr(c, 12, 12, W - 24, H - 24, 6)
   c.stroke()
@@ -159,14 +163,14 @@ function drawCardA(canvas, opts) {
 
   // ── Logo ─────────────────────────────────────────────────
   var lgGrad = c.createLinearGradient(44, 34, 82, 72)
-  lgGrad.addColorStop(0, 'var(--linear-blue)'); lgGrad.addColorStop(1, '#4338CA')
+  lgGrad.addColorStop(0, '#4F7CF8'); lgGrad.addColorStop(1, '#4338CA')
   c.fillStyle = lgGrad; rr(c, 44, 34, 40, 40, 10); c.fill()
   c.fillStyle = 'white'; c.font = 'bold 22px Arial'; c.textAlign = 'center'
   c.fillText('↗', 64, 62)
   c.textAlign = 'left'
   c.fillStyle = 'white'; c.font = 'bold 20px Arial'; c.fillText('Certify', 94, 62)
   var cw = c.measureText('Certify').width
-  c.fillStyle = 'var(--accent)'; c.font = 'bold 20px Arial'; c.fillText('ROI', 94 + cw, 62)
+  c.fillStyle = '#4F7CF8'; c.font = 'bold 20px Arial'; c.fillText('ROI', 94 + cw, 62)
 
   // ── "INDIA · 2026" badge ─────────────────────────────────
   c.font = '11px "Courier New", monospace'
@@ -176,11 +180,11 @@ function drawCardA(canvas, opts) {
   rr(c, bX, bY, bW, bH, 7); c.fill()
   c.strokeStyle = 'transparent'; c.lineWidth = 1
   rr(c, bX, bY, bW, bH, 7); c.stroke()
-  c.fillStyle = 'var(--accent)'; c.textAlign = 'center'
+  c.fillStyle = '#4F7CF8'; c.textAlign = 'center'
   c.fillText(bt, bX + bW / 2, bY + 17)
 
   // ── Header divider ───────────────────────────────────────
-  c.strokeStyle = 'var(--border-subtle)'; c.lineWidth = 1
+  c.strokeStyle = 'rgba(148,163,184,0.18)'; c.lineWidth = 1
   c.beginPath(); c.moveTo(44, 90); c.lineTo(W - 44, 90); c.stroke()
 
   // ── Eyebrow ──────────────────────────────────────────────
@@ -242,7 +246,7 @@ function drawCardA(canvas, opts) {
   // Domain pill
   c.fillStyle = accent1 + '22'; rr(c, p1x, pillY - pH / 2, p1w, pH, pRad); c.fill()
   c.strokeStyle = accent1 + '50'; c.lineWidth = 1; rr(c, p1x, pillY - pH / 2, p1w, pH, pRad); c.stroke()
-  c.fillStyle = 'var(--accent)'; c.textAlign = 'center'
+  c.fillStyle = '#4F7CF8'; c.textAlign = 'center'
   c.fillText(p1t, p1x + p1w / 2, pillY + 5)
 
   // Demand pill
@@ -254,7 +258,7 @@ function drawCardA(canvas, opts) {
   // ── Year progress arc — bottom right decorative element ──
   var arcX = W - 80, arcY = H - 80, arcR = 36
   // Track ring
-  c.strokeStyle = 'var(--border-subtle)'
+  c.strokeStyle = 'rgba(148,163,184,0.18)'
   c.lineWidth = 3
   c.beginPath(); c.arc(arcX, arcY, arcR, 0, Math.PI * 2); c.stroke()
   // Progress arc (roughly Q1 of year = ~0.25 of circle)
@@ -273,7 +277,7 @@ function drawCardA(canvas, opts) {
 
   // ── Footer divider ───────────────────────────────────────
   var fY = H - 58
-  c.strokeStyle = 'var(--border-subtle)'; c.lineWidth = 1
+  c.strokeStyle = 'rgba(148,163,184,0.18)'; c.lineWidth = 1
   c.beginPath(); c.moveTo(44, fY); c.lineTo(W - 130, fY); c.stroke()
 
   // ── Footer — tagline left ────────────────────────────────
@@ -312,24 +316,26 @@ function drawCardB(canvas, opts) {
   var c = canvas.getContext('2d')
   c.scale(SC, SC)
 
-  var accents  = DOMAIN_ACCENTS[domain] || ['var(--linear-blue)', 'var(--linear-blue)']
+  var accents  = DOMAIN_ACCENTS[domain] || ['#4F7CF8', '#4F7CF8']
   var accent1  = accents[0]
   var accent2  = accents[1]
   var demColor = DEMAND_COLORS[demand] || '#94A3B8'
   var domLabel = DOMAIN_LABELS[domain] || domain
+  var theme    = opts.theme || {}
+  var isDark   = theme.mode !== 'light'
 
   // ── Background ───────────────────────────────────────────
   var bg = c.createLinearGradient(0, 0, 0, H)
-  bg.addColorStop(0, '#0A0F20')
-  bg.addColorStop(1, '#070B18')
+  bg.addColorStop(0, isDark ? '#0A0F20' : '#F3F4F6')
+  bg.addColorStop(1, isDark ? '#070B18' : '#FFFFFF')
   c.fillStyle = bg; c.fillRect(0, 0, W, H)
 
   // Left panel background — slightly lighter
-  c.fillStyle = 'var(--border-subtle)'
+  c.fillStyle = 'rgba(148,163,184,0.08)'
   c.fillRect(0, 0, 420, H)
 
   // Left panel border line
-  c.strokeStyle = 'var(--border-subtle)'; c.lineWidth = 1
+  c.strokeStyle = 'rgba(148,163,184,0.18)'; c.lineWidth = 1
   c.beginPath(); c.moveTo(420, 0); c.lineTo(420, H); c.stroke()
 
   // Left panel domain glow
@@ -351,7 +357,7 @@ function drawCardB(canvas, opts) {
   }
 
   // Inset frame
-  c.strokeStyle = 'var(--border-subtle)'; c.lineWidth = 1
+  c.strokeStyle = 'rgba(148,163,184,0.18)'; c.lineWidth = 1
   rr(c, 12, 12, W - 24, H - 24, 8); c.stroke()
 
   // ── Left accent bar (vertical) ───────────────────────────
@@ -367,7 +373,7 @@ function drawCardB(canvas, opts) {
 
   // Big domain letter — giant background character
   c.font = 'bold 280px Arial'
-  c.fillStyle = 'var(--border-subtle)'
+  c.fillStyle = 'rgba(148,163,184,0.18)'
   c.textAlign = 'center'
   c.fillText(domLabel.charAt(0).toUpperCase(), 210, lMid + 90)
 
@@ -391,7 +397,7 @@ function drawCardB(canvas, opts) {
 
   // CertifyROI badge — bottom of left panel
   var lgGrad = c.createLinearGradient(170, H - 100, 250, H - 50)
-  lgGrad.addColorStop(0, 'var(--linear-blue)'); lgGrad.addColorStop(1, '#4338CA')
+  lgGrad.addColorStop(0, '#4F7CF8'); lgGrad.addColorStop(1, '#4338CA')
   c.fillStyle = lgGrad; rr(c, 170, H - 98, 36, 36, 9); c.fill()
   c.fillStyle = 'white'; c.font = 'bold 18px Arial'; c.textAlign = 'center'
   c.fillText('↗', 188, H - 73)
@@ -482,6 +488,7 @@ function ShareROICard({ certName, domain, demand, name }) {
   var [drawing, setDrawing] = useState(false)
   var [done,    setDone]    = useState(false)
   var [copied,  setCopied]  = useState(false)
+  var theme                 = useCanvasTheme()
 
   // ── Draw ─────────────────────────────────────────────────
   var render = useCallback(async function() {
@@ -496,6 +503,7 @@ function ShareROICard({ certName, domain, demand, name }) {
       domain:   domain || 'tech',
       demand:   demand || 'High',
       name:     name   || '',
+      theme,
     })
     setDrawing(false); setDone(true)
   }, [certName, domain, demand, name, variant])
@@ -518,6 +526,7 @@ function ShareROICard({ certName, domain, demand, name }) {
     a.download = 'certifyroi-' + (certName || 'card').replace(/\s+/g, '-').toLowerCase() + '-' + variant.toLowerCase() + '.png'
     a.href = canvas.toDataURL('image/png')
     a.click()
+    try { trackShareCardGenerated({ certName, variant, method: 'download' }) } catch (_) {}
   }
 
   // ── Copy to clipboard ─────────────────────────────────────
@@ -530,6 +539,7 @@ function ShareROICard({ certName, domain, demand, name }) {
       })
       await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
       setCopied(true); setTimeout(function() { setCopied(false) }, 2500)
+      try { trackShareCardGenerated({ certName, variant, method: 'copy' }) } catch (_) {}
     } catch(_) { download() }
   }
 
@@ -661,7 +671,7 @@ function ShareROICard({ certName, domain, demand, name }) {
                     onClick={download}
                     whileHover={{ scale: 1.02, y: -1 }}
                     whileTap={{ scale: 0.97 }}
-                    style={{ flex: 1, padding: '12px', borderRadius: '10px', background: 'transparent,#4338CA)', border: 'none', color: 'white', fontSize: '13px', cursor: 'pointer', fontFamily: FH, fontWeight: '700', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '7px', letterSpacing: '-0.01em' }}
+                    style={{ flex: 1, padding: '12px', borderRadius: '10px', background: '#4F7CF8', border: 'none', color: 'white', fontSize: '13px', cursor: 'pointer', fontFamily: FH, fontWeight: '700', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '7px', letterSpacing: '-0.01em' }}
                   >
                     <Download size={14} /> Download PNG
                   </motion.button>

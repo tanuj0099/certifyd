@@ -218,3 +218,65 @@ Examples:
     return { isValid: true, normalized: domainInput.trim(), reason: 'Validation skipped (API unavailable)' }
   }
 }
+
+// ── Offer analysis via Claude ────────────────────────────
+export const analyzeOffer = async ({ offerText, certStack, city, yoe }) => {
+  const certLabels = certStack.map(c => c.name).join(', ')
+  const systemPrompt = 'You are a salary negotiation analyst for the Indian job market (2026). Analyze offer letters against market benchmarks. Respond with ONLY a valid JSON object — no markdown, no prose, no code fences. All currency in Indian Rupees (₹).'
+
+  const userPrompt = `Analyze this job offer letter for an Indian professional:
+
+OFFER LETTER TEXT:
+"""
+${offerText.substring(0, 6000)}
+"""
+
+CANDIDATE PROFILE:
+- Certifications: ${certLabels}
+- City: ${city}
+- Years of Experience: ${yoe}
+
+Return ONLY this JSON:
+{
+  "offered_ctc": number_in_lakhs,
+  "offered_fixed": number_in_lakhs,
+  "offered_variable": number_in_lakhs,
+  "market_median": number_in_lakhs,
+  "market_75th": number_in_lakhs,
+  "percent_diff": number,
+  "assessment": "one sentence — is this above or below market",
+  "breakdown": { "base": number, "bonus": number, "stocks_esop": number, "benefits_note": "short string" },
+  "counter_offer_script": "2-3 sentence professional counter-offer script with specific number in ₹",
+  "red_flags": ["any red flags", "else empty array"],
+  "strengths": ["strong points about the offer"],
+  "market_trend": "one sentence about hiring trend"
+}`
+
+  const response = await fetch('/api/claude', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt },
+      ],
+      max_tokens: 1024,
+      temperature: 0.5,
+    }),
+  })
+
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}))
+    throw new Error(err?.error?.message || err?.error || 'Claude API: ' + response.status)
+  }
+
+  const data = await response.json()
+  const cleaned = (data.content || '').replace(/```(?:json)?\s*/gi, '').replace(/```\s*$/gi, '').trim()
+  try {
+    return JSON.parse(cleaned)
+  } catch {
+    const match = cleaned.match(/\{[\s\S]*\}/)
+    if (match) return JSON.parse(match[0])
+    throw new Error('Could not parse Claude response as JSON')
+  }
+}

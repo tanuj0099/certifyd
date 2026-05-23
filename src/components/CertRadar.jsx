@@ -1,13 +1,17 @@
 import { AnimatePresence, motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
 import { Search, X, Package } from 'lucide-react'
 import { useDeferredValue, useEffect, useMemo, useState } from 'react'
 import { supabase } from '../lib/supabase.js'
+import slugify from '../utils/slugify.js'
 
 const FM = "'JetBrains Mono','IBM Plex Mono',monospace"
 const FS = "'Inter','DM Sans',sans-serif"
 
+// Production table: public.certifications
+// Columns: name, provider, slug, cost_inr, difficulty, time_commitment_months
 const CERT_COLUMNS =
-  'cert_name, provider, domain_name, cost_inr, difficulty_level, prep_time_months'
+  'name, provider, slug, cost_inr, difficulty, time_commitment_months'
 
 const FREE_HINTS = ['free', 'hubspot academy', 'google skillshop', 'trailhead', 'aws skill builder']
 
@@ -22,17 +26,22 @@ function normalizeNumber(value) {
 }
 
 function normalizeCert(row) {
-  const certName = normalizeText(row.cert_name, 'Untitled certification')
+  // Production schema: name, provider, slug, cost_inr, difficulty, time_commitment_months
+  // Fallback to legacy column names for forward compatibility
+  const certName = normalizeText(row.name || row.cert_name, 'Untitled certification')
   const provider = normalizeText(row.provider, 'Unknown provider')
-  const domainName = normalizeText(row.domain_name, 'Unmapped')
+  // domain comes from description field ("Primary Domain: {track}") or a joined column
+  const domainName = normalizeText(row.domain_name || row.domain || (row.description ? row.description.replace('Primary Domain: ', '') : ''), 'Uncategorized')
+  const slug = normalizeText(row.slug, '')
 
   return {
     certName,
     provider,
     domainName,
+    slug,
     costInr: normalizeNumber(row.cost_inr),
-    difficulty: normalizeText(row.difficulty_level, 'Unrated'),
-    prepMonths: normalizeNumber(row.prep_time_months),
+    difficulty: normalizeText(row.difficulty || row.difficulty_level, 'Unrated'),
+    prepMonths: normalizeNumber(row.time_commitment_months || row.prep_time_months),
   }
 }
 
@@ -336,22 +345,30 @@ export default function CertRadar() {
         return
       }
 
-      const { data, error: queryError } = await supabase
-        .from('certificates')
-        .select(CERT_COLUMNS)
-        .order('domain_name', { ascending: true })
-        .order('cert_name', { ascending: true })
+      try {
+        const { data, error: queryError } = await supabase
+          .from('certifications')
+          .select(CERT_COLUMNS)
+          .order('name', { ascending: true })
 
-      if (cancelled) return
+        if (cancelled) return
 
-      if (queryError) {
-        setCerts([])
-        setError(queryError.message || 'Unable to load certification pipeline data.')
-      } else {
-        setCerts((data || []).map(normalizeCert))
+        if (queryError) {
+          setCerts([])
+          setError(queryError.message || 'Unable to load certification pipeline data.')
+        } else {
+          setCerts((data || []).map(normalizeCert))
+        }
+      } catch (fetchErr) {
+        if (!cancelled) {
+          setCerts([])
+          setError(fetchErr?.message || 'Failed to load certifications.')
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false)
+        }
       }
-
-      setLoading(false)
     }
 
     loadCerts()
@@ -408,7 +425,7 @@ export default function CertRadar() {
     <section
       style={{
         minHeight: '100vh',
-        padding: isPhone ? '104px 18px 56px' : '128px 24px 72px',
+        padding: isPhone ? '112px 18px 56px' : '128px 24px 72px',
         background: 'var(--bg)',
         color: 'var(--text)',
       }}
@@ -626,11 +643,13 @@ export default function CertRadar() {
           >
             <AnimatePresence mode="popLayout">
               {filteredCerts.map((cert, index) => (
-                <CertCard
+                <Link
                   key={`${cert.certName}-${cert.provider}-${index}`}
-                  cert={cert}
-                  index={index}
-                />
+                  to={`/cert/${cert.slug || slugify(cert.certName)}`}
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                >
+                  <CertCard cert={cert} index={index} />
+                </Link>
               ))}
             </AnimatePresence>
           </div>

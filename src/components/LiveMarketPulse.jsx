@@ -305,26 +305,31 @@ export default function LiveMarketPulse() {
       }
 
       try {
+        // Read live demand scores from Supabase demand_scores table
         let response = await supabase
-          .from('market_intelligence')
-          .select(COST_COLUMNS)
-          .order('domain_name', { ascending: true })
-
-        if (response.error && /certification_cost/i.test(response.error.message || '')) {
-          response = await supabase
-            .from('market_intelligence')
-            .select(BASE_COLUMNS)
-            .order('domain_name', { ascending: true })
-        }
+          .from('demand_scores')
+          .select('domain, salary_floor, salary_ceiling, job_count, score, updated_at, certification, slug')
+          .order('domain', { ascending: true })
 
         if (cancelled) return
         if (response.error) throw response.error
 
-        const normalized = (Array.isArray(response.data) ? response.data : []).map(normalizeMarketRow)
+        const normalized = (Array.isArray(response.data) ? response.data : []).map((row) => ({
+          domain_name: row.domain || row.domain_name || 'Unmapped domain',
+          min_salary: Number(row.salary_floor) || 0,
+          max_salary: Number(row.salary_ceiling) || 0,
+          job_count_naukri: Number(row.job_count) || 0,
+          updated_at: row.updated_at || null,
+          certification_cost: DEFAULT_CERT_COST,
+          score: Number(row.score) || 0,
+          certification: row.certification || null,
+          slug: row.slug || null,
+        }))
+
         setRows(normalized)
 
         const latest = normalized
-          .map((row) => row.updated_at)
+          .map((r) => r.updated_at)
           .filter(Boolean)
           .sort()
           .at(-1)
@@ -686,15 +691,64 @@ export default function LiveMarketPulse() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.18 }}
             >
-              {filtered.map((row, index) => (
-                <RoleRow
-                  key={`${row.domain_name}-${index}`}
-                  row={row}
-                  index={index}
-                  total={filtered.length}
-                  isPhone={isPhone}
-                />
-              ))}
+                      {/* Desktop bento grid: compact tiles instead of flat table */}
+                      <div
+                        style={{
+                          display: 'grid',
+                          gridTemplateColumns: isPhone ? '1fr' : 'repeat(auto-fit, minmax(220px, 1fr))',
+                          gap: '14px',
+                        }}
+                      >
+                        {filtered.map((row, index) => (
+                          <motion.article
+                            key={`${row.domain_name}-${index}`}
+                            initial={{ opacity: 0, y: 8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.22, delay: Math.min(index * 0.02, 0.2) }}
+                            style={{
+                              padding: '16px',
+                              borderRadius: '12px',
+                              background: 'var(--bg-alt)',
+                              border: '1px solid var(--border)',
+                              minHeight: '120px',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              justifyContent: 'space-between',
+                              gap: '10px',
+                              transition: 'border-color 0.18s ease',
+                            }}
+                          >
+                            <div>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '8px' }}>
+                                <h3 style={{ margin: 0, fontFamily: FS, fontSize: '14px', fontWeight: 750 }}>{row.domain_name}</h3>
+                                <div style={{ color: 'var(--text-3)', fontFamily: FM, fontSize: '12px' }}>{row.certification || ''}</div>
+                              </div>
+                              <div style={{ marginTop: '8px', color: 'var(--text-3)', fontSize: '13px', fontFamily: FM }}>
+                                {row.slug ? <span style={{ opacity: 0.9 }}>{row.slug}</span> : null}
+                              </div>
+                            </div>
+
+                            <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', alignItems: 'center' }}>
+                              <div>
+                                <div style={{ color: 'var(--text-4)', fontSize: '11px', fontFamily: FM }}>Live Jobs</div>
+                                <div style={{ color: 'var(--text)', fontWeight: 700, fontFamily: FM }}>{fmtJobs(row.job_count_naukri)}</div>
+                              </div>
+                              <div>
+                                <div style={{ color: 'var(--text-4)', fontSize: '11px', fontFamily: FM }}>Entry</div>
+                                <div style={{ color: 'var(--text)', fontWeight: 700, fontFamily: FM }}>{fmtLpa(row.min_salary)}</div>
+                              </div>
+                              <div>
+                                <div style={{ color: 'var(--text-4)', fontSize: '11px', fontFamily: FM }}>Ceiling</div>
+                                <div style={{ color: 'var(--text)', fontWeight: 700, fontFamily: FM }}>{fmtLpa(row.max_salary)}</div>
+                              </div>
+                              <div style={{ textAlign: 'right' }}>
+                                <div style={{ color: 'var(--text-4)', fontSize: '11px', fontFamily: FM }}>Demand</div>
+                                <div style={{ color: 'var(--accent)', fontWeight: 800, fontFamily: FM }}>{row.score ? row.score.toFixed(1) : '—'}</div>
+                              </div>
+                            </div>
+                          </motion.article>
+                        ))}
+                      </div>
             </motion.div>
           </AnimatePresence>
         )}

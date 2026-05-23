@@ -218,7 +218,8 @@ export default function FeaturesBentoGrid() {
           className="features-bento"
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: '24px',
             background: 'transparent',
           }}
         >

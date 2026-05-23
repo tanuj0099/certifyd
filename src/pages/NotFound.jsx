@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { AlertCircle, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -15,8 +15,8 @@ export default function NotFound({ isDark }) {
         alignItems: 'center',
         justifyContent: 'center',
         padding: '24px',
-        backgroundColor: 'var(--bg)',
-        color: 'var(--text)',
+        backgroundColor: '#010102',
+        color: '#FFFFFF',
         fontFamily: 'var(--font-body)',
         textAlign: 'center',
       }}
@@ -55,16 +55,16 @@ export default function NotFound({ isDark }) {
             fontFamily: 'var(--font-head)',
             letterSpacing: '-0.04em',
             margin: '0 0 16px',
-            color: 'var(--text)',
+            color: '#FFFFFF',
           }}
         >
-          404 - Page Not Found
+          404 - Signal Lost
         </h1>
 
         <p
           style={{
             fontSize: 'clamp(16px, 2vw, 18px)',
-            color: 'var(--text-2)',
+            color: 'rgba(255,255,255,0.6)',
             marginBottom: '40px',
             lineHeight: 1.6,
           }}
@@ -75,17 +75,17 @@ export default function NotFound({ isDark }) {
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/dashboard')}
           style={{
             display: 'inline-flex',
             alignItems: 'center',
             gap: '8px',
             padding: '14px 28px',
             borderRadius: '100px',
-            backgroundColor: 'var(--accent)',
-            color: 'var(--bg)',
+            backgroundColor: '#FFFFFF',
+            color: '#010102',
             fontSize: '16px',
-            fontWeight: '600',
+            fontWeight: '800',
             fontFamily: 'var(--font-head)',
             border: 'none',
             cursor: 'pointer',
@@ -94,7 +94,7 @@ export default function NotFound({ isDark }) {
           }}
         >
           <ArrowLeft size={18} />
-          Back to Home
+          Return to Dashboard
         </motion.button>
       </motion.div>
     </div>

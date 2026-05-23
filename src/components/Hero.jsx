@@ -12,7 +12,9 @@ import {
 } from 'recharts'
 import { useROICalc, useGuestCounter } from '../hooks/hooks.jsx'
 import { useAuth } from '../hooks/useAuth.jsx'
+import { useIsMobile } from './SharedUI.jsx'
 import { analyzeROI } from '../services/aiService.jsx'
+import { trackAiAnalysisRun, trackRoiCalculated } from '../lib/analytics.js'
 import { fetchCertifications, fetchDomains } from '../services/dataService.jsx'
 import AILoadingState from './AILoadingState.jsx'
 import HikeVerifier from './HikeVerifier.jsx'
@@ -409,10 +411,12 @@ function Leadboard({ domainList, sorted, preferred, showAll, setShowAll, activeC
 
   const hasMoreDomain = !showAll && domainList.length > 10
 
+  const isMobile = useIsMobile()
+
   return (
     <div style={{ marginBottom: '20px' }}>
       {!isSinglePrefilled && (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px', flexWrap: isMobile ? 'wrap' : 'nowrap' }}>
           <div style={{ fontFamily: FM, fontSize: '10px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
             {mappedDomain
               ? (domains.find(function (d) { return d.id === mappedDomain })?.label || mappedDomain) + ' · Top Picks'
@@ -461,7 +465,7 @@ function Leadboard({ domainList, sorted, preferred, showAll, setShowAll, activeC
                   {cert.name}
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
-                  <div style={{ fontFamily: FB, fontSize: '11px', color: 'var(--text-3)', lineHeight: 1.3, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '180px' }}>
+                  <div style={{ fontFamily: FB, fontSize: '11px', color: 'var(--text-3)', lineHeight: 1.3, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: isMobile ? '100%' : '180px', minWidth: 0 }}>
                     {cert.forWho}
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '3px', padding: '1px 6px', borderRadius: '9999px', background: readiness.color + '12', border: '1px solid ' + readiness.color + '25', flexShrink: 0 }}>
@@ -843,6 +847,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
   const selectedCert = storeSelectedCert || null;
 
   const { user } = useAuth();
+  const isMobile = useIsMobile();
   const guest = useGuestCounter(GUEST_FREE_LIMIT);
 
   const firstName = resumeName ? resumeName.split(' ')[0] : '';
@@ -890,6 +895,12 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
     try {
       var r = await analyzeROI({ certName, currentSalary: salary, certCost, hikePercent, isStudent });
       setAiResult(r);
+      try {
+        trackAiAnalysisRun({ certName, currentSalary: salary, certCost, hikePercent, isStudent, aiResult: r })
+      } catch (_) {}
+      try {
+        trackRoiCalculated({ certName, roiPercent: roi.roiPercent, breakEvenMonths: roi.breakEvenMonths, fiveYearGainINR: roi.fiveYearGainINR })
+      } catch (_) {}
       if (!user) guest.increment();
       setCooldown(10);
     } catch (e) {
@@ -1116,7 +1127,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
           ) : (
             <>
               {/* ── Financial Hero Metrics ──────────────────────── */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '8px', marginBottom: '12px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2,1fr)', gap: '8px', marginBottom: '12px' }}>
                 <div style={{ padding: '24px 16px', textAlign: 'center', borderColor: 'var(--border-accent)', background: 'transparent', minHeight: 110, border: 'none' }}>
                   <div className="micro-label" style={{ color: 'var(--text-4)', marginBottom: '8px' }}>5-Yr Net Gain</div>
                   <RollNumber value={roi.fiveYearGainL} prefix="₹" suffix="L" color={EMERALD} />
@@ -1128,7 +1139,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
               </div>
 
               {/* ── Secondary Dash Stats ────────────────────────── */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px', marginBottom: '12px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px', marginBottom: '12px' }}>
                 <StatCard label="New Salary" value={'₹' + roi.newSalaryL + 'L/yr'} color={PICTON} delay={0} />
                 <StatCard label="Monthly +" value={'₹' + roi.monthlyGainK + 'K'} color={VIOLET} delay={0.05} />
                 <StatCard

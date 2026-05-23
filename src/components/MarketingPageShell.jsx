@@ -123,6 +123,7 @@ export function MarketingFooter() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {[
                 { label: 'Home', to: '/' },
+                { label: 'Blog', to: '/blog' },
                 { label: 'Tools', to: '/app' },
                 { label: 'About', to: '/about' },
                 { label: 'FAQ', to: '/faq' },
@@ -132,6 +133,15 @@ export function MarketingFooter() {
                   {item.label}
                 </Link>
               ))}
+            </div>
+          </div>
+
+          <div>
+            <div style={{ fontFamily: FM, fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-4)', marginBottom: '12px' }}>Resources</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <Link to="/blog" style={{ fontFamily: FB, fontSize: '13px', color: 'var(--text-4)', textDecoration: 'none' }}>Blog</Link>
+              <Link to="/terms" style={{ fontFamily: FB, fontSize: '13px', color: 'var(--text-4)', textDecoration: 'none' }}>Terms</Link>
+              <Link to="/privacy" style={{ fontFamily: FB, fontSize: '13px', color: 'var(--text-4)', textDecoration: 'none' }}>Privacy</Link>
             </div>
           </div>
 
@@ -161,10 +171,10 @@ export function MarketingFooter() {
 
 export default function MarketingPageShell({ eyebrow, title, accent, subtitle, children, footer = true, maxWidth = '1240px' }) {
   return (
-    <div style={{ minHeight: '100vh', position: 'relative', background: 'var(--bg)', color: 'var(--text)' }}>
+    <div style={{ minHeight: '100vh', position: 'relative', background: 'var(--color-bg-marketing)', color: 'var(--text)' }}>
       <WaveBg variant="landing" />
-      <div style={{ position: 'relative', zIndex: 1, paddingTop: '100px' }}>
-        <AppSection id={eyebrow.substring(0,2).toUpperCase()} title={eyebrow} noBorderTop>
+      <div style={{ position: 'relative', zIndex: 1, paddingTop: '112px' }}>
+        <AppSection id={eyebrow.substring(0,2).toUpperCase()} title={eyebrow} noBorderTop bg="transparent">
           <div style={{ maxWidth: '880px', margin: '0 auto', width: '100%' }}>
             <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={T}>
               <h1 style={{ fontFamily: FH, fontSize: 'clamp(2.7rem, 6vw, 4.5rem)', fontWeight: '400', letterSpacing: '-0.03em', lineHeight: 0.95, margin: '0 0 18px', maxWidth: '14ch' }}>

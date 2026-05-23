@@ -16,6 +16,9 @@ import os
 import warnings
 from dotenv import load_dotenv
 from supabase import create_client
+import posthog_client
+import re
+from supabase import create_client
 
 from playwright.sync_api import sync_playwright, Page
 from playwright_stealth import Stealth
@@ -328,7 +331,11 @@ def run_engine():
         # Test with first 4 roles (change [:4] to [:] for full run)
         test_domains = DOMAINS_TO_SCRAPE
         results_log = []
-        
+
+        posthog_client.capture("scraper", "market_scrape_run_started", {
+            "total_domains": len(test_domains),
+        })
+
         for i, domain in enumerate(test_domains):
             print(f"\n{'='*60}")
             print(f"[{i+1}/{len(test_domains)}] {domain}")
@@ -368,7 +375,16 @@ def run_engine():
             })
             
             print(f"\n  [{status}] INR {lo_l:.1f}L-{hi_l:.1f}L | {stats['job_count']} jobs | Source: {stats.get('source', 'none')}")
-            
+
+            posthog_client.capture("scraper", "market_domain_scraped", {
+                "domain": domain,
+                "min_salary": stats["min_salary"],
+                "max_salary": stats["max_salary"],
+                "job_count": stats["job_count"],
+                "source": stats.get("source"),
+                "success": stats["min_salary"] > 0,
+            })
+
             # Small delay between roles
             if i < len(test_domains) - 1:
                 delay = random.uniform(3, 6)
@@ -388,6 +404,43 @@ def run_engine():
         print(f"  {flag} {r['domain']:<40} {r['min_lpa']}-{r['max_lpa']} LPA | {r['jobs']} jobs | {r['source']}")
     print(f"{'='*60}\nDONE.")
 
+    posthog_client.capture("scraper", "market_scrape_run_completed", {
+        "total_domains": len(results_log),
+        "success_count": hits,
+        "failure_count": len(results_log) - hits,
+    })
+    posthog_client.shutdown()
+
+supabase = create_client("YOUR_SUPABASE_URL", "YOUR_SUPABASE_SERVICE_ROLE_KEY")
+
+def save_scraped_certification(title, issuer, fees, difficulty, duration, track):
+    """
+    Persist a scraped certification record into public.certifications.
+    Column mapping must exactly match the Supabase table constraints.
+    """
+    # Build clean URL slug from title
+    clean_slug = title.lower().strip()
+    clean_slug = re.sub(r'[^a-z0-9\s-]', '', clean_slug)
+    clean_slug = re.sub(r'[\s-]+', '-', clean_slug).strip('-')
+
+    payload = {
+        "slug": clean_slug,
+        "name": title,
+        "provider": issuer,
+        "cost_inr": int(fees) if fees else 0,
+        "difficulty": difficulty,
+        "time_commitment_months": int(duration) if duration else 3,
+        "description": f"Primary Domain: {track}"
+    }
+
+    try:
+        if supabase:
+            supabase.table('certifications').insert(payload).execute()
+            print(f"Successfully synchronized: {clean_slug}")
+        else:
+            print(f"No Supabase client — skipping insert for: {clean_slug}")
+    except Exception as e:
+        print(f"DB insert failed for {clean_slug}: {e}")
 
 if __name__ == "__main__":
     run_engine()

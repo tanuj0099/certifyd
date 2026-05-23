@@ -24,10 +24,11 @@ function useIsMobile() {
 }
 
 // ── Formatters ─────────────────────────────────────────────
+const INR_FMT = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 })
 function formatCurrency(value) {
   const n = Number(value)
   if (!Number.isFinite(n) || n <= 0) return '—'
-  return `₹${n.toLocaleString('en-IN')}`
+  return INR_FMT.format(n)
 }
 function formatMonths(value) {
   const n = Number(value)
@@ -213,21 +214,21 @@ export default function CertificationPage() {
     )
   }
 
-  const costValue = cert.cost_inr ?? cert.avgCost ?? null
-  const roiPercent = cert.median_roi_percent ?? cert.avgHike ?? null
-  const timeMonths = cert.time_commitment_months ?? cert.timeMonths ?? null
-  const monthlyCost = costValue && timeMonths ? Math.max(Math.round(Number(costValue) / Math.max(1, Number(timeMonths))), 0) : null
-  const salaryFloor = demandData?.salary_floor ?? null
-  const salaryCeiling = demandData?.salary_ceiling ?? null
-  const jobCount = demandData?.job_count ?? null
+  const costValue = Number(cert.cost_inr ?? cert.avgCost) || 0
+  const roiPercent = Number(cert.median_roi_percent ?? cert.avgHike) || 0
+  const timeMonths = Number(cert.time_commitment_months ?? cert.timeMonths) || 0
+  const monthlyCost = costValue > 0 && timeMonths > 0 ? Math.max(Math.round(costValue / timeMonths), 0) : 0
+  const salaryFloor = Number(demandData?.salary_floor) || 0
+  const salaryCeiling = Number(demandData?.salary_ceiling) || 0
+  const jobCount = Number(demandData?.job_count) || 0
   const demandScore = demandData?.score ?? demandData?.demand_score ?? null
   const domain = cert.domain_name ?? cert.domain ?? null
   const difficulty = cert.difficulty_level ?? cert.difficulty ?? null
   const provider = cert.provider ?? null
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)', fontFamily: FS }}>
-      {/* ── Top bar ────────────────────────────────────────── */}
+    <div style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)', fontFamily: FS, paddingTop: isMobile ? '112px' : '128px' }}>
+      {/* ── Top bar ──────────────────────────────────────── */}
       <div style={{
         position: 'sticky', top: 0, zIndex: 50,
         borderBottom: '1px solid var(--border)',
@@ -235,13 +236,12 @@ export default function CertificationPage() {
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
         padding: isMobile ? '0 16px' : '0 24px',
-        paddingTop: isMobile ? '12px' : 'max(env(safe-area-inset-top), 64px)',
       }}>
         <div style={{ maxWidth: '1080px', margin: '0 auto', padding: '12px 0' }}>
           <Breadcrumb items={[
             { label: 'Cert Radar', href: '/tools/cert-radar' },
             { label: domain || 'Certification', href: '/tools/cert-radar' },
-            { label: cert.name },
+            { label: cert.name || cert.cert_name || slug },
           ]} />
         </div>
       </div>
@@ -278,7 +278,7 @@ export default function CertificationPage() {
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr auto', gap: isMobile ? '20px' : '24px', alignItems: 'flex-start' }}>
             <div>
               <h1 style={{ margin: 0, fontSize: isMobile ? 'clamp(1.5rem,6vw,2.2rem)' : 'clamp(1.8rem, 4vw, 3rem)', lineHeight: 1.06, letterSpacing: '-0.03em', color: 'var(--text)', fontWeight: 900, maxWidth: '18ch' }}>
-                {cert.name}
+                {cert.name || cert.cert_name || slug}
               </h1>
               {(cert.forWho || cert.description) && (
                 <p style={{ margin: '12px 0 0', maxWidth: '62ch', fontSize: isMobile ? '13px' : '15px', lineHeight: 1.75, color: 'var(--text-3)' }}>

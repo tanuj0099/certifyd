@@ -6,6 +6,7 @@ import {
   Zap, Target, Star, Clock, ChevronDown, MapPin
 } from 'lucide-react'
 import { supabase } from '../services/supabase.js'
+import { trackResumeUploaded } from '../lib/analytics.js'
 import { callGroqForResume, validateDomain } from '../services/aiService.jsx'
 import { useJourneyStore } from '../store/useJourneyStore.js'
 
@@ -814,6 +815,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
     if (!file) return
     var ext = file.name.split('.').pop().toLowerCase()
     setError(null); setRejection(null)
+    try { trackResumeUploaded({ filename: file.name, sizeBytes: file.size }) } catch (_) {}
     if (ext === 'pdf') {
       // OPTIMISTIC: accept file immediately, extract in background
       setFileName(file.name); setText(''); setPdfLoading(true); setTextReady(false)
