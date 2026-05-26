@@ -58,6 +58,7 @@ import HikeVerifier from "./components/HikeVerifier.jsx";
 import MarketIntelligenceTool from "./components/LiveMarketPulse.jsx";
 import { AppSection } from "./components/SharedUI.jsx";
 import { MarketingFooter } from "./components/MarketingPageShell.jsx";
+
 const AboutPage = lazy(() => import("./pages/About.jsx"));
 const FeaturesPage = lazy(() => import("./pages/Features.jsx"));
 const HowItWorksPage = lazy(() => import("./pages/HowItWorks.jsx"));
@@ -85,6 +86,7 @@ const LoginPage = lazy(() => import("./pages/LoginPage.jsx"));
 const SignupPage = lazy(() => import("./pages/SignupPage.jsx"));
 const OnboardingPage = lazy(() => import("./pages/Onboarding.jsx"));
 const ToolsIndex = lazy(() => import("./pages/ToolsIndex.jsx"));
+const RoadmapTool = lazy(() => import("./pages/RoadmapTool.jsx"));
 
 const T = { duration: 0.32, ease: [0.4, 0, 0.2, 1] };
 const FM = "'JetBrains Mono','Commit Mono',monospace";
@@ -2874,6 +2876,7 @@ function AppRoot() {
                   path="/market-pulse"
                   element={<MarketIntelligenceTool />}
                 />
+                <Route path="/roadmap/:id" element={<RoadmapTool />} />
                 <Route path="/faq" element={<FAQPage />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/features" element={<FeaturesPage />} />

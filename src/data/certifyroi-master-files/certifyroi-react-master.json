@@ -1,0 +1,4970 @@
+{
+  "nodes": [
+    {
+      "id": "-AKmITUmSGIflJG-eGkm5",
+      "type": "section",
+      "position": {
+        "x": -334.6031392708364,
+        "y": 1216.976431006493
+      },
+      "selected": false,
+      "data": {
+        "label": "",
+        "style": {
+          "width": 150,
+          "height": 100,
+          "fontSize": 17,
+          "backgroundColor": "#ffffff",
+          "borderColor": "#000000"
+        }
+      },
+      "zIndex": -999,
+      "width": 353,
+      "height": 218,
+      "style": {
+        "width": 353,
+        "height": 218
+      },
+      "resizing": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": -334.6031392708364,
+        "y": 1216.976431006493
+      },
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 353,
+        "height": 218
+      }
+    },
+    {
+      "id": "NiyRDadVpAFMzSVtgoFZ0",
+      "type": "vertical",
+      "position": {
+        "x": -387.02532545570534,
+        "y": 810.9443302389855
+      },
+      "selected": false,
+      "data": {
+        "label": "vertical node",
+        "style": {
+          "stroke": "#2B78E4",
+          "strokeWidth": 3.75,
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round"
+        },
+        "oldId": "sL8hbjRDbzA2bc9OzIfPe"
+      },
+      "zIndex": 999,
+      "width": 21,
+      "height": 72,
+      "style": {
+        "width": 21,
+        "height": 72
+      },
+      "positionAbsolute": {
+        "x": -387.02532545570534,
+        "y": 810.9443302389855
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 21,
+        "height": 72
+      }
+    },
+    {
+      "id": "sL8hbjRDbzA2bc9OzIfPe",
+      "type": "vertical",
+      "position": {
+        "x": -387.02532545570534,
+        "y": 889.4443302389855
+      },
+      "selected": false,
+      "data": {
+        "label": "vertical node",
+        "style": {
+          "stroke": "#2B78E4",
+          "strokeWidth": 3.75
+        }
+      },
+      "zIndex": 999,
+      "width": 21,
+      "height": 149,
+      "style": {
+        "width": 21,
+        "height": 149
+      },
+      "positionAbsolute": {
+        "x": -387.02532545570534,
+        "y": 889.4443302389855
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 21,
+        "height": 149
+      }
+    },
+    {
+      "id": "n1TuNyZjK9CLAfbKRQENe",
+      "type": "vertical",
+      "position": {
+        "x": 91.54031453135002,
+        "y": 429.44433023898546
+      },
+      "selected": false,
+      "data": {
+        "label": "vertical node",
+        "style": {
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round",
+          "strokeWidth": 3.5,
+          "stroke": "#2B78E4"
+        }
+      },
+      "zIndex": 999,
+      "width": 21,
+      "height": 124,
+      "style": {
+        "width": 21,
+        "height": 124
+      },
+      "positionAbsolute": {
+        "x": 91.54031453135002,
+        "y": 429.44433023898546
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 21,
+        "height": 124
+      }
+    },
+    {
+      "id": "NeJdgNbsxiUjt_GBzub6Z",
+      "type": "section",
+      "position": {
+        "x": -248.52532545570534,
+        "y": 274.94433023898546
+      },
+      "width": 248,
+      "height": 168,
+      "style": {
+        "width": 248,
+        "height": 168
+      },
+      "selected": false,
+      "data": {
+        "style": {
+          "backgroundColor": "#ffffff",
+          "borderColor": "#000000"
+        }
+      },
+      "positionAbsolute": {
+        "x": -248.52532545570534,
+        "y": 274.94433023898546
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 248,
+        "height": 168
+      }
+    },
+    {
+      "id": "FkTj8n1pIAGa1nf93MUKC",
+      "type": "section",
+      "position": {
+        "x": -5.525325455705342,
+        "y": 274.44433023898546
+      },
+      "width": 158,
+      "height": 155,
+      "style": {
+        "width": 158,
+        "height": 155
+      },
+      "selected": false,
+      "data": {
+        "style": {
+          "backgroundColor": "#ffffff",
+          "borderColor": "#000000"
+        }
+      },
+      "positionAbsolute": {
+        "x": -5.525325455705342,
+        "y": 274.44433023898546
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 158,
+        "height": 155
+      }
+    },
+    {
+      "id": "clS37EDia6KZVHCszqRqZ",
+      "type": "vertical",
+      "position": {
+        "x": 351.3414717224867,
+        "y": 235.94433023898546
+      },
+      "selected": false,
+      "data": {
+        "label": "vertical node",
+        "style": {
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round",
+          "strokeWidth": 3.5,
+          "stroke": "#2B78E4"
+        }
+      },
+      "zIndex": 999,
+      "width": 21,
+      "height": 84,
+      "style": {
+        "width": 21,
+        "height": 84
+      },
+      "positionAbsolute": {
+        "x": 351.3414717224867,
+        "y": 235.94433023898546
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 21,
+        "height": 84
+      }
+    },
+    {
+      "id": "l4RmWQLIK1NOOm6QTQMBa",
+      "type": "section",
+      "position": {
+        "x": -514.0253254557053,
+        "y": 262.94433023898546
+      },
+      "width": 235,
+      "height": 270,
+      "style": {
+        "width": 235,
+        "height": 270
+      },
+      "selected": false,
+      "data": {
+        "style": {
+          "backgroundColor": "#ffffff",
+          "borderColor": "#000000"
+        }
+      },
+      "positionAbsolute": {
+        "x": -514.0253254557053,
+        "y": 262.94433023898546
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 235,
+        "height": 270
+      }
+    },
+    {
+      "width": 117,
+      "height": 68,
+      "id": "iogwMmOvub2ZF4zgg6WyF",
+      "type": "title",
+      "position": {
+        "x": -49.45968546864998,
+        "y": -157.76957062917046
+      },
+      "selected": false,
+      "data": {
+        "label": "React",
+        "style": {
+          "fontSize": 28,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "9nxw2PEl-_eQPW0FHNPq2"
+      },
+      "zIndex": 999,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": -49.45968546864998,
+        "y": -157.76957062917046
+      },
+      "focusable": true,
+      "selectable": true,
+      "measured": {
+        "width": 117,
+        "height": 68
+      }
+    },
+    {
+      "width": 21,
+      "height": 64,
+      "id": "LEijbLyxg4RyutKEM2Y5g",
+      "type": "vertical",
+      "position": {
+        "x": -1.4596854686499796,
+        "y": -232.76957062917046
+      },
+      "selected": false,
+      "data": {
+        "label": "vertical node",
+        "style": {
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round",
+          "strokeWidth": 3.5,
+          "stroke": "#0A33FF"
+        },
+        "oldId": "xD07fJ1NmNeAarVCEfubU"
+      },
+      "zIndex": 999,
+      "positionAbsolute": {
+        "x": -1.4596854686499796,
+        "y": -232.76957062917046
+      },
+      "dragging": false,
+      "focusable": true,
+      "style": {
+        "width": 21,
+        "height": 64
+      },
+      "resizing": true,
+      "selectable": true,
+      "measured": {
+        "width": 21,
+        "height": 64
+      }
+    },
+    {
+      "id": "yHmHXymPNWwu8p1vvqD3o",
+      "type": "paragraph",
+      "position": {
+        "x": 179.8414717224867,
+        "y": -232.76957062917046
+      },
+      "selected": false,
+      "data": {
+        "label": "Find the detailed version of this roadmap along with other similar roadmaps",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "left",
+          "borderColor": "#000000",
+          "backgroundColor": "#FFFFFf"
+        }
+      },
+      "zIndex": 999,
+      "width": 364,
+      "height": 143,
+      "positionAbsolute": {
+        "x": 179.8414717224867,
+        "y": -232.76957062917046
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "style": {
+        "width": 364,
+        "height": 143
+      },
+      "resizing": false,
+      "measured": {
+        "width": 364,
+        "height": 143
+      }
+    },
+    {
+      "id": "R_Fs6rdl2XtQ9aLOubMqL",
+      "type": "button",
+      "position": {
+        "x": 193.04484613528683,
+        "y": -150.78400721142515
+      },
+      "selected": false,
+      "data": {
+        "label": "roadmap.sh",
+        "href": "https://roadmap.sh",
+        "color": "#ffffff",
+        "backgroundColor": "#4136D6",
+        "style": {
+          "fontSize": 17
+        },
+        "oldId": "2zqZkyVgigifcRS1H7F_b"
+      },
+      "zIndex": 999,
+      "width": 340,
+      "height": 49,
+      "dragging": false,
+      "style": {
+        "width": 340,
+        "height": 49
+      },
+      "resizing": false,
+      "positionAbsolute": {
+        "x": 193.04484613528683,
+        "y": -150.78400721142515
+      },
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 340,
+        "height": 49
+      }
+    },
+    {
+      "id": "xwpc_KxehAruFM0pCQnie",
+      "type": "vertical",
+      "position": {
+        "x": 161.49706098308326,
+        "y": 2056.1213007495107
+      },
+      "selected": false,
+      "data": {
+        "label": "vertical node",
+        "style": {
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round",
+          "strokeWidth": 3.5,
+          "stroke": "#4136D4"
+        },
+        "oldId": "Ju00mr0KLGN2BV6yEQGPt"
+      },
+      "zIndex": 999,
+      "width": 21,
+      "height": 104,
+      "positionAbsolute": {
+        "x": 161.49706098308326,
+        "y": 2056.1213007495107
+      },
+      "dragging": false,
+      "style": {
+        "width": 21,
+        "height": 104
+      },
+      "resizing": false,
+      "focusable": true,
+      "selectable": true,
+      "measured": {
+        "width": 21,
+        "height": 104
+      }
+    },
+    {
+      "width": 427,
+      "height": 119,
+      "id": "GV_zWF6rSWg5bqgiXhOEf",
+      "type": "paragraph",
+      "position": {
+        "x": -41.502939016916685,
+        "y": 1966.605335469083
+      },
+      "selected": false,
+      "data": {
+        "label": "Have a look at the following related roadmaps",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center",
+          "borderColor": "#000000",
+          "backgroundColor": "#ffffff"
+        },
+        "oldId": "sVXZrBCsiSzWBBYWTm-nQ"
+      },
+      "zIndex": 999,
+      "positionAbsolute": {
+        "x": -41.502939016916685,
+        "y": 1966.605335469083
+      },
+      "dragging": false,
+      "style": {
+        "width": 427,
+        "height": 119
+      },
+      "resizing": false,
+      "focusable": true,
+      "selectable": true,
+      "measured": {
+        "width": 427,
+        "height": 119
+      }
+    },
+    {
+      "width": 206,
+      "height": 49,
+      "id": "ZSrQoNGKiR484uALMWO9F",
+      "type": "button",
+      "position": {
+        "x": 169.0448461352869,
+        "y": 2024.2946173807345
+      },
+      "selected": false,
+      "data": {
+        "label": "TypeScript Roadmap",
+        "href": "https://roadmap.sh/typescript",
+        "color": "#FFFFFf",
+        "backgroundColor": "#4136D4",
+        "style": {
+          "fontSize": 17
+        },
+        "borderColor": "#4136D4",
+        "oldId": "dlGf3ZdFXYx0Z6Viu2x-l"
+      },
+      "zIndex": 999,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 169.0448461352869,
+        "y": 2024.2946173807345
+      },
+      "style": {},
+      "focusable": true,
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 206,
+        "height": 49
+      }
+    },
+    {
+      "width": 195,
+      "height": 49,
+      "id": "P5IZjP0g1_fnvHy3YTR4q",
+      "type": "button",
+      "position": {
+        "x": -31.15582553598972,
+        "y": 2024.2946173807345
+      },
+      "selected": false,
+      "data": {
+        "label": "Frontend Roadmap",
+        "href": "https://roadmap.sh/frontend",
+        "color": "#FFFFFf",
+        "backgroundColor": "#4136D4",
+        "style": {
+          "fontSize": 17
+        },
+        "borderColor": "#4136D4",
+        "oldId": "dlGf3ZdFXYx0Z6Viu2x-l"
+      },
+      "zIndex": 999,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": -31.15582553598972,
+        "y": 2024.2946173807345
+      },
+      "style": {},
+      "focusable": true,
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 195,
+        "height": 49
+      }
+    },
+    {
+      "id": "tU4Umtnfu01t9gLlnlK6b",
+      "type": "topic",
+      "position": {
+        "x": -94.45968546864998,
+        "y": 114.94433023898546
+      },
+      "selected": false,
+      "data": {
+        "label": "CLI Tools",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 207,
+      "height": 49,
+      "style": {
+        "width": 207,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -94.45968546864998,
+        "y": 114.94433023898546
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 207,
+        "height": 49
+      }
+    },
+    {
+      "id": "XDvH2t3AJGevS17uM8TO6",
+      "type": "button",
+      "position": {
+        "x": -94.45968546864998,
+        "y": 2.944330238985458
+      },
+      "selected": false,
+      "data": {
+        "label": "JavaScript Roadmap",
+        "href": "https://roadmap.sh/javascript",
+        "color": "#ffffff",
+        "backgroundColor": "#4136D6",
+        "style": {
+          "fontSize": 17
+        },
+        "oldId": "R_Fs6rdl2XtQ9aLOubMqL"
+      },
+      "zIndex": 999,
+      "width": 207,
+      "height": 49,
+      "dragging": false,
+      "style": {
+        "width": 207,
+        "height": 49
+      },
+      "resizing": false,
+      "positionAbsolute": {
+        "x": -94.45968546864998,
+        "y": 2.944330238985458
+      },
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 207,
+        "height": 49
+      }
+    },
+    {
+      "id": "y9ToYDix-koRbR6FLydFw",
+      "type": "subtopic",
+      "position": {
+        "x": 169.0448461352869,
+        "y": 114.94433023898546
+      },
+      "selected": false,
+      "data": {
+        "label": "Vite",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 169.0448461352869,
+        "y": 114.94433023898546
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "XB1EQomsFGntZTofIfckn",
+      "type": "paragraph",
+      "position": {
+        "x": 169.0448461352869,
+        "y": -46.05566976101454
+      },
+      "selected": false,
+      "data": {
+        "label": "Make sure to learn the \"Beginner\" topics of the JavaScript roadmap before you start learning React.",
+        "style": {
+          "fontSize": 17,
+          "borderColor": "#ffffff",
+          "backgroundColor": "#ffffff",
+          "color": "#000000",
+          "textAlign": "left",
+          "justifyContent": "flex-start",
+          "padding": 16
+        }
+      },
+      "zIndex": 999,
+      "width": 364,
+      "height": 119,
+      "style": {
+        "width": 364,
+        "height": 119
+      },
+      "positionAbsolute": {
+        "x": 169.0448461352869,
+        "y": -46.05566976101454
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 364,
+        "height": 119
+      }
+    },
+    {
+      "id": "79K4xgljcoSHkCYI1D55O",
+      "type": "topic",
+      "position": {
+        "x": -94.45968546864998,
+        "y": 207.44433023898546
+      },
+      "selected": false,
+      "data": {
+        "label": "Components",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "0uiGsC5SWavNdlFqizkKe"
+      },
+      "zIndex": 999,
+      "width": 207,
+      "height": 49,
+      "style": {
+        "width": 207,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -94.45968546864998,
+        "y": 207.44433023898546
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 207,
+        "height": 49
+      }
+    },
+    {
+      "id": "8mw4TxlLN4ZKAlLl-_NVV",
+      "type": "subtopic",
+      "position": {
+        "x": -515.0253254557053,
+        "y": 207.44433023898546
+      },
+      "selected": false,
+      "data": {
+        "label": "Functional Components",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "left-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 237,
+      "height": 49,
+      "style": {
+        "width": 237,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -515.0253254557053,
+        "y": 207.44433023898546
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 237,
+        "height": 49
+      }
+    },
+    {
+      "id": "h_o0LOSuwRvymWLF7IVj_",
+      "type": "paragraph",
+      "position": {
+        "x": -514.5253254557053,
+        "y": 0.944330238985458
+      },
+      "selected": false,
+      "data": {
+        "label": "There used to be \"Class Components\" which React doesn't recommend any more. You don't need to learn about them but you might still notice them in some legacy projects",
+        "style": {
+          "fontSize": 17,
+          "borderColor": "#ffffff",
+          "backgroundColor": "#ffffff",
+          "color": "#000000",
+          "textAlign": "left",
+          "justifyContent": "flex-start",
+          "padding": 16
+        },
+        "oldId": "XB1EQomsFGntZTofIfckn"
+      },
+      "zIndex": 999,
+      "width": 364,
+      "height": 162,
+      "style": {
+        "width": 364
+      },
+      "positionAbsolute": {
+        "x": -514.5253254557053,
+        "y": 0.944330238985458
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 364,
+        "height": 162
+      }
+    },
+    {
+      "id": "HMTUjok_ZAcrP6YobWs3T",
+      "type": "label",
+      "position": {
+        "x": -506.02532545570534,
+        "y": 489.94433023898546
+      },
+      "selected": false,
+      "data": {
+        "label": "Component Basics",
+        "href": "",
+        "color": "#000000",
+        "style": {
+          "fontSize": 17
+        }
+      },
+      "zIndex": 999,
+      "width": 219,
+      "height": 36,
+      "style": {
+        "width": 219
+      },
+      "positionAbsolute": {
+        "x": -506.02532545570534,
+        "y": 489.94433023898546
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 219,
+        "height": 36
+      }
+    },
+    {
+      "id": "WREBxWSNQDD_6fzpHL6CE",
+      "type": "subtopic",
+      "position": {
+        "x": -506.02532545570534,
+        "y": 270.94433023898546
+      },
+      "selected": false,
+      "data": {
+        "label": "JSX",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "left-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 219,
+      "height": 49,
+      "style": {
+        "width": 219,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -506.02532545570534,
+        "y": 270.94433023898546
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 219,
+        "height": 49
+      }
+    },
+    {
+      "id": "RFuy3Eho3mnW1GpP08BVw",
+      "type": "subtopic",
+      "position": {
+        "x": -506.02532545570534,
+        "y": 323.94433023898546
+      },
+      "selected": false,
+      "data": {
+        "label": "Props vs State",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "left-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 219,
+      "height": 49,
+      "style": {
+        "width": 219,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -506.02532545570534,
+        "y": 323.94433023898546
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 219,
+        "height": 49
+      }
+    },
+    {
+      "id": "aE6XBgH23135_9QmD4ff2",
+      "type": "subtopic",
+      "position": {
+        "x": -506.02532545570534,
+        "y": 376.94433023898546
+      },
+      "selected": false,
+      "data": {
+        "label": "Conditional Rendering",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "left-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 219,
+      "height": 49,
+      "style": {
+        "width": 219,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -506.02532545570534,
+        "y": 376.94433023898546
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 219,
+        "height": 49
+      }
+    },
+    {
+      "id": "4T59gdcwdXqj9kCuK7cfp",
+      "type": "subtopic",
+      "position": {
+        "x": -506.02532545570534,
+        "y": 429.94433023898546
+      },
+      "selected": false,
+      "data": {
+        "label": "Composition",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "left-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 219,
+      "height": 49,
+      "style": {
+        "width": 219,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -506.02532545570534,
+        "y": 429.94433023898546
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 219,
+        "height": 49
+      }
+    },
+    {
+      "id": "0uiGsC5SWavNdlFqizkKe",
+      "type": "topic",
+      "position": {
+        "x": 298.04484613528683,
+        "y": 207.44433023898546
+      },
+      "selected": false,
+      "data": {
+        "label": "Rendering",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 130,
+      "height": 49,
+      "style": {
+        "width": 130,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 298.04484613528683,
+        "y": 207.44433023898546
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 130,
+        "height": 49
+      }
+    },
+    {
+      "id": "8OBlgDRUg-CTgDXY-QHyO",
+      "type": "subtopic",
+      "position": {
+        "x": 305.47467454429466,
+        "y": 278.44433023898546
+      },
+      "selected": false,
+      "data": {
+        "label": "Component Lifecycle",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 234,
+      "height": 49,
+      "style": {
+        "width": 234,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 305.47467454429466,
+        "y": 278.44433023898546
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 234,
+        "height": 49
+      }
+    },
+    {
+      "id": "HeWVCPHqVnnbOn6zIim4K",
+      "type": "subtopic",
+      "position": {
+        "x": 305.47467454429466,
+        "y": 331.44433023898546
+      },
+      "selected": false,
+      "data": {
+        "label": "Lists and Keys",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 234,
+      "height": 49,
+      "style": {
+        "width": 234,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 305.47467454429466,
+        "y": 331.44433023898546
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 234,
+        "height": 49
+      }
+    },
+    {
+      "id": "vdumdIglnouf1KyGIGZnc",
+      "type": "subtopic",
+      "position": {
+        "x": 305.47467454429466,
+        "y": 384.44433023898546
+      },
+      "selected": false,
+      "data": {
+        "label": "Render Props",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 234,
+      "height": 49,
+      "style": {
+        "width": 234,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 305.47467454429466,
+        "y": 384.44433023898546
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 234,
+        "height": 49
+      }
+    },
+    {
+      "id": "_zNAOhFWMcWqP4oxNPCXF",
+      "type": "subtopic",
+      "position": {
+        "x": 305.47467454429466,
+        "y": 437.44433023898546
+      },
+      "selected": false,
+      "data": {
+        "label": "Refs",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 234,
+      "height": 49,
+      "style": {
+        "width": 234,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 305.47467454429466,
+        "y": 437.44433023898546
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 234,
+        "height": 49
+      }
+    },
+    {
+      "id": "Nex2HcTOYIbfqUzXyxSMY",
+      "type": "subtopic",
+      "position": {
+        "x": 305.47467454429466,
+        "y": 490.44433023898546
+      },
+      "selected": false,
+      "data": {
+        "label": "Events",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 234,
+      "height": 49,
+      "style": {
+        "width": 234,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 305.47467454429466,
+        "y": 490.44433023898546
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 234,
+        "height": 49
+      }
+    },
+    {
+      "id": "zOENl96GUZRw2PP2KxIck",
+      "type": "subtopic",
+      "position": {
+        "x": 305.47467454429466,
+        "y": 543.4443302389855
+      },
+      "selected": false,
+      "data": {
+        "label": "High Order Components",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 234,
+      "height": 49,
+      "style": {
+        "width": 234,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 305.47467454429466,
+        "y": 543.4443302389855
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 234,
+        "height": 49
+      }
+    },
+    {
+      "id": "LbLQhonBqzxHU6B-L--Vq",
+      "type": "topic",
+      "position": {
+        "x": 57.04484613528689,
+        "y": 541.5892656435051
+      },
+      "selected": false,
+      "data": {
+        "label": "Hooks",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "thfnymb_UIiKxakKfiua5"
+      },
+      "zIndex": 999,
+      "width": 113,
+      "height": 49,
+      "style": {
+        "width": 113,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 57.04484613528689,
+        "y": 541.5892656435051
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 113,
+        "height": 49
+      }
+    },
+    {
+      "id": "mkmz1JuNsTOR1D4vqilCX",
+      "type": "label",
+      "position": {
+        "x": 16.974674544294658,
+        "y": 387.44433023898546
+      },
+      "selected": false,
+      "data": {
+        "label": "Basic Hooks",
+        "href": "",
+        "color": "#000000",
+        "style": {
+          "fontSize": 17
+        }
+      },
+      "zIndex": 999,
+      "width": 113,
+      "height": 36,
+      "style": {},
+      "positionAbsolute": {
+        "x": 16.974674544294658,
+        "y": 387.44433023898546
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 113,
+        "height": 36
+      }
+    },
+    {
+      "id": "YEpkbNzEMzS6wAKg85J_N",
+      "type": "subtopic",
+      "position": {
+        "x": 6.974674544294658,
+        "y": 282.44433023898546
+      },
+      "selected": false,
+      "data": {
+        "label": "useState",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "FK59Zsm5ENA9g11XWCan_"
+      },
+      "zIndex": 999,
+      "width": 136,
+      "height": 49,
+      "style": {
+        "width": 136,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 6.974674544294658,
+        "y": 282.44433023898546
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 136,
+        "height": 49
+      }
+    },
+    {
+      "id": "8OnzX03hkZ9K9i__tjmFX",
+      "type": "subtopic",
+      "position": {
+        "x": 3.9746745442946576,
+        "y": 335.44433023898546
+      },
+      "selected": false,
+      "data": {
+        "label": "useEffect",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 140,
+      "height": 49,
+      "style": {
+        "width": 140,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 3.9746745442946576,
+        "y": 335.44433023898546
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 140,
+        "height": 49
+      }
+    },
+    {
+      "id": "HX75SExuzR5AP7TQ94qid",
+      "type": "subtopic",
+      "position": {
+        "x": -249.95515386471317,
+        "y": 521.0892656435051
+      },
+      "selected": false,
+      "data": {
+        "label": "Creating Custom Hooks",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "left-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 249,
+      "height": 49,
+      "style": {
+        "width": 249,
+        "height": 49
+      },
+      "dragging": false,
+      "positionAbsolute": {
+        "x": -249.95515386471317,
+        "y": 521.0892656435051
+      },
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 249,
+        "height": 49
+      }
+    },
+    {
+      "id": "EyspErq0ByXTgkgk3SGUz",
+      "type": "label",
+      "position": {
+        "x": -195.52532545570534,
+        "y": 478.14493540451963
+      },
+      "selected": false,
+      "data": {
+        "label": "Common Hooks",
+        "href": "",
+        "color": "#000000",
+        "style": {
+          "fontSize": 17
+        }
+      },
+      "zIndex": 999,
+      "width": 140,
+      "height": 36,
+      "style": {
+        "width": 140,
+        "height": 36
+      },
+      "positionAbsolute": {
+        "x": -195.52532545570534,
+        "y": 478.14493540451963
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "measured": {
+        "width": 140,
+        "height": 36
+      }
+    },
+    {
+      "id": "dgoDNDtW2_q9R9yhkXrcz",
+      "type": "subtopic",
+      "position": {
+        "x": -241.52532545570534,
+        "y": 282.94433023898546
+      },
+      "selected": false,
+      "data": {
+        "label": "useCallback",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "left-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 129,
+      "height": 49,
+      "style": {
+        "width": 129,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -241.52532545570534,
+        "y": 282.94433023898546
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 129,
+        "height": 49
+      }
+    },
+    {
+      "id": "t_laNdMmdLApYszqXRdWg",
+      "type": "subtopic",
+      "position": {
+        "x": -110.52532545570534,
+        "y": 282.94433023898546
+      },
+      "selected": false,
+      "data": {
+        "label": "useRef",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -110.52532545570534,
+        "y": 282.94433023898546
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "w3bNp7OkehI1gjx8NzlC8",
+      "type": "subtopic",
+      "position": {
+        "x": -110.52532545570534,
+        "y": 334.94433023898546
+      },
+      "selected": false,
+      "data": {
+        "label": "useMemo",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -110.52532545570534,
+        "y": 334.94433023898546
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "v48Mv0wQqjXbvy8x6gDjQ",
+      "type": "subtopic",
+      "position": {
+        "x": -241.52532545570534,
+        "y": 334.94433023898546
+      },
+      "selected": false,
+      "data": {
+        "label": "useReducer",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "left-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 129,
+      "height": 49,
+      "style": {
+        "width": 129,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -241.52532545570534,
+        "y": 334.94433023898546
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 129,
+        "height": 49
+      }
+    },
+    {
+      "id": "D5_O-uElftYGQr_bTU_se",
+      "type": "subtopic",
+      "position": {
+        "x": -240.52532545570534,
+        "y": 386.94433023898546
+      },
+      "selected": false,
+      "data": {
+        "label": "useContext",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "left-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 231,
+      "height": 49,
+      "style": {
+        "width": 231,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -240.52532545570534,
+        "y": 386.94433023898546
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 231,
+        "height": 49
+      }
+    },
+    {
+      "id": "FK59Zsm5ENA9g11XWCan_",
+      "type": "subtopic",
+      "position": {
+        "x": 3.9746745442946576,
+        "y": 282.44433023898546
+      },
+      "selected": false,
+      "data": {
+        "label": "useState",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 140,
+      "height": 49,
+      "style": {
+        "width": 140,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 3.9746745442946576,
+        "y": 282.44433023898546
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 140,
+        "height": 49
+      }
+    },
+    {
+      "id": "mkyU0ug8MXxV4biHuOity",
+      "type": "subtopic",
+      "position": {
+        "x": -249.95515386471317,
+        "y": 574.0892656435051
+      },
+      "selected": false,
+      "data": {
+        "label": "Hooks Best Practices",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "left-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 249,
+      "height": 49,
+      "style": {
+        "width": 249,
+        "height": 49
+      },
+      "dragging": false,
+      "positionAbsolute": {
+        "x": -249.95515386471317,
+        "y": 574.0892656435051
+      },
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 249,
+        "height": 49
+      }
+    },
+    {
+      "id": "NStw6bi_pPB49K41BFSgo",
+      "type": "topic",
+      "position": {
+        "x": 392.97467454429466,
+        "y": 686.2974386815656
+      },
+      "selected": false,
+      "data": {
+        "label": "Routers",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "thfnymb_UIiKxakKfiua5"
+      },
+      "zIndex": 999,
+      "width": 118,
+      "height": 49,
+      "style": {
+        "width": 118,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 392.97467454429466,
+        "y": 686.2974386815656
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 118,
+        "height": 49
+      }
+    },
+    {
+      "id": "zWL8VLx_g0SWubavJDs6i",
+      "type": "subtopic",
+      "position": {
+        "x": 363.97467454429466,
+        "y": 825.7974386815656
+      },
+      "selected": false,
+      "data": {
+        "label": "Tanstack Router",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "jvp43wFkKlGQX2y7IxkbM",
+        "legend": {
+          "id": "CRQCl3LvTj0sJWThSxjKu",
+          "label": "Alternative Option (Pick this or purple)",
+          "color": "#19a323",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 176,
+      "height": 49,
+      "style": {
+        "width": 176,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 363.97467454429466,
+        "y": 825.7974386815656
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 176,
+        "height": 49
+      }
+    },
+    {
+      "id": "jvp43wFkKlGQX2y7IxkbM",
+      "type": "subtopic",
+      "position": {
+        "x": 363.97467454429466,
+        "y": 772.7974386815656
+      },
+      "selected": false,
+      "data": {
+        "label": "React Router",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 176,
+      "height": 49,
+      "style": {
+        "width": 176,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 363.97467454429466,
+        "y": 772.7974386815656
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 176,
+        "height": 49
+      }
+    },
+    {
+      "id": "I7_mX4h-Yywp1YyTJRKXI",
+      "type": "topic",
+      "position": {
+        "x": 49.693201050423,
+        "y": 867.4443302389855
+      },
+      "selected": false,
+      "data": {
+        "label": "State Management",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "thfnymb_UIiKxakKfiua5"
+      },
+      "zIndex": 999,
+      "width": 193,
+      "height": 49,
+      "style": {},
+      "positionAbsolute": {
+        "x": 49.693201050423,
+        "y": 867.4443302389855
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 193,
+        "height": 49
+      }
+    },
+    {
+      "id": "10uL0r388lKh8pWYWqRZD",
+      "type": "subtopic",
+      "position": {
+        "x": 82.693201050423,
+        "y": 685.9443302389855
+      },
+      "selected": false,
+      "data": {
+        "label": "Context",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "CRQCl3LvTj0sJWThSxjKu",
+          "label": "Alternative Option (Pick this or purple)",
+          "color": "#19a323",
+          "position": "left-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 127,
+      "height": 49,
+      "style": {
+        "width": 127,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 82.693201050423,
+        "y": 685.9443302389855
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 127,
+        "height": 49
+      }
+    },
+    {
+      "id": "nl5imPsdY2oEWlg-9TTuk",
+      "type": "subtopic",
+      "position": {
+        "x": 82.693201050423,
+        "y": 738.9443302389855
+      },
+      "selected": false,
+      "data": {
+        "label": "Zustand",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "left-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 127,
+      "height": 49,
+      "style": {
+        "width": 127,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 82.693201050423,
+        "y": 738.9443302389855
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 127,
+        "height": 49
+      }
+    },
+    {
+      "id": "yI6XiNW04EL78UL4lkVgd",
+      "type": "subtopic",
+      "position": {
+        "x": 82.693201050423,
+        "y": 791.9443302389855
+      },
+      "selected": false,
+      "data": {
+        "label": "Jotai",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "left-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 127,
+      "height": 49,
+      "style": {
+        "width": 127,
+        "height": 49
+      },
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 82.693201050423,
+        "y": 791.9443302389855
+      },
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 127,
+        "height": 49
+      }
+    },
+    {
+      "id": "DfrCkbD-HEHwLymv10zb5",
+      "type": "topic",
+      "position": {
+        "x": -194.02532545570534,
+        "y": 867.4443302389855
+      },
+      "selected": false,
+      "data": {
+        "label": "Writing CSS",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "thfnymb_UIiKxakKfiua5"
+      },
+      "zIndex": 999,
+      "width": 137,
+      "height": 49,
+      "style": {},
+      "positionAbsolute": {
+        "x": -194.02532545570534,
+        "y": 867.4443302389855
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 137,
+        "height": 49
+      }
+    },
+    {
+      "id": "MnDgQq9Vcxsu3wDqv5uh2",
+      "type": "topic",
+      "position": {
+        "x": -519.0253254557053,
+        "y": 989.4443302389855
+      },
+      "selected": false,
+      "data": {
+        "label": "Headless Component Libraries",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 285,
+      "height": 49,
+      "style": {},
+      "dragging": false,
+      "positionAbsolute": {
+        "x": -519.0253254557053,
+        "y": 989.4443302389855
+      },
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 285,
+        "height": 49
+      }
+    },
+    {
+      "id": "KO3viVIJJREtxXxsocN7j",
+      "type": "subtopic",
+      "position": {
+        "x": -200.02532545570534,
+        "y": 789.9443302389855
+      },
+      "selected": false,
+      "data": {
+        "label": "Tailwind CSS",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "akVNUPOqaTXaSHoQFlkP_",
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "left-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 149,
+      "height": 49,
+      "style": {
+        "width": 149
+      },
+      "positionAbsolute": {
+        "x": -200.02532545570534,
+        "y": 789.9443302389855
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 149,
+        "height": 49
+      }
+    },
+    {
+      "id": "thfnymb_UIiKxakKfiua5",
+      "type": "topic",
+      "position": {
+        "x": -515.0253254557053,
+        "y": 867.4443302389855
+      },
+      "selected": false,
+      "data": {
+        "label": "Component / Libraries",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 220,
+      "height": 49,
+      "style": {},
+      "positionAbsolute": {
+        "x": -515.0253254557053,
+        "y": 867.4443302389855
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 220,
+        "height": 49
+      }
+    },
+    {
+      "id": "akVNUPOqaTXaSHoQFlkP_",
+      "type": "subtopic",
+      "position": {
+        "x": -200.02532545570534,
+        "y": 683.9443302389855
+      },
+      "selected": false,
+      "data": {
+        "label": "Panda CSS",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "CRQCl3LvTj0sJWThSxjKu",
+          "label": "Alternative Option (Pick this or purple)",
+          "color": "#19a323",
+          "position": "left-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 149,
+      "height": 49,
+      "style": {
+        "width": 149
+      },
+      "positionAbsolute": {
+        "x": -200.02532545570534,
+        "y": 683.9443302389855
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 149,
+        "height": 49
+      }
+    },
+    {
+      "id": "uqphqAnlcJOLnwHZs5jWu",
+      "type": "subtopic",
+      "position": {
+        "x": -453.52532545570534,
+        "y": 724.9443302389855
+      },
+      "selected": false,
+      "data": {
+        "label": "Chakra UI",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "CRQCl3LvTj0sJWThSxjKu",
+          "label": "Alternative Option (Pick this or purple)",
+          "color": "#19a323",
+          "position": "left-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 138,
+      "height": 49,
+      "style": {
+        "width": 138,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -453.52532545570534,
+        "y": 724.9443302389855
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 138,
+        "height": 49
+      }
+    },
+    {
+      "id": "gy7eBxPOlwG8BvxHVLDQ9",
+      "type": "subtopic",
+      "position": {
+        "x": -453.52532545570534,
+        "y": 671.9443302389855
+      },
+      "selected": false,
+      "data": {
+        "label": "Material UI",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "CRQCl3LvTj0sJWThSxjKu",
+          "label": "Alternative Option (Pick this or purple)",
+          "color": "#19a323",
+          "position": "left-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 138,
+      "height": 49,
+      "style": {
+        "width": 138,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -453.52532545570534,
+        "y": 671.9443302389855
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 138,
+        "height": 49
+      }
+    },
+    {
+      "id": "njKsYNkwTXPQ1NjlGKXab",
+      "type": "subtopic",
+      "position": {
+        "x": -453.52532545570534,
+        "y": 777.9443302389855
+      },
+      "selected": false,
+      "data": {
+        "label": "Shadcn UI",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "left-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 138,
+      "height": 49,
+      "style": {
+        "width": 138,
+        "height": 49
+      },
+      "dragging": false,
+      "positionAbsolute": {
+        "x": -453.52532545570534,
+        "y": 777.9443302389855
+      },
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 138,
+        "height": 49
+      }
+    },
+    {
+      "id": "awoEhwPKjUcR84XGL6Som",
+      "type": "subtopic",
+      "position": {
+        "x": -200.02532545570534,
+        "y": 736.9443302389855
+      },
+      "selected": false,
+      "data": {
+        "label": "CSS Modules",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "akVNUPOqaTXaSHoQFlkP_",
+        "legend": {
+          "id": "CRQCl3LvTj0sJWThSxjKu",
+          "label": "Alternative Option (Pick this or purple)",
+          "color": "#19a323",
+          "position": "left-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 149,
+      "height": 49,
+      "style": {
+        "width": 149
+      },
+      "positionAbsolute": {
+        "x": -200.02532545570534,
+        "y": 736.9443302389855
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 149,
+        "height": 49
+      }
+    },
+    {
+      "id": "XL9XOV2h0BAuA5cFcM5L_",
+      "type": "subtopic",
+      "position": {
+        "x": -153.52532545570534,
+        "y": 936.4443302389855
+      },
+      "selected": false,
+      "data": {
+        "label": "Radix UI",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 175,
+      "height": 49,
+      "style": {
+        "width": 175
+      },
+      "positionAbsolute": {
+        "x": -153.52532545570534,
+        "y": 936.4443302389855
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 175,
+        "height": 49
+      }
+    },
+    {
+      "id": "RvDfKoa_HIW3QDBfkPv3m",
+      "type": "subtopic",
+      "position": {
+        "x": -153.52532545570534,
+        "y": 989.4443302389855
+      },
+      "selected": false,
+      "data": {
+        "label": "React Aria",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "CRQCl3LvTj0sJWThSxjKu",
+          "label": "Alternative Option (Pick this or purple)",
+          "color": "#19a323",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 175,
+      "height": 49,
+      "style": {
+        "width": 175,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -153.52532545570534,
+        "y": 989.4443302389855
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 175,
+        "height": 49
+      }
+    },
+    {
+      "id": "kiCTo0U6VgNON8rv_Ktlj",
+      "type": "subtopic",
+      "position": {
+        "x": -153.52532545570534,
+        "y": 1042.4443302389855
+      },
+      "selected": false,
+      "data": {
+        "label": "Ark UI",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "CRQCl3LvTj0sJWThSxjKu",
+          "label": "Alternative Option (Pick this or purple)",
+          "color": "#19a323",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 175,
+      "height": 49,
+      "style": {
+        "width": 175
+      },
+      "positionAbsolute": {
+        "x": -153.52532545570534,
+        "y": 1042.4443302389855
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 175,
+        "height": 49
+      }
+    },
+    {
+      "id": "b4AP2OggxFAwsQtUwiUJJ",
+      "type": "topic",
+      "position": {
+        "x": -215.60313927083638,
+        "y": 1129.476431006493
+      },
+      "selected": false,
+      "data": {
+        "label": "API Calls",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "nK1DhEXBKVhvSR1P_vzgj"
+      },
+      "zIndex": 999,
+      "width": 115,
+      "height": 49,
+      "style": {
+        "width": 115,
+        "height": 49
+      },
+      "dragging": false,
+      "positionAbsolute": {
+        "x": -215.60313927083638,
+        "y": 1129.476431006493
+      },
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 115,
+        "height": 49
+      }
+    },
+    {
+      "id": "8nMbfGxe3STMbrAVcqHHh",
+      "type": "subtopic",
+      "position": {
+        "x": -321.88461276470804,
+        "y": 1228.476431006493
+      },
+      "selected": false,
+      "data": {
+        "label": "Apollo",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "left-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 115,
+      "height": 49,
+      "style": {
+        "width": 115,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -321.88461276470804,
+        "y": 1228.476431006493
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "measured": {
+        "width": 115,
+        "height": 49
+      }
+    },
+    {
+      "id": "cLfM342sZfsCwmPPxQpEI",
+      "type": "subtopic",
+      "position": {
+        "x": -321.88461276470804,
+        "y": 1281.476431006493
+      },
+      "selected": false,
+      "data": {
+        "label": "Relay",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "CRQCl3LvTj0sJWThSxjKu",
+          "label": "Alternative Option (Pick this or purple)",
+          "color": "#19a323",
+          "position": "left-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 115,
+      "height": 49,
+      "style": {
+        "width": 115,
+        "height": 49
+      },
+      "dragging": false,
+      "positionAbsolute": {
+        "x": -321.88461276470804,
+        "y": 1281.476431006493
+      },
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 115,
+        "height": 49
+      }
+    },
+    {
+      "id": "9M5jRu0pj8KMvg9f-2oqZ",
+      "type": "subtopic",
+      "position": {
+        "x": -321.88461276470804,
+        "y": 1334.476431006493
+      },
+      "selected": false,
+      "data": {
+        "label": "urql",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "CRQCl3LvTj0sJWThSxjKu",
+          "label": "Alternative Option (Pick this or purple)",
+          "color": "#19a323",
+          "position": "left-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 115,
+      "height": 49,
+      "style": {
+        "width": 115,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -321.88461276470804,
+        "y": 1334.476431006493
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "measured": {
+        "width": 115,
+        "height": 49
+      }
+    },
+    {
+      "id": "zWcMFfyiWJddGbiIhmdKm",
+      "type": "label",
+      "position": {
+        "x": -307.88461276470804,
+        "y": 1390.476431006493
+      },
+      "selected": false,
+      "data": {
+        "label": "GraphQL",
+        "href": "",
+        "color": "#000000",
+        "style": {
+          "fontSize": 17
+        },
+        "oldId": "KNAlIYCENB4VMuQGqJNk3"
+      },
+      "zIndex": 999,
+      "width": 87,
+      "height": 36,
+      "style": {},
+      "positionAbsolute": {
+        "x": -307.88461276470804,
+        "y": 1390.476431006493
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 87,
+        "height": 36
+      }
+    },
+    {
+      "id": "-ea1KsXEyz-4voHXklG_J",
+      "type": "subtopic",
+      "position": {
+        "x": -94.60313927083638,
+        "y": 1281.976431006493
+      },
+      "selected": false,
+      "data": {
+        "label": "swr",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "CRQCl3LvTj0sJWThSxjKu",
+          "label": "Alternative Option (Pick this or purple)",
+          "color": "#19a323",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -94.60313927083638,
+        "y": 1281.976431006493
+      },
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "dragging": false,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "5EPmbiNdP_vhIXclv_GjV",
+      "type": "subtopic",
+      "position": {
+        "x": -198.60313927083638,
+        "y": 1228.476431006493
+      },
+      "selected": false,
+      "data": {
+        "label": "react-query",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 205,
+      "height": 49,
+      "style": {
+        "width": 205,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -198.60313927083638,
+        "y": 1228.476431006493
+      },
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "dragging": false,
+      "measured": {
+        "width": 205,
+        "height": 49
+      }
+    },
+    {
+      "id": "ElqWQClryfSYdL7P_mgYK",
+      "type": "subtopic",
+      "position": {
+        "x": -198.60313927083638,
+        "y": 1281.976431006493
+      },
+      "selected": false,
+      "data": {
+        "label": "Axios",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "CRQCl3LvTj0sJWThSxjKu",
+          "label": "Alternative Option (Pick this or purple)",
+          "color": "#19a323",
+          "position": "left-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -198.60313927083638,
+        "y": 1281.976431006493
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "h49-tjEkKcq7d7ikRHIOx",
+      "type": "subtopic",
+      "position": {
+        "x": -198.60313927083638,
+        "y": 1334.976431006493
+      },
+      "selected": false,
+      "data": {
+        "label": "rtk-query",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "CRQCl3LvTj0sJWThSxjKu",
+          "label": "Alternative Option (Pick this or purple)",
+          "color": "#19a323",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 206,
+      "height": 49,
+      "style": {
+        "width": 206,
+        "height": 49
+      },
+      "resizing": false,
+      "positionAbsolute": {
+        "x": -198.60313927083638,
+        "y": 1334.976431006493
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 206,
+        "height": 49
+      }
+    },
+    {
+      "id": "KNAlIYCENB4VMuQGqJNk3",
+      "type": "label",
+      "position": {
+        "x": -125.60313927083638,
+        "y": 1390.476431006493
+      },
+      "selected": false,
+      "data": {
+        "label": "REST",
+        "href": "",
+        "color": "#000000",
+        "style": {
+          "fontSize": 17
+        }
+      },
+      "zIndex": 999,
+      "width": 61,
+      "height": 36,
+      "style": {},
+      "positionAbsolute": {
+        "x": -125.60313927083638,
+        "y": 1390.476431006493
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 61,
+        "height": 36
+      }
+    },
+    {
+      "id": "e_lwZ-a72-tAan2KDX6k3",
+      "type": "topic",
+      "position": {
+        "x": 162.47467454429466,
+        "y": 1129.476431006493
+      },
+      "selected": false,
+      "data": {
+        "label": "Testing",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "nK1DhEXBKVhvSR1P_vzgj"
+      },
+      "zIndex": 999,
+      "width": 143,
+      "height": 49,
+      "style": {
+        "width": 143,
+        "height": 49
+      },
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 162.47467454429466,
+        "y": 1129.476431006493
+      },
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 143,
+        "height": 49
+      }
+    },
+    {
+      "id": "opa61u9gYgSpoPtxp58wu",
+      "type": "subtopic",
+      "position": {
+        "x": 231.97467454429466,
+        "y": 986.4443302389855
+      },
+      "selected": false,
+      "data": {
+        "label": "Jest",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "CRQCl3LvTj0sJWThSxjKu",
+          "label": "Alternative Option (Pick this or purple)",
+          "color": "#19a323",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 231.97467454429466,
+        "y": 986.4443302389855
+      },
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "dragging": false,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "LULjhsPNONyI5912DKzPw",
+      "type": "subtopic",
+      "position": {
+        "x": 134.97467454429466,
+        "y": 986.4443302389855
+      },
+      "selected": false,
+      "data": {
+        "label": "Vitest",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "left-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 94,
+      "height": 49,
+      "style": {
+        "width": 94,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 134.97467454429466,
+        "y": 986.4443302389855
+      },
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "dragging": false,
+      "measured": {
+        "width": 94,
+        "height": 49
+      }
+    },
+    {
+      "id": "cQllxv7qGbRtM9O5llgN6",
+      "type": "subtopic",
+      "position": {
+        "x": 134.97467454429466,
+        "y": 1039.4443302389855
+      },
+      "selected": false,
+      "data": {
+        "label": "react-testing-library",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "left-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 198,
+      "height": 49,
+      "style": {
+        "width": 198,
+        "height": 49
+      },
+      "resizing": false,
+      "positionAbsolute": {
+        "x": 134.97467454429466,
+        "y": 1039.4443302389855
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 198,
+        "height": 49
+      }
+    },
+    {
+      "id": "zN7Ps1puD-YpHbKi1pHH8",
+      "type": "subtopic",
+      "position": {
+        "x": 156.47467454429466,
+        "y": 1214.4443302389855
+      },
+      "selected": false,
+      "data": {
+        "label": "Cypress",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "CRQCl3LvTj0sJWThSxjKu",
+          "label": "Alternative Option (Pick this or purple)",
+          "color": "#19a323",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 155,
+      "height": 49,
+      "style": {
+        "width": 155,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 156.47467454429466,
+        "y": 1214.4443302389855
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 155,
+        "height": 49
+      }
+    },
+    {
+      "id": "g39P0c6M2sHNoUPs0m8tr",
+      "type": "subtopic",
+      "position": {
+        "x": 156.47467454429466,
+        "y": 1267.4443302389855
+      },
+      "selected": false,
+      "data": {
+        "label": "Playwright",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "left-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 155,
+      "height": 49,
+      "style": {
+        "width": 155
+      },
+      "positionAbsolute": {
+        "x": 156.47467454429466,
+        "y": 1267.4443302389855
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 155,
+        "height": 49
+      }
+    },
+    {
+      "id": "W-atg_Msa9uPLr6RXAKSb",
+      "type": "topic",
+      "position": {
+        "x": 393.49469523818516,
+        "y": 1129.476431006493
+      },
+      "selected": false,
+      "data": {
+        "label": "Frameworks",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "nK1DhEXBKVhvSR1P_vzgj"
+      },
+      "zIndex": 999,
+      "width": 143,
+      "height": 49,
+      "style": {
+        "width": 143,
+        "height": 49
+      },
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 393.49469523818516,
+        "y": 1129.476431006493
+      },
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 143,
+        "height": 49
+      }
+    },
+    {
+      "id": "HdWq9ue0JdwmwqSIN2OD_",
+      "type": "subtopic",
+      "position": {
+        "x": 395.49469523818516,
+        "y": 1036.4443302389855
+      },
+      "selected": false,
+      "data": {
+        "label": "Next.js",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "-WjJBYCmRRj08n_9HxohY",
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 139,
+      "height": 49,
+      "style": {
+        "width": 139
+      },
+      "positionAbsolute": {
+        "x": 395.49469523818516,
+        "y": 1036.4443302389855
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 139,
+        "height": 49
+      }
+    },
+    {
+      "id": "_HoZkE7FH-v3wI_722ZTF",
+      "type": "subtopic",
+      "position": {
+        "x": 395.49469523818516,
+        "y": 983.4443302389855
+      },
+      "selected": false,
+      "data": {
+        "label": "Astro",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "-WjJBYCmRRj08n_9HxohY",
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 139,
+      "height": 49,
+      "style": {
+        "width": 139
+      },
+      "positionAbsolute": {
+        "x": 395.49469523818516,
+        "y": 983.4443302389855
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 139,
+        "height": 49
+      }
+    },
+    {
+      "id": "-WjJBYCmRRj08n_9HxohY",
+      "type": "subtopic",
+      "position": {
+        "x": 395.49469523818516,
+        "y": 930.4443302389855
+      },
+      "selected": false,
+      "data": {
+        "label": "react-router",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "CRQCl3LvTj0sJWThSxjKu",
+          "label": "Alternative Option (Pick this or purple)",
+          "color": "#19a323",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 139,
+      "height": 49,
+      "style": {
+        "width": 139,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 395.49469523818516,
+        "y": 930.4443302389855
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 139,
+        "height": 49
+      }
+    },
+    {
+      "id": "KHcC5pFN3qLnsbPPKpYd2",
+      "type": "topic",
+      "position": {
+        "x": 393.49469523818516,
+        "y": 1382.9443302389855
+      },
+      "selected": false,
+      "data": {
+        "label": "Forms",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "nK1DhEXBKVhvSR1P_vzgj"
+      },
+      "zIndex": 999,
+      "width": 143,
+      "height": 49,
+      "style": {
+        "width": 143,
+        "height": 49
+      },
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 393.49469523818516,
+        "y": 1382.9443302389855
+      },
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 143,
+        "height": 49
+      }
+    },
+    {
+      "id": "_5ht0PAdVOJWPzTRS1mVg",
+      "type": "subtopic",
+      "position": {
+        "x": 374.49469523818516,
+        "y": 1474.1701814857588
+      },
+      "selected": false,
+      "data": {
+        "label": "React Hook Form",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 181,
+      "height": 49,
+      "style": {
+        "width": 181,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 374.49469523818516,
+        "y": 1474.1701814857588
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "measured": {
+        "width": 181,
+        "height": 49
+      }
+    },
+    {
+      "id": "gr1CaLvL7tFOkIRywSsID",
+      "type": "subtopic",
+      "position": {
+        "x": 374.49469523818516,
+        "y": 1527.1701814857588
+      },
+      "selected": false,
+      "data": {
+        "label": "Formik",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "CRQCl3LvTj0sJWThSxjKu",
+          "label": "Alternative Option (Pick this or purple)",
+          "color": "#19a323",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 181,
+      "height": 49,
+      "style": {
+        "width": 181,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 374.49469523818516,
+        "y": 1527.1701814857588
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "measured": {
+        "width": 181,
+        "height": 49
+      }
+    },
+    {
+      "id": "UNlvRp6k3_RDoTAAIEfJ1",
+      "type": "topic",
+      "position": {
+        "x": 82.693201050423,
+        "y": 1520.8287356248509
+      },
+      "selected": false,
+      "data": {
+        "label": "Types & Validation",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "nK1DhEXBKVhvSR1P_vzgj"
+      },
+      "zIndex": 999,
+      "width": 186,
+      "height": 49,
+      "style": {},
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 82.693201050423,
+        "y": 1520.8287356248509
+      },
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 186,
+        "height": 49
+      }
+    },
+    {
+      "id": "ElgRwv5LSVg5FXGx-2K2s",
+      "type": "subtopic",
+      "position": {
+        "x": 100.193201050423,
+        "y": 1378.4581550365865
+      },
+      "selected": false,
+      "data": {
+        "label": "TypeScript",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 150,
+      "height": 47,
+      "style": {
+        "width": 150,
+        "height": 47.4759521484375
+      },
+      "positionAbsolute": {
+        "x": 100.193201050423,
+        "y": 1378.4581550365865
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 150,
+        "height": 47
+      }
+    },
+    {
+      "id": "K3RZ8ESxWCpLKHePF87Hy",
+      "type": "subtopic",
+      "position": {
+        "x": 100.193201050423,
+        "y": 1429.4581550365865
+      },
+      "selected": false,
+      "data": {
+        "label": "Zod",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 150,
+      "height": 49,
+      "style": {
+        "width": 150
+      },
+      "positionAbsolute": {
+        "x": 100.193201050423,
+        "y": 1429.4581550365865
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 150,
+        "height": 49
+      }
+    },
+    {
+      "id": "ydxyne6RzIDPHij1Z3CsN",
+      "type": "paragraph",
+      "position": {
+        "x": -288.02532545570534,
+        "y": 1511.8287356248509
+      },
+      "selected": false,
+      "data": {
+        "label": "Advanced Topics",
+        "style": {
+          "fontSize": 20,
+          "borderColor": "transparent",
+          "backgroundColor": "transparent",
+          "color": "#000000",
+          "textAlign": "center",
+          "justifyContent": "flex-start",
+          "padding": 16
+        }
+      },
+      "zIndex": 999,
+      "width": 204,
+      "height": 67,
+      "style": {
+        "width": 204,
+        "height": 67
+      },
+      "positionAbsolute": {
+        "x": -288.02532545570534,
+        "y": 1511.8287356248509
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 204,
+        "height": 67
+      }
+    },
+    {
+      "id": "bRpeoo9zXrnZ2IHSI7JX4",
+      "type": "topic",
+      "position": {
+        "x": -517.08952699072,
+        "y": 1627.5845254232022
+      },
+      "selected": false,
+      "data": {
+        "label": "Animation",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "_F3WMxhzaK9F8_-zHDDMF"
+      },
+      "zIndex": 999,
+      "width": 170,
+      "height": 49,
+      "style": {
+        "width": 170,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -517.08952699072,
+        "y": 1627.5845254232022
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 170,
+        "height": 49
+      }
+    },
+    {
+      "id": "SUeXDkmOLipdRP4fSrZOH",
+      "type": "topic",
+      "position": {
+        "x": -212.55356635764488,
+        "y": 1680.5845254232022
+      },
+      "selected": false,
+      "data": {
+        "label": "Server APIs",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "_F3WMxhzaK9F8_-zHDDMF"
+      },
+      "zIndex": 999,
+      "width": 178,
+      "height": 49,
+      "style": {
+        "width": 178,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -212.55356635764488,
+        "y": 1680.5845254232022
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 178,
+        "height": 49
+      }
+    },
+    {
+      "id": "H6-XGDjs4f-qbv13v5av0",
+      "type": "subtopic",
+      "position": {
+        "x": -517.08952699072,
+        "y": 1711.5475484484205
+      },
+      "selected": false,
+      "data": {
+        "label": "Framer Motion",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 170,
+      "height": 49,
+      "style": {
+        "width": 170
+      },
+      "positionAbsolute": {
+        "x": -517.08952699072,
+        "y": 1711.5475484484205
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "measured": {
+        "width": 170,
+        "height": 49
+      }
+    },
+    {
+      "id": "WzoB5B6SdOI4Mzv6U51nY",
+      "type": "subtopic",
+      "position": {
+        "x": -517.08952699072,
+        "y": 1764.5475484484205
+      },
+      "selected": false,
+      "data": {
+        "label": "react spring",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "y2dI1DVLWKAkv6VRpgaQa",
+        "legend": {
+          "id": "CRQCl3LvTj0sJWThSxjKu",
+          "label": "Alternative Option (Pick this or purple)",
+          "color": "#19a323",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 170,
+      "height": 47,
+      "style": {
+        "width": 170,
+        "height": 47.4759521484375
+      },
+      "positionAbsolute": {
+        "x": -517.08952699072,
+        "y": 1764.5475484484205
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "measured": {
+        "width": 170,
+        "height": 47
+      }
+    },
+    {
+      "id": "y2dI1DVLWKAkv6VRpgaQa",
+      "type": "subtopic",
+      "position": {
+        "x": -517.08952699072,
+        "y": 1815.5475484484205
+      },
+      "selected": false,
+      "data": {
+        "label": "GSock",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "CRQCl3LvTj0sJWThSxjKu",
+          "label": "Alternative Option (Pick this or purple)",
+          "color": "#19a323",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 170,
+      "height": 47,
+      "style": {
+        "width": 170,
+        "height": 47.4759521484375
+      },
+      "positionAbsolute": {
+        "x": -517.08952699072,
+        "y": 1815.5475484484205
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "measured": {
+        "width": 170,
+        "height": 47
+      }
+    },
+    {
+      "id": "_F3WMxhzaK9F8_-zHDDMF",
+      "type": "topic",
+      "position": {
+        "x": -212.55356635764488,
+        "y": 1733.5845254232022
+      },
+      "selected": false,
+      "data": {
+        "label": "Suspense",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 178,
+      "height": 49,
+      "style": {
+        "width": 178,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -212.55356635764488,
+        "y": 1733.5845254232022
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 178,
+        "height": 49
+      }
+    },
+    {
+      "id": "DcDggX4OmmwvJGHwuV86t",
+      "type": "topic",
+      "position": {
+        "x": -212.55356635764488,
+        "y": 1786.5845254232022
+      },
+      "selected": false,
+      "data": {
+        "label": "Portals",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "txARr3lgTvy-vJCj5zAb1"
+      },
+      "zIndex": 999,
+      "width": 178,
+      "height": 49,
+      "style": {
+        "width": 178
+      },
+      "positionAbsolute": {
+        "x": -212.55356635764488,
+        "y": 1786.5845254232022
+      },
+      "dragging": false,
+      "focusable": true,
+      "measured": {
+        "width": 178,
+        "height": 49
+      }
+    },
+    {
+      "id": "gMHMjsh0i8paLZUH5mDX3",
+      "type": "topic",
+      "position": {
+        "x": -212.55356635764488,
+        "y": 1627.5845254232022
+      },
+      "selected": false,
+      "data": {
+        "label": "Error Boundaries",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 178,
+      "height": 49,
+      "style": {
+        "width": 178
+      },
+      "positionAbsolute": {
+        "x": -212.55356635764488,
+        "y": 1627.5845254232022
+      },
+      "dragging": false,
+      "focusable": true,
+      "measured": {
+        "width": 178,
+        "height": 49
+      }
+    },
+    {
+      "id": "txARr3lgTvy-vJCj5zAb1",
+      "type": "topic",
+      "position": {
+        "x": 73.99706098308326,
+        "y": 1786.5845254232022
+      },
+      "selected": false,
+      "data": {
+        "label": "Mobile Applications",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 196,
+      "height": 49,
+      "style": {},
+      "positionAbsolute": {
+        "x": 73.99706098308326,
+        "y": 1786.5845254232022
+      },
+      "dragging": false,
+      "focusable": true,
+      "measured": {
+        "width": 196,
+        "height": 49
+      }
+    },
+    {
+      "id": "NvXAq1vN2wpncdW-yTL4c",
+      "type": "subtopic",
+      "position": {
+        "x": 98.99706098308327,
+        "y": 1665.4067151287932
+      },
+      "selected": false,
+      "data": {
+        "label": "React Native",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "legend": {
+          "id": "Z0WmUXWj-7draje3jE1WR",
+          "color": "#874efe",
+          "label": "Personal Recommendation (Opinion)",
+          "position": "right-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 146,
+      "height": 49,
+      "style": {},
+      "focusable": true,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 98.99706098308327,
+        "y": 1665.4067151287932
+      },
+      "measured": {
+        "width": 146,
+        "height": 49
+      }
+    },
+    {
+      "id": "5xCbPG6RMI0OEAI4aXKC7",
+      "type": "legend",
+      "position": {
+        "x": -495.02532545570534,
+        "y": -210.78400721142515
+      },
+      "selected": false,
+      "data": {
+        "label": "",
+        "legends": [
+          {
+            "id": "Z0WmUXWj-7draje3jE1WR",
+            "color": "#874efe",
+            "label": "Personal Recommendation (Opinion)"
+          },
+          {
+            "id": "CRQCl3LvTj0sJWThSxjKu",
+            "label": "Alternative Option (Pick this or purple)",
+            "color": "#19a323"
+          },
+          {
+            "id": "7RoFat0sGCLmWuZwuBpKm",
+            "label": "Order in Roadmap not strict (Learn anytime)",
+            "color": "#9e9e9e"
+          }
+        ]
+      },
+      "zIndex": 999,
+      "width": 400,
+      "height": 124,
+      "positionAbsolute": {
+        "x": -495.02532545570534,
+        "y": -210.78400721142515
+      },
+      "dragging": false,
+      "focusable": true,
+      "measured": {
+        "width": 400,
+        "height": 124
+      }
+    },
+    {
+      "id": "1kbrCI5JS0c9wbzxXpgFU",
+      "type": "subtopic",
+      "position": {
+        "x": 82.693201050423,
+        "y": 632.9443302389855
+      },
+      "selected": false,
+      "data": {
+        "label": "MobX",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "10uL0r388lKh8pWYWqRZD",
+        "legend": {
+          "id": "CRQCl3LvTj0sJWThSxjKu",
+          "label": "Alternative Option (Pick this or purple)",
+          "color": "#19a323",
+          "position": "left-center"
+        }
+      },
+      "zIndex": 999,
+      "width": 127,
+      "height": 49,
+      "style": {
+        "width": 127,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 82.693201050423,
+        "y": 632.9443302389855
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 127,
+        "height": 49
+      }
+    }
+  ],
+  "edges": [
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "sourceHandle": "x2",
+      "target": "GV_zWF6rSWg5bqgiXhOEf",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "M0aRyhxjzTWUOW95D1g1y",
+      "selected": false,
+      "type": "smoothstep",
+      "focusable": true,
+      "selectable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "sourceHandle": "x2",
+      "target": "GV_zWF6rSWg5bqgiXhOEf",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "Xw4lLz2zWuTkNu8r4oheF",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "sourceHandle": "x2",
+      "target": "GV_zWF6rSWg5bqgiXhOEf",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "mbCXMk97_HKXG3d4TxBOC",
+      "selected": false,
+      "focusable": true,
+      "selectable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "iogwMmOvub2ZF4zgg6WyF",
+      "sourceHandle": "x2",
+      "target": "XDvH2t3AJGevS17uM8TO6",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-iogwMmOvub2ZF4zgg6WyFx2-XDvH2t3AJGevS17uM8TO6w1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "tU4Umtnfu01t9gLlnlK6b",
+      "sourceHandle": "z2",
+      "target": "y9ToYDix-koRbR6FLydFw",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-tU4Umtnfu01t9gLlnlK6bz2-y9ToYDix-koRbR6FLydFwy1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "XDvH2t3AJGevS17uM8TO6",
+      "sourceHandle": "x2",
+      "target": "tU4Umtnfu01t9gLlnlK6b",
+      "targetHandle": "w2",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-XDvH2t3AJGevS17uM8TO6x2-tU4Umtnfu01t9gLlnlK6bw2",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "79K4xgljcoSHkCYI1D55O",
+      "sourceHandle": "y2",
+      "target": "8mw4TxlLN4ZKAlLl-_NVV",
+      "targetHandle": "z1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-0uiGsC5SWavNdlFqizkKey2-8mw4TxlLN4ZKAlLl-_NVVz1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "tU4Umtnfu01t9gLlnlK6b",
+      "sourceHandle": "x2",
+      "target": "79K4xgljcoSHkCYI1D55O",
+      "targetHandle": "w2",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-tU4Umtnfu01t9gLlnlK6bx2-0uiGsC5SWavNdlFqizkKew2",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "79K4xgljcoSHkCYI1D55O",
+      "sourceHandle": "z2",
+      "target": "0uiGsC5SWavNdlFqizkKe",
+      "targetHandle": "y2",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-79K4xgljcoSHkCYI1D55Oz2-0uiGsC5SWavNdlFqizkKey2",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "0uiGsC5SWavNdlFqizkKe",
+      "sourceHandle": "y2",
+      "target": "LbLQhonBqzxHU6B-L--Vq",
+      "targetHandle": "z1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "selected": false,
+      "selectable": true,
+      "focusable": true,
+      "id": "reactflow__edge-0uiGsC5SWavNdlFqizkKey2-thfnymb_UIiKxakKfiua5z1"
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "LbLQhonBqzxHU6B-L--Vq",
+      "sourceHandle": "y2",
+      "target": "HX75SExuzR5AP7TQ94qid",
+      "targetHandle": "z1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-thfnymb_UIiKxakKfiua5y2-HX75SExuzR5AP7TQ94qidz1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "LbLQhonBqzxHU6B-L--Vq",
+      "sourceHandle": "y2",
+      "target": "mkyU0ug8MXxV4biHuOity",
+      "targetHandle": "z1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-thfnymb_UIiKxakKfiua5y2-mkyU0ug8MXxV4biHuOityz1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "LbLQhonBqzxHU6B-L--Vq",
+      "sourceHandle": "z2",
+      "target": "NStw6bi_pPB49K41BFSgo",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-LbLQhonBqzxHU6B-L--Vqz2-thfnymb_UIiKxakKfiua5y1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "NStw6bi_pPB49K41BFSgo",
+      "sourceHandle": "x2",
+      "target": "jvp43wFkKlGQX2y7IxkbM",
+      "targetHandle": "w2",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-thfnymb_UIiKxakKfiua5x2-jvp43wFkKlGQX2y7IxkbMw2",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "NStw6bi_pPB49K41BFSgo",
+      "sourceHandle": "y2",
+      "target": "I7_mX4h-Yywp1YyTJRKXI",
+      "targetHandle": "z1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-NStw6bi_pPB49K41BFSgoy2-thfnymb_UIiKxakKfiua5z1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "I7_mX4h-Yywp1YyTJRKXI",
+      "sourceHandle": "w2",
+      "target": "yI6XiNW04EL78UL4lkVgd",
+      "targetHandle": "x1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-thfnymb_UIiKxakKfiua5w2-yI6XiNW04EL78UL4lkVgdx1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "KO3viVIJJREtxXxsocN7j",
+      "sourceHandle": "x2",
+      "target": "DfrCkbD-HEHwLymv10zb5",
+      "targetHandle": "w2",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-akVNUPOqaTXaSHoQFlkP_x2-DfrCkbD-HEHwLymv10zb5w2",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "I7_mX4h-Yywp1YyTJRKXI",
+      "sourceHandle": "y2",
+      "target": "DfrCkbD-HEHwLymv10zb5",
+      "targetHandle": "z1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-I7_mX4h-Yywp1YyTJRKXIy2-DfrCkbD-HEHwLymv10zb5z1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "DfrCkbD-HEHwLymv10zb5",
+      "sourceHandle": "y2",
+      "target": "thfnymb_UIiKxakKfiua5",
+      "targetHandle": "z1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-DfrCkbD-HEHwLymv10zb5y2-thfnymb_UIiKxakKfiua5z1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "MnDgQq9Vcxsu3wDqv5uh2",
+      "sourceHandle": "z2",
+      "target": "XL9XOV2h0BAuA5cFcM5L_",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-MnDgQq9Vcxsu3wDqv5uh2z2-XL9XOV2h0BAuA5cFcM5L_y1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "MnDgQq9Vcxsu3wDqv5uh2",
+      "sourceHandle": "z2",
+      "target": "RvDfKoa_HIW3QDBfkPv3m",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-MnDgQq9Vcxsu3wDqv5uh2z2-RvDfKoa_HIW3QDBfkPv3my1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "MnDgQq9Vcxsu3wDqv5uh2",
+      "sourceHandle": "z2",
+      "target": "kiCTo0U6VgNON8rv_Ktlj",
+      "targetHandle": "y2",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-MnDgQq9Vcxsu3wDqv5uh2z2-kiCTo0U6VgNON8rv_Ktljy2",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "MnDgQq9Vcxsu3wDqv5uh2",
+      "sourceHandle": "x2",
+      "target": "b4AP2OggxFAwsQtUwiUJJ",
+      "targetHandle": "y2",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-MnDgQq9Vcxsu3wDqv5uh2x2-nK1DhEXBKVhvSR1P_vzgjy2",
+      "selected": false,
+      "type": "smoothstep",
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "b4AP2OggxFAwsQtUwiUJJ",
+      "sourceHandle": "x2",
+      "target": "-AKmITUmSGIflJG-eGkm5",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-nK1DhEXBKVhvSR1P_vzgjx2--AKmITUmSGIflJG-eGkm5w1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "b4AP2OggxFAwsQtUwiUJJ",
+      "sourceHandle": "z2",
+      "target": "e_lwZ-a72-tAan2KDX6k3",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-b4AP2OggxFAwsQtUwiUJJz2-nK1DhEXBKVhvSR1P_vzgjy1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "e_lwZ-a72-tAan2KDX6k3",
+      "sourceHandle": "w2",
+      "target": "cQllxv7qGbRtM9O5llgN6",
+      "targetHandle": "x1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-nK1DhEXBKVhvSR1P_vzgjw2-cQllxv7qGbRtM9O5llgN6x1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "e_lwZ-a72-tAan2KDX6k3",
+      "sourceHandle": "x2",
+      "target": "zN7Ps1puD-YpHbKi1pHH8",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-nK1DhEXBKVhvSR1P_vzgjx2-zN7Ps1puD-YpHbKi1pHH8w1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "W-atg_Msa9uPLr6RXAKSb",
+      "sourceHandle": "w2",
+      "target": "HdWq9ue0JdwmwqSIN2OD_",
+      "targetHandle": "x1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-nK1DhEXBKVhvSR1P_vzgjw2-HdWq9ue0JdwmwqSIN2OD_x1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "e_lwZ-a72-tAan2KDX6k3",
+      "sourceHandle": "z2",
+      "target": "W-atg_Msa9uPLr6RXAKSb",
+      "targetHandle": "y2",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-e_lwZ-a72-tAan2KDX6k3z2-nK1DhEXBKVhvSR1P_vzgjy2",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "W-atg_Msa9uPLr6RXAKSb",
+      "sourceHandle": "x2",
+      "target": "KHcC5pFN3qLnsbPPKpYd2",
+      "targetHandle": "w2",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-W-atg_Msa9uPLr6RXAKSbx2-nK1DhEXBKVhvSR1P_vzgjw2",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "KHcC5pFN3qLnsbPPKpYd2",
+      "sourceHandle": "x2",
+      "target": "_5ht0PAdVOJWPzTRS1mVg",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-nK1DhEXBKVhvSR1P_vzgjx2-_5ht0PAdVOJWPzTRS1mVgw1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "KHcC5pFN3qLnsbPPKpYd2",
+      "sourceHandle": "y2",
+      "target": "UNlvRp6k3_RDoTAAIEfJ1",
+      "targetHandle": "z1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-KHcC5pFN3qLnsbPPKpYd2y2-nK1DhEXBKVhvSR1P_vzgjz1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "UNlvRp6k3_RDoTAAIEfJ1",
+      "sourceHandle": "w2",
+      "target": "K3RZ8ESxWCpLKHePF87Hy",
+      "targetHandle": "x1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-nK1DhEXBKVhvSR1P_vzgjw2-K3RZ8ESxWCpLKHePF87Hyx1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "UNlvRp6k3_RDoTAAIEfJ1",
+      "sourceHandle": "y2",
+      "target": "ydxyne6RzIDPHij1Z3CsN",
+      "targetHandle": "z1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-UNlvRp6k3_RDoTAAIEfJ1y2-ydxyne6RzIDPHij1Z3CsNz1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "ydxyne6RzIDPHij1Z3CsN",
+      "sourceHandle": "y2",
+      "target": "bRpeoo9zXrnZ2IHSI7JX4",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-ydxyne6RzIDPHij1Z3CsNy2-bRpeoo9zXrnZ2IHSI7JX4w1",
+      "selected": false,
+      "type": "smoothstep",
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "bRpeoo9zXrnZ2IHSI7JX4",
+      "sourceHandle": "x2",
+      "target": "H6-XGDjs4f-qbv13v5av0",
+      "targetHandle": "w2",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-bRpeoo9zXrnZ2IHSI7JX4x2-H6-XGDjs4f-qbv13v5av0w2",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "bRpeoo9zXrnZ2IHSI7JX4",
+      "sourceHandle": "z2",
+      "target": "gMHMjsh0i8paLZUH5mDX3",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "selected": false,
+      "selectable": true,
+      "focusable": true,
+      "id": "reactflow__edge-bRpeoo9zXrnZ2IHSI7JX4z2-gMHMjsh0i8paLZUH5mDX3y1"
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "DcDggX4OmmwvJGHwuV86t",
+      "sourceHandle": "z2",
+      "target": "txARr3lgTvy-vJCj5zAb1",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-DcDggX4OmmwvJGHwuV86tz2-txARr3lgTvy-vJCj5zAb1y1",
+      "selected": false,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "txARr3lgTvy-vJCj5zAb1",
+      "sourceHandle": "w2",
+      "target": "NvXAq1vN2wpncdW-yTL4c",
+      "targetHandle": "x1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-txARr3lgTvy-vJCj5zAb1w2-NvXAq1vN2wpncdW-yTL4cx1",
+      "selected": false,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "txARr3lgTvy-vJCj5zAb1",
+      "sourceHandle": "x2",
+      "target": "GV_zWF6rSWg5bqgiXhOEf",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-txARr3lgTvy-vJCj5zAb1x2-GV_zWF6rSWg5bqgiXhOEfw1",
+      "selected": false,
+      "focusable": true
+    }
+  ],
+  "certifyroi_content": {
+    "animation@bRpeoo9zXrnZ2IHSI7JX4": "# Animation\r\n\r\nAnimation in React can be achieved using various methods, such as CSS transitions, keyframes, or libraries like `react-spring`, `framer-motion`, and `GSAP` (GreenSock Animation Platform). CSS transitions are ideal for simple animations, where you can toggle classes or manipulate inline styles to create smooth transitions. For more complex and interactive animations, libraries like `react-spring` provide a declarative approach, allowing you to create animations by defining spring physics or interpolating values. `framer-motion` offers a rich API to handle complex animations, gestures, and even layout transitions with ease. `GSAP` is another powerful library that excels at creating high-performance animations, offering fine-grained control over every aspect of the animation process. These tools integrate seamlessly with React's component-driven architecture, enabling you to create responsive and dynamic user interfaces.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Framer Motion Docs](https://www.framer.com/motion/)\r\n- [@article@GSAP Docs](https://gsap.com/docs/v3/)\r\n- [@article@React Spring Docs](https://www.react-spring.dev/docs/getting-started)",
+    "api-calls@b4AP2OggxFAwsQtUwiUJJ": "# API Calls\r\n\r\nAPIs, short for Application Programming Interfaces, are software-to-software interfaces. Meaning, they allow different applications to talk to each other and exchange information or functionality. This allows businesses to access another business’s data, piece of code, software, or services in order to extend the functionality of their own products — all while saving time and money. There are several options available to make API calls from your React.js applications.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@AJAX and APIs](https://reactjs.org/docs/faq-ajax.html)\r\n- [@article@How to fetch data in React](https://www.robinwieruch.de/react-hooks-fetch-data/)",
+    "apollo@8nMbfGxe3STMbrAVcqHHh": "# Apollo\r\n\r\nApollo is a platform for building a unified graph, a communication layer that helps you manage the flow of data between your application clients (such as web and native apps) and your back-end services.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Apollo Website](https://www.apollographql.com)\r\n- [@article@Official Docs](https://www.apollographql.com/docs/)\r\n- [@video@Official YouTube Channel](https://www.youtube.com/c/ApolloGraphQL/)\r\n- [@video@GraphQL With React Tutorial - Apollo Client](https://www.youtube.com/watch?v=YyUWW04HwKY)\r\n- [@feed@Explore top posts about Apollo](https://app.daily.dev/tags/apollo?ref=roadmapsh)",
+    "ark-ui@kiCTo0U6VgNON8rv_Ktlj": "# Ark UI\r\n\r\nIt is a modern and versatile user interface framework designed to streamline the development of responsive and accessible web applications. It provides a `comprehensive set` of components and tools that simplify the process of building user interfaces, allowing developers to focus on functionality and design. With a strong emphasis on flexibility and ease of use, Ark UI enables rapid prototyping and `scalable solutions`, ensuring a consistent and polished user experience across various devices and platforms. Its modular architecture and extensive documentation make it an excellent choice for developers looking to enhance productivity and maintain high standards in their UI design.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Official Website](https://ark-ui.com/)\r\n- [@official@Official Website](https://ark-ui.com/react/docs/overview/introduction)\r\n- [@article@What is ARK UI?](https://shaxadd.medium.com/enhance-your-user-interfaces-with-ark-ui-a-comprehensive-guide-7e87dd0a79cf)\r\n- [@video@Hands On ARK UI](https://www.youtube.com/watch?v=zjo-77I0unk)",
+    "astro@_HoZkE7FH-v3wI_722ZTF": "# Astro\r\n\r\nAstro is the web framework for building content-driven websites like blogs, marketing, and e-commerce. Astro is best-known for pioneering a new frontend architecture to reduce JavaScript overhead and complexity compared to other frameworks. If you need a website that loads fast and has great SEO, then Astro is for you.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Astro Website](https://astro.build/)\r\n- [@video@Astro Crash Course in 60 Minutes](https://www.youtube.com/watch?v=NniT0vKyn-E)\r\n- [@video@How To: Add/Integrate React.js and TailwindCss into Astro framework](https://www.youtube.com/watch?v=d6CsWTVa42o)",
+    "axios@ElqWQClryfSYdL7P_mgYK": "# Axios\r\n\r\nThe most common way for frontend programs to communicate with servers is through the HTTP protocol. You are probably familiar with the Fetch API and the XMLHttpRequest interface, which allows you to fetch resources and make HTTP requests.\r\n\r\nAxios is a client HTTP API based on the XMLHttpRequest interface provided by browsers.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Axios Getting Started](https://axios-http.com/docs/intro)\r\n- [@article@How to make HTTP requests with Axios](https://blog.logrocket.com/how-to-make-http-requests-like-a-pro-with-axios/#why)\r\n- [@feed@Explore top posts about Axios](https://app.daily.dev/tags/axios?ref=roadmapsh)",
+    "chakra-ui@uqphqAnlcJOLnwHZs5jWu": "# Chakra UI\r\n\r\nChakra UI is a simple, modular and accessible component library that gives you the building blocks you need to build your React applications.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Chakra UI Website](https://chakra-ui.com/)\r\n- [@article@Chakra UI Official Getting Started](https://chakra-ui.com/docs/getting-started)\r\n- [@video@Official Getting Started Video](https://youtu.be/wI2vqXsjsIo)\r\n- [@video@Chakra UI Crash Course](https://youtu.be/s-bIsz-NR3c)",
+    "cli-tools@tU4Umtnfu01t9gLlnlK6b": "# CLI Tools\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@vite](https://vitejs.dev)\r\n- [@feed@Explore top posts about CLI](https://app.daily.dev/tags/cli?ref=roadmapsh)",
+    "component--libraries@thfnymb_UIiKxakKfiua5": "# Component / Libraries\r\n\r\nReact component libraries are collections of pre-built, reusable components that can be used to speed up the development process. They can be styled using CSS in various ways, including traditional CSS files, CSS modules, and CSS-in-JS solutions like styled-components.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@MUI: React Component Library](https://mui.com/)\r\n- [@article@NextUI.org](https://nextui.org/)",
+    "component-lifecycle@8OBlgDRUg-CTgDXY-QHyO": "# Component Life Cycle\r\n\r\nReact components have a lifecycle consisting of three phases: Mounting, Updating, and Unmounting along with several “lifecycle methods” that you can override to run code at particular times in the process.\r\n\r\nIt is not recommended to use lifecycle methods manually. Instead, use the useEffect hook with functional components.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Lifecycle of Reactive Effects](https://react.dev/learn/lifecycle-of-reactive-effects)\r\n- [@official@Class Component](https://react.dev/reference/react/Component)\r\n- [@article@React component lifecycle: React lifecycle methods & hooks](https://tsh.io/blog/react-component-lifecycle-methods-vs-hooks/)\r\n- [@article@The React lifecycle: methods and hooks explained](https://retool.com/blog/the-react-lifecycle-methods-and-hooks-explained#react-hooks-and-the-component-lifecycle)\r\n- [@article@React Lifecycle: Methods & Hooks In Detail](https://www.bairesdev.com/blog/react-lifecycle-methods-hooks/)\r\n- [@article@lifecycle diagram](https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/)",
+    "components@79K4xgljcoSHkCYI1D55O": "# Components\r\n\r\nComponents are the building blocks of React applications. They let us split the UI into independent, reusable pieces, and think about each piece in isolation.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Creating and nesting components](https://react.dev/learn#components)\r\n- [@article@Explore the different types of components in React](https://www.robinwieruch.de/react-component-types/)\r\n- [@article@What is the difference between components, elements, and instances?](https://www.robinwieruch.de/react-element-component/)\r\n- [@video@Components & Templates in React](https://www.youtube.com/watch?v=9D1x7-2FmTA)",
+    "composition@4T59gdcwdXqj9kCuK7cfp": "# Composition vs Inheritance\r\n\r\nReact has a powerful composition model, and it is recommended to use composition instead of inheritance to reuse code between components.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Passing JSX as children](https://react.dev/learn/passing-props-to-a-component#passing-jsx-as-children)\r\n- [@article@Composition vs Inheritance](https://reactjs.org/docs/composition-vs-inheritance.html)\r\n- [@article@How to perform component composition in React](https://www.robinwieruch.de/react-component-composition/)\r\n- [@article@Achieving Reusability With React Composition](https://formidable.com/blog/2021/react-composition/)",
+    "conditional-rendering@aE6XBgH23135_9QmD4ff2": "# Conditional Rendering\r\n\r\nIn React, you can create distinct components that encapsulate behavior you need. Then, you can render only some of them, depending on the state of your application.\r\n\r\nConditional rendering in React works the same way conditions work in JavaScript. Use JavaScript operators like [if](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/if...else) or the [conditional operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator) to create elements representing the current state, and let React update the UI to match them.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Conditional Rendering](https://react.dev/learn/conditional-rendering)\r\n- [@article@Different techniques for conditional rendering in React](https://www.robinwieruch.de/conditional-rendering-react/)\r\n- [@video@Conditional rendering in React](https://www.youtube.com/watch?v=4oCVDkb_EIs)",
+    "context@10uL0r388lKh8pWYWqRZD": "# Context\r\n\r\nContext provides a way to pass data through the component tree without having to pass props down manually at every level.\r\n\r\nIn a typical React application, data is passed top-down (parent to child) via props, but such usage can be cumbersome for certain types of props (e.g. locale preference, UI theme) that are required by many components within an application. Context provides a way to share values like these between components without having to explicitly pass a prop through every level of the tree.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Passing Data Deeply with Context](https://react.dev/learn/passing-data-deeply-with-context)\r\n- [@article@State with useContext and useState/useReducer](https://www.robinwieruch.de/react-state-usereducer-usestate-usecontext/)\r\n- [@video@React Context API Crash Course](https://www.youtube.com/watch?v=t9WmZFnE6Hg)",
+    "creating-custom-hooks@HX75SExuzR5AP7TQ94qid": "# Writing Custom Hooks\r\n\r\nBuilding your own Hooks lets you extract component logic into reusable functions.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Reusing Logic with Custom Hooks](https://react.dev/learn/reusing-logic-with-custom-hooks)\r\n- [@article@How to create a custom Hook (2) followed by Examples](https://www.robinwieruch.de/react-custom-hook/)\r\n- [@video@Custom Hooks in React](https://www.youtube.com/watch?v=I2Bgi0Qcdvc)\r\n- [@feed@Explore top posts about React Hooks](https://app.daily.dev/tags/react-hooks?ref=roadmapsh)",
+    "css-modules@awoEhwPKjUcR84XGL6Som": "# CSS Modules\r\n\r\nCSS files in which all class names and animation names are scoped locally by default.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@opensource@Project GitHub Repository](https://github.com/css-modules/css-modules)\r\n- [@article@Using CSS Modules In React App](https://medium.com/@ralph1786/using-css-modules-in-react-app-c2079eadbb87)\r\n- [@video@CSS Modules: Why are they great?](https://www.youtube.com/watch?v=pKMWU9OrA2s)\r\n- [@feed@Explore top posts about CSS](https://app.daily.dev/tags/css?ref=roadmapsh)",
+    "cypress@zN7Ps1puD-YpHbKi1pHH8": "# Cypress\r\n\r\nCypress framework is a JavaScript-based end-to-end testing framework built on top of Mocha – a feature-rich JavaScript test framework running on and in the browser, making asynchronous testing simple and convenient. It also uses a BDD/TDD assertion library and a browser to pair with any JavaScript testing framework.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Official Website](https://www.cypress.io/)\r\n- [@article@Official Documentation](https://docs.cypress.io/guides/overview/why-cypress#Other)\r\n- [@video@Cypress End-to-End Testing](https://www.youtube.com/watch?v=7N63cMKosIE)\r\n- [@feed@Explore top posts about Cypress](https://app.daily.dev/tags/cypress?ref=roadmapsh)",
+    "error-boundaries@gMHMjsh0i8paLZUH5mDX3": "# Error Boundaries\r\n\r\nIn the past, JavaScript errors inside components used to corrupt React’s internal state and cause it to emit cryptic errors on next renders. These errors were always caused by an earlier error in the application code, but React did not provide a way to handle them gracefully in components, and could not recover from them.\r\n\r\nError boundaries are React components that catch JavaScript errors anywhere in their child component tree, log those errors, and display a fallback UI instead of the component tree that crashed. Error boundaries catch errors during rendering, in lifecycle methods, and in constructors of the whole tree below them.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Error Boundaries in React](https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary)",
+    "events@Nex2HcTOYIbfqUzXyxSMY": "# Events\r\n\r\nHandling events with React elements is very similar to handling events on DOM elements. There are some syntax differences:\r\n\r\n*   React events are named using camelCase, rather than lowercase.\r\n*   With JSX you pass a function as the event handler, rather than a string.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Responding to Events](https://react.dev/learn/responding-to-events)\r\n- [@official@React Event Object (Synthetic Event)](https://react.dev/reference/react-dom/components/common#react-event-object)\r\n- [@article@React Event Handler](https://www.robinwieruch.de/react-event-handler/)",
+    "formik@gr1CaLvL7tFOkIRywSsID": "# Formik\r\n\r\nFormik is another famous opensource form library that helps with getting values in and out of form state, validation and error messages, and handling form submissions.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Official Website — Formik](https://formik.org/)\r\n- [@opensource@formik/formik](https://github.com/formik/formik)\r\n- [@video@Formik - Building React Forms easier](https://www.youtube.com/watch?v=khGypss-RJs)\r\n- [@video@React Formik Tutorial with Yup (React Form Validation)](https://www.youtube.com/watch?v=7Ophfq0lEAY)",
+    "forms@KHcC5pFN3qLnsbPPKpYd2": "# Forms\r\n\r\nAlthough you can build forms using vanilla React, it normally requires a lot of boilerplate code. This is because the form is built using a combination of state and props. To make it easier to manage forms, we use some sort of library.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@How to use Forms in React](https://www.robinwieruch.de/react-form/)\r\n- [@video@React Forms: the SIMPLEST way](https://www.youtube.com/watch?v=CT-72lTXdPg)",
+    "framer-motion@H6-XGDjs4f-qbv13v5av0": "# Framer Motion\r\n\r\nFramer Motion is a popular open-source motion library for React that allows developers to create sophisticated animations and interactions with ease. It is designed to be simple to use yet powerful, providing a rich set of tools to animate elements in a declarative way.\r\n\r\nIt powers the amazing animations and interactions in Framer, the web builder for creative pros. Zero code, maximum speed.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Framer Motion Website](https://www.framer.com/motion/introduction/)\r\n- [@video@Framer Motion Crash Course with React & TS](https://www.youtube.com/watch?v=hjbxaYTMhy0&list=PLA4qBVt61k3Phpwt7uqaptIg9NYZ5aNu_)",
+    "frameworks@W-atg_Msa9uPLr6RXAKSb": "# SSR Frameworks\r\n\r\nServer-side rendering (SSR) is a technique for rendering a JavaScript application on the server, rather than in the browser. This can improve the performance and user experience of a web application, as the initial render of the application is done on the server and the content is sent to the browser as a fully-rendered HTML page.\r\n\r\nThere are several frameworks and libraries available for server-side rendering React applications, most common being Next.js and Remix:\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Next.js](https://nextjs.org/)\r\n- [@article@Remix](https://remix.run/)\r\n- [@video@Next.js 14 Full Course 2024](https://www.youtube.com/watch?v=wm5gMKuwSYk)\r\n- [@video@Remix Crash Course](https://www.youtube.com/watch?v=RBYJTop1e-g)",
+    "functional-components@8mw4TxlLN4ZKAlLl-_NVV": "# Functional Components\r\n\r\nFunctional components are some of the more common components that will come across while working in React. These are simply JavaScript functions. We can create a functional component to React by writing a JavaScript function. These functions may or may not receive data as parameters. In the functional Components, the return value is the JSX code to render to the DOM tree. Functional components can also have state which is managed using React hooks.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Functional Components and Props](https://react.dev/reference/react/Component)\r\n- [@official@Your first component](https://react.dev/learn/your-first-component)\r\n- [@official@Passing props to a component](https://react.dev/learn/passing-props-to-a-component)\r\n- [@article@Functional Components in React](https://www.robinwieruch.de/react-function-component/)\r\n- [@video@React JS Functional Components](https://www.youtube.com/watch?v=NJ_qbsLf52w)\r\n- [@feed@Explore top posts about React](https://app.daily.dev/tags/react?ref=roadmapsh)",
+    "gsock@y2dI1DVLWKAkv6VRpgaQa": "# GSock\r\n\r\n`GSAP` (GreenSock Animation Platform) is a framework-agnostic JavaScript animation library that turns developers into animation superheroes. Build high-performance animations that work in every major browser. Animate CSS, SVG, canvas, React, Vue, WebGL, colors, strings, motion paths, generic objects...anything JavaScript can touch!\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@GSAP: Homepage](https://gsap.com/docs/v3/)\r\n- [@article@The Beginner's Guide to the GreenSock Animation Platform](https://www.freecodecamp.org/news/the-beginners-guide-to-the-greensock-animation-platform-7dc9fd9eb826/)\r\n- [@video@Intro to Greensock Web Animation](https://www.youtube.com/watch?v=EOa7ccPWvXg)",
+    "headless-component-libraries@MnDgQq9Vcxsu3wDqv5uh2": "# Headless Component Libraries\r\n\r\nHeadless component libraries have some powerful state, logic and data management tools that do not enforce any UI structure. Consequently, developers are able to build custom UI components with unique styles but that still benefit from strong reusable logics. This kind of library simplifies complex behaviors and accessibility issues in outdoor environments allowing you to create innovative interfaces. With headless components, developers keep code clean and maintainable as a result of the reusability aspect inherent in these, this also guarantees efficient and accessible components enhancing application quality.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@What are headless components?](https://dev.to/verthon/headless-ui-libraries-the-key-to-flexible-and-accessible-user-interfaces-546p)\r\n- [@article@Headless Components: A Comprehensive Guide](https://blog.logrocket.com/the-complete-guide-to-building-headless-interface-components-in-react/)\r\n- [@video@Rise of Headless Components](https://www.youtube.com/watch?v=_WtVG_pKsxM)",
+    "high-order-components@zOENl96GUZRw2PP2KxIck": "# High Order Components\r\n\r\nA higher-order component (HOC) is an advanced technique in React for reusing component logic. HOCs are not part of the React API, per se. They are a pattern that emerges from React’s compositional nature.\r\n\r\nConcretely, a higher-order component is a function that takes a component and returns a new component.\r\n\r\nHigher-order components are not commonly used in modern React code. In order to reuse logic, React hooks are mainly used now.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@High-Order Components](https://reactjs.org/docs/higher-order-components.html)\r\n- [@article@How to create a Higher-Order Component](https://www.robinwieruch.de/react-higher-order-components/)\r\n- [@video@Learn React Higher Order Component (HOC) in 10 Minutes](https://youtu.be/J5P0q7EROfw?si=-8s5h1b0mZSGVgLt)\r\n- [@video@ReactJS Tutorial - Higher Order Components (Part 1)](https://www.youtube.com/watch?v=B6aNv8nkUSw)\r\n- [@video@ReactJS Tutorial - Higher Order Components (Part 2)](https://www.youtube.com/watch?v=rsBQj6X7UK8)\r\n- [@video@ReactJS Tutorial - Higher Order Components (Part 3)](https://www.youtube.com/watch?v=l8V59zIdBXU)",
+    "hooks-best-practices@mkyU0ug8MXxV4biHuOity": "# Hooks Best Practices\r\n\r\nTo fully leverage the capabilities of React Hooks, it is crucial to adopt best practices that not only enhance code readability but also optimize performance. By adhering to these practices, developers can create cleaner, more maintainable components that make the most of React's powerful features, leading to a more efficient and enjoyable development experience.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Rules of Hooks](https://react.dev/reference/rules/rules-of-hooks/)\r\n- [@article@React Hooks Best Practices: Unlocking Efficiency and Elegance](https://medium.com/womenintechnology/react-hooks-best-practices-unlocking-efficiency-and-elegance-da23f7e1418a)\r\n- [@article@Mastering React Hooks: Best Practices and Common Pitfalls](https://dev.to/codesensei/mastering-react-hooks-best-practices-and-common-pitfalls-3d9i)\r\n- [@article@React Hooks Cheat Sheet: Best Practices with Examples](https://blog.logrocket.com/react-hooks-cheat-sheet-solutions-common-problems/)\r\n- [@article@React Custom Hooks: Best Practices and Examples](https://utopia-insights.dev/react-custom-hooks-best-practices-and-examples/)",
+    "hooks@LbLQhonBqzxHU6B-L--Vq": "# Hooks\r\n\r\nHooks were introduced in React 16.8 and they let us use React's features-like managing your component's state and or performing an after effect when certain changes occur in state(s) without writing a class.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Hooks Reference](https://react.dev/reference/react)\r\n- [@feed@Explore top posts about React Hooks](https://app.daily.dev/tags/react-hooks?ref=roadmapsh)",
+    "jest@opa61u9gYgSpoPtxp58wu": "# Jest\r\n\r\nJest is a delightful JavaScript Testing Framework with a focus on simplicity. It works with projects using: Babel, TypeScript, Node, React, Angular, Vue and more!\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Jest Website](https://jestjs.io/)\r\n- [@article@Testing JavaScript with Jest on Vultr](https://developer.mozilla.org/en-US/blog/test-javascript-with-jest-on-vultr/)\r\n- [@feed@Explore top posts about Jest](https://app.daily.dev/tags/jest?ref=roadmapsh)",
+    "jotai@yI6XiNW04EL78UL4lkVgd": "# Jotai\r\n\r\nJotai takes an atomic approach to global React state management.\r\n\r\nBuild state by combining atoms and renders are automatically optimized based on atom dependency. This solves the extra re-render issue of React context, eliminates the need for memoization, and provides a similar developer experience to signals while maintaining a declarative programming model.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Official Website: Jotai](https://jotai.org/)\r\n- [@article@State Management on React - Jotai](https://dev.to/kevin-uehara/state-management-on-react-part-3-jotai-i7f)\r\n- [@video@Jotai React - Better Global State Management](https://www.youtube.com/watch?v=ZcKzPZN7Ids)",
+    "jsx@WREBxWSNQDD_6fzpHL6CE": "# JSX\r\n\r\nJSX stands for JavaScript XML. It allows writing HTML in JavaScript and converts the HTML tags into React elements.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Writing markup with JSX](https://react.dev/learn/writing-markup-with-jsx)\r\n- [@official@JavaScript in JSX with Curly Braces](https://react.dev/learn/javascript-in-jsx-with-curly-braces)\r\n- [@article@Working with JSX - React - CodeGuage](https://www.codeguage.com/courses/react/jsx)\r\n- [@feed@Explore top posts about JSX](https://app.daily.dev/tags/jsx?ref=roadmapsh)",
+    "lists-and-keys@HeWVCPHqVnnbOn6zIim4K": "# Lists and Keys\r\n\r\nWhen you render lists in React, you can use the `key` prop to specify a unique key for each item. This key is used to identify which item to update when you want to update a specific item.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Lists and Keys](https://react.dev/learn/rendering-lists#keeping-list-items-in-order-with-key)\r\n- [@official@Rendering Lists](https://react.dev/learn/rendering-lists)\r\n- [@article@List components in React by Example](https://www.robinwieruch.de/react-list-component/)\r\n- [@article@Why do we need the key prop in React?](https://www.robinwieruch.de/react-list-key/)",
+    "material-ui@gy7eBxPOlwG8BvxHVLDQ9": "# Material UI\r\n\r\nMaterial UI is an open-source React component library that implements Google's Material Design.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Material UI website](https://mui.com/material-ui/getting-started/)\r\n- [@video@React Material UI Course](https://www.youtube.com/watch?v=BHEPVdfBAqE&list=PLC3y8-rFHvwh-K9mDlrrcDywl7CeVL2rO)\r\n- [@video@Material UI with React](https://www.youtube.com/watch?v=5cvg2qZwYrI)",
+    "mobile-applications@txARr3lgTvy-vJCj5zAb1": "# Mobile\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@React Native Official website](https://reactnative.dev/)\r\n- [@video@React Native Course for Beginners](https://www.youtube.com/watch?v=ZBCUegTZF7M)",
+    "mobx@1kbrCI5JS0c9wbzxXpgFU": "# MobX\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Official Website: MobX](https://mobx.js.org/)\r\n- [@article@How to Improve State Management in React with MobX](https://medium.com/whitespectre/how-to-improve-state-management-in-react-with-mobx-568808ff86a4)\r\n- [@video@Mobx React - State Management](https://www.youtube.com/watch?v=AgcaGGkYy_8)\r\n- [@video@MobX Tutorial with React and Typescript](https://www.youtube.com/watch?v=ElgfQdq-Htk)",
+    "nextjs@HdWq9ue0JdwmwqSIN2OD_": "# Next.js\r\n\r\nNext.js is an open-source development framework built on top of Node.js enabling React based web applications functionalities such as server-side rendering and generating static websites.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Official Website](https://nextjs.org/)\r\n- [@official@Official Docs for Getting Started](https://nextjs.org/docs/getting-started)\r\n- [@article@Mastering Next.js](https://masteringnextjs.com/)\r\n- [@video@Next.js Full course](https://www.youtube.com/watch?v=9P8mASSREYM&list=PLC3y8-rFHvwgC9mj0qv972IO5DmD-H0ZH)\r\n- [@video@Next.js for Beginners - freeCodeCamp](https://youtu.be/KjY94sAKLlw?si=orve81YcY8Fm2vDy)\r\n- [@feed@Explore top posts about JavaScript](https://app.daily.dev/tags/javascript?ref=roadmapsh)",
+    "panda-css@akVNUPOqaTXaSHoQFlkP_": "# Panda CSS\r\n\r\nPanda CSS is CSS-in-JS with build time generated styles, RSC compatible, multi-variant support, and best-in-class developer experience.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Official Website](https://panda-css.com)\r\n- [@official@Tutorials and videos to get started with Panda!](https://panda-css.com/learn)\r\n- [@article@Panda CSS – CSS-in-JS without Runtime Overhead](https://infinum.com/blog/panda-css-css-in-js-without-runtime-overhead/)\r\n- [@video@Panda CSS First Impressions | Theo Reacts](https://www.youtube.com/watch?v=UlY-Ixddjm0)",
+    "playwright@g39P0c6M2sHNoUPs0m8tr": "# Playwright\r\n\r\nPlaywright Test was created specifically to accommodate the needs of end-to-end testing. Playwright supports all modern rendering engines including Chromium, WebKit, and Firefox. Test on Windows, Linux, and macOS, locally or on CI, headless or headed with native mobile emulation of Google Chrome for Android and Mobile Safari.Playwright leverages the DevTools protocol to write powerful, stable automated tests.Playwright can actually see into and control the browser rather than relying on a middle translation layer, it allows for the simulation of more insightful and relevant user scenarios.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Official Website: Playwright](https://playwright.dev/)\r\n- [@article@Playwright Tutorial: Learn Basics and Setup](https://www.browserstack.com/guide/playwright-tutorial)\r\n- [@video@Get started with end-to-end testing: Playwright](https://www.youtube.com/playlist?list=PLQ6Buerc008ed-F9OksF7ek37wR3y916p)",
+    "portals@DcDggX4OmmwvJGHwuV86t": "# Portals\r\n\r\nPortals provide a first-class way to render children into a DOM node that exists outside the DOM hierarchy of the parent component.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Portals in React](https://react.dev/reference/react-dom/createPortal)\r\n- [@video@React Portals](https://www.youtube.com/watch?v=HpHLa-5Wdys)",
+    "props-vs-state@RFuy3Eho3mnW1GpP08BVw": "# Props vs State\r\n\r\nProps (short for “properties”) and state are both plain JavaScript objects. While both hold information that influences the output of component render, they are different in one important way: props get passed to the component (similar to function parameters) whereas state is managed within the component (similar to variables declared within a function).\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@State: A Component's Memory](https://react.dev/learn/state-a-components-memory)\r\n- [@article@How to use Props in React](https://www.robinwieruch.de/react-pass-props-to-component/)\r\n- [@article@What is the difference between state and props in React?](https://stackoverflow.com/questions/27991366/what-is-the-difference-between-state-and-props-in-react)\r\n- [@article@How to update state from props in React](https://www.robinwieruch.de/react-derive-state-props/)",
+    "radix-ui@XL9XOV2h0BAuA5cFcM5L_": "# Radix UI\r\n\r\nRadix UI is an open-source library designed to make it easier to create accessible and customizable User Interface (UI) components in React. It provides developers with a range of `unstyled`, fully `accessible` primitives, giving them complete control over the appearance and behavior of their UI elements.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Getting Started with Radix UI](https://www.radix-ui.com/themes/docs/overview/getting-started)\r\n- [@official@Official Website](https://www.radix-ui.com/)\r\n- [@article@What is Radix UI?](https://medium.com/@olivier.trinh/what-is-radix-ui-ff535bbb52d5)\r\n- [@video@Radix UI Course](https://www.youtube.com/playlist?list=PLlNdnoKwDZdwANQoaakE8-kYMyKFOETlo)",
+    "react-aria@RvDfKoa_HIW3QDBfkPv3m": "# React Aria\r\n\r\nReact Aria is style-free out of the box, allowing you to build custom designs to fit your application or design system using any styling and animation solution. Each component is broken down into individual parts with built-in states, render props, and slots that make styling a breeze.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Getting Started with React Aria](https://react-spectrum.adobe.com/react-aria/)\r\n- [@video@Why You Should Use React Aria Components](https://www.youtube.com/watch?v=lTPh6NGLAmk)",
+    "react-hook-form@_5ht0PAdVOJWPzTRS1mVg": "# React hook form\r\n\r\nReact hook form is an opensource form library for react. Performant, flexible and extensible forms with easy-to-use validation.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@opensource@react-hook-form/react-hook-form](https://github.com/react-hook-form/react-hook-form)\r\n- [@article@React Hook Form: Official Website](https://react-hook-form.com/)\r\n- [@feed@Explore top posts about React](https://app.daily.dev/tags/react?ref=roadmapsh)",
+    "react-native@NvXAq1vN2wpncdW-yTL4c": "# React Native\r\n\r\nReact Native is an open-source UI software framework created by Meta Platforms, Inc. It is used to develop applications for Android, Android TV, iOS, macOS, tvOS, Web, Windows and UWP by enabling developers to use the React framework along with native platform capabilities.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@React Native: Official Website](https://reactnative.dev/)\r\n- [@official@Official Getting Started](https://reactnative.dev/docs/getting-started)\r\n- [@feed@Explore top posts about React](https://app.daily.dev/tags/react?ref=roadmapsh)",
+    "react-router@-WjJBYCmRRj08n_9HxohY": "# react-router\r\n\r\nThere used to be Remix in this list but they announced to merge Remix into react-router after v7.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Official Website](https://remix.run/)\r\n- [@official@Announcement to merge Remix into react-router](https://remix.run/blog/merging-remix-and-react-router)",
+    "react-router@jvp43wFkKlGQX2y7IxkbM": "# React Router\r\n\r\nReact Router is a standard library for routing in React applications. It enables navigation between different views or components within a single-page application (SPA) without requiring the browser to reload the page. It provides a declarative way to define routes and map them to specific components, allowing users to seamlessly navigate through different parts of the application.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@React Router — Official Website](https://reactrouter.com/)\r\n- [@article@What is React Router?](https://www.w3schools.com/react/react_router.asp)\r\n- [@article@React Router V7: A Crash Course](https://dev.to/pedrotech/react-router-v7-a-crash-course-2m86)",
+    "react-spring@WzoB5B6SdOI4Mzv6U51nY": "# react spring\r\n\r\nReact Spring is a popular animation library for React that leverages the principles of spring physics to create smooth, natural-looking animations. Unlike traditional animation libraries that rely on keyframes and linear transitions, React Spring uses spring-based physics to produce fluid and realistic animations that can dynamically respond to user interactions and state changes.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@React Spring — Official Website](https://www.react-spring.dev/)\r\n- [@article@How to Create Interactive Animations Using React Spring](https://www.sitepoint.com/react-spring-interactive-animations/)\r\n- [@video@React Spring Crash Course](https://www.youtube.com/watch?v=f2vdduklY20&list=PLLnpHn493BHGrM7tAQL8qVtqwqzbuuE5_)",
+    "react-testing-library@cQllxv7qGbRtM9O5llgN6": "# React Testing Library\r\n\r\nThe React Testing Library is a very lightweight solution for testing React components. It provides light utility functions on top of react-dom and react-dom/test-utils, in a way that encourages better testing practices. Its primary guiding principle is: The more your tests resemble the way your software is used, the more confidence they can give you.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)\r\n- [@article@How to use React Testing Library](https://www.robinwieruch.de/react-testing-library/)\r\n- [@feed@Explore top posts about React](https://app.daily.dev/tags/react?ref=roadmapsh)",
+    "refs@_zNAOhFWMcWqP4oxNPCXF": "# Refs\r\n\r\nRefs provide a way to access DOM nodes or React elements created in the render method.\r\n\r\nIn the typical React dataflow, props are the only way that parent components interact with their children. To modify a child, you re-render it with new props. However, there are a few cases where you need to imperatively modify a child outside of the typical dataflow. The child to be modified could be an instance of a React component, or it could be a DOM element. For both of these cases, React provides an escape hatch.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Referencing Values with Refs](https://react.dev/learn/referencing-values-with-refs)\r\n- [@official@Manipulating the DOM with Refs](https://react.dev/learn/manipulating-the-dom-with-refs)\r\n- [@article@Examples of using refs in React](https://www.robinwieruch.de/react-ref/)\r\n- [@article@The Complete Guide to useRef() and Refs in React](https://dmitripavlutin.com/react-useref-guide/)\r\n- [@article@What Exactly Are Refs? - React - CodeGuage](https://www.codeguage.com/courses/react/refs)\r\n- [@video@Learn useRef in 11 Minutes - Web Dev Simplified](https://www.youtube.com/watch?v=t2ypzz6gJm0)",
+    "relay@cLfM342sZfsCwmPPxQpEI": "# Relay\r\n\r\nRelay is a JavaScript client used in the browser to fetch GraphQL data. It's a JavaScript framework developed by Facebook for managing and fetching data in React applications. It is built with scalability in mind in order to power complex applications like Facebook. The ultimate goal of GraphQL and Relay is to deliver instant UI-response interactions.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Official Website](https://relay.dev/)\r\n- [@official@Introduction to Relay modern](https://relay.dev/docs/)",
+    "render-props@vdumdIglnouf1KyGIGZnc": "# Render Props\r\n\r\nThe term 'render props' refers to a technique for sharing code between React components using a prop whose value is a function.\r\n\r\nA component with a render prop takes a function that returns a React element and calls it instead of implementing its own render logic.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Render Props in React](https://react.dev/learn/passing-props-to-a-component)\r\n- [@article@How to create a Render Prop Component](https://www.robinwieruch.de/react-render-props/)\r\n- [@article@Render Props Pattern](https://www.patterns.dev/posts/render-props-pattern/)",
+    "rendering@0uiGsC5SWavNdlFqizkKe": "# Rendering\r\n\r\nReact follows a declarative approach to rendering components, which means that developers specify what a component should look like, and React takes care of rendering the component to the screen. This is in contrast to an imperative approach, where developers would write code to manually manipulate the DOM (Document Object Model) to update the UI.\r\n\r\nThe virtual DOM (VDOM) is an important aspect of how React works. It is a lightweight in-memory representation of the DOM (Document Object Model), and it is used to optimize the rendering of components in a React application.\r\n\r\n*   Components are written as JavaScript classes or functions that define a render method. The render method returns a description of what the component should look like, using JSX syntax.\r\n*   When a component is rendered, React creates a virtual DOM (VDOM) representation of the component. The VDOM is a lightweight in-memory representation of the DOM, and it is used to optimize the rendering of components.\r\n*   React compares the VDOM representation of the component with the previous VDOM representation (if it exists). If there are differences between the two VDOMs, React calculates the minimum number of DOM updates needed to bring the actual DOM into line with the new VDOM.\r\n*   React updates the actual DOM with the minimum number of DOM updates needed to reflect the changes in the VDOM.\r\n\r\nThis process is known as reconciliation, and it is an important aspect of how React works. By using a declarative approach and a VDOM, React is able to optimize the rendering of components and improve the performance of web applications.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Render and Commit - Official Docs](https://react.dev/learn/render-and-commit)\r\n- [@article@Rendering in React - ui.dev](https://ui.dev/why-react-renders)\r\n- [@article@Fix the slow render before you fix the re-render](https://kentcdodds.com/blog/fix-the-slow-render-before-you-fix-the-re-render)",
+    "routers@NStw6bi_pPB49K41BFSgo": "# Routing\r\n\r\nRouting is an essential concept in Single Page Applications (SPA). When your application is divided into separated logical sections, and all of them are under their own URL, your users can easily share links among each other.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@How to use Routing in React JS: A Comprehensive Guide.](https://blog.logrocket.com/react-router-v6-guide/)\r\n- [@video@React Router 6 – Tutorial for Beginners.](https://www.youtube.com/watch?v=59IXY5IDrBA)",
+    "rtk-query@h49-tjEkKcq7d7ikRHIOx": "# rtk-query\r\n\r\n[RTK Query](https://redux-toolkit.js.org/rtk-query/overview) is a data fetching and caching tool that is included in the Redux Toolkit package. It is designed to simplify common use cases for fetching data, including caching, polling, and invalidation.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@RTK Query - Official Website](https://redux-toolkit.js.org/rtk-query/overview)",
+    "server-apis@SUeXDkmOLipdRP4fSrZOH": "# Server APIs\r\n\r\nThe react-dom/server APIs let you render React components to HTML on the server. These APIs are only used on the server at the top level of your app to generate the initial HTML. A [framework](https://react.dev/learn/start-a-new-react-project#production-grade-react-frameworks) may call them for you. Most of your components don’t need to import or use them.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Documentation For API](https://react.dev/reference/react-dom/server)",
+    "shadcn-ui@njKsYNkwTXPQ1NjlGKXab": "# Shadcn UI\r\n\r\nShadcn is an open-source framework providing pre-built, accessible, and customizable UI components for rapid web application development. It offers a streamlined approach to construct modern user interfaces.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Official Website](https://ui.shadcn.com/)\r\n- [@official@Documentation](https://ui.shadcn.com/docs)\r\n- [@article@Shadcn Guide](https://blog.logrocket.com/shadcn-ui-adoption-guide/)\r\n- [@video@Shadcn Setup and Tutorial](https://www.youtube.com/watch?v=v0_AT8zaLo8)",
+    "state-management@I7_mX4h-Yywp1YyTJRKXI": "# State Management\r\n\r\nApplication state management is the process of maintaining knowledge of an application's inputs across multiple related data flows that form a complete business transaction -- or a session -- to understand the condition of the app at any given moment. In computer science, an input is information put into the program by the user and state refers to the condition of an application according to its stored inputs -- saved as variables or constants. State can also be described as the collection of preserved information that forms a complete session.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@What is State Management?](https://www.techtarget.com/searchapparchitecture/definition/state-management)\r\n- [@article@Overview of State in React](https://www.robinwieruch.de/react-state/)",
+    "suspense@_F3WMxhzaK9F8_-zHDDMF": "# Suspense\r\n\r\nReact Suspense is a feature in React that allows components to \"suspend\" rendering while they are waiting for something to happen, such as data to be fetched from an API or an image to be loaded. Suspense allows developers to create a more seamless user experience by rendering a placeholder or fallback component while the component is waiting for the required data to be available.\r\n\r\nHere is a general overview of how React Suspense works:\r\n\r\n*   A component that uses Suspense wraps a component that may need to \"suspend\" rendering in a `Suspense` component.\r\n*   The wrapped component throws a promise when it needs to suspend rendering.\r\n*   The `Suspense` component catches the promise and renders a fallback component while the promise is pending.\r\n*   When the promise resolves, the wrapped component is rendered with the required data.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@React Suspense](https://react.dev/reference/react/Suspense)\r\n- [@article@React Suspense - A complete guide](https://hygraph.com/blog/react-suspense)",
+    "swr@-ea1KsXEyz-4voHXklG_J": "# SWR\r\n\r\nSWR is a React Hooks library for data fetching.\r\n\r\nThe name “SWR” is derived from stale-while-revalidate, a cache invalidation strategy popularized by HTTP RFC 5861. SWR first returns the data from cache (stale), then sends the request (revalidate), and finally comes with the up-to-date data again.\r\n\r\nWith just one hook, you can significantly simplify the data fetching logic in your project.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@SWR: React Hooks for Data Fetching](https://swr.vercel.app/)\r\n- [@feed@Explore top posts about Next.js](https://app.daily.dev/tags/nextjs?ref=roadmapsh)",
+    "tailwind-css@KO3viVIJJREtxXxsocN7j": "# Tailwind CSS\r\n\r\nCSS Framework that provides atomic CSS classes to help you style components e.g. `flex`, `pt-4`, `text-center` and `rotate-90` that can be composed to build any design, directly in your markup.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Tailwind Website](https://tailwindcss.com)\r\n- [@video@Tailwind CSS Full Course for Beginners](https://www.youtube.com/watch?v=lCxcTsOHrjo)\r\n- [@video@Tailwind CSS Crash Course](https://www.youtube.com/watch?v=UBOj6rqRUME)\r\n- [@video@Should You Use Tailwind CSS?](https://www.youtube.com/watch?v=hdGsFpZ0J2E)\r\n- [@video@Official Screencasts](https://www.youtube.com/c/TailwindLabs/videos)\r\n- [@feed@Explore top posts about Tailwind CSS](https://app.daily.dev/tags/tailwind-css?ref=roadmapsh)",
+    "tanstack-query@5EPmbiNdP_vhIXclv_GjV": "# TanStack Query\r\n\r\nTanStack Query, previously known as React Query, is a powerful library for fetching, caching, synchronizing, and updating server state in your React applications. It simplifies the process of handling asynchronous data, reducing boilerplate code and improving the user experience by providing features like automatic retries, background updates, and optimistic updates. It essentially helps you manage data fetching and caching in a declarative and efficient way.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@TanStack Query](https://tanstack.com/query/latest)\r\n- [@opensource@TanStack Query](https://github.com/TanStack/query)\r\n- [@article@TanStack for Beginners: A Complete Guide & Tutorial](https://codeparrot.ai/blogs/tanstack-for-beginners-a-complete-guide-tutorial)\r\n- [@video@TanStack Query - How to become a React Query God](https://www.youtube.com/watch?v=mPaCnwpFvZY)\r\n- [@feed@Explore top posts about React](https://app.daily.dev/tags/react?ref=roadmapsh)",
+    "tanstack-router@zWL8VLx_g0SWubavJDs6i": "# TanStack Router\r\n\r\nTanStack Router is a powerful router for building React applications, offering a range of advanced features to streamline development.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@TanStack Router Documentation](https://tanstack.com/router/latest/docs/framework/react/overview)\r\n- [@video@TanStack Router - Crash Course](https://www.youtube.com/watch?v=4sslBg8LprE&list=PLOQjd5dsGSxJilh0lBofeY8Qib98kzmF5)\r\n- [@video@TanStack Router Vite: Ultimate Guide for Beginners](https://www.youtube.com/watch?v=AN9rD7y9MS8)",
+    "testing@e_lwZ-a72-tAan2KDX6k3": "# Testing\r\n\r\nA key to building software that meets requirements without defects is testing. Software testing helps developers know they are building the right software. When tests are run as part of the development process (often with continuous integration tools), they build confidence and prevent regressions in the code.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@What is Software Testing?](https://www.guru99.com/software-testing-introduction-importance.html)\r\n- [@article@Testing Pyramid](https://www.browserstack.com/guide/testing-pyramid-for-test-automation)\r\n- [@feed@Explore top posts about Testing](https://app.daily.dev/tags/testing?ref=roadmapsh)",
+    "types--validation@UNlvRp6k3_RDoTAAIEfJ1": "# Types & Validation\r\n\r\n**Typescript** provides a static type system that helps you in avoiding mistakes during the development and provides other features (e.g. IDE support) that help you improve your productivity.\r\n\r\nOne thing you should note is that TypeScript can only help you avoid mistakes during the development. We can't rely on it to validate a client's input. **Zod** is a powerful validation library that allows us to validate: form input, local storage, API contracts and much more using their typesafe implementation.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@What is TypeScript and why would I use it in place of JavaScript?](https://stackoverflow.com/questions/12694530/what-is-typescript-and-why-would-i-use-it-in-place-of-javascript)\r\n- [@article@When Use Zod](https://www.totaltypescript.com/when-should-you-use-zod)",
+    "typescript@ElgRwv5LSVg5FXGx-2K2s": "# TypeScript\r\n\r\nTypeScript is a strongly typed programming language that builds on JavaScript, giving you better tooling at any scale.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Official Website](https://www.typescriptlang.org/)\r\n- [@article@The TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/intro.html)\r\n- [@video@TypeScript for Beginners](https://www.youtube.com/watch?v=BwuLxPH8IDs)\r\n- [@feed@Explore top posts about TypeScript](https://app.daily.dev/tags/typescript?ref=roadmapsh)",
+    "urql@9M5jRu0pj8KMvg9f-2oqZ": "# urql\r\n\r\nurql (Universal React Query Library) is a library for managing GraphQL data in React applications. It is developed and maintained by Formidable Labs and is available as open-source software.\r\n\r\nurql is designed to be easy to use and flexible, with a simple API for performing GraphQL queries and mutations. It is based on the concept of a client, which is used to manage the GraphQL data for an application. The client provides a set of utilities and APIs for managing GraphQL data, including:\r\n\r\n*   executeQuery: A utility for executing a GraphQL query.\r\n*   executeMutation: A utility for executing a GraphQL mutation.\r\n*   useQuery: A hook for executing a GraphQL query and accessing the result in a component.\r\n*   useMutation: A hook for executing a GraphQL mutation and accessing the result in a component.\r\n\r\nurql is often used as an alternative to other GraphQL libraries, such as Apollo Client, because of its simplicity and lightweight size. It is particularly well-suited for small to medium-sized React applications where the complexity of other GraphQL libraries may not be required.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@urql - Formidable Labs](https://formidable.com/open-source/urql/)",
+    "usecallback@dgoDNDtW2_q9R9yhkXrcz": "# useCallback\r\n\r\n`useCallback` is a React hook that returns a memoized version of a callback function. It's used to optimize performance by preventing unnecessary re-renders. Specifically, it helps avoid recreating functions when their dependencies haven't changed, which can be useful when passing callbacks to child components that rely on referential equality to prevent re-rendering.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@React Documentation on useCallback](https://react.dev/reference/react/useCallback)\r\n- [@article@useCallback Explained in Depth](https://kentcdodds.com/blog/usememo-and-usecallback)\r\n- [@article@useCallback Hook: An Introductory Guide](https://dmitripavlutin.com/dont-overuse-react-usecallback/)",
+    "usecontext@D5_O-uElftYGQr_bTU_se": "# useContext\r\n\r\nThe `useContext` Hook lets us share data between components without having to pass props down through every level of the component tree. This is particularly useful when many components need to access the same data or when components are deeply nested.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Using useContext](https://react.dev/reference/react/useContext)\r\n- [@official@Explore the concept of context](https://react.dev/learn/passing-data-deeply-with-context)\r\n- [@video@Learn useContext In 13 Minutes](https://www.youtube.com/watch?v=5LrDIWkK_Bc)",
+    "useeffect@8OnzX03hkZ9K9i__tjmFX": "# useEffect Hook\r\n\r\n`useEffect` is a special hook that lets you run side effects in React. It is similar to componentDidMount and componentDidUpdate, but it only runs when the component (or some of its props) changes and during the initial mount.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Using the Effect Hook](https://react.dev/reference/react/useEffect)\r\n- [@article@React useEffect Hook by Example](https://www.robinwieruch.de/react-useeffect-hook/)",
+    "usememo@w3bNp7OkehI1gjx8NzlC8": "# useMemo\r\n\r\n`useMemo` is a React hook that memoizes the result of a function. It is used to optimize performance by caching the result of a function and returning the cached result when the inputs to the function have not changed.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@useMemo Docs](https://react.dev/reference/react/useMemo)\r\n- [@article@useMemo and useCallback - Josh W. Comeau](https://www.joshwcomeau.com/react/usememo-and-usecallback/)",
+    "usereducer@v48Mv0wQqjXbvy8x6gDjQ": "# useReducer\r\n\r\n`useReducer`: An alternative to useState. Accepts a reducer of type (state, action) => newState, and returns the current state paired with a dispatch method. (If you’re familiar with Redux, you already know how this works.)\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@useReducer Docs](https://react.dev/reference/react/useReducer)\r\n- [@article@The React useReducer Hook](https://www.telerik.com/blogs/react-usereducer-hook)\r\n- [@article@A guide to the React useReducer Hook](https://blog.logrocket.com/react-usereducer-hook-ultimate-guide/)\r\n- [@video@Learn React Hooks: useReducer - Simply Explained!](https://www.youtube.com/watch?v=rgp_iCVS8ys&t)",
+    "useref@t_laNdMmdLApYszqXRdWg": "# useRef\r\n\r\n`useRef` is a React hook that provides a way to create a mutable reference that persists across component re-renders. It stores a value that doesn't cause re-renders when it changes.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@useRef](https://react.dev/reference/react/useRef)\r\n- [@video@WebDevSimplified](https://www.youtube.com/watch?v=t2ypzz6gJm0)",
+    "usestate@FK59Zsm5ENA9g11XWCan_": "# useState Hook\r\n\r\n`useState` hook is used to manage the state of a component in functional components. Calling `useState` returns an array with two elements: the current state value and a function to update the state.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Using the State Hook](https://react.dev/reference/react/useState)\r\n- [@article@React useState Hook by Example](https://www.robinwieruch.de/react-usestate-hook/)",
+    "usestate@YEpkbNzEMzS6wAKg85J_N": "# useState",
+    "vite@y9ToYDix-koRbR6FLydFw": "# Vite\r\n\r\nVite is a build tool that aims to provide a faster and leaner development experience for modern web projects.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Vite Website](https://vitejs.dev)\r\n- [@official@Vite Documentation](https://vitejs.dev/guide)\r\n- [@video@Vite Crash Course](https://youtu.be/LQQ3CR2JTX8)\r\n- [@video@Vite Crash Course | Faster Alternative To CRA | 2023](https://www.youtube.com/watch?v=89NJdbYTgJ8)\r\n- [@feed@Explore top posts about Vite](https://app.daily.dev/tags/vite?ref=roadmapsh)",
+    "vitest@LULjhsPNONyI5912DKzPw": "# Vitest\r\n\r\nVitest is a fast Vite-native unit test framework with out-of-box ESM, TypeScript and JSX support. Works on React, Vue, Svelte and more projects created with Vite\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Vitest Website](https://vitest.dev/)\r\n- [@video@Testing with Vitest](https://www.youtube.com/watch?v=cM_AeQHzlGg)",
+    "writing-css@DfrCkbD-HEHwLymv10zb5": "# Styling\r\n\r\nWhile \"CSS in JS\" is the most predominant way of styling modern frontend applications, there are several different ways to style your React applications whether it is vanilla CSS, [CSS Modules](https://github.com/css-modules/css-modules), or [CSS in JS](https://css-tricks.com/a-thorough-analysis-of-css-in-js/) etc and each has several frameworks available.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Ways to CSS style a React application](https://www.robinwieruch.de/react-css-styling/)",
+    "zod@K3RZ8ESxWCpLKHePF87Hy": "# Zod\r\n\r\nZod is a TypeScript-first schema declaration and validation library. I'm using the term \"schema\" to broadly refer to any data type, from a simple string to a complex nested object.\r\n\r\nZod is designed to be as developer-friendly as possible. The goal is to eliminate duplicate type declarations. With Zod, you declare a validator once and Zod will automatically infer the static TypeScript type. It's easy to compose simpler types into complex data structures.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Zod Website](https://zod.dev/)\r\n- [@video@Learn Zod In 30 Minutes](https://www.youtube.com/watch?v=L6BE-U3oy80)",
+    "zustand@nl5imPsdY2oEWlg-9TTuk": "# Zustand\r\n\r\nZustand is a small, fast and scalable bearbones state-management solution using simplified flux principles. Has a comfy api based on hooks, isn't boilerplatey or opinionated.\r\n\r\nZustand is often used as an alternative to other state management libraries, such as Redux and MobX, because of its simplicity and small size. It is particularly well-suited for small to medium-sized applications, where the complexity of larger state management libraries is not required.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@opensource@Zustand - Official Website](https://github.com/pmndrs/zustand)\r\n- [@opensource@Zustand Repository](https://github.com/pmndrs/zustand)\r\n- [@article@Working with Zustand](https://tkdodo.eu/blog/working-with-zustand)\r\n- [@article@Zustand - Official Documentation](https://docs.pmnd.rs/zustand/getting-started/introduction)\r\n- [@video@Zustand Tutorial for Beginners](https://www.youtube.com/watch?v=AYO4qHAnLQI&t)"
+  }
+}

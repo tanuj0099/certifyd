@@ -1,0 +1,5431 @@
+{
+  "nodes": [
+    {
+      "id": "CdLumO1g7RNbOkwUFkVC3",
+      "type": "horizontal",
+      "position": {
+        "x": 1216.3696984675892,
+        "y": 1636.8196545591995
+      },
+      "selected": true,
+      "data": {
+        "label": "horizontal node",
+        "style": {
+          "stroke": "#2B78E4",
+          "strokeWidth": 3.65,
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round"
+        }
+      },
+      "zIndex": 999,
+      "width": 157,
+      "height": 20,
+      "style": {
+        "width": 157,
+        "height": 20
+      },
+      "positionAbsolute": {
+        "x": 1216.3696984675892,
+        "y": 1636.8196545591995
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 157,
+        "height": 20
+      }
+    },
+    {
+      "id": "VheIOU0XKrEw_5M-Wv4yv",
+      "type": "section",
+      "position": {
+        "x": 1022.3252013753893,
+        "y": 1620.015947794886
+      },
+      "width": 195,
+      "height": 124,
+      "style": {
+        "width": 195,
+        "height": 124
+      },
+      "selected": true,
+      "data": {
+        "style": {
+          "backgroundColor": "#ffffff",
+          "borderColor": "#000000"
+        }
+      },
+      "positionAbsolute": {
+        "x": 1022.3252013753893,
+        "y": 1620.015947794886
+      },
+      "dragging": false,
+      "resizing": true,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 195,
+        "height": 124
+      }
+    },
+    {
+      "id": "8Ej86dM3j55V5r29WHTef",
+      "type": "section",
+      "position": {
+        "x": 839.8929054677501,
+        "y": 1619.5740097760008
+      },
+      "width": 187,
+      "height": 168,
+      "style": {
+        "width": 187,
+        "height": 168
+      },
+      "selected": true,
+      "data": {
+        "style": {
+          "backgroundColor": "#ffffff",
+          "borderColor": "#000000"
+        }
+      },
+      "positionAbsolute": {
+        "x": 839.8929054677501,
+        "y": 1619.5740097760008
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 187,
+        "height": 168
+      }
+    },
+    {
+      "id": "phhoZcCGuVm_zYFfcArb8",
+      "type": "section",
+      "position": {
+        "x": 699.482369832682,
+        "y": 1618.4390443834811
+      },
+      "width": 146,
+      "height": 169,
+      "style": {
+        "width": 146,
+        "height": 169
+      },
+      "selected": true,
+      "data": {
+        "style": {
+          "backgroundColor": "#ffffff",
+          "borderColor": "#000000"
+        }
+      },
+      "positionAbsolute": {
+        "x": 699.482369832682,
+        "y": 1618.4390443834811
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 146,
+        "height": 169
+      }
+    },
+    {
+      "id": "iv_f10rCHm21sz5hesZxj",
+      "type": "vertical",
+      "position": {
+        "x": 1688.2217949048954,
+        "y": 1645.8131791964786
+      },
+      "selected": true,
+      "data": {
+        "label": "vertical node",
+        "style": {
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round",
+          "strokeWidth": 3.65,
+          "stroke": "#2B78E4"
+        },
+        "oldId": "l40LZhtS-ldRtJ2cgiiXc"
+      },
+      "zIndex": 999,
+      "width": 21,
+      "height": 104,
+      "style": {
+        "width": 21,
+        "height": 104
+      },
+      "positionAbsolute": {
+        "x": 1688.2217949048954,
+        "y": 1645.8131791964786
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 21,
+        "height": 104
+      }
+    },
+    {
+      "id": "l40LZhtS-ldRtJ2cgiiXc",
+      "type": "vertical",
+      "position": {
+        "x": 1577.5469679422956,
+        "y": 1649.8131791964786
+      },
+      "selected": true,
+      "data": {
+        "label": "vertical node",
+        "style": {
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round",
+          "strokeWidth": 3.65,
+          "stroke": "#2B78E4"
+        }
+      },
+      "zIndex": 999,
+      "width": 21,
+      "height": 100,
+      "style": {
+        "width": 21,
+        "height": 100
+      },
+      "positionAbsolute": {
+        "x": 1577.5469679422956,
+        "y": 1649.8131791964786
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 21,
+        "height": 100
+      }
+    },
+    {
+      "id": "7HWfRgtCU9Dv2N_3oHwYe",
+      "type": "horizontal",
+      "position": {
+        "x": 945.0073106597292,
+        "y": 1515.8599244017678
+      },
+      "selected": true,
+      "data": {
+        "label": "horizontal node",
+        "style": {
+          "stroke": "#2B78E4",
+          "strokeWidth": 3.65
+        }
+      },
+      "zIndex": 999,
+      "width": 96,
+      "height": 20,
+      "style": {
+        "width": 96,
+        "height": 20
+      },
+      "positionAbsolute": {
+        "x": 945.0073106597292,
+        "y": 1515.8599244017678
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 96,
+        "height": 20
+      }
+    },
+    {
+      "id": "BUES6hALwmHMS0oAKPKz0",
+      "type": "vertical",
+      "position": {
+        "x": 782.5073106597292,
+        "y": 1116.3203519457165
+      },
+      "selected": true,
+      "data": {
+        "label": "vertical node",
+        "style": {
+          "stroke": "#2B78E4",
+          "strokeWidth": 3.6
+        }
+      },
+      "zIndex": 999,
+      "width": 21,
+      "height": 166,
+      "style": {
+        "width": 21,
+        "height": 166
+      },
+      "positionAbsolute": {
+        "x": 782.5073106597292,
+        "y": 1116.3203519457165
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 21,
+        "height": 166
+      }
+    },
+    {
+      "id": "pbxsWeOonIRXRxPpdV-zo",
+      "type": "horizontal",
+      "position": {
+        "x": 818.6618709488598,
+        "y": 1178.2990031143668
+      },
+      "selected": true,
+      "data": {
+        "label": "horizontal node",
+        "style": {
+          "stroke": "#2B78E4",
+          "strokeWidth": 3.6
+        }
+      },
+      "zIndex": 999,
+      "width": 170,
+      "height": 20,
+      "style": {
+        "width": 170,
+        "height": 20
+      },
+      "positionAbsolute": {
+        "x": 818.6618709488598,
+        "y": 1178.2990031143668
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 170,
+        "height": 20
+      }
+    },
+    {
+      "id": "myugQ4WCRi1GGRZJ8uu5k",
+      "type": "vertical",
+      "position": {
+        "x": 808.6618709488598,
+        "y": 1115.3203519457165
+      },
+      "selected": true,
+      "data": {
+        "label": "vertical node",
+        "style": {
+          "stroke": "#2B78E4",
+          "strokeWidth": 3.6
+        },
+        "oldId": "BUES6hALwmHMS0oAKPKz0"
+      },
+      "zIndex": 999,
+      "width": 21,
+      "height": 75,
+      "style": {
+        "width": 21,
+        "height": 75
+      },
+      "positionAbsolute": {
+        "x": 808.6618709488598,
+        "y": 1115.3203519457165
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 21,
+        "height": 75
+      }
+    },
+    {
+      "id": "ofYL6wlERXJaXuKL075zY",
+      "type": "section",
+      "position": {
+        "x": 703.0073106597292,
+        "y": 1280.8599244017678
+      },
+      "width": 243,
+      "height": 270,
+      "style": {
+        "width": 243,
+        "height": 270
+      },
+      "selected": true,
+      "data": {
+        "style": {
+          "backgroundColor": "#ffffff",
+          "borderColor": "#000000"
+        }
+      },
+      "positionAbsolute": {
+        "x": 703.0073106597292,
+        "y": 1280.8599244017678
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 243,
+        "height": 270
+      }
+    },
+    {
+      "id": "FY6qOOwg_pdFKoYPVOeys",
+      "type": "horizontal",
+      "position": {
+        "x": 1478.3696984675892,
+        "y": 1176.8203519457165
+      },
+      "selected": true,
+      "data": {
+        "label": "horizontal node",
+        "style": {
+          "stroke": "#2B78E4",
+          "strokeWidth": 3.65
+        }
+      },
+      "zIndex": 999,
+      "width": 65,
+      "height": 20,
+      "style": {
+        "width": 65,
+        "height": 20
+      },
+      "positionAbsolute": {
+        "x": 1478.3696984675892,
+        "y": 1176.8203519457165
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 65,
+        "height": 20
+      }
+    },
+    {
+      "id": "ekkBrbM8BtpMu3TpHadYb",
+      "type": "section",
+      "position": {
+        "x": 1251.596805689261,
+        "y": 889.688197690446
+      },
+      "selected": true,
+      "data": {
+        "label": "",
+        "style": {
+          "width": 150,
+          "height": 100,
+          "fontSize": 17,
+          "backgroundColor": "#ffffff",
+          "borderColor": "#000000"
+        }
+      },
+      "zIndex": -999,
+      "width": 229,
+      "height": 322,
+      "style": {
+        "width": 229,
+        "height": 322
+      },
+      "resizing": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 1251.596805689261,
+        "y": 889.688197690446
+      },
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 229,
+        "height": 322
+      }
+    },
+    {
+      "id": "FyTlaUqrK5h3e5mWwkvVg",
+      "type": "section",
+      "position": {
+        "x": 1018.5552405844742,
+        "y": 524.0085042417479
+      },
+      "selected": true,
+      "data": {
+        "label": "",
+        "style": {
+          "width": 150,
+          "height": 100,
+          "fontSize": 17,
+          "backgroundColor": "#ffffff",
+          "borderColor": "#000000"
+        }
+      },
+      "zIndex": -999,
+      "width": 450,
+      "height": 316,
+      "style": {
+        "width": 450,
+        "height": 316
+      },
+      "resizing": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 1018.5552405844742,
+        "y": 524.0085042417479
+      },
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 450,
+        "height": 316
+      }
+    },
+    {
+      "id": "o5yOEJFOR-wScK0GWPuQq",
+      "type": "section",
+      "position": {
+        "x": 701.5073106597292,
+        "y": 403.3478959395741
+      },
+      "width": 249,
+      "height": 440,
+      "style": {
+        "width": 249,
+        "height": 440
+      },
+      "selected": true,
+      "data": {
+        "style": {
+          "backgroundColor": "#ffffff",
+          "borderColor": "#000000"
+        }
+      },
+      "resizing": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 701.5073106597292,
+        "y": 403.3478959395741
+      },
+      "focusable": true,
+      "selectable": true,
+      "measured": {
+        "width": 249,
+        "height": 440
+      }
+    },
+    {
+      "id": "hp15XdmPlKKTbYnrYfCBl",
+      "type": "title",
+      "position": {
+        "x": 1193.3343015809069,
+        "y": -6.124142006891191
+      },
+      "selected": true,
+      "data": {
+        "label": "Java",
+        "style": {
+          "fontSize": 28,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 100,
+      "height": 68,
+      "positionAbsolute": {
+        "x": 1193.3343015809069,
+        "y": -6.124142006891191
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 100,
+        "height": 68
+      }
+    },
+    {
+      "id": "2TGq1y2QthnxxN-FfToSe",
+      "type": "topic",
+      "position": {
+        "x": 1125.8343015809069,
+        "y": 187.97715893815337
+      },
+      "selected": true,
+      "data": {
+        "label": "Learn the Basics",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "Rhk7BrJqNEXQT3LGlGLM6"
+      },
+      "zIndex": 999,
+      "width": 235,
+      "height": 49,
+      "style": {
+        "width": 235,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1125.8343015809069,
+        "y": 187.97715893815337
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 235,
+        "height": 49
+      }
+    },
+    {
+      "id": "rj8ATHPvFP-QtD9mDLY0Z",
+      "type": "vertical",
+      "position": {
+        "x": 1232.8343015809069,
+        "y": -98.12414200689119
+      },
+      "selected": true,
+      "data": {
+        "label": "vertical node",
+        "style": {
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round",
+          "strokeWidth": 3.75,
+          "stroke": "#2B78E4"
+        }
+      },
+      "zIndex": 999,
+      "width": 21,
+      "height": 92,
+      "style": {
+        "width": 21,
+        "height": 92
+      },
+      "positionAbsolute": {
+        "x": 1232.8343015809069,
+        "y": -98.12414200689119
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 21,
+        "height": 92
+      }
+    },
+    {
+      "id": "OlbQNB6YXZjO1J7D0lZU1",
+      "type": "subtopic",
+      "position": {
+        "x": 699.1618709488599,
+        "y": 81.97715893815337
+      },
+      "selected": true,
+      "data": {
+        "label": "Basic Syntax",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 248,
+      "height": 50,
+      "style": {
+        "width": 248,
+        "height": 50
+      },
+      "positionAbsolute": {
+        "x": 699.1618709488599,
+        "y": 81.97715893815337
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 248,
+        "height": 50
+      }
+    },
+    {
+      "id": "5g9mmi01WeZ4aDqNzwx_V",
+      "type": "subtopic",
+      "position": {
+        "x": 699.1618709488599,
+        "y": 187.97715893815337
+      },
+      "selected": true,
+      "data": {
+        "label": "Data Types",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "QgWalJLIb6Fw0HhN1wb02"
+      },
+      "zIndex": 999,
+      "width": 248,
+      "height": 49,
+      "style": {
+        "width": 248,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 699.1618709488599,
+        "y": 187.97715893815337
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 248,
+        "height": 49
+      }
+    },
+    {
+      "id": "sG_3ZQIE1-FQXQkk-OduQ",
+      "type": "subtopic",
+      "position": {
+        "x": 1522.5338845627668,
+        "y": 239.38076562915717
+      },
+      "selected": true,
+      "data": {
+        "label": "Conditionals",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 234,
+      "height": 49,
+      "style": {
+        "width": 234,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1522.5338845627668,
+        "y": 239.38076562915717
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 234,
+        "height": 49
+      }
+    },
+    {
+      "id": "5khApwg1FZ-0qorsLyH-F",
+      "type": "subtopic",
+      "position": {
+        "x": 1522.5338845627668,
+        "y": 186.38076562915717
+      },
+      "selected": true,
+      "data": {
+        "label": "Arrays ",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "DZ4BX4NYeCQbjGSj56lng"
+      },
+      "zIndex": 999,
+      "width": 234,
+      "height": 49,
+      "style": {
+        "width": 234,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1522.5338845627668,
+        "y": 186.38076562915717
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 234,
+        "height": 49
+      }
+    },
+    {
+      "id": "JHUhVEjWFXTn6-wKcKevg",
+      "type": "subtopic",
+      "position": {
+        "x": 1522.5338845627668,
+        "y": 292.38076562915717
+      },
+      "selected": true,
+      "data": {
+        "label": "Loops",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "DZ4BX4NYeCQbjGSj56lng"
+      },
+      "zIndex": 999,
+      "width": 234,
+      "height": 49,
+      "style": {
+        "width": 234,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1522.5338845627668,
+        "y": 292.38076562915717
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 234,
+        "height": 49
+      }
+    },
+    {
+      "id": "VBNcAO0STaZJ1iV9A7utv",
+      "type": "subtopic",
+      "position": {
+        "x": 699.1618709488599,
+        "y": 240.97715893815337
+      },
+      "selected": true,
+      "data": {
+        "label": "Variables and Scopes",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "aEaBobzFWv0mJHGAbgxKY"
+      },
+      "zIndex": 999,
+      "width": 248,
+      "height": 49,
+      "style": {
+        "width": 248,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 699.1618709488599,
+        "y": 240.97715893815337
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 248,
+        "height": 49
+      }
+    },
+    {
+      "id": "yNDbk6r5wFqBi25xmIRF_",
+      "type": "subtopic",
+      "position": {
+        "x": 699.1618709488599,
+        "y": 293.97715893815337
+      },
+      "selected": true,
+      "data": {
+        "label": "Type Casting",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "aEaBobzFWv0mJHGAbgxKY"
+      },
+      "zIndex": 999,
+      "width": 248,
+      "height": 49,
+      "style": {
+        "width": 248,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 699.1618709488599,
+        "y": 293.97715893815337
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 248,
+        "height": 49
+      }
+    },
+    {
+      "id": "aEaBobzFWv0mJHGAbgxKY",
+      "type": "subtopic",
+      "position": {
+        "x": 1522.5338845627668,
+        "y": 80.38076562915717
+      },
+      "selected": true,
+      "data": {
+        "label": "Strings and Methods",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 234,
+      "height": 49,
+      "style": {
+        "width": 234,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1522.5338845627668,
+        "y": 80.38076562915717
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 234,
+        "height": 49
+      }
+    },
+    {
+      "id": "ziD_XwzJSFQP_3iLjq9pA",
+      "type": "subtopic",
+      "position": {
+        "x": 1522.5338845627668,
+        "y": 133.38076562915717
+      },
+      "selected": true,
+      "data": {
+        "label": "Math Operations",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "aEaBobzFWv0mJHGAbgxKY"
+      },
+      "zIndex": 999,
+      "width": 234,
+      "height": 49,
+      "style": {
+        "width": 234,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1522.5338845627668,
+        "y": 133.38076562915717
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 234,
+        "height": 49
+      }
+    },
+    {
+      "id": "QgWalJLIb6Fw0HhN1wb02",
+      "type": "subtopic",
+      "position": {
+        "x": 699.1618709488599,
+        "y": 134.97715893815337
+      },
+      "selected": true,
+      "data": {
+        "label": "Lifecycle of a Program",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "aEaBobzFWv0mJHGAbgxKY"
+      },
+      "zIndex": 999,
+      "width": 248,
+      "height": 49,
+      "style": {
+        "width": 248,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 699.1618709488599,
+        "y": 134.97715893815337
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 248,
+        "height": 49
+      }
+    },
+    {
+      "id": "LenPrQwxFsE1UVbXO_dE7",
+      "type": "subtopic",
+      "position": {
+        "x": 712.0073106597292,
+        "y": 462.3478959395741
+      },
+      "selected": true,
+      "data": {
+        "label": "Classes and Objects",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "xTwJYcA6ldgaw3yGmbDEd"
+      },
+      "zIndex": 999,
+      "width": 230,
+      "height": 49,
+      "style": {
+        "width": 230,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 712.0073106597292,
+        "y": 462.3478959395741
+      },
+      "dragging": false,
+      "focusable": true,
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 230,
+        "height": 49
+      }
+    },
+    {
+      "id": "xTwJYcA6ldgaw3yGmbDEd",
+      "type": "subtopic",
+      "position": {
+        "x": 712.0073106597292,
+        "y": 515.3478959395741
+      },
+      "selected": true,
+      "data": {
+        "label": "Attributes and Methods",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 230,
+      "height": 49,
+      "style": {
+        "width": 230,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 712.0073106597292,
+        "y": 515.3478959395741
+      },
+      "dragging": false,
+      "focusable": true,
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 230,
+        "height": 49
+      }
+    },
+    {
+      "id": "KYndNwfQcwRCf3zCXOwd_",
+      "type": "subtopic",
+      "position": {
+        "x": 712.0073106597292,
+        "y": 568.3478959395741
+      },
+      "selected": true,
+      "data": {
+        "label": "Access Specifiers",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "xTwJYcA6ldgaw3yGmbDEd"
+      },
+      "zIndex": 999,
+      "width": 230,
+      "height": 49,
+      "style": {
+        "width": 230,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 712.0073106597292,
+        "y": 568.3478959395741
+      },
+      "dragging": false,
+      "focusable": true,
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 230,
+        "height": 49
+      }
+    },
+    {
+      "id": "ZcNxO6qIXIg7RaWYnZj2e",
+      "type": "subtopic",
+      "position": {
+        "x": 712.0073106597292,
+        "y": 621.3478959395741
+      },
+      "selected": true,
+      "data": {
+        "label": "Static Keyword",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "Ajuc_rHObqMQBXLqRIuxh"
+      },
+      "zIndex": 999,
+      "width": 230,
+      "height": 49,
+      "style": {
+        "width": 230,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 712.0073106597292,
+        "y": 621.3478959395741
+      },
+      "dragging": false,
+      "focusable": true,
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 230,
+        "height": 49
+      }
+    },
+    {
+      "id": "zDBW20W2XMCtNTG3emJ_A",
+      "type": "subtopic",
+      "position": {
+        "x": 712.0073106597292,
+        "y": 726.5225969995055
+      },
+      "selected": true,
+      "data": {
+        "label": "Nested Classes",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "Ajuc_rHObqMQBXLqRIuxh"
+      },
+      "zIndex": 999,
+      "width": 230,
+      "height": 49,
+      "style": {
+        "width": 230,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 712.0073106597292,
+        "y": 726.5225969995055
+      },
+      "dragging": false,
+      "focusable": true,
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 230,
+        "height": 49
+      }
+    },
+    {
+      "id": "DZ4BX4NYeCQbjGSj56lng",
+      "type": "subtopic",
+      "position": {
+        "x": 1522.5338845627668,
+        "y": 345.38076562915717
+      },
+      "selected": true,
+      "data": {
+        "label": "Basics of OOP",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 234,
+      "height": 49,
+      "style": {
+        "width": 234,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1522.5338845627668,
+        "y": 345.38076562915717
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 234,
+        "height": 49
+      }
+    },
+    {
+      "id": "zNHDLv26Xn3oMrDVSAP1Z",
+      "type": "paragraph",
+      "position": {
+        "x": 1075.0552405844742,
+        "y": 416.3478959395741
+      },
+      "selected": true,
+      "data": {
+        "label": "Object Oriented Programming",
+        "style": {
+          "fontSize": 20,
+          "borderColor": "transparent",
+          "backgroundColor": "transparent",
+          "color": "#000000",
+          "textAlign": "center",
+          "justifyContent": "center",
+          "padding": 16
+        }
+      },
+      "zIndex": 999,
+      "width": 337,
+      "height": 52,
+      "style": {
+        "width": 337,
+        "height": 52
+      },
+      "dragging": false,
+      "resizing": false,
+      "positionAbsolute": {
+        "x": 1075.0552405844742,
+        "y": 416.3478959395741
+      },
+      "focusable": true,
+      "selectable": true,
+      "measured": {
+        "width": 337,
+        "height": 52
+      }
+    },
+    {
+      "id": "ryMPhTTScI9pJMkQsZaaM",
+      "type": "label",
+      "position": {
+        "x": 762.5073106597292,
+        "y": 416.3478959395741
+      },
+      "selected": true,
+      "data": {
+        "label": "Basics of OOP",
+        "href": "",
+        "color": "#000000",
+        "style": {
+          "fontSize": 17
+        }
+      },
+      "zIndex": 999,
+      "width": 129,
+      "height": 36,
+      "style": {},
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 762.5073106597292,
+        "y": 416.3478959395741
+      },
+      "focusable": true,
+      "selectable": true,
+      "measured": {
+        "width": 129,
+        "height": 36
+      }
+    },
+    {
+      "id": "X6xl98_RqAQY79baHmRRI",
+      "type": "horizontal",
+      "position": {
+        "x": 949.5073106597292,
+        "y": 432.3478959395741
+      },
+      "selected": true,
+      "data": {
+        "label": "horizontal node",
+        "style": {
+          "stroke": "#2B78E4",
+          "strokeWidth": 3.65,
+          "strokeDasharray": "0",
+          "strokeLinecap": "round"
+        }
+      },
+      "zIndex": 999,
+      "width": 140,
+      "height": 20,
+      "style": {
+        "width": 140,
+        "height": 20
+      },
+      "positionAbsolute": {
+        "x": 949.5073106597292,
+        "y": 432.3478959395741
+      },
+      "dragging": false,
+      "resizing": false,
+      "focusable": true,
+      "selectable": true,
+      "measured": {
+        "width": 140,
+        "height": 20
+      }
+    },
+    {
+      "id": "sHYmeXbdREoxrru0PZ3Px",
+      "type": "label",
+      "position": {
+        "x": 1170.5552405844742,
+        "y": 533.5536247250346
+      },
+      "selected": true,
+      "data": {
+        "label": "More about OOP",
+        "href": "",
+        "color": "#000000",
+        "style": {
+          "fontSize": 17
+        }
+      },
+      "zIndex": 999,
+      "width": 146,
+      "height": 36,
+      "style": {},
+      "positionAbsolute": {
+        "x": 1170.5552405844742,
+        "y": 533.5536247250346
+      },
+      "dragging": false,
+      "focusable": true,
+      "selectable": true,
+      "measured": {
+        "width": 146,
+        "height": 36
+      }
+    },
+    {
+      "id": "Ax2ouIZgN1DpPzKDy4fwp",
+      "type": "subtopic",
+      "position": {
+        "x": 981.8343015809069,
+        "y": 632.5536247250346
+      },
+      "selected": true,
+      "data": {
+        "label": "Method Chaining",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "3qowgj1pas1X7oRric9eU"
+      },
+      "zIndex": 999,
+      "width": 210,
+      "height": 49,
+      "style": {
+        "width": 210,
+        "height": 49
+      },
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 981.8343015809069,
+        "y": 632.5536247250346
+      },
+      "focusable": true,
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 210,
+        "height": 49
+      }
+    },
+    {
+      "id": "ey1f8IsdAlDv1O3E_tNog",
+      "type": "subtopic",
+      "position": {
+        "x": 981.8343015809069,
+        "y": 685.5536247250346
+      },
+      "selected": true,
+      "data": {
+        "label": "Enums",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "VqLV7kolfRFnvOuJAvzlg"
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 981.8343015809069,
+        "y": 685.5536247250346
+      },
+      "focusable": true,
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "Ajuc_rHObqMQBXLqRIuxh",
+      "type": "subtopic",
+      "position": {
+        "x": 712.0073106597292,
+        "y": 674.3478959395741
+      },
+      "selected": true,
+      "data": {
+        "label": "Final Keyword",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "KYndNwfQcwRCf3zCXOwd_"
+      },
+      "zIndex": 999,
+      "width": 230,
+      "height": 49,
+      "style": {
+        "width": 230,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 712.0073106597292,
+        "y": 674.3478959395741
+      },
+      "dragging": false,
+      "focusable": true,
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 230,
+        "height": 49
+      }
+    },
+    {
+      "id": "3qowgj1pas1X7oRric9eU",
+      "type": "subtopic",
+      "position": {
+        "x": 981.8343015809069,
+        "y": 579.5536247250346
+      },
+      "selected": true,
+      "data": {
+        "label": "Object Lifecycle",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "iH9wSsOK4a77pS7U0Yu5z"
+      },
+      "zIndex": 999,
+      "width": 210,
+      "height": 49,
+      "style": {
+        "width": 210,
+        "height": 49
+      },
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 981.8343015809069,
+        "y": 579.5536247250346
+      },
+      "focusable": true,
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 210,
+        "height": 49
+      }
+    },
+    {
+      "id": "qdA6bK9ZkP8p0_NH_wMuj",
+      "type": "subtopic",
+      "position": {
+        "x": 1365.6267811847088,
+        "y": 579.0404190441817
+      },
+      "selected": true,
+      "data": {
+        "label": "Abstraction",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "Kjdj862xnz8fqDYE3HKhC"
+      },
+      "zIndex": 999,
+      "width": 139,
+      "height": 49,
+      "style": {
+        "width": 139,
+        "height": 49
+      },
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 1365.6267811847088,
+        "y": 579.0404190441817
+      },
+      "focusable": true,
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 139,
+        "height": 49
+      }
+    },
+    {
+      "id": "PXpPEmCEBUKRjwP3B5LzJ",
+      "type": "subtopic",
+      "position": {
+        "x": 1197.6267811847088,
+        "y": 579.5536247250346
+      },
+      "selected": true,
+      "data": {
+        "label": "Inheritance",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "iH9wSsOK4a77pS7U0Yu5z"
+      },
+      "zIndex": 999,
+      "width": 165,
+      "height": 49,
+      "style": {
+        "width": 165,
+        "height": 49
+      },
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 1197.6267811847088,
+        "y": 579.5536247250346
+      },
+      "focusable": true,
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 165,
+        "height": 49
+      }
+    },
+    {
+      "id": "y-i56f1P_mMdvyBr7J4XE",
+      "type": "subtopic",
+      "position": {
+        "x": 1197.6267811847088,
+        "y": 685.5536247250346
+      },
+      "selected": true,
+      "data": {
+        "label": "Method Overloading / Overriding",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "Kjdj862xnz8fqDYE3HKhC"
+      },
+      "zIndex": 999,
+      "width": 307,
+      "height": 49,
+      "style": {
+        "width": 307,
+        "height": 49
+      },
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 1197.6267811847088,
+        "y": 685.5536247250346
+      },
+      "focusable": true,
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 307,
+        "height": 49
+      }
+    },
+    {
+      "id": "Kjdj862xnz8fqDYE3HKhC",
+      "type": "subtopic",
+      "position": {
+        "x": 1197.6267811847088,
+        "y": 739.5536247250346
+      },
+      "selected": true,
+      "data": {
+        "label": "Static vs Dynamic Binding",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "iH9wSsOK4a77pS7U0Yu5z"
+      },
+      "zIndex": 999,
+      "width": 307,
+      "height": 49,
+      "style": {
+        "width": 307,
+        "height": 49
+      },
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 1197.6267811847088,
+        "y": 739.5536247250346
+      },
+      "focusable": true,
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 307,
+        "height": 49
+      }
+    },
+    {
+      "id": "6wTRN2PYC6zM_Txkekx53",
+      "type": "subtopic",
+      "position": {
+        "x": 1366.9652858056302,
+        "y": 632.5536247250346
+      },
+      "selected": true,
+      "data": {
+        "label": "Interfaces",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "iH9wSsOK4a77pS7U0Yu5z"
+      },
+      "zIndex": 999,
+      "width": 139,
+      "height": 49,
+      "style": {
+        "width": 139,
+        "height": 49
+      },
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 1366.9652858056302,
+        "y": 632.5536247250346
+      },
+      "focusable": true,
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 139,
+        "height": 49
+      }
+    },
+    {
+      "id": "iH9wSsOK4a77pS7U0Yu5z",
+      "type": "subtopic",
+      "position": {
+        "x": 1197.6267811847088,
+        "y": 632.5536247250346
+      },
+      "selected": true,
+      "data": {
+        "label": "Encapsulation",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 164,
+      "height": 49,
+      "style": {
+        "width": 164,
+        "height": 49
+      },
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 1197.6267811847088,
+        "y": 632.5536247250346
+      },
+      "focusable": true,
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 164,
+        "height": 49
+      }
+    },
+    {
+      "id": "VqLV7kolfRFnvOuJAvzlg",
+      "type": "subtopic",
+      "position": {
+        "x": 1087.8343015809069,
+        "y": 685.5536247250346
+      },
+      "selected": true,
+      "data": {
+        "label": "Record",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "iH9wSsOK4a77pS7U0Yu5z"
+      },
+      "zIndex": 999,
+      "width": 104,
+      "height": 49,
+      "style": {
+        "width": 104,
+        "height": 49
+      },
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 1087.8343015809069,
+        "y": 685.5536247250346
+      },
+      "focusable": true,
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 104,
+        "height": 49
+      }
+    },
+    {
+      "id": "60POZOjwHSdKYL6rfkyEy",
+      "type": "subtopic",
+      "position": {
+        "x": 712.0073106597292,
+        "y": 780.5225969995055
+      },
+      "selected": true,
+      "data": {
+        "label": "Packages",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "zDBW20W2XMCtNTG3emJ_A"
+      },
+      "zIndex": 999,
+      "width": 230,
+      "height": 49,
+      "style": {
+        "width": 230,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 712.0073106597292,
+        "y": 780.5225969995055
+      },
+      "dragging": false,
+      "focusable": true,
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 230,
+        "height": 49
+      }
+    },
+    {
+      "id": "dg_UpaO8TzIN7w_QZ1n-6",
+      "type": "subtopic",
+      "position": {
+        "x": 981.8343015809069,
+        "y": 739.5536247250346
+      },
+      "selected": true,
+      "data": {
+        "label": "Initializer Block",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "_TTAYrb6QvFGyTvK7cA-7"
+      },
+      "zIndex": 999,
+      "width": 210,
+      "height": 49,
+      "style": {
+        "width": 210,
+        "height": 49
+      },
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 981.8343015809069,
+        "y": 739.5536247250346
+      },
+      "focusable": true,
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 210,
+        "height": 49
+      }
+    },
+    {
+      "id": "3r0Er9XZHovIZz3gNyj4A",
+      "type": "subtopic",
+      "position": {
+        "x": 981.8343015809069,
+        "y": 792.3789236651032
+      },
+      "selected": true,
+      "data": {
+        "label": "Pass by Value / Pass by Reference",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "dg_UpaO8TzIN7w_QZ1n-6"
+      },
+      "zIndex": 999,
+      "width": 523,
+      "height": 49,
+      "style": {
+        "width": 523,
+        "height": 49
+      },
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 981.8343015809069,
+        "y": 792.3789236651032
+      },
+      "focusable": true,
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 523,
+        "height": 49
+      }
+    },
+    {
+      "id": "c--y6GcKj9am0CBdu_Hnt",
+      "type": "topic",
+      "position": {
+        "x": 1538.5338845627668,
+        "y": 684.5892688143869
+      },
+      "selected": true,
+      "data": {
+        "label": "Annotations",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 218,
+      "height": 49,
+      "style": {
+        "width": 218,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1538.5338845627668,
+        "y": 684.5892688143869
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 218,
+        "height": 49
+      }
+    },
+    {
+      "id": "00_q6I95eO-PUUrKpPFY8",
+      "type": "topic",
+      "position": {
+        "x": 1538.5338845627668,
+        "y": 632.0714467697107
+      },
+      "selected": true,
+      "data": {
+        "label": "Lambda Expressions",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "c--y6GcKj9am0CBdu_Hnt"
+      },
+      "zIndex": 999,
+      "width": 218,
+      "height": 49,
+      "style": {
+        "width": 218,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1538.5338845627668,
+        "y": 632.0714467697107
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 218,
+        "height": 49
+      }
+    },
+    {
+      "id": "kdxy8Zssnc5lJjdmjUyMc",
+      "type": "topic",
+      "position": {
+        "x": 1538.5338845627668,
+        "y": 737.107090859063
+      },
+      "selected": true,
+      "data": {
+        "label": "Modules",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "c--y6GcKj9am0CBdu_Hnt"
+      },
+      "zIndex": 999,
+      "width": 218,
+      "height": 49,
+      "style": {
+        "width": 218,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1538.5338845627668,
+        "y": 737.107090859063
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 218,
+        "height": 49
+      }
+    },
+    {
+      "id": "a-EQiBUlSgdZba1mW36op",
+      "type": "subtopic",
+      "position": {
+        "x": 1263.3696984675892,
+        "y": 937.5225017715202
+      },
+      "selected": true,
+      "data": {
+        "label": "Array vs ArrayList",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 204,
+      "height": 49,
+      "style": {
+        "width": 204,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1263.3696984675892,
+        "y": 937.5225017715202
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 204,
+        "height": 49
+      }
+    },
+    {
+      "id": "XjkNd5WJ9yxW48dwHQNkZ",
+      "type": "subtopic",
+      "position": {
+        "x": 1263.3696984675892,
+        "y": 990.5225017715202
+      },
+      "selected": true,
+      "data": {
+        "label": "Set",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1263.3696984675892,
+        "y": 990.5225017715202
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "eKtdDtiJygKQ4PuEylFQY",
+      "type": "subtopic",
+      "position": {
+        "x": 1367.3054548486343,
+        "y": 990.5225017715202
+      },
+      "selected": true,
+      "data": {
+        "label": "Map",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1367.3054548486343,
+        "y": 990.5225017715202
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "ThoWhXb4vUvNfE70_wMfa",
+      "type": "subtopic",
+      "position": {
+        "x": 1263.3696984675892,
+        "y": 1043.5225017715202
+      },
+      "selected": true,
+      "data": {
+        "label": "Queue",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "DWO2-EPIUeKK5aQGiTuKc"
+      },
+      "zIndex": 999,
+      "width": 102,
+      "height": 49,
+      "style": {
+        "width": 102,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1263.3696984675892,
+        "y": 1043.5225017715202
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 102,
+        "height": 49
+      }
+    },
+    {
+      "id": "DzfE_9WLAp-BrG3C1-MwU",
+      "type": "subtopic",
+      "position": {
+        "x": 1263.3696984675892,
+        "y": 1096.5225017715204
+      },
+      "selected": true,
+      "data": {
+        "label": "Stack",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "eL4pc6SaNiKP48PzN7mNe"
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1263.3696984675892,
+        "y": 1096.5225017715204
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "DWO2-EPIUeKK5aQGiTuKc",
+      "type": "subtopic",
+      "position": {
+        "x": 1367.3054548486343,
+        "y": 1043.5225017715202
+      },
+      "selected": true,
+      "data": {
+        "label": "Dequeue",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1367.3054548486343,
+        "y": 1043.5225017715202
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "-17LFO72I8RKjJRMXct9k",
+      "type": "subtopic",
+      "position": {
+        "x": 1367.3054548486343,
+        "y": 1096.5225017715204
+      },
+      "selected": true,
+      "data": {
+        "label": "Iterator",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "DWO2-EPIUeKK5aQGiTuKc"
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1367.3054548486343,
+        "y": 1096.5225017715204
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "PX4ZcshR0QtsPElyZzSel",
+      "type": "label",
+      "position": {
+        "x": 1314.3696984675892,
+        "y": 898.3203519457165
+      },
+      "selected": true,
+      "data": {
+        "label": "Collections",
+        "href": "",
+        "color": "#000000",
+        "style": {
+          "fontSize": 17
+        }
+      },
+      "zIndex": 999,
+      "width": 102,
+      "height": 36,
+      "style": {},
+      "positionAbsolute": {
+        "x": 1314.3696984675892,
+        "y": 898.3203519457165
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 102,
+        "height": 36
+      }
+    },
+    {
+      "id": "eL4pc6SaNiKP48PzN7mNe",
+      "type": "subtopic",
+      "position": {
+        "x": 1263.3696984675892,
+        "y": 1152.0111884486032
+      },
+      "selected": true,
+      "data": {
+        "label": "Generic Collections",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 207,
+      "height": 49,
+      "style": {
+        "width": 207,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1263.3696984675892,
+        "y": 1152.0111884486032
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 207,
+        "height": 49
+      }
+    },
+    {
+      "id": "Z_rjrHtWp1Zp1G2YN0KfD",
+      "type": "vertical",
+      "position": {
+        "x": 1638.356875320924,
+        "y": 831.2420992601204
+      },
+      "selected": true,
+      "data": {
+        "label": "vertical node",
+        "style": {
+          "stroke": "#2B78E4",
+          "strokeWidth": 3.65
+        }
+      },
+      "zIndex": 999,
+      "width": 21,
+      "height": 109,
+      "style": {
+        "width": 21,
+        "height": 109
+      },
+      "positionAbsolute": {
+        "x": 1638.356875320924,
+        "y": 831.2420992601204
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 21,
+        "height": 109
+      }
+    },
+    {
+      "id": "l9fxK8K9fcUqR7hs5TkWU",
+      "type": "topic",
+      "position": {
+        "x": 1538.5338845627668,
+        "y": 789.6249129037391
+      },
+      "selected": true,
+      "data": {
+        "label": "Optionals",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "JeMG0gU8IVRBZgczjXmPi"
+      },
+      "zIndex": 999,
+      "width": 218,
+      "height": 49,
+      "style": {
+        "width": 218,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1538.5338845627668,
+        "y": 789.6249129037391
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 218,
+        "height": 49
+      }
+    },
+    {
+      "id": "g9P3548F38tYGjevBc42w",
+      "type": "topic",
+      "position": {
+        "x": 1538.5338845627668,
+        "y": 520.5536247250346
+      },
+      "selected": true,
+      "data": {
+        "label": "Exception Handling",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "00_q6I95eO-PUUrKpPFY8"
+      },
+      "zIndex": 999,
+      "width": 218,
+      "height": 49,
+      "style": {
+        "width": 218,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1538.5338845627668,
+        "y": 520.5536247250346
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 218,
+        "height": 49
+      }
+    },
+    {
+      "id": "D1woaibP6qkuqmBQkZrhO",
+      "type": "horizontal",
+      "position": {
+        "x": 1174.7508238192552,
+        "y": 1178.2990031143668
+      },
+      "selected": true,
+      "data": {
+        "label": "horizontal node",
+        "style": {
+          "stroke": "#2B78E4",
+          "strokeWidth": 3.65
+        },
+        "oldId": "FY6qOOwg_pdFKoYPVOeys"
+      },
+      "zIndex": 999,
+      "width": 78,
+      "height": 20,
+      "style": {
+        "width": 78,
+        "height": 20
+      },
+      "positionAbsolute": {
+        "x": 1174.7508238192552,
+        "y": 1178.2990031143668
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 78,
+        "height": 20
+      }
+    },
+    {
+      "id": "_W84u4UXMSY0zvy6RJvFi",
+      "type": "topic",
+      "position": {
+        "x": 1250.6499336025647,
+        "y": 1501.4989519840194
+      },
+      "selected": true,
+      "data": {
+        "label": "Web Frameworks",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "LgpsnXV0CTvTspjnsd0Rd"
+      },
+      "zIndex": 999,
+      "width": 232,
+      "height": 49,
+      "style": {
+        "width": 232,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1250.6499336025647,
+        "y": 1501.4989519840194
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 232,
+        "height": 49
+      }
+    },
+    {
+      "id": "xoryfi4SpJlkz-PV05ql6",
+      "type": "subtopic",
+      "position": {
+        "x": 1250.6499336025647,
+        "y": 1315.2594233874954
+      },
+      "selected": true,
+      "data": {
+        "label": "Spring (Spring Boot)",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 232,
+      "height": 49,
+      "style": {
+        "width": 232,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1250.6499336025647,
+        "y": 1315.2594233874954
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 232,
+        "height": 49
+      }
+    },
+    {
+      "id": "kN-mXxqUPNJNsJGQ0U_7J",
+      "type": "subtopic",
+      "position": {
+        "x": 1250.6499336025647,
+        "y": 1421.2594233874954
+      },
+      "selected": true,
+      "data": {
+        "label": "Play Framework",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "xoryfi4SpJlkz-PV05ql6"
+      },
+      "zIndex": 999,
+      "width": 232,
+      "height": 49,
+      "style": {
+        "width": 232,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1250.6499336025647,
+        "y": 1421.2594233874954
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 232,
+        "height": 49
+      }
+    },
+    {
+      "id": "w-kcKPh8U0P_jtT90_1Xy",
+      "type": "subtopic",
+      "position": {
+        "x": 1250.6499336025647,
+        "y": 1368.2594233874954
+      },
+      "selected": true,
+      "data": {
+        "label": "Quarkus",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "OrkJa48HIDmrLOgCBpimA"
+      },
+      "zIndex": 999,
+      "width": 114,
+      "height": 49,
+      "style": {
+        "width": 114,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1250.6499336025647,
+        "y": 1368.2594233874954
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 114,
+        "height": 49
+      }
+    },
+    {
+      "id": "aqTfDatV26H0rOAhyQo0q",
+      "type": "label",
+      "position": {
+        "x": 1246.1499336025647,
+        "y": 1255.4420481297732
+      },
+      "selected": true,
+      "data": {
+        "label": "Spring Boot is recommended",
+        "href": "",
+        "color": "#000000",
+        "style": {
+          "fontSize": 17
+        }
+      },
+      "zIndex": 999,
+      "width": 241,
+      "height": 36,
+      "style": {},
+      "positionAbsolute": {
+        "x": 1246.1499336025647,
+        "y": 1255.4420481297732
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 241,
+        "height": 36
+      }
+    },
+    {
+      "id": "81N1cZLue_Ii0uD5CV6kZ",
+      "type": "topic",
+      "position": {
+        "x": 1006.8720474064457,
+        "y": 1502.013322952089
+      },
+      "selected": true,
+      "data": {
+        "label": "Build Tools",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 181,
+      "height": 49,
+      "style": {
+        "width": 181,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1006.8720474064457,
+        "y": 1502.013322952089
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 181,
+        "height": 49
+      }
+    },
+    {
+      "id": "VdL_fAHxmRbuF0J627beA",
+      "type": "subtopic",
+      "position": {
+        "x": 1006.8720474064457,
+        "y": 1317.2276953646335
+      },
+      "selected": true,
+      "data": {
+        "label": "Maven",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "6FMj9tMAQPii_1kLtHJLk"
+      },
+      "zIndex": 999,
+      "width": 181,
+      "height": 49,
+      "style": {
+        "width": 181,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1006.8720474064457,
+        "y": 1317.2276953646335
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 181,
+        "height": 49
+      }
+    },
+    {
+      "id": "rmDIm5dqtdlNfPhvpqS7-",
+      "type": "subtopic",
+      "position": {
+        "x": 1006.8720474064457,
+        "y": 1370.2276953646335
+      },
+      "selected": true,
+      "data": {
+        "label": "Gradle",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "6FMj9tMAQPii_1kLtHJLk"
+      },
+      "zIndex": 999,
+      "width": 181,
+      "height": 49,
+      "style": {
+        "width": 181,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1006.8720474064457,
+        "y": 1370.2276953646335
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 181,
+        "height": 49
+      }
+    },
+    {
+      "id": "6FMj9tMAQPii_1kLtHJLk",
+      "type": "subtopic",
+      "position": {
+        "x": 1006.8720474064457,
+        "y": 1423.2276953646335
+      },
+      "selected": true,
+      "data": {
+        "label": "Bazel",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 181,
+      "height": 49,
+      "style": {
+        "width": 181,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1006.8720474064457,
+        "y": 1423.2276953646335
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 181,
+        "height": 49
+      }
+    },
+    {
+      "id": "zItXmuluDtl6HkTYQ7qMh",
+      "type": "topic",
+      "position": {
+        "x": 1538.5338845627668,
+        "y": 941.8599244017678
+      },
+      "selected": true,
+      "data": {
+        "label": "Dependency Injection",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "JeMG0gU8IVRBZgczjXmPi"
+      },
+      "zIndex": 999,
+      "width": 218,
+      "height": 49,
+      "style": {
+        "width": 218,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1538.5338845627668,
+        "y": 941.8599244017678
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 218,
+        "height": 49
+      }
+    },
+    {
+      "id": "M0ybgK1JCycXhZ1dEpCFo",
+      "type": "topic",
+      "position": {
+        "x": 1538.5338845627668,
+        "y": 1109.3203519457165
+      },
+      "selected": true,
+      "data": {
+        "label": "I/O Operations",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "JeMG0gU8IVRBZgczjXmPi"
+      },
+      "zIndex": 999,
+      "width": 218,
+      "height": 49,
+      "style": {
+        "width": 218,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1538.5338845627668,
+        "y": 1109.3203519457165
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 218,
+        "height": 49
+      }
+    },
+    {
+      "id": "NowpzyPVFcX082j5YS5i8",
+      "type": "topic",
+      "position": {
+        "x": 1538.5338845627668,
+        "y": 1162.3203519457165
+      },
+      "selected": true,
+      "data": {
+        "label": "File Operations",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "JeMG0gU8IVRBZgczjXmPi"
+      },
+      "zIndex": 999,
+      "width": 218,
+      "height": 49,
+      "style": {
+        "width": 218,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1538.5338845627668,
+        "y": 1162.3203519457165
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 218,
+        "height": 49
+      }
+    },
+    {
+      "id": "H-TpLxAx_BnJhyFc4HK6M",
+      "type": "label",
+      "position": {
+        "x": 1354.1499336025647,
+        "y": 1273.5598732714204
+      },
+      "selected": true,
+      "data": {
+        "label": "v",
+        "href": "",
+        "color": "#000000",
+        "style": {
+          "fontSize": 17
+        },
+        "oldId": "aqTfDatV26H0rOAhyQo0q"
+      },
+      "zIndex": 999,
+      "width": 25,
+      "height": 36,
+      "style": {},
+      "positionAbsolute": {
+        "x": 1354.1499336025647,
+        "y": 1273.5598732714204
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 25,
+        "height": 36
+      }
+    },
+    {
+      "id": "shqS9-hg__mkOtnnl_I4l",
+      "type": "topic",
+      "position": {
+        "x": 973.8343015809069,
+        "y": 1162.3203519457165
+      },
+      "selected": true,
+      "data": {
+        "label": "Concurrency",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "JeMG0gU8IVRBZgczjXmPi"
+      },
+      "zIndex": 999,
+      "width": 218,
+      "height": 49,
+      "style": {
+        "width": 218,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 973.8343015809069,
+        "y": 1162.3203519457165
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 218,
+        "height": 49
+      }
+    },
+    {
+      "id": "u_YysD7Bpnq-xkFX5yJGz",
+      "type": "subtopic",
+      "position": {
+        "x": 973.8343015809069,
+        "y": 1073.5225017715202
+      },
+      "selected": true,
+      "data": {
+        "label": "Threads",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "U4Wx3MH3LgJLa0n9Ne0Br"
+      },
+      "zIndex": 999,
+      "width": 218,
+      "height": 49,
+      "style": {
+        "width": 218,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 973.8343015809069,
+        "y": 1073.5225017715202
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 218,
+        "height": 49
+      }
+    },
+    {
+      "id": "vJSq1GJLIMQ6IIB8CMK8g",
+      "type": "subtopic",
+      "position": {
+        "x": 973.8343015809069,
+        "y": 1020.5225017715202
+      },
+      "selected": true,
+      "data": {
+        "label": "Virtual Threads",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "U4Wx3MH3LgJLa0n9Ne0Br"
+      },
+      "zIndex": 999,
+      "width": 218,
+      "height": 49,
+      "style": {
+        "width": 218,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 973.8343015809069,
+        "y": 1020.5225017715202
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 218,
+        "height": 49
+      }
+    },
+    {
+      "id": "wEc7pSVU5G2c6Zqmtb_1k",
+      "type": "subtopic",
+      "position": {
+        "x": 973.8343015809069,
+        "y": 967.5225017715202
+      },
+      "selected": true,
+      "data": {
+        "label": "Java Memory Model",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "U4Wx3MH3LgJLa0n9Ne0Br"
+      },
+      "zIndex": 999,
+      "width": 218,
+      "height": 49,
+      "style": {
+        "width": 218,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 973.8343015809069,
+        "y": 967.5225017715202
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 218,
+        "height": 49
+      }
+    },
+    {
+      "id": "U4Wx3MH3LgJLa0n9Ne0Br",
+      "type": "subtopic",
+      "position": {
+        "x": 973.8343015809069,
+        "y": 915.3203519457165
+      },
+      "selected": true,
+      "data": {
+        "label": "volatile keyword",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 218,
+      "height": 49,
+      "style": {
+        "width": 218,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 973.8343015809069,
+        "y": 915.3203519457165
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 218,
+        "height": 49
+      }
+    },
+    {
+      "id": "_wV2VQq6MIY1rVHjK8pfu",
+      "type": "topic",
+      "position": {
+        "x": 702.0073106597292,
+        "y": 914.3203519457165
+      },
+      "selected": true,
+      "data": {
+        "label": "Cryptography",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "JeMG0gU8IVRBZgczjXmPi"
+      },
+      "zIndex": 999,
+      "width": 222,
+      "height": 49,
+      "style": {
+        "width": 222,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 702.0073106597292,
+        "y": 914.3203519457165
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 222,
+        "height": 49
+      }
+    },
+    {
+      "id": "9h20XVRli7TDq0QIJwX2U",
+      "type": "topic",
+      "position": {
+        "x": 701.1618709488599,
+        "y": 966.5225017715202
+      },
+      "selected": true,
+      "data": {
+        "label": "Date and Time",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "JeMG0gU8IVRBZgczjXmPi"
+      },
+      "zIndex": 999,
+      "width": 224,
+      "height": 49,
+      "style": {
+        "width": 224,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 701.1618709488599,
+        "y": 966.5225017715202
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 224,
+        "height": 49
+      }
+    },
+    {
+      "id": "UGccAJeFA636IiCySl-zF",
+      "type": "label",
+      "position": {
+        "x": 711.0073106597292,
+        "y": 1507.8599244017678
+      },
+      "selected": true,
+      "data": {
+        "label": "Functional Programming",
+        "href": "",
+        "color": "#000000",
+        "style": {
+          "fontSize": 17
+        }
+      },
+      "zIndex": 999,
+      "width": 227,
+      "height": 36,
+      "style": {
+        "width": 227
+      },
+      "positionAbsolute": {
+        "x": 711.0073106597292,
+        "y": 1507.8599244017678
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 227,
+        "height": 36
+      }
+    },
+    {
+      "id": "1Mk_zXxCCcUoX-gFxtlnf",
+      "type": "subtopic",
+      "position": {
+        "x": 711.0073106597292,
+        "y": 1394.8599244017678
+      },
+      "selected": true,
+      "data": {
+        "label": "Functional Composition",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "WHxAwfdKHQSOg0TLX05EG"
+      },
+      "zIndex": 999,
+      "width": 227,
+      "height": 49,
+      "style": {
+        "width": 227,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 711.0073106597292,
+        "y": 1394.8599244017678
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 227,
+        "height": 49
+      }
+    },
+    {
+      "id": "dz6bCmB4dgA7VVZ448cN6",
+      "type": "subtopic",
+      "position": {
+        "x": 711.0073106597292,
+        "y": 1288.8599244017678
+      },
+      "selected": true,
+      "data": {
+        "label": "High Order Functions",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "SityDdjhhNZ9CO3Tg0VI9"
+      },
+      "zIndex": 999,
+      "width": 227,
+      "height": 49,
+      "style": {
+        "width": 227,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 711.0073106597292,
+        "y": 1288.8599244017678
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 227,
+        "height": 49
+      }
+    },
+    {
+      "id": "SityDdjhhNZ9CO3Tg0VI9",
+      "type": "subtopic",
+      "position": {
+        "x": 711.0073106597292,
+        "y": 1341.8599244017678
+      },
+      "selected": true,
+      "data": {
+        "label": "Functional Interfaces",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 227,
+      "height": 49,
+      "style": {
+        "width": 227,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 711.0073106597292,
+        "y": 1341.8599244017678
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 227,
+        "height": 49
+      }
+    },
+    {
+      "id": "WHxAwfdKHQSOg0TLX05EG",
+      "type": "subtopic",
+      "position": {
+        "x": 711.0073106597292,
+        "y": 1447.8599244017678
+      },
+      "selected": true,
+      "data": {
+        "label": "Stream API",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "SityDdjhhNZ9CO3Tg0VI9"
+      },
+      "zIndex": 999,
+      "width": 227,
+      "height": 49,
+      "style": {
+        "width": 227,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 711.0073106597292,
+        "y": 1447.8599244017678
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 227,
+        "height": 49
+      }
+    },
+    {
+      "id": "JeMG0gU8IVRBZgczjXmPi",
+      "type": "topic",
+      "position": {
+        "x": 700.0073106597292,
+        "y": 1018.7246515973238
+      },
+      "selected": true,
+      "data": {
+        "label": "Networking",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "kdxy8Zssnc5lJjdmjUyMc"
+      },
+      "zIndex": 999,
+      "width": 224,
+      "height": 49,
+      "style": {
+        "width": 224,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 700.0073106597292,
+        "y": 1018.7246515973238
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 224,
+        "height": 49
+      }
+    },
+    {
+      "id": "C7rB3jkshHFN7TkHRJPlz",
+      "type": "topic",
+      "position": {
+        "x": 700.0073106597292,
+        "y": 1073.5225017715202
+      },
+      "selected": true,
+      "data": {
+        "label": "Regular Expressions",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "JeMG0gU8IVRBZgczjXmPi"
+      },
+      "zIndex": 999,
+      "width": 224,
+      "height": 49,
+      "style": {
+        "width": 224,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 700.0073106597292,
+        "y": 1073.5225017715202
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 224,
+        "height": 49
+      }
+    },
+    {
+      "id": "fV-gW51jhna2__Ln2HIIh",
+      "type": "topic",
+      "position": {
+        "x": 1529.0338845627668,
+        "y": 1500.3599244017678
+      },
+      "selected": true,
+      "data": {
+        "label": "Database Access",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "LgpsnXV0CTvTspjnsd0Rd"
+      },
+      "zIndex": 999,
+      "width": 221,
+      "height": 49,
+      "style": {
+        "width": 221,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1529.0338845627668,
+        "y": 1500.3599244017678
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 221,
+        "height": 49
+      }
+    },
+    {
+      "id": "WzWOxBUKKg6LeuBmVesc2",
+      "type": "subtopic",
+      "position": {
+        "x": 1554.5338845627668,
+        "y": 1417.8469443073327
+      },
+      "selected": true,
+      "data": {
+        "label": "Spring Data JPA",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "9UbRG752qxJdUwmqEAjN3"
+      },
+      "zIndex": 999,
+      "width": 170,
+      "height": 49,
+      "style": {
+        "width": 170,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1554.5338845627668,
+        "y": 1417.8469443073327
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 170,
+        "height": 49
+      }
+    },
+    {
+      "id": "UEiDzzodyEu5O1xFAFDly",
+      "type": "subtopic",
+      "position": {
+        "x": 1554.5338845627668,
+        "y": 1364.8469443073327
+      },
+      "selected": true,
+      "data": {
+        "label": "Hibernate",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "9UbRG752qxJdUwmqEAjN3"
+      },
+      "zIndex": 999,
+      "width": 170,
+      "height": 49,
+      "style": {
+        "width": 170,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1554.5338845627668,
+        "y": 1364.8469443073327
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 170,
+        "height": 49
+      }
+    },
+    {
+      "id": "X2rJ3BY1ytFKsbJqJETFu",
+      "type": "subtopic",
+      "position": {
+        "x": 1554.5338845627668,
+        "y": 1311.8469443073327
+      },
+      "selected": true,
+      "data": {
+        "label": "EBean",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "9UbRG752qxJdUwmqEAjN3"
+      },
+      "zIndex": 999,
+      "width": 170,
+      "height": 49,
+      "style": {
+        "width": 170,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1554.5338845627668,
+        "y": 1311.8469443073327
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 170,
+        "height": 49
+      }
+    },
+    {
+      "id": "d9F5Wt8onY125DLuzNULg",
+      "type": "topic",
+      "position": {
+        "x": 1529.0338845627668,
+        "y": 1622.3196545591995
+      },
+      "selected": true,
+      "data": {
+        "label": "Logging Frameworks",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "LgpsnXV0CTvTspjnsd0Rd"
+      },
+      "zIndex": 999,
+      "width": 221,
+      "height": 49,
+      "style": {
+        "width": 221,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1529.0338845627668,
+        "y": 1622.3196545591995
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 221,
+        "height": 49
+      }
+    },
+    {
+      "id": "okC1uMdyfIJAhX_R9Npsw",
+      "type": "subtopic",
+      "position": {
+        "x": 1532.5469679422956,
+        "y": 1716.8068987197155
+      },
+      "selected": true,
+      "data": {
+        "label": "Logback",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 111,
+      "height": 49,
+      "style": {
+        "width": 111,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1532.5469679422956,
+        "y": 1716.8068987197155
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 111,
+        "height": 49
+      }
+    },
+    {
+      "id": "sFaNj_1MviaTc6UIfjXl6",
+      "type": "subtopic",
+      "position": {
+        "x": 1648.2217949048954,
+        "y": 1716.8068987197155
+      },
+      "selected": true,
+      "data": {
+        "label": "Log4j2",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1648.2217949048954,
+        "y": 1716.8068987197155
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "LGlZHKqyQ-aWtHnhklhgn",
+      "type": "subtopic",
+      "position": {
+        "x": 1532.5469679422956,
+        "y": 1769.8068987197155
+      },
+      "selected": true,
+      "data": {
+        "label": "SLF4J",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 111,
+      "height": 49,
+      "style": {
+        "width": 111,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1532.5469679422956,
+        "y": 1769.8068987197155
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 111,
+        "height": 49
+      }
+    },
+    {
+      "id": "Fn7aAaGbwYsAp4xLuuFud",
+      "type": "subtopic",
+      "position": {
+        "x": 1648.2217949048954,
+        "y": 1769.8068987197155
+      },
+      "selected": true,
+      "data": {
+        "label": "TinyLog",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1648.2217949048954,
+        "y": 1769.8068987197155
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "LgpsnXV0CTvTspjnsd0Rd",
+      "type": "topic",
+      "position": {
+        "x": 1300.7385519848222,
+        "y": 1621.8196545591995
+      },
+      "selected": true,
+      "data": {
+        "label": "Testing",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "81N1cZLue_Ii0uD5CV6kZ"
+      },
+      "zIndex": 999,
+      "width": 121,
+      "height": 50,
+      "style": {
+        "width": 121,
+        "height": 50
+      },
+      "positionAbsolute": {
+        "x": 1300.7385519848222,
+        "y": 1621.8196545591995
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 121,
+        "height": 50
+      }
+    },
+    {
+      "id": "9UbRG752qxJdUwmqEAjN3",
+      "type": "subtopic",
+      "position": {
+        "x": 1554.5338845627668,
+        "y": 1258.8469443073327
+      },
+      "selected": true,
+      "data": {
+        "label": "JDBC",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 170,
+      "height": 49,
+      "style": {
+        "width": 170,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1554.5338845627668,
+        "y": 1258.8469443073327
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 170,
+        "height": 49
+      }
+    },
+    {
+      "id": "ahcnPvftbi83gtiqV6VTP",
+      "type": "label",
+      "position": {
+        "x": 712.482369832682,
+        "y": 1739.4390443834811
+      },
+      "selected": true,
+      "data": {
+        "label": "Unit Testing",
+        "href": "",
+        "color": "#000000",
+        "style": {
+          "fontSize": 17
+        }
+      },
+      "zIndex": 999,
+      "width": 120,
+      "height": 32,
+      "style": {
+        "width": 120,
+        "height": 31.718994140625
+      },
+      "positionAbsolute": {
+        "x": 712.482369832682,
+        "y": 1739.4390443834811
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 120,
+        "height": 32
+      }
+    },
+    {
+      "id": "hY1-sEpTmpaj1PregdkFf",
+      "type": "subtopic",
+      "position": {
+        "x": 712.482369832682,
+        "y": 1626.4390443834811
+      },
+      "selected": true,
+      "data": {
+        "label": "JUnit",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 120,
+      "height": 49,
+      "style": {
+        "width": 120,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 712.482369832682,
+        "y": 1626.4390443834811
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 120,
+        "height": 49
+      }
+    },
+    {
+      "id": "XU2C8bF9ICej8LS7ZGTTv",
+      "type": "subtopic",
+      "position": {
+        "x": 712.482369832682,
+        "y": 1679.4390443834811
+      },
+      "selected": true,
+      "data": {
+        "label": "TestNG",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 120,
+      "height": 49,
+      "style": {
+        "width": 120,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 712.482369832682,
+        "y": 1679.4390443834811
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 120,
+        "height": 49
+      }
+    },
+    {
+      "id": "lI6ST4WcGtPdKSoWIxStg",
+      "type": "label",
+      "position": {
+        "x": 854.3929054677501,
+        "y": 1740.5740097760008
+      },
+      "selected": true,
+      "data": {
+        "label": "Integration Testing",
+        "href": "",
+        "color": "#000000",
+        "style": {
+          "fontSize": 17
+        }
+      },
+      "zIndex": 999,
+      "width": 160,
+      "height": 36,
+      "style": {},
+      "positionAbsolute": {
+        "x": 854.3929054677501,
+        "y": 1740.5740097760008
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 160,
+        "height": 36
+      }
+    },
+    {
+      "id": "gB4XUR9nCdF1-dOEwGcHi",
+      "type": "subtopic",
+      "position": {
+        "x": 854.3929054677501,
+        "y": 1627.5740097760008
+      },
+      "selected": true,
+      "data": {
+        "label": "REST Assured",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 160,
+      "height": 49,
+      "style": {
+        "width": 160,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 854.3929054677501,
+        "y": 1627.5740097760008
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 160,
+        "height": 49
+      }
+    },
+    {
+      "id": "U2BqOY49HaII6mKQB3SVt",
+      "type": "subtopic",
+      "position": {
+        "x": 854.3929054677501,
+        "y": 1680.5740097760008
+      },
+      "selected": true,
+      "data": {
+        "label": "JMeter",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 160,
+      "height": 49,
+      "style": {
+        "width": 160,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 854.3929054677501,
+        "y": 1680.5740097760008
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 160,
+        "height": 49
+      }
+    },
+    {
+      "id": "BFX3fjnFTHVnNnqMudZoK",
+      "type": "label",
+      "position": {
+        "x": 1046.8252013753893,
+        "y": 1693.015947794886
+      },
+      "selected": true,
+      "data": {
+        "label": "Behavior Testing",
+        "href": "",
+        "color": "#000000",
+        "style": {
+          "fontSize": 17
+        }
+      },
+      "zIndex": 999,
+      "width": 145,
+      "height": 36,
+      "style": {},
+      "positionAbsolute": {
+        "x": 1046.8252013753893,
+        "y": 1693.015947794886
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 145,
+        "height": 36
+      }
+    },
+    {
+      "id": "UFDy19TNkykRsKv4vRsVJ",
+      "type": "subtopic",
+      "position": {
+        "x": 1030.3252013753893,
+        "y": 1633.015947794886
+      },
+      "selected": true,
+      "data": {
+        "label": "Cucumber-JVM",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "mLM1HJf6_pxrUDOmb45ew"
+      },
+      "zIndex": 999,
+      "width": 178,
+      "height": 49,
+      "style": {
+        "width": 178,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1030.3252013753893,
+        "y": 1633.015947794886
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 178,
+        "height": 49
+      }
+    },
+    {
+      "id": "mLM1HJf6_pxrUDOmb45ew",
+      "type": "subtopic",
+      "position": {
+        "x": 1022.3252013753893,
+        "y": 1738.4390443834811
+      },
+      "selected": true,
+      "data": {
+        "label": "Mocking > Mockito",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 197,
+      "height": 49,
+      "style": {
+        "width": 197,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1022.3252013753893,
+        "y": 1738.4390443834811
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 197,
+        "height": 49
+      }
+    },
+    {
+      "width": 412,
+      "height": 121,
+      "id": "0vLaVNJaJSHZ_bHli6Qzs",
+      "type": "paragraph",
+      "position": {
+        "x": 1155.2385519848222,
+        "y": 1895.2880407433463
+      },
+      "selected": true,
+      "data": {
+        "label": "Visit Backend path and see what you missed",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center",
+          "borderColor": "#000000",
+          "backgroundColor": "WHITe"
+        },
+        "oldId": "m9eO0jLGuR_9w2JJbe_g2"
+      },
+      "zIndex": 999,
+      "positionAbsolute": {
+        "x": 1155.2385519848222,
+        "y": 1895.2880407433463
+      },
+      "dragging": false,
+      "style": {
+        "width": 412,
+        "height": 121
+      },
+      "resizing": false,
+      "focusable": true,
+      "selectable": true,
+      "measured": {
+        "width": 412,
+        "height": 121
+      }
+    },
+    {
+      "width": 21,
+      "height": 85,
+      "id": "xi0QAi4kXm3-IFKgopnOP",
+      "type": "vertical",
+      "position": {
+        "x": 1359.8343015809069,
+        "y": 2016.2880407433463
+      },
+      "selected": true,
+      "data": {
+        "label": "vertical node",
+        "style": {
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round",
+          "strokeWidth": 3.5,
+          "stroke": "#2B78E4"
+        },
+        "oldId": "RLtk1C3gofHnLJ17x3o5b"
+      },
+      "zIndex": 999,
+      "positionAbsolute": {
+        "x": 1359.8343015809069,
+        "y": 2016.2880407433463
+      },
+      "dragging": false,
+      "focusable": true,
+      "style": {
+        "width": 21,
+        "height": 85
+      },
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 21,
+        "height": 85
+      }
+    },
+    {
+      "width": 378,
+      "height": 49,
+      "id": "-sFboM4eFUMVq1tlPl-fV",
+      "type": "button",
+      "position": {
+        "x": 1177.931647147896,
+        "y": 1952.012591461887
+      },
+      "selected": true,
+      "data": {
+        "label": "Backend Roadmap",
+        "href": "https://roadmap.sh/backend",
+        "color": "#FFFFFf",
+        "backgroundColor": "#4136D6",
+        "style": {
+          "fontSize": 17
+        },
+        "borderColor": "#4136D6",
+        "oldId": "qXKNK_IsGS8-JgLK-Q9oU"
+      },
+      "zIndex": 999,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 1177.931647147896,
+        "y": 1952.012591461887
+      },
+      "style": {
+        "width": 378,
+        "height": 49
+      },
+      "focusable": true,
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 378,
+        "height": 49
+      }
+    },
+    {
+      "id": "t7TlesNLK0sOM8Zv7t-MF",
+      "type": "paragraph",
+      "position": {
+        "x": 703.0073106597292,
+        "y": -98.12414200689119
+      },
+      "selected": true,
+      "data": {
+        "label": "This is Java specific roadmap and intentionally skips some backend topics.",
+        "style": {
+          "fontSize": 17,
+          "borderColor": "#000000",
+          "backgroundColor": "#ffffff",
+          "color": "#000000",
+          "textAlign": "center",
+          "justifyContent": "flex-start",
+          "padding": 16
+        }
+      },
+      "zIndex": 999,
+      "width": 391,
+      "height": 150,
+      "positionAbsolute": {
+        "x": 703.0073106597292,
+        "y": -98.12414200689119
+      },
+      "dragging": false,
+      "style": {
+        "width": 391,
+        "height": 150
+      },
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 391,
+        "height": 150
+      }
+    },
+    {
+      "id": "2zqZkyVgigifcRS1H7F_b",
+      "type": "button",
+      "position": {
+        "x": 722.5073106597292,
+        "y": -12.157567200212156
+      },
+      "selected": true,
+      "data": {
+        "label": "Visit Backend Roadmap",
+        "href": "https://roadmap.sh/backend",
+        "color": "#000000",
+        "backgroundColor": "#d1d1d1",
+        "style": {
+          "fontSize": 17
+        },
+        "borderColor": "#D1D1D1"
+      },
+      "zIndex": 999,
+      "width": 352,
+      "height": 49,
+      "dragging": false,
+      "style": {
+        "width": 352,
+        "height": 49
+      },
+      "resizing": false,
+      "positionAbsolute": {
+        "x": 722.5073106597292,
+        "y": -12.157567200212156
+      },
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 352,
+        "height": 49
+      }
+    },
+    {
+      "id": "kpF15oUmlUmk1qVGEBB7Y",
+      "type": "paragraph",
+      "position": {
+        "x": 1401.8167239283337,
+        "y": -93.80861630367417
+      },
+      "selected": true,
+      "data": {
+        "label": "Find the detailed version of this roadmap along with other similar roadmaps",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "left",
+          "borderColor": "#000000",
+          "backgroundColor": "#FFFFFf"
+        },
+        "oldId": "yHmHXymPNWwu8p1vvqD3o"
+      },
+      "zIndex": 999,
+      "width": 355,
+      "height": 143,
+      "positionAbsolute": {
+        "x": 1401.8167239283337,
+        "y": -93.80861630367417
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "style": {
+        "width": 355,
+        "height": 143
+      },
+      "resizing": false,
+      "measured": {
+        "width": 355,
+        "height": 143
+      }
+    },
+    {
+      "id": "if9eTna5NRTMStVwpSwDP",
+      "type": "button",
+      "position": {
+        "x": 1414.3167239283337,
+        "y": -11.95049837897065
+      },
+      "selected": true,
+      "data": {
+        "label": "roadmap.sh",
+        "href": "https://roadmap.sh",
+        "color": "#ffffff",
+        "backgroundColor": "#4136D6",
+        "style": {
+          "fontSize": 17
+        },
+        "oldId": "2zqZkyVgigifcRS1H7F_b"
+      },
+      "zIndex": 999,
+      "width": 330,
+      "height": 49,
+      "dragging": false,
+      "style": {
+        "width": 330,
+        "height": 49
+      },
+      "resizing": false,
+      "positionAbsolute": {
+        "x": 1414.3167239283337,
+        "y": -11.95049837897065
+      },
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 330,
+        "height": 49
+      }
+    },
+    {
+      "id": "OrkJa48HIDmrLOgCBpimA",
+      "type": "subtopic",
+      "position": {
+        "x": 1368.6499336025647,
+        "y": 1368.2594233874954
+      },
+      "selected": true,
+      "data": {
+        "label": "Javalin",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "kN-mXxqUPNJNsJGQ0U_7J"
+      },
+      "zIndex": 999,
+      "width": 114,
+      "height": 49,
+      "style": {
+        "width": 114,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 1368.6499336025647,
+        "y": 1368.2594233874954
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 114,
+        "height": 49
+      }
+    }
+  ],
+  "edges": [
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "iogwMmOvub2ZF4zgg6WyF",
+      "sourceHandle": "x2",
+      "target": "_hYN0gEi9BL24nptEtXWU",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "XX0I26JoVMVXIe_7bVMix",
+      "selected": true,
+      "focusable": true,
+      "selectable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "_hYN0gEi9BL24nptEtXWU",
+      "sourceHandle": "z2",
+      "target": "idLHBxhvcIqZTqmh_E8Az",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "dFn6kGOoJ-0BzJJEb9DSG",
+      "selected": true,
+      "focusable": true,
+      "selectable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "_hYN0gEi9BL24nptEtXWU",
+      "sourceHandle": "z2",
+      "target": "os3Pa6W9SSNEzgmlBbglQ",
+      "targetHandle": "y2",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "arkF7QJJRbCBYWp0crqa2",
+      "selected": true,
+      "focusable": true,
+      "selectable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "_hYN0gEi9BL24nptEtXWU",
+      "sourceHandle": "z2",
+      "target": "3oInpqvTSSC5_K6i7j8N7",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "HNVw8OboycWKLEtEbG2bn",
+      "selected": true,
+      "focusable": true,
+      "selectable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "_hYN0gEi9BL24nptEtXWU",
+      "sourceHandle": "z2",
+      "target": "YKhuRbcUFzo0hTvuTq-Yl",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "auB7Png72XjmhcLr3IJA7",
+      "selected": true,
+      "focusable": true,
+      "selectable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "jZ67HhVRelJaxjsCckSSI",
+      "sourceHandle": "x2",
+      "target": "hWA7RtuqltMTmHdcCnmES",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "2aoDIr80lXSJLW1hIGUkb",
+      "selected": true,
+      "focusable": true,
+      "selectable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "sourceHandle": "z2",
+      "target": "NMznG9mo2wzNFnjhg990f",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "m-_y7nLeYFkUKGiacxWA0",
+      "selected": true,
+      "focusable": true,
+      "selectable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "sourceHandle": "z2",
+      "target": "gc_7cuIO2_joKlQRAPDfX",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "G7pXuJfkyt2nWAOHU8yV0",
+      "selected": true,
+      "focusable": true,
+      "selectable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "rrrvATyhXqRgJGWI3z0WF",
+      "sourceHandle": "x2",
+      "target": "AvbMQ5vY3ip1oX_6Yq4ie",
+      "targetHandle": "w2",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "2_6Yz3-Agx9_rEN5xW86c",
+      "selected": true,
+      "focusable": true,
+      "selectable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "hWA7RtuqltMTmHdcCnmES",
+      "sourceHandle": "w2",
+      "target": "1AJv95mTLpR7L8KBoGym8",
+      "targetHandle": "x1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "kgMI98fg2-mKMgUs0wnjD",
+      "selected": true,
+      "focusable": true,
+      "selectable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "hWA7RtuqltMTmHdcCnmES",
+      "sourceHandle": "y2",
+      "target": "0etAs56EeBfh_0IlAaSra",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "selected": true,
+      "id": "ts38Q2ceHs60TJscUBZVE",
+      "focusable": true,
+      "selectable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "jZ67HhVRelJaxjsCckSSI",
+      "sourceHandle": "y2",
+      "target": "h6ceO0kiBIxNRkPzN3hBY",
+      "targetHandle": "z1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "ZiMV7umyPdhy3JJDcopR-",
+      "selected": true,
+      "focusable": true,
+      "selectable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "jZ67HhVRelJaxjsCckSSI",
+      "sourceHandle": "y2",
+      "target": "_JlT9oKQ6Yu4UX6l19G8P",
+      "targetHandle": "z2",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "WI-MhbxrehFcVwyGJ5CQJ",
+      "selected": true,
+      "focusable": true,
+      "selectable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "_hYN0gEi9BL24nptEtXWU",
+      "sourceHandle": "x2",
+      "target": "jZ67HhVRelJaxjsCckSSI",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "qUrLBzvXvJOg53HBfjrOI",
+      "selected": true,
+      "focusable": true,
+      "selectable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "hp15XdmPlKKTbYnrYfCBl",
+      "sourceHandle": "x2",
+      "target": "2TGq1y2QthnxxN-FfToSe",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-hp15XdmPlKKTbYnrYfCBlx2-Rhk7BrJqNEXQT3LGlGLM6w1",
+      "selected": true,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "2TGq1y2QthnxxN-FfToSe",
+      "sourceHandle": "y2",
+      "target": "OlbQNB6YXZjO1J7D0lZU1",
+      "targetHandle": "z1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-Rhk7BrJqNEXQT3LGlGLM6y2-OlbQNB6YXZjO1J7D0lZU1z1",
+      "selected": true,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "2TGq1y2QthnxxN-FfToSe",
+      "sourceHandle": "y2",
+      "target": "5g9mmi01WeZ4aDqNzwx_V",
+      "targetHandle": "z1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-Rhk7BrJqNEXQT3LGlGLM6y2-QgWalJLIb6Fw0HhN1wb02z1",
+      "selected": true,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "2TGq1y2QthnxxN-FfToSe",
+      "sourceHandle": "y2",
+      "target": "VBNcAO0STaZJ1iV9A7utv",
+      "targetHandle": "z1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-Rhk7BrJqNEXQT3LGlGLM6y2-VBNcAO0STaZJ1iV9A7utvz1",
+      "selected": true,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "2TGq1y2QthnxxN-FfToSe",
+      "sourceHandle": "y2",
+      "target": "yNDbk6r5wFqBi25xmIRF_",
+      "targetHandle": "z1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-Rhk7BrJqNEXQT3LGlGLM6y2-yNDbk6r5wFqBi25xmIRF_z1",
+      "selected": true,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "2TGq1y2QthnxxN-FfToSe",
+      "sourceHandle": "z2",
+      "target": "5khApwg1FZ-0qorsLyH-F",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-Rhk7BrJqNEXQT3LGlGLM6z2-5khApwg1FZ-0qorsLyH-Fy1",
+      "selected": true,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "2TGq1y2QthnxxN-FfToSe",
+      "sourceHandle": "z2",
+      "target": "sG_3ZQIE1-FQXQkk-OduQ",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-Rhk7BrJqNEXQT3LGlGLM6z2-sG_3ZQIE1-FQXQkk-OduQy1",
+      "selected": true,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "2TGq1y2QthnxxN-FfToSe",
+      "sourceHandle": "z2",
+      "target": "JHUhVEjWFXTn6-wKcKevg",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-Rhk7BrJqNEXQT3LGlGLM6z2-DZ4BX4NYeCQbjGSj56lngy1",
+      "selected": true,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "2TGq1y2QthnxxN-FfToSe",
+      "sourceHandle": "z2",
+      "target": "KcIUQ5XpOI6WTA9wrqzn3",
+      "targetHandle": "y2",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-Rhk7BrJqNEXQT3LGlGLM6z2-KcIUQ5XpOI6WTA9wrqzn3y2",
+      "selected": true,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "2TGq1y2QthnxxN-FfToSe",
+      "sourceHandle": "z2",
+      "target": "ziD_XwzJSFQP_3iLjq9pA",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-2TGq1y2QthnxxN-FfToSez2-ziD_XwzJSFQP_3iLjq9pAy1",
+      "selected": true,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "2TGq1y2QthnxxN-FfToSe",
+      "sourceHandle": "z2",
+      "target": "aEaBobzFWv0mJHGAbgxKY",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-2TGq1y2QthnxxN-FfToSez2-aEaBobzFWv0mJHGAbgxKYy1",
+      "selected": true,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "2TGq1y2QthnxxN-FfToSe",
+      "sourceHandle": "y2",
+      "target": "QgWalJLIb6Fw0HhN1wb02",
+      "targetHandle": "z1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-2TGq1y2QthnxxN-FfToSey2-QgWalJLIb6Fw0HhN1wb02z1",
+      "selected": true,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "Rhk7BrJqNEXQT3LGlGLM6",
+      "sourceHandle": "y2",
+      "target": "LenPrQwxFsE1UVbXO_dE7",
+      "targetHandle": "w2",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-Rhk7BrJqNEXQT3LGlGLM6y2-LenPrQwxFsE1UVbXO_dE7w2",
+      "selected": true,
+      "type": "simplebezier",
+      "focusable": true,
+      "selectable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "2TGq1y2QthnxxN-FfToSe",
+      "sourceHandle": "z2",
+      "target": "DZ4BX4NYeCQbjGSj56lng",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-2TGq1y2QthnxxN-FfToSez2-DZ4BX4NYeCQbjGSj56lngy1",
+      "selected": true,
+      "focusable": true,
+      "selectable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "2TGq1y2QthnxxN-FfToSe",
+      "sourceHandle": "x2",
+      "target": "zNHDLv26Xn3oMrDVSAP1Z",
+      "targetHandle": "w2",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-2TGq1y2QthnxxN-FfToSex2-zNHDLv26Xn3oMrDVSAP1Zw2",
+      "selected": true,
+      "focusable": true,
+      "selectable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "FyTlaUqrK5h3e5mWwkvVg",
+      "sourceHandle": "x2",
+      "target": "XUikvUeIXLl34LP6HFrAI",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-FyTlaUqrK5h3e5mWwkvVgx2-XUikvUeIXLl34LP6HFrAIw1",
+      "selected": true,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "kdxy8Zssnc5lJjdmjUyMc",
+      "sourceHandle": "y2",
+      "target": "8n5A3GTRV3WpEnCa4yGam",
+      "targetHandle": "z1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-kdxy8Zssnc5lJjdmjUyMcy2-8n5A3GTRV3WpEnCa4yGamz1",
+      "selected": true,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "zNHDLv26Xn3oMrDVSAP1Z",
+      "sourceHandle": "x2",
+      "target": "FyTlaUqrK5h3e5mWwkvVg",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-zNHDLv26Xn3oMrDVSAP1Zx2-FyTlaUqrK5h3e5mWwkvVgw1",
+      "selected": true,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "zNHDLv26Xn3oMrDVSAP1Z",
+      "sourceHandle": "z2",
+      "target": "g9P3548F38tYGjevBc42w",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-zNHDLv26Xn3oMrDVSAP1Zz2-g9P3548F38tYGjevBc42ww1",
+      "selected": true,
+      "type": "smoothstep",
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "g9P3548F38tYGjevBc42w",
+      "sourceHandle": "x2",
+      "target": "00_q6I95eO-PUUrKpPFY8",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-g9P3548F38tYGjevBc42wx2-00_q6I95eO-PUUrKpPFY8w1",
+      "selected": true,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "81N1cZLue_Ii0uD5CV6kZ",
+      "sourceHandle": "w2",
+      "target": "6FMj9tMAQPii_1kLtHJLk",
+      "targetHandle": "x2",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-81N1cZLue_Ii0uD5CV6kZw2-6FMj9tMAQPii_1kLtHJLkx2",
+      "selected": true,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "zItXmuluDtl6HkTYQ7qMh",
+      "sourceHandle": "x2",
+      "target": "M0ybgK1JCycXhZ1dEpCFo",
+      "targetHandle": "w2",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-zItXmuluDtl6HkTYQ7qMhx2-M0ybgK1JCycXhZ1dEpCFow2",
+      "selected": true,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "_W84u4UXMSY0zvy6RJvFi",
+      "sourceHandle": "w2",
+      "target": "kN-mXxqUPNJNsJGQ0U_7J",
+      "targetHandle": "x1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-LgpsnXV0CTvTspjnsd0Rdw2-kN-mXxqUPNJNsJGQ0U_7Jx1",
+      "selected": true,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "_W84u4UXMSY0zvy6RJvFi",
+      "sourceHandle": "y2",
+      "target": "81N1cZLue_Ii0uD5CV6kZ",
+      "targetHandle": "z2",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-LgpsnXV0CTvTspjnsd0Rdy2-81N1cZLue_Ii0uD5CV6kZz2",
+      "selected": true,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "shqS9-hg__mkOtnnl_I4l",
+      "sourceHandle": "w2",
+      "target": "u_YysD7Bpnq-xkFX5yJGz",
+      "targetHandle": "x1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-JeMG0gU8IVRBZgczjXmPiw2-u_YysD7Bpnq-xkFX5yJGzx1",
+      "selected": true,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "_W84u4UXMSY0zvy6RJvFi",
+      "sourceHandle": "z2",
+      "target": "fV-gW51jhna2__Ln2HIIh",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-_W84u4UXMSY0zvy6RJvFiz2-LgpsnXV0CTvTspjnsd0Rdy1",
+      "selected": true,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "fV-gW51jhna2__Ln2HIIh",
+      "sourceHandle": "w2",
+      "target": "WzWOxBUKKg6LeuBmVesc2",
+      "targetHandle": "x1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-LgpsnXV0CTvTspjnsd0Rdw2-WzWOxBUKKg6LeuBmVesc2x1",
+      "selected": true,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "fV-gW51jhna2__Ln2HIIh",
+      "sourceHandle": "x2",
+      "target": "d9F5Wt8onY125DLuzNULg",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-fV-gW51jhna2__Ln2HIIhx2-LgpsnXV0CTvTspjnsd0Rdw1",
+      "selected": true,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "d9F5Wt8onY125DLuzNULg",
+      "sourceHandle": "y2",
+      "target": "LgpsnXV0CTvTspjnsd0Rd",
+      "targetHandle": "z2",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-d9F5Wt8onY125DLuzNULgy2-LgpsnXV0CTvTspjnsd0Rdz2",
+      "selected": true,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "d9F5Wt8onY125DLuzNULg",
+      "sourceHandle": "y2",
+      "target": "d9F5Wt8onY125DLuzNULg",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-d9F5Wt8onY125DLuzNULgy2-d9F5Wt8onY125DLuzNULgy1",
+      "selected": true,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "KMA7NkxFbPoUDtFnGBFnj",
+      "sourceHandle": "x2",
+      "target": "0vLaVNJaJSHZ_bHli6Qzs",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-KMA7NkxFbPoUDtFnGBFnjx2-0vLaVNJaJSHZ_bHli6Qzsw1",
+      "selected": true,
+      "type": "simplebezier",
+      "focusable": true,
+      "selectable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "DYkdM_L7T2GcTPAoZNnUR",
+      "sourceHandle": "x2",
+      "target": "0vLaVNJaJSHZ_bHli6Qzs",
+      "targetHandle": "z1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-DYkdM_L7T2GcTPAoZNnURx2-0vLaVNJaJSHZ_bHli6Qzsz1",
+      "selected": true,
+      "type": "smoothstep",
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "LgpsnXV0CTvTspjnsd0Rd",
+      "sourceHandle": "x2",
+      "target": "0vLaVNJaJSHZ_bHli6Qzs",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-LgpsnXV0CTvTspjnsd0Rdx2-0vLaVNJaJSHZ_bHli6Qzsw1",
+      "selected": true,
+      "selectable": true,
+      "focusable": true
+    }
+  ],
+  "certifyroi_content": {
+    "abstraction@qdA6bK9ZkP8p0_NH_wMuj": "# Abstraction\r\n\r\nThe abstract keyword in Java is used to declare a class or a method that cannot be instantiated directly or must be implemented by subclasses, respectively. It is a key part of Java's abstraction mechanism, allowing developers to define abstract classes and methods that provide a blueprint for other classes.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Abstract Classes](https://jenkov.com/tutorials/java/abstract-classes.html)\r\n- [@article@Java Interfaces vs. Abstract Classes](https://jenkov.com/tutorials/java/interfaces-vs-abstract-classes.html)",
+    "access-specifiers@KYndNwfQcwRCf3zCXOwd_": "# Access Specifiers\r\n\r\nAccess specifiers (or access modifiers) in Java are keywords that control the visibility or accessibility of classes, methods, constructors, and other members. They determine from where these members can be accessed. Java provides four access specifiers: `private`, `default` (no keyword), `protected`, and `public`, each offering a different level of access control.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Access Modifiers](https://jenkov.com/tutorials/java/access-modifiers.html)",
+    "annotations@c--y6GcKj9am0CBdu_Hnt": "# Annotations\r\n\r\nAnnotations are a form of metadata that provide data about a program. They are used to provide supplemental information about the code, but they are not a part of the program itself. Annotations can be used by the compiler to detect errors or suppress warnings, and they can also be used at runtime to modify the behavior of the program.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Annotations Tutorial](https://jenkov.com/tutorials/java/annotations.html)",
+    "array-vs-arraylist@a-EQiBUlSgdZba1mW36op": "# Array vs ArrayList\r\n\r\nArrays and ArrayLists are both ways to store collections of elements in Java. An array is a fixed-size, ordered sequence of elements of the same data type. Once you declare its size, you cannot change it. An ArrayList, on the other hand, is a dynamic, resizable array implementation. It can grow or shrink as needed, allowing you to add or remove elements without worrying about the initial size.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Arrays](https://jenkov.com/tutorials/java/arrays.html)\r\n- [@article@Java ArrayLists](https://jenkov.com/tutorials/java-collections/list.html)",
+    "arrays@5khApwg1FZ-0qorsLyH-F": "# Arrays\r\n\r\nArrays are fundamental data structures used to store a collection of elements of the same data type in contiguous memory locations. They provide a way to organize and access multiple values using a single variable name and an index. Each element in an array can be accessed directly using its index, starting from 0.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Arrays](https://jenkov.com/tutorials/java/arrays.html)\r\n- [@video@Java Arrays Tutorial](https://www.youtube.com/watch?v=ei_4Nt7XWOw)",
+    "attributes-and-methods@xTwJYcA6ldgaw3yGmbDEd": "# Attributes and Methods\r\n\r\nAttributes are variables that hold data about an object, defining its state or characteristics. Methods are functions that define the behavior of an object, allowing it to perform actions or operations. Together, attributes and methods encapsulate the data and behavior of an object within a class.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Classes](https://jenkov.com/tutorials/java/classes.html)\r\n- [@article@Java Methods](https://jenkov.com/tutorials/java/methods.html)\r\n- [@article@Java Properties](https://jenkov.com/tutorials/java-collections/properties.html)",
+    "basic-syntax@OlbQNB6YXZjO1J7D0lZU1": "# Basic Syntax\r\n\r\nUnderstanding the basics is the key to a solid foundation. In this section, learn the basic terminologies, naming conventions, reserved keywords, expressions, statements, data structures, OOP, packages, etc.\r\n\r\n*   To print output use --> System.out.println();\r\n*   To take input from user --> Scanner or BufferedReader class can be used\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Java Language Basics](https://dev.java/learn/language-basics)\r\n- [@video@Java - Basic Syntax](https://www.youtube.com/watch?v=81piDKqPxjQ)\r\n- [@video@Java Tutorial for Beginners](https://www.youtube.com/watch?v=RRubcjpTkks)",
+    "basics-of-oop@DZ4BX4NYeCQbjGSj56lng": "# Basics of OOP\r\n\r\nObject-Oriented Programming (OOP) is a programming paradigm centered around \"objects,\" which contain data in the form of fields (attributes) and code in the form of procedures (methods). OOP focuses on creating reusable code by grouping related data and behavior into objects, allowing for modularity, abstraction, inheritance, and polymorphism. These concepts help in organizing and structuring code in a way that mirrors real-world entities and their interactions.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Classes and Objects](https://jenkov.com/tutorials/java/classes.html)",
+    "bazel@6FMj9tMAQPii_1kLtHJLk": "# Bazel\r\n\r\nBazel is an open-source build and test tool similar to Make, Maven, and Gradle. It uses a human-readable, high-level build language. Bazel supports projects in multiple languages and builds outputs for multiple platforms. It's designed for fast, reliable, and reproducible builds, making it suitable for large codebases and complex projects.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Getting started with Bazel](https://bazel.build/start)\r\n- [@article@Build Java Projects with Bazel](https://earthly.dev/blog/build-java-projects-with-bazel/)\r\n- [@article@Introduction to the Bazel Build Tool](https://www.baeldung.com/bazel-build-tool)",
+    "build-tools@81N1cZLue_Ii0uD5CV6kZ": "# Build Tools\r\n\r\nA build tool is a program or command-line utility that automates the process of compiling, assembling, and deploying software.\r\n\r\nBuild tools are not only limited to compiling code; they can also help with package management, dependency handling, and continuous integration systems.",
+    "classes-and-objects@LenPrQwxFsE1UVbXO_dE7": "# Classes and Objects\r\n\r\nClasses are blueprints for creating objects, which are instances of those classes. A class defines the characteristics (attributes) and behaviors (methods) that objects of that class will possess. Think of a class as a template and an object as a specific instance created from that template.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Class and Objects](https://www.programiz.com/java-programming/class-objects)\r\n- [@video@Java Classes and Objects](https://www.youtube.com/watch?v=IUqKuGNasdM)",
+    "concurrency@shqS9-hg__mkOtnnl_I4l": "# Concurrency\r\n\r\nConcurrency is the ability of a program to execute multiple tasks seemingly simultaneously. This doesn't necessarily mean they are running at the exact same instant, but rather that their execution overlaps in time. This can be achieved through techniques like multithreading, where a single program is divided into multiple threads that can run concurrently, or through asynchronous programming, where tasks can be started and then the program can continue executing other tasks without waiting for the first task to complete.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Concurrency and Multithreading Tutorial](https://jenkov.com/tutorials/java-concurrency/index.html)\r\n- [@article@Java Concurrency in Practice](https://www.baeldung.com/java-concurrency)",
+    "conditionals@sG_3ZQIE1-FQXQkk-OduQ": "# Conditionals\r\n\r\nJava has the following conditional statements:\r\n\r\n*   Use `if` to specify a block of code to be executed, if a specified condition is true\r\n*   Use `else` to specify a block of code to be executed if the same condition is false\r\n*   Use `else if` to specify a new condition to test; if the first condition is false\r\n*   Use `switch` to specify many alternative blocks of code to be executed\r\n*   Use `?,:` operator to specify one line condition\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@What are Conditional statements?](https://www.educative.io/answers/what-are-conditional-statements-in-programming)\r\n- [@video@Conditionals and Loops in Java](https://youtu.be/ldYLYRNaucM)\r\n- [@video@Switch Statements + Nested Case in Java](https://youtu.be/mA23x39DjbI)",
+    "cryptography@_wV2VQq6MIY1rVHjK8pfu": "# Cryptography\r\n\r\nCryptography is the practice and study of techniques for secure communication in the presence of adversaries. It involves converting readable data (plaintext) into an unreadable format (ciphertext) through encryption, and then converting the ciphertext back into plaintext through decryption. Cryptography uses algorithms and keys to ensure confidentiality, integrity, authentication, and non-repudiation of information.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Cryptography Tutorial](https://jenkov.com/tutorials/java-cryptography/index.html)\r\n- [@video@Cryptography 101 for Java developers](https://www.youtube.com/watch?v=itmNhVckTPc)",
+    "cucumber-jvm@UFDy19TNkykRsKv4vRsVJ": "# Cucumber JVM\r\n\r\nCucumber is a testing tool that supports Behavior Driven Development (BDD). It offers a way to write tests that anybody can understand, regardless of their technical knowledge.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Cucumber](https://cucumber.io/)\r\n- [@official@Cucumber Documentation](https://cucumber.io/docs/cucumber/)\r\n- [@article@Cucumber-JVM for Java](https://automationpanda.com/2017/10/24/cucumber-jvm-for-java/)\r\n- [@video@Cucumber-JVM 5 with Enhanced Cucumber Expression](https://www.youtube.com/watch?v=jCzpxvAJoZM)\r\n- [@feed@Explore top posts about JVM](https://app.daily.dev/tags/jvm?ref=roadmapsh)",
+    "data-types@5g9mmi01WeZ4aDqNzwx_V": "# Data Types and Variables\r\n\r\nVariable in Java is a data container that stores the data values during Java program execution. Every variable is assigned a data type, which designates the type and quantity of values it can hold. Variable is a memory location name of the data. The Java variables have mainly three types: Local, Instance and Static.\r\n\r\nData Types are divided into two group -\r\n\r\n*   Primitive - byte,short,int,long,float,double,boolean and char\r\n*   Non-Primitive - String, Arrays, Classes, Enums and Records\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Data Types](https://jenkov.com/tutorials/java/variables.html)\r\n- [@article@What are Data Types & Variables?](https://jenkov.com/tutorials/java/data-types.html)",
+    "database-access@fV-gW51jhna2__Ln2HIIh": "# ORM (Object-Relational Mapping)\r\n\r\nA programming method to map objects in Java to relational entities in a database. In other words, converting data between relational databases and object-oriented programming languages. Some popular ORM tools/frameworks in Java are:\r\n\r\n*   Spring Data JPA\r\n*   Hibernate\r\n*   Ebean\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@ORM tutorial](https://www.altexsoft.com/blog/object-relational-mapping/)\r\n- [@article@Java Databases: An Overview of Libraries & APIs](https://www.marcobehler.com/guides/java-databases)\r\n- [@feed@Explore top posts about Java](https://app.daily.dev/tags/java?ref=roadmapsh)",
+    "date-and-time@9h20XVRli7TDq0QIJwX2U": "# Working with Date and Time in Java\r\n\r\nDate and Time is a very important concept in programming. Java provides a rich set of classes to work with Date and Time.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Date and Time API in Java](https://chamalwr.medium.com/datetime-api-in-java-2aef5df1c39b)\r\n- [@article@Introduction to Date and Time in Java](https://www.baeldung.com/java-8-date-time-intro)\r\n- [@article@Java SE 8 Date and Time](https://www.oracle.com/technical-resources/articles/java/jf14-date-time.html)",
+    "dependency-injection@zItXmuluDtl6HkTYQ7qMh": "# Dependency Injection\r\n\r\nDependency Injection (DI) is a design pattern where objects receive their dependencies from external sources rather than creating them themselves. This means a class doesn't have to worry about how to obtain the objects it needs to function; instead, those objects are \"injected\" into the class, usually through its constructor, setter methods, or interface. This promotes loose coupling and makes code more testable and maintainable.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Dependency Injection Tutorial](https://jenkov.com/tutorials/dependency-injection/index.html)\r\n- [@article@Java Dependency Injection Design Pattern Example Tutorial](https://www.digitalocean.com/community/tutorials/java-dependency-injection-design-pattern-example-tutorial)",
+    "dequeue@DWO2-EPIUeKK5aQGiTuKc": "# Dequeue\r\n\r\nA Dequeue (pronounced \"dee-queue\") is a double-ended queue, a data structure that allows you to add and remove elements from both the front (head) and the back (tail) of the queue. Unlike a regular queue (FIFO - First-In, First-Out), a dequeue provides flexibility for both FIFO and LIFO (Last-In, First-Out) operations. This makes it useful for implementing various algorithms and data management tasks where elements need to be accessed or modified from either end.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Deque Tutorial](https://jenkov.com/tutorials/java-collections/deque.html)\r\n- [@article@Java Deque](https://www.programiz.com/java-programming/deque)",
+    "ebean@X2rJ3BY1ytFKsbJqJETFu": "# Ebean\r\n\r\nEbean is an object-relational mapping tool written in Java. It supports the standard JPA annotations for declaring entities. However, it provides a much simpler API for persisting. In fact, one of the points worth mentioning about the Ebean architecture is that it is sessionless, meaning it does not fully manage entities.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Ebean](https://ebean.io/)\r\n- [@official@Ebean Documentation](https://ebean.io/docs/)\r\n- [@article@Guide to Ebean](https://www.baeldung.com/ebean-orm)",
+    "encapsulation@iH9wSsOK4a77pS7U0Yu5z": "# Encapsulation\r\n\r\nEncapsulation is a fundamental concept in object-oriented programming where data and the methods that operate on that data are bundled together as a single unit. This unit, often a class, hides the internal state of the object from the outside world and only exposes a controlled interface for interacting with it. This protects the data from accidental modification and allows for easier maintenance and modification of the code.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java - Encapsulation](https://www.tutorialspoint.com/java/java_encapsulation.htm)",
+    "enums@ey1f8IsdAlDv1O3E_tNog": "# Enums\r\n\r\nEnums, short for enumerations, are a special data type in Java that represent a group of named constants. They allow you to define a type that can only take on a specific set of predefined values. This makes your code more readable and less prone to errors by restricting the possible values a variable can hold.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Enums](https://jenkov.com/tutorials/java/enums.html)\r\n- [@article@Java Enums](https://www.programiz.com/java-programming/enums)",
+    "exception-handling@g9P3548F38tYGjevBc42w": "# Exception Handling\r\n\r\nException Handling in Java is one of the effective means to handle the runtime errors so that the regular flow of the application can be preserved. Java Exception Handling is a mechanism to handle runtime errors such as ClassNotFoundException, IOException, SQLException, RemoteException, etc.\r\n\r\nThere are three types of exceptions -\r\n\r\n1.  Checked Exception - exceptions checked at compile time. Example - IOException\r\n2.  Unchecked Exception - exceptions checked at run time. Example - NullPointerException\r\n3.  Error - It is irrecoverable. Example - OutOfMemoryError\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@video@Understanding Java Exceptions](https://www.youtube.com/watch?v=W-N2ltgU-X4)\r\n- [@video@Java Exception Handling](https://www.youtube.com/watch?v=1XAfapkBQjk)",
+    "file-operations@NowpzyPVFcX082j5YS5i8": "# Files and APIs\r\n\r\nLearn how to work with files i.e., reading, writing and deleting, files and folders, etc. Also, learn how to make API calls, parse the incoming response, and so on.\r\n\r\n*   `FileWriter` - this class is useful to create a file by writing characters into it\r\n*   `FileReader` - this class is useful to read data in form of characters from file\r\n*   `Files.lines(Paths.get(\"file.txt\")))` - processing the files as a stream. Since Java 8\r\n*   `Files.readString / Files.writeString` - reads the whole file and puts it into a string - since Java 11\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@How To Work With Files In Java](https://www.marcobehler.com/guides/java-files)\r\n- [@article@(old) Java HttpURLConnection Example - Java HTTP Request GET, POST](https://www.digitalocean.com/community/tutorials/java-httpurlconnection-example-java-http-request-get-post)\r\n- [@article@New Java HttpClient](https://www.baeldung.com/java-9-http-client)\r\n- [@article@5 ways to make HTTP requests in Java](https://www.twilio.com/blog/5-ways-to-make-http-requests-in-java)\r\n- [@article@Read a file line by line in Java](https://mkyong.com/java8/java-8-stream-read-a-file-line-by-line/)\r\n- [@article@Various ways to read a file to String in Java](https://howtodoinjava.com/java/io/java-read-file-to-string-examples/)",
+    "final-keyword@Ajuc_rHObqMQBXLqRIuxh": "# Final Keyword\r\n\r\nThe `final` keyword in Java is a non-access modifier used to apply restrictions on a variable, method, or class. When applied to a variable, it makes the variable's value constant after initialization. When applied to a method, it prevents the method from being overridden in a subclass. When applied to a class, it prevents the class from being subclassed (inherited).\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Final Keyword](https://www.baeldung.com/java-final)\r\n- [@article@How does the final keyword in Java work? I can still modify an object](https://stackoverflow.com/questions/15655012/how-does-the-final-keyword-in-java-work-i-can-still-modify-an-object)",
+    "functional-composition@1Mk_zXxCCcUoX-gFxtlnf": "# Functional Composition\r\n\r\nFunctional composition is the process of combining two or more functions to produce a new function. The resulting function applies each function in order, passing the output of one function as the input to the next. This allows you to build complex operations by chaining together simpler, reusable functions.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Functional Composition in Java](https://jenkov.com/tutorials/java-functional-programming/functional-composition.html)\r\n- [@article@Java Functional Programming](https://www.baeldung.com/java-functional-programming)",
+    "functional-interfaces@SityDdjhhNZ9CO3Tg0VI9": "# Functional Interfaces\r\n\r\nFunctional interfaces are interfaces that contain only one abstract method. They can have multiple default or static methods, but only one method that needs to be implemented. These interfaces can be used with lambda expressions and method references, allowing for concise and readable code when dealing with single-method operations.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Functional Interfaces](https://jenkov.com/tutorials/java-functional-programming/functional-interfaces.html)\r\n- [@article@Java Functional Interfaces](https://www.baeldung.com/java-8-functional-interfaces)",
+    "generic-collections@eL4pc6SaNiKP48PzN7mNe": "# Generics\r\n\r\nJava Generic methods and generic classes enable programmers to specify, with a single method declaration, a set of related methods, or with a single class declaration, a set of related types, respectively.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java - Generics](https://www.tutorialspoint.com/java/java_generics.htm)\r\n- [@video@Generics in Java](https://www.youtube.com/watch?v=XMvznsY02Mk)",
+    "gradle@rmDIm5dqtdlNfPhvpqS7-": "# Gradle\r\n\r\nGradle is an open-source build automation tool that helps software engineers to test, build, and release high-performance software products. In addition, Gradle also supports multi-language development. Currently, the supported languages for Gradle include Java, Kotlin, Groovy, Scala, C/C++, and JavaScript.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Gradle](https://gradle.org/)\r\n- [@article@Building Spring Boot Projects with Gradle](https://www.baeldung.com/spring-boot-gradle-plugin)\r\n- [@video@Gradle Tutorial](https://youtu.be/kONQCIAcWeI)\r\n- [@video@Working with Gradle](https://youtu.be/6V6G3RyxEMk)\r\n- [@feed@Explore top posts about Gradle](https://app.daily.dev/tags/gradle?ref=roadmapsh)",
+    "hibernate@UEiDzzodyEu5O1xFAFDly": "# Hibernate\r\n\r\nHibernate is an open source object-relational mapping tool that provides a framework to map object-oriented domain models to relational databases for web applications. Hibernate implements the specifications of JPA. Performance is key so Hibernate supports first-level and second-level caching\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Hibernate](https://hibernate.org/)\r\n- [@article@Second-level caching explained](https://hazelcast.com/glossary/hibernate-second-level-cache/)",
+    "high-order-functions@dz6bCmB4dgA7VVZ448cN6": "# High Order Functions\r\n\r\nHigh Order Functions are functions that can either accept other functions as arguments or return functions as their results. This capability allows for more flexible and reusable code by enabling you to abstract over operations. Essentially, you can pass behavior as data, making your code more dynamic and adaptable to different situations.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java High Order Functions](https://jenkov.com/tutorials/java-functional-programming/higher-order-functions.html)",
+    "inheritance@PXpPEmCEBUKRjwP3B5LzJ": "# Inheritance\r\n\r\nInheritance is a fundamental concept in object-oriented programming where a new class (called a subclass or derived class) acquires properties and behaviors from an existing class (called a superclass or base class). This allows for code reuse and the creation of hierarchical relationships between classes, promoting a more organized and maintainable codebase. The subclass can extend the superclass by adding new attributes and methods or overriding existing ones.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Inheritance](https://jenkov.com/tutorials/java/inheritance.html)\r\n- [@article@Inheritance in Java with Example](https://www.digitalocean.com/community/tutorials/inheritance-java-example)",
+    "initializer-block@dg_UpaO8TzIN7w_QZ1n-6": "# Initializer Block\r\n\r\nAn initializer block in Java is a block of code, enclosed in curly braces `{}` , that is executed when an instance of a class is created. It's used to initialize instance variables or perform setup tasks before the constructor is called. There are two types: instance initializer blocks, which run every time a new object is created, and static initializer blocks, which run only once when the class is first loaded.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Static and Instance Initializer Blocks in Java](https://www.baeldung.com/java-static-instance-initializer-blocks)\r\n- [@article@All About Java Instance Initializer Blocks](https://blogs.oracle.com/javamagazine/post/java-instance-initializer-block)\r\n- [@article@What is an initialization block?](https://stackoverflow.com/questions/3987428/what-is-an-initialization-block)",
+    "interfaces@6wTRN2PYC6zM_Txkekx53": "# Interfaces\r\n\r\nAn interface in Java is a blueprint of a class. It specifies a set of methods that a class must implement if it claims to implement the interface. Think of it as a contract: any class that \"signs\" the contract (implements the interface) agrees to provide specific behaviors (methods). Interfaces can also contain constants (static final variables). They help achieve abstraction and multiple inheritance in Java.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Interfaces in Java](https://jenkov.com/tutorials/java/interfaces.html)\r\n- [@article@A Guide to Java Interfaces](https://www.baeldung.com/java-interfaces)",
+    "io-operations@M0ybgK1JCycXhZ1dEpCFo": "# I/O Operations\r\n\r\nI/O Operations, short for Input/Output Operations, deal with how a program interacts with the outside world. This involves reading data from sources like files, network connections, or the keyboard, and writing data to destinations such as files, the console, or network sockets. Essentially, it's the mechanism by which a program receives information and sends results.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java IO Tutorial](https://jenkov.com/tutorials/java-io/index.html)",
+    "iterator@-17LFO72I8RKjJRMXct9k": "# Iterator\r\n\r\nAn Iterator is an object that enables you to traverse through a collection (like a List or Set) one element at a time. It provides a standard way to access elements sequentially without needing to know the underlying structure of the collection. You can use methods like `hasNext()` to check if there's a next element and `next()` to retrieve it.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Iterator Tutorial](https://jenkov.com/tutorials/java-collections/iterator.html)\r\n- [@article@Java Iterable Tutorial](https://jenkov.com/tutorials/java-collections/iterable.html)",
+    "java-memory-model@wEc7pSVU5G2c6Zqmtb_1k": "# Java Memory Model\r\n\r\nThe Java Memory Model (JMM) defines how threads in Java interact with memory. It specifies how and when different threads can see writes to shared variables, addressing issues like data visibility and race conditions in concurrent programs. The JMM ensures that multithreaded Java programs behave predictably across different hardware architectures by establishing rules for memory synchronization and ordering.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Memory Model](https://jenkov.com/tutorials/java-concurrency/java-memory-model.html)",
+    "javalin@OrkJa48HIDmrLOgCBpimA": "# Javalin\r\n\r\nJavalin is a lightweight web framework for Java and Kotlin that's designed to be simple, intuitive, and fun to use. It allows developers to quickly build web applications and APIs with minimal boilerplate code. Javalin focuses on providing a straightforward approach to routing, request handling, and response generation, making it a good choice for projects where speed of development and ease of understanding are important.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Javalin Website](https://javalin.io/)\r\n- [@article@Creating a REST API with Javalin](https://www.baeldung.com/javalin-rest-microservices)",
+    "jdbc@9UbRG752qxJdUwmqEAjN3": "# Java JDBC\r\n\r\nJDBC is an API(Application programming interface) used in java programming to interact with databases. The classes and interfaces of JDBC allow the application to send requests made by users to the specified database.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@IBM: What is JDBC](https://www.ibm.com/docs/en/informix-servers/12.10?topic=started-what-is-jdbc)\r\n- [@feed@Explore top posts about Java](https://app.daily.dev/tags/java?ref=roadmapsh)",
+    "jmeter@U2BqOY49HaII6mKQB3SVt": "# JMeter\r\n\r\nApache JMeter is an Apache project that can be used as a load testing tool for analyzing and measuring the performance of a variety of services, with a focus on web applications.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Apache JMeter Website](https://jmeter.apache.org/)\r\n- [@feed@Explore top posts about Testing](https://app.daily.dev/tags/testing?ref=roadmapsh)",
+    "junit@hY1-sEpTmpaj1PregdkFf": "# JUnit\r\n\r\nJUnit is a testing framework for Java.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@JUnit](https://junit.org/junit5)\r\n- [@official@JUnit Documentation](https://junit.org/junit5/docs/current/user-guide/)\r\n- [@article@JUnit tutorial](https://www.guru99.com/junit-tutorial.html)\r\n- [@article@Basic JUnit tutorial](https://www.baeldung.com/junit-5)\r\n- [@video@Testing with JUnit crash course](https://www.youtube.com/watch?v=flpmSXVTqBI)",
+    "lambda-expressions@00_q6I95eO-PUUrKpPFY8": "# Lambda Expressions\r\n\r\nLambda expressions are essentially short blocks of code that you can pass around to be executed. They allow you to treat functionality as a method argument, or code as data. Think of them as anonymous methods – methods without a name – that can be written directly in the place where they are needed, making your code more concise and readable, especially when dealing with functional interfaces.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Lambda Expressions](https://jenkov.com/tutorials/java/lambda-expressions.html)",
+    "learn-the-basics@2TGq1y2QthnxxN-FfToSe": "# Java Fundamentals\r\n\r\nJava is a programming language and computing platform first released by Sun Microsystems in 1995. Java is a general-purpose, class-based, object-oriented programming language designed for having lesser implementation dependencies. It is a computing platform for application development. Java is fast, secure, and reliable. Therefore, it is widely used for developing Java applications in laptops, data centers, game consoles, scientific supercomputers, cell phones, etc.\r\n\r\nLearn about the fundamentals of Java such as basic syntax, data types, variables, conditionals, functions, data structures, packages, etc.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@course@Introduction to Java by Hyperskill (JetBrains Academy)](https://hyperskill.org/tracks/8)\r\n- [@article@Head First Java](https://www.amazon.co.uk/Head-First-Java-3rd-Brain-Friendly/dp/1491910771)\r\n- [@article@Thinking in Java](https://www.amazon.co.uk/Thinking-Java-Eckel-Bruce-February/dp/B00IBON6C6)\r\n- [@article@Effective Java](https://www.amazon.com/Effective-Java-Joshua-Bloch/dp/0134685997)\r\n- [@article@Java: A Beginners Guide](https://www.amazon.co.uk/Java-Beginners-Guide-Herbert-Schildt/dp/1260463559)\r\n- [@article@Java: The Complete Reference](https://www.amazon.co.uk/gp/product/B09JL8BMK7/ref=dbs_a_def_rwt_bibl_vppi_i2)\r\n- [@video@Java Tutorial for Beginners](https://youtu.be/eIrMbAQSU34)\r\n- [@video@Java + DSA + Interview Preparation Course (For beginners)](https://youtube.com/playlist?list=PL9gnSGHSqcnr_DxHsP7AW9ftq0AtAyYqJ)\r\n- [@feed@Explore top posts about Java](https://app.daily.dev/tags/java?ref=roadmapsh)",
+    "lifecycle-of-a-program@QgWalJLIb6Fw0HhN1wb02": "# Lifecycle of a Program\r\n\r\nIn Java, the program lifecycle consists of several distinct phases that work together to execute code. The process begins with developers writing Java source code in `.java` files using an IDE or text editor. This code is then compiled by the Java compiler (javac) into bytecode stored in `.class` files, with syntax and type checking performed during compilation. When the program runs, the Java Virtual Machine (JVM) loads these compiled class files into memory through a process involving loading of binary data, linking for verification and preparation, and initialization of class elements. The JVM then verifies the bytecode's security compliance, performs Just-In-Time (JIT) compilation to translate bytecode into native machine code for better performance, and executes the program instructions while managing system resources. Throughout execution, the JVM handles garbage collection by reclaiming memory from unused objects, and finally releases all resources upon program termination. This architecture enables Java's \"write once, run anywhere\" capability since the bytecode can execute on any device with a compatible JVM.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Life Cycle of a Java Program](https://www.startertutorials.com/corejava/life-cycle-java-program.html)\r\n- [@article@How the JVM Executes Java Code](https://www.cesarsotovalero.net/blog/how-the-jvm-executes-java-code.html)\r\n- [@article@JIT vs. AOT Compilation in Java](https://bell-sw.com/blog/compilation-in-java-jit-vs-aot/)",
+    "log4j2@sFaNj_1MviaTc6UIfjXl6": "# Log4j2\r\n\r\nApache Log4j is a Java-based logging utility. Log4j Java library's role is to log information that helps applications run smoothly, determine what's happening, and help with the debugging process when errors occur. Logging libraries typically write down messages to the log file or a database.\r\n\r\nLog4j2 is the updated version of the popular and influential log4j library, used extensively throughout the Java ecosystem for so many years. Version 2. x keeps all the logging features of its predecessor and builds on that foundation with some significant improvements, especially in the area of performance.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Official Website](https://logging.apache.org/log4j/2.x/manual/configuration.html)\r\n- [@article@Log4j explained: Everything you need to know](https://www.techtarget.com/whatis/feature/Log4j-explained-Everything-you-need-to-know)",
+    "logback@okC1uMdyfIJAhX_R9Npsw": "# Logback\r\n\r\nLogback is one of the most widely used logging frameworks in the Java Community. It's a replacement for its predecessor, Log4j. Logback offers a faster implementation, provides more options for configuration, and more flexibility in archiving old log files.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Official Website](https://logback.qos.ch/manual/configuration.html)",
+    "logging-frameworks@d9F5Wt8onY125DLuzNULg": "# Logging Frameworks\r\n\r\nLogging is an important feature that helps developers to trace out the errors. It provides the ability to capture the log file. Logging provides the complete tracing information of the application and also records the critical failure if any occur in an application. There are three components of Logging: Logger, Logging handlers or Appenders and Layouts or logging formatters.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Introduction to Java Logging](https://www.baeldung.com/java-logging-intro)\r\n- [@article@Java Logging Frameworks](https://en.wikipedia.org/wiki/Java_logging_framework)\r\n- [@article@How to Do Logging In Java](https://www.marcobehler.com/guides/java-logging)\r\n- [@feed@Explore top posts about Java](https://app.daily.dev/tags/java?ref=roadmapsh)",
+    "loops@JHUhVEjWFXTn6-wKcKevg": "# Loops\r\n\r\nIn Java and other programming languages, loops are used to iterate a part of the program several times. There are four types of loops in Java, `for`, `forEach`, `while`, and `do...while`.\r\n\r\n*   Syntax of `for` loop is `for(initialization;condition;increment/decrement){}`\r\n*   Syntax of `forEach` loop is `for(data_type variable:array_name){}`\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Loops in Java.](https://www.programiz.com/java-programming/for-loop)",
+    "map@eKtdDtiJygKQ4PuEylFQY": "# Map\r\n\r\nA Map is a data structure that stores data in key-value pairs. Each key is unique, and it maps to a specific value. Think of it like a dictionary where you use a word (the key) to look up its definition (the value). Maps allow you to efficiently retrieve, add, or remove values based on their associated keys.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Generic Map in Java](https://jenkov.com/tutorials/java-generics/generic-map.html)\r\n- [@article@Java Map](https://jenkov.com/tutorials/java-collections/map.html)\r\n- [@article@Java ConcurrentMap](https://jenkov.com/tutorials/java-util-concurrent/concurrentmap.html)\r\n- [@article@Java SortedMap](https://jenkov.com/tutorials/java-collections/sortedmap.html)",
+    "math-operations@ziD_XwzJSFQP_3iLjq9pA": "# Math Operations\r\n\r\nMath operations involve performing calculations using numbers. These operations include addition, subtraction, multiplication, division, and modulus (finding the remainder). They are fundamental building blocks for solving numerical problems and manipulating data in programming.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Math](https://jenkov.com/tutorials/java/math-operators-and-math-class.html)",
+    "maven@VdL_fAHxmRbuF0J627beA": "# Maven\r\n\r\nMaven is an open-source build tool, used primarily for Java projects.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Getting started](https://maven.apache.org/guides/getting-started/)\r\n- [@article@Building Spring Projects with Maven](https://www.baeldung.com/spring-with-maven)\r\n- [@feed@Explore top posts about Maven](https://app.daily.dev/tags/maven?ref=roadmapsh)",
+    "method-chaining@Ax2ouIZgN1DpPzKDy4fwp": "# Method Chaining\r\n\r\nMethod chaining is a programming technique where multiple method calls are made sequentially on the same object, one after another, in a single statement. Each method in the chain returns an object, allowing the next method to be called on that returned object. This approach enhances code readability and conciseness by reducing the need for temporary variables and intermediate steps.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@@GeeksforGeeks@Method Chaining In Java with Examples](https://www.geeksforgeeks.org/java/method-chaining-in-java-with-examples/)\r\n- [@article@How to achieve method chaining in Java](https://stackoverflow.com/questions/21180269/how-to-achieve-method-chaining-in-java)",
+    "method-overloading--overriding@y-i56f1P_mMdvyBr7J4XE": "# Method Overloading and Overriding\r\n\r\nMethod overloading allows you to define multiple methods in the same class with the same name but different parameters (different number, types, or order of parameters). Method overriding, on the other hand, occurs when a subclass provides a specific implementation for a method that is already defined in its superclass. The method signature (name and parameters) must be the same in both the superclass and the subclass for overriding to occur.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Overriding vs Overloading in Java](https://www.digitalocean.com/community/tutorials/overriding-vs-overloading-in-java)\r\n- [@article@Java Inheritance Tutorial](https://jenkov.com/tutorials/java/inheritance.html)",
+    "mocking--mockito@mLM1HJf6_pxrUDOmb45ew": "# Mocking\r\n\r\nMocking removes external dependencies from a unit test to create a sense of an entire controlled environment. The traditional method of mocks involves mocking all other classes that interact with the class we want to test. The common targets for mocking are:\r\n\r\n*   Database connections\r\n*   Web services\r\n*   Slow Classes\r\n*   Classes with side effects\r\n*   Classes with non-deterministic behavior\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Mockito - Mocking Framework for Java](https://site.mockito.org/)\r\n- [@feed@Explore top posts about Testing](https://app.daily.dev/tags/testing?ref=roadmapsh)",
+    "modules@kdxy8Zssnc5lJjdmjUyMc": "# Modules\r\n\r\nModules in Java are a way to organize code into reusable and independent units. They provide a higher level of abstraction than packages, allowing you to control which parts of your code are exposed to other modules and which are kept private. This enhances encapsulation, improves security, and simplifies dependency management by explicitly declaring dependencies between modules.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Modules](https://jenkov.com/tutorials/java/modules.html)\r\n- [@article@A Guide to Java 9 Modularity](https://www.baeldung.com/java-modularity)",
+    "nested-classes@zDBW20W2XMCtNTG3emJ_A": "# Nested Classes\r\n\r\nNested classes are classes defined inside another class. The class that contains the inner class is known as the outer class. Nested classes can access members of the outer class, even if they are declared private. They are a way to logically group classes that are only used in one place, increasing encapsulation and maintainability.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Nested Classes](https://jenkov.com/tutorials/java/nested-classes.html)\r\n- [@article@Guide to Nested Classes in Java](https://www.baeldung.com/java-nested-classes)",
+    "networking@JeMG0gU8IVRBZgczjXmPi": "# Networking sockets\r\n\r\n*   Java Networking is a concept of connecting two or more computing devices together so that we can share resources.\r\n*   Java socket programming provides facility to share data between different computing devices.\r\n*   A socket is one endpoint of a two-way communication link between two programs running on the network. A socket is bound to a port number so that the TCP layer can identify the application that data is destined to be sent to.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Sockets](https://docs.oracle.com/javase/tutorial/networking/sockets/index.html)\r\n- [@article@Java Networking](https://www.tutorialspoint.com/java/java_networking.htm)\r\n- [@video@What is Socket Programming?](https://youtu.be/BqBKEXLqdvI)\r\n- [@feed@Explore top posts about Networking](https://app.daily.dev/tags/networking?ref=roadmapsh)",
+    "object-lifecycle@3qowgj1pas1X7oRric9eU": "# Object Lifecycle\r\n\r\nThe object lifecycle refers to the series of stages an object goes through from its creation (allocation of memory) to its destruction (reclaiming of memory). These stages typically include object creation, initialization, usage, and eventual garbage collection when the object is no longer needed. Understanding this lifecycle is crucial for efficient memory management and preventing resource leaks.",
+    "optionals@l9fxK8K9fcUqR7hs5TkWU": "# Optionals\r\n\r\nOptionals are a container object that may or may not contain a non-null value. They are primarily used to represent the absence of a value, avoiding the need to return null, which can lead to NullPointerExceptions. Optionals provide methods to explicitly check if a value is present and to handle cases where a value is absent in a more controlled and readable manner.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Guide To Optionals](https://www.baeldung.com/java-optional)\r\n- [@article@Java Optional](https://dzone.com/articles/optional-in-java)",
+    "packages@60POZOjwHSdKYL6rfkyEy": "# Packages\r\n\r\nA package is a namespace that mainly contains classes and interfaces. For instance, the standard class `ArrayList` is in the package `java.util`. For this class, `java.util.ArrayList` is called its fully qualified name because this syntax has no ambiguity. Classes in different packages can have the same name. For example, you have the two classes `java.util.Date` and `java.sql.Date`, which are different. If no package is declared in a class, its package is the default package.\r\n\r\nTo create package use this command -> javac -d directory javafilename\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Packages in Java](https://docs.oracle.com/javase/8/docs/api/java/lang/Package.html)",
+    "pass-by-value--pass-by-reference@3r0Er9XZHovIZz3gNyj4A": "# Pass by Value / Pass by Reference\r\n\r\nPass by value and pass by reference are two different ways of passing arguments to a function or method. In pass by value, a copy of the variable's value is passed to the function, so any changes made to the parameter inside the function do not affect the original variable. In pass by reference, a direct reference to the variable is passed, meaning that changes made to the parameter inside the function will directly affect the original variable.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java is Pass-by-Value, Not Pass-by-Reference](https://www.baeldung.com/java-pass-by-value-or-pass-by-reference)\r\n- [@article@Is Java \"pass-by-reference\" or \"pass-by-value\"?](https://stackoverflow.com/questions/40480/is-java-pass-by-reference-or-pass-by-value)",
+    "play-framework@kN-mXxqUPNJNsJGQ0U_7J": "# Play Framework\r\n\r\nPlay Framework is a high-productivity web application framework that allows the model-view-controller pattern. It is written in Scala but can also be used for other programming languages that are compiled and run on the JVM. e.g.Java.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Play Framework Website](https://www.playframework.com/)\r\n- [@article@What is Play Framework?](https://en.wikipedia.org/wiki/Play_Framework)\r\n- [@article@Intro to Play Framework](https://www.baeldung.com/java-intro-to-the-play-framework)\r\n- [@video@Introduction to Play Framework](https://youtu.be/bLrmnjPQsZc)",
+    "quarkus@w-kcKPh8U0P_jtT90_1Xy": "# Quarkus\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Official Website](https://quarkus.io/)\r\n- [@feed@Explore top posts about Quarkus](https://app.daily.dev/tags/quarkus?ref=roadmapsh)",
+    "queue@ThoWhXb4vUvNfE70_wMfa": "# Queue\r\n\r\nA queue is a fundamental data structure that follows the First-In, First-Out (FIFO) principle. Think of it like a line at a store: the first person to join the line is the first person to be served. Elements are added to the rear (enqueue) and removed from the front (dequeue) of the queue.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Queue](https://jenkov.com/tutorials/java-collections/queue.html)",
+    "record@VqLV7kolfRFnvOuJAvzlg": "# Record\r\n\r\nA record is a special type of class in Java that is designed to hold immutable data. It automatically generates methods like `equals()`, `hashCode()`, and `toString()` based on the components declared in its header, reducing boilerplate code. Records are useful for creating data transfer objects (DTOs) or simple data aggregates where the primary purpose is to store and access data.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Records](https://jenkov.com/tutorials/java/record.html)\r\n- [@video@Java Records](https://www.youtube.com/watch?v=xs7DiEIHW0U)",
+    "regular-expressions@C7rB3jkshHFN7TkHRJPlz": "# Regular Expressions\r\n\r\nRegular expressions, often shortened to \"regex,\" are sequences of characters that define a search pattern. These patterns are used to match character combinations in strings. They can be used to search, edit, or manipulate text and data. Regular expressions provide a powerful and flexible way to work with text-based data.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Regular Expressions Tutorial](https://jenkov.com/tutorials/java-regex/index.html)",
+    "rest-assured@gB4XUR9nCdF1-dOEwGcHi": "# Rest assured\r\n\r\nTesting and validating REST services in Java is harder than in dynamic languages such as Ruby and Groovy. REST Assured brings the simplicity of using these languages into the Java domain.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Rest-assured](https://rest-assured.io/)\r\n- [@opensource@Rest-assured Documentation](https://github.com/rest-assured/rest-assured/wiki)\r\n- [@article@A Guide to REST-assured](https://www.baeldung.com/rest-assured-tutorial)\r\n- [@feed@Explore top posts about REST API](https://app.daily.dev/tags/rest-api?ref=roadmapsh)",
+    "set@XjkNd5WJ9yxW48dwHQNkZ": "# Set\r\n\r\nA Set is a data structure that stores a collection of unique elements. This means that no duplicate values are allowed within a Set. Sets provide efficient ways to check for membership (if an element exists in the set) and perform operations like union, intersection, and difference.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Set](https://jenkov.com/tutorials/java-collections/set.html)\r\n- [@article@Java Set Interface and Implementation](https://www.digitalocean.com/community/tutorials/java-set)",
+    "slf4j@LGlZHKqyQ-aWtHnhklhgn": "# Slf4j\r\n\r\nThe SLF4J or the Simple Logging Facade for Java is an abstraction layer for various Java logging frameworks, like Log4j 2 or Logback. This allows for plugging different logging frameworks at deployment time without the need for code changes.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Official Website](https://www.slf4j.org/)",
+    "spring-data-jpa@WzWOxBUKKg6LeuBmVesc2": "# Spring data jpa\r\n\r\nSpring Data JPA aims to significantly improve the implementation of data access layers by reducing the effort to the amount that's actually needed. As a developer you write your repository interfaces, including custom finder methods, and Spring will provide the implementation automatically.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Spring Data JPA](https://spring.io/projects/spring-data-jpa)\r\n- [@article@Introduction to Spring Data JPA](https://www.baeldung.com/the-persistence-layer-with-spring-data-jpa)\r\n- [@video@Spring Data JPA Tutorial](https://youtu.be/XszpXoII9Sg)\r\n- [@video@Spring Boot Tutorial - Spring Data JPA](https://youtu.be/8SGI_XS5OPw)\r\n- [@feed@Explore top posts about Spring Framework](https://app.daily.dev/tags/spring?ref=roadmapsh)",
+    "spring-spring-boot@xoryfi4SpJlkz-PV05ql6": "# Spring Boot\r\n\r\nSpring Boot is an open source, microservice-based Java web framework. The Spring Boot framework creates a fully production-ready environment that is completely configurable using its prebuilt code within its codebase. The microservice architecture provides developers with a fully enclosed application, including embedded application servers.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@roadmap@Visit Dedicated Spring Boot Roadmap](https://roadmap.sh/spring-boot)\r\n- [@official@Spring Boot](https://spring.io/projects/spring-boot/)\r\n- [@article@What is Spring Boot?](https://www.ibm.com/cloud/learn/java-spring-boot)\r\n- [@article@Spring Boot Tutorial](https://www.javaguides.net/2021/07/spring-boot-tutorial-for-beginners.html)\r\n- [@article@Learn Spring Boot](https://www.baeldung.com/spring-boot)\r\n- [@video@Spring Boot Tutorial](https://youtu.be/vtPkZShrvXQ)\r\n- [@video@Spring Boot for Beginners](https://youtu.be/UfOxcrxhC0s)\r\n- [@feed@Explore top posts about Spring Framework](https://app.daily.dev/tags/spring?ref=roadmapsh)",
+    "stack@DzfE_9WLAp-BrG3C1-MwU": "# Stack\r\n\r\nA stack is a fundamental data structure that follows the Last-In, First-Out (LIFO) principle. Imagine a stack of plates; you can only add or remove plates from the top. This means the last element added to the stack is the first one to be removed. Stacks are used to manage function calls, evaluate expressions, and implement undo/redo functionality.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Stack Tutorial](https://jenkov.com/tutorials/java-collections/stack.html)\r\n- [@article@Guide to Java Stack](https://www.baeldung.com/java-stack)",
+    "static-keyword@ZcNxO6qIXIg7RaWYnZj2e": "# Static Keyword\r\n\r\nThe `static` keyword in Java is used to create members (variables and methods) that belong to the class itself, rather than to any specific instance of the class. This means there's only one copy of a static variable shared by all objects of that class, and you can access static members directly using the class name without needing to create an object. Static methods can only access static variables and call other static methods.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Static Keyword Explained With Examples](https://www.freecodecamp.org/news/java-static-keyword-explained/)\r\n- [@article@Static and Non-static Fields in Java](https://jenkov.com/tutorials/java/fields.html#static-and-non-static-fields)\r\n- [@article@Guide to the Java 'static' Keyword](https://www.baeldung.com/java-static)",
+    "static-vs-dynamic-binding@Kjdj862xnz8fqDYE3HKhC": "# Static vs Dynamic Binding\r\n\r\nStatic binding, also known as early binding, happens at compile time. The compiler knows exactly which method will be called based on the type of the variable. Dynamic binding, or late binding, occurs at runtime. The specific method to be called is determined based on the actual object type, not the variable type, allowing for more flexibility and polymorphism.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Static and Dynamic Binding in Java](https://www.baeldung.com/java-static-dynamic-binding)\r\n- [@article@Static and Dynamic Binding in Java with Examples](https://beginnersbook.com/2013/04/java-static-dynamic-binding/)",
+    "stream-api@WHxAwfdKHQSOg0TLX05EG": "# Streams\r\n\r\nJava provides a new additional package in Java 8 called java.util.stream. This package consists of classes, interfaces and enum to allows functional-style operations on the elements. You can use stream by importing java.util.stream package.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@The Java 8 Stream API Tutorial](https://www.baeldung.com/java-8-streams)\r\n- [@video@Streams API Tutorial in Java 8+](https://www.youtube.com/watch?v=VNovNwHr9jY)\r\n- [@video@Java 8 Streams Tutorial](https://www.youtube.com/watch?v=t1-YZ6bF-g0)",
+    "strings-and-methods@aEaBobzFWv0mJHGAbgxKY": "# Strings and Methods\r\n\r\nStrings are sequences of characters, like words or sentences, used to represent text in programming. Methods are actions you can perform on these strings, such as finding their length, changing their case (uppercase or lowercase), or extracting parts of them. These methods allow you to manipulate and work with text data effectively.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Strings](https://jenkov.com/tutorials/java/strings.html)",
+    "testing@LgpsnXV0CTvTspjnsd0Rd": "# Testing\r\n\r\nA key to building software that meets requirements without defects is testing. Software testing helps developers know they are building the right software. When tests are run as part of the development process (often with continuous integration tools), they build confidence and prevent regressions in the code.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@What is Software Testing?](https://www.guru99.com/software-testing-introduction-importance.html)\r\n- [@article@Testing Pyramid](https://www.browserstack.com/guide/testing-pyramid-for-test-automation)\r\n- [@feed@Explore top posts about Java](https://app.daily.dev/tags/java?ref=roadmapsh)",
+    "testng@XU2C8bF9ICej8LS7ZGTTv": "# Testng\r\n\r\nTestNG is a testing framework inspired from JUnit and NUnit but introducing some new functionalities that make it more powerful and easier to use.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Testng](https://testng.org)\r\n- [@official@Testng Documentation](https://testng.org/doc/documentation-main.html)\r\n- [@article@Testng tutorial](https://www.guru99.com/all-about-testng-and-selenium.html)",
+    "threads@u_YysD7Bpnq-xkFX5yJGz": "# Basics of Threads\r\n\r\nA thread in Java is the direction or path that is taken while a program is being executed. Generally, all the programs have at least one thread, known as the main thread, that is provided by the JVM or Java Virtual Machine at the starting of the program’s execution.\r\n\r\nWriting correct multi-threaded application is complex and it's an advanced topic. Things like ParallelStreams, thread-safe Collections and ExecutorService can be helpful.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Threads in Java](https://jenkov.com/tutorials/java-concurrency/index.html)\r\n- [@video@Java Threads Tutorial](https://www.youtube.com/watch?v=TCd8QIS-2KI)",
+    "tinylog@Fn7aAaGbwYsAp4xLuuFud": "# Tinylog\r\n\r\nTinylog is a lightweight open-source logging framework for Java and Android, optimized for ease of use.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Official Website](https://tinylog.org/v1/)\r\n- [@official@TinyLog v2](https://tinylog.org/v2/)",
+    "type-casting@yNDbk6r5wFqBi25xmIRF_": "# Type Casting\r\n\r\nType casting is the process of converting a variable from one data type to another. This is often necessary when you need to perform operations between variables of different types, or when you need to store a value of one type in a variable of another type. In Java, type casting can be either implicit (automatic) or explicit (requiring a cast operator).\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Type Casting in Java: Everything You Need to Know](https://www.simplilearn.com/tutorials/java-tutorial/type-casting-in-java)\r\n- [@article@Java Type Casting (With Examples)](https://www.programiz.com/java-programming/typecasting)",
+    "variables-and-scopes@VBNcAO0STaZJ1iV9A7utv": "# Variables and Scopes\r\n\r\nVariables are like containers that hold data in a program. Each variable has a name, a type (like integer, text, or boolean), and a value. The scope of a variable determines where in your code you can access and use that variable. Understanding scope is crucial to avoid naming conflicts and ensure data is accessed correctly within different parts of your program.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Variables](https://jenkov.com/tutorials/java/variables.html)\r\n- [@article@Java Variable Scope](https://www.baeldung.com/java-variable-scope)",
+    "virtual-threads@vJSq1GJLIMQ6IIB8CMK8g": "# Virtual Threads\r\n\r\nVirtual Threads are lightweight threads managed by the Java Virtual Machine (JVM). Unlike traditional operating system threads, which are relatively expensive to create and manage, virtual threads are designed to be extremely lightweight, allowing for the creation of millions of them. They are intended to improve the scalability and concurrency of Java applications by making it easier to write code that can handle a large number of concurrent operations without the overhead associated with traditional threads.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java 21 Virtual Threads: Dude, Where's My Lock?](https://netflixtechblog.com/java-21-virtual-threads-dude-wheres-my-lock-3052540e231d)\r\n- [@article@Virtual Thread vs Thread in Java](https://www.baeldung.com/java-virtual-thread-vs-thread)\r\n- [@article@The Ultimate Guide to Java Virtual Threads](https://rockthejvm.com/articles/the-ultimate-guide-to-java-virtual-threads)",
+    "volatile-keyword@U4Wx3MH3LgJLa0n9Ne0Br": "# Volatile Keyword\r\n\r\nThe `volatile` keyword in Java is a modifier that can be applied to instance variables. It ensures that all threads see the most up-to-date value of a variable. Without `volatile`, each thread might cache its own copy of the variable, leading to inconsistencies when multiple threads access and modify it concurrently. Using `volatile` forces the thread to read the variable's value directly from main memory, and write changes directly back to main memory, bypassing the thread's local cache.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Java Volatile Keyword](https://jenkov.com/tutorials/java-concurrency/volatile.html)\r\n- [@article@Guide to the Volatile Keyword in Java](https://www.baeldung.com/java-volatile)",
+    "web-frameworks@_W84u4UXMSY0zvy6RJvFi": "# Web Frameworks\r\n\r\nFrameworks are tools with pre-written code, that act as a template or skeleton, which can be reused to create an application by simply filling with your code as needed which enables developers to program their application with no overhead of creating each line of code again and again from scratch."
+  }
+}

@@ -411,36 +411,26 @@ def run_engine():
     })
     posthog_client.shutdown()
 
-supabase = create_client("YOUR_SUPABASE_URL", "YOUR_SUPABASE_SERVICE_ROLE_KEY")
+supabase = create_client("https://ejgadkswcjorkyzkqhfl.supabase.co", "YOUR_SUPABASE_KEY")
 
-def save_scraped_certification(title, issuer, fees, difficulty, duration, track):
-    """
-    Persist a scraped certification record into public.certifications.
-    Column mapping must exactly match the Supabase table constraints.
-    """
-    # Build clean URL slug from title
-    clean_slug = title.lower().strip()
-    clean_slug = re.sub(r'[^a-z0-9\s-]', '', clean_slug)
-    clean_slug = re.sub(r'[\s-]+', '-', clean_slug).strip('-')
+def save_scraped_certification(cert_name, cost, difficulty, months, roi):
+    # Auto-generate a clean URL slug (e.g., "AWS Certified Cloud Practitioner" -> "aws-certified-cloud-practitioner")
+    clean_slug = cert_name.lower().strip()
+    clean_slug = re.sub(r'[^a-z0-True0-9\s-]', '', clean_slug) # Strip out punctuation/symbols
+    clean_slug = re.sub(r'[\s-]+', '-', clean_slug)           # Collapse spaces and hyphens into single hyphens
 
-    payload = {
+    scraped_data = {
         "slug": clean_slug,
-        "name": title,
-        "provider": issuer,
-        "cost_inr": int(fees) if fees else 0,
+        "name": cert_name,
+        "cost_inr": int(cost),
         "difficulty": difficulty,
-        "time_commitment_months": int(duration) if duration else 3,
-        "description": f"Primary Domain: {track}"
+        "time_commitment_months": int(months),
+        "median_roi_percent": int(roi)
     }
 
-    try:
-        if supabase:
-            supabase.table('certifications').insert(payload).execute()
-            print(f"Successfully synchronized: {clean_slug}")
-        else:
-            print(f"No Supabase client — skipping insert for: {clean_slug}")
-    except Exception as e:
-        print(f"DB insert failed for {clean_slug}: {e}")
+    # 2. Push to Supabase. Upsert handles infinite scaling seamlessly.
+    supabase.table("certifications").upsert(scraped_data).execute()
+    print(f"Successfully synchronized: {clean_slug}")
 
 if __name__ == "__main__":
     run_engine()

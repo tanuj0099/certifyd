@@ -1,0 +1,3380 @@
+{
+  "nodes": [
+    {
+      "id": "yrZUjoNj7mjOHaZVRiFJV",
+      "type": "horizontal",
+      "position": {
+        "x": -502.08230823147517,
+        "y": 497.90458777290166
+      },
+      "selected": false,
+      "data": {
+        "label": "horizontal node",
+        "style": {
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round",
+          "strokeWidth": 3.5,
+          "stroke": "#2B78E4"
+        }
+      },
+      "zIndex": 999,
+      "width": 63,
+      "height": 20,
+      "positionAbsolute": {
+        "x": -502.08230823147517,
+        "y": 497.90458777290166
+      },
+      "dragging": false,
+      "style": {
+        "width": 63,
+        "height": 20
+      },
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 63,
+        "height": 20
+      }
+    },
+    {
+      "id": "kPPgIGhyoDoJoUJnP-vOY",
+      "type": "section",
+      "position": {
+        "x": 44.659212053078704,
+        "y": -125.50228984395414
+      },
+      "selected": false,
+      "data": {
+        "label": "",
+        "style": {
+          "width": 150,
+          "height": 100,
+          "fontSize": 17,
+          "backgroundColor": "#ffffff",
+          "borderColor": "#000000"
+        }
+      },
+      "zIndex": -999,
+      "width": 356,
+      "height": 103,
+      "style": {
+        "width": 356,
+        "height": 103
+      },
+      "resizing": false,
+      "positionAbsolute": {
+        "x": 44.659212053078704,
+        "y": -125.50228984395414
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 356,
+        "height": 103
+      }
+    },
+    {
+      "id": "tmRyxL2cIei7PVHdOvmuJ",
+      "type": "horizontal",
+      "position": {
+        "x": 253.00948964805815,
+        "y": 1215.2210153640276
+      },
+      "selected": false,
+      "data": {
+        "label": "horizontal node",
+        "style": {
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round",
+          "strokeWidth": 3.5,
+          "stroke": "#2B78E4"
+        },
+        "oldId": "zh4DYU0QpAolXJ6wE0CEe"
+      },
+      "zIndex": 999,
+      "width": 85,
+      "height": 20,
+      "positionAbsolute": {
+        "x": 253.00948964805815,
+        "y": 1215.2210153640276
+      },
+      "dragging": false,
+      "style": {
+        "width": 85,
+        "height": 20
+      },
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 85,
+        "height": 20
+      }
+    },
+    {
+      "id": "Ju00mr0KLGN2BV6yEQGPt",
+      "type": "vertical",
+      "position": {
+        "x": -45.86972326342038,
+        "y": 1834.052389726952
+      },
+      "selected": false,
+      "data": {
+        "label": "vertical node",
+        "style": {
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round",
+          "strokeWidth": 3.5,
+          "stroke": "#4136D4"
+        }
+      },
+      "zIndex": 999,
+      "width": 21,
+      "height": 104,
+      "positionAbsolute": {
+        "x": -45.86972326342038,
+        "y": 1834.052389726952
+      },
+      "dragging": false,
+      "style": {
+        "width": 21,
+        "height": 104
+      },
+      "resizing": false,
+      "focusable": true,
+      "selectable": true,
+      "measured": {
+        "width": 21,
+        "height": 104
+      }
+    },
+    {
+      "width": 454,
+      "height": 124,
+      "id": "sVXZrBCsiSzWBBYWTm-nQ",
+      "type": "paragraph",
+      "position": {
+        "x": -253.28332913299596,
+        "y": 1746.0147859609992
+      },
+      "selected": false,
+      "data": {
+        "label": "Continue Learning with following relevant tracks",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center",
+          "borderColor": "#000000",
+          "backgroundColor": "#ffffff"
+        },
+        "oldId": "0vLaVNJaJSHZ_bHli6Qzs"
+      },
+      "zIndex": 999,
+      "positionAbsolute": {
+        "x": -253.28332913299596,
+        "y": 1746.0147859609992
+      },
+      "dragging": false,
+      "style": {
+        "width": 454,
+        "height": 124
+      },
+      "resizing": false,
+      "focusable": true,
+      "selectable": true,
+      "measured": {
+        "width": 454,
+        "height": 124
+      }
+    },
+    {
+      "width": 162,
+      "height": 68,
+      "id": "iogwMmOvub2ZF4zgg6WyF",
+      "type": "title",
+      "position": {
+        "x": -584.5823082314752,
+        "y": -192.89091544360696
+      },
+      "selected": false,
+      "data": {
+        "label": "Full Stack",
+        "style": {
+          "fontSize": 28,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "9nxw2PEl-_eQPW0FHNPq2"
+      },
+      "zIndex": 999,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": -584.5823082314752,
+        "y": -192.89091544360696
+      },
+      "focusable": true,
+      "selectable": true,
+      "measured": {
+        "width": 162,
+        "height": 68
+      }
+    },
+    {
+      "width": 104,
+      "height": 49,
+      "id": "sQsxo9QyLKZyhMnFUcxhS",
+      "type": "button",
+      "position": {
+        "x": -235.86972326342038,
+        "y": 1802.4845433334572
+      },
+      "selected": false,
+      "data": {
+        "label": "Frontend",
+        "href": "https://roadmap.sh/frontend",
+        "color": "#FFFFFf",
+        "backgroundColor": "#4136D4",
+        "style": {
+          "fontSize": 17
+        },
+        "borderColor": "#4136D4",
+        "oldId": "uSLzfLPXxS5-P7ozscvjZ"
+      },
+      "zIndex": 999,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": -235.86972326342038,
+        "y": 1802.4845433334572
+      },
+      "style": {
+        "width": 104,
+        "height": 49
+      },
+      "focusable": true,
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 104,
+        "height": 49
+      }
+    },
+    {
+      "width": 21,
+      "height": 81,
+      "id": "LEijbLyxg4RyutKEM2Y5g",
+      "type": "vertical",
+      "position": {
+        "x": -514.0823082314752,
+        "y": -273.89091544360696
+      },
+      "selected": false,
+      "data": {
+        "label": "vertical node",
+        "style": {
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round",
+          "strokeWidth": 3.5,
+          "stroke": "#0A33FF"
+        },
+        "oldId": "xD07fJ1NmNeAarVCEfubU"
+      },
+      "zIndex": 999,
+      "positionAbsolute": {
+        "x": -514.0823082314752,
+        "y": -273.89091544360696
+      },
+      "dragging": false,
+      "focusable": true,
+      "style": {
+        "width": 21,
+        "height": 81
+      },
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 21,
+        "height": 81
+      }
+    },
+    {
+      "id": "yHmHXymPNWwu8p1vvqD3o",
+      "type": "paragraph",
+      "position": {
+        "x": 45.49718479195076,
+        "y": -280.15106699547107
+      },
+      "selected": false,
+      "data": {
+        "label": "Find the detailed version of this roadmap along with other similar roadmaps",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "left",
+          "borderColor": "#000000",
+          "backgroundColor": "#FFFFFf"
+        }
+      },
+      "zIndex": 999,
+      "width": 355,
+      "height": 143,
+      "positionAbsolute": {
+        "x": 45.49718479195076,
+        "y": -280.15106699547107
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "style": {
+        "width": 355,
+        "height": 143
+      },
+      "resizing": false,
+      "measured": {
+        "width": 355,
+        "height": 143
+      }
+    },
+    {
+      "id": "2zqZkyVgigifcRS1H7F_b",
+      "type": "button",
+      "position": {
+        "x": 58.7005592047509,
+        "y": -198.1655035777258
+      },
+      "selected": false,
+      "data": {
+        "label": "roadmap.sh",
+        "href": "https://roadmap.sh",
+        "color": "#ffffff",
+        "backgroundColor": "#4136D6",
+        "style": {
+          "fontSize": 17
+        }
+      },
+      "zIndex": 999,
+      "width": 330,
+      "height": 49,
+      "dragging": false,
+      "style": {
+        "width": 330,
+        "height": 49
+      },
+      "resizing": false,
+      "positionAbsolute": {
+        "x": 58.7005592047509,
+        "y": -198.1655035777258
+      },
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 330,
+        "height": 49
+      }
+    },
+    {
+      "id": "B0kARTODvCBi0iOF8iiqI",
+      "type": "topic",
+      "position": {
+        "x": -395.56446376179997,
+        "y": 43.404587772901664
+      },
+      "selected": false,
+      "data": {
+        "label": "HTML",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "mGgx_QTEPmVKf6AijX9fi"
+      },
+      "zIndex": 999,
+      "width": 105,
+      "height": 49,
+      "positionAbsolute": {
+        "x": -395.56446376179997,
+        "y": 43.404587772901664
+      },
+      "dragging": false,
+      "style": {
+        "width": 105,
+        "height": 49
+      },
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 105,
+        "height": 49
+      }
+    },
+    {
+      "id": "dAJHWmGeiYdzZ1ZjrWz1S",
+      "type": "topic",
+      "position": {
+        "x": -251.56446376179997,
+        "y": 43.404587772901664
+      },
+      "selected": false,
+      "data": {
+        "label": "CSS",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "mGgx_QTEPmVKf6AijX9fi"
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "positionAbsolute": {
+        "x": -251.56446376179997,
+        "y": 43.404587772901664
+      },
+      "dragging": false,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "T9PB6WQf-Fa9NXKKvVOy_",
+      "type": "topic",
+      "position": {
+        "x": 28.00948964805815,
+        "y": 43.404587772901664
+      },
+      "selected": false,
+      "data": {
+        "label": "JavaScript",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "khoUtTUxdf8udAzN9_CAb"
+      },
+      "zIndex": 999,
+      "width": 125,
+      "height": 49,
+      "positionAbsolute": {
+        "x": 28.00948964805815,
+        "y": 43.404587772901664
+      },
+      "dragging": false,
+      "style": {
+        "width": 125,
+        "height": 49
+      },
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 125,
+        "height": 49
+      }
+    },
+    {
+      "id": "mGgx_QTEPmVKf6AijX9fi",
+      "type": "topic",
+      "position": {
+        "x": 298.1821043313223,
+        "y": 133.40458777290166
+      },
+      "selected": false,
+      "data": {
+        "label": "npm",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "positionAbsolute": {
+        "x": 298.1821043313223,
+        "y": 133.40458777290166
+      },
+      "dragging": false,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "WsdUAEaI7FX6DKKhPXUHp",
+      "type": "subtopic",
+      "position": {
+        "x": -351.97806963137555,
+        "y": 133.40458777290166
+      },
+      "selected": false,
+      "data": {
+        "label": "Checkpoint - Static Webpages",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center",
+          "colorType": "a"
+        },
+        "oldId": "7JU1cVggMDoZUV-adGsf-"
+      },
+      "zIndex": 999,
+      "width": 291,
+      "height": 49,
+      "positionAbsolute": {
+        "x": -351.97806963137555,
+        "y": 133.40458777290166
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "style": {
+        "width": 291,
+        "height": 49
+      },
+      "resizing": true,
+      "measured": {
+        "width": 291,
+        "height": 49
+      }
+    },
+    {
+      "id": "arAWBttFmMY6g99PcEaeA",
+      "type": "vertical",
+      "position": {
+        "x": -117.38142186176219,
+        "y": 69.40458777290166
+      },
+      "selected": false,
+      "data": {
+        "label": "vertical node",
+        "style": {
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round",
+          "strokeWidth": 3.5,
+          "stroke": "#2B78E4"
+        },
+        "oldId": "8MhESAMICF6j7X3RL9bFE"
+      },
+      "zIndex": 999,
+      "width": 21,
+      "height": 64,
+      "positionAbsolute": {
+        "x": -117.38142186176219,
+        "y": 69.40458777290166
+      },
+      "dragging": false,
+      "style": {
+        "width": 21,
+        "height": 64
+      },
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 21,
+        "height": 64
+      }
+    },
+    {
+      "id": "2DFzoIUjKdAKGjfu_SCfa",
+      "type": "subtopic",
+      "position": {
+        "x": -23.99051035194185,
+        "y": 133.40458777290166
+      },
+      "selected": false,
+      "data": {
+        "label": "Checkpoint - Interactivity",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center",
+          "colorType": "a"
+        },
+        "oldId": "YVMyHFSCVF-GgXydq-SFJ"
+      },
+      "zIndex": 999,
+      "width": 287,
+      "height": 49,
+      "positionAbsolute": {
+        "x": -23.99051035194185,
+        "y": 133.40458777290166
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "style": {
+        "width": 287,
+        "height": 49
+      },
+      "resizing": false,
+      "measured": {
+        "width": 287,
+        "height": 49
+      }
+    },
+    {
+      "id": "CVVeXklBu8uEr7oyiSEhQ",
+      "type": "vertical",
+      "position": {
+        "x": 191.6185781382378,
+        "y": 71.40458777290166
+      },
+      "selected": false,
+      "data": {
+        "label": "vertical node",
+        "style": {
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round",
+          "strokeWidth": 3.5,
+          "stroke": "#2B78E4"
+        },
+        "oldId": "8MhESAMICF6j7X3RL9bFE"
+      },
+      "zIndex": 999,
+      "width": 21,
+      "height": 62,
+      "positionAbsolute": {
+        "x": 191.6185781382378,
+        "y": 71.40458777290166
+      },
+      "dragging": false,
+      "style": {
+        "width": 21,
+        "height": 62
+      },
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 21,
+        "height": 62
+      }
+    },
+    {
+      "id": "We2APJpOPTr-VNfowG0kI",
+      "type": "topic",
+      "position": {
+        "x": 162.00948964805815,
+        "y": 316.40458777290166
+      },
+      "selected": false,
+      "data": {
+        "label": "Git",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "khoUtTUxdf8udAzN9_CAb"
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "positionAbsolute": {
+        "x": 162.00948964805815,
+        "y": 316.40458777290166
+      },
+      "dragging": false,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "8sPXL8iClpPqje03ksses",
+      "type": "topic",
+      "position": {
+        "x": -19.56446376179997,
+        "y": 316.40458777290166
+      },
+      "selected": false,
+      "data": {
+        "label": "GitHub",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "khoUtTUxdf8udAzN9_CAb"
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "positionAbsolute": {
+        "x": -19.56446376179997,
+        "y": 316.40458777290166
+      },
+      "dragging": false,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "R4aeJNOrfWyVp3ea-qF4H",
+      "type": "subtopic",
+      "position": {
+        "x": -26.978069631375547,
+        "y": 215.40458777290166
+      },
+      "selected": false,
+      "data": {
+        "label": "Checkpoint - External Packages",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center",
+          "colorType": "a"
+        },
+        "oldId": "YVMyHFSCVF-GgXydq-SFJ"
+      },
+      "zIndex": 999,
+      "width": 290,
+      "height": 49,
+      "positionAbsolute": {
+        "x": -26.978069631375547,
+        "y": 215.40458777290166
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 290,
+        "height": 49
+      }
+    },
+    {
+      "id": "PW10DTLV-5U2ue770SXtM",
+      "type": "horizontal",
+      "position": {
+        "x": 262.02193036862445,
+        "y": 229.90458777290166
+      },
+      "selected": false,
+      "data": {
+        "label": "horizontal node",
+        "style": {
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round",
+          "strokeWidth": 3.5,
+          "stroke": "#2B78E4"
+        },
+        "oldId": "BfadoWcewEUb5PQ_itqK-"
+      },
+      "zIndex": 999,
+      "width": 85,
+      "height": 20,
+      "positionAbsolute": {
+        "x": 262.02193036862445,
+        "y": 229.90458777290166
+      },
+      "dragging": false,
+      "style": {
+        "width": 85,
+        "height": 20
+      },
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 85,
+        "height": 20
+      }
+    },
+    {
+      "id": "CVCqdPkq_hGQfI8EEi5RC",
+      "type": "topic",
+      "position": {
+        "x": -329.47806963137555,
+        "y": 315.40458777290166
+      },
+      "selected": false,
+      "data": {
+        "label": "Tailwind CSS",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "2kKHuQZScu7hCDgQWxl5u"
+      },
+      "zIndex": 999,
+      "width": 146,
+      "height": 49,
+      "positionAbsolute": {
+        "x": -329.47806963137555,
+        "y": 315.40458777290166
+      },
+      "dragging": false,
+      "style": {
+        "width": 146,
+        "height": 49
+      },
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 146,
+        "height": 49
+      }
+    },
+    {
+      "id": "khoUtTUxdf8udAzN9_CAb",
+      "type": "topic",
+      "position": {
+        "x": -444.8178956686777,
+        "y": 315.40458777290166
+      },
+      "selected": false,
+      "data": {
+        "label": "React",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "mGgx_QTEPmVKf6AijX9fi"
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "positionAbsolute": {
+        "x": -444.8178956686777,
+        "y": 315.40458777290166
+      },
+      "dragging": false,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "zFGWxgLPcZoW7KIzlnSV9",
+      "type": "subtopic",
+      "position": {
+        "x": -350.97806963137555,
+        "y": 215.40458777290166
+      },
+      "selected": false,
+      "data": {
+        "label": "Checkpoint - Collaborative Work",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center",
+          "colorType": "a"
+        },
+        "oldId": "7JU1cVggMDoZUV-adGsf-"
+      },
+      "zIndex": 999,
+      "width": 290,
+      "height": 49,
+      "positionAbsolute": {
+        "x": -350.97806963137555,
+        "y": 215.40458777290166
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 290,
+        "height": 49
+      }
+    },
+    {
+      "id": "8MhESAMICF6j7X3RL9bFE",
+      "type": "vertical",
+      "position": {
+        "x": -117.38142186176219,
+        "y": 265.40458777290166
+      },
+      "selected": false,
+      "data": {
+        "label": "vertical node",
+        "style": {
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round",
+          "strokeWidth": 3.5,
+          "stroke": "#2B78E4"
+        }
+      },
+      "zIndex": 999,
+      "width": 21,
+      "height": 73,
+      "positionAbsolute": {
+        "x": -117.38142186176219,
+        "y": 265.40458777290166
+      },
+      "dragging": false,
+      "style": {
+        "width": 21,
+        "height": 73
+      },
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 21,
+        "height": 73
+      }
+    },
+    {
+      "id": "H63WyNiiJ2Yr9HWs98EjR",
+      "type": "paragraph",
+      "position": {
+        "x": -459.47806963137555,
+        "y": 396.90458777290166
+      },
+      "selected": false,
+      "data": {
+        "label": "Feel free to skip these and revisit after learning Backend",
+        "style": {
+          "fontSize": 17,
+          "borderColor": "transparent",
+          "backgroundColor": "TRANSPARENT",
+          "color": "#000000",
+          "textAlign": "center",
+          "justifyContent": "center",
+          "padding": 16
+        },
+        "oldId": "fKzuMTsf6XL_0Ik6t8SAX"
+      },
+      "zIndex": 999,
+      "width": 276,
+      "height": 63,
+      "dragging": false,
+      "style": {
+        "width": 276,
+        "height": 63
+      },
+      "resizing": false,
+      "positionAbsolute": {
+        "x": -459.47806963137555,
+        "y": 396.90458777290166
+      },
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 276,
+        "height": 63
+      }
+    },
+    {
+      "id": "QfW-odmDYknm_qXNcDu5o",
+      "type": "paragraph",
+      "position": {
+        "x": -482.08230823147517,
+        "y": 575.9045877729017
+      },
+      "selected": false,
+      "data": {
+        "label": "Start Backend Development",
+        "style": {
+          "fontSize": 17,
+          "borderColor": "transparent",
+          "backgroundColor": "#ffffff",
+          "color": "#000000",
+          "textAlign": "center",
+          "justifyContent": "center",
+          "padding": 16
+        }
+      },
+      "zIndex": 999,
+      "width": 265,
+      "height": 48,
+      "dragging": false,
+      "style": {
+        "width": 265,
+        "height": 48
+      },
+      "resizing": false,
+      "positionAbsolute": {
+        "x": -482.08230823147517,
+        "y": 575.9045877729017
+      },
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 265,
+        "height": 48
+      }
+    },
+    {
+      "id": "7JU1cVggMDoZUV-adGsf-",
+      "type": "subtopic",
+      "position": {
+        "x": -443.47806963137555,
+        "y": 483.40458777290166
+      },
+      "selected": false,
+      "data": {
+        "label": "Checkpoint - Frontend Apps",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center",
+          "colorType": "a"
+        }
+      },
+      "zIndex": 999,
+      "width": 260,
+      "height": 49,
+      "positionAbsolute": {
+        "x": -443.47806963137555,
+        "y": 483.40458777290166
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 260,
+        "height": 49
+      }
+    },
+    {
+      "id": "_aA6Hp4KkgJeptqo8oKTg",
+      "type": "topic",
+      "position": {
+        "x": 7.00948964805815,
+        "y": 574.9045877729017
+      },
+      "selected": false,
+      "data": {
+        "label": "Node.js",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "cUOfvOlQ_0Uu1VX3i67kJ"
+      },
+      "zIndex": 999,
+      "width": 146,
+      "height": 49,
+      "positionAbsolute": {
+        "x": 7.00948964805815,
+        "y": 574.9045877729017
+      },
+      "dragging": false,
+      "style": {
+        "width": 146,
+        "height": 49
+      },
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 146,
+        "height": 49
+      }
+    },
+    {
+      "id": "qCV1wiNSXj4OSHyMqxRIK",
+      "type": "paragraph",
+      "position": {
+        "x": -26.978069631375547,
+        "y": 431.40458777290166
+      },
+      "selected": false,
+      "data": {
+        "label": "You can pick any backend programming language. My recommendation is Node.js because you are already familiar with JavaScript and it's easier to pick.",
+        "style": {
+          "fontSize": 17,
+          "borderColor": "transparent",
+          "backgroundColor": "TRANSPARENT",
+          "color": "#000000",
+          "textAlign": "left",
+          "justifyContent": "center",
+          "padding": 16
+        },
+        "oldId": "fKzuMTsf6XL_0Ik6t8SAX"
+      },
+      "zIndex": 999,
+      "width": 445,
+      "height": 101,
+      "dragging": false,
+      "style": {
+        "width": 445,
+        "height": 101
+      },
+      "resizing": false,
+      "positionAbsolute": {
+        "x": -26.978069631375547,
+        "y": 431.40458777290166
+      },
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 445,
+        "height": 101
+      }
+    },
+    {
+      "id": "0QKpvDD33C3WCmNGtRanp",
+      "type": "vertical",
+      "position": {
+        "x": -104.20433957685361,
+        "y": 531.9045877729017
+      },
+      "selected": false,
+      "data": {
+        "label": "vertical node",
+        "style": {
+          "stroke": "#000000"
+        }
+      },
+      "zIndex": 999,
+      "width": 21,
+      "height": 130,
+      "positionAbsolute": {
+        "x": -104.20433957685361,
+        "y": 531.9045877729017
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "style": {
+        "width": 21,
+        "height": 130
+      },
+      "resizing": false,
+      "measured": {
+        "width": 21,
+        "height": 130
+      }
+    },
+    {
+      "id": "WqNcVZ8IkyqEubdd9JCa1",
+      "type": "label",
+      "position": {
+        "x": -283.06446376179997,
+        "y": 630.9045877729017
+      },
+      "selected": false,
+      "data": {
+        "label": "Backend Starts here",
+        "href": "",
+        "color": "#000000",
+        "style": {
+          "fontSize": 17
+        },
+        "oldId": "Dj2QhtEuuIgKc2CvgFGyK"
+      },
+      "zIndex": 999,
+      "width": 174,
+      "height": 36,
+      "positionAbsolute": {
+        "x": -283.06446376179997,
+        "y": 630.9045877729017
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 174,
+        "height": 36
+      }
+    },
+    {
+      "id": "JGu0TKwAw-ieiG92BytYI",
+      "type": "subtopic",
+      "position": {
+        "x": -47.99051035194185,
+        "y": 651.9045877729017
+      },
+      "selected": false,
+      "data": {
+        "label": "Checkpoint — CLI Apps",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center",
+          "colorType": "a"
+        },
+        "oldId": "YVMyHFSCVF-GgXydq-SFJ"
+      },
+      "zIndex": 999,
+      "width": 302,
+      "height": 49,
+      "positionAbsolute": {
+        "x": -47.99051035194185,
+        "y": 651.9045877729017
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "style": {
+        "width": 302,
+        "height": 49
+      },
+      "resizing": false,
+      "measured": {
+        "width": 302,
+        "height": 49
+      }
+    },
+    {
+      "id": "o72NM00uoHXswkadhqVVW",
+      "type": "horizontal",
+      "position": {
+        "x": 253.00948964805815,
+        "y": 666.4045877729017
+      },
+      "selected": false,
+      "data": {
+        "label": "horizontal node",
+        "style": {
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round",
+          "strokeWidth": 3.5,
+          "stroke": "#2B78E4"
+        },
+        "oldId": "BfadoWcewEUb5PQ_itqK-"
+      },
+      "zIndex": 999,
+      "width": 85,
+      "height": 20,
+      "positionAbsolute": {
+        "x": 253.00948964805815,
+        "y": 666.4045877729017
+      },
+      "dragging": false,
+      "style": {
+        "width": 85,
+        "height": 20
+      },
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 85,
+        "height": 20
+      }
+    },
+    {
+      "id": "vmHbWdmMHF53otXIrqzRV",
+      "type": "topic",
+      "position": {
+        "x": -117.38142186176219,
+        "y": 847.9045877729017
+      },
+      "selected": false,
+      "data": {
+        "label": "RESTful APIs",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "cUOfvOlQ_0Uu1VX3i67kJ"
+      },
+      "zIndex": 999,
+      "width": 151,
+      "height": 49,
+      "positionAbsolute": {
+        "x": -117.38142186176219,
+        "y": 847.9045877729017
+      },
+      "dragging": false,
+      "style": {
+        "width": 151,
+        "height": 49
+      },
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 151,
+        "height": 49
+      }
+    },
+    {
+      "id": "3EtGLO6cwkLc1-o9gwFNk",
+      "type": "subtopic",
+      "position": {
+        "x": -49.99051035194191,
+        "y": 779.7210153640276
+      },
+      "selected": false,
+      "data": {
+        "label": "Checkpoint — Simple CRUD Apps",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center",
+          "colorType": "a"
+        },
+        "oldId": "sO_9-l4FECbaqiaFnyeXO"
+      },
+      "zIndex": 999,
+      "width": 304,
+      "height": 49,
+      "positionAbsolute": {
+        "x": -49.99051035194191,
+        "y": 779.7210153640276
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 304,
+        "height": 49
+      }
+    },
+    {
+      "id": "BQV2ycD-EnmssO1idTgx9",
+      "type": "horizontal",
+      "position": {
+        "x": 253.00948964805815,
+        "y": 794.2210153640276
+      },
+      "selected": false,
+      "data": {
+        "label": "horizontal node",
+        "style": {
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round",
+          "strokeWidth": 3.5,
+          "stroke": "#2B78E4"
+        },
+        "oldId": "zh4DYU0QpAolXJ6wE0CEe"
+      },
+      "zIndex": 999,
+      "width": 85,
+      "height": 20,
+      "positionAbsolute": {
+        "x": 253.00948964805815,
+        "y": 794.2210153640276
+      },
+      "dragging": false,
+      "style": {
+        "width": 85,
+        "height": 20
+      },
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 85,
+        "height": 20
+      }
+    },
+    {
+      "id": "vHojhJYjiN0IwruEqi1Dv",
+      "type": "topic",
+      "position": {
+        "x": -257.06446376179997,
+        "y": 847.9045877729017
+      },
+      "selected": false,
+      "data": {
+        "label": "JWT Auth",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "cUOfvOlQ_0Uu1VX3i67kJ"
+      },
+      "zIndex": 999,
+      "width": 123,
+      "height": 49,
+      "positionAbsolute": {
+        "x": -257.06446376179997,
+        "y": 847.9045877729017
+      },
+      "dragging": false,
+      "style": {
+        "width": 123,
+        "height": 49
+      },
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 123,
+        "height": 49
+      }
+    },
+    {
+      "id": "Onfd7Sl8LG2sjh2aQY7gb",
+      "type": "topic",
+      "position": {
+        "x": -460.08230823147517,
+        "y": 847.9045877729017
+      },
+      "selected": false,
+      "data": {
+        "label": "Redis",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "cUOfvOlQ_0Uu1VX3i67kJ"
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "positionAbsolute": {
+        "x": -460.08230823147517,
+        "y": 847.9045877729017
+      },
+      "dragging": false,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "SHTSvMDqI7X1_ZT7-m--n",
+      "type": "topic",
+      "position": {
+        "x": -576.5823082314752,
+        "y": 1145.3143775154215
+      },
+      "selected": false,
+      "data": {
+        "label": "Linux Basics",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "cUOfvOlQ_0Uu1VX3i67kJ"
+      },
+      "zIndex": 999,
+      "width": 146,
+      "height": 49,
+      "positionAbsolute": {
+        "x": -576.5823082314752,
+        "y": 1145.3143775154215
+      },
+      "dragging": false,
+      "style": {
+        "width": 146,
+        "height": 49
+      },
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 146,
+        "height": 49
+      }
+    },
+    {
+      "id": "gSUWhfd0DQoJjDpHEkk0i",
+      "type": "horizontal",
+      "position": {
+        "x": -504.47806963137555,
+        "y": 970.0850398450953
+      },
+      "selected": false,
+      "data": {
+        "label": "horizontal node",
+        "style": {
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round",
+          "strokeWidth": 3.5,
+          "stroke": "#2B78E4"
+        },
+        "oldId": "b7EdI-25v_eVMkqTBa0se"
+      },
+      "zIndex": 999,
+      "width": 100,
+      "height": 20,
+      "positionAbsolute": {
+        "x": -504.47806963137555,
+        "y": 970.0850398450953
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "style": {
+        "width": 100,
+        "height": 20
+      },
+      "resizing": false,
+      "measured": {
+        "width": 100,
+        "height": 20
+      }
+    },
+    {
+      "id": "v4NF25lJElAtkU0Rm6Fob",
+      "type": "subtopic",
+      "position": {
+        "x": -459.47806963137555,
+        "y": 955.5850398450953
+      },
+      "selected": false,
+      "data": {
+        "label": "Checkpoint — Complete App",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center",
+          "colorType": "a"
+        },
+        "oldId": "YVMyHFSCVF-GgXydq-SFJ"
+      },
+      "zIndex": 999,
+      "width": 265,
+      "height": 49,
+      "positionAbsolute": {
+        "x": -459.47806963137555,
+        "y": 955.5850398450953
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 265,
+        "height": 49
+      }
+    },
+    {
+      "id": "Oav7YPRBmsE1gVhEURckg",
+      "type": "horizontal",
+      "position": {
+        "x": -560.0823082314752,
+        "y": 1037.8143775154215
+      },
+      "selected": false,
+      "data": {
+        "label": "horizontal node",
+        "style": {
+          "stroke": "#000000"
+        },
+        "oldId": "rQozP_4g0XSRR4l5-OGsI"
+      },
+      "zIndex": 999,
+      "width": 243,
+      "height": 20,
+      "positionAbsolute": {
+        "x": -560.0823082314752,
+        "y": 1037.8143775154215
+      },
+      "dragging": false,
+      "resizing": false,
+      "style": {
+        "width": 243,
+        "height": 20
+      },
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 243,
+        "height": 20
+      }
+    },
+    {
+      "id": "Dj2QhtEuuIgKc2CvgFGyK",
+      "type": "label",
+      "position": {
+        "x": -473.2578102157039,
+        "y": 1051.3143775154215
+      },
+      "selected": false,
+      "data": {
+        "label": "DevOps starts here",
+        "href": "",
+        "color": "#000000",
+        "style": {
+          "fontSize": 17
+        }
+      },
+      "zIndex": 999,
+      "width": 166,
+      "height": 36,
+      "positionAbsolute": {
+        "x": -473.2578102157039,
+        "y": 1051.3143775154215
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 166,
+        "height": 36
+      }
+    },
+    {
+      "id": "cUOfvOlQ_0Uu1VX3i67kJ",
+      "type": "topic",
+      "position": {
+        "x": -241.7043395768536,
+        "y": 1145.3143775154215
+      },
+      "selected": false,
+      "data": {
+        "label": "Basic AWS Services",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "2kKHuQZScu7hCDgQWxl5u"
+      },
+      "zIndex": 999,
+      "width": 210,
+      "height": 49,
+      "positionAbsolute": {
+        "x": -241.7043395768536,
+        "y": 1145.3143775154215
+      },
+      "dragging": false,
+      "style": {
+        "width": 210,
+        "height": 49
+      },
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 210,
+        "height": 49
+      }
+    },
+    {
+      "id": "6oBIxYj8WPcUHidQ99tus",
+      "type": "subtopic",
+      "position": {
+        "x": -239.56446376179997,
+        "y": 1087.3143775154215
+      },
+      "selected": false,
+      "data": {
+        "label": "EC2",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "B-cphY7Imnv6JBMujVIF7"
+      },
+      "zIndex": 999,
+      "width": 71,
+      "height": 51,
+      "style": {
+        "width": 71,
+        "height": 51
+      },
+      "resizing": false,
+      "positionAbsolute": {
+        "x": -239.56446376179997,
+        "y": 1087.3143775154215
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 71,
+        "height": 51
+      }
+    },
+    {
+      "id": "QtL-bLKtWIdH00K6k_PdC",
+      "type": "subtopic",
+      "position": {
+        "x": -165.56446376179997,
+        "y": 1087.3143775154215
+      },
+      "selected": false,
+      "data": {
+        "label": "VPC",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center",
+          "colorType": "c"
+        },
+        "oldId": "n2Xp_ijJ2OS8xhE7xMWxk"
+      },
+      "zIndex": 999,
+      "width": 71,
+      "height": 51,
+      "style": {
+        "width": 71,
+        "height": 51
+      },
+      "resizing": false,
+      "positionAbsolute": {
+        "x": -165.56446376179997,
+        "y": 1087.3143775154215
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 71,
+        "height": 51
+      }
+    },
+    {
+      "id": "5zyYpu9cyuTFwQCjTbHpS",
+      "type": "subtopic",
+      "position": {
+        "x": -239.56446376179997,
+        "y": 1032.3143775154215
+      },
+      "selected": false,
+      "data": {
+        "label": "Route53",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "B-cphY7Imnv6JBMujVIF7"
+      },
+      "zIndex": 999,
+      "width": 104,
+      "height": 51,
+      "style": {
+        "width": 104,
+        "height": 51
+      },
+      "resizing": false,
+      "positionAbsolute": {
+        "x": -239.56446376179997,
+        "y": 1032.3143775154215
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 104,
+        "height": 51
+      }
+    },
+    {
+      "id": "B-cphY7Imnv6JBMujVIF7",
+      "type": "subtopic",
+      "position": {
+        "x": -133.7043395768536,
+        "y": 1032.3143775154215
+      },
+      "selected": false,
+      "data": {
+        "label": "SES",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 51,
+      "style": {
+        "width": 101,
+        "height": 51
+      },
+      "resizing": false,
+      "positionAbsolute": {
+        "x": -133.7043395768536,
+        "y": 1032.3143775154215
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 101,
+        "height": 51
+      }
+    },
+    {
+      "id": "n2Xp_ijJ2OS8xhE7xMWxk",
+      "type": "subtopic",
+      "position": {
+        "x": -91.56446376179997,
+        "y": 1087.3143775154215
+      },
+      "selected": false,
+      "data": {
+        "label": "S3",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "B-cphY7Imnv6JBMujVIF7"
+      },
+      "zIndex": 999,
+      "width": 60,
+      "height": 51,
+      "style": {
+        "width": 60,
+        "height": 51
+      },
+      "resizing": false,
+      "positionAbsolute": {
+        "x": -91.56446376179997,
+        "y": 1087.3143775154215
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 60,
+        "height": 51
+      }
+    },
+    {
+      "id": "fKzuMTsf6XL_0Ik6t8SAX",
+      "type": "paragraph",
+      "position": {
+        "x": 58.49718479195076,
+        "y": 923.8143775154215
+      },
+      "selected": false,
+      "data": {
+        "label": "Use the checkpoints and do not forget to practice what you learn. There are project ideas at each checkpoint that you can build to solidify your knowledge.",
+        "style": {
+          "fontSize": 17,
+          "borderColor": "#000000",
+          "backgroundColor": "#ffffff",
+          "color": "#000000",
+          "textAlign": "left",
+          "justifyContent": "center",
+          "padding": 16
+        },
+        "oldId": "QfW-odmDYknm_qXNcDu5o"
+      },
+      "zIndex": 999,
+      "width": 342,
+      "height": 139,
+      "dragging": false,
+      "style": {
+        "width": 342
+      },
+      "resizing": false,
+      "positionAbsolute": {
+        "x": 58.49718479195076,
+        "y": 923.8143775154215
+      },
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 342,
+        "height": 139
+      }
+    },
+    {
+      "id": "y1SFX7uvWaCy4OYBnECLu",
+      "type": "topic",
+      "position": {
+        "x": 290.52193036862445,
+        "y": 1266.5238331844262
+      },
+      "selected": false,
+      "data": {
+        "label": "Monit",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "2kKHuQZScu7hCDgQWxl5u"
+      },
+      "zIndex": 999,
+      "width": 89,
+      "height": 49,
+      "positionAbsolute": {
+        "x": 290.52193036862445,
+        "y": 1266.5238331844262
+      },
+      "dragging": false,
+      "style": {},
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 89,
+        "height": 49
+      }
+    },
+    {
+      "id": "HGhnbMg6jh6cAmUH4DtOx",
+      "type": "topic",
+      "position": {
+        "x": 262.02193036862445,
+        "y": 716.9045877729017
+      },
+      "selected": false,
+      "data": {
+        "label": "PostgreSQL",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "2kKHuQZScu7hCDgQWxl5u"
+      },
+      "zIndex": 999,
+      "width": 146,
+      "height": 49,
+      "positionAbsolute": {
+        "x": 262.02193036862445,
+        "y": 716.9045877729017
+      },
+      "dragging": false,
+      "style": {
+        "width": 146,
+        "height": 49
+      },
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 146,
+        "height": 49
+      }
+    },
+    {
+      "id": "J2_IWAb1s9zZcxOY3NXm2",
+      "type": "subtopic",
+      "position": {
+        "x": 16.00948964805815,
+        "y": 1200.7210153640276
+      },
+      "selected": false,
+      "data": {
+        "label": "Checkpoint — Deployment",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center",
+          "colorType": "a"
+        },
+        "oldId": "sO_9-l4FECbaqiaFnyeXO"
+      },
+      "zIndex": 999,
+      "width": 248,
+      "height": 49,
+      "positionAbsolute": {
+        "x": 16.00948964805815,
+        "y": 1200.7210153640276
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "style": {
+        "width": 248,
+        "height": 49
+      },
+      "measured": {
+        "width": 248,
+        "height": 49
+      }
+    },
+    {
+      "id": "863KMXcFJzInvTp_-Ldmz",
+      "type": "topic",
+      "position": {
+        "x": 103.00948964805815,
+        "y": 1392.5238331844262
+      },
+      "selected": false,
+      "data": {
+        "label": "GitHub Actions",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "2kKHuQZScu7hCDgQWxl5u"
+      },
+      "zIndex": 999,
+      "width": 160,
+      "height": 49,
+      "positionAbsolute": {
+        "x": 103.00948964805815,
+        "y": 1392.5238331844262
+      },
+      "dragging": false,
+      "style": {},
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 160,
+        "height": 49
+      }
+    },
+    {
+      "id": "zh4DYU0QpAolXJ6wE0CEe",
+      "type": "horizontal",
+      "position": {
+        "x": 253.00948964805815,
+        "y": 1340.2210153640276
+      },
+      "selected": false,
+      "data": {
+        "label": "horizontal node",
+        "style": {
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round",
+          "strokeWidth": 3.5,
+          "stroke": "#2B78E4"
+        },
+        "oldId": "BfadoWcewEUb5PQ_itqK-"
+      },
+      "zIndex": 999,
+      "width": 85,
+      "height": 20,
+      "positionAbsolute": {
+        "x": 253.00948964805815,
+        "y": 1340.2210153640276
+      },
+      "dragging": false,
+      "style": {
+        "width": 85,
+        "height": 20
+      },
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 85,
+        "height": 20
+      }
+    },
+    {
+      "id": "NQmEl27eBPYhivcXdOEz3",
+      "type": "subtopic",
+      "position": {
+        "x": 16.00948964805815,
+        "y": 1325.7210153640276
+      },
+      "selected": false,
+      "data": {
+        "label": "Checkpoint — Monitoring",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center",
+          "colorType": "a"
+        },
+        "oldId": "sO_9-l4FECbaqiaFnyeXO"
+      },
+      "zIndex": 999,
+      "width": 248,
+      "height": 49,
+      "positionAbsolute": {
+        "x": 16.00948964805815,
+        "y": 1325.7210153640276
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "style": {
+        "width": 248,
+        "height": 49
+      },
+      "measured": {
+        "width": 248,
+        "height": 49
+      }
+    },
+    {
+      "id": "rFXupYpUFfp7vZO8zh614",
+      "type": "topic",
+      "position": {
+        "x": -327.56446376179997,
+        "y": 1392.5238331844262
+      },
+      "selected": false,
+      "data": {
+        "label": "Ansible",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "2kKHuQZScu7hCDgQWxl5u"
+      },
+      "zIndex": 999,
+      "width": 102,
+      "height": 49,
+      "positionAbsolute": {
+        "x": -327.56446376179997,
+        "y": 1392.5238331844262
+      },
+      "dragging": false,
+      "style": {},
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 102,
+        "height": 49
+      }
+    },
+    {
+      "id": "WJIx6JGqxoNT-vKk4LMQp",
+      "type": "vertical",
+      "position": {
+        "x": -128.06446376179997,
+        "y": 1366
+      },
+      "selected": false,
+      "data": {
+        "label": "vertical node",
+        "style": {
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round",
+          "strokeWidth": 3.5,
+          "stroke": "#2B78E4"
+        },
+        "oldId": "gJhoy4tQwP4Gtwh0wL343"
+      },
+      "zIndex": 999,
+      "width": 21,
+      "height": 50,
+      "style": {
+        "width": 21,
+        "height": 50
+      },
+      "resizing": false,
+      "positionAbsolute": {
+        "x": -128.06446376179997,
+        "y": 1366
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 21,
+        "height": 50
+      }
+    },
+    {
+      "id": "liaY1GnlOateB_ZKBjNpY",
+      "type": "subtopic",
+      "position": {
+        "x": -226.56446376179997,
+        "y": 1325.7210153640276
+      },
+      "selected": false,
+      "data": {
+        "label": "Checkpoint — CI / CD",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center",
+          "colorType": "a"
+        },
+        "oldId": "sO_9-l4FECbaqiaFnyeXO"
+      },
+      "zIndex": 999,
+      "width": 218,
+      "height": 49,
+      "positionAbsolute": {
+        "x": -226.56446376179997,
+        "y": 1325.7210153640276
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "style": {
+        "width": 218,
+        "height": 49
+      },
+      "resizing": false,
+      "measured": {
+        "width": 218,
+        "height": 49
+      }
+    },
+    {
+      "id": "2kKHuQZScu7hCDgQWxl5u",
+      "type": "topic",
+      "position": {
+        "x": -560.0823082314752,
+        "y": 1468.728630371825
+      },
+      "selected": false,
+      "data": {
+        "label": "Terraform",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "khoUtTUxdf8udAzN9_CAb"
+      },
+      "zIndex": 999,
+      "width": 121,
+      "height": 49,
+      "positionAbsolute": {
+        "x": -560.0823082314752,
+        "y": 1468.728630371825
+      },
+      "dragging": false,
+      "style": {},
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 121,
+        "height": 49
+      }
+    },
+    {
+      "id": "gJhoy4tQwP4Gtwh0wL343",
+      "type": "vertical",
+      "position": {
+        "x": -473.2578102157039,
+        "y": 1365.182006288024
+      },
+      "selected": false,
+      "data": {
+        "label": "vertical node",
+        "style": {
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round",
+          "strokeWidth": 3.5,
+          "stroke": "#2B78E4"
+        }
+      },
+      "zIndex": 999,
+      "width": 21,
+      "height": 50,
+      "style": {
+        "width": 21,
+        "height": 50
+      },
+      "resizing": false,
+      "positionAbsolute": {
+        "x": -473.2578102157039,
+        "y": 1365.182006288024
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 21,
+        "height": 50
+      }
+    },
+    {
+      "id": "sO_9-l4FECbaqiaFnyeXO",
+      "type": "subtopic",
+      "position": {
+        "x": -571.7578102157039,
+        "y": 1324.9030216520516
+      },
+      "selected": false,
+      "data": {
+        "label": "Checkpoint — Automation",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center",
+          "colorType": "a"
+        },
+        "oldId": "YVMyHFSCVF-GgXydq-SFJ"
+      },
+      "zIndex": 999,
+      "width": 252,
+      "height": 49,
+      "positionAbsolute": {
+        "x": -571.7578102157039,
+        "y": 1324.9030216520516
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "style": {
+        "width": 252,
+        "height": 49
+      },
+      "resizing": false,
+      "measured": {
+        "width": 252,
+        "height": 49
+      }
+    },
+    {
+      "id": "b7EdI-25v_eVMkqTBa0se",
+      "type": "horizontal",
+      "position": {
+        "x": -498,
+        "y": 1552.5384432996068
+      },
+      "selected": false,
+      "data": {
+        "label": "horizontal node",
+        "style": {
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round",
+          "strokeWidth": 3.5,
+          "stroke": "#2B78E4"
+        }
+      },
+      "zIndex": 999,
+      "width": 100,
+      "height": 20,
+      "positionAbsolute": {
+        "x": -498,
+        "y": 1552.5384432996068
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "style": {
+        "width": 100,
+        "height": 20
+      },
+      "resizing": false,
+      "measured": {
+        "width": 100,
+        "height": 20
+      }
+    },
+    {
+      "id": "YVMyHFSCVF-GgXydq-SFJ",
+      "type": "subtopic",
+      "position": {
+        "x": -415.56446376179997,
+        "y": 1538.0384432996068
+      },
+      "selected": false,
+      "data": {
+        "label": "Checkpoint — Infrastructure",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center",
+          "colorType": "a"
+        },
+        "oldId": "7JU1cVggMDoZUV-adGsf-"
+      },
+      "zIndex": 999,
+      "width": 260,
+      "height": 49,
+      "positionAbsolute": {
+        "x": -415.56446376179997,
+        "y": 1538.0384432996068
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 260,
+        "height": 49
+      }
+    },
+    {
+      "width": 104,
+      "height": 49,
+      "id": "DezWXw5LWeP1S5Sosj90S",
+      "type": "button",
+      "position": {
+        "x": -128.86972326342038,
+        "y": 1802.4845433334572
+      },
+      "selected": false,
+      "data": {
+        "label": "Backend",
+        "href": "https://roadmap.sh/backend",
+        "color": "#FFFFFf",
+        "backgroundColor": "#4136D4",
+        "style": {
+          "fontSize": 17
+        },
+        "borderColor": "#4136D4",
+        "oldId": "uSLzfLPXxS5-P7ozscvjZ"
+      },
+      "zIndex": 999,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": -128.86972326342038,
+        "y": 1802.4845433334572
+      },
+      "style": {
+        "width": 104,
+        "height": 49
+      },
+      "focusable": true,
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 104,
+        "height": 49
+      }
+    },
+    {
+      "width": 104,
+      "height": 49,
+      "id": "DsvdvpHWD0FgTjdkSJ9Uu",
+      "type": "button",
+      "position": {
+        "x": -21.869723263420383,
+        "y": 1802.4845433334572
+      },
+      "selected": false,
+      "data": {
+        "label": "DevOps",
+        "href": "https://roadmap.sh/devops",
+        "color": "#FFFFFf",
+        "backgroundColor": "#4136D4",
+        "style": {
+          "fontSize": 17
+        },
+        "borderColor": "#4136D4",
+        "oldId": "uSLzfLPXxS5-P7ozscvjZ"
+      },
+      "zIndex": 999,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": -21.869723263420383,
+        "y": 1802.4845433334572
+      },
+      "style": {
+        "width": 104,
+        "height": 49
+      },
+      "focusable": true,
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 104,
+        "height": 49
+      }
+    },
+    {
+      "width": 101,
+      "height": 49,
+      "id": "uSLzfLPXxS5-P7ozscvjZ",
+      "type": "button",
+      "position": {
+        "x": 85.13027673657962,
+        "y": 1802.4845433334572
+      },
+      "selected": false,
+      "data": {
+        "label": "AWS",
+        "href": "https://roadmap.sh/aws",
+        "color": "#FFFFFf",
+        "backgroundColor": "#4136D4",
+        "style": {
+          "fontSize": 17
+        },
+        "borderColor": "#4136D4",
+        "oldId": "PkhQdVms2TGgnPrytCBPZ"
+      },
+      "zIndex": 999,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 85.13027673657962,
+        "y": 1802.4845433334572
+      },
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "focusable": true,
+      "resizing": true,
+      "selectable": true,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "2bi7EWaC5QIWX6_Vl6988",
+      "type": "paragraph",
+      "position": {
+        "x": 72.1182771963982,
+        "y": -101.66069241448308
+      },
+      "selected": false,
+      "data": {
+        "label": "",
+        "style": {
+          "fontSize": 17,
+          "borderColor": "#000000",
+          "backgroundColor": "#fcff00",
+          "color": "#ffffff",
+          "textAlign": "left",
+          "justifyContent": "flex-start",
+          "padding": 3
+        },
+        "oldId": "kvS4x6z7YWJjMpkpU01yh"
+      },
+      "zIndex": 999,
+      "width": 26,
+      "height": 25,
+      "resizing": false,
+      "style": {
+        "width": 26,
+        "height": 25
+      },
+      "positionAbsolute": {
+        "x": 72.1182771963982,
+        "y": -101.66069241448308
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 26,
+        "height": 25
+      }
+    },
+    {
+      "id": "aaWX__NQvUofoN1VzwgD0",
+      "type": "label",
+      "position": {
+        "x": 102.99749010787673,
+        "y": -107.16069241448308
+      },
+      "selected": false,
+      "data": {
+        "label": "Key topics to learn",
+        "href": "",
+        "color": "#000000",
+        "style": {
+          "fontSize": 17
+        },
+        "oldId": "7HLG5FTMmOWGS-mOpqnQh"
+      },
+      "zIndex": 999,
+      "width": 158,
+      "height": 36,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 102.99749010787673,
+        "y": -107.16069241448308
+      },
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 158,
+        "height": 36
+      }
+    },
+    {
+      "id": "kvS4x6z7YWJjMpkpU01yh",
+      "type": "paragraph",
+      "position": {
+        "x": 72.1182771963982,
+        "y": -68.28925019287855
+      },
+      "selected": false,
+      "data": {
+        "label": "",
+        "style": {
+          "fontSize": 17,
+          "borderColor": "#000000",
+          "backgroundColor": "#000000",
+          "color": "#000000",
+          "textAlign": "left",
+          "justifyContent": "flex-start",
+          "padding": 3
+        }
+      },
+      "zIndex": 999,
+      "width": 26,
+      "height": 25,
+      "resizing": false,
+      "style": {
+        "width": 26,
+        "height": 25
+      },
+      "positionAbsolute": {
+        "x": 72.1182771963982,
+        "y": -68.28925019287855
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 26,
+        "height": 25
+      }
+    },
+    {
+      "id": "7HLG5FTMmOWGS-mOpqnQh",
+      "type": "label",
+      "position": {
+        "x": 102.99749010787673,
+        "y": -71.16069241448308
+      },
+      "selected": false,
+      "data": {
+        "label": "Project ideas and suggestions",
+        "href": "",
+        "color": "#000000",
+        "style": {
+          "fontSize": 17
+        }
+      },
+      "zIndex": 999,
+      "width": 249,
+      "height": 36,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 102.99749010787673,
+        "y": -71.16069241448308
+      },
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 249,
+        "height": 36
+      }
+    },
+    {
+      "id": "9mrs26igEG0D9GpMv2NZc",
+      "type": "section",
+      "position": {
+        "x": -317.516084034493,
+        "y": -278.10767016925365
+      },
+      "selected": false,
+      "data": {
+        "label": "",
+        "style": {
+          "width": 150,
+          "height": 100,
+          "fontSize": 17,
+          "backgroundColor": "#ffffff",
+          "borderColor": "#000000"
+        }
+      },
+      "zIndex": -999,
+      "width": 346,
+      "height": 259,
+      "style": {
+        "width": 346,
+        "height": 259
+      },
+      "positionAbsolute": {
+        "x": -317.516084034493,
+        "y": -278.10767016925365
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 346,
+        "height": 259
+      }
+    },
+    {
+      "id": "X8Gvqj2h4wkfA1Cx2d1iW",
+      "type": "paragraph",
+      "position": {
+        "x": -297.06446376179997,
+        "y": -251.15106699547107
+      },
+      "selected": false,
+      "data": {
+        "label": "If you are already a full-stack developer you should visit the following tracks.",
+        "style": {
+          "fontSize": 17,
+          "borderColor": "transparent",
+          "backgroundColor": "transparent",
+          "color": "#000000",
+          "textAlign": "left",
+          "justifyContent": "flex-start",
+          "padding": 0
+        },
+        "oldId": "7cbUuhyNE2SoZbm2Zh_t7"
+      },
+      "zIndex": 999,
+      "width": 311,
+      "height": 55,
+      "positionAbsolute": {
+        "x": -297.06446376179997,
+        "y": -251.15106699547107
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "style": {
+        "width": 311
+      },
+      "resizing": false,
+      "measured": {
+        "width": 311,
+        "height": 55
+      }
+    },
+    {
+      "id": "7cbUuhyNE2SoZbm2Zh_t7",
+      "type": "paragraph",
+      "position": {
+        "x": -297.06446376179997,
+        "y": -122.15106699547107
+      },
+      "selected": false,
+      "data": {
+        "label": "Target audience for this roadmap is absolute beginners wanting to get into full-stack development.",
+        "style": {
+          "fontSize": 17,
+          "borderColor": "transparent",
+          "backgroundColor": "transparent",
+          "color": "#000000",
+          "textAlign": "left",
+          "justifyContent": "flex-start",
+          "padding": 0
+        }
+      },
+      "zIndex": 999,
+      "width": 311,
+      "height": 80,
+      "positionAbsolute": {
+        "x": -297.06446376179997,
+        "y": -122.15106699547107
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "style": {
+        "width": 311
+      },
+      "resizing": false,
+      "measured": {
+        "width": 311,
+        "height": 80
+      }
+    },
+    {
+      "id": "p1nlhjqz_BiKFFop2yHpJ",
+      "type": "button",
+      "position": {
+        "x": -293.3007174828185,
+        "y": -187.42126760749414
+      },
+      "selected": false,
+      "data": {
+        "label": "Frontend",
+        "href": "https://roadmap.sh/frontend",
+        "color": "#ffffff",
+        "backgroundColor": "#4136D6",
+        "style": {
+          "fontSize": 17
+        },
+        "oldId": "x1j-a82XiCX3bNIgLFryZ"
+      },
+      "zIndex": 999,
+      "width": 99,
+      "height": 49,
+      "positionAbsolute": {
+        "x": -293.3007174828185,
+        "y": -187.42126760749414
+      },
+      "dragging": false,
+      "style": {
+        "width": 99,
+        "height": 49
+      },
+      "focusable": true,
+      "selectable": true,
+      "measured": {
+        "width": 99,
+        "height": 49
+      }
+    },
+    {
+      "id": "bt_V8XXqg8XDAJCzHrbWt",
+      "type": "button",
+      "position": {
+        "x": -192.09195631976291,
+        "y": -187.42126760749414
+      },
+      "selected": false,
+      "data": {
+        "label": "Backend",
+        "href": "https://roadmap.sh/backend",
+        "color": "#ffffff",
+        "backgroundColor": "#4136D6",
+        "style": {
+          "fontSize": 17
+        },
+        "oldId": "x1j-a82XiCX3bNIgLFryZ"
+      },
+      "zIndex": 999,
+      "width": 99,
+      "height": 49,
+      "positionAbsolute": {
+        "x": -192.09195631976291,
+        "y": -187.42126760749414
+      },
+      "dragging": false,
+      "style": {
+        "width": 99,
+        "height": 49
+      },
+      "focusable": true,
+      "selectable": true,
+      "measured": {
+        "width": 99,
+        "height": 49
+      }
+    },
+    {
+      "id": "x1j-a82XiCX3bNIgLFryZ",
+      "type": "button",
+      "position": {
+        "x": -89.5180029099048,
+        "y": -187.42126760749414
+      },
+      "selected": false,
+      "data": {
+        "label": "DevOps",
+        "href": "https://roadmap.sh/devops",
+        "color": "#ffffff",
+        "backgroundColor": "#4136D6",
+        "style": {
+          "fontSize": 17
+        }
+      },
+      "zIndex": 999,
+      "width": 89,
+      "height": 49,
+      "positionAbsolute": {
+        "x": -89.5180029099048,
+        "y": -187.42126760749414
+      },
+      "dragging": false,
+      "style": {
+        "width": 89,
+        "height": 49
+      },
+      "focusable": true,
+      "selectable": true,
+      "measured": {
+        "width": 89,
+        "height": 49
+      }
+    }
+  ],
+  "edges": [
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "sourceHandle": "x2",
+      "target": "sVXZrBCsiSzWBBYWTm-nQ",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "PShueM-HfMGu2Jy1dt73g",
+      "selected": false,
+      "type": "smoothstep",
+      "focusable": true,
+      "selectable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "iogwMmOvub2ZF4zgg6WyF",
+      "sourceHandle": "x2",
+      "target": "B0kARTODvCBi0iOF8iiqI",
+      "targetHandle": "y2",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-iogwMmOvub2ZF4zgg6WyFx2-mGgx_QTEPmVKf6AijX9fiy2",
+      "selected": false,
+      "type": "smoothstep",
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "B0kARTODvCBi0iOF8iiqI",
+      "sourceHandle": "z2",
+      "target": "dAJHWmGeiYdzZ1ZjrWz1S",
+      "targetHandle": "y2",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-B0kARTODvCBi0iOF8iiqIz2-mGgx_QTEPmVKf6AijX9fiy2",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "T9PB6WQf-Fa9NXKKvVOy_",
+      "sourceHandle": "z2",
+      "target": "mGgx_QTEPmVKf6AijX9fi",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-khoUtTUxdf8udAzN9_CAbz2-mGgx_QTEPmVKf6AijX9fiw1",
+      "selected": false,
+      "type": "smoothstep",
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "dAJHWmGeiYdzZ1ZjrWz1S",
+      "sourceHandle": "z2",
+      "target": "T9PB6WQf-Fa9NXKKvVOy_",
+      "targetHandle": "y2",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-dAJHWmGeiYdzZ1ZjrWz1Sz2-khoUtTUxdf8udAzN9_CAby2",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "mGgx_QTEPmVKf6AijX9fi",
+      "sourceHandle": "x2",
+      "target": "We2APJpOPTr-VNfowG0kI",
+      "targetHandle": "z2",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-mGgx_QTEPmVKf6AijX9fix2-We2APJpOPTr-VNfowG0kIz2",
+      "selected": false,
+      "type": "smoothstep",
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "We2APJpOPTr-VNfowG0kI",
+      "sourceHandle": "y2",
+      "target": "8sPXL8iClpPqje03ksses",
+      "targetHandle": "z1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-We2APJpOPTr-VNfowG0kIy2-khoUtTUxdf8udAzN9_CAbz1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "8sPXL8iClpPqje03ksses",
+      "sourceHandle": "y2",
+      "target": "CVCqdPkq_hGQfI8EEi5RC",
+      "targetHandle": "z1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-8sPXL8iClpPqje03kssesy2-khoUtTUxdf8udAzN9_CAbz1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "CVCqdPkq_hGQfI8EEi5RC",
+      "sourceHandle": "y2",
+      "target": "khoUtTUxdf8udAzN9_CAb",
+      "targetHandle": "z2",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-2kKHuQZScu7hCDgQWxl5uy2-khoUtTUxdf8udAzN9_CAbz2",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "khoUtTUxdf8udAzN9_CAb",
+      "sourceHandle": "y2",
+      "target": "QfW-odmDYknm_qXNcDu5o",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-khoUtTUxdf8udAzN9_CAby2-QfW-odmDYknm_qXNcDu5oy1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true,
+      "type": "smoothstep"
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "QfW-odmDYknm_qXNcDu5o",
+      "sourceHandle": "z2",
+      "target": "_aA6Hp4KkgJeptqo8oKTg",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-QfW-odmDYknm_qXNcDu5oz2-2kKHuQZScu7hCDgQWxl5uy1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "HGhnbMg6jh6cAmUH4DtOx",
+      "sourceHandle": "x2",
+      "target": "vmHbWdmMHF53otXIrqzRV",
+      "targetHandle": "z1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-2kKHuQZScu7hCDgQWxl5ux2-cUOfvOlQ_0Uu1VX3i67kJz1",
+      "selected": false,
+      "type": "smoothstep",
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "vmHbWdmMHF53otXIrqzRV",
+      "sourceHandle": "y2",
+      "target": "vHojhJYjiN0IwruEqi1Dv",
+      "targetHandle": "z2",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-vmHbWdmMHF53otXIrqzRVy2-cUOfvOlQ_0Uu1VX3i67kJz2",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "vHojhJYjiN0IwruEqi1Dv",
+      "sourceHandle": "y2",
+      "target": "Onfd7Sl8LG2sjh2aQY7gb",
+      "targetHandle": "z1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-vHojhJYjiN0IwruEqi1Dvy2-cUOfvOlQ_0Uu1VX3i67kJz1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "Onfd7Sl8LG2sjh2aQY7gb",
+      "sourceHandle": "y2",
+      "target": "SHTSvMDqI7X1_ZT7-m--n",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-Onfd7Sl8LG2sjh2aQY7gby2-cUOfvOlQ_0Uu1VX3i67kJw1",
+      "selected": false,
+      "type": "smoothstep",
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "SHTSvMDqI7X1_ZT7-m--n",
+      "sourceHandle": "z2",
+      "target": "cUOfvOlQ_0Uu1VX3i67kJ",
+      "targetHandle": "y2",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-SHTSvMDqI7X1_ZT7-m--nz2-cUOfvOlQ_0Uu1VX3i67kJy2",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "cUOfvOlQ_0Uu1VX3i67kJ",
+      "sourceHandle": "z2",
+      "target": "y1SFX7uvWaCy4OYBnECLu",
+      "targetHandle": "w2",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-cUOfvOlQ_0Uu1VX3i67kJz2-2kKHuQZScu7hCDgQWxl5uw2",
+      "selected": false,
+      "type": "smoothstep",
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "_aA6Hp4KkgJeptqo8oKTg",
+      "sourceHandle": "z2",
+      "target": "HGhnbMg6jh6cAmUH4DtOx",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-_aA6Hp4KkgJeptqo8oKTgz2-HGhnbMg6jh6cAmUH4DtOxw1",
+      "selected": false,
+      "type": "smoothstep",
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "y1SFX7uvWaCy4OYBnECLu",
+      "sourceHandle": "x2",
+      "target": "863KMXcFJzInvTp_-Ldmz",
+      "targetHandle": "z1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-y1SFX7uvWaCy4OYBnECLux2-2kKHuQZScu7hCDgQWxl5uz1",
+      "selected": false,
+      "type": "smoothstep",
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "863KMXcFJzInvTp_-Ldmz",
+      "sourceHandle": "y2",
+      "target": "rFXupYpUFfp7vZO8zh614",
+      "targetHandle": "z2",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-863KMXcFJzInvTp_-Ldmzy2-2kKHuQZScu7hCDgQWxl5uz2",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "rFXupYpUFfp7vZO8zh614",
+      "sourceHandle": "y2",
+      "target": "2kKHuQZScu7hCDgQWxl5u",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-rFXupYpUFfp7vZO8zh614y2-2kKHuQZScu7hCDgQWxl5uw1",
+      "selected": false,
+      "type": "smoothstep",
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "2kKHuQZScu7hCDgQWxl5u",
+      "sourceHandle": "x2",
+      "target": "sVXZrBCsiSzWBBYWTm-nQ",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-2kKHuQZScu7hCDgQWxl5ux2-sVXZrBCsiSzWBBYWTm-nQw1",
+      "selected": false,
+      "type": "smoothstep",
+      "selectable": true,
+      "focusable": true
+    }
+  ],
+  "certifyroi_content": {
+    "ansible@rFXupYpUFfp7vZO8zh614": "# Ansible\r\n\r\nAnsible is an open-source configuration management, application deployment and provisioning tool that uses its own declarative language in YAML. Ansible is agentless, meaning you only need remote connections via SSH or Windows Remote Management via Powershell in order to function\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Ansible](https://www.ansible.com/)\r\n- [@official@Ansible Documentation](https://docs.ansible.com/)\r\n- [@official@Ansible Getting Started Guide](https://www.ansible.com/resources/get-started)\r\n- [@video@Ansible Full Course for Beginners](https://www.youtube.com/watch?v=9Ua2b06oAr4)\r\n- [@feed@Explore top posts about Ansible](https://app.daily.dev/tags/ansible?ref=roadmapsh)",
+    "basic-aws-services@cUOfvOlQ_0Uu1VX3i67kJ": "# Basic AWS Services\r\n\r\nAWS has several services but you don't need to know all of them. Some common ones that you can start with are EC2, VPC, S3, Route 53, and SES.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Up and Running with AWS VPC](https://cs.fyi/guide/up-and-running-with-aws-vpc)\r\n- [@article@Up and Running with AWS EC2](https://cs.fyi/guide/up-and-running-with-aws-ec2)\r\n- [@article@VPC Basics](https://cloudcasts.io/course/vpc-basics)\r\n- [@article@EC2 Essentials](https://cloudcasts.io/course/ec2-essentials)\r\n- [@video@Deploy Node App on AWS EC2](https://youtu.be/oHAQ3TzUTro)\r\n- [@video@AWS VPC & Subnets For Beginners](https://youtu.be/TUTqYEZZUdc)\r\n- [@video@DNS with AWS Route 53](https://www.youtube.com/watch?v=yRIY7BJohfo)\r\n- [@video@Upload Images to S3 from Node Back End](https://www.youtube.com/watch?v=NZElg91l_ms)\r\n- [@feed@Explore top posts about AWS](https://app.daily.dev/tags/aws?ref=roadmapsh)",
+    "checkpoint---collaborative-work@zFGWxgLPcZoW7KIzlnSV9": "# Checkpoint\r\n\r\nNow that you have learnt git and GitHub you should be ready to work with others. You should now setup your GitHub profile and push all the projects that you have built so far to your GitHub profile. Here are some of my recommendations for your GitHub profile:\r\n\r\n*   Keep the repository names lowercase and use hyphens to separate words e.g. `todo-app` instead of `TodoApp` or `Todo-App`.\r\n*   Add a `README.md` file to each repository that you create. This file should contain a description of the project. Put some effort into the readme and make sure it clearly details what the project is about and how anyone can run it locally.\r\n*   Add snapshots of your project to the readme file so that anyone can see what the project looks like without having to run it locally.\r\n*   Add a `LICENSE` file to each repository that you create. This file should contain the license that you want to use for the project. You can use [choosealicense.com](https://choosealicense.com/) to help you choose a license.\r\n\r\nYou can have a look at [my GitHub profile](https://github.com/nilbuild) and see how I have structured my repositories and how [some of my readme files look like](https://github.com/nilbuild/aws-cost-cli).",
+    "checkpoint---external-packages@R4aeJNOrfWyVp3ea-qF4H": "# Checkpoint\r\n\r\nAt this point, you should be able to install and use external packages using `npm`. You probably know about [npmjs.com](https://npmjs.com/) where you can search for packages and read their documentation. You should also be familiar with the `package.json` file and how to use it to manage your project dependencies.\r\n\r\nYou don't need to get into the module bundlers and build tools just yet. Just make sure that you are able to use the dependencies installed in the `node_modules` folder using simple link and script tags in your HTML.\r\n\r\nRegarding projects, here are a few ideas that you can try:\r\n\r\n*   Create a simple webpage that shows the current time of user. You can use [dayjs](https://day.js.org/) to get the current time and display it on the page. Here is the [sample design for homepage](https://i.imgur.com/yGIMGkr.png).\r\n*   Install the [micromodal](https://micromodal.vercel.app/#introduction) library. Create a button on the page clicking which should open a modal and let the user select a timezone from a dropdown. Once the user selects a timezone, the modal should close and the time on the page should be updated to show the time in the selected timezone. Here is the [sample design for the modal](https://imgur.com/a/vFY6Sdl).",
+    "checkpoint---frontend-apps@7JU1cVggMDoZUV-adGsf-": "# Checkpoint\r\n\r\nAt this point you should be able to build a complete frontend application including:\r\n\r\n*   Structuring your webpages with HTML\r\n*   Styling your webpages with CSS\r\n*   Adding interactivity to your webpages with JavaScript\r\n*   Using the DOM API to manipulate your webpages\r\n*   Using the Fetch API to make HTTP requests\r\n*   Understand promises and use `async`/`await` syntax to write asynchronous code\r\n*   Installing and using external libraries with npm\r\n*   Version controlling your code with Git\r\n*   Pushing your code to GitHub\r\n\r\nIf you decided to skip React and Tailwind for now, that is fine also but you should be able to build a complete frontend application using vanilla HTML, CSS, and JavaScript. However, keep in mind that the modern frontend applications are mostly built with frameworks like React, Vue, and Angular. So, you should learn at least one of them at any point of time.\r\n\r\nThis marks the end of frontend basics that you needed, we will now be moving to the backend development. While you continue with the backend development, know that there is more to frontend development and remember to checkout the [frontend roadmap](/frontend) later in your journey.",
+    "checkpoint---interactivity@2DFzoIUjKdAKGjfu_SCfa": "# Checkpoint\r\n\r\nAt this point you should be able to add interactivity to your web pages using JavaScript. You should make sure that you have learnt the following:\r\n\r\n*   Know about variables, loops, data types, conditionals, functions.\r\n*   Know about arrays and objects and different ways to access their data.\r\n*   Know how to select DOM elements.\r\n*   Add event listeners to DOM elements (e.g. click, focus, form submission).\r\n*   Use JavaScript to add and remove DOM elements\r\n*   Add and remove classes from DOM elements\r\n*   Use JavaScript to make HTTP requests to external APIs (i.e. `fetch`)\r\n*   Use JavaScript to store data in the browser's local storage\r\n\r\nHere are few ideas to practice your skills:\r\n\r\n*   Create a simple to-do list app that allows users to search, add, edit, and delete items. Use local storage to store the data.\r\n*   Create a simple webpage where user can put in anyone's GitHub username and see their profile information. You can use GitHub's API to fetch the data. For example, here is the [sample URL to fetch my data](https://api.github.com/users/nilbuild). Make sure to add validation and error handling.\r\n*   Create a basic calculator app that allows users to perform basic arithmetic operations.",
+    "checkpoint---static-webpages@WsdUAEaI7FX6DKKhPXUHp": "# Checkpoint\r\n\r\nNow that you have learnt HTML and CSS, you should be able to build static webpages. I recommend you to build as many test projects at each yellow step of the roadmap as possible to solidify what you learn.\r\n\r\nThe practice that I used to follow when I was learning was this:\r\n\r\n*   While you are watching a course or reading a book, make sure to code along with the instructor/author — pause the video at regular intervals and code what you are being taught.\r\n*   Search on YouTube and watch a few project based tutorials on the topic that you are learning. Apart from coding along with the instructor:\r\n    *   Try to build the same project at least 2 to 3 times on your own without looking at the video. If you get stuck, refer to the section of the video where the instructor builds that part of the project.\r\n    *   Build something else that is similar to the project that you just built. For example, if you just built a todo app, try to build a notes app or a reminder app.\r\n\r\nProject Ideas\r\n-------------\r\n\r\nNow that you have learnt HTML and CSS, here are a few ideas for you to build:\r\n\r\n*   Try to copy the design of a website that you like.\r\n    *   Here is a [simple blog design in figma](https://www.figma.com/file/nh0V05z3NB87ue9v5PcO3R/writings.dev?type=design&node-id=0%3A1&t=2iQplaIojU3ydAfW-1) that you can try to copy.\r\n    *   Or try to rebuild the [webpages of this website](https://cs.fyi/).\r\n*   Take some inspiration from [personal portfolios of others](https://astro.build/showcase/) and build your own personal portfolio",
+    "checkpoint--automation@sO_9-l4FECbaqiaFnyeXO": "# Checkpoint\r\n\r\nNow that you have learnt ansible, you can use it to automate the deployment of your application.\r\n\r\nA task for you at this point would be to automate the steps that you manually performed earlier when setting up the EC2 instance i.e. SSH into the server, install Node.js, Git, PostgreSQL, Running the application etc. Write an ansible playbook that automates these and see if you can spin up a new EC2 instance without SSHing into it and manually installing all the dependencies.",
+    "checkpoint--ci--cd@liaY1GnlOateB_ZKBjNpY": "# Checkpoint — CI / CD\r\n\r\nNow that you have the infrastructure setup, it's time to automate the deployment process. This is where CI / CD comes in. If you don't know what CI/CD are, you should watch [DevOps CI/CD Explained in 100 Seconds](https://www.youtube.com/watch?v=scEDHsr3APg).\r\n\r\nThe next step at this point is to implement CI/CD for your application using GitHub actions. Setup a GitHub action that, whenever you push to master, will automatically:\r\n\r\n*   Run your tests (ignore this step if you haven't learnt it yet)\r\n*   Deploy your application to AWS\r\n\r\nRegarding the deployment to AWS you can use `rsync` to copy the files to the server. Here's a [sample GitHub workflow](https://gist.github.com/nilbuild/1e94b412006040f38e24b9443b2da41a) using `rsync`.",
+    "checkpoint--cli-apps@JGu0TKwAw-ieiG92BytYI": "# Checkpoint\r\n\r\nAt this point you should be able to build CLI applications using Node.js or whatever backend programming language you picked.\r\n\r\nYou should be able to build a CLI application that can:\r\n\r\n*   Read and write files\r\n*   Parse command line arguments\r\n*   Make HTTP requests\r\n*   Parse JSON\r\n*   Use a third-party library (e.g. a library for parsing CSV files)\r\n*   Use a third-party API\r\n\r\nHere are some ideas for CLI applications you can build:\r\n\r\n*   Create a CLI application that takes a URL and a CSS selector arguments and prints the text content of the element that matches the selector. **Hint** you can use [cheerio](https://github.com/cheeriojs/cheerio)\r\n*   An application that optionally takes two dates and prints the most starred GitHub projects in that date range. **Hint** you can use [GitHub's search API](https://developer.github.com/v3/search/#search-repositories)\r\n*   Bulk rename files in a directory. **Hint** you can use [fs](https://nodejs.org/api/fs.html) and [path](https://nodejs.org/api/path.html)\r\n*   Write a CLI application that takes a path as input and compresses all the images in that directory. It should accept an option for output path; if the output path is not given it should compress images in place otherwise write the compressed images to the output path. **Hint** you can use [sharp](https://github.com/lovell/sharp).",
+    "checkpoint--complete-app@v4NF25lJElAtkU0Rm6Fob": "# Checkpoint\r\n\r\nAt this point, you should have everything that you need to build a complete application that:\r\n\r\n*   Has a responsive frontend that users can interact with\r\n*   Has a backend API that is secured with JWT authentication\r\n*   Has a database that stores data\r\n\r\nAt this point you should practice building as much as you can on your own to solidify your knowledge. If you need inspiration, here are some ideas:\r\n\r\n*   Build a simple blogging application where users can register, login, setup their blog and write posts.\r\n*   A single page site builder where users can pick a template, modify it and publish it. **Hint** you will need filesystem to store the design templates. Template files will have placeholders that you will need to replace with user data.\r\n*   Build a simple e-commerce application which will have two types of users i.e. **Sellers** who can: Register as Seller, Login, Setup their store, Add products, Edit products, Delete products, View Received Orders, Update Order Status (Pending, Shipped, Delivered), **Buyers** who can register, Login, Browse products by all sellers, Add products to cart, Checkout, View order history, View order status, Cancel order, View seller profile, View seller products\r\n\r\nThese are just some ideas to get you started. You can build anything you want. The goal is to practice building a complete application from scratch.",
+    "checkpoint--deployment@J2_IWAb1s9zZcxOY3NXm2": "# Deployment\r\n\r\nNow that you know the basics of AWS, you should be able to deploy your application to AWS. You don't need to use all the AWS services, here is what you can probably get started with:\r\n\r\n*   Setup an EC2 instance using any AMI (e.g. latest version of Ubuntu)\r\n*   SSH into the EC2 instance using the key pair you created\r\n*   Install Node.js on the EC2 instance\r\n*   Install Git on the EC2 instance\r\n*   Clone your application from GitHub\r\n*   Install and configure database on the EC2 instance (e.g. PostgreSQL)\r\n*   Make sure that the security group of the EC2 instance allows HTTP and HTTPS traffic\r\n*   Try to access your application using the public IP address of the EC2 instance\r\n*   Purchase or setup a domain name using Route53 (or any other domain name provider) and point it to the public IP address of the EC2 instance\r\n*   Setup HTTPs using [certbot](https://roadmap.sh/guides/setup-and-auto-renew-ssl-certificates)\r\n*   And voilla! You have deployed your application to AWS!\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@video@Deploy Node App on AWS EC2](https://youtu.be/oHAQ3TzUTro)\r\n- [@feed@Explore top posts about CI/CD](https://app.daily.dev/tags/cicd?ref=roadmapsh)",
+    "checkpoint--infrastructure@YVMyHFSCVF-GgXydq-SFJ": "# Checkpoint\r\n\r\nIf you remember, earlier in the roadmap, you manually logged into the AWS console and had to setup the services. Now that you know terraform, go ahead and automate the process of creating the infrastructure for your application using terraform and with that your deployments will be fully automated i.e., you should have:\r\n\r\n*   Infrastructure setup using terraform\r\n*   Provisioning using Ansible\r\n*   CI/CD using GitHub Actions\r\n*   Monitoring using Monit\r\n\r\nAnd that is it! You have successfully completed the roadmap and are now a full-stack developer. Congratulations! 🎉\r\n\r\nWhat's next?\r\n------------\r\n\r\nGo ahead and build something cool! Share your learnings with the community and help others learn as well. If you have any questions, feel free to join our [discord server](https://roadmap.sh/discord) and ask away!",
+    "checkpoint--monitoring@NQmEl27eBPYhivcXdOEz3": "# Checkpoint\r\n\r\nYou should now implement monitoring and autorestarts for your application using monit. Regarding autorestarts, you can also use [pm2](https://pm2.keymetrics.io/).\r\n\r\nHere are some of the monitors you should implement for the application.\r\n\r\n*   CPU Usage\r\n*   Memory Usage\r\n*   Disk Usage\r\n*   Network Usage\r\n*   Service Availability\r\n*   Process Availability\r\n\r\nMonit comes with existing configurations for many services. You can find them in `/etc/monit/conf-available`. You can copy them (and modify if required) to `/etc/monit/conf-enabled` to enable them.",
+    "checkpoint--simple-crud-apps@3EtGLO6cwkLc1-o9gwFNk": "# Checkpoint\r\n\r\n**CRUD** stands for **Create, Read, Update, and Delete**. These are the four basic operations you can perform on any data when working with web applications, databases, and APIs.\r\n\r\nNow that you know about programming language and the databases, you should be able to build a simple CLI application that interacts with database. We haven't talked about the APIs yet but you don't need an API to practice CRUD operations. Here are some of the CLI applications you can build to practice CRUD operations:\r\n\r\n*   A simple todo list application for the CLI with the following options:\r\n    *   `--new` to add a new todo item\r\n    *   `--list [all|pending|done]` to list the todo items\r\n    *   `--done [id]` to update a todo item\r\n    *   `--delete [id]` to delete a todo item\r\n    *   `--help` to list all the available options\r\n    *   `--version` to print the version of the application",
+    "css@dAJHWmGeiYdzZ1ZjrWz1S": "# CSS\r\n\r\nCSS or Cascading Style Sheets is the language used to style the frontend of any website. CSS is a cornerstone technology of the World Wide Web, alongside HTML and JavaScript.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@roadmap@Visit the Dedicated CSS Roadmap](https://roadmap.sh/css)\r\n- [@article@Web.dev by Google — Learn CSS](https://web.dev/learn/css/)\r\n- [@article@CSS: Cascading Style Sheets | MDN](https://developer.mozilla.org/en-US/docs/Web/CSS)\r\n- [@video@CSS Complete Course](https://youtu.be/n4R2E7O-Ngo)\r\n- [@video@HTML and CSS Tutorial](https://www.youtube.com/watch?v=D-h8L5hgW-w)\r\n- [@feed@Explore top posts about CSS](https://app.daily.dev/tags/css?ref=roadmapsh)",
+    "ec2@6oBIxYj8WPcUHidQ99tus": "# EC2\r\n\r\nAmazon Elastic Compute Cloud (EC2) is a web service that provides resizable compute capacity in the form of virtual servers, known as instances. With EC2, you can quickly scale your infrastructure up or down as your computing requirements change. This service effectively reduces the time required to obtain and boot new server instances, allowing you to easily adjust capacity according to the needs of your application.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Amazon AWS EC2](https://aws.amazon.com/ec2/)\r\n- [@article@Up and Running with AWS EC2](https://cs.fyi/guide/up-and-running-with-aws-ec2)\r\n- [@article@EC2 Essentials](https://cloudcasts.io/course/ec2-essentials)\r\n- [@video@Deploy Node App on AWS EC2](https://youtu.be/oHAQ3TzUTro)\r\n- [@feed@Explore top posts about AWS EC2](https://app.daily.dev/tags/aws-ec2?ref=roadmapsh)",
+    "git@We2APJpOPTr-VNfowG0kI": "# Git\r\n\r\nGit is a free and open source distributed version control system designed to handle everything from small to very large projects with speed and efficiency.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@roadmap@Visit Dedicated Git & GitHub Roadmap](https://roadmap.sh/git-github)\r\n- [@article@Tutorial: Git for Absolutely Everyone](https://thenewstack.io/tutorial-git-for-absolutely-everyone/)\r\n- [@video@Git & GitHub Crash Course For Beginners](https://www.youtube.com/watch?v=SWYqp7iY_Tc)\r\n- [@course@Why use Git? (Interactive Lesson)](https://inter-git.com/lessons/introduction)",
+    "github-actions@863KMXcFJzInvTp_-Ldmz": "# GitHub Actions\r\n\r\nGitHub Actions is a workflow automation tool provided by GitHub that can be used to automate various tasks in the app development process.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@roadmap@Visit Dedicated Git & GitHub Roadmap](https://roadmap.sh/git-github)\r\n- [@official@GitHub Actions](https://github.com/features/actions)\r\n- [@official@GitHub Actions Documentation](https://docs.github.com/en/actions)\r\n- [@video@5 Ways to DevOps-ify your App](https://www.youtube.com/watch?v=eB0nUzAI7M8)\r\n- [@video@DevOps CI/CD Explained in 100 Seconds](https://www.youtube.com/watch?v=scEDHsr3APg)\r\n- [@feed@Explore top posts about GitHub](https://app.daily.dev/tags/github-actions?ref=roadmapsh)",
+    "github@8sPXL8iClpPqje03ksses": "# GitHub\r\n\r\nGitHub is a provider of Internet hosting for software development and version control using Git. It offers the distributed version control and source code management functionality of Git, plus its own features.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@GitHub](https://github.com)\r\n- [@official@GitHub Documentation](https://docs.github.com/en/get-started/quickstart)\r\n- [@article@How to Use Git in a Professional Dev Team](https://ooloo.io/project/github-flow)\r\n- [@video@What is GitHub?](https://www.youtube.com/watch?v=w3jLJU7DT5E)\r\n- [@video@Git vs. GitHub: Whats the difference?](https://www.youtube.com/watch?v=wpISo9TNjfU)\r\n- [@video@Git and GitHub for Beginners](https://www.youtube.com/watch?v=RGOj5yH7evk)\r\n- [@video@Git and GitHub - CS50 Beyond 2019](https://www.youtube.com/watch?v=eulnSXkhE7I)\r\n- [@feed@Explore top posts about GitHub](https://app.daily.dev/tags/github?ref=roadmapsh)",
+    "html@B0kARTODvCBi0iOF8iiqI": "# HTML\r\n\r\nHTML stands for HyperText Markup Language. It is used on the frontend and gives the structure to the webpage which you can style using CSS and make interactive using JavaScript.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@roadmap@Visit the Dedicated HTML Roadmap](https://roadmap.sh/html)\r\n- [@video@HTML Full Course for Beginners](https://youtu.be/mJgBOIoGihA)\r\n- [@video@HTML Full Course - Build a Website Tutorial](https://www.youtube.com/watch?v=pQN-pnXPaVg)\r\n- [@feed@Explore top posts about HTML](https://app.daily.dev/tags/html?ref=roadmapsh)",
+    "javascript@T9PB6WQf-Fa9NXKKvVOy_": "# JavaScript\r\n\r\nJavaScript allows you to add interactivity to your pages. Common examples that you may have seen on the websites are sliders, click interactions, popups and so on.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@roadmap@Visit Dedicated JavaScript Roadmap](https://roadmap.sh/javascript)\r\n- [@article@The Modern JavaScript Tutorial](https://javascript.info/)\r\n- [@article@Build 30 Javascript projects in 30 days](https://javascript30.com/)\r\n- [@video@JavaScript Crash Course for Beginners](https://youtu.be/hdI2bqOjy3c?t=2)\r\n- [@feed@Explore top posts about JavaScript](https://app.daily.dev/tags/javascript?ref=roadmapsh)",
+    "jwt-auth@vHojhJYjiN0IwruEqi1Dv": "# JWT\r\n\r\nJWT stands for JSON Web Token is a token-based encryption open standard/methodology that is used to transfer information securely as a JSON object. Clients and Servers use JWT to securely share information, with the JWT containing encoded JSON objects and claims. JWTs are designed to be compact, safe to use within URLs, and ideal for SSO contexts.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@jwt.io](https://jwt.io/)\r\n- [@official@Introduction to JSON Web Tokens](https://jwt.io/introduction)\r\n- [@article@What is JWT?](https://www.akana.com/blog/what-is-jwt)\r\n- [@video@What Is JWT and Why Should You Use JWT](https://www.youtube.com/watch?v=7Q17ubqLfaM)\r\n- [@video@What is JWT? JSON Web Token Explained](https://www.youtube.com/watch?v=926mknSW9Lo)\r\n- [@video@JWT Authentication Tutorial - Node.js](https://www.youtube.com/watch?v=mbsmsi7l3r4)\r\n- [@feed@Explore top posts about JWT](https://app.daily.dev/tags/jwt?ref=roadmapsh)",
+    "linux-basics@SHTSvMDqI7X1_ZT7-m--n": "# Linux / Unix\r\n\r\nKnowledge of UNIX is a must for almost all kind of development as most of the code that you write is most likely going to be finally deployed on a UNIX/Linux machine. Linux has been the backbone of the free and open source software movement, providing a simple and elegant operating system for almost all your needs.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@roadmap@Visit Dedicated Linux Roadmap](https://roadmap.sh/linux)\r\n- [@course@Coursera - Unix Courses](https://www.coursera.org/courses?query=unix)\r\n- [@article@Linux Basics](https://dev.to/rudrakshi99/linux-basics-2onj)\r\n- [@article@Unix / Linux Tutorial](https://www.tutorialspoint.com/unix/index.htm)\r\n- [@video@Linux Operating System - Crash Course](https://www.youtube.com/watch?v=ROjZy1WbCIA)\r\n- [@feed@Explore top posts about Linux](https://app.daily.dev/tags/linux?ref=roadmapsh)",
+    "monit@y1SFX7uvWaCy4OYBnECLu": "# Monit\r\n\r\nWhen it comes to monitoring the health of your applications, there are several different options available. My favorite monitoring stack is Prometheus and Grafana, but it can be a bit overwhelming to set up and configure. If you're looking for a simpler solution, **Monit** is a great alternative that can be utilized to monitor and manage system resources such as services, processes, files, directories, devices, and network connections, making your application more reliable and resilient to issues like crashes, unresponsiveness, or resource exhaustion.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Monit](https://mmonit.com/monit/)\r\n- [@official@Monit Documentation](https://mmonit.com/monit/documentation/)",
+    "nodejs@_aA6Hp4KkgJeptqo8oKTg": "# Node.js\r\n\r\nNode.js is an open-source and cross-platform JavaScript runtime environment. It is a popular tool for almost any kind of project! Node.js runs the V8 JavaScript engine, Google Chrome's core, outside the browser. This allows Node.js to be very performant. A Node.js app runs in a single process, without creating a new thread for every request. Node.js provides a set of asynchronous I/O primitives in its standard library that prevent JavaScript code from blocking and generally, libraries in Node.js are written using non-blocking paradigms, making blocking behavior the exception rather than the norm.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@roadmap@Visit Dedicated Node.js Roadmap](https://roadmap.sh/nodejs)\r\n- [@official@Node.js Website](https://nodejs.org/en/about/)\r\n- [@official@Learn Node.js Official Website](https://nodejs.org/en/learn/getting-started/introduction-to-nodejs)\r\n- [@video@Node.js and Express.js Full Course](https://www.youtube.com/watch?v=Oe421EPjeBE)\r\n- [@feed@Explore top posts about Node.js](https://app.daily.dev/tags/nodejs?ref=roadmapsh)",
+    "npm@mGgx_QTEPmVKf6AijX9fi": "# npm\r\n\r\nnpm is a package manager for the JavaScript programming language maintained by npm, Inc. npm is the default package manager for the JavaScript runtime environment Node.js.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@opensource@How to NPM](https://github.com/workshopper/how-to-npm)\r\n- [@article@Modern JavaScript for Dinosaurs](https://peterxjang.com/blog/modern-javascript-explained-for-dinosaurs.html)\r\n- [@article@An Absolute Beginners Guide to Using npm](https://nodesource.com/blog/an-absolute-beginners-guide-to-using-npm/)\r\n- [@video@NPM tutorial for Beginners](https://www.youtube.com/watch?v=2V1UUhBJ62Y)\r\n- [@video@NPM Crash Course](https://www.youtube.com/watch?v=jHDhaSSKmB0)\r\n- [@feed@Explore top posts about NPM](https://app.daily.dev/tags/npm?ref=roadmapsh)",
+    "postgresql@HGhnbMg6jh6cAmUH4DtOx": "# PostgreSQL\r\n\r\nPostgreSQL, also known as Postgres, is a free and open-source relational database management system emphasizing extensibility and SQL compliance.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@roadmap@Visit Dedicated PostgreSQL DBA Roadmap](https://roadmap.sh/postgresql-dba)\r\n- [@official@PostgreSQL Website](https://www.postgresql.org/)\r\n- [@article@Learn PostgreSQL - Full Tutorial for Beginners](https://www.postgresqltutorial.com/)\r\n- [@video@Learn PostgreSQL Tutorial - Full Course for Beginners](https://www.youtube.com/watch?v=qw--VYLpxG4)\r\n- [@video@Postgres tutorial for Beginners](https://www.youtube.com/watch?v=eMIxuk0nOkU)\r\n- [@feed@Explore top posts about PostgreSQL](https://app.daily.dev/tags/postgresql?ref=roadmapsh)",
+    "react@khoUtTUxdf8udAzN9_CAb": "# React\r\n\r\nReact is the most popular front-end JavaScript library for building user interfaces. React can also render on the server using Node and power mobile apps using React Native.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@roadmap@Visit Dedicated React Roadmap](https://roadmap.sh/react)\r\n- [@official@React](https://react.dev/)\r\n- [@official@Getting Started with React](https://react.dev/learn/tutorial-tic-tac-toe)\r\n- [@video@React JS Course for Beginners](https://www.youtube.com/watch?v=nTeuhbP7wdE)\r\n- [@video@React Course - Beginners Tutorial for React](https://www.youtube.com/watch?v=bMknfKXIFA8)\r\n- [@video@Understanding Reacts UI Rendering Process](https://www.youtube.com/watch?v=i793Qm6kv3U)\r\n- [@feed@Explore top posts about React](https://app.daily.dev/tags/react?ref=roadmapsh)",
+    "redis@Onfd7Sl8LG2sjh2aQY7gb": "# Redis\r\n\r\nRedis is an open source (BSD licensed), in-memory data structure store used as a database, cache, message broker, and streaming engine. Redis provides data structures such as strings, hashes, lists, sets, sorted sets with range queries, bitmaps, hyperloglogs, geospatial indexes, and streams. Redis has built-in replication, Lua scripting, LRU eviction, transactions, and different levels of on-disk persistence, and provides high availability via Redis Sentinel and automatic partitioning with Redis Cluster.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@roadmap@Visit Dedicated Redis Roadmap](https://roadmap.sh/redis)\r\n- [@official@Redis Website](https://redis.io/)\r\n- [@official@Redis Documentation](https://redis.io/docs/latest/)\r\n- [@official@Redis University](https://university.redis.io/academy)\r\n- [@video@Redis in 100 Seconds](https://www.youtube.com/watch?v=G1rOthIU-uo)\r\n- [@video@Redis Caching in Node.js](https://www.youtube.com/watch?v=oaJq1mQ3dFI)\r\n- [@feed@Explore top posts about Redis](https://app.daily.dev/tags/redis?ref=roadmapsh)",
+    "restful-apis@vmHbWdmMHF53otXIrqzRV": "# REST\r\n\r\nREST, or REpresentational State Transfer, is an architectural style for providing standards between computer systems on the web, making it easier for systems to communicate with each other.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@What is a REST API?](https://www.redhat.com/en/topics/api/what-is-a-rest-api)\r\n- [@article@Roy Fieldings dissertation chapter, Representational State Transfer (REST)](https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm)\r\n- [@article@Learn REST: A RESTful Tutorial](https://restapitutorial.com/)\r\n- [@video@What Is A RESTful API? Explanation of REST & HTTP](https://www.youtube.com/watch?v=Q-BpqyOT3a8)",
+    "route53@5zyYpu9cyuTFwQCjTbHpS": "# Route53\r\n\r\nRoute53 is AWS's Domain Name System (DNS) service that plays a critical role in connecting user requests to your web application or other resources within your infrastructure. With Route53, you can easily manage domains, redirect traffic, and configure domain-related settings. It has several advantages, including high availability, low latency, and integration with other AWS resources.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Route53](https://aws.amazon.com/route53/)\r\n- [@video@Amazon Route 53](https://www.youtube.com/watch?v=RGWgfhZByAI)\r\n- [@video@AWS Route 53 Domain Name](https://www.youtube.com/watch?v=jDz4j_kkyLA)\r\n- [@video@DNS with AWS Route 53](https://www.youtube.com/watch?v=yRIY7BJohfo&t=2s)",
+    "s3@n2Xp_ijJ2OS8xhE7xMWxk": "# S3\r\n\r\nS3 is a service that allows you to store files in the cloud. It's a simple service that you can use to store files and serve them to your users.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Amazon AWS S3](https://aws.amazon.com/s3/)\r\n- [@video@Upload Images to S3 from Node Back End](https://www.youtube.com/watch?v=NZElg91l_ms)\r\n- [@video@S3 Bucket Hosting a Static Website](https://www.youtube.com/watch?v=RoY3ekCCxKc&list=PL0X6fGhFFNTcU-_MCPe9dkH6sqmgfhy_M)\r\n- [@feed@Explore top posts about AWS S3](https://app.daily.dev/tags/aws-s3?ref=roadmapsh)",
+    "ses@B-cphY7Imnv6JBMujVIF7": "# SES\r\n\r\nAmazon SES (Simple Email Service) is a scalable, flexible, and cost-effective cloud-based email service that is specifically designed for developers, marketers, and businesses to send and receive marketing, transactional, and notification emails. SES is useful, especially when you need to send a large volume of emails, as it offers high deliverability, reliability, and ease of use.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Amazon AWS SES](https://aws.amazon.com/ses/)\r\n- [@video@Contact Form Submission With AWS SES](https://www.youtube.com/watch?v=HiHflLTqiwU)",
+    "tailwind-css@CVCqdPkq_hGQfI8EEi5RC": "# Tailwind CSS\r\n\r\nCSS Framework that provides atomic CSS classes to help you style components e.g. `flex`, `pt-4`, `text-center` and `rotate-90` that can be composed to build any design, directly in your markup.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Tailwind CSS](https://tailwindcss.com)\r\n- [@video@Tailwind CSS Full Course for Beginners](https://www.youtube.com/watch?v=lCxcTsOHrjo)\r\n- [@video@Tailwind CSS Crash Course](https://www.youtube.com/watch?v=UBOj6rqRUME)\r\n- [@video@Should You Use Tailwind CSS?](https://www.youtube.com/watch?v=hdGsFpZ0J2E)\r\n- [@feed@Explore top posts about Tailwind CSS](https://app.daily.dev/tags/tailwind-css?ref=roadmapsh)",
+    "terraform@2kKHuQZScu7hCDgQWxl5u": "# Terraform\r\n\r\nTerraform is an extremely popular open source Infrastructure as Code (IaC) tool that can be used with many different cloud and service provider APIs. Terraform focuses on an immutable approach to infrastructure, with a terraform state file center to tracking the status of your real world infrastructure.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@roadmap@Visit Dedicated Terraform Roadmap](https://roadmap.sh/terraform)\r\n- [@official@Terraform Website](https://www.terraform.io/)\r\n- [@official@Terraform Documentation](https://www.terraform.io/docs)\r\n- [@official@Terraform CDK](https://www.terraform.io/cdktf)\r\n- [@official@Terraform Tutorials](https://learn.hashicorp.com/terraform)\r\n- [@video@Intro to Terraform Video](https://www.youtube.com/watch?v=h970ZBgKINg&ab_channel=HashiCorp)\r\n- [@feed@Explore top posts about Terraform](https://app.daily.dev/tags/terraform?ref=roadmapsh)",
+    "vpc@QtL-bLKtWIdH00K6k_PdC": "# VPC\r\n\r\nVPC stands for **Virtual Private Cloud** and is an essential service provided by AWS that allows you to create a private, isolated section within the AWS cloud, where you can define your own virtual network. It offers a more secure and controlled environment, enabling you to easily launch and manage your resources within your personal network.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Amazon AWS VPC](https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html)\r\n- [@article@Up and Running with AWS VPC](https://cs.fyi/guide/up-and-running-with-aws-vpc)\r\n- [@article@VPC Basics](https://cloudcasts.io/course/vpc-basics)\r\n- [@video@AWS VPC & Subnets For Beginners](https://youtu.be/TUTqYEZZUdc)"
+  }
+}

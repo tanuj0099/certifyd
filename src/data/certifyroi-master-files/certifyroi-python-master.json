@@ -1,0 +1,4832 @@
+{
+  "nodes": [
+    {
+      "id": "7qkVORlOiHO2gVIC0spiJ",
+      "type": "section",
+      "position": {
+        "x": -470.10560351401324,
+        "y": 1018.842978409371
+      },
+      "selected": false,
+      "data": {
+        "label": "",
+        "style": {
+          "width": 150,
+          "height": 100,
+          "fontSize": 17,
+          "backgroundColor": "#ffffff",
+          "borderColor": "#000000"
+        }
+      },
+      "zIndex": -999,
+      "width": 227,
+      "height": 157,
+      "style": {
+        "width": 227,
+        "height": 157
+      },
+      "resizing": false,
+      "positionAbsolute": {
+        "x": -470.10560351401324,
+        "y": 1018.842978409371
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 227,
+        "height": 157
+      }
+    },
+    {
+      "id": "DYVswTR2tgKfRIkQ3WGDW",
+      "type": "section",
+      "position": {
+        "x": -615.0754215575712,
+        "y": 1018.842978409371
+      },
+      "width": 151,
+      "height": 157,
+      "style": {
+        "width": 151,
+        "height": 157
+      },
+      "selected": false,
+      "data": {
+        "style": {
+          "backgroundColor": "#ffffff",
+          "borderColor": "#000000"
+        }
+      },
+      "positionAbsolute": {
+        "x": -615.0754215575712,
+        "y": 1018.842978409371
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 151,
+        "height": 157
+      }
+    },
+    {
+      "id": "jKeTTySc4iyJY29xLqNNQ",
+      "type": "section",
+      "position": {
+        "x": 264.82694462464815,
+        "y": 1166.6757618831236
+      },
+      "width": 175,
+      "height": 108,
+      "style": {
+        "width": 175,
+        "height": 108
+      },
+      "selected": false,
+      "data": {
+        "style": {
+          "backgroundColor": "#ffffff",
+          "borderColor": "#000000"
+        }
+      },
+      "positionAbsolute": {
+        "x": 264.82694462464815,
+        "y": 1166.6757618831236
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 175,
+        "height": 108
+      }
+    },
+    {
+      "id": "kEXUjAWagEHfsybVfqFbj",
+      "type": "vertical",
+      "position": {
+        "x": 351.32694462464815,
+        "y": 962.1504012205187
+      },
+      "selected": false,
+      "data": {
+        "label": "vertical node",
+        "style": {
+          "stroke": "#2B78E4",
+          "strokeWidth": 3.65
+        }
+      },
+      "zIndex": 999,
+      "width": 21,
+      "height": 206,
+      "style": {
+        "width": 21,
+        "height": 206
+      },
+      "positionAbsolute": {
+        "x": 351.32694462464815,
+        "y": 962.1504012205187
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 21,
+        "height": 206
+      }
+    },
+    {
+      "id": "RW1wSb7P-AZWXa_znXytT",
+      "type": "horizontal",
+      "position": {
+        "x": 230.82694462464815,
+        "y": 933.1504012205187
+      },
+      "selected": false,
+      "data": {
+        "label": "horizontal node",
+        "style": {
+          "stroke": "#2B78E4",
+          "strokeWidth": 3.65
+        },
+        "oldId": "KFFbnOBa-y5r58w2pUf15"
+      },
+      "zIndex": 999,
+      "width": 67,
+      "height": 20,
+      "style": {
+        "width": 67,
+        "height": 20
+      },
+      "positionAbsolute": {
+        "x": 230.82694462464815,
+        "y": 933.1504012205187
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 67,
+        "height": 20
+      }
+    },
+    {
+      "id": "I0lCQskv_MEITj9xTEetZ",
+      "type": "section",
+      "position": {
+        "x": 67.79817070787664,
+        "y": 755.1504012205187
+      },
+      "width": 166,
+      "height": 210,
+      "style": {
+        "width": 166,
+        "height": 210
+      },
+      "selected": false,
+      "data": {
+        "style": {
+          "backgroundColor": "#ffffff",
+          "borderColor": "#000000"
+        }
+      },
+      "positionAbsolute": {
+        "x": 67.79817070787664,
+        "y": 755.1504012205187
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 166,
+        "height": 210
+      }
+    },
+    {
+      "id": "-Bdnmm4sceeOS3oBa214C",
+      "type": "section",
+      "position": {
+        "x": -621.1730553753519,
+        "y": 551.0807887739926
+      },
+      "width": 223,
+      "height": 111,
+      "style": {
+        "width": 223,
+        "height": 111
+      },
+      "selected": false,
+      "data": {},
+      "positionAbsolute": {
+        "x": -621.1730553753519,
+        "y": 551.0807887739926
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 223,
+        "height": 111
+      }
+    },
+    {
+      "id": "n79gqI0nU2Ufufrbqn4I2",
+      "type": "vertical",
+      "position": {
+        "x": -578.7332744798255,
+        "y": 928.842978409371
+      },
+      "selected": false,
+      "data": {
+        "label": "vertical node",
+        "style": {
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round",
+          "strokeWidth": 3.5,
+          "stroke": "#2B78E4"
+        }
+      },
+      "zIndex": 999,
+      "width": 21,
+      "height": 90,
+      "style": {
+        "width": 21,
+        "height": 90
+      },
+      "positionAbsolute": {
+        "x": -578.7332744798255,
+        "y": 928.842978409371
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 21,
+        "height": 90
+      }
+    },
+    {
+      "id": "nvL0Yb5peOKtN6J3bHlRt",
+      "type": "section",
+      "position": {
+        "x": -615.0754215575712,
+        "y": 1168.2821121205188
+      },
+      "selected": false,
+      "data": {
+        "label": "",
+        "style": {
+          "width": 150,
+          "height": 100,
+          "fontSize": 17,
+          "backgroundColor": "#ffffff",
+          "borderColor": "#000000"
+        }
+      },
+      "zIndex": -999,
+      "width": 372,
+      "height": 118,
+      "style": {
+        "width": 372,
+        "height": 118
+      },
+      "resizing": false,
+      "positionAbsolute": {
+        "x": -615.0754215575712,
+        "y": 1168.2821121205188
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 372,
+        "height": 118
+      }
+    },
+    {
+      "id": "QeITF-YfZejH1ChhvL153",
+      "type": "vertical",
+      "position": {
+        "x": 300.8559210300732,
+        "y": 286.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "vertical node",
+        "style": {
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round",
+          "strokeWidth": 3.5,
+          "stroke": "#2B78E4"
+        }
+      },
+      "zIndex": 999,
+      "width": 21,
+      "height": 94,
+      "style": {
+        "width": 21,
+        "height": 94
+      },
+      "positionAbsolute": {
+        "x": 300.8559210300732,
+        "y": 286.7304293708296
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 21,
+        "height": 94
+      }
+    },
+    {
+      "id": "dtrq89l_tp6Z6J6hXsIov",
+      "type": "vertical",
+      "position": {
+        "x": 175.3559210300732,
+        "y": 290.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "vertical node",
+        "style": {
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round",
+          "strokeWidth": 3.5,
+          "stroke": "#2B78E4"
+        },
+        "oldId": "QeITF-YfZejH1ChhvL153"
+      },
+      "zIndex": 999,
+      "width": 21,
+      "height": 94,
+      "style": {
+        "width": 21,
+        "height": 94
+      },
+      "positionAbsolute": {
+        "x": 175.3559210300732,
+        "y": 290.7304293708296
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 21,
+        "height": 94
+      }
+    },
+    {
+      "id": "WM8uelKHGcNtlUiJVwxZf",
+      "type": "vertical",
+      "position": {
+        "x": -578.7332744798255,
+        "y": 849.1393183285392
+      },
+      "selected": false,
+      "data": {
+        "label": "vertical node",
+        "style": {
+          "stroke": "#2B78E4",
+          "strokeWidth": 3.75
+        },
+        "oldId": "hVyw2aK17eHhz6Xg4Vccr"
+      },
+      "zIndex": 999,
+      "width": 21,
+      "height": 95,
+      "style": {
+        "width": 21,
+        "height": 95
+      },
+      "positionAbsolute": {
+        "x": -578.7332744798255,
+        "y": 849.1393183285392
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 21,
+        "height": 95
+      }
+    },
+    {
+      "id": "hVyw2aK17eHhz6Xg4Vccr",
+      "type": "vertical",
+      "position": {
+        "x": -578.7332744798255,
+        "y": 440.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "vertical node",
+        "style": {
+          "stroke": "#2B78E4",
+          "strokeWidth": 3.75
+        }
+      },
+      "zIndex": 999,
+      "width": 21,
+      "height": 89,
+      "style": {
+        "width": 21,
+        "height": 89
+      },
+      "positionAbsolute": {
+        "x": -578.7332744798255,
+        "y": 440.7304293708296
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 21,
+        "height": 89
+      }
+    },
+    {
+      "id": "LgWrLnoO7qkmpqJs35kyZ",
+      "type": "horizontal",
+      "position": {
+        "x": -567.7332744798255,
+        "y": 433.2304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "horizontal node",
+        "style": {
+          "stroke": "#2B78E4",
+          "strokeWidth": 3.75
+        }
+      },
+      "zIndex": 999,
+      "width": 158,
+      "height": 20,
+      "style": {
+        "width": 158,
+        "height": 20
+      },
+      "positionAbsolute": {
+        "x": -567.7332744798255,
+        "y": 433.2304293708296
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 158,
+        "height": 20
+      }
+    },
+    {
+      "width": 127,
+      "height": 68,
+      "id": "hIQe_B-68ENL-GFg6GmnD",
+      "type": "title",
+      "position": {
+        "x": -173.16916540260297,
+        "y": -161.7695706291704
+      },
+      "selected": false,
+      "data": {
+        "label": "Python",
+        "style": {
+          "fontSize": 28,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "iogwMmOvub2ZF4zgg6WyF"
+      },
+      "zIndex": 999,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": -173.16916540260297,
+        "y": -161.7695706291704
+      },
+      "focusable": true,
+      "selectable": true,
+      "measured": {
+        "width": 127,
+        "height": 68
+      }
+    },
+    {
+      "width": 21,
+      "height": 76,
+      "id": "LEijbLyxg4RyutKEM2Y5g",
+      "type": "vertical",
+      "position": {
+        "x": -120.16916540260297,
+        "y": -226.7695706291704
+      },
+      "selected": false,
+      "data": {
+        "label": "vertical node",
+        "style": {
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round",
+          "strokeWidth": 3.5,
+          "stroke": "#0A33FF"
+        },
+        "oldId": "xD07fJ1NmNeAarVCEfubU"
+      },
+      "zIndex": 999,
+      "positionAbsolute": {
+        "x": -120.16916540260297,
+        "y": -226.7695706291704
+      },
+      "dragging": false,
+      "focusable": true,
+      "style": {
+        "width": 21,
+        "height": 76
+      },
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 21,
+        "height": 76
+      }
+    },
+    {
+      "id": "yHmHXymPNWwu8p1vvqD3o",
+      "type": "paragraph",
+      "position": {
+        "x": 110.84147172248669,
+        "y": -233.7695706291704
+      },
+      "selected": false,
+      "data": {
+        "label": "Find the detailed version of this roadmap and other similar roadmaps",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "left",
+          "borderColor": "#000000",
+          "backgroundColor": "#FFFFFf"
+        }
+      },
+      "zIndex": 999,
+      "width": 329,
+      "height": 138,
+      "positionAbsolute": {
+        "x": 110.84147172248669,
+        "y": -233.7695706291704
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "style": {
+        "width": 329,
+        "height": 138
+      },
+      "resizing": false,
+      "measured": {
+        "width": 329,
+        "height": 138
+      }
+    },
+    {
+      "id": "R_Fs6rdl2XtQ9aLOubMqL",
+      "type": "button",
+      "position": {
+        "x": 121.34147172248669,
+        "y": -156.7840072114252
+      },
+      "selected": false,
+      "data": {
+        "label": "roadmap.sh",
+        "href": "https://roadmap.sh",
+        "color": "#ffffff",
+        "backgroundColor": "#4136D6",
+        "style": {
+          "fontSize": 17
+        },
+        "oldId": "2zqZkyVgigifcRS1H7F_b"
+      },
+      "zIndex": 999,
+      "width": 308,
+      "height": 49,
+      "dragging": false,
+      "style": {
+        "width": 308,
+        "height": 49
+      },
+      "resizing": false,
+      "positionAbsolute": {
+        "x": 121.34147172248669,
+        "y": -156.7840072114252
+      },
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 308,
+        "height": 49
+      }
+    },
+    {
+      "id": "Y3FQ2wGWFb1VciLEVEGUf",
+      "type": "linksgroup",
+      "position": {
+        "x": -617.2332744798255,
+        "y": -231.7695706291704
+      },
+      "selected": false,
+      "data": {
+        "label": "Related Roadmaps",
+        "links": [
+          {
+            "id": "TRPGwvkLuLL9ZZ4kDMiyI",
+            "label": "Backend Roadmap",
+            "url": "https://roadmap.sh/backend"
+          },
+          {
+            "id": "D2U09O9v90i02pfmTeG52",
+            "label": "DevOps Roadmap",
+            "url": "https://roadmap.sh/devops"
+          },
+          {
+            "id": "yFz6Tz37UtT8Q0NVDPl3H",
+            "label": "AI & Data Scientist",
+            "url": "https://roadmap.sh/ai-data-scientist"
+          }
+        ]
+      },
+      "zIndex": 999,
+      "width": 345,
+      "height": 166,
+      "positionAbsolute": {
+        "x": -617.2332744798255,
+        "y": -231.7695706291704
+      },
+      "dragging": false,
+      "style": {
+        "width": 345,
+        "height": 166
+      },
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 345,
+        "height": 166
+      }
+    },
+    {
+      "id": "xwpc_KxehAruFM0pCQnie",
+      "type": "vertical",
+      "position": {
+        "x": -397.3402957676265,
+        "y": 1442.7311650625577
+      },
+      "selected": false,
+      "data": {
+        "label": "vertical node",
+        "style": {
+          "strokeDasharray": "0.8 8",
+          "strokeLinecap": "round",
+          "strokeWidth": 3.5,
+          "stroke": "#4136D4"
+        },
+        "oldId": "Ju00mr0KLGN2BV6yEQGPt"
+      },
+      "zIndex": 999,
+      "width": 21,
+      "height": 104,
+      "positionAbsolute": {
+        "x": -397.3402957676265,
+        "y": 1442.7311650625577
+      },
+      "dragging": false,
+      "style": {
+        "width": 21,
+        "height": 104
+      },
+      "resizing": false,
+      "focusable": true,
+      "selectable": true,
+      "measured": {
+        "width": 21,
+        "height": 104
+      }
+    },
+    {
+      "width": 506,
+      "height": 117,
+      "id": "GV_zWF6rSWg5bqgiXhOEf",
+      "type": "paragraph",
+      "position": {
+        "x": -611.3402957676265,
+        "y": 1352.21519978213
+      },
+      "selected": false,
+      "data": {
+        "label": "Have a look at the following related roadmaps",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center",
+          "borderColor": "#000000",
+          "backgroundColor": "#ffffff"
+        },
+        "oldId": "sVXZrBCsiSzWBBYWTm-nQ"
+      },
+      "zIndex": 999,
+      "positionAbsolute": {
+        "x": -611.3402957676265,
+        "y": 1352.21519978213
+      },
+      "dragging": false,
+      "style": {
+        "width": 506,
+        "height": 117
+      },
+      "resizing": false,
+      "focusable": true,
+      "selectable": true,
+      "measured": {
+        "width": 506,
+        "height": 117
+      }
+    },
+    {
+      "width": 143,
+      "height": 49,
+      "id": "OQpi63qND2KBXVvKBNMST",
+      "type": "button",
+      "position": {
+        "x": -599.8231176820491,
+        "y": 1406.9044816937815
+      },
+      "selected": false,
+      "data": {
+        "label": "Backend",
+        "href": "https://roadmap.sh/backend",
+        "color": "#FFFFFf",
+        "backgroundColor": "#4136D4",
+        "style": {
+          "fontSize": 17
+        },
+        "borderColor": "#4136D4",
+        "oldId": "U0fJo2a3vnaodNJhfZ78I"
+      },
+      "zIndex": 999,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": -599.8231176820491,
+        "y": 1406.9044816937815
+      },
+      "style": {
+        "width": 143,
+        "height": 49
+      },
+      "focusable": true,
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 143,
+        "height": 49
+      }
+    },
+    {
+      "width": 191,
+      "height": 49,
+      "id": "iuSv7V59YxUZawN38Qlli",
+      "type": "button",
+      "position": {
+        "x": -309.5754215575712,
+        "y": 1406.9044816937815
+      },
+      "selected": false,
+      "data": {
+        "label": "AI / Data Science",
+        "href": "https://roadmap.sh/ai-data-scientist",
+        "color": "#FFFFFf",
+        "backgroundColor": "#4136D4",
+        "style": {
+          "fontSize": 17
+        },
+        "borderColor": "#4136D4",
+        "oldId": "ZSrQoNGKiR484uALMWO9F"
+      },
+      "zIndex": 999,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": -309.5754215575712,
+        "y": 1406.9044816937815
+      },
+      "style": {
+        "width": 191,
+        "height": 49
+      },
+      "focusable": true,
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 191,
+        "height": 49
+      }
+    },
+    {
+      "id": "GISOFMKvnBys0O0IMpz2J",
+      "type": "topic",
+      "position": {
+        "x": -243.16916540260297,
+        "y": 67.2304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Learn the Basics",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "JDDG4KfhtIlw1rkNCzUli"
+      },
+      "zIndex": 999,
+      "width": 267,
+      "height": 49,
+      "style": {
+        "width": 267,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -243.16916540260297,
+        "y": 67.2304293708296
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 267,
+        "height": 49
+      }
+    },
+    {
+      "id": "6xRncUs3_vxVbDur567QA",
+      "type": "subtopic",
+      "position": {
+        "x": -615.9741508977197,
+        "y": -11.214355272135947
+      },
+      "selected": false,
+      "data": {
+        "label": "Basic Syntax",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 268,
+      "height": 49,
+      "style": {
+        "width": 268,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -615.9741508977197,
+        "y": -11.214355272135947
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 268,
+        "height": 49
+      }
+    },
+    {
+      "id": "dEFLBGpiH6nbSMeR7ecaT",
+      "type": "subtopic",
+      "position": {
+        "x": -615.9741508977197,
+        "y": 41.78564472786405
+      },
+      "selected": false,
+      "data": {
+        "label": "Variables and Data Types",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 268,
+      "height": 49,
+      "style": {
+        "width": 268,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -615.9741508977197,
+        "y": 41.78564472786405
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 268,
+        "height": 49
+      }
+    },
+    {
+      "id": "NP1kjSk0ujU0Gx-ajNHlR",
+      "type": "subtopic",
+      "position": {
+        "x": -615.9741508977197,
+        "y": 94.78564472786405
+      },
+      "selected": false,
+      "data": {
+        "label": "Conditionals",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "Dvy7BnNzK55qbh_SgOk8m"
+      },
+      "zIndex": 999,
+      "width": 268,
+      "height": 49,
+      "style": {
+        "width": 268,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -615.9741508977197,
+        "y": 94.78564472786405
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 268,
+        "height": 49
+      }
+    },
+    {
+      "id": "R9DQNc0AyAQ2HLpP4HOk6",
+      "type": "subtopic",
+      "position": {
+        "x": 131.83083459739703,
+        "y": -38.7695706291704
+      },
+      "selected": false,
+      "data": {
+        "label": "Type Casting",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 311,
+      "height": 49,
+      "style": {
+        "width": 311,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 131.83083459739703,
+        "y": -38.7695706291704
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 311,
+        "height": 49
+      }
+    },
+    {
+      "id": "fNTb9y3zs1HPYclAmu_Wv",
+      "type": "subtopic",
+      "position": {
+        "x": 131.83083459739703,
+        "y": 14.230429370829597
+      },
+      "selected": false,
+      "data": {
+        "label": "Exceptions",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 311,
+      "height": 49,
+      "style": {
+        "width": 311,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 131.83083459739703,
+        "y": 14.230429370829597
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 311,
+        "height": 49
+      }
+    },
+    {
+      "id": "-DJgS6l2qngfwurExlmmT",
+      "type": "subtopic",
+      "position": {
+        "x": 131.83083459739703,
+        "y": 67.2304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Functions, Builtin Functions",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 311,
+      "height": 49,
+      "style": {
+        "width": 311,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 131.83083459739703,
+        "y": 67.2304293708296
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 311,
+        "height": 49
+      }
+    },
+    {
+      "id": "UT_SR7G-LYtzqooWrEtF1",
+      "type": "subtopic",
+      "position": {
+        "x": 132.83083459739703,
+        "y": 120.2304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Lists",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 132.83083459739703,
+        "y": 120.2304293708296
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "i7xIGiXU-k5UIKHIhQPjE",
+      "type": "subtopic",
+      "position": {
+        "x": 236.83083459739703,
+        "y": 120.2304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Tuples",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 236.83083459739703,
+        "y": 120.2304293708296
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "soZFqivM3YBuljeX6PoaX",
+      "type": "subtopic",
+      "position": {
+        "x": 340.83083459739703,
+        "y": 120.2304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Sets",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 340.83083459739703,
+        "y": 120.2304293708296
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "bc9CL_HMT-R6nXO1eR-gP",
+      "type": "subtopic",
+      "position": {
+        "x": 131.83083459739703,
+        "y": 173.2304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Dictionaries",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 311,
+      "height": 49,
+      "style": {
+        "width": 311,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 131.83083459739703,
+        "y": 173.2304293708296
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 311,
+        "height": 49
+      }
+    },
+    {
+      "id": "Dvy7BnNzK55qbh_SgOk8m",
+      "type": "subtopic",
+      "position": {
+        "x": -615.9741508977197,
+        "y": 147.78564472786405
+      },
+      "selected": false,
+      "data": {
+        "label": "Loops",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 268,
+      "height": 49,
+      "style": {
+        "width": 268,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -615.9741508977197,
+        "y": 147.78564472786405
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 268,
+        "height": 49
+      }
+    },
+    {
+      "id": "OPD4WdMO7q4gRZMcRCQh1",
+      "type": "subtopic",
+      "position": {
+        "x": -243.66916540260297,
+        "y": 316.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Arrays and Linked Lists",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "kIuns7FOwapwtFLKo1phQ"
+      },
+      "zIndex": 999,
+      "width": 268,
+      "height": 49,
+      "style": {
+        "width": 268,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -243.66916540260297,
+        "y": 316.7304293708296
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "measured": {
+        "width": 268,
+        "height": 49
+      }
+    },
+    {
+      "id": "0NlRczh6ZEaFLlT6LORWz",
+      "type": "subtopic",
+      "position": {
+        "x": -243.66916540260297,
+        "y": 422.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Heaps, Stacks and Queues",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "rSfg5M65LyZldhrdWOr90"
+      },
+      "zIndex": 999,
+      "width": 268,
+      "height": 49,
+      "style": {
+        "width": 268,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -243.66916540260297,
+        "y": 422.7304293708296
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 268,
+        "height": 49
+      }
+    },
+    {
+      "id": "DG4fi1e5ec2BVckPLsTJS",
+      "type": "subtopic",
+      "position": {
+        "x": -243.66916540260297,
+        "y": 369.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Hash Tables",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "0-m8jVuDKE8hX1QorKGTM"
+      },
+      "zIndex": 999,
+      "width": 268,
+      "height": 49,
+      "style": {
+        "width": 268,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -243.66916540260297,
+        "y": 369.7304293708296
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 268,
+        "height": 49
+      }
+    },
+    {
+      "id": "uJIqgsqUbE62Tyo3K75Qx",
+      "type": "subtopic",
+      "position": {
+        "x": -243.66916540260297,
+        "y": 475.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Binary Search Tree",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "7NZlydjm4432vLY1InBS7"
+      },
+      "zIndex": 999,
+      "width": 268,
+      "height": 49,
+      "style": {
+        "width": 268,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -243.66916540260297,
+        "y": 475.7304293708296
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 268,
+        "height": 49
+      }
+    },
+    {
+      "id": "kLBgy_nxxjE8SxdVi04bq",
+      "type": "subtopic",
+      "position": {
+        "x": -243.66916540260297,
+        "y": 528.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Recursion",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "94KnPMQdNTOwQkUv37tAk"
+      },
+      "zIndex": 999,
+      "width": 268,
+      "height": 49,
+      "style": {
+        "width": 268,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -243.66916540260297,
+        "y": 528.7304293708296
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 268,
+        "height": 49
+      }
+    },
+    {
+      "id": "vvTmjcWCVclOPY4f_5uB0",
+      "type": "subtopic",
+      "position": {
+        "x": -243.66916540260297,
+        "y": 581.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Sorting Algorithms",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "YNptpfK9qv2ovmkUXLkJT"
+      },
+      "zIndex": 999,
+      "width": 268,
+      "height": 49,
+      "style": {
+        "width": 268,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -243.66916540260297,
+        "y": 581.7304293708296
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 268,
+        "height": 49
+      }
+    },
+    {
+      "id": "274uk28wzxn6EKWQzLpHs",
+      "type": "topic",
+      "position": {
+        "x": 130.3559210300732,
+        "y": 345.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Modules",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 243,
+      "height": 49,
+      "style": {
+        "width": 243,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 130.3559210300732,
+        "y": 345.7304293708296
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 243,
+        "height": 49
+      }
+    },
+    {
+      "width": 127,
+      "height": 68,
+      "id": "iogwMmOvub2ZF4zgg6WyF",
+      "type": "title",
+      "position": {
+        "x": -173.16916540260297,
+        "y": -161.7695706291704
+      },
+      "selected": false,
+      "data": {
+        "label": "Python",
+        "style": {
+          "fontSize": 28,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "9nxw2PEl-_eQPW0FHNPq2"
+      },
+      "zIndex": 999,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": -173.16916540260297,
+        "y": -161.7695706291704
+      },
+      "focusable": true,
+      "selectable": true,
+      "measured": {
+        "width": 127,
+        "height": 68
+      }
+    },
+    {
+      "id": "JDDG4KfhtIlw1rkNCzUli",
+      "type": "topic",
+      "position": {
+        "x": -243.16916540260297,
+        "y": 67.2304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Learn the Basics",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "VJSIbYJcy2MC6MOFBrqXi"
+      },
+      "zIndex": 999,
+      "width": 267,
+      "height": 49,
+      "style": {
+        "width": 267,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -243.16916540260297,
+        "y": 67.2304293708296
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 267,
+        "height": 49
+      }
+    },
+    {
+      "id": "VJSIbYJcy2MC6MOFBrqXi",
+      "type": "topic",
+      "position": {
+        "x": -243.66916540260297,
+        "y": 216.70802158662212
+      },
+      "selected": false,
+      "data": {
+        "label": "Data Structures & Algorithms",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 269,
+      "height": 49,
+      "style": {
+        "width": 269,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -243.66916540260297,
+        "y": 216.70802158662212
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 269,
+        "height": 49
+      }
+    },
+    {
+      "id": "kIuns7FOwapwtFLKo1phQ",
+      "type": "subtopic",
+      "position": {
+        "x": -243.66916540260297,
+        "y": 316.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Arrays and Linked Lists",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 268,
+      "height": 49,
+      "style": {
+        "width": 268,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -243.66916540260297,
+        "y": 316.7304293708296
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "measured": {
+        "width": 268,
+        "height": 49
+      }
+    },
+    {
+      "id": "rSfg5M65LyZldhrdWOr90",
+      "type": "subtopic",
+      "position": {
+        "x": -243.66916540260297,
+        "y": 422.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Heaps, Stacks and Queues",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 268,
+      "height": 49,
+      "style": {
+        "width": 268,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -243.66916540260297,
+        "y": 422.7304293708296
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 268,
+        "height": 49
+      }
+    },
+    {
+      "id": "0-m8jVuDKE8hX1QorKGTM",
+      "type": "subtopic",
+      "position": {
+        "x": -243.66916540260297,
+        "y": 369.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Hash Tables",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 268,
+      "height": 49,
+      "style": {
+        "width": 268,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -243.66916540260297,
+        "y": 369.7304293708296
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 268,
+        "height": 49
+      }
+    },
+    {
+      "id": "7NZlydjm4432vLY1InBS7",
+      "type": "subtopic",
+      "position": {
+        "x": -243.66916540260297,
+        "y": 475.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Binary Search Tree",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 268,
+      "height": 49,
+      "style": {
+        "width": 268,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -243.66916540260297,
+        "y": 475.7304293708296
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 268,
+        "height": 49
+      }
+    },
+    {
+      "id": "94KnPMQdNTOwQkUv37tAk",
+      "type": "subtopic",
+      "position": {
+        "x": -243.66916540260297,
+        "y": 528.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Recursion",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 268,
+      "height": 49,
+      "style": {
+        "width": 268,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -243.66916540260297,
+        "y": 528.7304293708296
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 268,
+        "height": 49
+      }
+    },
+    {
+      "id": "YNptpfK9qv2ovmkUXLkJT",
+      "type": "subtopic",
+      "position": {
+        "x": -243.66916540260297,
+        "y": 581.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Sorting Algorithms",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 268,
+      "height": 49,
+      "style": {
+        "width": 268,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -243.66916540260297,
+        "y": 581.7304293708296
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 268,
+        "height": 49
+      }
+    },
+    {
+      "id": "08XifLQ20c4FKI_4AWNBQ",
+      "type": "subtopic",
+      "position": {
+        "x": 130.3559210300732,
+        "y": 263.9180561596926
+      },
+      "selected": false,
+      "data": {
+        "label": "Builtin",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 111,
+      "height": 49,
+      "style": {
+        "width": 111,
+        "height": 49
+      },
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 130.3559210300732,
+        "y": 263.9180561596926
+      },
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 111,
+        "height": 49
+      }
+    },
+    {
+      "id": "l7k0qTYe42wYBTlT2-1cy",
+      "type": "subtopic",
+      "position": {
+        "x": 249.3559210300732,
+        "y": 263.9180561596926
+      },
+      "selected": false,
+      "data": {
+        "label": "Custom",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 124,
+      "height": 49,
+      "style": {
+        "width": 124,
+        "height": 49
+      },
+      "dragging": false,
+      "resizing": false,
+      "positionAbsolute": {
+        "x": 249.3559210300732,
+        "y": 263.9180561596926
+      },
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 124,
+        "height": 49
+      }
+    },
+    {
+      "id": "aWHgAk959DPUZL46CeRiI",
+      "type": "topic",
+      "position": {
+        "x": 130.3559210300732,
+        "y": 398.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Lambdas",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 243,
+      "height": 49,
+      "style": {
+        "width": 243,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 130.3559210300732,
+        "y": 398.7304293708296
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 243,
+        "height": 49
+      }
+    },
+    {
+      "id": "pIluLJkySqn_gI_GykV6G",
+      "type": "topic",
+      "position": {
+        "x": 130.3559210300732,
+        "y": 451.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Decorators",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 243,
+      "height": 49,
+      "style": {
+        "width": 243,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 130.3559210300732,
+        "y": 451.7304293708296
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 243,
+        "height": 49
+      }
+    },
+    {
+      "id": "aB1LSQjDEQb_BxueOcnxU",
+      "type": "topic",
+      "position": {
+        "x": 130.3559210300732,
+        "y": 504.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Iterators",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "P_Di-XPSDITmU3xKQew8G"
+      },
+      "zIndex": 999,
+      "width": 243,
+      "height": 49,
+      "style": {
+        "width": 243,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 130.3559210300732,
+        "y": 504.7304293708296
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 243,
+        "height": 49
+      }
+    },
+    {
+      "id": "7t6mJBsaFMWPi7o9fbhhq",
+      "type": "topic",
+      "position": {
+        "x": 130.3559210300732,
+        "y": 557.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Regular Expressions",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "P_Di-XPSDITmU3xKQew8G"
+      },
+      "zIndex": 999,
+      "width": 243,
+      "height": 49,
+      "style": {
+        "width": 243,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 130.3559210300732,
+        "y": 557.7304293708296
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 243,
+        "height": 49
+      }
+    },
+    {
+      "id": "P_Di-XPSDITmU3xKQew8G",
+      "type": "topic",
+      "position": {
+        "x": -248.16916540260297,
+        "y": 657.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Object Oriented Programming",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 276,
+      "height": 49,
+      "style": {},
+      "positionAbsolute": {
+        "x": -248.16916540260297,
+        "y": 657.7304293708296
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 276,
+        "height": 49
+      }
+    },
+    {
+      "id": "AqwzR8dZKLQIoj_6KKZ3t",
+      "type": "subtopic",
+      "position": {
+        "x": -202.66916540260297,
+        "y": 734.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Classes",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 185,
+      "height": 49,
+      "style": {
+        "width": 185,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -202.66916540260297,
+        "y": 734.7304293708296
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 185,
+        "height": 49
+      }
+    },
+    {
+      "id": "S0FLE70szSVUPI0CDEQK7",
+      "type": "subtopic",
+      "position": {
+        "x": -202.66916540260297,
+        "y": 787.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Inheritance",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 185,
+      "height": 49,
+      "style": {
+        "width": 185,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -202.66916540260297,
+        "y": 787.7304293708296
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 185,
+        "height": 49
+      }
+    },
+    {
+      "id": "zAS4YiEJ6VPsyABrkIG8i",
+      "type": "subtopic",
+      "position": {
+        "x": -202.66916540260297,
+        "y": 840.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Methods, Dunder",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 185,
+      "height": 49,
+      "style": {
+        "width": 185,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -202.66916540260297,
+        "y": 840.7304293708296
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 185,
+        "height": 49
+      }
+    },
+    {
+      "id": "qeCMw-sJ2FR4UxvU9DDzv",
+      "type": "topic",
+      "position": {
+        "x": -461.23327447982547,
+        "y": 418.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Package Managers",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 195,
+      "height": 49,
+      "style": {
+        "width": 195,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -461.23327447982547,
+        "y": 418.7304293708296
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 195,
+        "height": 49
+      }
+    },
+    {
+      "id": "1dfOTOGsOk5XE3bnZs8Ht",
+      "type": "subtopic",
+      "position": {
+        "x": -461.23327447982547,
+        "y": 222.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "PyPI",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -461.23327447982547,
+        "y": 222.7304293708296
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "iVhQnp6hpgVZDNJ0XoVra",
+      "type": "subtopic",
+      "position": {
+        "x": -357.23327447982547,
+        "y": 222.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Pip",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "p3Frfs6oxpuciUzeCEsvb"
+      },
+      "zIndex": 999,
+      "width": 91,
+      "height": 49,
+      "style": {
+        "width": 91,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -357.23327447982547,
+        "y": 222.7304293708296
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 91,
+        "height": 49
+      }
+    },
+    {
+      "id": "uh67D1u-Iv5cZamRgFEJg",
+      "type": "subtopic",
+      "position": {
+        "x": -461.23327447982547,
+        "y": 275.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Conda",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -461.23327447982547,
+        "y": 275.7304293708296
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "uXd2B01GVBEQNXQE8RATT",
+      "type": "subtopic",
+      "position": {
+        "x": -461.23327447982547,
+        "y": 328.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Poetry",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 195,
+      "height": 49,
+      "style": {
+        "width": 195,
+        "height": 49
+      },
+      "dragging": false,
+      "positionAbsolute": {
+        "x": -461.23327447982547,
+        "y": 328.7304293708296
+      },
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 195,
+        "height": 49
+      }
+    },
+    {
+      "id": "4gtmtYWYRWqwLdZRL0XMg",
+      "type": "topic",
+      "position": {
+        "x": -621.1730553753519,
+        "y": 668.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "List Comprehensions",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 223,
+      "height": 49,
+      "style": {
+        "width": 223,
+        "height": 49
+      },
+      "dragging": false,
+      "focusable": true,
+      "positionAbsolute": {
+        "x": -621.1730553753519,
+        "y": 668.7304293708296
+      },
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 223,
+        "height": 49
+      }
+    },
+    {
+      "id": "jnLIVRrWxcX3yq3Op91Vr",
+      "type": "topic",
+      "position": {
+        "x": -621.1730553753519,
+        "y": 721.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Generator Expressions",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 223,
+      "height": 49,
+      "style": {
+        "width": 223
+      },
+      "positionAbsolute": {
+        "x": -621.1730553753519,
+        "y": 721.7304293708296
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 223,
+        "height": 49
+      }
+    },
+    {
+      "id": "4GU5HNi3W8yFkImVY9ZpW",
+      "type": "topic",
+      "position": {
+        "x": -621.1730553753519,
+        "y": 774.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Paradigms",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 223,
+      "height": 49,
+      "style": {
+        "width": 223,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -621.1730553753519,
+        "y": 774.7304293708296
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 223,
+        "height": 49
+      }
+    },
+    {
+      "id": "KAXF2kUAOvtBZhY8G9rkI",
+      "type": "topic",
+      "position": {
+        "x": -621.1730553753519,
+        "y": 827.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Context Manager",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 223,
+      "height": 49,
+      "style": {
+        "width": 223,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -621.1730553753519,
+        "y": 827.7304293708296
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 223,
+        "height": 49
+      }
+    },
+    {
+      "id": "0-ShORjGnQlAdcwjtxdEB",
+      "type": "topic",
+      "position": {
+        "x": -617.2332744798255,
+        "y": 922.73046875
+      },
+      "selected": false,
+      "data": {
+        "label": "Learn a Framework",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 253,
+      "height": 49,
+      "style": {
+        "width": 253,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -617.2332744798255,
+        "y": 922.73046875
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 253,
+        "height": 49
+      }
+    },
+    {
+      "id": "xOUj3Uz6UZgm7j6RvIvDO",
+      "type": "label",
+      "position": {
+        "x": -605.0754215575712,
+        "y": 1136.7821121205188
+      },
+      "selected": false,
+      "data": {
+        "label": "Synchronous",
+        "href": "",
+        "color": "#000000",
+        "style": {
+          "fontSize": 17
+        }
+      },
+      "zIndex": 999,
+      "width": 131,
+      "height": 27,
+      "style": {
+        "width": 131,
+        "height": 27.41717529296875
+      },
+      "positionAbsolute": {
+        "x": -605.0754215575712,
+        "y": 1136.7821121205188
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "measured": {
+        "width": 131,
+        "height": 27
+      }
+    },
+    {
+      "id": "DHtskqATeAVKgaazdhXKD",
+      "type": "subtopic",
+      "position": {
+        "x": -605.0754215575712,
+        "y": 1081.842978409371
+      },
+      "selected": false,
+      "data": {
+        "label": "Pyramid",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 131,
+      "height": 49,
+      "style": {
+        "width": 131,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -605.0754215575712,
+        "y": 1081.842978409371
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 131,
+        "height": 49
+      }
+    },
+    {
+      "id": "7zcpXN3krnS3tMRWVNIVe",
+      "type": "subtopic",
+      "position": {
+        "x": -605.0754215575712,
+        "y": 1028.842978409371
+      },
+      "selected": false,
+      "data": {
+        "label": "Plotly Dash",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 131,
+      "height": 49,
+      "style": {
+        "width": 131,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -605.0754215575712,
+        "y": 1028.842978409371
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 131,
+        "height": 49
+      }
+    },
+    {
+      "id": "FFy2S2eFDyahPltEzucF8",
+      "type": "label",
+      "position": {
+        "x": -428.86083334739004,
+        "y": 1132.2821121205188
+      },
+      "selected": false,
+      "data": {
+        "label": "Asynchronous",
+        "href": "",
+        "color": "#000000",
+        "style": {
+          "fontSize": 17
+        }
+      },
+      "zIndex": 999,
+      "width": 124,
+      "height": 36,
+      "style": {},
+      "dragging": false,
+      "positionAbsolute": {
+        "x": -428.86083334739004,
+        "y": 1132.2821121205188
+      },
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 124,
+        "height": 36
+      }
+    },
+    {
+      "id": "InUJIGmTnf0X4cSoLuCEQ",
+      "type": "subtopic",
+      "position": {
+        "x": -457.82311768204903,
+        "y": 1028.7821121205188
+      },
+      "selected": false,
+      "data": {
+        "label": "gevent",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -457.82311768204903,
+        "y": 1028.7821121205188
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "IBVAvFtN4mnIPbIuyUvEb",
+      "type": "subtopic",
+      "position": {
+        "x": -352.4492068228141,
+        "y": 1028.7821121205188
+      },
+      "selected": false,
+      "data": {
+        "label": "aiohttp",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -352.4492068228141,
+        "y": 1028.7821121205188
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "zey2C6BdzsHJAlb_K3qrP",
+      "type": "subtopic",
+      "position": {
+        "x": -457.82311768204903,
+        "y": 1081.7821121205188
+      },
+      "selected": false,
+      "data": {
+        "label": "Tornado",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -457.82311768204903,
+        "y": 1081.7821121205188
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "9RGpqsj9jHz0_-r7EvRcw",
+      "type": "subtopic",
+      "position": {
+        "x": -352.4492068228141,
+        "y": 1081.7821121205188
+      },
+      "selected": false,
+      "data": {
+        "label": "Sanic",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -352.4492068228141,
+        "y": 1081.7821121205188
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "NYOaEGM47I2oqnroxyVZV",
+      "type": "label",
+      "position": {
+        "x": -551.5754215575712,
+        "y": 1183.2645121406858
+      },
+      "selected": false,
+      "data": {
+        "label": "Synchronous + Asynchronous",
+        "href": "",
+        "color": "#000000",
+        "style": {
+          "fontSize": 17
+        }
+      },
+      "zIndex": 999,
+      "width": 243,
+      "height": 36,
+      "style": {},
+      "positionAbsolute": {
+        "x": -551.5754215575712,
+        "y": 1183.2645121406858
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 243,
+        "height": 36
+      }
+    },
+    {
+      "id": "XeQSmvAsGSTi8dd7QVHxn",
+      "type": "subtopic",
+      "position": {
+        "x": -600.8947642441506,
+        "y": 1224.64342674736
+      },
+      "selected": false,
+      "data": {
+        "label": "Fast API",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 110,
+      "height": 49,
+      "style": {},
+      "positionAbsolute": {
+        "x": -600.8947642441506,
+        "y": 1224.64342674736
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "measured": {
+        "width": 110,
+        "height": 49
+      }
+    },
+    {
+      "id": "x1V8GjdjANTnhP6YXMbgC",
+      "type": "subtopic",
+      "position": {
+        "x": -488.39476424415045,
+        "y": 1224.64342674736
+      },
+      "selected": false,
+      "data": {
+        "label": "Django",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 123,
+      "height": 49,
+      "style": {
+        "width": 123,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -488.39476424415045,
+        "y": 1224.64342674736
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 123,
+        "height": 49
+      }
+    },
+    {
+      "id": "HKsGyRzntjh1UbRZSWh_4",
+      "type": "subtopic",
+      "position": {
+        "x": -362.89476424415045,
+        "y": 1224.64342674736
+      },
+      "selected": false,
+      "data": {
+        "label": "Flask",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 103,
+      "height": 49,
+      "style": {
+        "width": 103,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -362.89476424415045,
+        "y": 1224.64342674736
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 103,
+        "height": 49
+      }
+    },
+    {
+      "id": "u4nRzWQ4zhDFMOrZ2I_uJ",
+      "type": "topic",
+      "position": {
+        "x": -201.6003273267287,
+        "y": 922.73046875
+      },
+      "selected": false,
+      "data": {
+        "label": "Concurrency",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 206,
+      "height": 49,
+      "style": {
+        "width": 206,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -201.6003273267287,
+        "y": 922.73046875
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 206,
+        "height": 49
+      }
+    },
+    {
+      "id": "bS7WeVKm2kEElu3sBKcIC",
+      "type": "subtopic",
+      "position": {
+        "x": -201.6003273267287,
+        "y": 1123.7962000920706
+      },
+      "selected": false,
+      "data": {
+        "label": "GIL",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 206,
+      "height": 49,
+      "style": {
+        "width": 206,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -201.6003273267287,
+        "y": 1123.7962000920706
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 206,
+        "height": 49
+      }
+    },
+    {
+      "id": "UIx0XYaOgXXlYbbQtjiPq",
+      "type": "subtopic",
+      "position": {
+        "x": -201.6003273267287,
+        "y": 1176.7962000920706
+      },
+      "selected": false,
+      "data": {
+        "label": "Threading",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 206,
+      "height": 49,
+      "style": {
+        "width": 206,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -201.6003273267287,
+        "y": 1176.7962000920706
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 206,
+        "height": 49
+      }
+    },
+    {
+      "id": "HSY5OUc_M5S6OcFXPRtkx",
+      "type": "subtopic",
+      "position": {
+        "x": -201.6003273267287,
+        "y": 1017.7962000920706
+      },
+      "selected": false,
+      "data": {
+        "label": "Multiprocessing",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 206,
+      "height": 49,
+      "style": {
+        "width": 206,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -201.6003273267287,
+        "y": 1017.7962000920706
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "measured": {
+        "width": 206,
+        "height": 49
+      }
+    },
+    {
+      "id": "Mow7RvropbC4ZGDpcGZmw",
+      "type": "subtopic",
+      "position": {
+        "x": -201.6003273267287,
+        "y": 1070.7962000920706
+      },
+      "selected": false,
+      "data": {
+        "label": "Asynchrony",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 206,
+      "height": 49,
+      "style": {
+        "width": 206,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -201.6003273267287,
+        "y": 1070.7962000920706
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "measured": {
+        "width": 206,
+        "height": 49
+      }
+    },
+    {
+      "id": "p3Frfs6oxpuciUzeCEsvb",
+      "type": "subtopic",
+      "position": {
+        "x": -357.23327447982547,
+        "y": 275.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "uv",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 91,
+      "height": 49,
+      "style": {
+        "width": 91,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -357.23327447982547,
+        "y": 275.7304293708296
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 91,
+        "height": 49
+      }
+    },
+    {
+      "id": "GHKAY9gOykEbxkEeR30wL",
+      "type": "subtopic",
+      "position": {
+        "x": -611.7332744798255,
+        "y": 565.0807887739926
+      },
+      "selected": false,
+      "data": {
+        "label": "pyproject.toml",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 204,
+      "height": 49,
+      "style": {
+        "width": 204,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -611.7332744798255,
+        "y": 565.0807887739926
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 204,
+        "height": 49
+      }
+    },
+    {
+      "id": "yDP0K1gXlDmVSgTtGJaPY",
+      "type": "label",
+      "position": {
+        "x": -578.31263469232,
+        "y": 619.0807887739926
+      },
+      "selected": false,
+      "data": {
+        "label": "Configuration",
+        "href": "",
+        "color": "#000000",
+        "style": {
+          "fontSize": 17
+        }
+      },
+      "zIndex": 999,
+      "width": 144,
+      "height": 36,
+      "style": {
+        "width": 144
+      },
+      "positionAbsolute": {
+        "x": -578.31263469232,
+        "y": 619.0807887739926
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 144,
+        "height": 36
+      }
+    },
+    {
+      "id": "IWq-tfkz-pSC1ztZl60vM",
+      "type": "subtopic",
+      "position": {
+        "x": 77.79817070787664,
+        "y": 763.1504012205187
+      },
+      "selected": false,
+      "data": {
+        "label": "Pipenv",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 146,
+      "height": 49,
+      "style": {
+        "width": 146,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 77.79817070787664,
+        "y": 763.1504012205187
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "measured": {
+        "width": 146,
+        "height": 49
+      }
+    },
+    {
+      "id": "_IXXTSwQOgYzYIUuKVWNE",
+      "type": "subtopic",
+      "position": {
+        "x": 77.79817070787664,
+        "y": 816.1504012205187
+      },
+      "selected": false,
+      "data": {
+        "label": "virtualenv",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 146,
+      "height": 49,
+      "style": {
+        "width": 146,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 77.79817070787664,
+        "y": 816.1504012205187
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "measured": {
+        "width": 146,
+        "height": 49
+      }
+    },
+    {
+      "id": "N5VaKMbgQ0V_BC5tadV65",
+      "type": "subtopic",
+      "position": {
+        "x": 77.79817070787664,
+        "y": 869.1504012205187
+      },
+      "selected": false,
+      "data": {
+        "label": "pyenv",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 146,
+      "height": 46,
+      "style": {
+        "width": 146,
+        "height": 46
+      },
+      "positionAbsolute": {
+        "x": 77.79817070787664,
+        "y": 869.1504012205187
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 146,
+        "height": 46
+      }
+    },
+    {
+      "id": "lkST4ErYyBfrCcpsuptzh",
+      "type": "label",
+      "position": {
+        "x": 77.79817070787664,
+        "y": 926.1504012205187
+      },
+      "selected": false,
+      "data": {
+        "label": "Environments",
+        "href": "",
+        "color": "#000000",
+        "style": {
+          "fontSize": 17
+        }
+      },
+      "zIndex": 999,
+      "width": 146,
+      "height": 34,
+      "style": {
+        "width": 146,
+        "height": 33.95526123046875
+      },
+      "positionAbsolute": {
+        "x": 77.79817070787664,
+        "y": 926.1504012205187
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 146,
+        "height": 34
+      }
+    },
+    {
+      "id": "1PXApuUpPmJjgi12cmWo4",
+      "type": "topic",
+      "position": {
+        "x": 282.82694462464815,
+        "y": 918.6504012205187
+      },
+      "selected": false,
+      "data": {
+        "label": "Static Typing",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 157,
+      "height": 49,
+      "style": {
+        "width": 157,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 282.82694462464815,
+        "y": 918.6504012205187
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 157,
+        "height": 49
+      }
+    },
+    {
+      "id": "KFFbnOBa-y5r58w2pUf15",
+      "type": "horizontal",
+      "position": {
+        "x": 3.5088599202340447,
+        "y": 937.23046875
+      },
+      "selected": false,
+      "data": {
+        "label": "horizontal node",
+        "style": {
+          "stroke": "#2B78E4",
+          "strokeWidth": 3.65
+        }
+      },
+      "zIndex": 999,
+      "width": 68,
+      "height": 20,
+      "style": {
+        "width": 68,
+        "height": 20
+      },
+      "positionAbsolute": {
+        "x": 3.5088599202340447,
+        "y": 937.23046875
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 68,
+        "height": 20
+      }
+    },
+    {
+      "id": "W3VALz5evFo1qqkQbMN1R",
+      "type": "subtopic",
+      "position": {
+        "x": 282.82694462464815,
+        "y": 842.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Pydantic",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 157,
+      "height": 49,
+      "style": {
+        "width": 157,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 282.82694462464815,
+        "y": 842.7304293708296
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "measured": {
+        "width": 157,
+        "height": 49
+      }
+    },
+    {
+      "id": "gIcJ3bUVQXqO1Wx4gUKd5",
+      "type": "subtopic",
+      "position": {
+        "x": 282.82694462464815,
+        "y": 683.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "mypy",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        },
+        "oldId": "o1wi39VnjnFfWIC8XcuAK"
+      },
+      "zIndex": 999,
+      "width": 157,
+      "height": 49,
+      "style": {
+        "width": 157,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 282.82694462464815,
+        "y": 683.7304293708296
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "measured": {
+        "width": 157,
+        "height": 49
+      }
+    },
+    {
+      "id": "1q9HWgu9jDTK757hTNOmE",
+      "type": "subtopic",
+      "position": {
+        "x": 282.82694462464815,
+        "y": 736.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "pyright",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 157,
+      "height": 49,
+      "style": {
+        "width": 157,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 282.82694462464815,
+        "y": 736.7304293708296
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "measured": {
+        "width": 157,
+        "height": 49
+      }
+    },
+    {
+      "id": "9mFR_ueXbIB2IrkqU2s85",
+      "type": "subtopic",
+      "position": {
+        "x": 282.82694462464815,
+        "y": 789.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "pyre",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 157,
+      "height": 49,
+      "style": {
+        "width": 157,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 282.82694462464815,
+        "y": 789.7304293708296
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 157,
+        "height": 49
+      }
+    },
+    {
+      "id": "0F0ppU_ClIUKZ23Q6BVZp",
+      "type": "topic",
+      "position": {
+        "x": 259.82694462464815,
+        "y": 1046.9159442045684
+      },
+      "selected": false,
+      "data": {
+        "label": "Code Formatting",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 180,
+      "height": 49,
+      "style": {
+        "width": 180,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 259.82694462464815,
+        "y": 1046.9159442045684
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "resizing": false,
+      "measured": {
+        "width": 180,
+        "height": 49
+      }
+    },
+    {
+      "id": "6cB0pvUO1-gvCtgqozP-Q",
+      "type": "subtopic",
+      "position": {
+        "x": 67.77353876747918,
+        "y": 1098.8447698764166
+      },
+      "selected": false,
+      "data": {
+        "label": "ruff",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 108,
+      "height": 49,
+      "style": {
+        "width": 108
+      },
+      "positionAbsolute": {
+        "x": 67.77353876747918,
+        "y": 1098.8447698764166
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "measured": {
+        "width": 108,
+        "height": 49
+      }
+    },
+    {
+      "id": "DS6nuAUhUYcqiJDmQisKM",
+      "type": "subtopic",
+      "position": {
+        "x": 67.77353876747918,
+        "y": 1045.8447698764166
+      },
+      "selected": false,
+      "data": {
+        "label": "black",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 108,
+      "height": 49,
+      "style": {
+        "width": 108
+      },
+      "positionAbsolute": {
+        "x": 67.77353876747918,
+        "y": 1045.8447698764166
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "measured": {
+        "width": 108,
+        "height": 49
+      }
+    },
+    {
+      "id": "tsh_vbhzKz1-H9Vh69tsK",
+      "type": "subtopic",
+      "position": {
+        "x": 67.77353876747918,
+        "y": 992.8447698764166
+      },
+      "selected": false,
+      "data": {
+        "label": "yapf",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 108,
+      "height": 49,
+      "style": {
+        "width": 108,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 67.77353876747918,
+        "y": 992.8447698764166
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 108,
+        "height": 49
+      }
+    },
+    {
+      "id": "ZFyKLneWQyUks5zSi_-kw",
+      "type": "label",
+      "position": {
+        "x": 280.6043153709654,
+        "y": 1231.6757618831236
+      },
+      "selected": false,
+      "data": {
+        "label": "Documentation",
+        "href": "",
+        "color": "#000000",
+        "style": {
+          "fontSize": 17
+        }
+      },
+      "zIndex": 999,
+      "width": 146,
+      "height": 36,
+      "style": {
+        "width": 146
+      },
+      "positionAbsolute": {
+        "x": 280.6043153709654,
+        "y": 1231.6757618831236
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 146,
+        "height": 36
+      }
+    },
+    {
+      "id": "maYNuTKYyZndxk1z29-UY",
+      "type": "subtopic",
+      "position": {
+        "x": 280.6043153709654,
+        "y": 1176.7962000920706
+      },
+      "selected": false,
+      "data": {
+        "label": "Sphinx",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 146,
+      "height": 46,
+      "style": {
+        "width": 146,
+        "height": 46
+      },
+      "positionAbsolute": {
+        "x": 280.6043153709654,
+        "y": 1176.7962000920706
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 146,
+        "height": 46
+      }
+    },
+    {
+      "id": "_94NrQ3quc4t_PPOsFSN0",
+      "type": "topic",
+      "position": {
+        "x": -621.1730553753519,
+        "y": 498.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "Common Packages",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 222,
+      "height": 49,
+      "style": {
+        "width": 222,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": -621.1730553753519,
+        "y": 498.7304293708296
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 222,
+        "height": 49
+      }
+    },
+    {
+      "id": "WQOYjuwKIWB2meea4JnsV",
+      "type": "topic",
+      "position": {
+        "x": 22.33083459739703,
+        "y": 1387.21519978213
+      },
+      "selected": false,
+      "data": {
+        "label": "Testing",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 143,
+      "height": 49,
+      "style": {
+        "width": 143,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 22.33083459739703,
+        "y": 1387.21519978213
+      },
+      "dragging": false,
+      "resizing": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 143,
+        "height": 49
+      }
+    },
+    {
+      "id": "aVclygxoA9ePU5IxaORSH",
+      "type": "subtopic",
+      "position": {
+        "x": 266.57585484459395,
+        "y": 1408.9552389677524
+      },
+      "selected": false,
+      "data": {
+        "label": "doctest",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 172,
+      "height": 49,
+      "style": {
+        "width": 172,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 266.57585484459395,
+        "y": 1408.9552389677524
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "measured": {
+        "width": 172,
+        "height": 49
+      }
+    },
+    {
+      "id": "SSnzpijHLO5_l7DNEoMfx",
+      "type": "subtopic",
+      "position": {
+        "x": 337.57585484459395,
+        "y": 1302.9552389677524
+      },
+      "selected": false,
+      "data": {
+        "label": "nose",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 101,
+      "height": 49,
+      "style": {
+        "width": 101,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 337.57585484459395,
+        "y": 1302.9552389677524
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 101,
+        "height": 49
+      }
+    },
+    {
+      "id": "3FDwJpesfelEyJrNWtm0V",
+      "type": "subtopic",
+      "position": {
+        "x": 266.57585484459395,
+        "y": 1461.9552389677524
+      },
+      "selected": false,
+      "data": {
+        "label": "pytest",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 172,
+      "height": 49,
+      "style": {
+        "width": 172,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 266.57585484459395,
+        "y": 1461.9552389677524
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "measured": {
+        "width": 172,
+        "height": 49
+      }
+    },
+    {
+      "id": "b4he_RO17C3ScNeUd6v2b",
+      "type": "subtopic",
+      "position": {
+        "x": 266.57585484459395,
+        "y": 1355.9552389677524
+      },
+      "selected": false,
+      "data": {
+        "label": "unittest / pyUnit",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 172,
+      "height": 49,
+      "style": {
+        "width": 172,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 266.57585484459395,
+        "y": 1355.9552389677524
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "resizing": false,
+      "measured": {
+        "width": 172,
+        "height": 49
+      }
+    },
+    {
+      "id": "o1wi39VnjnFfWIC8XcuAK",
+      "type": "subtopic",
+      "position": {
+        "x": 282.82694462464815,
+        "y": 630.7304293708296
+      },
+      "selected": false,
+      "data": {
+        "label": "typing",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 157,
+      "height": 49,
+      "style": {
+        "width": 157,
+        "height": 49
+      },
+      "positionAbsolute": {
+        "x": 282.82694462464815,
+        "y": 630.7304293708296
+      },
+      "selectable": true,
+      "focusable": true,
+      "dragging": false,
+      "measured": {
+        "width": 157,
+        "height": 49
+      }
+    },
+    {
+      "id": "jPFOiwbqfaGshaGDBWb5x",
+      "type": "subtopic",
+      "position": {
+        "x": 266.57585484459395,
+        "y": 1302.9552389677524
+      },
+      "selected": false,
+      "data": {
+        "label": "tox",
+        "style": {
+          "fontSize": 17,
+          "justifyContent": "flex-start",
+          "textAlign": "center"
+        }
+      },
+      "zIndex": 999,
+      "width": 68,
+      "height": 49,
+      "style": {},
+      "positionAbsolute": {
+        "x": 266.57585484459395,
+        "y": 1302.9552389677524
+      },
+      "dragging": false,
+      "selectable": true,
+      "focusable": true,
+      "measured": {
+        "width": 68,
+        "height": 49
+      }
+    },
+    {
+      "width": 143,
+      "height": 49,
+      "id": "U0fJo2a3vnaodNJhfZ78I",
+      "type": "button",
+      "position": {
+        "x": -453.8231176820491,
+        "y": 1406.9044816937815
+      },
+      "selected": false,
+      "data": {
+        "label": "DevOps",
+        "href": "https://roadmap.sh/devops",
+        "color": "#FFFFFf",
+        "backgroundColor": "#4136D4",
+        "style": {
+          "fontSize": 17
+        },
+        "borderColor": "#4136D4",
+        "oldId": "P5IZjP0g1_fnvHy3YTR4q"
+      },
+      "zIndex": 999,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": -453.8231176820491,
+        "y": 1406.9044816937815
+      },
+      "style": {
+        "width": 143,
+        "height": 49
+      },
+      "focusable": true,
+      "resizing": false,
+      "selectable": true,
+      "measured": {
+        "width": 143,
+        "height": 49
+      }
+    }
+  ],
+  "edges": [
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "sourceHandle": "x2",
+      "target": "GV_zWF6rSWg5bqgiXhOEf",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "M0aRyhxjzTWUOW95D1g1y",
+      "selected": false,
+      "type": "smoothstep",
+      "focusable": true,
+      "selectable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "sourceHandle": "x2",
+      "target": "GV_zWF6rSWg5bqgiXhOEf",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "Xw4lLz2zWuTkNu8r4oheF",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "sourceHandle": "x2",
+      "target": "GV_zWF6rSWg5bqgiXhOEf",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "mbCXMk97_HKXG3d4TxBOC",
+      "selected": false,
+      "focusable": true,
+      "selectable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "hIQe_B-68ENL-GFg6GmnD",
+      "sourceHandle": "x2",
+      "target": "GISOFMKvnBys0O0IMpz2J",
+      "targetHandle": "w2",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-iogwMmOvub2ZF4zgg6WyFx2-VJSIbYJcy2MC6MOFBrqXiw2",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "GISOFMKvnBys0O0IMpz2J",
+      "sourceHandle": "y2",
+      "target": "6xRncUs3_vxVbDur567QA",
+      "targetHandle": "z1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-VJSIbYJcy2MC6MOFBrqXiy2-6xRncUs3_vxVbDur567QAz1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "GISOFMKvnBys0O0IMpz2J",
+      "sourceHandle": "y2",
+      "target": "dEFLBGpiH6nbSMeR7ecaT",
+      "targetHandle": "z1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-VJSIbYJcy2MC6MOFBrqXiy2-dEFLBGpiH6nbSMeR7ecaTz1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "GISOFMKvnBys0O0IMpz2J",
+      "sourceHandle": "y2",
+      "target": "NP1kjSk0ujU0Gx-ajNHlR",
+      "targetHandle": "z2",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-VJSIbYJcy2MC6MOFBrqXiy2-Dvy7BnNzK55qbh_SgOk8mz2",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "GISOFMKvnBys0O0IMpz2J",
+      "sourceHandle": "y2",
+      "target": "Dvy7BnNzK55qbh_SgOk8m",
+      "targetHandle": "z1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-VJSIbYJcy2MC6MOFBrqXiy2-Dvy7BnNzK55qbh_SgOk8mz1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "GISOFMKvnBys0O0IMpz2J",
+      "sourceHandle": "z2",
+      "target": "R9DQNc0AyAQ2HLpP4HOk6",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-VJSIbYJcy2MC6MOFBrqXiz2-R9DQNc0AyAQ2HLpP4HOk6y1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "GISOFMKvnBys0O0IMpz2J",
+      "sourceHandle": "z2",
+      "target": "fNTb9y3zs1HPYclAmu_Wv",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-VJSIbYJcy2MC6MOFBrqXiz2-fNTb9y3zs1HPYclAmu_Wvy1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "GISOFMKvnBys0O0IMpz2J",
+      "sourceHandle": "z2",
+      "target": "-DJgS6l2qngfwurExlmmT",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-VJSIbYJcy2MC6MOFBrqXiz2--DJgS6l2qngfwurExlmmTy1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "GISOFMKvnBys0O0IMpz2J",
+      "sourceHandle": "z2",
+      "target": "UT_SR7G-LYtzqooWrEtF1",
+      "targetHandle": "y2",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-VJSIbYJcy2MC6MOFBrqXiz2-UT_SR7G-LYtzqooWrEtF1y2",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "GISOFMKvnBys0O0IMpz2J",
+      "sourceHandle": "z2",
+      "target": "bc9CL_HMT-R6nXO1eR-gP",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-VJSIbYJcy2MC6MOFBrqXiz2-bc9CL_HMT-R6nXO1eR-gPy1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "VJSIbYJcy2MC6MOFBrqXi",
+      "sourceHandle": "x2",
+      "target": "OPD4WdMO7q4gRZMcRCQh1",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-VJSIbYJcy2MC6MOFBrqXix2-OPD4WdMO7q4gRZMcRCQh1w1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "VJSIbYJcy2MC6MOFBrqXi",
+      "sourceHandle": "z2",
+      "target": "274uk28wzxn6EKWQzLpHs",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-VJSIbYJcy2MC6MOFBrqXiz2-274uk28wzxn6EKWQzLpHsy1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "P_Di-XPSDITmU3xKQew8G",
+      "sourceHandle": "y2",
+      "target": "qeCMw-sJ2FR4UxvU9DDzv",
+      "targetHandle": "x1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-P_Di-XPSDITmU3xKQew8Gy2-qeCMw-sJ2FR4UxvU9DDzvx1",
+      "selected": false,
+      "type": "smoothstep",
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "qeCMw-sJ2FR4UxvU9DDzv",
+      "sourceHandle": "w2",
+      "target": "uXd2B01GVBEQNXQE8RATT",
+      "targetHandle": "x1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-qeCMw-sJ2FR4UxvU9DDzvw2-uXd2B01GVBEQNXQE8RATTx1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "GISOFMKvnBys0O0IMpz2J",
+      "sourceHandle": "x2",
+      "target": "VJSIbYJcy2MC6MOFBrqXi",
+      "targetHandle": "w2",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "selected": false,
+      "selectable": true,
+      "focusable": true,
+      "id": "reactflow__edge-GISOFMKvnBys0O0IMpz2Jx2-VJSIbYJcy2MC6MOFBrqXiw2"
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "7t6mJBsaFMWPi7o9fbhhq",
+      "sourceHandle": "x2",
+      "target": "P_Di-XPSDITmU3xKQew8G",
+      "targetHandle": "z1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "selected": false,
+      "selectable": true,
+      "focusable": true,
+      "id": "reactflow__edge-7t6mJBsaFMWPi7o9fbhhqx2-P_Di-XPSDITmU3xKQew8Gz1",
+      "type": "smoothstep"
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "0-ShORjGnQlAdcwjtxdEB",
+      "sourceHandle": "z2",
+      "target": "u4nRzWQ4zhDFMOrZ2I_uJ",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-0-ShORjGnQlAdcwjtxdEBz2-u4nRzWQ4zhDFMOrZ2I_uJy1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "P_Di-XPSDITmU3xKQew8G",
+      "sourceHandle": "x2",
+      "target": "AqwzR8dZKLQIoj_6KKZ3t",
+      "targetHandle": "w2",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-P_Di-XPSDITmU3xKQew8Gx2-AqwzR8dZKLQIoj_6KKZ3tw2",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "u4nRzWQ4zhDFMOrZ2I_uJ",
+      "sourceHandle": "x2",
+      "target": "HSY5OUc_M5S6OcFXPRtkx",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-u4nRzWQ4zhDFMOrZ2I_uJx2-HSY5OUc_M5S6OcFXPRtkxw1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "1PXApuUpPmJjgi12cmWo4",
+      "sourceHandle": "w2",
+      "target": "W3VALz5evFo1qqkQbMN1R",
+      "targetHandle": "x1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-1PXApuUpPmJjgi12cmWo4w2-W3VALz5evFo1qqkQbMN1Rx1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "0F0ppU_ClIUKZ23Q6BVZp",
+      "sourceHandle": "y2",
+      "target": "tsh_vbhzKz1-H9Vh69tsK",
+      "targetHandle": "z1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-0F0ppU_ClIUKZ23Q6BVZpy2-tsh_vbhzKz1-H9Vh69tsKz1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "0F0ppU_ClIUKZ23Q6BVZp",
+      "sourceHandle": "y2",
+      "target": "DS6nuAUhUYcqiJDmQisKM",
+      "targetHandle": "z2",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-0F0ppU_ClIUKZ23Q6BVZpy2-DS6nuAUhUYcqiJDmQisKMz2",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "0F0ppU_ClIUKZ23Q6BVZp",
+      "sourceHandle": "y2",
+      "target": "6cB0pvUO1-gvCtgqozP-Q",
+      "targetHandle": "z1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-0F0ppU_ClIUKZ23Q6BVZpy2-6cB0pvUO1-gvCtgqozP-Qz1",
+      "selected": false,
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "jKeTTySc4iyJY29xLqNNQ",
+      "sourceHandle": "y2",
+      "target": "WQOYjuwKIWB2meea4JnsV",
+      "targetHandle": "w1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-jKeTTySc4iyJY29xLqNNQy2-WQOYjuwKIWB2meea4JnsVw1",
+      "selected": false,
+      "type": "smoothstep",
+      "selectable": true,
+      "focusable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "WQOYjuwKIWB2meea4JnsV",
+      "sourceHandle": "z2",
+      "target": "jPFOiwbqfaGshaGDBWb5x",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-WQOYjuwKIWB2meea4JnsVz2-jPFOiwbqfaGshaGDBWb5xy1",
+      "selected": false,
+      "focusable": true,
+      "selectable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "WQOYjuwKIWB2meea4JnsV",
+      "sourceHandle": "z2",
+      "target": "b4he_RO17C3ScNeUd6v2b",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-WQOYjuwKIWB2meea4JnsVz2-b4he_RO17C3ScNeUd6v2by1",
+      "selected": false,
+      "focusable": true,
+      "selectable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "WQOYjuwKIWB2meea4JnsV",
+      "sourceHandle": "z2",
+      "target": "aVclygxoA9ePU5IxaORSH",
+      "targetHandle": "y1",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-WQOYjuwKIWB2meea4JnsVz2-aVclygxoA9ePU5IxaORSHy1",
+      "selected": false,
+      "focusable": true,
+      "selectable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0.8 8",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "WQOYjuwKIWB2meea4JnsV",
+      "sourceHandle": "z2",
+      "target": "3FDwJpesfelEyJrNWtm0V",
+      "targetHandle": "y2",
+      "data": {
+        "edgeStyle": "dashed"
+      },
+      "id": "reactflow__edge-WQOYjuwKIWB2meea4JnsVz2-3FDwJpesfelEyJrNWtm0Vy2",
+      "selected": false,
+      "focusable": true,
+      "selectable": true
+    },
+    {
+      "style": {
+        "strokeDasharray": "0",
+        "strokeLinecap": "round",
+        "strokeWidth": 3.5,
+        "stroke": "#2b78e4"
+      },
+      "source": "WQOYjuwKIWB2meea4JnsV",
+      "sourceHandle": "y2",
+      "target": "GV_zWF6rSWg5bqgiXhOEf",
+      "targetHandle": "z1",
+      "data": {
+        "edgeStyle": "solid"
+      },
+      "id": "reactflow__edge-WQOYjuwKIWB2meea4JnsVy2-GV_zWF6rSWg5bqgiXhOEfz1",
+      "selected": false,
+      "focusable": true,
+      "selectable": true
+    }
+  ],
+  "certifyroi_content": {
+    "aiohttp@IBVAvFtN4mnIPbIuyUvEb": "# AIOHTTP\r\n\r\naiohttp is a Python 3.5+ library that provides a simple and powerful asynchronous HTTP client and server implementation.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@aiohttp docs](https://docs.aiohttp.org/en/stable/)\r\n- [@article@Creating a RESTful API with Python and aiohttp](https://tutorialedge.net/python/create-rest-api-python-aiohttp/)\r\n- [@video@Python Asyncio, Requests, Aiohttp | Make faster API Calls](https://www.youtube.com/watch?v=nFn4_nA_yk8)",
+    "arrays-and-linked-lists@OPD4WdMO7q4gRZMcRCQh1": "# Arrays and Linked lists\r\n\r\nArrays store elements in contiguous memory locations, resulting in easily calculable addresses for the elements stored and this allows faster access to an element at a specific index. Linked lists are less rigid in their storage structure and elements are usually not stored in contiguous locations, hence they need to be stored with additional tags giving a reference to the next element. This difference in the data storage scheme decides which data structure would be more suitable for a given situation.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Arrays in Python](https://www.edureka.co/blog/arrays-in-python/)\r\n- [@article@Linked List Python](https://realpython.com/linked-lists-python/)\r\n- [@video@Array Data Structure | Illustrated Data Structures](https://www.youtube.com/watch?v=QJNwK2uJyGs)\r\n- [@video@Linked List Data Structure | Illustrated Data Structures](https://www.youtube.com/watch?v=odW9FU8jPRQ)",
+    "asynchrony@Mow7RvropbC4ZGDpcGZmw": "# Asynchrony\r\n\r\nAsynchronous programming, supported by asyncio, allows code to be executed without blocking, using async and await. This is especially useful for I/O tasks such as networking or file manipulation, allowing thousands of connections to be handled without blocking the main thread.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Python AsyncIO library](https://docs.python.org/3/library/asyncio.html)\r\n- [@article@Async IO in Python: A Complete Walkthrough](https://realpython.com/async-io-python/)",
+    "basic-syntax@6xRncUs3_vxVbDur567QA": "# Basic Syntax\r\n\r\nSetup the environment for python and get started with the basics.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Python Basics](https://www.tutorialspoint.com/python/python_basic_syntax.htm)\r\n- [@article@Learn X in Y Minutes / Python](https://learnxinyminutes.com/docs/python/)\r\n- [@video@Python for Beginners - Learn Python in 1 Hour](https://www.youtube.com/watch?v=kqtD5dpn9C8)",
+    "binary-search-tree@uJIqgsqUbE62Tyo3K75Qx": "# Binary Search Trees\r\n\r\nA binary search tree, also called an ordered or sorted binary tree, is a rooted binary tree data structure with the key of each internal node being greater than all the keys in the respective node's left subtree and less than the ones in its right subtree\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Binary search in Python 101: Implementation and use cases](https://roadmap.sh/python/binary-search)\r\n- [@article@How to Implement Binary Search Tree in Python](https://web.archive.org/web/20230601181553/https://www.section.io/engineering-education/implementing-binary-search-tree-using-python/)\r\n- [@article@Binary Search Tree in Python](https://www.pythonforbeginners.com/data-structures/binary-search-tree-in-python)\r\n- [@video@Tree Data Structure | Illustrated Data Structures](https://www.youtube.com/watch?v=S2W3SXGPVyU)",
+    "black@DS6nuAUhUYcqiJDmQisKM": "# black\r\n\r\nBlack is a python code formatter that automatically formats code according to a consistent style. By removing formatting decisions from developers, Black helps maintain uniform codebases, improves readability, and reduces time spent on style discussions during code reviews.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Getting Started with Black](https://black.readthedocs.io/en/stable/getting_started.html)\r\n- [@official@Black Documentation](https://black.readthedocs.io/en/stable/)",
+    "builtin@08XifLQ20c4FKI_4AWNBQ": "# Builtin Modules\r\n\r\nPython has a rich standard library of built-in modules that provide a wide range of functionality. Some of the most commonly used built-in modules include: sys, os, math, datetime, random, re, itertools, etc.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Python Module Index](https://docs.python.org/3/py-modindex.html)\r\n- [@article@Python Modules](https://www.digitalocean.com/community/tutorials/python-modules)\r\n- [@article@Python - Built-In Modules](https://www.knowledgehut.com/tutorials/python-tutorial/python-built-in-modules)",
+    "classes@AqwzR8dZKLQIoj_6KKZ3t": "# Classes\r\n\r\nA class is a user-defined blueprint or prototype from which objects are created. Classes provide a means of bundling data and functionality together. Creating a new class creates a new type of object, allowing new instances of that type to be made. Each class instance can have attributes attached to it for maintaining its state. Class instances can also have methods (defined by their class) for modifying their state.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Classes in Python](https://docs.python.org/3/tutorial/classes.html)\r\n- [@video@Python OOP Tutorial](https://www.youtube.com/watch?v=ZDa-Z5JzLYM&list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc)",
+    "code-formatting@0F0ppU_ClIUKZ23Q6BVZp": "# Code Formatting\r\n\r\nPython code formatting is crucial for maintaining readability, consistency, and reducing errors. Black is a code formatter for Python. It is a tool that automatically formats Python code to adhere to the PEP 8 style guide. It is a great tool to use in your Python projects to ensure that your code is formatted consistently and correctly.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Pylint for Python](https://www.pylint.org/)\r\n- [@official@Black Documentation](https://black.readthedocs.io/en/stable/)",
+    "common-packages@_94NrQ3quc4t_PPOsFSN0": "# Common Packages and Modules\r\n\r\nPython has a rich ecosystem of packages and modules that can be used to get the most out of the language. A package is essentially a directory that contains multiple modules and subpackages. A module is a single file that contains a collection of related functions, classes, and variables. Modules are the basic building blocks of Python code organization. A module can be thought of as a container that holds a set of related code.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@requests](https://docs.python-requests.org/en/latest/)\r\n- [@official@pathlib](https://docs.python.org/3/library/pathlib.html)\r\n- [@official@asyncio](https://docs.python.org/3/library/asyncio.html)\r\n- [@official@dataclasses](https://docs.python.org/3/library/dataclasses.html)\r\n- [@official@python-dotenv](https://pypi.org/project/python-dotenv/)\r\n- [@official@numpy](https://numpy.org/doc/stable/)\r\n- [@official@pandas](https://pandas.pydata.org/docs/)",
+    "concurrency@u4nRzWQ4zhDFMOrZ2I_uJ": "# Concurrency\r\n\r\nConcurrency in Python allows multiple tasks to be executed simultaneously using different approaches. GIL (Global Interpreter Lock) limits thread execution, making multithreading less efficient for computational tasks, but suitable for I/O. Multiprocessing, using the multiprocessing module, allows multiple cores to be utilized, providing true parallelism. Asynchrony via asyncio is optimal for I/O operations, allowing thousands of connections to be processed simultaneously without blocking. The choice of approach depends on the nature of the task.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Concurrent Execution](https://docs.python.org/3/library/concurrency.html)\r\n- [@article@Python Concurrency](https://realpython.com/python-concurrency/)",
+    "conda@uh67D1u-Iv5cZamRgFEJg": "# Conda\r\n\r\nConda is an open source package management system and environment management system that runs on Windows, macOS, and Linux. Conda quickly installs, runs and updates packages and their dependencies. Conda easily creates, saves, loads and switches between environments on your local computer. It was created for Python programs, but it can package and distribute software for any language.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Conda Documentation](https://docs.conda.io/en/latest/)",
+    "conditionals@NP1kjSk0ujU0Gx-ajNHlR": "# Conditionals\r\n\r\nConditional Statements in Python perform different actions depending on whether a specific condition evaluates to true or false. Conditional Statements are handled by _if-elif-else_ statements and MATCH-CASE statements in Python.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Conditional Statements in Python](https://realpython.com/python-conditional-statements/)\r\n- [@article@Python Conditional Statements](https://www.guru99.com/if-loop-python-conditional-structures.html)\r\n- [@article@Python Switch Statement 101: Match-case and alternatives](https://roadmap.sh/python/switch)\r\n- [@article@How to Use a Match Statement in Python](https://learnpython.com/blog/python-match-case-statement/)",
+    "context-manager@KAXF2kUAOvtBZhY8G9rkI": "# Context Manager\r\n\r\nContext Managers are a construct in Python that allows you to set up context for a block of code, and then automatically clean up or release resources when the block is exited. It is most commonly used with the `with` statement.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Context Libraries](https://docs.python.org/3/library/contextlib.html)\r\n- [@article@Context Managers in Python](https://www.freecodecamp.org/news/context-managers-in-python/)\r\n- [@article@Context Managers](https://book.pythontips.com/en/latest/context_managers.html)",
+    "custom@l7k0qTYe42wYBTlT2-1cy": "# Custom Modules\r\n\r\nModules refer to a file containing Python statements and definitions. A file containing Python code, for example: `example.py`, is called a module, and its module name would be example. We use modules to break down large programs into small manageable and organized files. Furthermore, modules provide reusability of code.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Python Modules](https://docs.python.org/3/tutorial/modules.html)\r\n- [@article@Modules in Python](https://www.programiz.com/python-programming/modules)\r\n- [@article@Python Modules and Packages](https://realpython.com/python-modules-packages/)",
+    "data-structures--algorithms@VJSIbYJcy2MC6MOFBrqXi": "# Data Structures and Algorithms\r\n\r\nA data structure is a named location that can be used to store and organize data. And, an algorithm is a collection of steps to solve a particular problem. Learning data structures and algorithms allow us to write efficient and optimized computer programs.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@roadmap@Visit Dedicated DSA Roadmap](https://roadmap.sh/datastructures-and-algorithms)\r\n- [@article@Learn DS & Algorithms](https://www.programiz.com/dsa)\r\n- [@video@Data Structures Illustrated](https://www.youtube.com/playlist?list=PLkZYeFmDuaN2-KUIv-mvbjfKszIGJ4FaY)\r\n- [@video@DSA Python Playlist](https://www.youtube.com/playlist?list=PLKYEe2WisBTFEr6laH5bR2J19j7sl5O8R)",
+    "decorators@pIluLJkySqn_gI_GykV6G": "# Decorators\r\n\r\nDecorator is a design pattern in Python that allows a user to add new functionality to an existing object without modifying its structure. Decorators are usually called before the definition of a function you want to decorate.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Learn Decorators in Python](https://pythonbasics.org/decorators/)\r\n- [@article@Python Decorators](https://www.datacamp.com/tutorial/decorators-python)\r\n- [@video@Decorators in Python](https://www.youtube.com/watch?v=FXUUSfJO_J4)\r\n- [@video@Python Decorators in 1 Minute](https://www.youtube.com/watch?v=BE-L7xu8pO4)",
+    "dictionaries@bc9CL_HMT-R6nXO1eR-gP": "# Dictionaries\r\n\r\nIn Python, a dictionary is a built-in data type that allows you to store key-value pairs. Each key in the dictionary is unique, and each key is associated with a value. Starting from Python 3.7, dictionaries maintain the order of items as they were added.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Dictionaries in Python](https://docs.python.org/3/tutorial/datastructures.html#dictionaries)\r\n- [@article@Dictionaries in Python](https://realpython.com/python-dicts/)\r\n- [@article@Hashmaps in Python: Master Implementation and Use Cases](https://roadmap.sh/python/hashmap)",
+    "django@x1V8GjdjANTnhP6YXMbgC": "# Django\r\n\r\nDjango is a free and open-source, Python-based web framework that follows the model–template–views architectural pattern. It is maintained by the Django Software Foundation, an independent organization established in the US as a 501 non-profit\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@roadmap@Visit the Dedicated Django Roadmap](https://roadmap.sh/django)\r\n- [@official@Django Website](https://www.djangoproject.com/)\r\n- [@official@Getting Started](https://www.djangoproject.com/start/)\r\n- [@article@Is Django Synchronous or Asynchronous?](https://stackoverflow.com/questions/58548089/django-is-synchronous-or-asynchronous)\r\n- [@video@Python Django Tutorial for Beginners](https://www.youtube.com/watch?v=rHux0gMZ3Eg)\r\n- [@feed@Explore top posts about Django](https://app.daily.dev/tags/django?ref=roadmapsh)",
+    "doctest@aVclygxoA9ePU5IxaORSH": "# Doctest\r\n\r\nPython’s standard library comes equipped with a test framework module called doctest. The doctest module programmatically searches Python code for pieces of text within comments that look like interactive Python sessions. Then, the module executes those sessions to confirm that the code referenced by a doctest runs as expected.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Doctest Module](https://docs.python.org/3/library/doctest.html)\r\n- [@article@How To Write Doctests in Python](https://www.digitalocean.com/community/tutorials/how-to-write-doctests-in-python)",
+    "encapsulation@3dC2o3WXdx4plFhDP2Vqk": "# Encapsulation\r\n\r\nEncapsulation is a way to bundle data (attributes) and the methods that operate on that data into a single unit, known as a class. It restricts direct access to some of the object's components and prevents the accidental modification of data. This is achieved by declaring some attributes or methods as private, meaning they can only be accessed from within the class itself.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Encapsulation in Python: All You Need to Know](https://roadmap.sh/python/encapsulation)\r\n- [@article@Encapsulation in Python: A Comprehensive Guide](https://www.datacamp.com/tutorial/encapsulation-in-python-object-oriented-programming)\r\n- [@article@Encapsulation](https://programming-25.mooc.fi/part-9/3-encapsulation)\r\n- [@video@Encapsulation - Advanced Python Tutorial #5](https://www.youtube.com/watch?v=dzmYoSzL8ok)",
+    "exceptions@fNTb9y3zs1HPYclAmu_Wv": "# Exceptions\r\n\r\nExceptions are runtime errors that occur during program execution in Python. Instead of immediately stopping the program, Python allows developers to handle these errors using `try`, `except`, `else`, and `finally` blocks. Proper exception handling helps manage unexpected situations such as invalid input, missing files, or network failures, improving program reliability and allowing applications to fail gracefully.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Exceptions Documentation](https://docs.python.org/3/tutorial/errors.html#exceptions)\r\n- [@article@Python Exceptions: An Introduction](https://realpython.com/python-exceptions/)\r\n- [@article@Errors and Exceptions](https://docs.python.org/3/tutorial/errors.html)\r\n- [@article@Python Exception Handling](https://www.programiz.com/python-programming/exception-handling)\r\n- [@video@Exception Handling in Python](https://www.youtube.com/watch?v=V_NXT2-QIlE)",
+    "fast-api@XeQSmvAsGSTi8dd7QVHxn": "# FastAPI\r\n\r\nFastAPI is a modern Python web framework used for building APIs with high performance and automatic documentation. It leverages Python type hints for request validation, serialization, and editor support, making API development faster and less error-prone. FastAPI is commonly used for backend services, microservices, and machine learning model deployment due to its speed and ease of use.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@FastAPI Documentation](https://fastapi.tiangolo.com/)\r\n- [@video@Create an API with Fast-API (Full 19 Hour Course)](https://www.youtube.com/watch?v=0sOvCWFmrtA)\r\n- [@feed@Explore top posts about FastAPI](https://app.daily.dev/tags/fastapi?ref=roadmapsh)",
+    "file-handling@Nf3kRDSl_vas6QPXG7eVa": "# File Handling in Python\r\n\r\nFile handling in Python involves reading data from and writing data to files. It allows programs to interact with files stored on a computer's storage. You can open files in different modes like read, write, or append, and then perform operations like reading the entire file content, reading line by line, or writing new data. A common use case is working with structured data, and Python provides built-in modules like `json` to easily read and write data in JSON format, which is frequently used for data exchange.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Pyhton File open](https://www.w3schools.com/python/python_file_handling.asp)\r\n- [@article@Working With Files in Python](https://realpython.com/working-with-files-in-python/)\r\n- [@article@Python JSON](https://www.w3schools.com/python/python_json.asp)\r\n- [@article@Working With JSON Data in Python](https://realpython.com/python-json/)\r\n- [@video@Python File Handling for Beginners](https://www.youtube.com/watch?v=BRrem1k3904)\r\n- [@video@Python Tutorial: Working with JSON Data using the json Module](https://www.youtube.com/watch?v=9N6a-VLBa2I)",
+    "flask@HKsGyRzntjh1UbRZSWh_4": "# Flask\r\n\r\nFlask is a micro web framework written in Python. It is classified as a microframework because it does not require particular tools or libraries. It has no database abstraction layer, form validation, or any other components where pre-existing third-party libraries provide common functions. Instead, it provides flexibility by requiring you to choose and integrate the best libraries for your project's needs.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Flask Website](https://flask.palletsprojects.com/)\r\n- [@official@Flask Tutorial](https://flask.palletsprojects.com/en/3.0.x/tutorial/)\r\n- [@feed@Explore top posts about Flask](https://app.daily.dev/tags/flask?ref=roadmapsh)",
+    "functions-builtin-functions@-DJgS6l2qngfwurExlmmT": "# Functions\r\n\r\nIn programming, a function is a reusable block of code that executes a certain functionality when it is called. Functions are integral parts of every programming language because they help make your code more modular and reusable. In Python, we define a function with the `def` keyword, then write the function identifier (name) followed by parentheses and a colon.\r\n\r\nExample\r\n-------\r\n\r\n    def greet(name):\r\n        print(f\"Hello, {name}!\")\r\n    \r\n    \r\n    greet(\"Roadmap.sh\")\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Built-in Functions in Python](https://docs.python.org/3/library/functions.html)\r\n- [@article@Defining Python Functions](https://realpython.com/defining-your-own-python-function/)",
+    "generator-expressions@jnLIVRrWxcX3yq3Op91Vr": "# Generator Expressions\r\n\r\nGenerator expressions are a concise way to create a generator using a single line of code in Python. They are similar to list comprehensions, but instead of creating a list, they create a generator object that produces the values on-demand, as they are needed. Generator expressions are a useful tool for efficiently producing large sequence of values, as they allow you to create the generator without creating the entire sequence in memory at once. This tends to use less memory, especially for large sequences.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Python Official Documentation on Generator Expressions](https://docs.python.org/3/tutorial/classes.html#generator-expressions)\r\n- [@article@Python Generator Expressions](https://www.pythontutorial.net/advanced-python/python-generator-expressions/)\r\n- [@article@List Comprehensions in Python and Generator Expressions](https://djangostars.com/blog/list-comprehensions-and-generator-expressions/)",
+    "gevent@InUJIGmTnf0X4cSoLuCEQ": "# gevent\r\n\r\ngevent is a Python library that provides a high-level interface to the event loop. It is based on non-blocking IO (libevent/libev) and lightweight greenlets. Non-blocking IO means requests waiting for network IO won't block other requests; greenlets mean we can continue to write code in synchronous style.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@gevent Website](http://www.gevent.org/)\r\n- [@opensource@gevent/gevent](https://github.com/gevent/gevent)\r\n- [@article@gevent For the Working Python Developer](https://sdiehl.github.io/gevent-tutorial/)",
+    "gil@bS7WeVKm2kEElu3sBKcIC": "# GIL\r\n\r\nGIL is a mechanism that allows only one thread to execute Python code at a time. This limitation is related to memory management in CPython and can reduce the efficiency of multithreaded applications on multi-core systems.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@What is GIL?](https://realpython.com/python-gil/)",
+    "glob@bqnwMKY4R0rirup3q_hb_": "# Glob Module in Python\r\n\r\nThe `glob` module in Python is a handy tool for finding files and directories whose names match a specific pattern. It uses Unix shell rules for pattern matching, allowing you to easily search for files with certain extensions, files starting with a particular name, or any other combination of criteria you define using wildcards. The main function in this module, also named `glob`, takes a pattern as input and returns a list of all the pathnames that match it.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Python glob Module: File Pattern Matching Explained](https://roadmap.sh/python/glob)\r\n- [@article@glob](https://realpython.com/ref/stdlib/glob/)",
+    "hashmaps@DG4fi1e5ec2BVckPLsTJS": "# HashMaps\r\n\r\nHashMap, HashTable, Map, Dictionary, or Associative are all the names of the same data structure. It is a data structure that implements a set abstract data type, a structure that can map keys to values.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Hashmaps in Python: Master Implementation and Use Cases](https://roadmap.sh/python/hashmap)\r\n- [@article@Build a Hash Table in Python](https://realpython.com/python-hash-table/)\r\n- [@article@Hash Tables and Hashmaps in Python](https://www.edureka.co/blog/hash-tables-and-hashmaps-in-python/)\r\n- [@video@Hash Table Data Structure | Illustrated Data Structures](https://www.youtube.com/watch?v=jalSiaIi8j4)",
+    "heaps-stacks-and-queues@0NlRczh6ZEaFLlT6LORWz": "# Heaps Stacks and Queues\r\n\r\n**Stacks:** Operations are performed LIFO (last in, first out), which means that the last element added will be the first one removed. A stack can be implemented using an array or a linked list. If the stack runs out of memory, it’s called a stack overflow.\r\n\r\n**Queue:** Operations are performed FIFO (first in, first out), which means that the first element added will be the first one removed. A queue can be implemented using an array.\r\n\r\n**Heap:** A tree-based data structure in which the value of a parent node is ordered in a certain way with respect to the value of its child node(s). A heap can be either a min heap (the value of a parent node is less than or equal to the value of its children) or a max heap (the value of a parent node is greater than or equal to the value of its children).\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Heaps, Stacks, Queues](https://stephanosterburg.gitbook.io/scrapbook/coding/coding-interview/data-structures/heaps-stacks-queues)\r\n- [@article@How to Implement Python Stack?](https://realpython.com/how-to-implement-python-stack/)\r\n- [@article@Python Stacks, Queues, and Priority Queues in Practice](https://realpython.com/queue-in-python/)\r\n- [@article@Heap Implementation in Python](https://www.educative.io/answers/heap-implementation-in-python)\r\n- [@video@Stack Data Structure | Illustrated Data Structures](https://www.youtube.com/watch?v=I5lq6sCuABE)\r\n- [@video@Queue Data Structure | Illustrated Data Structures](https://www.youtube.com/watch?v=mDCi1lXd9hc)",
+    "inheritance@S0FLE70szSVUPI0CDEQK7": "# Inheritance\r\n\r\nInheritance is a fundamental concept in object-oriented programming where a new class (the child class or subclass) is derived from an existing class (the parent class or superclass). The child class inherits attributes and methods from the parent class, allowing for code reuse and the creation of hierarchical relationships between classes. This promotes a more organized and maintainable codebase by establishing a clear structure and reducing redundancy.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Python Official Documentation on Inheritance](https://docs.python.org/3/tutorial/classes.html#inheritance)",
+    "iterators@aB1LSQjDEQb_BxueOcnxU": "# Iterators\r\n\r\nAn iterator is an object that contains a countable number of values. An iterator is an object that can be iterated upon, meaning that you can traverse through all the values. Technically, in Python, an iterator is an object which implements the iterator protocol, which consist of the methods **iter**() and **next**() .\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Python Official Documentation on Iterators](https://docs.python.org/3/tutorial/classes.html#iterators)\r\n- [@article@Python Iterators](https://www.programiz.com/python-programming/iterator)\r\n- [@article@Iterators and Iterables in Python](https://realpython.com/python-iterators-iterables/)",
+    "lambdas@aWHgAk959DPUZL46CeRiI": "# Lambdas\r\n\r\nPython Lambda Functions are anonymous function means that the function is without a name. As we already know that the def keyword is used to define a normal function in Python. Similarly, the lambda keyword is used to define an anonymous function in Python.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@How to use Lambda functions](https://realpython.com/python-lambda/)\r\n- [@video@Python Lambda Functions](https://www.youtube.com/watch?v=KR22jigJLok)",
+    "learn-a-framework@0-ShORjGnQlAdcwjtxdEB": "# Python Frameworks\r\n\r\nFrameworks automate the common implementation of common solutions which gives the flexibility to the users to focus on the application logic instead of the basic routine processes. Frameworks make the life of web developers easier by giving them a structure for app development. They provide common patterns in a web application that are fast, reliable and easily maintainable.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Pyscript: A Browser-Based Python Framework](https://thenewstack.io/pyscript-a-browser-based-python-framework/)\r\n- [@feed@Explore top posts about Python](https://app.daily.dev/tags/python?ref=roadmapsh)",
+    "learn-the-basics@GISOFMKvnBys0O0IMpz2J": "# Python\r\n\r\nPython is a high-level, interpreted, general-purpose programming language. Its design philosophy emphasizes code readability with the use of significant indentation. Python is dynamically-typed and garbage-collected.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Python Website](https://www.python.org/)\r\n- [@article@Python - Wiki](https://en.wikipedia.org/wiki/Python_(programming_language))\r\n- [@article@Tutorial Series: How to Code in Python](https://www.digitalocean.com/community/tutorials/how-to-write-your-first-python-3-program)\r\n- [@article@Google's Python Class](https://developers.google.com/edu/python)\r\n- [@video@Learn Python - Full Course](https://www.youtube.com/watch?v=4M87qBgpafk)\r\n- [@feed@Explore top posts about Python](https://app.daily.dev/tags/python?ref=roadmapsh)",
+    "list-comprehensions@4gtmtYWYRWqwLdZRL0XMg": "# List Comprehensions\r\n\r\nList comprehensions are a concise way to create a list using a single line of code in Python. They are a powerful tool for creating and manipulating lists, and they can be used to simplify and shorten code.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Python List Comprehensions](https://docs.python.org/3/tutorial/datastructures.html#list-comprehensions)\r\n- [@article@What Exactly are List Comprehensions in Python? - CodeGuage](https://www.codeguage.com/courses/python/lists-list-comprehensions)\r\n- [@article@Python List Comprehensions Quiz](https://realpython.com/quizzes/list-comprehension-python/)",
+    "lists@UT_SR7G-LYtzqooWrEtF1": "# Lists in Python\r\n\r\nLists are fundamental data structures in Python used to store an ordered collection of items. These items can be of different data types (numbers, strings, or even other lists), and lists are mutable, meaning you can change their contents after they are created by adding, removing, or modifying elements. They are defined using square brackets `[]` and elements are separated by commas.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Python Official Documentation on Listsc](https://docs.python.org/3/tutorial/introduction.html#lists)\r\n- [@article@Tuples vs. Lists vs. Sets in Python](https://jerrynsh.com/tuples-vs-lists-vs-sets-in-python/)\r\n- [@article@Python for Beginners: Lists](https://thenewstack.io/python-for-beginners-lists/)\r\n- [@article@Python for Beginners: When and How to Use Tuples](https://thenewstack.io/python-for-beginners-when-and-how-to-use-tuples/)\r\n- [@video@Difference Between List, Tuple, Set and Dictionary in Python](https://www.youtube.com/watch?v=n0krwG38SHI)",
+    "loops@Dvy7BnNzK55qbh_SgOk8m": "# Loops\r\n\r\nLoops are used to execute a block of code repeatedly.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Python \"while\" Loops (Indefinite Iteration)](https://realpython.com/python-while-loop/)\r\n- [@article@Python \"for\" Loops (Definite Iteration)](https://realpython.com/python-for-loop/#the-guts-of-the-python-for-loop)\r\n- [@video@Python For Loops](https://www.youtube.com/watch?v=KWgYha0clzw)",
+    "methods@zAS4YiEJ6VPsyABrkIG8i": "# Methods and Dunder\r\n\r\nA method in python is somewhat similar to a function, except it is associated with object/classes. Methods in python are very similar to functions except for two major differences.\r\n\r\n*   The method is implicitly used for an object for which it is called.\r\n*   The method is accessible to data that is contained within the class.\r\n\r\nDunder or magic methods in Python are the methods that have two prefix and suffix underscores in the method name. Dunder here means “Double Under (Underscores)”. These are commonly used for operator overloading. Few examples for magic methods are: **`__init__`**, **`__add__`**, **`__len__`**, **`__repr__`** etc.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Method vs Function in Python](https://www.tutorialspoint.com/difference-between-method-and-function-in-python)\r\n- [@article@Python - Magic or Dunder Methods](https://www.tutorialsteacher.com/python/magic-methods-in-python)",
+    "modules@274uk28wzxn6EKWQzLpHs": "# Modules\r\n\r\nModules refer to a file containing Python statements and definitions. A file containing Python code, for example: `example.py`, is called a module, and its module name would be example. We use modules to break down large programs into small manageable and organized files. Furthermore, modules provide reusability of code.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Python Modules](https://docs.python.org/3/tutorial/modules.html)\r\n- [@article@Modules in Python](https://www.programiz.com/python-programming/modules)",
+    "multiprocessing@HSY5OUc_M5S6OcFXPRtkx": "# Multiprocessing\r\n\r\nMultiprocessing utilizes multiple processes, each with its own GIL. This allows full utilization of multiple processor cores, which is effective for computationally intensive tasks. Python's multiprocessing module supports creating processes and exchanging data between them.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Python Documentation](https://docs.python.org/3/library/multiprocessing.html)\r\n- [@article@Multiprocessing in Python with Example](https://www.digitalocean.com/community/tutorials/python-multiprocessing-example)\r\n- [@article@Multiprocessing in Python](https://realpython.com/python-multiprocessing/)",
+    "mypy@gIcJ3bUVQXqO1Wx4gUKd5": "# mypy\r\n\r\nmypy is an optional static type checker for Python that aims to combine the benefits of dynamic (or \"duck\") typing and static typing. Mypy combines the expressive power and convenience of Python with a powerful type system and compile-time type checking. Mypy type checks standard Python programs; run them using any Python VM with basically no runtime overhead.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@mypy documentation](https://mypy-lang.org/)\r\n- [@opensource@python/mypy](https://github.com/python/mypy)",
+    "object-oriented-programming@P_Di-XPSDITmU3xKQew8G": "# OOP\r\n\r\nIn Python, object-oriented Programming (OOPs) is a programming paradigm that uses objects and classes in programming. It aims to implement real-world entities like inheritance, polymorphism, encapsulation, etc., in programming. The main concept of OOPs is to bind the data and the functions that work on that together as a single unit so that no other part of the code can access this data.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Object Oriented Programming in Python](https://realpython.com/python3-object-oriented-programming/)\r\n- [@video@Object Oriented Programming (OOP) In Python - Beginner Crash Course](https://www.youtube.com/watch?v=-pEs-Bss8Wc/)\r\n- [@video@OOP in Python One Shot](https://www.youtube.com/watch?v=Ej_02ICOIgs)\r\n- [@video@Python OOP Tutorial](https://www.youtube.com/watch?v=IbMDCwVm63M)",
+    "operators@so95CO6Qw3I0S98ISENS-": "# Operators\r\n\r\nOperators are symbols or keywords that perform operations on values and variables. Python includes several types: arithmetic operators (+, -, \\*, /) for math calculations, comparison operators (==, !=, <, >) for evaluating relationships between values, and logical operators (and, or, not) for combining conditions. There are also assignment operators (=, +=, -=) for storing and updating values, bitwise operators for working with binary data, and membership operators (in, not in) for checking whether a value exists within a sequence like a list or string.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Python Operators](https://www.w3schools.com/python/python_operators.asp)\r\n- [@article@Python Operators with examples](https://www.programiz.com/python-programming/operators)\r\n- [@article@Python Division: Operators, Floor Division, and Examples](https://roadmap.sh/python/division)\r\n- [@article@Python Modulo Operator (%): Complete Guide with Examples](https://roadmap.sh/python/modulo)\r\n- [@article@Python not Operator: The Complete Guide to Logical Negation](https://roadmap.sh/python/not-operator)",
+    "package-managers@qeCMw-sJ2FR4UxvU9DDzv": "# Package Managers\r\n\r\nPackage managers allow you to manage the dependencies (external code written by you or someone else) that your project needs to work correctly.\r\n\r\n`PyPI` and `Pip` are the most common contenders but there are some other options available as well.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@opensource@pypa/pipx](https://github.com/pypa/pipx)\r\n- [@feed@Explore top posts about Python](https://app.daily.dev/tags/python?ref=roadmapsh)",
+    "paradigms@4GU5HNi3W8yFkImVY9ZpW": "# Python Paradigms\r\n\r\nPython is a multi-paradigm programming language, which means that it supports several programming paradigms. Some of the main paradigms supported by Python are:\r\n\r\n*   Imperative programming: This paradigm focuses on telling the computer what to do, step by step. Python supports imperative programming with features such as variables, loops, and control structures.\r\n*   Object-oriented programming (OOP): This paradigm is based on the idea of objects and their interactions. Python supports OOP with features such as classes, inheritance, and polymorphism.\r\n*   Functional programming: This paradigm is based on the idea of functions as first-class citizens, and it emphasizes the use of pure functions and immutable data. Python supports functional programming with features such as higher-order functions, lambda expressions, and generators.\r\n*   Aspect-oriented programming: This paradigm is based on the idea of separating cross-cutting concerns from the main functionality of a program. Python does not have built-in support for aspect-oriented programming, but it can be achieved using libraries or language extensions.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Python Paradigms](https://opensource.com/article/19/10/python-programming-paradigms)\r\n- [@video@Learn Functional Programming - Python Course](https://www.youtube.com/watch?v=5QZYGU0C2OA)",
+    "pdm@xDgXISgVUMRHh9hu4h6Hl": "# PDM\r\n\r\nPDM is a modern Python package manager that supports PEP 582, which allows packages to be installed in a `__pypackages__` directory instead of the traditional `site-packages` directory. It aims to provide a streamlined and improved experience for managing dependencies, building, and publishing Python projects. PDM also includes features like dependency resolution, virtual environment management, and project scaffolding.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@pdm](https://pdm-project.org/en/latest/)\r\n- [@opensource@pdm](https://github.com/pdm-project/pdm)\r\n- [@article@Introduction to PDM: A Python Project and Dependency Manager](https://betterstack.com/community/guides/scaling-python/pdm-explained/)",
+    "pip@iVhQnp6hpgVZDNJ0XoVra": "# Pip\r\n\r\nThe standard package manager for Python is pip. It allows you to install and manage packages that aren’t part of the Python standard library.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@pip Documentation](https://pip.pypa.io/en/stable/installation/)\r\n- [@article@Using Pythons pip to Manage Your Projects Dependencies](https://realpython.com/what-is-pip/)\r\n- [@feed@Explore top posts about PIP](https://app.daily.dev/tags/pip?ref=roadmapsh)",
+    "pipenv@IWq-tfkz-pSC1ztZl60vM": "# pipenv\r\n\r\nPipeline Environment (pipenv) is a tool that aims to bring the best of all packaging worlds (bundled, requirements.txt, [setup.py](https://docs.python.org/3.11/distutils/setupscript.html), setup.cfg, etc.) to the Python world. It automatically creates and manages a virtualenv for your projects, as well as adds/removes packages from your Pipfile as you install/uninstall packages. It also generates the ever-important Pipfile.lock, which is used to produce deterministic builds.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Pipenv Documentation](https://pipenv.pypa.io/en/latest/)",
+    "plotly-dash@7zcpXN3krnS3tMRWVNIVe": "# Plotly Dash\r\n\r\nPlotly Dash is a Python framework that allows you to build analytical web applications. It's a high-level library that enables you to create interactive, web-based data visualization dashboards without requiring extensive knowledge of web development.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Plotly Dash Documentation](https://dash.plotly.com/)\r\n- [@official@20 Minutes Tutorial](http://dash.plotly.com/tutorial)",
+    "poetry@uXd2B01GVBEQNXQE8RATT": "# Poetry\r\n\r\nPoetry is a dependency management and packaging tool for Python that runs on Windows, macOS, and Linux. Poetry efficiently installs, manages, and updates packages and their dependencies. Poetry seamlessly creates, saves, loads, and switches between project environments on your local computer. It is designed specifically for Python projects, providing a streamlined workflow for managing dependencies, virtual environments, and building packages.\r\n\r\nPoetry as a package manager helps you find and install packages. If you need a specific version of a package or a different version of Python, Poetry handles both dependency management and virtual environments effortlessly. With just a few commands, you can set up a completely isolated environment to run a different version of Python or package configuration, while maintaining your usual development environment. Poetry’s lock file ensures consistent installs across different environments, enhancing reproducibility and stability of your projects.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Poetry Docs](https://python-poetry.org/docs/)\r\n- [@video@Python Poetry - Basics](https://www.youtube.com/watch?v=Ji2XDxmXSOM)",
+    "pydantic@W3VALz5evFo1qqkQbMN1R": "# Pydantic\r\n\r\nPydantic is a python library for data validation and settings management using python type annotations.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Pydantic Documentation](https://docs.pydantic.dev/latest/)",
+    "pyenv@N5VaKMbgQ0V_BC5tadV65": "# pyenv\r\n\r\npyenv is a tool for managing multiple versions of the Python programming language on Unix-like systems. It works by setting environment variables to point to the directory where the desired version of Python is installed. This allows you to switch between different versions of Python without having to modify your system's default Python installation.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@opensource@pyenv/pyenv](https://github.com/pyenv/pyenv)",
+    "pypi@1dfOTOGsOk5XE3bnZs8Ht": "# PyPI\r\n\r\nPyPI, typically pronounced pie-pee-eye, is a repository containing several hundred thousand packages. These range from trivial Hello, World implementations to advanced deep learning libraries.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@PyPI Website](https://pypi.org/)\r\n- [@article@How to Publish an Open-Source Python Package to PyPI](https://realpython.com/pypi-publish-python-package/)\r\n- [@video@Getting Started with Pip and PyPI in Python](https://www.youtube.com/watch?v=bPSfNKvhooA)\r\n- [@feed@Explore top posts about Python](https://app.daily.dev/tags/python?ref=roadmapsh)",
+    "pyprojecttoml@GHKAY9gOykEbxkEeR30wL": "# pyproject.toml\r\n\r\nThis file is used to define the project configuration and dependencies. It is a configuration file that contains metadata about the project, such as its name, version, dependencies, and build settings. The `pyproject.toml` file is used by tools like `poetry` and `flit` to manage Python projects and their dependencies.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Writing pyproject.toml files](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/)",
+    "pyramid@DHtskqATeAVKgaazdhXKD": "# Pyramid\r\n\r\nPyramid is a general, open source, web application development framework built in python. It allows python developer to create web applications with ease. Pyramid is backed by the enterprise knowledge Management System KARL (a George Soros project).\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Pyramid Website](https://trypyramid.com/)\r\n- [@official@Pyramid Documentation](https://trypyramid.com/documentation.html)\r\n- [@article@Pyramid Framework Introduction](https://www.tutorialspoint.com/python_web_development_libraries/python_web_development_libraries_pyramid_framework.htm)",
+    "pyre@9mFR_ueXbIB2IrkqU2s85": "# pyrefly\r\n\r\npyrefly is a static type checker for Python. It is a tool that helps you find type errors in your Python code. Pyre is designed to be fast, scalable, and easy to use. It is used at Facebook to help developers catch type errors before they make it to production.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@pyrefly Documentation](https://pyrefly.org)",
+    "pyright@1q9HWgu9jDTK757hTNOmE": "# pyright\r\n\r\npyright is a static type checker for Python. It is a Microsoft product and is written in TypeScript. It is a language server that uses the Language Server Protocol (LSP) to communicate with the editor. It is a good alternative to mypy and pytype.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Pyright Documentation](https://microsoft.github.io/pyright/)",
+    "pytest@3FDwJpesfelEyJrNWtm0V": "# pytest\r\n\r\npytest is a mature full-featured Python testing tool that helps you write better programs.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Pytest Docs](https://docs.pytest.org/)\r\n- [@article@Pytest Tutorial](https://www.tutorialspoint.com/pytest/index.htm)\r\n- [@article@Effective Python Testing With Pytest](https://realpython.com/pytest-python-testing/)\r\n- [@video@Pytest Tutorial – How to Test Python Code](https://www.youtube.com/watch?v=cHYq1MRoyI0)\r\n- [@feed@Explore top posts about Python](https://app.daily.dev/tags/python?ref=roadmapsh)",
+    "recursion@kLBgy_nxxjE8SxdVi04bq": "# Recursion\r\n\r\nRecursion is a method of solving a computational problem where the solution depends on solutions to smaller instances of the same problem. Recursion solves such recursive problems by using functions that call themselves from within their own code.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Recursion in Python: An Introduction](https://realpython.com/python-recursion/)\r\n- [@feed@Explore top posts about Recursion](https://app.daily.dev/tags/recursion?ref=roadmapsh)",
+    "regular-expressions@7t6mJBsaFMWPi7o9fbhhq": "# Regular Expressions\r\n\r\nA regular expression is a sequence of characters that specifies a search pattern in text. Usually such patterns are used by string-searching algorithms for \"find\" or \"find and replace\" operations on strings, or for input validation.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Regular Expressions in Python](https://docs.python.org/3/library/re.html)\r\n- [@article@Python Regular Expressions](https://developers.google.com/edu/python/regular-expressions)\r\n- [@article@Python - Regular Expressions](https://www.tutorialspoint.com/python/python_reg_expressions.htm)",
+    "ruff@6cB0pvUO1-gvCtgqozP-Q": "# ruff\r\n\r\nRuff is a fast Python linter and code quality tool written in Rust that combines the functionality of multiple linting and formatting tools into a single, high-performance utility. It helps detect errors, enforce coding standards, and improve code quality while running significantly faster than traditional Python linters.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Ruff documentation](https://docs.astral.sh/ruff/)",
+    "sanic@9RGpqsj9jHz0_-r7EvRcw": "# Sanic\r\n\r\nSanic is a Python 3.7+ web server and web framework that's written to go fast. It allows the usage of the async/await syntax added in Python 3.5, which makes your code non-blocking and speedy.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Sanic Website](https://sanic.dev/en/)",
+    "sets@soZFqivM3YBuljeX6PoaX": "# Sets\r\n\r\nPython Set is an unordered collection of data types that is iterable, mutable, and has no duplicate elements. The order of elements in a set is undefined though it may consist of various elements. The major advantage of using a set, as opposed to a list, is that it has a highly optimized method for checking whether a specific element is contained in the set.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Python Official Documentation on Sets](https://docs.python.org/3/tutorial/datastructures.html#sets)\r\n- [@article@An In-Depth Guide to Working with Python Sets](https://learnpython.com/blog/python-sets/)\r\n- [@video@Python Sets tutorial for Beginners](https://www.youtube.com/watch?v=t9j8lCUGZXo)",
+    "sorting-algorithms@vvTmjcWCVclOPY4f_5uB0": "# Sorting Algorithms\r\n\r\nSorting refers to arranging data in a particular format. Sorting algorithm specifies the way to arrange data in a particular order. Most common orders are in numerical or lexicographical order. The importance of sorting lies in the fact that data searching can be optimized to a very high level, if data is stored in a sorted manner.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Sorting Algorithms in Python](https://realpython.com/sorting-algorithms-python/)\r\n- [@article@Python - Sorting Algorithms](https://www.tutorialspoint.com/python_data_structure/python_sorting_algorithms.htm)\r\n- [@feed@Explore top posts about Algorithms](https://app.daily.dev/tags/algorithms?ref=roadmapsh)",
+    "sphinx@maYNuTKYyZndxk1z29-UY": "# sphinx\r\n\r\nSphinx is a tool that makes it easy to create intelligent and beautiful documentation, written by Georg Brandl and licensed under the BSD license.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Sphinx Website](https://www.sphinx-doc.org/en/master/)",
+    "static-typing@1PXApuUpPmJjgi12cmWo4": "# Static Typing\r\n\r\nStatic typing can be a powerful tool to help you catch bugs before they happen. It can also help you understand the code you're working with, and make it easier to maintain and refactor.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Static Typing in Python](https://typing.readthedocs.io/en/latest/index.html)",
+    "testing@WQOYjuwKIWB2meea4JnsV": "# Testing\r\n\r\nTesting in programming means checking if your code works as expected. It's a systematic way to find and fix errors (bugs) before your code goes live. Imagine building a beautiful house without checking if the walls are straight or the roof doesn't leak—that's what coding without testing can feel like!\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Unit Testing in Python](https://docs.python.org/3/library/unittest.html)\r\n- [@article@Python Testing Tutorial](https://realpython.com/python-testing/)",
+    "threading@UIx0XYaOgXXlYbbQtjiPq": "# Threading\r\n\r\n[Multithreading](https://roadmap.sh/python/multithreading) allows multiple threads within a single process. However, because of GIL, threads cannot run in parallel on different cores, which makes multithreading suitable for I/O tasks (e.g., network requests) but not for computational tasks.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Python Threading Library](https://docs.python.org/3/library/threading.html)\r\n- [@article@Python Multithreading: The Most Practical Intro](https://roadmap.sh/python/multithreading)\r\n- [@article@Introduction to Threading in Python](https://realpython.com/intro-to-python-threading/)",
+    "tornado@zey2C6BdzsHJAlb_K3qrP": "# Tornado\r\n\r\nTornado is a scalable, non-blocking web server and web application framework written in Python. It was developed for use by FriendFeed; the company was acquired by Facebook in 2009 and Tornado was open-sourced soon after.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Tornado Website](https://www.tornadoweb.org/)\r\n- [@article@A Step-by-Step Tutorial on Python Tornado](https://phrase.com/blog/posts/tornado-web-framework-i18n/)\r\n- [@video@Tornado Python Framework](https://www.youtube.com/watch?v=-gJ21qzpieA)",
+    "tox@jPFOiwbqfaGshaGDBWb5x": "# Tox\r\n\r\nTox is a tool for automating test environment management and testing against multiple interpreter configurations. It is particularly useful for Python codebase that need to support multiple versions of Python.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Tox Documentation](https://tox.wiki/en/)",
+    "tuples@i7xIGiXU-k5UIKHIhQPjE": "# Tuples\r\n\r\nA tuple is an ordered and immutable collection of elements in Python. Unlike lists, tuples cannot be modified after creation, making them useful for storing fixed data such as coordinates, configuration values, or records that should remain unchanged. Tuples support indexing, iteration, and unpacking, and because they are immutable, they can also be used as dictionary keys or returned safely from functions as multiple values.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Tuples Documentation](https://docs.python.org/3/tutorial/datastructures.html#tuples-and-sequences)\r\n- [@article@When and How to Use Tuples](https://thenewstack.io/python-for-beginners-when-and-how-to-use-tuples/)\r\n- [@article@Python's tuple Data Type: A Deep Dive With Examples](https://realpython.com/python-tuple/#getting-started-with-pythons-tuple-data-type)\r\n- [@video@why are Tuples even a thing?](https://www.youtube.com/watch?v=fR_D_KIAYrE)",
+    "type-casting@R9DQNc0AyAQ2HLpP4HOk6": "# Typecasting\r\n\r\nThe process of converting the value of one data type (integer, string, float, etc.) to another data type is called type conversion. Python has two types of type conversion: Implicit and Explicit.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Type Conversion and Casting](https://www.programiz.com/python-programming/type-conversion-and-casting)",
+    "typing@o1wi39VnjnFfWIC8XcuAK": "# Typing\r\n\r\nThe `typing` module provides support for type hints in Python, allowing developers to specify expected data types for variables, function parameters, and return values. Type hints improve code readability, enable better editor support and static analysis, and help catch potential bugs early without changing how Python executes programs at runtime.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Typing Module](https://docs.python.org/3/library/typing.html)",
+    "unittest--pyunit@b4he_RO17C3ScNeUd6v2b": "# PyUnit / Unittest\r\n\r\nPyUnit is an easy way to create unit testing programs and UnitTests with Python. (Note that [docs.python.org](http://docs.python.org) uses the name \"unittest\", which is also the module name.)\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@PyUnit Docs](https://wiki.python.org/moin/PyUnit%C2%A0)\r\n- [@article@How To Use unittest to Write a Test Case for a Function in Python](https://www.digitalocean.com/community/tutorials/how-to-use-unittest-to-write-a-test-case-for-a-function-in-python)\r\n- [@article@A Gentle Introduction to Unit Testing in Python](https://machinelearningmastery.com/a-gentle-introduction-to-unit-testing-in-python/)",
+    "uv@p3Frfs6oxpuciUzeCEsvb": "# uv\r\n\r\nuv is an \"extremely fast\" python package installer and resolver.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@opensource@astral-sh/uv](https://github.com/astral-sh/uv)\r\n- [@article@@UV for Python](https://www.youtube.com/watch?v=qh98qOND6MI&t)",
+    "variable-scope@3RNy7Sp28d-NMx0Yh4bdx": "# Variable Scope\r\n\r\nVariable scope refers to the region of a program where a particular variable can be accessed. It determines the visibility and lifetime of a variable. Understanding scope is crucial for avoiding naming conflicts and ensuring that variables are used correctly within different parts of your code.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Python Nonlocal Keyword Explained by Our Experts](https://roadmap.sh/python/nonlocal)\r\n- [@article@Python Variable Scope And The LEGB Rule Explained](https://www.datacamp.com/tutorial/scope-of-variables-python)\r\n- [@article@Python Scope](https://www.w3schools.com/python/python_scope.asp)\r\n- [@video@Python Tutorial: Variable Scope - Understanding the LEGB rule and global/nonlocal statements](https://www.youtube.com/watch?v=QVdf0LgmICw)",
+    "variables-and-data-types@dEFLBGpiH6nbSMeR7ecaT": "# Variables\r\n\r\nVariables are used to store information to be referenced and manipulated in a computer program. They also provide a way of labeling data with a descriptive name, so our programs can be understood more clearly by the reader and ourselves. It is helpful to think of variables as containers that hold information. Their sole purpose is to label and store data in memory. This data can then be used throughout your program.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Variables in Python](https://realpython.com/python-variables)\r\n- [@article@Python for Beginners: Data Types](https://thenewstack.io/python-for-beginners-data-types/)\r\n- [@video@Python Variables and Data Types](https://www.youtube.com/playlist?list=PLBlnK6fEyqRhN-sfWgCU1z_Qhakc1AGOn)",
+    "virtualenv@_IXXTSwQOgYzYIUuKVWNE": "# virtualenv\r\n\r\n`virtualenv` is a tool to create isolated Python environments. It creates a folder which contains all the necessary executables to use the packages that a Python project would need.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@Virtual Environments](https://virtualenv.pypa.io/en/latest/)",
+    "working-with-strings@Sg5w8zO2Ji-uDJKEoWey9": "# Working with Strings\r\n\r\nStrings in Python are sequences of characters used to represent text. You can create them by enclosing characters within single quotes, double quotes, or triple quotes. Once created, strings are immutable, meaning their values cannot be changed directly. Common operations include accessing individual characters using indexing, slicing to extract substrings, concatenating strings using the `+` operator, and using built-in methods to manipulate and format the text they contain.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@string — Common string operations](https://docs.python.org/3/library/string.html)\r\n- [@article@Python Strings](https://www.w3schools.com/python/python_strings.asp)\r\n- [@article@Python Print New Line: Methods, Examples, and Best Practices](https://roadmap.sh/python/print-new-line)\r\n- [@video@String methods in Python are easy 〰️](https://www.youtube.com/watch?v=tb6EYiHtcXU)\r\n- [@video@Python Tutorial for Beginners 2: Strings - Working with Textual Data](https://www.youtube.com/watch?v=k9TUPpGqYTo)",
+    "yapf@tsh_vbhzKz1-H9Vh69tsK": "# yapf\r\n\r\nyapf is a formatter for Python files. It is a tool that automatically formats Python code to conform to the PEP 8 style guide. It is similar to black but has more configuration options.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@opensource@google/yapf](https://github.com/google/yapf)"
+  }
+}
