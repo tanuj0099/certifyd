@@ -11,23 +11,53 @@ export function mapRoadmapDataToFlow(rawJson: any): MappedRoadmap {
 
   const contentDict = rawJson.certifyroi_content || {};
   const rawNodes = Array.isArray(rawJson.nodes) ? rawJson.nodes : [];
-  const rawEdges = Array.isArray(rawJson.edges) ? rawJson.edges : [];
+  let rawEdges = Array.isArray(rawJson.edges) ? rawJson.edges : [];
 
+  // --- 1. TITLE EXTRACTION & GIBBERISH FILTER ---
   const nodeMap = new Map();
   rawNodes.forEach((n: any) => {
-    const title = n.title || n.label || n.data?.title || n.data?.label || n.id;
-    nodeMap.set(n.id, { id: n.id, title });
+    const rawTitle = n.title || n.label || n.name || n.text || n.data?.title || n.data?.label || n.form?.title || n.id;
+    const isGibberishHash = /^[a-zA-Z0-9_-]{15,}$/.test(rawTitle);
+    nodeMap.set(n.id, { id: n.id, title: isGibberishHash ? "Specialized Skill" : rawTitle });
   });
 
-  // 1. Build Strict Relationships
+  // --- 2. JUNK EXCISOR ---
+  const JUNK_PHRASES = ["have a look at the following", "how to use this", "disclaimer", "keep learning"];
+  const junkIds = new Set<string>();
+  
+  nodeMap.forEach((node, id) => {
+    if (JUNK_PHRASES.some(phrase => node.title.toLowerCase().includes(phrase))) {
+      junkIds.add(id);
+      nodeMap.delete(id);
+    }
+  });
+
+  const parentsOfJunk = new Map<string, string[]>();
+  const childrenOfJunk = new Map<string, string[]>();
+
+  rawEdges.forEach((e: any) => {
+    const s = e.source || e.from;
+    const t = e.target || e.to;
+    if (junkIds.has(t)) { if (!parentsOfJunk.has(t)) parentsOfJunk.set(t, []); parentsOfJunk.get(t)!.push(s); }
+    if (junkIds.has(s)) { if (!childrenOfJunk.has(s)) childrenOfJunk.set(s, []); childrenOfJunk.get(s)!.push(t); }
+  });
+
+  junkIds.forEach(jId => {
+    const parents = parentsOfJunk.get(jId) || [];
+    const children = childrenOfJunk.get(jId) || [];
+    parents.forEach(p => children.forEach(c => {
+      if (!junkIds.has(p) && !junkIds.has(c)) rawEdges.push({ source: p, target: c, id: `bridge-${p}-${c}` });
+    }));
+  });
+
+  rawEdges = rawEdges.filter((e: any) => !junkIds.has(e.source || e.from) && !junkIds.has(e.target || e.to));
+  const validIds = new Set(nodeMap.keys());
+
+  // --- 3. GRAPH RELATIONSHIPS ---
   const childrenMap = new Map<string, string[]>();
   const parentMap = new Map<string, string[]>();
-  rawNodes.forEach(n => {
-    childrenMap.set(n.id, []);
-    parentMap.set(n.id, []);
-  });
+  validIds.forEach(id => { childrenMap.set(id, []); parentMap.set(id, []); });
 
-  const validIds = new Set(nodeMap.keys());
   rawEdges.forEach((e: any) => {
     const s = e.source || e.from;
     const t = e.target || e.to;
@@ -37,23 +67,20 @@ export function mapRoadmapDataToFlow(rawJson: any): MappedRoadmap {
     }
   });
 
-  // 2. The Critical Path Algorithm (Guarantees Logical Flow)
+  // --- 4. CRITICAL PATH (THE SPINE) ---
   const depthMemo = new Map<string, number>();
   function getDepth(nodeId: string): number {
     if (depthMemo.has(nodeId)) return depthMemo.get(nodeId)!;
     const children = childrenMap.get(nodeId) || [];
     if (children.length === 0) return 1;
-    const maxChildDepth = Math.max(...children.map(getDepth));
-    const depth = 1 + maxChildDepth;
+    const depth = 1 + Math.max(...children.map(getDepth));
     depthMemo.set(nodeId, depth);
     return depth;
   }
 
-  // Find the absolute start of the roadmap
   const roots = Array.from(validIds).filter(id => parentMap.get(id)!.length === 0);
   roots.sort((a, b) => getDepth(b) - getDepth(a));
   
-  // Trace the logical spine from start to finish
   const spinePath: string[] = [];
   let currentSpine = roots[0];
   while (currentSpine) {
@@ -62,91 +89,103 @@ export function mapRoadmapDataToFlow(rawJson: any): MappedRoadmap {
     if (children.length === 0) break;
     currentSpine = children.reduce((a, b) => getDepth(a) > getDepth(b) ? a : b);
   }
-  const spineSet = new Set(spinePath);
 
-  // 3. The Anti-Overlap Engine (Dynamic Y-Cursor)
+  // Assign every non-spine node to its closest spine parent
+  const nodeToSpine = new Map<string, string>();
+  spinePath.forEach(id => nodeToSpine.set(id, id));
+  const queue = [...spinePath];
+  while(queue.length > 0) {
+    const curr = queue.shift()!;
+    const assignedSpine = nodeToSpine.get(curr)!;
+    (childrenMap.get(curr) || []).forEach(child => {
+      if (!nodeToSpine.has(child)) {
+        nodeToSpine.set(child, assignedSpine);
+        queue.push(child);
+      }
+    });
+  }
+
+  // --- 5. THE VERTICAL STACK RENDERER (Clean grouping) ---
   const layoutedNodes: Node[] = [];
-  const placed = new Set<string>();
+  const nodeSideMap = new Map<string, string>();
   
-  const Y_STEP = 140; // Vertical distance between core nodes
-  const Y_RIB_STEP = 90; // Vertical distance between stacked side-quests
-  const X_OFFSET = 280; // Distance from center
-
+  const Y_STEP = 160; 
+  const Y_RIB_STEP = 65; // Tightly stacked vertically
   let currentY = 0;
 
-  spinePath.forEach((spineId) => {
-    // A. Place the Core Node
-    placed.add(spineId);
+  spinePath.forEach((spineId, index) => {
+    // Center the core node (assuming ~240px width, so X: -120)
     layoutedNodes.push({
       id: spineId,
       type: 'certifyRoiNode',
-      position: { x: -120, y: currentY }, // Center (assuming ~240px width)
-      data: {
-        label: nodeMap.get(spineId).title,
-        description: contentDict[spineId] || "",
-        variant: 'checkpoint'
-      }
+      position: { x: -120, y: currentY }, 
+      data: { id: spineId, label: nodeMap.get(spineId).title, description: contentDict[spineId] || "", variant: 'checkpoint' }
     });
+    nodeSideMap.set(spineId, 'center');
 
-    // B. Find its side-quests (children not on the spine)
-    const ribs = (childrenMap.get(spineId) || []).filter(c => !spineSet.has(c));
-    
-    let leftY = currentY + 80;
-    let rightY = currentY + 80;
+    const cluster = Array.from(validIds).filter(id => id !== spineId && nodeToSpine.get(id) === spineId);
+    cluster.sort((a, b) => getDepth(a) - getDepth(b));
 
-    ribs.forEach((ribId, index) => {
-      if (placed.has(ribId)) return;
-      placed.add(ribId);
+    // Entire cluster goes to ONE side, alternating each step down the spine
+    const side = index % 2 === 0 ? 'right' : 'left';
+    const sideX = side === 'left' ? -380 : 200; 
+    let ribY = currentY; 
 
-      // Alternate left and right
-      const isLeft = index % 2 === 0;
-      const sideX = isLeft ? -(X_OFFSET + 100) : X_OFFSET;
-      const sideY = isLeft ? leftY : rightY;
-
+    cluster.forEach((ribId) => {
       layoutedNodes.push({
         id: ribId,
         type: 'certifyRoiNode',
-        position: { x: sideX, y: sideY },
-        data: {
-          label: nodeMap.get(ribId).title,
-          description: contentDict[ribId] || "",
-          variant: 'standard',
-          side: isLeft ? 'left' : 'right'
-        }
+        position: { x: sideX, y: ribY },
+        data: { id: ribId, label: nodeMap.get(ribId).title, description: contentDict[ribId] || "", variant: 'standard' }
       });
-
-      // Draw horizontal edge from spine to rib
-      flowEdges.push({
-        id: `e-${spineId}-${ribId}`,
-        source: spineId,
-        target: ribId,
-        type: 'smoothstep',
-        sourceHandle: isLeft ? 'left' : 'right', // Connects logically out the sides
-        animated: true,
-        style: { stroke: '#94a3b8', strokeWidth: 2, strokeDasharray: '4,4' }
-      });
-
-      // Advance the Y cursor for that side so the next item stacks neatly below it
-      if (isLeft) leftY += Y_RIB_STEP;
-      else rightY += Y_RIB_STEP;
+      nodeSideMap.set(ribId, side);
+      ribY += Y_RIB_STEP; 
     });
 
-    // Draw vertical edge to the NEXT spine node
-    const nextSpineIndex = spinePath.indexOf(spineId) + 1;
-    if (nextSpineIndex < spinePath.length) {
-      const nextSpineId = spinePath[nextSpineIndex];
+    // Advance Y enough to clear either the spine step or the tall stack of side-skills
+    currentY = Math.max(currentY + Y_STEP, ribY + 40);
+  });
+
+  // --- 6. SMART EDGE ROUTING (The Spaghetti Filter) ---
+  rawEdges.forEach((e: any) => {
+    const s = e.source || e.from;
+    const t = e.target || e.to;
+    
+    if (validIds.has(s) && validIds.has(t)) {
+      const sSide = nodeSideMap.get(s);
+      const tSide = nodeSideMap.get(t);
+      const isCore = sSide === 'center' && tSide === 'center';
+
+      // 🛑 SPAGHETTI FILTER: Kill edges that ruin the layout
+      if (sSide === 'left' && tSide === 'right') return; // No crossing the screen
+      if (sSide === 'right' && tSide === 'left') return;
+      if (sSide !== 'center' && tSide === 'center') return; // No backward lines up the tree
+      if (!isCore && nodeToSpine.get(s) !== nodeToSpine.get(t)) return; // Don't jump clusters
+
+      // Assign the invisible handles based strictly on physical location
+      let sHandle = 's-bottom';
+      let tHandle = 't-top';
+
+      if (sSide === 'center' && tSide === 'right') { sHandle = 's-right'; tHandle = 't-left'; }
+      else if (sSide === 'center' && tSide === 'left') { sHandle = 's-left'; tHandle = 't-right'; }
+      else if (sSide === 'right' && tSide === 'right') { sHandle = 's-bottom'; tHandle = 't-top'; }
+      else if (sSide === 'left' && tSide === 'left') { sHandle = 's-bottom'; tHandle = 't-top'; }
+
       flowEdges.push({
-        id: `e-${spineId}-${nextSpineId}`,
-        source: spineId,
-        target: nextSpineId,
-        type: 'smoothstep',
+        id: e.id || `e-${s}-${t}`,
+        source: s,
+        target: t,
+        type: 'smoothstep', // smoothstep rounds the corners automatically
+        sourceHandle: sHandle,
+        targetHandle: tHandle,
         animated: true,
-        style: { stroke: '#0f172a', strokeWidth: 3 } // Thick solid line for the main path
+        style: { 
+          stroke: isCore ? '#0f172a' : '#94a3b8', 
+          strokeWidth: isCore ? 3 : 2, 
+          strokeDasharray: isCore ? 'none' : '5,5' 
+        }
       });
     }
-
-    // C. The Overlap Blocker: Wait for the longest side-quest chain to finish before dropping the next core node
-    currentY = Math.max(currentY + Y_STEP, leftY + 40, rightY + 40);
   });
 
   return { nodes: layoutedNodes, edges: flowEdges };
