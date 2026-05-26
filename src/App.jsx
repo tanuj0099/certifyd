@@ -88,7 +88,6 @@ const OnboardingPage = lazy(() => import("./pages/Onboarding.jsx"));
 const ToolsIndex = lazy(() => import("./pages/ToolsIndex.jsx"));
 const RoadmapTool = lazy(() => import("./pages/RoadmapTool.jsx"));
 const RoadmapsHub = lazy(() => import("./pages/RoadmapsHub.jsx"));
-const Dashboard = lazy(() => import("./pages/Dashboard.jsx"));
 
 const T = { duration: 0.32, ease: [0.4, 0, 0.2, 1] };
 const FM = "'JetBrains Mono','Commit Mono',monospace";
@@ -2882,7 +2881,6 @@ function AppRoot() {
 <Route path="/roadmap/:id" element={<RoadmapTool />} />
                 <Route path="/roadmap/:id" element={<RoadmapTool />} />
                 <Route path="/faq" element={<FAQPage />} />
-                <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/features" element={<FeaturesPage />} />
                 <Route path="/how-it-works" element={<HowItWorksPage />} />
