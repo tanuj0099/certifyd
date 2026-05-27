@@ -1,5 +1,6 @@
 import { Ratelimit } from '@upstash/ratelimit'
 import { Redis }     from '@upstash/redis'
+import { createMockGroqResponse, isServerTestMode } from '../server/testMode.js'
 
 // ── Rate limiter (lazy-initialised so missing env vars don't crash build) ──
 let ratelimit = null
@@ -28,6 +29,10 @@ export default async function handler(req, res) {
   // ── Method guard ────────────────────────────────────────
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })
+  }
+
+  if (isServerTestMode()) {
+    return res.status(200).json(createMockGroqResponse(req.body))
   }
 
   // ── API key guard ────────────────────────────────────────

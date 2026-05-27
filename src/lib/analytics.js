@@ -1,7 +1,9 @@
 import posthog from 'posthog-js'
+import { isClientTestMode } from './testMode.js'
 
 function safeCapture(eventName, properties = {}) {
   try {
+    if (isClientTestMode()) return
     if (posthog && typeof posthog.capture === 'function') {
       posthog.capture(eventName, properties)
     }

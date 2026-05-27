@@ -21,6 +21,16 @@ Every verification run must attach one of:
 - Browser trace, HAR, screenshot, or analytics event export.
 - Worker/job log showing input object ID and completed output.
 
+## CI Test-Mode Policy
+
+CI and local automated verification must run with `TEST_MODE=true` and `VITE_TEST_MODE=true` unless the job is explicitly marked as a staging smoke test.
+
+- LLM responses must come from deterministic fixtures or test-mode API mocks. Schema parsing is tested against static valid and invalid JSON fixtures.
+- S3 upload tests must mock the browser `PUT` response. Assert URL, method, headers, and request body shape; do not upload to AWS in CI.
+- Supabase/Auth/RLS/market-data tests must run against an isolated seeded test database or local Supabase instance. Live production data is never an assertion source.
+- PostHog tests must use network interception or a local test sink. Live ingestion is reserved for staging smoke tests.
+- Playwright should cover only wiring and critical consent/network behavior. Business rules, ROI math, and edge-case branching belong in unit or integration tests first.
+
 ## Phase 1: Identity And Authentication Routing
 
 | ID | Assertion | Type | Automation Target | Pass Condition | Fail Condition | Evidence |
@@ -39,21 +49,21 @@ Every verification run must attach one of:
 
 | ID | Assertion | Type | Automation Target | Pass Condition | Fail Condition | Evidence |
 |---|---|---|---|---|---|---|
-| TEL-001 | Clicking a standard navigation control emits a silent PostHog payload. | E2E | Playwright network interception | A click on each sampled nav button sends one PostHog request containing CSS selector, timestamp, and anonymized session ID. | No request, missing required fields, duplicate spam, or direct PII in payload. | HAR or intercepted request JSON. |
+| TEL-001 | Clicking a standard navigation control emits a silent PostHog payload. | E2E smoke | Playwright network interception against test sink | A click on each sampled nav button attempts one PostHog request containing CSS selector, timestamp, and anonymized session ID after consent. | No request, missing required fields, duplicate spam, direct PII in payload, or live PostHog used in CI. | HAR or intercepted request JSON from test sink. |
 | TEL-002 | Standard navigation tracking does not require manual `onClick` listeners. | Static analysis | Source scan | Navigation tracking is implemented through PostHog autocapture or shared instrumentation, with no per-nav manual tracking handlers required. | Standard nav buttons require individual analytics `onClick` handlers. | Static scan report and file references. |
-| TEL-003 | Rapid clicks on a non-responsive element register `dead_click`. | E2E + analytics export | Playwright + PostHog events API/dashboard | Five or more rapid clicks on a static div or disabled button produce a `dead_click` event for the test session. | Event absent after ingestion window or attributed to the wrong session. | Analytics export or dashboard screenshot with session ID. |
-| TEL-004 | Final "Calculate ROI" click emits `roi_calculated`. | E2E | Playwright network interception or PostHog test sink | Clicking the final ROI action sends `roi_calculated`. | No event or wrong event name. | Intercepted event payload. |
-| TEL-005 | `roi_calculated` contains selected domain and baseline salary. | E2E | Playwright network interception or PostHog test sink | Event properties include selected domain and baseline salary as structured JSON values. | Missing field, stringified unparseable blob, wrong salary, or wrong domain. | Intercepted event payload. |
+| TEL-003 | Rapid clicks on a non-responsive element register `dead_click`. | Staging smoke | Playwright + PostHog staging project | Five or more rapid clicks on a static div or disabled button produce a `dead_click` event for the staging test session. | Event absent after ingestion window, attributed to the wrong session, or run against production analytics. | Staging analytics export or dashboard screenshot with session ID. |
+| TEL-004 | Final "Calculate ROI" click emits `roi_calculated`. | Integration + E2E smoke | Unit test for analytics wrapper; Playwright interception only for route wiring | Clicking the final ROI action calls the analytics wrapper with `roi_calculated`; smoke test verifies browser attempts the event against a test sink. | No event, wrong event name, or live PostHog used in CI. | Unit output and intercepted test-sink payload. |
+| TEL-005 | `roi_calculated` contains selected domain and baseline salary. | Integration | Unit/component test with mocked analytics wrapper | Event properties include selected domain and baseline salary as structured JSON values. | Missing field, stringified unparseable blob, wrong salary, or wrong domain. | Mock call assertion. |
 
 ## Phase 3: Document Pipeline - Resume Upload
 
 | ID | Assertion | Type | Automation Target | Pass Condition | Fail Condition | Evidence |
 |---|---|---|---|---|---|---|
-| DOC-001 | Upload request returns a temporary signed AWS S3 URL from the backend. | API | Backend endpoint test | Request returns HTTPS S3 URL with signature, expiration, method scope, key, and content constraints. | Unsigned URL, permanent credential, missing expiration, or non-S3 upload target. | API response with signature redacted. |
-| DOC-002 | Browser uploads directly to S3 using `PUT`. | E2E | Playwright network interception | Browser issues `PUT` to returned S3 URL; backend does not receive the file bytes. | Browser posts file to app backend or uses wrong HTTP method. | HAR showing direct S3 `PUT`. |
-| DOC-003 | A 10MB PDF upload bypasses Vercel payload limits. | Negative infra | E2E upload test | 10MB PDF completes without Vercel `413 Payload Too Large`; S3 returns success. | Any `413`, backend payload rejection, or timeout caused by serverless body handling. | HAR and upload result. |
+| DOC-001 | Upload request returns a temporary signed AWS S3 URL from the backend. | API | Backend endpoint test with mocked AWS signer in CI | Request returns HTTPS S3 URL with signature, expiration, method scope, key, and content constraints. | Unsigned URL, permanent credential, missing expiration, non-S3 upload target, or live AWS signer used in CI. | API response with signature redacted. |
+| DOC-002 | Browser uploads directly to S3 using `PUT`. | E2E contract | Playwright route mock for the S3 URL | Browser attempts `PUT` to returned S3 URL with expected headers; Playwright fulfills the response locally; backend does not receive file bytes. | Browser posts file to app backend, uses wrong method, misses required headers, or CI uploads to AWS. | Intercepted Playwright request metadata. |
+| DOC-003 | A 10MB PDF upload bypasses Vercel payload limits. | Negative contract + staging smoke | Mocked 10MB fixture in CI; real upload only in staging smoke | CI verifies the app sends the 10MB payload directly to mocked S3 without backend body handling; staging may verify no Vercel `413`. | Backend receives file bytes, `413` in staging, or CI uploads to AWS. | Playwright request metadata and optional staging HAR. |
 | DOC-004 | S3 upload completion triggers OCR worker. | Integration | Worker/job test | Upload completion event creates a worker job and logs OCR start for the object key. | No worker job, wrong key, or job never starts. | Worker log or queue event. |
-| DOC-005 | OCR/LLM extraction writes strict skills JSON to the database. | Integration | Worker + schema validation | Extracted output validates against schema containing skills and years of experience before database write. | Invalid JSON, missing required fields, freeform prose, or unvalidated database write. | JSON schema validation output and DB row. |
+| DOC-005 | OCR/LLM extraction writes strict skills JSON to the database. | Unit + integration | Static JSON fixtures + schema parser; mocked LLM response in worker integration | Extracted output validates against schema containing skills and numeric years of experience before database write. | Invalid JSON, missing required fields, freeform prose, unvalidated database write, or live LLM call in CI. | Fixture parser output and seeded test DB row. |
 | DOC-006 | One year of experience hides certifications requiring 3+ years. | Negative logic | Unit/integration | Given extracted experience of `1`, recommendations exclude all certs with mandatory prerequisites greater than `1` year. | Any 3+ year prerequisite cert appears in recommendations. | Recommendation result fixture. |
 
 ## Phase 4: Recommendation Pivot Engine
@@ -70,21 +80,21 @@ Every verification run must attach one of:
 
 | ID | Assertion | Type | Automation Target | Pass Condition | Fail Condition | Evidence |
 |---|---|---|---|---|---|---|
-| ROI-001 | Bangalore and Bhopal produce different monthly salary deltas for identical inputs. | Logic | Unit/integration | Same cert and baseline salary produce different `Delta_S_m` values because `Loc_idx` differs. | Outputs are identical or city has no effect. | Calculation fixture output. |
+| ROI-001 | Bangalore and Bhopal produce different monthly salary deltas for identical inputs. | Logic | Unit/integration against seeded market-data fixture | Same cert and baseline salary produce different `Delta_S_m` values because fixture `Loc_idx` differs. | Outputs are identical, city has no effect, or test reads mutable live market data. | Calculation fixture output. |
 | ROI-002 | PMP cost changes when `PMI Member` is enabled. | Logic | Unit/integration | PMP `C_cert` equals INR 34,194 when member toggle is true. | Member cost is not INR 34,194. | Calculation fixture output. |
 | ROI-003 | PMP cost changes when `PMI Member` is disabled. | Logic | Unit/integration | PMP `C_cert` equals INR 42,863 when member toggle is false. | Non-member cost is not INR 42,863. | Calculation fixture output. |
-| ROI-004 | Payback window equals `C_cert / Delta_S_m`. | Logic/UI | Unit + E2E UI assertion | UI payback value matches computed quotient with documented rounding. | UI value differs from formula beyond rounding tolerance. | Unit output and UI screenshot/value extraction. |
+| ROI-004 | Payback window equals `C_cert / Delta_S_m`. | Logic + UI smoke | Unit formula test first; lightweight component assertion for display formatting | Payback value matches computed quotient with documented rounding. | Value differs from formula beyond rounding tolerance. | Unit output and component assertion. |
 
 ## Phase 6: Edge Cases And Anomalies
 
 | ID | Assertion | Type | Automation Target | Pass Condition | Fail Condition | Evidence |
 |---|---|---|---|---|---|---|
-| EDGE-001 | Salary at or above INR 40,000,000 suppresses standard percentage-hike language. | E2E | Playwright | Entering baseline salary `40000000` or higher hides consumer percentage-hike copy. | Standard percentage-hike claim remains visible. | DOM assertion and screenshot. |
-| EDGE-002 | Executive salary scenario shows B2B reimbursement business case. | E2E | Playwright | Same scenario displays corporate sponsorship/reimbursement business case content. | Consumer ROI output remains primary or business case is missing. | DOM assertion and screenshot. |
-| EDGE-003 | INR 500,000 baseline with INR 5,000,000 immediate goal triggers variance limit. | Logic/E2E | Unit + Playwright | System flags goal as unrealistic and enters reality-anchoring flow. | System accepts goal as ordinary single-step path. | Test fixture output and UI assertion. |
-| EDGE-004 | Unrealistic goal does not output a 900% ROI single-certification path. | Negative logic | Unit/E2E | Output contains no single-cert ROI path claiming 900% or equivalent direct jump. | A 900% single-cert path is returned or displayed. | Recommendation payload and DOM assertion. |
-| EDGE-005 | Unrealistic goal returns maximum statistical ceiling for the user's tier. | Logic/E2E | Unit + Playwright | Output includes bounded ceiling value derived from tier rules. | Ceiling absent, unbounded, or greater than tier cap. | Calculation fixture and UI assertion. |
-| EDGE-006 | Unrealistic goal returns multi-year sequential roadmap. | Logic/E2E | Unit + Playwright | Output contains two or more sequenced milestones across multiple years/certifications. | Output is a single-cert immediate jump or lacks sequence/timeline. | Recommendation payload and DOM assertion. |
+| EDGE-001 | Salary at or above INR 40,000,000 suppresses standard percentage-hike language. | Logic + component | Unit branch test + component assertion | Entering baseline salary `40000000` or higher hides consumer percentage-hike copy. | Standard percentage-hike claim remains visible. | Unit output and component assertion. |
+| EDGE-002 | Executive salary scenario shows B2B reimbursement business case. | Logic + component | Unit branch test + component assertion | Same scenario displays corporate sponsorship/reimbursement business case content. | Consumer ROI output remains primary or business case is missing. | Unit output and component assertion. |
+| EDGE-003 | INR 500,000 baseline with INR 5,000,000 immediate goal triggers variance limit. | Logic | Unit test with fixture | System flags goal as unrealistic and enters reality-anchoring flow. | System accepts goal as ordinary single-step path. | Test fixture output. |
+| EDGE-004 | Unrealistic goal does not output a 900% ROI single-certification path. | Negative logic | Unit test with fixture | Output contains no single-cert ROI path claiming 900% or equivalent direct jump. | A 900% single-cert path is returned or displayed. | Recommendation payload assertion. |
+| EDGE-005 | Unrealistic goal returns maximum statistical ceiling for the user's tier. | Logic | Unit test with fixture | Output includes bounded ceiling value derived from tier rules. | Ceiling absent, unbounded, or greater than tier cap. | Calculation fixture. |
+| EDGE-006 | Unrealistic goal returns multi-year sequential roadmap. | Logic + component | Unit fixture + component rendering assertion | Output contains two or more sequenced milestones across multiple years/certifications. | Output is a single-cert immediate jump or lacks sequence/timeline. | Recommendation payload and component assertion. |
 
 ## Phase 7: DPDP Act Legal Compliance
 

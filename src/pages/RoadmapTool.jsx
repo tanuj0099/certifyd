@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { ReactFlow, Background } from '@xyflow/react';
 import { ArrowLeft, Map, FolderGit2, LineChart, ChevronDown, CheckCircle2 } from 'lucide-react';
 import '@xyflow/react/dist/style.css';
+import TopCertsModule from '../components/ui/TopCertsModule';
 
 import RoadmapNode from '../components/ui/RoadmapNode';
 import RoadmapDrawer from '../components/ui/RoadmapDrawer';
@@ -159,6 +160,10 @@ export default function RoadmapTool() {
         >
           <Background color="#cbd5e1" gap={24} size={2} />
         </ReactFlow>
+      </div>
+
+      <div className="bg-white border-t border-slate-200">
+        <TopCertsModule roadmapId={id} />
       </div>
 
       <RoadmapDrawer 
