@@ -20,7 +20,7 @@ function CertPicker({ value, onChange, exclude, index }) {
   return (
     <div style={{ position: 'relative' }}>
       <button onClick={function () { setOpen(function (v) { return !v }) }}
-        style={{ width: '100%', padding: '11px 14px', background: selected ? color + '0e' : 'transparent', border: '1px solid ' + (selected ? color + '44' : 'var(--border)'), borderRadius: '10px', color: selected ? color : 'var(--text-4)', fontSize: '13px', cursor: 'pointer', fontFamily: FH, fontWeight: selected ? '700' : '500', display: 'flex', alignItems: 'center', gap: '8px', transition: 'all 0.18s' }}>
+        style={{ width: '100%', padding: '13px 14px', background: selected ? color + '0e' : 'transparent', border: '1px solid ' + (selected ? color + '44' : 'var(--border)'), borderRadius: '10px', color: selected ? color : 'var(--text-4)', fontSize: '13px', cursor: 'pointer', fontFamily: FH, fontWeight: selected ? '700' : '500', display: 'flex', alignItems: 'center', gap: '8px', transition: 'all 0.18s', minHeight: '48px' }}>
         <div style={{ width: 8, height: 8, borderRadius: '50%', background: color, flexShrink: 0 }} />
         <span style={{ flex: 1, textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
           {selected ? selected.name : 'Add cert ' + (index + 1) + '...'}
@@ -36,7 +36,7 @@ function CertPicker({ value, onChange, exclude, index }) {
               {CERT_DOMAINS.slice(0, 6).map(function (d) {
                 return (
                   <button key={d.id} onClick={function () { setDomain(d.id) }}
-                    style={{ padding: '3px 9px', borderRadius: '20px', fontSize: '11px', cursor: 'pointer', background: domain === d.id ? 'var(--indigo-dim)' : 'transparent', border: '1px solid ' + (domain === d.id ? 'var(--border-accent)' : 'var(--border)'), color: domain === d.id ? 'var(--indigo-light)' : 'var(--text-4)', fontFamily: FB, transition: 'all 0.15s' }}>
+                    style={{ padding: '6px 9px', borderRadius: '20px', fontSize: '11px', cursor: 'pointer', background: domain === d.id ? 'var(--indigo-dim)' : 'transparent', border: '1px solid ' + (domain === d.id ? 'var(--border-accent)' : 'var(--border)'), color: domain === d.id ? 'var(--indigo-light)' : 'var(--text-4)', fontFamily: FB, transition: 'all 0.15s', minHeight: '36px' }}>
                     {d.label}
                   </button>
                 )

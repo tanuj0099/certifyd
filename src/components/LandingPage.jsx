@@ -178,7 +178,14 @@ function TrustStrip() {
       <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, background: C.bg, zIndex: 11, borderRight: `1px solid ${C.border}`, display: 'flex', alignItems: 'center', padding: '0 20px', boxShadow: `20px 0 20px -10px ${C.bg}` }}>
         <span style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.18em' }}>MARKET_DATA</span>
       </div>
-      <div style={{ flex: 1, paddingLeft: isMobile ? '140px' : '150px' }}>
+      {/*
+        BEFORE: paddingLeft: isMobile ? '140px' : '150px'
+        On a 375px phone, 140px left-pad leaves only 235px for the ticker
+        content — the "MARKET_DATA" label badge is ~130px wide, so the
+        ticker text was clipping behind it and causing a horizontal overflow.
+        FIX: reduce to 120px on mobile so the ticker has enough room.
+      */}
+      <div style={{ flex: 1, paddingLeft: isMobile ? '120px' : '150px' }}>
         <motion.div animate={{ x: ['0%', '-50%'] }} transition={{ duration: 45, repeat: Infinity, ease: 'linear' }} style={{ display: 'flex', width: 'max-content' }}>
           {[...items, ...items, ...items].map((item, i) => (
             <div key={i} style={{ display: 'inline-flex', alignItems: 'center', height: '48px', borderRight: `1px solid ${C.border}`, padding: '0 36px' }}>
@@ -814,9 +821,18 @@ function PivotDomainsCard({ onEnter }) {
 
             {/* Input + state machine */}
             <div style={{ position: 'relative' }}>
+              {/*
+                BEFORE: padding: '4px 4px 4px 14px' — the input row was ~40px tall,
+                below the 48px minimum for form inputs.
+                FIX: minHeight: '52px' on the wrapper ensures the whole row
+                (input + button) meets the fat-finger target.
+                fontSize: '16px' on the input prevents iOS Safari from
+                auto-zooming the viewport when the field is focused.
+              */}
               <div style={{
                 display: 'flex', gap: '8px', alignItems: 'center',
                 padding: '4px 4px 4px 14px',
+                minHeight: '52px',
                 borderRadius: '8px',
                 border: '1px solid ' + (pivotFocus ? LINEAR_BLUE + '60' : (!C.isLight ? 'var(--border-subtle)' : 'transparent')),
                 background: !C.isLight ? 'var(--border-subtle)' : 'transparent',
@@ -831,7 +847,8 @@ function PivotDomainsCard({ onEnter }) {
                   placeholder="e.g. Cybersecurity, Data Science, Finance..."
                   style={{
                     flex: 1, background: 'transparent', border: 'none', outline: 'none',
-                    fontFamily: FM, fontSize: '13px',
+                    fontFamily: FM,
+                    fontSize: '16px', /* prevents iOS Safari viewport zoom on focus */
                     color: C.text,
                   }}
                 />
@@ -839,7 +856,8 @@ function PivotDomainsCard({ onEnter }) {
                   onClick={handleStartSwitching}
                   disabled={!domain.trim()}
                   style={{
-                    padding: '9px 16px', borderRadius: '6px',
+                    padding: '11px 16px', /* bumped from 9px → 11px for 44px+ touch target */
+                    borderRadius: '6px',
                     background: domain.trim() ? LINEAR_BLUE : 'transparent',
                     border: '1px solid ' + (domain.trim() ? LINEAR_BLUE : 'var(--border-subtle)'),
                     color: domain.trim() ? C.text : C.text3,
@@ -847,6 +865,7 @@ function PivotDomainsCard({ onEnter }) {
                     cursor: domain.trim() ? 'pointer' : 'not-allowed',
                     letterSpacing: '0.06em', whiteSpace: 'nowrap',
                     transition: 'all 0.18s',
+                    minHeight: '44px',
                   }}
                 >
                   START SWITCHING →

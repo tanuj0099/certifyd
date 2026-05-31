@@ -4,6 +4,7 @@ import {
   Search, BarChart2, TrendingUp, FileText, Map,
   Cpu, GraduationCap, CheckCircle, ArrowRight,
 } from 'lucide-react'
+import { MarketingFooter } from '../components/MarketingPageShell.jsx'
 
 const FM = "'JetBrains Mono','IBM Plex Mono',monospace"
 const FS = "'Inter','DM Sans',sans-serif"
@@ -194,8 +195,12 @@ function ToolCard({ tool }) {
 
 export default function ToolsIndex() {
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)', paddingTop: '128px' }}>
-      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '32px 24px 80px' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)' }}>
+      {/*
+        BEFORE: paddingTop: '128px' — hardcoded, breaks if nav height changes
+        AFTER:  page-top-pad utility class from index.css (104px mobile / 112px desktop)
+      */}
+      <div className="page-top-pad" style={{ maxWidth: '1100px', margin: '0 auto', padding: '32px 24px 80px' }}>
 
         {/* Header */}
         <div style={{ marginBottom: '48px', borderBottom: '1px solid var(--border)', paddingBottom: '32px' }}>
@@ -221,6 +226,7 @@ export default function ToolsIndex() {
           ))}
         </div>
       </div>
+      <MarketingFooter />
     </div>
   )
 }

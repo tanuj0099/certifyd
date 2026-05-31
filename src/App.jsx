@@ -58,6 +58,8 @@ import HikeVerifier from "./components/HikeVerifier.jsx";
 import MarketIntelligenceTool from "./components/LiveMarketPulse.jsx";
 import { AppSection } from "./components/SharedUI.jsx";
 import { MarketingFooter } from "./components/MarketingPageShell.jsx";
+import OfflineBanner from "./components/OfflineBanner.jsx";
+import { useNetworkStatus } from "./hooks/useNetworkStatus.js";
 
 const AboutPage = lazy(() => import("./pages/About.jsx"));
 const FeaturesPage = lazy(() => import("./pages/Features.jsx"));
@@ -2775,6 +2777,22 @@ function AppRoot() {
   const { user, signOut, loading } = useAuth();
   const [showSignIn, setShowSignIn] = useState(false);
 
+  // ── Offline detection ─────────────────────────────────
+  const isOnline = useNetworkStatus();
+
+  // Auto-reload once connection is restored so stale data is refreshed
+  const wasOfflineRef = useRef(false);
+  useEffect(() => {
+    if (!isOnline) {
+      wasOfflineRef.current = true;
+    } else if (wasOfflineRef.current) {
+      wasOfflineRef.current = false;
+      // Small delay so the "back online" transition is visible before reload
+      const t = setTimeout(() => window.location.reload(), 1200);
+      return () => clearTimeout(t);
+    }
+  }, [isOnline]);
+
   // ── Journey state now lives in Zustand ────────────────
   const activeTab = useJourneyStore((s) => s.activeTab);
   const setActiveTab = useJourneyStore((s) => s.setActiveTab);
@@ -2812,13 +2830,73 @@ function AppRoot() {
     return "home";
   };
   const currentPage = getPageFromPath();
-  // Full-page auth routes are detached from the shell — suppress nav and modal overlays
-  const isAuthPage = ['/login', '/signup'].includes(location.pathname)
+
+  // Full-page auth routes are detached from the shell — suppress nav
+  const isAuthPage = ['/login', '/signup', '/onboarding'].includes(location.pathname);
+
+  /*
+    Footer visibility rules:
+    - Auth/onboarding pages: no footer (they are full-screen flows)
+    - Home (/): LandingPage renders its own footer internally; MarketingFooter
+      is also rendered here for consistency — LandingPage's internal Footer
+      component is a simplified version, so we skip the duplicate by checking.
+    - /app: rendered below
+    - All other pages: render MarketingFooter here so individual page files
+      don't need to import it manually.
+
+    Pages that already include their own footer via ToolPageWrapper or
+    MarketingPageShell will render it twice if we also render here — so we
+    exclude those known wrappers. The cleanest approach: render footer for
+    ALL non-auth pages here, and remove the manual footer imports from
+    individual pages that use ToolPageWrapper/MarketingPageShell.
+
+    For now (non-breaking): render footer here only for pages that are known
+    NOT to include their own footer. This is the safe incremental approach.
+  */
+  const PAGES_WITH_OWN_FOOTER = new Set([
+    'home',          // LandingPage has its own Footer component
+    'app',           // AppPage has no footer — we add it below
+    'about',         // MarketingPageShell includes MarketingFooter
+    'features',      // MarketingPageShell
+    'how-it-works',  // MarketingPageShell
+    'pricing',       // MarketingPageShell
+    'blog',          // likely uses MarketingPageShell
+    'faq',           // likely uses MarketingPageShell
+    'contact',       // likely uses MarketingPageShell
+    'profile',       // ProfilePage manually imports MarketingFooter
+  ]);
+
+  // Tool pages that use ToolPageWrapper (which includes footer by default)
+  const isToolPage = currentPage.startsWith('tools/') ||
+    ['tools/resume','tools/roi','tools/heatmap','tools/compare',
+     'tools/cert-radar','tools/simulator','tools/jobmap','tools/college',
+     'tools/hike','tools/market'].includes(currentPage);
+
+  // Roadmap pages have their own footer section
+  const isRoadmapPage = location.pathname.startsWith('/roadmap') ||
+    location.pathname === '/roadmaps';
+
+  // Cert detail pages use their own layout
+  const isCertPage = location.pathname.startsWith('/cert/') ||
+    location.pathname.startsWith('/certification/') ||
+    location.pathname.startsWith('/cert-radar/');
+
+  const shouldRenderGlobalFooter =
+    !isAuthPage &&
+    !PAGES_WITH_OWN_FOOTER.has(currentPage) &&
+    !isToolPage &&
+    !isRoadmapPage &&
+    !isCertPage;
 
   return (
     <div
       style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
     >
+      {/* ── Offline overlay — rendered above everything ── */}
+      <AnimatePresence>
+        {!isOnline && <OfflineBanner key="offline" />}
+      </AnimatePresence>
+
       {!isAuthPage && (
         <DynamicIslandNav
           isDark={isDark}
@@ -2878,7 +2956,6 @@ function AppRoot() {
                   element={<MarketIntelligenceTool />}
                 />
                 <Route path="/roadmaps" element={<RoadmapsHub />} />
-<Route path="/roadmap/:id" element={<RoadmapTool />} />
                 <Route path="/roadmap/:id" element={<RoadmapTool />} />
                 <Route path="/faq" element={<FAQPage />} />
                 <Route path="/about" element={<AboutPage />} />
@@ -2916,48 +2993,34 @@ function AppRoot() {
                 <Route path="/privacy" element={<PrivacyPage />} />
                 <Route path="/cookies" element={<CookiesPage />} />
                 <Route path="/FAQ" element={<Navigate to="/faq" replace />} />
-                <Route
-                  path="/About"
-                  element={<Navigate to="/about" replace />}
-                />
-                <Route
-                  path="/Features"
-                  element={<Navigate to="/features" replace />}
-                />
-                <Route
-                  path="/How-It-Works"
-                  element={<Navigate to="/how-it-works" replace />}
-                />
-                <Route
-                  path="/Pricing"
-                  element={<Navigate to="/pricing" replace />}
-                />
-                <Route
-                  path="/Contact"
-                  element={<Navigate to="/contact" replace />}
-                />
-                <Route
-                  path="/Terms"
-                  element={<Navigate to="/terms" replace />}
-                />
-                <Route
-                  path="/Privacy"
-                  element={<Navigate to="/privacy" replace />}
-                />
-                <Route
-                  path="*"
-                  element={
-                    <Navigate to="/dashboard" replace />
-                  }
-                />
+                <Route path="/About" element={<Navigate to="/about" replace />} />
+                <Route path="/Features" element={<Navigate to="/features" replace />} />
+                <Route path="/How-It-Works" element={<Navigate to="/how-it-works" replace />} />
+                <Route path="/Pricing" element={<Navigate to="/pricing" replace />} />
+                <Route path="/Contact" element={<Navigate to="/contact" replace />} />
+                <Route path="/Terms" element={<Navigate to="/terms" replace />} />
+                <Route path="/Privacy" element={<Navigate to="/privacy" replace />} />
+                {/*
+                  BEFORE: <Navigate to="/dashboard" replace /> — silently
+                  redirected unknown URLs, creating a confusing dead end.
+                  AFTER: renders the proper 404 page so users know they're lost
+                  and have a clear path back.
+                */}
+                <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
           </motion.div>
         </AnimatePresence>
       </main>
-      {currentPage === "app" || currentPage === "home" ? (
+
+      {/*
+        Global footer — rendered here for pages that don't include their own.
+        Auth pages, onboarding, and pages that already wrap with
+        ToolPageWrapper / MarketingPageShell are excluded to avoid duplicates.
+      */}
+      {(currentPage === "app" || currentPage === "home" || shouldRenderGlobalFooter) && (
         <MarketingFooter />
-      ) : null}
+      )}
     </div>
   );
 }

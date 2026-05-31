@@ -66,6 +66,36 @@ export const useJourneyStore = create(
       targetDomain: '',
       setTargetDomain: (v) => set({ targetDomain: v || '' }),
 
+      // ── Pipeline & Roadmap State (persisted) ───────────
+      
+      // What the user wants to become (e.g., "Senior Backend Engineer")
+      targetRole: "",
+      setTargetRole: (role) => set({ targetRole: role || '' }),
+
+      // The missing skills between their resume and their target
+      validatedGap: [], 
+      setValidatedGap: (gaps) => set({ validatedGap: gaps || [] }),
+
+      // Track the skills checked off on the React Flow canvas
+      // Format: { "backend": ["skill_id_1", "skill_id_2"], "frontend": ["skill_id_3"] }
+      activeRoadmapProgress: {},
+      
+      toggleSkillCompletion: (roadmapId, skillId) => set((state) => {
+        const currentProgress = state.activeRoadmapProgress[roadmapId] || [];
+        const isCompleted = currentProgress.includes(skillId);
+        
+        const updatedProgress = isCompleted
+          ? currentProgress.filter(id => id !== skillId)
+          : [...currentProgress, skillId];
+
+        return {
+          activeRoadmapProgress: {
+            ...state.activeRoadmapProgress,
+            [roadmapId]: updatedProgress
+          }
+        };
+      }),
+
       setResumeContext: ({ certName, city, domain, name }) => {
         set({
           prefilledCert: certName || '',
@@ -91,6 +121,8 @@ export const useJourneyStore = create(
         expectedFirstSalary: state.expectedFirstSalary,
         mode:        state.mode,
         targetDomain: state.targetDomain,
+        targetRole: state.targetRole,
+        activeRoadmapProgress: state.activeRoadmapProgress,
       }),
     }
   )
