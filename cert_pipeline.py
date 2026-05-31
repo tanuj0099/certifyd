@@ -8,10 +8,21 @@ from playwright_stealth import Stealth
 import posthog_client
 
 # ─────────────────────────────────────────────────────────────────────────────
-# CONFIG
+# CONFIG — credentials loaded from environment, never hardcoded
+# Set SUPABASE_URL and SUPABASE_KEY in your .env file before running.
 # ─────────────────────────────────────────────────────────────────────────────
-SUPABASE_URL = "https://ejgadkswcjorkyzkqhfl.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqZ2Fka3N3Y2pvcmt5emtxaGZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2MTE5ODksImV4cCI6MjA5MzE4Nzk4OX0.idlg63kuUcwv61zfJYk_3XXouUiWJcC-6JnpmhQdlFI"
+from dotenv import load_dotenv
+load_dotenv()
+
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+
+if not SUPABASE_URL or not SUPABASE_KEY:
+    raise EnvironmentError(
+        "Missing SUPABASE_URL or SUPABASE_KEY. "
+        "Copy .env.example to .env and fill in your credentials."
+    )
+
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 USD_TO_INR = 83.0

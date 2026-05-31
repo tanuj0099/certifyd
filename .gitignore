@@ -27,6 +27,27 @@ scraper.py
 cert_pipeline.py
 requirements.txt
 
+# ── Pipeline / data-engineering scripts ──────────────────────────────────────
+# These files contain or may contain credentials loaded from .env.
+# They must NEVER be committed to the frontend repository.
+directory_engine.py
+azure_api_engine.py
+cisco_fast_engine.py
+reddit_ai_engine.py
+master_pipeline.py
+market_ticker.py
+quick_fix.py
+market_pulse_backfill.py
+capture_ui.py
+repomix-output.xml
+
+# CSV data dumps — large binary-like files, no place in source control
+*.csv
+processed_certifications_gold.csv
+final_production_database.csv
+ultimate_156_database.csv
+ultimate_156_database_fixed.csv
+
 # Stray files
 =3.0.0
 api/
@@ -57,4 +78,4 @@ yarn-error.log*
 .aider*
 
 # Next.js
-.next/
+.next/
