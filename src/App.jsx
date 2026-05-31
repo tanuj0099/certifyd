@@ -1925,73 +1925,13 @@ const AppPage = function ({ onCertSelected }) {
 
   return (
     <div
+      className="page-top-pad"
       style={{
-        paddingTop: typeof window !== 'undefined' && window.innerWidth < 768 ? '112px' : '128px',
         minHeight: '100vh',
         background: 'var(--bg)',
         position: 'relative',
       }}
     >
-      {/* ─── PREMIUM FLOATING NAVIGATION BAR ─── */}
-      {modeLocked && (
-        <nav
-          style={{
-            position: "sticky",
-            top: 0,
-            zIndex: 100,
-            borderBottom: "1px solid var(--border)",
-            background: "var(--bg)",
-            backdropFilter: "blur(12px)",
-            WebkitBackdropFilter: "blur(12px)",
-          }}
-        >
-          <div
-            style={{
-              maxWidth: "1400px",
-              margin: "0 auto",
-              padding: "0 16px",
-              height: "56px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            {/* Brand Section */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-              }}
-            >
-              <div
-                style={{
-                  width: "5px",
-                  height: "5px",
-                  borderRadius: "2px",
-                  background: "linear-gradient(135deg, var(--accent) 0%, #8A8F98 100%)",
-                  boxShadow: "0 0 12px rgba(94, 106, 210, 0.4)",
-                }}
-              />
-              <span
-                style={{
-                  fontFamily: FH,
-                  fontWeight: "700",
-                  fontSize: "13px",
-                  letterSpacing: "0.05em",
-                  color: "var(--text)",
-                  textTransform: "uppercase",
-                }}
-              >
-                CertifyROI
-              </span>
-            </div>
-
-            {/* Spacer */}
-            <div style={{ width: "100px" }} />
-          </div>
-        </nav>
-      )}
 
       <AnimatePresence>
         {!modeLocked ? <ModeSelector onSelect={onModeSelect} /> : null}
@@ -2855,7 +2795,6 @@ function AppRoot() {
     NOT to include their own footer. This is the safe incremental approach.
   */
   const PAGES_WITH_OWN_FOOTER = new Set([
-    'home',          // LandingPage has its own Footer component
     'app',           // AppPage has no footer — we add it below
     'about',         // MarketingPageShell includes MarketingFooter
     'features',      // MarketingPageShell
@@ -2866,6 +2805,7 @@ function AppRoot() {
     'contact',       // likely uses MarketingPageShell
     'profile',       // ProfilePage manually imports MarketingFooter
     'cert-radar',    // CertRadarTool manually imports MarketingFooter
+    'tools',         // ToolsIndex manually imports MarketingFooter
   ]);
 
   // Tool pages that use ToolPageWrapper (which includes footer by default)

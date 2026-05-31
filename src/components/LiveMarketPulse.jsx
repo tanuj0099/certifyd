@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Search, X, TrendingUp } from 'lucide-react'
 import { useEffect, useMemo, useState, useDeferredValue } from 'react'
 import { supabase } from '../lib/supabase.js'
-
+import { MarketingFooter } from './MarketingPageShell.jsx'
 const FM = "'JetBrains Mono','IBM Plex Mono',monospace"
 const FS = "'Inter','DM Sans',sans-serif"
 const DEFAULT_CERT_COST = 25_000
@@ -399,6 +399,7 @@ export default function LiveMarketPulse() {
   const statColumns = isPhone ? 'repeat(2, minmax(0, 1fr))' : isTablet ? 'repeat(3, minmax(0, 1fr))' : 'repeat(6, minmax(0, 1fr))'
 
   return (
+    <>
     <section
       style={{
         minHeight: '100vh',
@@ -723,5 +724,7 @@ export default function LiveMarketPulse() {
         )}
       </div>
     </section>
+    <MarketingFooter />
+    </>
   )
 }
