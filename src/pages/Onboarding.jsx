@@ -171,8 +171,8 @@ export default function Onboarding() {
     }
   }
 
-  const canAdvanceStep0 = workspaceName.trim().length >= 2
-  const canAdvanceStep1 = !!careerFocus
+  const canAdvanceStep0 = workspaceName.trim().length >= 2 && /^[a-z0-9-]+$/.test(workspaceSlug)
+  const canAdvanceStep1 = !!careerFocus && !!targetDomain && !!city && (!currentSalary || (Number(currentSalary) > 0 && Number(currentSalary) < 100000000))
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#010102] transition-colors flex items-center justify-center p-6 font-sans">

@@ -236,7 +236,7 @@ export default function ContactPage() {
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'flex-start', paddingTop: '4px' }}>
-                  <PillButton type="submit">
+                  <PillButton type="submit" disabled={submitting}>
                     {submitting ? 'Sending...' : 'Send Message'} <ArrowRight size={15} />
                   </PillButton>
                 </div>

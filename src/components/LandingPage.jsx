@@ -1,9 +1,11 @@
-﻿import { motion, useScroll, AnimatePresence } from 'framer-motion'
+import { motion, useScroll, AnimatePresence } from 'framer-motion'
 import React, { useRef, useState, useEffect } from 'react'
 import { ArrowRight, ChevronDown, BarChart2, CheckCircle2 } from 'lucide-react'
 import FeaturesBentoGrid from './FeaturesBentoGrid.jsx'
 import { useJourneyStore } from '../store/useJourneyStore.js'
 import { THEMES, useThemeContext } from './SharedUI.jsx'
+import { useLocation, useNavigate } from 'react-router-dom'
+import SEOHead from './SEOHead.jsx'
 
 function useTheme() {
   return useThemeContext()
@@ -1184,6 +1186,7 @@ function Footer() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <BarChart2 size={15} color={C.gold} />
             <span style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: '13px', color: C.text }}>Certify<span style={{ color: C.gold }}>ROI</span></span>
+            <span style={{ fontFamily: F_SANS, fontSize: '11px', color: C.text3, marginLeft: '8px' }}>© 2026 CertifyROI. All rights reserved.</span>
           </div>
           <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.08em' }}>DATA: LINKEDIN · NASSCOM · NAUKRI · 2026</div>
         </div>
@@ -1225,7 +1228,8 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
             {isMobile ? (
               <img
                 src="/mountain.png"
-                alt=""
+                alt="Mountain background"
+                loading="lazy"
                 style={{
                   position: 'absolute',
                   bottom: 0, left: 0,
@@ -1243,7 +1247,8 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
             ) : (
               <img
                 src="/mountain.png"
-                alt=""
+                alt="Mountain background"
+                loading="lazy"
                 style={{
                   width: '100%', height: '100%',
                   objectFit: 'cover',

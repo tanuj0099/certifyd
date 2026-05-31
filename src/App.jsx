@@ -59,6 +59,7 @@ import MarketIntelligenceTool from "./components/LiveMarketPulse.jsx";
 import { AppSection } from "./components/SharedUI.jsx";
 import { MarketingFooter } from "./components/MarketingPageShell.jsx";
 import OfflineBanner from "./components/OfflineBanner.jsx";
+import CookieBanner from "./components/CookieBanner.jsx";
 import { useNetworkStatus } from "./hooks/useNetworkStatus.js";
 
 const AboutPage = lazy(() => import("./pages/About.jsx"));
@@ -2864,6 +2865,7 @@ function AppRoot() {
     'faq',           // likely uses MarketingPageShell
     'contact',       // likely uses MarketingPageShell
     'profile',       // ProfilePage manually imports MarketingFooter
+    'cert-radar',    // CertRadarTool manually imports MarketingFooter
   ]);
 
   // Tool pages that use ToolPageWrapper (which includes footer by default)
@@ -3018,9 +3020,12 @@ function AppRoot() {
         Auth pages, onboarding, and pages that already wrap with
         ToolPageWrapper / MarketingPageShell are excluded to avoid duplicates.
       */}
-      {(currentPage === "app" || currentPage === "home" || shouldRenderGlobalFooter) && (
+      {(currentPage === "app" || shouldRenderGlobalFooter) && (
         <MarketingFooter />
       )}
+
+      {/* Global Cookie Banner */}
+      <CookieBanner />
     </div>
   );
 }

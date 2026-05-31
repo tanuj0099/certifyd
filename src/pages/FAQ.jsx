@@ -120,13 +120,28 @@ function FAQItem({ q, a, index }) {
   )
 }
 
-export default function FAQPage() {
+export default function FAQ() {
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": FAQS.map(faq => ({
+      "@type": "Question",
+      "name": faq.q,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.a
+      }
+    }))
+  };
+
   return (
     <MarketingPageShell
-      eyebrow="FAQ"
-      title="Frequently Asked"
-      accent="Questions"
-      subtitle="Everything you need to know about CertifyROI, salary data, and certification decisions."
+      eyebrow="Questions"
+      title="Everything you need to know"
+      accent="about ROI"
+      subtitle="Plain English answers about data accuracy, methodology, and how we help you maximize your salary hike."
+      maxWidth="800px"
+      schema={faqSchema}
     >
       <div style={{
         maxWidth: '800px', margin: '0 auto',

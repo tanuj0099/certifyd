@@ -99,7 +99,7 @@ const CertRadar = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black w-full text-white pb-20">
+    <div className="w-full pb-20" style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)' }}>
       {/*
         ── Page wrapper ──────────────────────────────────────────
         Mobile:  p-4  (16px sides — comfortable thumb reach)
@@ -115,10 +115,10 @@ const CertRadar = () => {
             Tablet:  text-3xl
             Desktop: text-4xl
           */}
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-white mb-1.5 md:mb-2">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-1.5 md:mb-2" style={{ color: 'var(--text)' }}>
             Certification Radar
           </h1>
-          <p className="text-zinc-400 text-sm md:text-base leading-relaxed">
+          <p className="text-sm md:text-base leading-relaxed" style={{ color: 'var(--text-2)' }}>
             Discover and analyze premium credentials to accelerate your career growth.
           </p>
         </header>
@@ -127,33 +127,32 @@ const CertRadar = () => {
         <div className="mb-8 md:mb-10 space-y-4 md:space-y-6">
 
           {/* Search bar — underline style */}
-          <div className="flex items-center gap-3 border-b border-white/10 pb-3 transition-colors focus-within:border-white/30">
+          <div className="flex items-center gap-3 border-b pb-3 transition-colors" style={{ borderColor: 'var(--border)' }}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="w-5 h-5 text-zinc-500 flex-shrink-0"
+              className="w-5 h-5 flex-shrink-0"
+              style={{ color: 'var(--text-3)' }}
               viewBox="0 0 24 24" fill="none" stroke="currentColor"
               strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
             >
               <circle cx="11" cy="11" r="8" />
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
-            {/*
-              min-h-[44px] ensures the input row meets Apple/Google's
-              44px minimum touch-target recommendation.
-            */}
             <input
               type="text"
               placeholder="Search certifications..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full min-h-[44px] bg-transparent border-none text-white text-base md:text-lg placeholder-zinc-600 focus:outline-none focus:ring-0 px-0"
+              className="w-full min-h-[44px] bg-transparent border-none text-base md:text-lg focus:outline-none focus:ring-0 px-0"
+              style={{ color: 'var(--text)' }}
             />
             {/* Clear button — only visible when there's a query */}
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
                 aria-label="Clear search"
-                className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-white/10 text-zinc-400 hover:text-white hover:bg-white/20 transition-colors"
+                className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full transition-colors"
+                style={{ background: 'var(--border)', color: 'var(--text-2)' }}
               >
                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -177,14 +176,12 @@ const CertRadar = () => {
                 <button
                   key={filter.label}
                   onClick={() => setActiveTrack(filter.value)}
-                  className={`
-                    flex-shrink-0 min-h-[44px] px-4 py-2 rounded-full text-sm font-medium
-                    transition-colors whitespace-nowrap
-                    ${isActive
-                      ? 'bg-white text-black shadow-sm'
-                      : 'text-zinc-400 hover:text-white active:text-white'
-                    }
-                  `}
+                  className="flex-shrink-0 min-h-[44px] px-4 py-2 rounded-full text-sm font-medium transition-colors whitespace-nowrap"
+                  style={{
+                    background: isActive ? 'var(--text)' : 'transparent',
+                    color: isActive ? 'var(--bg)' : 'var(--text-2)',
+                    border: `1px solid ${isActive ? 'transparent' : 'var(--border)'}`
+                  }}
                 >
                   {filter.label}
                 </button>
@@ -195,10 +192,10 @@ const CertRadar = () => {
 
         {/* ── Error state ── */}
         {error && (
-          <div className="mb-6 p-4 bg-red-900/20 border border-red-500/20 rounded-xl flex items-start gap-3 text-red-400">
+          <div className="mb-6 p-4 border rounded-xl flex items-start gap-3" style={{ background: 'rgba(239, 68, 68, 0.1)', borderColor: 'rgba(239, 68, 68, 0.2)', color: '#ef4444' }}>
             <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
             <div>
-              <h3 className="font-semibold text-red-300 text-sm">Database Error</h3>
+              <h3 className="font-semibold text-sm">Database Error</h3>
               <p className="text-sm opacity-90 mt-0.5">{error}</p>
             </div>
           </div>
@@ -222,8 +219,25 @@ const CertRadar = () => {
                 ))
               ) : (
                 !error && (
-                  <div className="col-span-full py-16 md:py-20 text-center text-zinc-500 border border-dashed border-white/10 rounded-2xl">
-                    <p className="text-sm">No certifications match your search.</p>
+                  <div className="col-span-full py-20 md:py-28 flex flex-col items-center justify-center text-center rounded-2xl border border-dashed" style={{ borderColor: 'var(--border)', color: 'var(--text-3)' }}>
+                    <div className="w-16 h-16 rounded-full flex items-center justify-center mb-6" style={{ background: 'var(--border)' }}>
+                      <svg className="w-8 h-8" style={{ color: 'var(--text-2)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-lg font-medium mb-2" style={{ color: 'var(--text)' }}>No certifications found</h3>
+                    <p className="text-sm max-w-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>
+                      We couldn't find any certifications matching "{searchQuery}" in the {activeTrack || 'All'} track. Try adjusting your filters.
+                    </p>
+                    {searchQuery && (
+                      <button 
+                        onClick={() => { setSearchQuery(''); setActiveTrack(null); }}
+                        className="mt-6 px-4 py-2 text-sm font-medium rounded-full transition-colors"
+                        style={{ background: 'var(--border)', color: 'var(--text)' }}
+                      >
+                        Clear all filters
+                      </button>
+                    )}
                   </div>
                 )
               )}
@@ -235,19 +249,12 @@ const CertRadar = () => {
                 <button
                   onClick={handleLoadMore}
                   disabled={isLoadingMore}
-                  className="
-                    min-h-[44px] px-6 md:px-8 py-3
-                    bg-zinc-900 hover:bg-zinc-800 active:bg-zinc-700
-                    border border-white/10 rounded-full
-                    text-white text-sm font-medium
-                    transition-colors
-                    disabled:opacity-50 disabled:cursor-not-allowed
-                    flex items-center gap-2
-                  "
+                  className="min-h-[44px] px-6 md:px-8 py-3 rounded-full text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 border"
+                  style={{ background: 'var(--bg-alt)', borderColor: 'var(--border)', color: 'var(--text)' }}
                 >
                   {isLoadingMore ? (
                     <>
-                      <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                      <div className="w-4 h-4 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: 'var(--text-3)', borderTopColor: 'var(--text)' }} />
                       Loading…
                     </>
                   ) : (

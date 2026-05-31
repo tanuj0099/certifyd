@@ -122,29 +122,8 @@ var validateDocument = function (text) {
   return { isResume: score >= 8, score: score, sectionHits: sectionHits, verbHits: verbHits }
 }
 
-// ── PDF reader ────────────────────────────────────────────
-var readPdfFile = async function (file) {
-  if (!window.pdfjsLib) {
-    await new Promise(function (resolve, reject) {
-      var script = document.createElement('script')
-      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'
-      script.onload = resolve
-      script.onerror = reject
-      document.head.appendChild(script)
-    })
-  }
-  window.pdfjsLib.GlobalWorkerOptions.workerSrc =
-    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'
-  var arrayBuffer = await file.arrayBuffer()
-  var pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise
-  var fullText = ''
-  for (var i = 1; i <= pdf.numPages; i++) {
-    var page = await pdf.getPage(i)
-    var content = await page.getTextContent()
-    fullText += content.items.map(function (item) { return item.str }).join(' ') + '\n'
-  }
-  return fullText.trim()
-}
+// ── PDF reader (Moved to Server) ──────────────────────────
+// File parsing and validation is now handled securely server-side.
 
 // ── Prompt builder — requests strict JSON output ─────────
 var buildPrompt = function (resumeText, mode, timeline, domainIntent, switchTarget, targetDomain) {
@@ -820,7 +799,18 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
       // OPTIMISTIC: accept file immediately, extract in background
       setFileName(file.name); setText(''); setPdfLoading(true); setTextReady(false)
       try {
-        var extracted = await readPdfFile(file)
+        var response = await fetch('/api/parse-resume', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/pdf' },
+          body: file
+        })
+        if (!response.ok) {
+          var errData = await response.json().catch(function() { return {} })
+          throw new Error(errData.error || 'Server rejected file')
+        }
+        var data = await response.json()
+        var extracted = data.text
+
         if (!extracted || !extracted.trim()) {
           setFileName('')
           setError('Could not extract text from this PDF. Please paste your resume below.')
@@ -831,7 +821,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
         setTextReady(true)
       } catch (e) {
         setFileName('')
-        setError('PDF parsing failed. Please paste your resume text below.')
+        setError(e.message || 'PDF parsing failed. Please paste your resume text below.')
         setTextReady(true)
       } finally {
         setPdfLoading(false)
@@ -1262,6 +1252,12 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
       )}
 
       {loading && <CleanLoader />}
+
+      {!hasResult && !loading && (
+        <div style={{ marginTop: '16px', textAlign: 'center', fontSize: '11px', color: 'var(--text-4)', fontFamily: FB }}>
+          AI extracts skills to query database. Results are based on hard data.
+        </div>
+      )}
 
       {error && (
         <div style={{ padding: '11px 13px', borderRadius: '10px', background: 'transparent', border: '1px solid var(--border)', fontSize: '13px', color: 'var(--err)', display: 'flex', gap: '8px', fontFamily: FB }}>

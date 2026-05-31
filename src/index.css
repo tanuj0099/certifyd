@@ -131,6 +131,8 @@
     --bg:         #F4F5F6;
     --bg-alt:     #FFFFFF;
     --surface:    #FFFFFF;
+    --card:       #FFFFFF;
+    --card-hover: #FAFAFA;
     --text:       #121212;
     --text-2:     #3a3d42;
     --text-3:     #62666D;
@@ -197,6 +199,8 @@
       --bg:         #F4F5F6;
       --bg-alt:     #FFFFFF;
       --surface:    #FFFFFF;
+      --card:       #FFFFFF;
+      --card-hover: #FAFAFA;
       --text:       #121212;
       --text-2:     #3a3d42;
       --text-3:     #62666D;
@@ -587,14 +591,14 @@
   }
 
   /* ── Nav clearance utility — all top-level pages use this ── */
-  /* The Dynamic Island nav is ~52-54px tall, fixed at top:14px */
-  /* We need at minimum 14+54+24 = 92px clearance; use 104px base */
+  /* The new SaaS header is sticky and takes up 64px of space */
+  /* We just need normal visual padding below it. */
   .page-top-pad {
-    padding-top: 104px;
+    padding-top: 32px;
   }
   @media (min-width: 768px) {
     .page-top-pad {
-      padding-top: 112px;
+      padding-top: 48px;
     }
   }
 
@@ -1234,4 +1238,10 @@ body,
   .dark .border-zinc-700 {
     border-color: #222326 !important;
   }
+}
+
+/* ── Global Focus Styles for Accessibility ── */
+*:focus-visible {
+  outline: 2px solid var(--accent, #F4F5F8);
+  outline-offset: 2px;
 }

@@ -1,13 +1,11 @@
-const ADMIN_EMAILS = (import.meta.env.VITE_ADMIN_EMAILS || '')
-  .split(',')
-  .map((email) => email.trim().toLowerCase())
-  .filter(Boolean)
+// Admin emails should not be bundled in the client code for security reasons.
+// Real admin checks should rely on Supabase RLS policies and server-side validation.
+// This is a stub that returns false to prevent UI bypass; update UI to fetch role from server.
 
 export function isAdminEmail(email) {
-  if (!email || !ADMIN_EMAILS.length) return false
-  return ADMIN_EMAILS.includes(email.trim().toLowerCase())
+  return false
 }
 
 export function getAdminEmails() {
-  return ADMIN_EMAILS
+  return []
 }

@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { visualizer } from 'rollup-plugin-visualizer'
 import path from 'path'
 
 // ─────────────────────────────────────────────────────────
@@ -10,7 +11,10 @@ import path from 'path'
 // ─────────────────────────────────────────────────────────
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    visualizer({ open: false, gzipSize: true, filename: 'dist/stats.html' })
+  ],
   resolve: {
     alias: {
       // This tells Vite that anytime it sees "@/" to look inside the "src/" folder

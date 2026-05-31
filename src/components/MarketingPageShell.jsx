@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, Mail, MapPin, TrendingUp } from 'lucide-react'
 import WaveBg from './WaveBg.jsx'
 import { AppSection } from './SharedUI.jsx'
+import SEOHead from './SEOHead.jsx'
 
 const FH = "'EB Garamond','Cormorant Garamond',Georgia,serif"
 const FB = "'Inter','DM Sans',sans-serif"
@@ -11,9 +12,9 @@ const MotionLink = motion.create(Link)
 
 const T = { duration: 0.34, ease: [0.16, 1, 0.3, 1] }
 
-export function PillButton({ children, href, onClick, type = 'button', wide = false }) {
+export function PillButton({ children, href, onClick, type = 'button', wide = false, disabled = false }) {
   const Comp = href ? MotionLink : motion.button
-  const props = href ? { to: href } : { type, onClick }
+  const props = href ? { to: href } : { type, onClick, disabled }
 
   return (
     <Comp
@@ -37,7 +38,8 @@ export function PillButton({ children, href, onClick, type = 'button', wide = fa
         letterSpacing: '0.08em',
         textTransform: 'uppercase',
         boxShadow: 'none',
-        cursor: 'pointer',
+        cursor: disabled ? 'not-allowed' : 'pointer',
+        opacity: disabled ? 0.6 : 1,
       }}
     >
       {children}
@@ -169,9 +171,14 @@ export function MarketingFooter() {
   )
 }
 
-export default function MarketingPageShell({ eyebrow, title, accent, subtitle, children, footer = true, maxWidth = '1240px' }) {
+export default function MarketingPageShell({ eyebrow, title, accent, subtitle, children, footer = true, maxWidth = '1240px', schema }) {
   return (
     <div style={{ minHeight: '100vh', position: 'relative', background: 'var(--color-bg-marketing)', color: 'var(--text)' }}>
+      <SEOHead 
+        title={`${title} ${accent || ''} | CertifyROI`} 
+        description={subtitle || 'Certification ROI Calculator'} 
+        schema={schema}
+      />
       <WaveBg variant="landing" />
       <div style={{ position: 'relative', zIndex: 1, paddingTop: '112px' }}>
         <AppSection id={eyebrow.substring(0,2).toUpperCase()} title={eyebrow} noBorderTop bg="transparent">

@@ -88,7 +88,7 @@ export default async function handler(req, res) {
   const safeMessages = body.messages.map(function(m) {
     return {
       role:    ['user', 'assistant', 'system'].includes(m.role) ? m.role : 'user',
-      content: typeof m.content === 'string' ? m.content : '',
+      content: typeof m.content === 'string' ? m.content.replace(/<[^>]*>?/gm, '') : '',
     }
   })
 

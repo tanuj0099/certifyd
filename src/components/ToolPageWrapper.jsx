@@ -7,6 +7,8 @@
  */
 import { motion } from 'framer-motion'
 import { MarketingFooter } from './MarketingPageShell.jsx'
+import FeedbackWidget from './FeedbackWidget.jsx'
+import SEOHead from './SEOHead.jsx'
 
 const FM = "'JetBrains Mono','IBM Plex Mono',monospace"
 const T  = { type: 'spring', stiffness: 120, damping: 22 }
@@ -18,6 +20,7 @@ export default function ToolPageWrapper({
   children,
   eyebrow = 'TOOLS',
   footer  = true,
+  showFeedback = true,
 }) {
   return (
     /*
@@ -29,6 +32,29 @@ export default function ToolPageWrapper({
       background: 'var(--bg)',   // #222326 Nordic / #FFFFFF Ash
       color:      'var(--text)',
     }}>
+      <SEOHead 
+        title={`${title} | CertifyROI`} 
+        description={description || 'Analyze certification ROI, time to payback, and market demand.'} 
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [{
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://certifyroi.in/"
+          },{
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Tools",
+            "item": "https://certifyroi.in/app"
+          },{
+            "@type": "ListItem",
+            "position": 3,
+            "name": title
+          }]
+        }}
+      />
 
       {/* ── Page heading — zero elevation, no card ─────────────────── */}
       <div className="page-top-pad" style={{ maxWidth: '100%', margin: '0', paddingLeft: '24px', paddingRight: '24px' }}>
@@ -106,6 +132,7 @@ export default function ToolPageWrapper({
             }}
           >
             {children}
+            {showFeedback && <FeedbackWidget source={title} />}
           </div>
         </motion.div>
       </div>

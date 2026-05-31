@@ -517,6 +517,11 @@ const CertDetail = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
               </Link>
+
+              {/* Affiliate Disclosure */}
+              <p className="text-[10px] text-zinc-500 text-center pt-2 leading-relaxed">
+                If you purchase training through links on this page, we may earn a commission. This does not affect our ROI calculations.
+              </p>
             </div>
           </aside>
 

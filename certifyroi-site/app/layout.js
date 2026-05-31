@@ -1,12 +1,45 @@
+import { Inter } from 'next/font/google'
+import '../globals.css'
+
+const inter = Inter({ subsets: ['latin'], display: 'swap' })
+
 export const metadata = {
-  title: 'CertifyROI - Market Intelligence',
-  description: 'Real-time salary data for tech roles in India',
+  metadataBase: new URL('https://certifyroi.in'),
+  title: 'Live Market Pulse | CertifyROI',
+  description: 'Real-time salary floors and dynamic demand metrics for elite tech roles in India.',
+  robots: {
+    index: true,
+    follow: true,
+  },
+  openGraph: {
+    title: 'Live Market Pulse | CertifyROI',
+    description: 'Real-time salary floors and dynamic demand metrics for elite tech roles in India.',
+    url: 'https://certifyroi.in/market-pulse',
+    siteName: 'CertifyROI',
+    images: [
+      {
+        url: 'https://certifyroi.in/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'CertifyROI Market Pulse',
+      },
+    ],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Live Market Pulse | CertifyROI',
+    description: 'Real-time salary floors and dynamic demand metrics for elite tech roles in India.',
+    images: ['https://certifyroi.in/og-image.png'],
+  },
 }
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body style={{ margin: 0, background: '#f5f5f5' }}>{children}</body>
+      <body className={inter.className} style={{ margin: 0, background: '#f5f5f5' }}>
+        {children}
+      </body>
     </html>
   )
 }

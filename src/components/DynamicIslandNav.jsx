@@ -94,7 +94,10 @@ function doNavigate(event, item, onNavigate, onActivate, onClose, navigate, onSi
 
 // ── Desktop NavLink ────────────────────────────────────────
 function NavLink({ item, active, onNavigate, onActivate, navigate }) {
-  const href = item.href ?? hrefFor(item)
+  const href = item.pageId ? `/${item.pageId}` : item.href
+  const F_SANS = 'Inter, -apple-system, sans-serif'
+  const isDarkTheme = typeof document !== 'undefined' && document.documentElement.getAttribute('data-theme') === 'dark'
+
   return (
     <a
       href={href}
@@ -102,14 +105,27 @@ function NavLink({ item, active, onNavigate, onActivate, navigate }) {
       style={{
         position: 'relative',
         display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-        minHeight: '34px', padding: '0 8px', borderRadius: '999px',
+        minHeight: '34px', padding: '0 12px', borderRadius: '999px',
         border: '1px solid transparent',
         background: active ? 'var(--text)' : 'transparent',
-        color: active ? 'var(--bg)' : 'var(--text-2)',
+        color: active ? 'var(--bg)' : 'var(--text)',
+        opacity: active ? 1 : 0.7,
         textDecoration: 'none', fontFamily: F_SANS,
-        fontSize: '12px', fontWeight: 500, letterSpacing: '0.025em',
+        fontSize: '13px', fontWeight: active ? 600 : 500, letterSpacing: '0.01em',
         whiteSpace: 'nowrap',
-        transition: 'background 180ms ease, color 180ms ease',
+        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+      }}
+      onMouseOver={(e) => {
+        if (!active) {
+          e.currentTarget.style.opacity = '1';
+          e.currentTarget.style.background = 'color-mix(in srgb, var(--text) 8%, transparent)';
+        }
+      }}
+      onMouseOut={(e) => {
+        if (!active) {
+          e.currentTarget.style.opacity = '0.7';
+          e.currentTarget.style.background = 'transparent';
+        }
       }}
     >
       {item.label}
@@ -118,7 +134,7 @@ function NavLink({ item, active, onNavigate, onActivate, navigate }) {
           layoutId="desktop-active-dot"
           style={{
             position: 'absolute', bottom: '4px', left: '50%',
-            width: '18px', height: '1px',
+            width: '18px', height: '2px', borderRadius: '1px',
             transform: 'translateX(-50%)',
             background: 'var(--bg)',
           }}
@@ -384,57 +400,67 @@ const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, 
 
   return (
     <>
-      {/* ── Top capsule — DESKTOP ONLY ─────────────────────────────── */}
+      {/* ── Top Header — DESKTOP ONLY ─────────────────────────────── */}
       {!isMobile && (
-        <div style={{ position:'fixed', top:'14px', left:'50%', transform:'translateX(-50%)', zIndex:9999, pointerEvents:'none', display:'flex', justifyContent:'center' }}>
-          <motion.nav
-            layout
-            initial={{ y:-56, opacity:0, scale:0.96 }}
-            animate={{ y:0, opacity:1, scale:1 }}
-            transition={{ type:'spring', stiffness:150, damping:24 }}
-            className="transition-all duration-300 ease-in-out flex items-center justify-between"
-            style={{
-              pointerEvents: 'auto',
-              width: 'auto',
-              maxWidth: '100%',
-              padding: '10px 24px',
-              borderRadius: '999px',
-              border: '1px solid var(--border-mid)',
-              outline: '1px solid var(--border)',
-              outlineOffset: '-3px',
-              background: 'var(--glass-bg)',
-              backdropFilter: 'blur(18px) saturate(160%)',
-              WebkitBackdropFilter: 'blur(18px) saturate(160%)',
-              boxSizing: 'border-box',
-              overflow: 'visible',
-              whiteSpace: 'nowrap'
-            }}
-            aria-label="Primary navigation"
-          >
-            <button type="button" aria-label="Go to home"
-              onClick={() => { try { navigate(user ? '/dashboard' : '/') } catch (e) { window.location.href = user ? '/dashboard' : '/' } }}
-              style={{ background:'none', border:'none', padding:'0 10px 0 0', cursor:'pointer', color:'var(--text)', fontFamily:F_SANS, fontSize:'13px', fontWeight:800, letterSpacing:'-0.01em', flexShrink:0 }}>
-              CertifyROI
-            </button>
-            <div style={{ width:'1px', height:'18px', background:'var(--border)', flexShrink:0 }} />
-            <div style={{ display:'flex', alignItems:'center', gap:'16px', padding: '0 16px' }}>
-              {navItems.map(item => (
-                <NavLink key={item.pageId||item.label} item={item} active={isActivePage(activeHref, item.pageId)} onNavigate={onNavigate} onActivate={setActiveHref} navigate={navigate} />
-              ))}
+        <header 
+          className="sticky top-0 z-50 w-full border-b backdrop-blur-md transition-colors duration-300"
+          style={{ 
+            backgroundColor: 'color-mix(in srgb, var(--bg) 85%, transparent)',
+            borderColor: 'var(--border-mid)'
+          }}
+        >
+          <div className="h-16 max-w-7xl mx-auto px-4 flex items-center justify-between">
+            {/* Far Left: Logo */}
+            <div className="flex items-center flex-shrink-0">
+              <button type="button" aria-label="Go to home"
+                onClick={() => { try { navigate(user ? '/dashboard' : '/') } catch (e) { window.location.href = user ? '/dashboard' : '/' } }}
+                style={{ 
+                  background:'none', border:'none', padding:'0', cursor:'pointer', 
+                  color:'var(--text)', fontFamily:F_SANS, fontSize:'16px', fontWeight:800, letterSpacing:'-0.01em',
+                  transition: 'color 0.2s ease'
+                }}>
+                CertifyROI
+              </button>
             </div>
-            <div style={{ display:'flex', alignItems:'center', gap:'4px', marginLeft:'4px' }}>
-              <div style={{ width:'1px', height:'22px', background:'var(--border)' }} />
+
+            {/* Center: Main navigation links */}
+            <div className="flex-1 flex justify-center px-8">
+              <div style={{ display:'flex', alignItems:'center', gap:'12px' }}>
+                {navItems.map(item => (
+                  <NavLink key={item.pageId||item.label} item={item} active={isActivePage(activeHref, item.pageId)} onNavigate={onNavigate} onActivate={setActiveHref} navigate={navigate} />
+                ))}
+              </div>
+            </div>
+
+            {/* Far Right: Action buttons & Theme */}
+            <div className="flex items-center gap-4 flex-shrink-0">
               <ThemeToggle mode={themeMode} onCycle={cycleTheme} />
               {user
                 ? <UserAccountMenu user={user} onNavigate={onNavigate} onSignOut={onSignOut} />
                 : <button type="button" onClick={() => onSignIn?.()}
-                    style={{ display:'inline-flex', alignItems:'center', justifyContent:'center', gap:'7px', height:'34px', padding:'0 15px', borderRadius:'999px', border:'1px solid var(--border)', background:'var(--text)', color:'var(--bg)', fontFamily:F_SANS, fontSize:'12px', fontWeight:800, cursor:'pointer' }}>
-                    <User size={13} />Sign In
+                    style={{ 
+                      display:'inline-flex', alignItems:'center', justifyContent:'center', gap:'7px', 
+                      height:'34px', padding:'0 16px', borderRadius:'999px', border:'1px solid var(--border)', 
+                      background:'var(--text)', color:'var(--bg)', 
+                      fontFamily:F_SANS, fontSize:'13px', fontWeight:600, cursor:'pointer',
+                      transition: 'all 0.2s ease',
+                      boxShadow: '0 2px 10px rgba(0,0,0,0.05)'
+                    }}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-1px)';
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.transform = 'none';
+                      e.currentTarget.style.boxShadow = '0 2px 10px rgba(0,0,0,0.05)';
+                    }}
+                  >
+                    <User size={14} strokeWidth={2.5} />Sign In
                   </button>
               }
             </div>
-          </motion.nav>
-        </div>
+          </div>
+        </header>
       )}
 
       {/* ── Mobile hamburger overlay ─────────────────── */}

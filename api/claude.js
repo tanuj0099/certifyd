@@ -70,7 +70,7 @@ export default async function handler(req, res) {
         max_tokens,
         temperature,
         system:      messages.find(m => m.role === 'system')?.content || 'You are a helpful assistant.',
-        messages:    messages.filter(m => m.role !== 'system').map(m => ({ role: m.role, content: m.content })),
+        messages:    messages.filter(m => m.role !== 'system').map(m => ({ role: m.role, content: typeof m.content === 'string' ? m.content.replace(/<[^>]*>?/gm, '') : '' })),
       }),
     })
 

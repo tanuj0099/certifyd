@@ -288,7 +288,7 @@ const JobCertMap = () => {
           { id: 'mandatory', label: 'SEBI / IRDAI Mandated', count: MANDATORY_FINANCIAL_CERTS.length },
         ].map(t => (
           <button key={t.id} onClick={() => setTab(t.id)}
-            style={{ padding: '8px 16px', borderRadius: '9px', border: 'none', cursor: 'pointer', fontFamily: F_HEAD, fontWeight: tab === t.id ? '700' : '500', fontSize: '13px', background: tab === t.id ? 'var(--indigo)' : 'transparent', color: tab === t.id ? 'white' : 'var(--text-4)', transition: 'all 0.18s', whiteSpace: 'nowrap' }}>
+            style={{ padding: '8px 16px', borderRadius: '9px', border: 'none', cursor: 'pointer', fontFamily: F_HEAD, fontWeight: tab === t.id ? '700' : '500', fontSize: '13px', background: tab === t.id ? 'var(--text)' : 'transparent', color: tab === t.id ? 'var(--bg)' : 'var(--text-4)', transition: 'all 0.18s', whiteSpace: 'nowrap' }}>
             {t.label}
             <span style={{ marginLeft: '6px', fontSize: '10px', opacity: 0.7, fontFamily: F_MONO }}>({t.count})</span>
           </button>

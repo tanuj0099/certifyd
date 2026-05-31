@@ -1,11 +1,27 @@
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth.jsx'
-import { isAdminEmail } from '../utils/admin.js'
+import { useState, useEffect } from 'react'
 
 export default function AdminRoute({ children }) {
   const { user, loading } = useAuth()
+  const [isAdmin, setIsAdmin] = useState(null)
 
-  if (loading) {
+  useEffect(() => {
+    if (user && user.email) {
+      fetch('/api/admin-check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: user.email })
+      })
+      .then(res => res.json())
+      .then(data => setIsAdmin(data.isAdmin))
+      .catch(() => setIsAdmin(false))
+    } else {
+      setIsAdmin(false)
+    }
+  }, [user])
+
+  if (loading || isAdmin === null) {
     return (
     <div
         className="dash-page"
@@ -22,7 +38,7 @@ export default function AdminRoute({ children }) {
     return <Navigate to="/" replace state={{ authRequired: true, from: '/admin' }} />
   }
 
-  if (!isAdminEmail(user.email)) {
+  if (!isAdmin) {
     return <Navigate to="/unauthorized" replace />
   }
 

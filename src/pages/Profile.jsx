@@ -97,6 +97,37 @@ export default function ProfilePage() {
     }
   }
 
+  async function handleExportData() {
+    try {
+      setSyncState('saving')
+      const dataToExport = {
+        user: {
+          id: user.uid,
+          email: user.email,
+          provider: user.providerData?.[0]?.providerId || 'password',
+        },
+        profile,
+        export_date: new Date().toISOString()
+      }
+      
+      const blob = new Blob([JSON.stringify(dataToExport, null, 2)], { type: 'application/json' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `certifyroi-data-${user.uid}.json`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+      
+      setSyncState('ready')
+      setMessage('Your data has been successfully downloaded.')
+    } catch (error) {
+      setSyncState('error')
+      setMessage('Failed to export data.')
+    }
+  }
+
   async function handleSuggestion(event) {
     event.preventDefault()
     if (!user) return
@@ -253,6 +284,26 @@ export default function ProfilePage() {
                 Sign out
               </DashButton>
 
+              <div style={{ marginTop: 24, paddingTop: 24, borderTop: '1px solid var(--border)' }}>
+                <h3 style={{ margin: '0 0 8px', fontSize: 13, fontWeight: 700, color: 'var(--text)' }}>Data Portability</h3>
+                <p style={{ fontSize: 12, color: 'var(--text-3)', lineHeight: 1.5, marginBottom: 12 }}>
+                  You have the right to request a copy of your data. Download a JSON file containing your profile information and preferences.
+                </p>
+                <button
+                  type="button"
+                  onClick={handleExportData}
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 8,
+                    padding: '8px 14px', borderRadius: 8, border: '1px solid var(--border)',
+                    background: 'var(--bg)', color: 'var(--text)',
+                    fontSize: 12, fontWeight: 600, fontFamily: 'inherit', cursor: 'pointer',
+                  }}
+                >
+                  <Save size={14} />
+                  Download My Data
+                </button>
+              </div>
+
               {/* ── Secure Delete Account Cascade ── */}
               <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)' }}>
                 <h3 style={{ margin: '0 0 8px', fontSize: 13, fontWeight: 700, color: 'var(--err)' }}>Danger Zone</h3>
@@ -288,7 +339,9 @@ export default function ProfilePage() {
                           try {
                             const userId = user?.uid || user?.id
                             if (supabase && userId) {
-                              await supabase.from('user_profiles').delete().eq('user_id', userId)
+                              // Call the secure soft-delete RPC
+                              const { error: rpcError } = await supabase.rpc('soft_delete_user')
+                              if (rpcError) throw rpcError
                             }
                             if (supabase) {
                               await supabase.auth.signOut()

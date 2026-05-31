@@ -1,4 +1,4 @@
-﻿import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { Search, X, TrendingUp } from 'lucide-react'
 import { useEffect, useMemo, useState, useDeferredValue } from 'react'
 import { supabase } from '../lib/supabase.js'
@@ -233,7 +233,7 @@ function RoleRow({ row, index, total, isPhone }) {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.22, delay: Math.min(index * 0.025, 0.2) }}
-      whileHover={{ backgroundColor: 'color-mix(in srgb, var(--text) 5%, transparent)' }}
+      className="group"
       style={{
         display: 'grid',
         gridTemplateColumns: 'minmax(0, 1.6fr) 112px 112px 96px 96px',
@@ -244,7 +244,10 @@ function RoleRow({ row, index, total, isPhone }) {
         background: 'transparent',
         borderRadius: '6px',
         cursor: 'default',
+        transition: 'background 0.2s ease',
       }}
+      onMouseOver={(e) => { e.currentTarget.style.background = 'var(--bg-elevated)' }}
+      onMouseOut={(e) => { e.currentTarget.style.background = 'transparent' }}
     >
       <span
         style={{
@@ -714,7 +717,8 @@ export default function LiveMarketPulse() {
               textTransform: 'uppercase',
             }}
           >
-            Source: market_intelligence table · ROI = cost ÷ ((ceiling − entry) ÷ 12) · Missing cost defaults to ₹25,000
+            Source: market_intelligence table · ROI = cost ÷ ((ceiling − entry) ÷ 12) · Missing cost defaults to ₹25,000<br/>
+            Data aggregated from Naukri, LinkedIn India, and AmbitionBox (Q1 2026). For informational purposes only.
           </p>
         )}
       </div>
