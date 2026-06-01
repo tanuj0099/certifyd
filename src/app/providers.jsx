@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { AuthProvider, useAuth } from '@/hooks/useAuth.jsx';
 import { ThemeProvider, useTheme } from '@/hooks/useTheme.jsx';
 import DynamicIslandNav from '@/components/DynamicIslandNav.jsx';
@@ -20,6 +20,7 @@ function GlobalUI({ children }) {
   }, []);
 
   const pathname = usePathname();
+  const router = useRouter();
   const { isDark, toggleTheme } = useTheme();
   const { user, signOut } = useAuth();
   const isOnline = useNetworkStatus();
@@ -72,6 +73,8 @@ function GlobalUI({ children }) {
           currentPage={currentPage}
           user={user}
           onSignOut={signOut}
+          onSignIn={() => router.push('/login')}
+          onSignUp={() => router.push('/signup')}
         />
       )}
 

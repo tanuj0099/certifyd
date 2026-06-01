@@ -232,7 +232,7 @@ function ThemeToggle({ mode, onCycle }) {
 }
 
 //  Mobile hamburger menu (full-screen overlay for extra items) 
-function MobileMenu({ open, currentPage, onNavigate, onActivate, onClose, user, onSignIn, onSignOut, themeMode, onThemeCycle, navItems }) {
+function MobileMenu({ open, currentPage, onNavigate, onActivate, onClose, user, onSignIn, onSignUp, onSignOut, themeMode, onThemeCycle, navItems }) {
   const items = navItems || (user ? AUTH_NAV : ANON_NAV)
   const router = useRouter()
 
@@ -280,11 +280,26 @@ function MobileMenu({ open, currentPage, onNavigate, onActivate, onClose, user, 
             </div>
           </div>
 
-          <button type="button"
-            onClick={() => { if (user) { router.push('/profile'); onClose() } else { onSignIn?.(); onClose() } }}
-            style={{ width:'100%', minHeight:'44px', borderRadius:'999px', border:'none', background:'var(--text)', color:'var(--bg)', fontFamily:F_SANS, fontSize:'14px', fontWeight:800, cursor:'pointer' }}>
-            {user ? 'My profile' : 'Sign In'}
-          </button>
+          {user ? (
+            <button type="button"
+              onClick={() => { router.push('/profile'); onClose() }}
+              style={{ width:'100%', minHeight:'44px', borderRadius:'999px', border:'none', background:'var(--text)', color:'var(--bg)', fontFamily:F_SANS, fontSize:'14px', fontWeight:800, cursor:'pointer' }}>
+              My profile
+            </button>
+          ) : (
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button type="button"
+                onClick={() => { onSignIn?.(); onClose() }}
+                style={{ flex: 1, minHeight:'44px', borderRadius:'999px', border:'1px solid var(--border)', background:'transparent', color:'var(--text)', fontFamily:F_SANS, fontSize:'14px', fontWeight:800, cursor:'pointer' }}>
+                Sign In
+              </button>
+              <button type="button"
+                onClick={() => { onSignUp?.(); onClose() }}
+                style={{ flex: 1, minHeight:'44px', borderRadius:'999px', border:'none', background:'var(--text)', color:'var(--bg)', fontFamily:F_SANS, fontSize:'14px', fontWeight:800, cursor:'pointer' }}>
+                Sign Up
+              </button>
+            </div>
+          )}
         </motion.div>
       )}
     </AnimatePresence>
@@ -383,7 +398,7 @@ function MobileBottomBar({ currentPage, user, onSignIn, onNavigate }) {
 }
 
 //  Main DynamicIslandNav 
-const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, onSignOut }) => {
+const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, onSignUp, onSignOut }) => {
   const [activeHref, setActiveHref] = useState(currentPage || 'home')
   const [menuOpen, setMenuOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
@@ -450,26 +465,45 @@ const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, 
               <ThemeToggle mode={themeMode} onCycle={cycleTheme} />
               {user
                 ? <UserAccountMenu user={user} onNavigate={onNavigate} onSignOut={onSignOut} />
-                : <button type="button" onClick={() => onSignIn?.()}
-                    style={{ 
-                      display:'inline-flex', alignItems:'center', justifyContent:'center', gap:'7px', 
-                      height:'34px', padding:'0 16px', borderRadius:'999px', border:'1px solid var(--border)', 
-                      background:'var(--text)', color:'var(--bg)', 
-                      fontFamily:F_SANS, fontSize:'13px', fontWeight:600, cursor:'pointer',
-                      transition: 'all 0.2s ease',
-                      boxShadow: '0 2px 10px rgba(0,0,0,0.05)'
-                    }}
-                    onMouseOver={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-1px)';
-                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
-                    }}
-                    onMouseOut={(e) => {
-                      e.currentTarget.style.transform = 'none';
-                      e.currentTarget.style.boxShadow = '0 2px 10px rgba(0,0,0,0.05)';
-                    }}
-                  >
-                    <User size={14} strokeWidth={2.5} />Sign In
-                  </button>
+                : <div className="flex items-center gap-2">
+                    <button type="button" onClick={() => onSignIn?.()}
+                      style={{ 
+                        display:'inline-flex', alignItems:'center', justifyContent:'center', gap:'7px', 
+                        height:'34px', padding:'0 16px', borderRadius:'999px', border:'1px solid var(--border)', 
+                        background:'transparent', color:'var(--text)', 
+                        fontFamily:F_SANS, fontSize:'13px', fontWeight:600, cursor:'pointer',
+                        transition: 'all 0.2s ease',
+                      }}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.background = 'var(--hover-bg)';
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.background = 'transparent';
+                      }}
+                    >
+                      <User size={14} strokeWidth={2.5} />Sign In
+                    </button>
+                    <button type="button" onClick={() => onSignUp?.()}
+                      style={{ 
+                        display:'inline-flex', alignItems:'center', justifyContent:'center', gap:'7px', 
+                        height:'34px', padding:'0 16px', borderRadius:'999px', border:'1px solid var(--border)', 
+                        background:'var(--text)', color:'var(--bg)', 
+                        fontFamily:F_SANS, fontSize:'13px', fontWeight:600, cursor:'pointer',
+                        transition: 'all 0.2s ease',
+                        boxShadow: '0 2px 10px rgba(0,0,0,0.05)'
+                      }}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-1px)';
+                        e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.transform = 'none';
+                        e.currentTarget.style.boxShadow = '0 2px 10px rgba(0,0,0,0.05)';
+                      }}
+                    >
+                      Sign Up
+                    </button>
+                  </div>
               }
             </div>
           </div>
