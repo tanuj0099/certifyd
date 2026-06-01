@@ -1,40 +1,5 @@
 {
-  "rewrites": [
-    { "source": "/api/groq", "destination": "/api/groq" },
-    { "source": "/api/demand", "destination": "/api/demand" },
-    { "source": "/api/certifications", "destination": "/api/certifications" },
-    { "source": "/api/domains", "destination": "/api/domains" },
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        { "key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains; preload" },
-        { "key": "X-XSS-Protection",          "value": "1; mode=block" }
-      ]
-    },
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, OPTIONS" },
-        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization" }
-      ]
-    },
-    {
-      "source": "/index.html",
-      "headers": [
-        {
-          "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://www.googletagmanager.com https://www.google-analytics.com https://www.gstatic.com https://*.firebaseapp.com https://*.firebase.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com https://r2cdn.perplexity.ai; img-src 'self' data: blob: https:; connect-src 'self' https://api.groq.com https://apis.google.com https://www.google-analytics.com https://*.googleapis.com https://*.firebase.com https://*.firebaseio.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; frame-src https://*.firebaseapp.com https://accounts.google.com; worker-src blob:; object-src 'none'; base-uri 'self'"
-        },
-        { "key": "X-Content-Type-Options",  "value": "nosniff" },
-        { "key": "X-Frame-Options",          "value": "DENY" },
-        { "key": "Referrer-Policy",          "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy",       "value": "camera=(), microphone=(), geolocation=()" }
-      ]
-    }
-  ],
+  "framework": "nextjs",
   "crons": [
     {
       "path": "/api/update-salaries",
