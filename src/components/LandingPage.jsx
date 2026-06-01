@@ -273,7 +273,7 @@ function CertAssembly() {
             </svg>
             <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '28px 24px' }}>
               <div style={{ fontFamily: F_MONO, fontSize: '10px', color: C.gold, letterSpacing: '0.18em', marginBottom: '12px', textTransform: 'uppercase' }}>
-                CertifyROI · Cert Intelligence
+                Certify · Cert Intelligence
               </div>
               <div style={{ fontFamily: F_SERIF, fontWeight: '400', fontSize: '1.5rem', color: C.text, marginBottom: '4px', textAlign: 'center', lineHeight: 1.1 }}>
                 Route Briefing
@@ -359,7 +359,7 @@ function CertAssembly() {
               </div>
 
               <div style={{ position: 'absolute', inset: 0, transform: l2Desktop, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '32px' }}>
-                <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.gold, letterSpacing: '0.18em', marginBottom: '14px', textTransform: 'uppercase' }}>CertifyROI · Cert Intelligence</div>
+                <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.gold, letterSpacing: '0.18em', marginBottom: '14px', textTransform: 'uppercase' }}>Certify · Cert Intelligence</div>
                 <div style={{ fontFamily: F_SERIF, fontWeight: '400', fontSize: 'clamp(1.5rem, 3.2vw, 2.4rem)', color: C.text, marginBottom: '6px', textAlign: 'center', lineHeight: 1.1 }}>ROI Briefing</div>
                 <div style={{ fontFamily: F_SANS, fontSize: '13px', color: C.text3, marginBottom: '28px', textAlign: 'center' }}>Live Data · India 2026</div>
                 <div style={{ display: 'flex', gap: '28px', marginBottom: '20px', width: '100%', justifyContent: 'center' }}>
@@ -996,7 +996,7 @@ function SocialProof() {
   const C = useTheme()
   const isMobile = useIsMobile()
   const quotes = [
-    { quote: 'CertifyROI said payback was month 8. It was month 7. Switched companies immediately. ₹6L hike.', name: 'Priya S.', detail: 'Bangalore · Engineer → Cloud Architect', hike: '+₹6L/yr' },
+    { quote: 'Certify said payback was month 8. It was month 7. Switched companies immediately. ₹6L hike.', name: 'Priya S.', detail: 'Bangalore · Engineer → Cloud Architect', hike: '+₹6L/yr' },
     { quote: 'Was about to spend ₹12L on an MBA. The analysis showed a different path — 5 months, 1% of the cost.', name: 'Rahul M.', detail: 'Hyderabad · Ops Manager → Data Analyst', hike: 'Saved ₹12L' },
     { quote: 'Student Mode. India-specific. GCP placed 47 Pune freshers in Q1 2026. My ₹5.2L offer was one of them.', name: 'Ananya K.', detail: 'Pune · Fresh Graduate', hike: '₹5.2L offer' },
   ]

@@ -252,7 +252,7 @@ export default function ProfilePage() {
                 <DashTextarea
                   value={suggestion.message}
                   onChange={(e) => setSuggestion((s) => ({ ...s, message: e.target.value }))}
-                  placeholder="Tell us what would make CertifyROI more useful for your career decisions..."
+                  placeholder="Tell us what would make Certify more useful for your career decisions..."
                   required
                 />
               </DashField>

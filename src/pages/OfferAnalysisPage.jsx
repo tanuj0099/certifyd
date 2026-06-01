@@ -623,7 +623,7 @@ export default function OfferAnalysisPage() {
                     <ArrowRight size={15} />
                   </a>
                   <p style={{ fontFamily: FB, fontSize: '11px', color: 'var(--text-4)', marginTop: '8px' }}>
-                    Job listings are linked to Naukri.com. CertifyROI does not host or list jobs directly.
+                    Job listings are linked to Naukri.com. Certify does not host or list jobs directly.
                   </p>
                 </AppSection>
               </motion.div>

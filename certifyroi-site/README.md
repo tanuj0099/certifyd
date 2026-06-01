@@ -1,6 +1,6 @@
-# CertifyROI Site
+# Certify Site
 
-A Next.js frontend for displaying CertifyROI market intelligence data.
+A Next.js frontend for displaying Certify market intelligence data.
 
 ## Setup
 

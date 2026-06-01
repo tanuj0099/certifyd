@@ -213,7 +213,7 @@ const TermsPage = function () {
         {[
           {
             title: "1. Acceptance",
-            body: "By using CertifyROI, you agree to these terms. We may update them at any time.",
+            body: "By using Certify, you agree to these terms. We may update them at any time.",
           },
           {
             title: "2. Educational Purpose",
@@ -233,7 +233,7 @@ const TermsPage = function () {
           },
           {
             title: "6. Limitation of Liability",
-            body: "CertifyROI is not liable for career decisions made based on information on this platform. Use this as one data point among many.",
+            body: "Certify is not liable for career decisions made based on information on this platform. Use this as one data point among many.",
           },
           {
             title: "7. Contact",
@@ -388,7 +388,7 @@ const CookiesPage = function () {
         {[
           {
             title: "What are cookies?",
-            body: "Cookies are small text files stored on your device by your web browser when you visit a website. CertifyROI uses a minimal set of cookies — no advertising, no tracking.",
+            body: "Cookies are small text files stored on your device by your web browser when you visit a website. Certify uses a minimal set of cookies — no advertising, no tracking.",
           },
           {
             title: "Essential cookies",
@@ -400,7 +400,7 @@ const CookiesPage = function () {
           },
           {
             title: "No advertising cookies",
-            body: "CertifyROI has no advertising partnerships, no affiliate tracking, and no retargeting pixels. We do not use Google Ads, Meta Pixel, or any third-party advertising network cookies.",
+            body: "Certify has no advertising partnerships, no affiliate tracking, and no retargeting pixels. We do not use Google Ads, Meta Pixel, or any third-party advertising network cookies.",
           },
           {
             title: "No cross-site tracking",
@@ -408,7 +408,7 @@ const CookiesPage = function () {
           },
           {
             title: "How to manage cookies",
-            body: "You can clear cookies at any time through your browser settings. Clearing cookies will sign you out of CertifyROI. Your localStorage preferences can also be cleared through browser DevTools (Application > Local Storage).",
+            body: "You can clear cookies at any time through your browser settings. Clearing cookies will sign you out of Certify. Your localStorage preferences can also be cleared through browser DevTools (Application > Local Storage).",
           },
           {
             title: "Contact",
@@ -503,7 +503,7 @@ const _OldBlogPage = function () {
         transition={T}
       >
         <h1 style={{ ...hs, fontSize: "clamp(2rem,5.5vw,3.8rem)" }}>
-          THE CERTIFYROI
+          THE CERTIFY
           <br />
           <span style={{ color: "var(--indigo)" }}>BLOG</span>
         </h1>
@@ -764,7 +764,7 @@ const _OldFAQPage = function () {
   var faqs = [
     {
       category: "Product",
-      q: "Is CertifyROI free?",
+      q: "Is Certify free?",
       a: "Yes. The ROI calculator, city demand heatmap, cert comparison, career simulator, and job-cert map are all free with no account required. You get 3 free AI analyses as a guest. Sign in with Google for unlimited free AI analyses.",
     },
     {
@@ -814,8 +814,8 @@ const _OldFAQPage = function () {
     },
     {
       category: "Career Questions",
-      q: "I have no tech background. Can I still use CertifyROI?",
-      a: "Yes. CertifyROI covers finance (CFA, FMVA, CMA, CA, NISM), management (PMP, CSM, Six Sigma), marketing (Google, HubSpot, Meta), HR (SHRM, People Analytics), product management, architecture (LEED), medical (DNB, USMLE, ACRP), law, civil and mechanical engineering, and government exam prep (GATE, UPSC, SSC, IBPS). Tech is one of 17 domains.",
+      q: "I have no tech background. Can I still use Certify?",
+      a: "Yes. Certify covers finance (CFA, FMVA, CMA, CA, NISM), management (PMP, CSM, Six Sigma), marketing (Google, HubSpot, Meta), HR (SHRM, People Analytics), product management, architecture (LEED), medical (DNB, USMLE, ACRP), law, civil and mechanical engineering, and government exam prep (GATE, UPSC, SSC, IBPS). Tech is one of 17 domains.",
     },
     {
       category: "Career Questions",
@@ -829,7 +829,7 @@ const _OldFAQPage = function () {
     },
     {
       category: "Career Questions",
-      q: "Can CertifyROI help with government exam planning?",
+      q: "Can Certify help with government exam planning?",
       a: "We can show you the ROI profile of government exams — starting salaries, allowances, career trajectories, prep costs, and realistic success rates. We can't help with actual exam preparation content. Use us to decide if a government path makes sense for your profile and situation — not to prepare for it.",
     },
     {
@@ -850,7 +850,7 @@ const _OldFAQPage = function () {
     {
       category: "Technical",
       q: "Is there a mobile app?",
-      a: "CertifyROI is a mobile-optimised web app. Open certifyroi.vercel.app in your mobile browser — all tools work fully on any screen size. You can add it to your home screen from Safari or Chrome for an app-like experience without an App Store install.",
+      a: "Certify is a mobile-optimised web app. Open certifyroi.vercel.app in your mobile browser — all tools work fully on any screen size. You can add it to your home screen from Safari or Chrome for an app-like experience without an App Store install.",
     },
     {
       category: "Technical",
@@ -860,7 +860,7 @@ const _OldFAQPage = function () {
     {
       category: "Technical",
       q: "I found incorrect salary data. How do I report it?",
-      a: "We want to know. Use the Contact page and include: the cert name, your city, the figure you saw on CertifyROI, and a link to a data source you believe is more accurate. We review all reported corrections and update the database quarterly. Your correction may help thousands of other professionals make a better decision.",
+      a: "We want to know. Use the Contact page and include: the cert name, your city, the figure you saw on Certify, and a link to a data source you believe is more accurate. We review all reported corrections and update the database quarterly. Your correction may help thousands of other professionals make a better decision.",
     },
   ];
   var categories = [
@@ -2570,7 +2570,7 @@ const Footer = function ({ onNavigate }) {
           <p
             style={{ fontSize: "12px", color: "var(--text-4)", fontFamily: FB }}
           >
-            © 2026 CertifyROI. Salary figures are medians, not guarantees. Not
+            © 2026 Certify. Salary figures are medians, not guarantees. Not
             financial advice.
           </p>
           <p

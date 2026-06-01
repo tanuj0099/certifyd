@@ -160,7 +160,7 @@ export function MarketingFooter() {
 
         <div style={{ borderTop: '1px solid var(--border)', paddingTop: '16px', display: 'flex', justifyContent: 'space-between', gap: '10px', flexWrap: 'wrap' }}>
           <p style={{ fontFamily: FB, fontSize: '12px', color: 'var(--text-4)', margin: 0 }}>
-            Copyright 2026 CertifyROI. Salary figures are medians, not guarantees.
+            Copyright 2026 Certify. Salary figures are medians, not guarantees.
           </p>
           <div className="mono-tag" style={{ fontFamily: FM, fontSize: '11px', color: 'var(--text-4)', margin: 0, opacity: 0.65 }}>
             Data: Q1 2026 - LinkedIn India - NASSCOM - Naukri - AmbitionBox
@@ -175,7 +175,7 @@ export default function MarketingPageShell({ eyebrow, title, accent, subtitle, c
   return (
     <div style={{ minHeight: '100vh', position: 'relative', background: 'var(--color-bg-marketing)', color: 'var(--text)' }}>
       <SEOHead 
-        title={`${title} ${accent || ''} | CertifyROI`} 
+        title={`${title} ${accent || ''} | Certify`} 
         description={subtitle || 'Certification ROI Calculator'} 
         schema={schema}
       />

@@ -5,30 +5,30 @@ const inter = Inter({ subsets: ['latin'], display: 'swap' })
 
 export const metadata = {
   metadataBase: new URL('https://certifyroi.in'),
-  title: 'Live Market Pulse | CertifyROI',
+  title: 'Live Market Pulse | Certify',
   description: 'Real-time salary floors and dynamic demand metrics for elite tech roles in India.',
   robots: {
     index: true,
     follow: true,
   },
   openGraph: {
-    title: 'Live Market Pulse | CertifyROI',
+    title: 'Live Market Pulse | Certify',
     description: 'Real-time salary floors and dynamic demand metrics for elite tech roles in India.',
     url: 'https://certifyroi.in/market-pulse',
-    siteName: 'CertifyROI',
+    siteName: 'Certify',
     images: [
       {
         url: 'https://certifyroi.in/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'CertifyROI Market Pulse',
+        alt: 'Certify Market Pulse',
       },
     ],
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Live Market Pulse | CertifyROI',
+    title: 'Live Market Pulse | Certify',
     description: 'Real-time salary floors and dynamic demand metrics for elite tech roles in India.',
     images: ['https://certifyroi.in/og-image.png'],
   },

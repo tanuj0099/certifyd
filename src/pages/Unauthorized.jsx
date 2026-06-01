@@ -19,7 +19,7 @@ export default function UnauthorizedPage() {
           Sign in to access this page.
         </h1>
         <p style={{ margin: '16px auto 28px', maxWidth: '54ch', color: 'var(--text-2)', fontFamily: F_SANS, fontSize: '15px', lineHeight: 1.75 }}>
-          The page exists, but it needs an authenticated CertifyROI account before we can show personal data.
+          The page exists, but it needs an authenticated Certify account before we can show personal data.
         </p>
         <Link
           to="/"

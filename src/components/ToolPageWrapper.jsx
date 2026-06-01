@@ -33,7 +33,7 @@ export default function ToolPageWrapper({
       color:      'var(--text)',
     }}>
       <SEOHead 
-        title={`${title} | CertifyROI`} 
+        title={`${title} | Certify`} 
         description={description || 'Analyze certification ROI, time to payback, and market demand.'} 
         schema={{
           "@context": "https://schema.org",

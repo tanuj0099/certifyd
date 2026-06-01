@@ -181,7 +181,7 @@ export default function Onboarding() {
         {/* Brand mark */}
         <div className="text-center mb-10">
           <div className="font-mono text-[11px] text-zinc-500 dark:text-white/30 tracking-[0.22em] uppercase mb-2">
-            CertifyROI
+            Certify
           </div>
           <div className="font-sans text-[22px] font-extrabold text-zinc-900 dark:text-[#f4f5f8] tracking-tight">
             Set up your workspace

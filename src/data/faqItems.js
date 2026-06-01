@@ -3,7 +3,7 @@
 export const FAQ_ITEMS = [
   {
     category: "Product",
-    q: "Is CertifyROI free?",
+    q: "Is Certify free?",
     a: "Yes. The ROI calculator, city demand heatmap, cert comparison, career simulator, and job-cert map are all free with no account required. You get 3 free AI analyses as a guest. Sign in with Google for unlimited free AI analyses.",
   },
   {
@@ -53,8 +53,8 @@ export const FAQ_ITEMS = [
   },
   {
     category: "Career Questions",
-    q: "I have no tech background. Can I still use CertifyROI?",
-    a: "Yes. CertifyROI covers finance (CFA, FMVA, CMA, CA, NISM), management (PMP, CSM, Six Sigma), marketing (Google, HubSpot, Meta), HR (SHRM, People Analytics), product management, architecture (LEED), medical (DNB, USMLE, ACRP), law, civil and mechanical engineering, and government exam prep (GATE, UPSC, SSC, IBPS). Tech is one of 17 domains.",
+    q: "I have no tech background. Can I still use Certify?",
+    a: "Yes. Certify covers finance (CFA, FMVA, CMA, CA, NISM), management (PMP, CSM, Six Sigma), marketing (Google, HubSpot, Meta), HR (SHRM, People Analytics), product management, architecture (LEED), medical (DNB, USMLE, ACRP), law, civil and mechanical engineering, and government exam prep (GATE, UPSC, SSC, IBPS). Tech is one of 17 domains.",
   },
   {
     category: "Career Questions",
@@ -68,7 +68,7 @@ export const FAQ_ITEMS = [
   },
   {
     category: "Career Questions",
-    q: "Can CertifyROI help with government exam planning?",
+    q: "Can Certify help with government exam planning?",
     a: "We can show you the ROI profile of government exams — starting salaries, allowances, career trajectories, prep costs, and realistic success rates. We can't help with actual exam preparation content. Use us to decide if a government path makes sense for your profile and situation — not to prepare for it.",
   },
   {
@@ -89,7 +89,7 @@ export const FAQ_ITEMS = [
   {
     category: "Technical",
     q: "Is there a mobile app?",
-    a: "CertifyROI is a mobile-optimised web app. Open certifyroi.vercel.app in your mobile browser — all tools work fully on any screen size. You can add it to your home screen from Safari or Chrome for an app-like experience without an App Store install.",
+    a: "Certify is a mobile-optimised web app. Open certifyroi.vercel.app in your mobile browser — all tools work fully on any screen size. You can add it to your home screen from Safari or Chrome for an app-like experience without an App Store install.",
   },
   {
     category: "Technical",
@@ -99,7 +99,7 @@ export const FAQ_ITEMS = [
   {
     category: "Technical",
     q: "I found incorrect salary data. How do I report it?",
-    a: "We want to know. Use the Contact page and include: the cert name, your city, the figure you saw on CertifyROI, and a link to a data source you believe is more accurate. We review all reported corrections and update the database quarterly. Your correction may help thousands of other professionals make a better decision.",
+    a: "We want to know. Use the Contact page and include: the cert name, your city, the figure you saw on Certify, and a link to a data source you believe is more accurate. We review all reported corrections and update the database quarterly. Your correction may help thousands of other professionals make a better decision.",
   },
 ]
 

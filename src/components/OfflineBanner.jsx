@@ -2,7 +2,7 @@
  * OfflineBanner
  *
  * A full-screen overlay that renders when the browser reports no network
- * connection. Matches the CertifyROI brand aesthetic (Nordic dark / Ash light
+ * connection. Matches the Certify brand aesthetic (Nordic dark / Ash light
  * via CSS variables). Animates in/out with Framer Motion.
  *
  * Usage — drop into AppRoot, rendered above everything else:
@@ -170,7 +170,7 @@ export default function OfflineBanner() {
             maxWidth: '34ch',
           }}
         >
-          CertifyROI needs an internet connection to fetch the latest
+          Certify needs an internet connection to fetch the latest
           certification data and salary benchmarks.{' '}
           <span style={{ color: 'var(--text-2)', fontWeight: '600' }}>
             Please reconnect to continue your journey.
@@ -206,7 +206,7 @@ export default function OfflineBanner() {
           opacity: 0.5,
         }}
       >
-        CertifyROI · certifyroi.in
+        Certify · certifyroi.in
       </div>
     </motion.div>
   )

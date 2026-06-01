@@ -11,7 +11,7 @@ class ErrorBoundary extends Component {
   }
 
   componentDidCatch(error, info) {
-    console.error('CertifyROI Error:', error, info)
+    console.error('Certify Error:', error, info)
   }
 
   render() {

@@ -44,7 +44,7 @@ export default function AdminDashboard() {
   return (
     <DashboardShell
       eyebrow="Admin console"
-      title="CertifyROI operations"
+      title="Certify operations"
       subtitle="Live user profiles and feedback from Supabase. Access is restricted to allowlisted admin emails."
       actions={
         <button type="button" className="dash-btn dash-btn--ghost" onClick={load} disabled={loading}>

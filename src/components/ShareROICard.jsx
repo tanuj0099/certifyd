@@ -395,14 +395,14 @@ function drawCardB(canvas, opts) {
   c.fillStyle = demColor; c.textAlign = 'center'
   c.fillText(demand.toUpperCase() + ' DEMAND', 210, dbY + 22)
 
-  // CertifyROI badge — bottom of left panel
+  // Certify badge — bottom of left panel
   var lgGrad = c.createLinearGradient(170, H - 100, 250, H - 50)
   lgGrad.addColorStop(0, '#4F7CF8'); lgGrad.addColorStop(1, '#4338CA')
   c.fillStyle = lgGrad; rr(c, 170, H - 98, 36, 36, 9); c.fill()
   c.fillStyle = 'white'; c.font = 'bold 18px Arial'; c.textAlign = 'center'
   c.fillText('↗', 188, H - 73)
   c.fillStyle = 'transparent'; c.font = '11px Arial'; c.textAlign = 'center'
-  c.fillText('CertifyROI', 210, H - 50)
+  c.fillText('Certify', 210, H - 50)
 
   // ── RIGHT PANEL CONTENT ──────────────────────────────────
   var rx = 470, rw = W - rx - 60

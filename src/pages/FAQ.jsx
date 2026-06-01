@@ -17,11 +17,11 @@ const FAQS = [
     a: 'We use median salary data from Naukri, AmbitionBox, LinkedIn India, and NASSCOM. Our projections are based on 40,000+ India-specific data points. However, actual outcomes vary based on company tier, negotiation skills, and economic conditions. We show medians, not guarantees — half of people earn more, half earn less.',
   },
   {
-    q: 'Is CertifyROI free to use?',
+    q: 'Is Certify free to use?',
     a: 'Yes, the core ROI calculator is completely free. You get 3 free analyses as a guest. After that, you can sign in with Google or phone OTP to continue using the tool for free. We never sell your data.',
   },
   {
-    q: 'What certifications does CertifyROI cover?',
+    q: 'What certifications does Certify cover?',
     a: 'We cover 100+ certifications across 17 domains: Cloud (AWS, Azure, GCP), Data Science, Cybersecurity, Finance (CA, CFA, FRM), Project Management (PMP, CSM), Marketing, HR, Medical, Law, Architecture, Government exams (UPSC, SSC), and more.',
   },
   {
@@ -33,7 +33,7 @@ const FAQS = [
     a: 'Student Mode is for freshers or career switchers with no current salary. Instead of calculating a salary hike percentage, it shows time-to-first-offer and expected starting salary after certification. Built for where you actually are.',
   },
   {
-    q: 'Does CertifyROI sell certifications or courses?',
+    q: 'Does Certify sell certifications or courses?',
     a: 'No. We don\'t sell courses, have no affiliate deals with Coursera/Udemy, and earn nothing if you buy a cert. Our only incentive is to give you honest numbers — including when a certification is NOT worth it for your profile.',
   },
   {
@@ -41,7 +41,7 @@ const FAQS = [
     a: 'Salary data is updated quarterly. Demand scores update monthly based on live job posting counts from Naukri and LinkedIn. Certification costs are verified annually against official certification body websites.',
   },
   {
-    q: 'Can I use CertifyROI to convince my boss to fund my certification?',
+    q: 'Can I use Certify to convince my boss to fund my certification?',
     a: 'Yes! Our "Pitch Your Boss" feature generates a one-page ROI brief you can send to your manager. It includes break-even timeline, expected salary delta, and market demand data — perfect for funding requests.',
   },
   {

@@ -179,7 +179,6 @@ export default function RoadmapTool() {
                 className="flex items-center gap-2 text-sm font-bold pb-3 transition-colors whitespace-nowrap flex-shrink-0 min-h-[44px]"
                 style={{
                   color: active ? 'var(--text)' : 'var(--text-4)',
-                  borderBottom: active ? '2px solid var(--text)' : '2px solid transparent',
                   background: 'none',
                   border: 'none',
                   borderBottom: active ? '2px solid var(--text)' : '2px solid transparent',

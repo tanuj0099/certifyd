@@ -419,7 +419,7 @@ const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, 
                   color:'var(--text)', fontFamily:F_SANS, fontSize:'16px', fontWeight:800, letterSpacing:'-0.01em',
                   transition: 'color 0.2s ease'
                 }}>
-                CertifyROI
+                Certify
               </button>
             </div>
 

@@ -37,9 +37,9 @@ export default function AboutPage() {
   return (
     <MarketingPageShell
       eyebrow="ABOUT"
-      title="Why CertifyROI"
+      title="Why Certify"
       accent="exists"
-      subtitle="We built CertifyROI to answer the question every professional eventually asks: will this certification actually pay for itself in my city, at my current salary, and in my real career path?"
+      subtitle="We built Certify to answer the question every professional eventually asks: will this certification actually pay for itself in my city, at my current salary, and in my real career path?"
     >
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={T} style={{ display: 'flex', flexDirection: 'column', gap: '26px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
@@ -115,7 +115,7 @@ export default function AboutPage() {
                 You should know the answer before you pay the exam fee.
               </p>
               <p style={{ fontFamily: FB, fontSize: '14px', lineHeight: '1.8', color: 'var(--text-2)', margin: 0 }}>
-                CertifyROI is built to make that answer visible, explainable, and fast to evaluate.
+                Certify is built to make that answer visible, explainable, and fast to evaluate.
               </p>
             </div>
 

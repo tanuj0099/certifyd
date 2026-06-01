@@ -130,7 +130,7 @@ export default function LoginPage() {
             </svg>
           </div>
           <div style={{ fontSize: '22px', fontWeight: 800, color: '#f7f8f8', letterSpacing: '-0.02em' }}>
-            CertifyROI
+            Certify
           </div>
         </div>
 
@@ -337,7 +337,7 @@ export default function LoginPage() {
         >
           <Link to="/" style={{ color: 'inherit', textDecoration: 'none' }}>← Back to home</Link>
           <span style={{ margin: '0 10px', opacity: 0.4 }}>·</span>
-          <span>Credentials never stored on CertifyROI servers</span>
+          <span>Credentials never stored on Certify servers</span>
         </div>
       </motion.div>
     </div>

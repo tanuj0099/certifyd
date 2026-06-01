@@ -69,7 +69,7 @@ export function Header({ currentPage }) {
               <span style={{
                 fontFamily: F_HEAD, fontWeight: '700', fontSize: '16px',
                 color: 'var(--text)', letterSpacing: '-0.02em',
-              }}>CertifyROI</span>
+              }}>Certify</span>
             </motion.div>
           </Link>
 
@@ -180,7 +180,7 @@ export function Footer() {
             }}>
               <span style={{ color: 'var(--bg)', fontFamily: F_HEAD, fontWeight: '800', fontSize: '12px' }}>CR</span>
             </div>
-            <span style={{ fontFamily: F_HEAD, fontWeight: '700', fontSize: '14px', color: 'var(--text)' }}>CertifyROI</span>
+            <span style={{ fontFamily: F_HEAD, fontWeight: '700', fontSize: '14px', color: 'var(--text)' }}>Certify</span>
           </div>
           <p style={{ fontFamily: F_BODY, fontSize: '13px', color: 'var(--text-3)', lineHeight: '1.6', margin: 0 }}>
             Bangalore's #1 Certification ROI Calculator. Make informed career decisions with real India data.
@@ -241,7 +241,7 @@ export function Footer() {
         flexWrap: 'wrap', gap: '16px',
       }}>
         <p style={{ fontFamily: F_MONO, fontSize: '11px', color: 'var(--text-4)', margin: 0 }}>
-          © 2026 CertifyROI. All rights reserved.
+          © 2026 Certify. All rights reserved.
         </p>
         <div className="mono-tag" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '10px', color: 'var(--accent)', letterSpacing: '0.05em', opacity: 0.8 }}>
           Data: Q1 2026 · Naukri · LinkedIn India · NASSCOM · AmbitionBox

@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async'
 
 export default function SEOHead({ 
-  title = 'CertifyROI | Certification ROI Calculator', 
+  title = 'Certify | Certification ROI Calculator', 
   description = 'Calculate the exact return on investment for your next tech certification. Salary benchmarks and active demand data for India.', 
   path = '', 
   schema,

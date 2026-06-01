@@ -17,7 +17,7 @@ const buildROIPrompt = ({ certName, currentSalary, certCost, hikePercent, isStud
     ? `STUDENT with no salary, targeting first job in India. Cert: ${certName}. Goal: first offer Rs.4.8L+.`
     : `Salary: Rs.${currentSalary}L/yr → Rs.${(hikedSalary/100000).toFixed(1)}L. Cost: Rs.${certCost}L. Break-even: ${breakEvenMonths} months. 5yr net: Rs.${(fiveYearGain/100000).toFixed(1)}L.`
 
-  return `You are CertifyROI, a brutally honest career advisor for Indian professionals (2026).
+  return `You are Certify, a brutally honest career advisor for Indian professionals (2026).
 ${context}
 Certification: ${certName || 'General IT Certification'}
 
@@ -105,7 +105,7 @@ const callGroq = async (messages, maxTokens = 700, temperature = 0.65, jsonMode 
 export const analyzeROI = async ({ certName, currentSalary, certCost, hikePercent, isStudent = false }) => {
   const text   = await callGroq(
     [
-      { role: 'system', content: 'You are CertifyROI. Respond ONLY with a valid JSON object. India market 2026.' },
+      { role: 'system', content: 'You are Certify. Respond ONLY with a valid JSON object. India market 2026.' },
       { role: 'user',   content: buildROIPrompt({ certName, currentSalary, certCost, hikePercent, isStudent }) },
     ],
     700,
@@ -140,7 +140,7 @@ export const callGroqForPitch = async (_unusedApiKey, prompt) => {
 export const callGroqForResume = async (_unusedApiKey, prompt) => {
   return callGroq(
     [
-      { role: 'system', content: 'You are CertifyROI. Respond ONLY with a valid JSON object. India market 2026.' },
+      { role: 'system', content: 'You are Certify. Respond ONLY with a valid JSON object. India market 2026.' },
       { role: 'user',   content: prompt },
     ],
     900,

@@ -142,7 +142,7 @@ var buildPrompt = function (resumeText, mode, timeline, domainIntent, switchTarg
       ? 'User wants to grow in: ' + domainIntent + '. Prioritise certs in that domain.'
       : 'Auto-detect best domain from resume.'
 
-  return 'You are CertifyROI, a career advisor for Indian professionals (2026).\n' +
+  return 'You are Certify, a career advisor for Indian professionals (2026).\n' +
     'Mode: ' + mode + '\nTimeline: ' + timelineNote + '\nDomain: ' + domainNote + '\n\n' +
     'Resume:\n' + resumeText.slice(0, 2200) + '\n\n' +
     'Respond with ONLY a valid JSON object — no markdown, no prose, no code fences.\n\n' +

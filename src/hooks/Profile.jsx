@@ -66,7 +66,7 @@ const ProfilePage = () => {
             />
             <div>
               <h2 style={{ fontFamily: FH, fontSize: '22px', fontWeight: '700', margin: 0, color: 'var(--text-primary)' }}>
-                {profile?.display_name || 'CertifyROI User'}
+                {profile?.display_name || 'Certify User'}
               </h2>
               <p style={{ fontFamily: FM, fontSize: '13px', color: 'var(--text-muted)', margin: '4px 0 0' }}>
                 {user?.email}

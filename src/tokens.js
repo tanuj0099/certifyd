@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────
-// tokens.js — CertifyROI master cert database
+// tokens.js — Certify master cert database
 // 100+ certifications across all major Indian career domains
 // Data: India market 2026 · Sources: Naukri, AmbitionBox,
 // NASSCOM, LinkedIn India, respective certification bodies
