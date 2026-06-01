@@ -10,26 +10,26 @@ import { trackResumeUploaded } from '../lib/analytics.js'
 import { callGroqForResume, validateDomain } from '../services/aiService.jsx'
 import { useJourneyStore } from '../store/useJourneyStore.js'
 
-// ── Font tokens → CSS variables ───────────────────────────
+//  Font tokens  CSS variables 
 var FM = 'var(--font-mono)'
 var FB = 'var(--font-body)'
 var FH = 'var(--font-head)'
 
-// ── Color constants ───────────────────────────────────────
+//  Color constants 
 var PICTON = 'var(--linear-blue)'
 var EMERALD = 'var(--linear-blue)'
 var AMBER = 'var(--cool-grey)'
 var INDIGO = 'var(--linear-blue)'
 var VIOLET = 'var(--accent)'
 
-// ── Timeline options ──────────────────────────────────────
+//  Timeline options 
 var TIMELINE_OPTIONS = [
-  { id: 'fast', label: 'Fast track', sub: '1–3 months', desc: 'Quick wins — get results fast' },
-  { id: 'medium', label: 'Standard', sub: '3–6 months', desc: 'Balanced depth and speed' },
+  { id: 'fast', label: 'Fast track', sub: '1-3 months', desc: 'Quick wins - get results fast' },
+  { id: 'medium', label: 'Standard', sub: '3-6 months', desc: 'Balanced depth and speed' },
   { id: 'flexible', label: 'No rush', sub: 'Open', desc: 'Best cert regardless of time' },
 ]
 
-// ── Domain options ────────────────────────────────────────
+//  Domain options 
 var DOMAIN_CHOICES = [
   { id: 'auto', label: 'Auto-detect', sub: 'Picks from your profile' },
   { id: 'tech', label: 'Cloud / Tech', sub: 'AWS, Azure, DevOps' },
@@ -43,7 +43,7 @@ var DOMAIN_CHOICES = [
   { id: 'medical', label: 'Medical', sub: 'DNB, USMLE, ACRP' },
 ]
 
-// ── Manual skill tags (for mobile / no-resume flow) ───────
+//  Manual skill tags (for mobile / no-resume flow) 
 var SKILL_GROUPS = [
   { group: 'Cloud & Infra', skills: ['AWS', 'Azure', 'GCP', 'Docker', 'Kubernetes', 'Linux', 'Terraform'] },
   { group: 'Development', skills: ['Python', 'Java', 'JavaScript', 'Node.js', 'React', 'SQL', 'REST APIs'] },
@@ -63,8 +63,8 @@ function buildSkillText(skills, role, exp) {
   ].filter(Boolean).join(' ')
 }
 
-// ── Loader steps — defined OUTSIDE component so the array
-//    reference is stable and won't re-trigger useEffect ────
+//  Loader steps - defined OUTSIDE component so the array
+//    reference is stable and won't re-trigger useEffect 
 var LOADER_STEPS = [
   'Reading your resume...',
   'Matching India job market 2026...',
@@ -72,7 +72,7 @@ var LOADER_STEPS = [
   'Writing your recommendation...',
 ]
 
-// ── Document validator ────────────────────────────────────
+//  Document validator 
 var validateDocument = function (text) {
   var t = text.toLowerCase()
   var tRaw = text
@@ -110,7 +110,7 @@ var validateDocument = function (text) {
   if (degrees.filter(function (d) { return t.includes(d) }).length >= 1) score += 2
   var institutions = ['university', 'college', 'institute', 'iit', 'nit', 'bits', 'vit', 'srm', 'manipal', 'christ', 'symbiosis', 'amity']
   if (institutions.filter(function (i) { return t.includes(i) }).length >= 1) score += 1
-  if (/\b20\d{2}\s*[–\-]\s*(20\d{2}|present)/i.test(tRaw)) score += 2
+  if (/\b20\d{2}\s*[-\-]\s*(20\d{2}|present)/i.test(tRaw)) score += 2
   if (/(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\s*'?\d{2,4}/i.test(tRaw)) score += 1
   var actionVerbs = ['managed', 'led ', 'developed', 'built ', 'handled', 'coordinated', 'organized', 'achieved', 'launched', 'mentored', 'conducted', 'reduced', 'increased', 'collaborated', 'spearheaded', 'implemented', 'delivered', 'designed', 'created', 'trained', 'secured', 'boosted']
   var verbHits = actionVerbs.filter(function (v) { return t.includes(v) })
@@ -122,16 +122,16 @@ var validateDocument = function (text) {
   return { isResume: score >= 8, score: score, sectionHits: sectionHits, verbHits: verbHits }
 }
 
-// ── PDF reader (Moved to Server) ──────────────────────────
+//  PDF reader (Moved to Server) 
 // File parsing and validation is now handled securely server-side.
 
-// ── Prompt builder — requests strict JSON output ─────────
+//  Prompt builder - requests strict JSON output 
 var buildPrompt = function (resumeText, mode, timeline, domainIntent, switchTarget, targetDomain) {
   var timelineNote = timeline === 'fast'
-    ? 'IMPORTANT: User needs FAST-TRACK only — certs completable in 1–3 months.'
+    ? 'IMPORTANT: User needs FAST-TRACK only - certs completable in 1-3 months.'
     : timeline === 'medium'
-      ? 'User has 3–6 months. Recommend certs within that window.'
-      : 'Flexible timeline — recommend the best certs regardless of duration.'
+      ? 'User has 3-6 months. Recommend certs within that window.'
+      : 'Flexible timeline - recommend the best certs regardless of duration.'
 
   // targetDomain (from Landing Page "Pivot Domains") takes highest priority
   var domainNote = targetDomain
@@ -145,7 +145,7 @@ var buildPrompt = function (resumeText, mode, timeline, domainIntent, switchTarg
   return 'You are Certify, a career advisor for Indian professionals (2026).\n' +
     'Mode: ' + mode + '\nTimeline: ' + timelineNote + '\nDomain: ' + domainNote + '\n\n' +
     'Resume:\n' + resumeText.slice(0, 2200) + '\n\n' +
-    'Respond with ONLY a valid JSON object — no markdown, no prose, no code fences.\n\n' +
+    'Respond with ONLY a valid JSON object - no markdown, no prose, no code fences.\n\n' +
     '{\n' +
     '  "name": "full name or empty string",\n' +
     '  "summary": "2-3 sentences on background and biggest career opportunity",\n' +
@@ -163,7 +163,7 @@ var buildPrompt = function (resumeText, mode, timeline, domainIntent, switchTarg
     'Rules: India-specific. Under 380 words total. Be specific to their actual resume.'
 }
 
-// ── Safe JSON parser — never throws ──────────────────────
+//  Safe JSON parser - never throws 
 var INDIA_CITIES = ['Bangalore', 'Bengaluru', 'Hyderabad', 'Pune', 'Mumbai', 'Delhi', 'Chennai', 'Kolkata', 'Noida', 'Gurgaon', 'Gurugram', 'Ahmedabad', 'Kochi', 'Vadodara', 'Jaipur']
 var DOMAIN_MAP = ['tech', 'data', 'cybersecurity', 'finance', 'management', 'marketing', 'hr', 'government', 'medical', 'business']
 
@@ -209,9 +209,9 @@ var safeParseResumeJSON = function (text) {
       parseError: false,
     }
   } catch (_) {
-    // JSON parse failed — return a safe empty shell so UI doesn't crash
+    // JSON parse failed - return a safe empty shell so UI doesn't crash
     return {
-      name: '', summary: 'Analysis complete — re-run for structured results.',
+      name: '', summary: 'Analysis complete - re-run for structured results.',
       city: '', domain: 'business',
       gaps: [], certs: [],
       immediateAction: text.slice(0, 300),
@@ -222,7 +222,7 @@ var safeParseResumeJSON = function (text) {
   }
 }
 
-// ── Not-a-resume error ────────────────────────────────────
+//  Not-a-resume error 
 var NotAResumeError = function ({ rejectedBy, onDismiss }) {
   var messages = {
     'fee receipt': { title: "That's a fee receipt", desc: "Please upload your CV or resume instead." },
@@ -261,8 +261,8 @@ var NotAResumeError = function ({ rejectedBy, onDismiss }) {
   )
 }
 
-// ── Clean loader ──────────────────────────────────────────
-// LOADER_STEPS moved above to module scope — stable reference, no useEffect re-fires.
+//  Clean loader 
+// LOADER_STEPS moved above to module scope - stable reference, no useEffect re-fires.
 var CleanLoader = function () {
   var [step, setStep] = useState(0)
 
@@ -271,7 +271,7 @@ var CleanLoader = function () {
       return setTimeout(function () { setStep(i) }, i * 1000)
     })
     return function () { timers.forEach(clearTimeout) }
-  }, []) // stable — LOADER_STEPS is module-level constant
+  }, []) // stable - LOADER_STEPS is module-level constant
 
   return (
     <div style={{ padding: '22px', borderRadius: '13px', background: 'transparent', border: 'none' }}>
@@ -309,7 +309,7 @@ var CleanLoader = function () {
   )
 }
 
-// ── Preferences panel ─────────────────────────────────────
+//  Preferences panel 
 var PreferencesPanel = function ({ timeline, onTimeline, domainIntent, onDomain, mode, switchTarget }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '16px' }}>
@@ -346,7 +346,7 @@ var PreferencesPanel = function ({ timeline, onTimeline, domainIntent, onDomain,
         </div>
       </div>
 
-      {/* Domain — show if not switcher */}
+      {/* Domain - show if not switcher */}
       {mode !== 'switcher' && (
         <div>
           <div className="micro-label" style={{ color: 'var(--text-4)', marginBottom: '9px' }}>
@@ -393,7 +393,7 @@ var PreferencesPanel = function ({ timeline, onTimeline, domainIntent, onDomain,
   )
 }
 
-// ── PersonalisedHero ──────────────────────────────────────
+//  PersonalisedHero 
 var PersonalisedHero = function ({ name, city, domain, primaryCert, mode, certDomains }) {
   var [phase, setPhase] = useState(0)
 
@@ -406,8 +406,8 @@ var PersonalisedHero = function ({ name, city, domain, primaryCert, mode, certDo
   var domainLabel = certDomains && certDomains.length > 0 ? certDomains.find(function (d) { return d.id === domain })?.label || domain : domain
   var firstName = name ? name.split(' ')[0] : ''
   var intro = firstName
-    ? firstName + ', out of 103 certifications analysed for ' + (city ? 'a professional in ' + city : 'your profile') + ' right now —'
-    : 'For a ' + (mode === 'student' ? 'student' : mode === 'switcher' ? 'career switcher' : 'professional') + ' in ' + domainLabel + ' right now —'
+    ? firstName + ', out of 103 certifications analysed for ' + (city ? 'a professional in ' + city : 'your profile') + ' right now -'
+    : 'For a ' + (mode === 'student' ? 'student' : mode === 'switcher' ? 'career switcher' : 'professional') + ' in ' + domainLabel + ' right now -'
   var callout = firstName ? 'this is your move.' : 'one cert stands clearly above the rest.'
 
   return (
@@ -453,7 +453,7 @@ var PersonalisedHero = function ({ name, city, domain, primaryCert, mode, certDo
   )
 }
 
-// ── PrimaryCertHero ───────────────────────────────────────
+//  PrimaryCertHero 
 var PrimaryCertHero = function ({ cert }) {
   var [hovered, setHovered] = useState(false)
   return (
@@ -499,7 +499,7 @@ var PrimaryCertHero = function ({ cert }) {
   )
 }
 
-// ── CertLeaderboardRow ────────────────────────────────────
+//  CertLeaderboardRow 
 var CertLeaderboardRow = function ({ cert, rank, onSelect, mode }) {
   var [hovered, setHovered] = useState(false)
   var col = rank === 2 ? PICTON : VIOLET
@@ -555,7 +555,7 @@ var CertLeaderboardRow = function ({ cert, rank, onSelect, mode }) {
   )
 }
 
-// ── ResultDisplay ─────────────────────────────────────────
+//  ResultDisplay 
 var ResultDisplay = function ({ result, onCertSelected, mode, onClear, certDomains }) {
   var [showOtherCerts, setShowOtherCerts] = useState(false)
   var primaryCert = result.certs[0]
@@ -583,7 +583,7 @@ var ResultDisplay = function ({ result, onCertSelected, mode, onClear, certDomai
         </motion.button>
       )}
 
-      {/* Profile summary — plain border, no NeonCard */}
+      {/* Profile summary - plain border, no NeonCard */}
       {result.summary && (
         <motion.div
           initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.8, duration: 0.35 }}
@@ -598,11 +598,11 @@ var ResultDisplay = function ({ result, onCertSelected, mode, onClear, certDomai
             <div style={{ display: 'flex', alignItems: 'center', gap: '7px', marginBottom: '8px' }}>
               <User size={11} color={PICTON} />
               <span style={{ fontFamily: FM, fontSize: '9px', color: PICTON, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                {firstName ? 'Profile — ' + firstName.toUpperCase() : 'Profile'}
+                {firstName ? 'Profile - ' + firstName.toUpperCase() : 'Profile'}
               </span>
               {result.city && (
                 <span style={{ marginLeft: 'auto', fontFamily: FM, fontSize: '9px', padding: '2px 7px', borderRadius: '5px', background: PICTON + '14', color: PICTON, display: 'flex', alignItems: 'center', gap: '3px' }}>
-                  {/* FIX: 📍 emoji → MapPin icon */}
+                  {/* FIX:  emoji  MapPin icon */}
                   <MapPin size={9} color={PICTON} />
                   {result.city}
                 </span>
@@ -644,7 +644,7 @@ var ResultDisplay = function ({ result, onCertSelected, mode, onClear, certDomai
             style={{ width: '100%', padding: '9px 13px', borderRadius: '9px', border: '1px solid var(--border)', background: 'transparent', color: 'var(--text-4)', fontFamily: FM, fontSize: '10px', letterSpacing: '0.07em', textTransform: 'uppercase', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: showOtherCerts ? '8px' : '0' }}
           >
             <span>Other options ({otherCerts.length} more)</span>
-            {/* FIX: ▾ text char → ChevronDown icon — consistent with lucide icon system */}
+            {/* FIX:  text char  ChevronDown icon - consistent with lucide icon system */}
             <motion.span
               animate={{ rotate: showOtherCerts ? 180 : 0 }}
               transition={{ duration: 0.2 }}
@@ -668,7 +668,7 @@ var ResultDisplay = function ({ result, onCertSelected, mode, onClear, certDomai
         </motion.div>
       )}
 
-      {/* "Do this week" — plain border, no NeonCard */}
+      {/* "Do this week" - plain border, no NeonCard */}
       {result.immediateAction && (
         <motion.div
           initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 2.4, duration: 0.35 }}
@@ -692,7 +692,7 @@ var ResultDisplay = function ({ result, onCertSelected, mode, onClear, certDomai
         </motion.div>
       )}
 
-      {/* Market insight — FIX: 📊 emoji → TrendingUp icon */}
+      {/* Market insight - FIX:  emoji  TrendingUp icon */}
       {result.marketInsight && (
         <motion.div
           initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 2.6 }}
@@ -720,20 +720,20 @@ var ResultDisplay = function ({ result, onCertSelected, mode, onClear, certDomai
   )
 }
 
-// ── MAIN ──────────────────────────────────────────────────
+//  MAIN 
 var ResumeAnalyzer = function ({ mode, onCertSelected }) {
-  // ── Database State ──────────────────────────────────────
+  //  Database State 
   const [certificationsData, setCertificationsData] = useState([]);
   const [domainsData, setDomainsData] = useState([]);
   const [dbLoading, setDbLoading] = useState(true);
 
-  // ── The "Once and For All" Alias Fix ────────────────────
+  //  The "Once and For All" Alias Fix 
   const CERTIFICATIONS = certificationsData;
   const certifications = certificationsData;
   const CERT_DOMAINS = domainsData;
   const certDomains = domainsData;
 
-  // ── Fetch from Supabase on mount ────────────────────────
+  //  Fetch from Supabase on mount 
   useEffect(() => {
     async function fetchDatabase() {
       try {
@@ -753,7 +753,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
     fetchDatabase();
   }, []);
 
-  // ── Loading Fallback ────────────────────────────────────
+  //  Loading Fallback 
   
   mode = mode || 'professional'
 
@@ -774,12 +774,12 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
   var [skillExp, setSkillExp] = useState('')
   var fileRef = useRef(null)
 
-  // switchTarget — read from Zustand store (no more localStorage)
+  // switchTarget - read from Zustand store (no more localStorage)
   var switchTarget = useJourneyStore(function (s) {
     return mode === 'switcher' ? (s.resumeDomain || null) : null
   })
 
-  // targetDomain — from Landing Page "Pivot Domains" input, persisted in Zustand
+  // targetDomain - from Landing Page "Pivot Domains" input, persisted in Zustand
   var targetDomain    = useJourneyStore(function (s) { return s.targetDomain || '' })
   var setTargetDomain = useJourneyStore(function (s) { return s.setTargetDomain })
 
@@ -842,7 +842,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
   }
 
   // FIX: separate dismiss-rejection from clear-all.
-  // On rejection dismiss, only clear the rejection + file — NOT the pasted text.
+  // On rejection dismiss, only clear the rejection + file - NOT the pasted text.
   // If a user pasted text that failed, they shouldn't have to re-paste after dismissing.
   var dismissRejection = function () {
     setRejection(null)
@@ -851,8 +851,8 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
   }
 
   var handleAnalyse = async function () {
-    // If PDF is still extracting, wait — optimistic UI means button is active but needs text
-    if (!textReady) { setError('Still reading your file — please wait a moment and try again.'); return }
+    // If PDF is still extracting, wait - optimistic UI means button is active but needs text
+    if (!textReady) { setError('Still reading your file - please wait a moment and try again.'); return }
     // If skill-tag mode: synthesize text from selected skills
     var analyseText = text
     if (inputMode === 'skills') {
@@ -868,7 +868,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
     }
     setLoading(true); setResult(null); setError(null); setRejection(null); setDomainValidationError(null)
 
-    // ── Domain Validation (Groq) ─────────────────────────
+    //  Domain Validation (Groq) 
     var domainToValidate = domainOverride || targetDomain
     if (domainToValidate && domainToValidate.trim()) {
       setDomainValidating(true)
@@ -886,14 +886,14 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
         }
       } catch (_) {
         setDomainValidating(false)
-        // Fail open — continue analysis
+        // Fail open - continue analysis
       }
     }
 
     try {
       var safeText = analyseText.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, ' ').replace(/\s+/g, ' ').slice(0, 2200).trim()
       var raw = await callGroqForResume(null, buildPrompt(safeText, mode, timeline, domainIntent, switchTarget, domainOverride || targetDomain))
-      if (!raw || raw.length < 30) throw new Error('Empty response — try again')
+      if (!raw || raw.length < 30) throw new Error('Empty response - try again')
       var parsed = safeParseResumeJSON(raw)
       setResult(parsed.certs?.length ? parsed : {
         ...parsed,
@@ -908,12 +908,12 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
           city: 'Bangalore', domain: 'tech',
           gaps: ['No hands-on cloud portfolio projects', 'Missing architecture-level certifications', 'Limited DevOps exposure'],
           certs: [
-            { name: 'AWS Solutions Architect', why: 'Highest ROI for Indian tech professionals — 2,400+ open roles on Naukri', roi: '30-40%', timeline: '3 months', fastTrack: 'Register free on AWS Skill Builder today', primary: true },
-            { name: 'Google Data Analytics', why: 'High demand, entry-friendly', roi: '20-28%', timeline: '4 months', fastTrack: 'Enrol on Coursera — first 7 days free', primary: false },
+            { name: 'AWS Solutions Architect', why: 'Highest ROI for Indian tech professionals - 2,400+ open roles on Naukri', roi: '30-40%', timeline: '3 months', fastTrack: 'Register free on AWS Skill Builder today', primary: true },
+            { name: 'Google Data Analytics', why: 'High demand, entry-friendly', roi: '20-28%', timeline: '4 months', fastTrack: 'Enrol on Coursera - first 7 days free', primary: false },
             { name: 'PMP Certification', why: 'Best path to senior management', roi: '25-30%', timeline: '6 months', fastTrack: "Download PMI's free Exam Content Outline", primary: false },
           ],
-          immediateAction: 'Check Vercel → Settings → Environment Variables → ensure GROQ_API_KEY is set.',
-          marketInsight: 'AWS certified professionals in Bangalore command 35% higher salaries — 2,400+ active roles on Naukri as of March 2026.',
+          immediateAction: 'Check Vercel  Settings  Environment Variables  ensure GROQ_API_KEY is set.',
+          marketInsight: 'AWS certified professionals in Bangalore command 35% higher salaries - 2,400+ active roles on Naukri as of March 2026.',
           raw: '(demo)',
         })
       } else {
@@ -937,7 +937,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
 
-      {/* ── Target pivot domain badge (from LandingPage) ──── */}
+      {/*  Target pivot domain badge (from LandingPage)  */}
       {(targetDomain || domainOverride) && !domainValidationError && (
         <div style={{ padding: '10px 14px', borderRadius: '8px', background: 'transparent', border: '1px solid transparent', display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
           <span style={{ fontFamily: FM, fontSize: '9px', color: 'var(--linear-blue)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>TARGET PIVOT</span>
@@ -948,7 +948,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
         </div>
       )}
 
-      {/* ── Domain validation error UI (Linear/Vercel palette) ── */}
+      {/*  Domain validation error UI (Linear/Vercel palette)  */}
       {domainValidationError && (
         <div style={{ padding: '16px 18px', borderRadius: '8px', background: 'var(--border-subtle)', border: '1px solid transparent' }}>
           <div style={{ fontFamily: FM, fontSize: '10px', letterSpacing: '0.14em', color: 'var(--text-3)', marginBottom: '10px' }}>
@@ -974,7 +974,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
               onClick={function () { setDomainValidationError(null); if (domainOverride) setTargetDomain(domainOverride) }}
               style={{ padding: '9px 16px', borderRadius: '6px', background: 'var(--accent)', border: 'none', color: 'var(--bg)', fontFamily: FM, fontSize: '12px', fontWeight: '700', cursor: 'pointer', letterSpacing: '0.04em', whiteSpace: 'nowrap' }}
             >
-              RETRY →
+              RETRY 
             </button>
           </div>
         </div>
@@ -997,12 +997,12 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
         />
       )}
 
-      {/* ── Input mode tab switcher ─────────────────────── */}
+      {/*  Input mode tab switcher  */}
       {!hasResult && (
         <div className="glass" style={{ display: 'flex', gap: '4px', padding: '4px', borderRadius: '10px' }}>
           {[
-            { id: 'upload', label: '↑ Upload Resume', sub: 'PDF / DOC / paste' },
-            { id: 'skills', label: '✦ Tag Your Skills', sub: 'No resume? Use this' },
+            { id: 'upload', label: ' Upload Resume', sub: 'PDF / DOC / paste' },
+            { id: 'skills', label: ' Tag Your Skills', sub: 'No resume? Use this' },
           ].map(function (tab) {
             var active = inputMode === tab.id
             return (
@@ -1027,7 +1027,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
         </div>
       )}
 
-      {/* ── Skill tag grid (mobile-first fallback) ───────── */}
+      {/*  Skill tag grid (mobile-first fallback)  */}
       <AnimatePresence>
         {!hasResult && inputMode === 'skills' && (
           <motion.div
@@ -1036,7 +1036,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
           >
             <div className="glass" style={{ padding: '16px', borderRadius: '11px' }}>
               <div style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '14px' }}>
-                Tag skills you already have — pick at least 3
+                Tag skills you already have - pick at least 3
                 {pickedSkills.length > 0 && <span style={{ color: EMERALD, marginLeft: '8px' }}>{pickedSkills.length} selected</span>}
               </div>
 
@@ -1097,7 +1097,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
         )}
       </AnimatePresence>
 
-      {/* Upload zone — only shown in upload mode */}
+      {/* Upload zone - only shown in upload mode */}
       <AnimatePresence>
         {!hasResult && !text.trim() && inputMode === 'upload' && (
           <motion.div
@@ -1150,12 +1150,12 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
                   </div>
                 ) : (
                   <>
-                    {/* FIX: static icon — removed animate={{ y: [0,-5,0] }} bounce animation */}
+                    {/* FIX: static icon - removed animate={{ y: [0,-5,0] }} bounce animation */}
                     <Upload size={22} color="var(--text-4)" style={{ margin: '0 auto 10px', display: 'block' }} />
                     <div style={{ fontSize: '14px', color: 'var(--text-3)', fontFamily: FH, fontWeight: '700', marginBottom: '4px' }}>
                       Drop resume or <span style={{ color: PICTON, textDecoration: 'underline' }}>browse</span>
                     </div>
-                    <div style={{ fontSize: '11px', color: 'var(--text-4)', fontFamily: FB }}>PDF · TXT · DOC accepted</div>
+                    <div style={{ fontSize: '11px', color: 'var(--text-4)', fontFamily: FB }}>PDF  TXT  DOC accepted</div>
                   </>
                 )}
               </div>
@@ -1200,7 +1200,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
         )}
       </AnimatePresence>
 
-      {/* Rejection — FIX: onDismiss calls dismissRejection() not clearAll().
+      {/* Rejection - FIX: onDismiss calls dismissRejection() not clearAll().
           Text is preserved so user doesn't re-paste after a validation failure. */}
       <AnimatePresence>
         {rejection && (
@@ -1211,7 +1211,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
         )}
       </AnimatePresence>
 
-      {/* Analyse button — enabled as soon as file is selected (optimistic) */}
+      {/* Analyse button - enabled as soon as file is selected (optimistic) */}
       {!hasResult && !loading && (
         <motion.button
           onClick={handleAnalyse}

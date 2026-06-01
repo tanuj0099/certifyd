@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import { supabase } from '../lib/supabase.js';
 import {
   ArrowLeft,
@@ -23,36 +24,36 @@ import {
   Cell,
 } from 'recharts';
 
-// ─────────────────────────────────────────────────────────
+// 
 // Constants
-// ─────────────────────────────────────────────────────────
+// 
 const INDUSTRY_AVG_COST     = 250;  // USD
 const INDUSTRY_AVG_DURATION = 100;  // minutes
 
-// ─────────────────────────────────────────────────────────
+// 
 // Helpers
-// ─────────────────────────────────────────────────────────
+// 
 function formatCost(cost) {
-  if (cost === null || cost === undefined) return '—';
+  if (cost === null || cost === undefined) return '-';
   const n = Number(cost);
   if (n === 0) return 'Free';
   return `$${n.toLocaleString()}`;
 }
 
 function formatValidity(months) {
-  if (months === null || months === undefined) return '—';
+  if (months === null || months === undefined) return '-';
   const n = Number(months);
   if (n >= 999) return 'Lifetime';
   return `${n} Months`;
 }
 
 function formatDuration(mins) {
-  if (!mins) return '—';
+  if (!mins) return '-';
   return `${mins} Mins`;
 }
 
 function formatQuestions(n) {
-  if (!n) return '—';
+  if (!n) return '-';
   return String(n);
 }
 
@@ -75,7 +76,7 @@ function vendorFromSlug(slug) {
   const MAP = {
     AWS: 'AWS', GCP: 'Google Cloud', AZURE: 'Microsoft Azure', AZ: 'Microsoft Azure',
     CKA: 'CNCF', CKAD: 'CNCF', CKS: 'CNCF',
-    CISSP: 'ISC²', CISM: 'ISACA', CISA: 'ISACA',
+    CISSP: 'ISC', CISM: 'ISACA', CISA: 'ISACA',
     PMP: 'PMI', CAPM: 'PMI',
     COMPTIA: 'CompTIA',
     RHCE: 'Red Hat', RHCSA: 'Red Hat',
@@ -84,9 +85,9 @@ function vendorFromSlug(slug) {
   return MAP[prefix] || prefix;
 }
 
-// ─────────────────────────────────────────────────────────
-// StatCard — hero row
-// ─────────────────────────────────────────────────────────
+// 
+// StatCard - hero row
+// 
 function StatCard({ icon: Icon, label, value, valueClass = 'text-white', accent }) {
   return (
     /*
@@ -106,8 +107,8 @@ function StatCard({ icon: Icon, label, value, valueClass = 'text-white', accent 
         </span>
       </div>
       {/*
-        Value text: scale down on mobile to prevent overflow in the 2×2 grid.
-        text-lg on mobile (≈18px) → text-2xl on desktop.
+        Value text: scale down on mobile to prevent overflow in the 22 grid.
+        text-lg on mobile (18px)  text-2xl on desktop.
       */}
       <p className={`text-lg md:text-2xl font-bold leading-none tabular-nums ${valueClass}`}>
         {value}
@@ -116,9 +117,9 @@ function StatCard({ icon: Icon, label, value, valueClass = 'text-white', accent 
   );
 }
 
-// ─────────────────────────────────────────────────────────
-// Custom Recharts tooltip — positioned to avoid right-edge clipping
-// ─────────────────────────────────────────────────────────
+// 
+// Custom Recharts tooltip - positioned to avoid right-edge clipping
+// 
 function CustomTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null;
   return (
@@ -134,9 +135,9 @@ function CustomTooltip({ active, payload, label }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────
-// ComparisonChart — horizontal bar chart
-// ─────────────────────────────────────────────────────────
+// 
+// ComparisonChart - horizontal bar chart
+// 
 function ComparisonChart({ title, thisValue, avgValue, unit, thisLabel, color }) {
   const data = [
     { name: thisLabel,      value: thisValue },
@@ -158,7 +159,7 @@ function ComparisonChart({ title, thisValue, avgValue, unit, thisLabel, color })
       </h4>
 
       {/*
-        ResponsiveContainer width="100%" is critical — it lets Recharts
+        ResponsiveContainer width="100%" is critical - it lets Recharts
         measure the parent div and never overflow the viewport.
         height is taller on mobile (110px) so bars are finger-friendly.
         YAxis width is reduced on mobile to reclaim horizontal space.
@@ -210,9 +211,9 @@ function ComparisonChart({ title, thisValue, avgValue, unit, thisLabel, color })
   );
 }
 
-// ─────────────────────────────────────────────────────────
+// 
 // Loading skeleton
-// ─────────────────────────────────────────────────────────
+// 
 function LoadingSkeleton() {
   return (
     <div className="min-h-screen bg-black w-full text-white p-4 md:p-8">
@@ -226,7 +227,7 @@ function LoadingSkeleton() {
         </div>
         {/* Title */}
         <div className="h-8 md:h-12 w-3/4 bg-white/10 rounded" />
-        {/* Stat cards — 2×2 on mobile, 4 across on desktop */}
+        {/* Stat cards - 22 on mobile, 4 across on desktop */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
           {[...Array(4)].map((_, i) => (
             <div key={i} className="h-20 md:h-28 bg-zinc-900/30 border border-white/5 rounded-2xl" />
@@ -245,9 +246,9 @@ function LoadingSkeleton() {
   );
 }
 
-// ─────────────────────────────────────────────────────────
+// 
 // Main component
-// ─────────────────────────────────────────────────────────
+// 
 const CertDetail = () => {
   const { slug } = useParams();
   const [cert, setCert]         = useState(null);
@@ -292,7 +293,7 @@ const CertDetail = () => {
           {error || 'Certification not found.'}
         </p>
         <Link
-          to="/tools/cert-radar"
+          href="/tools/cert-radar"
           className="inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-full border border-white/10 text-sm font-medium text-zinc-400 hover:text-white hover:border-white/20 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -311,16 +312,16 @@ const CertDetail = () => {
     <div className="min-h-screen bg-black w-full text-white pb-20 md:pb-24">
       {/*
         Page wrapper:
-        Mobile:  px-4  py-6   — tight but breathable
+        Mobile:  px-4  py-6   - tight but breathable
         Tablet:  px-6  py-8
         Desktop: px-10 py-12
       */}
       <div className="max-w-[1100px] mx-auto px-4 py-6 md:px-6 md:py-8 lg:px-10 lg:py-12">
 
-        {/* ── Back nav ── */}
+        {/*  Back nav  */}
         <nav className="mb-6 md:mb-10">
           <Link
-            to="/tools/cert-radar"
+            href="/tools/cert-radar"
             className="
               inline-flex items-center gap-2
               min-h-[44px] pr-4
@@ -334,11 +335,11 @@ const CertDetail = () => {
           </Link>
         </nav>
 
-        {/* ══════════════════════════════════════════════
+        {/* 
             HERO
-        ══════════════════════════════════════════════ */}
+         */}
         <header className="mb-6 md:mb-10">
-          {/* Badges row — wraps naturally on mobile */}
+          {/* Badges row - wraps naturally on mobile */}
           <div className="flex flex-wrap items-center gap-2 mb-4 md:mb-5">
             {vendor && (
               <span className="px-3 py-1.5 text-[10px] uppercase tracking-widest font-semibold bg-white/5 border border-white/10 text-zinc-400 rounded-full">
@@ -359,19 +360,19 @@ const CertDetail = () => {
 
           {/*
             Title typography scale:
-            Mobile:  text-2xl (24px) — no wrapping on 375px
+            Mobile:  text-2xl (24px) - no wrapping on 375px
             Tablet:  text-3xl (30px)
-            Desktop: text-5xl (48px) — premium impact
+            Desktop: text-5xl (48px) - premium impact
           */}
           <h1 className="text-2xl md:text-3xl lg:text-5xl font-extrabold tracking-tight leading-[1.05] text-white">
             {cert.name}
           </h1>
         </header>
 
-        {/* ── Bottom-line stat cards ──────────────────────────
-            2×2 grid on mobile  → neat square, no squishing
-            4 across on desktop → full-width row
-        ── */}
+        {/*  Bottom-line stat cards 
+            22 grid on mobile   neat square, no squishing
+            4 across on desktop  full-width row
+         */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-8 md:mb-12">
           <StatCard
             icon={DollarSign}
@@ -400,9 +401,9 @@ const CertDetail = () => {
           />
         </div>
 
-        {/* ══════════════════════════════════════════════
+        {/* 
             MAIN LAYOUT
-            ─────────────────────────────────────────────
+            
             Mobile:  single column, flex-col
                      Logistics card appears FIRST (order-first)
                      so users see the quick-facts before reading
@@ -410,14 +411,14 @@ const CertDetail = () => {
             Desktop: 2/3 left narrative + 1/3 sticky sidebar
                      Sidebar returns to its natural right position
                      (order-last on lg).
-        ══════════════════════════════════════════════ */}
+         */}
         <div className="flex flex-col lg:grid lg:grid-cols-3 gap-5 md:gap-6 items-start">
 
-          {/* ── RIGHT SIDEBAR — Logistics Card ──────────────
+          {/*  RIGHT SIDEBAR - Logistics Card 
               order-first:    appears at top on mobile
               lg:order-last:  returns to right column on desktop
               lg:sticky:      sticks while scrolling on desktop
-          ── */}
+           */}
           <aside className="w-full order-first lg:order-last lg:sticky lg:top-6">
             <div className="p-4 md:p-6 rounded-2xl bg-zinc-900/50 border border-white/[0.09] space-y-4 md:space-y-5">
               <h3 className="text-xs md:text-sm font-bold uppercase tracking-widest text-zinc-400">
@@ -501,9 +502,9 @@ const CertDetail = () => {
                 ))}
               </div>
 
-              {/* CTA — min-h-[44px] for fat-finger safety */}
+              {/* CTA - min-h-[44px] for fat-finger safety */}
               <Link
-                to="/app"
+                href="/tools/roi"
                 className="
                   mt-1 w-full flex items-center justify-center gap-2
                   min-h-[44px] py-3 px-4
@@ -525,10 +526,10 @@ const CertDetail = () => {
             </div>
           </aside>
 
-          {/* ── LEFT COLUMN — Narrative + Charts ────────────
+          {/*  LEFT COLUMN - Narrative + Charts 
               order-last on mobile (appears below logistics card)
               lg:col-span-2 on desktop (takes 2/3 width)
-          ── */}
+           */}
           <div className="w-full order-last lg:order-first lg:col-span-2 space-y-5 md:space-y-6">
 
             {/* What is it? */}
@@ -561,7 +562,7 @@ const CertDetail = () => {
               </section>
             )}
 
-            {/* ── Market Context Charts ── */}
+            {/*  Market Context Charts  */}
             <section>
               {/* Section divider label */}
               <div className="flex items-center gap-2 mb-4">
@@ -574,7 +575,7 @@ const CertDetail = () => {
 
               {/*
                 Charts grid:
-                Mobile:  1 column — each chart gets full width, no overflow
+                Mobile:  1 column - each chart gets full width, no overflow
                 Tablet+: 2 columns side by side
               */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

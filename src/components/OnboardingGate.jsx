@@ -1,46 +1,50 @@
+'use client';
+
 import { useEffect, useRef, useState } from 'react'
-import { Navigate, useLocation } from 'react-router-dom'
+import { usePathname } from 'next/navigation';
+import { Navigate } from 'react-router-dom';
+
 import { useAuth } from '../hooks/useAuth.jsx'
 import { supabase } from '../lib/supabase.js'
 import SkeletonLoader from './SkeletonLoader.jsx'
 
 /**
- * OnboardingGate — wraps protected routes that require a completed profile.
+ * OnboardingGate - wraps protected routes that require a completed profile.
  *
  * Flow:
- *  1. User must be signed in (else → /)
+ *  1. User must be signed in (else  /)
  *  2. Supabase 'profiles' table is checked for onboarding_complete = true
- *  3. If profile is missing or incomplete → /onboarding
- *  4. If complete → render children
+ *  3. If profile is missing or incomplete  /onboarding
+ *  4. If complete  render children
  *
  * Does NOT redirect if Supabase is unavailable (graceful degradation).
  * Does NOT redirect to /onboarding if already on /onboarding (prevents ping-pong loops).
  *
  * CRITICAL: useEffect dependency uses user.uid (a stable string) NOT the user object
- * reference — using the object would cause infinite re-renders because Firebase/Supabase
+ * reference - using the object would cause infinite re-renders because Firebase/Supabase
  * re-creates the user object on every auth state subscription tick.
  */
 export default function OnboardingGate({ children }) {
   const { user, loading: authLoading } = useAuth()
-  const location = useLocation()
+  const location = { pathname: usePathname() }
 
   const [profileChecked, setProfileChecked] = useState(false)
   const [needsOnboarding, setNeedsOnboarding] = useState(false)
 
-  // Stable user identity string — avoids object reference churn in deps
+  // Stable user identity string - avoids object reference churn in deps
   const userId = user?.uid || user?.id || null
 
-  // Track the last userId we ran a check for — skip duplicate runs
+  // Track the last userId we ran a check for - skip duplicate runs
   const lastCheckedRef = useRef(null)
 
   useEffect(() => {
     // Wait for auth to settle
     if (authLoading) return
-    // No user — nothing to check
+    // No user - nothing to check
     if (!userId) return
-    // Already checked this exact user — prevent re-fire
+    // Already checked this exact user - prevent re-fire
     if (lastCheckedRef.current === userId) return
-    // Supabase not configured — pass user through without blocking
+    // Supabase not configured - pass user through without blocking
     if (!supabase) {
       lastCheckedRef.current = userId
       setProfileChecked(true)
@@ -83,14 +87,14 @@ export default function OnboardingGate({ children }) {
       cancelled = true
       lastCheckedRef.current = null
     }
-  }, [userId, authLoading]) // stable primitives only — no object references
+  }, [userId, authLoading]) // stable primitives only - no object references
 
   // Auth still loading
   if (authLoading) {
     return <SkeletonLoader type="dashboard" />
   }
 
-  // Not signed in → root (preserve the attempted path in state)
+  // Not signed in  root (preserve the attempted path in state)
   if (!user) {
     return <Navigate to="/" replace state={{ authRequired: true, from: location.pathname }} />
   }
@@ -100,7 +104,7 @@ export default function OnboardingGate({ children }) {
     return <SkeletonLoader type="dashboard" />
   }
 
-  // New user needs onboarding — but never redirect to /onboarding from /onboarding itself
+  // New user needs onboarding - but never redirect to /onboarding from /onboarding itself
   if (needsOnboarding && location.pathname !== '/onboarding') {
     return <Navigate to="/onboarding" replace />
   }

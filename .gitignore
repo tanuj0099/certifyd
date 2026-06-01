@@ -1,4 +1,4 @@
-# Dependencies
+        # Dependencies
 node_modules/
 .pnp
 .pnp.js
@@ -79,3 +79,6 @@ yarn-error.log*
 
 # Next.js
 .next/
+
+# Sentry Config File
+.env.sentry-build-plugin

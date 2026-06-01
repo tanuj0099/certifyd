@@ -52,8 +52,8 @@ const PitchGenerator = ({ certName, certCost, currentSalary, hikePercent, onClos
         setResult(type === 'email'
           ? `Subject: Training Sponsorship Request - ${certName}\n\nHi [Manager's Name],\n\nI'd like to request company sponsorship for the ${certName} certification (Rs.${certCost}L).\n\nHere's why this makes sense for the team:\n\n1. We can handle ${certName.includes('AWS') ? 'cloud infrastructure' : certName.includes('Data') ? 'data analytics' : 'this domain'} in-house, reducing external consulting costs\n2. Certified professionals deliver 30-40% faster on relevant projects per industry benchmarks\n3. Keeps our skills current with what clients are actively requesting in 2026\n\nThe investment pays for itself within ${breakEven} months. Total ask: Rs.${certCost}L.\n\nWould you be open to sponsoring Rs.${certCost}L?\n\nThanks,\n[Your Name]`
           : type === 'slack'
-          ? `Hey [Manager] - quick ask. Would the company consider sponsoring my ${certName} cert (Rs.${certCost}L)? Pays back in ${breakEven} months through productivity gains. Happy to share the full ROI breakdown. Would you be open to sponsoring Rs.${certCost}L? 🙏`
-          : `Hi [Manager]! Any chance the company could sponsor my ${certName} cert? It's Rs.${certCost}L and pays back in ${breakEven} months. Direct benefit to the team. Would you be open to sponsoring Rs.${certCost}L? Thanks! 🙏`)
+          ? `Hey [Manager] - quick ask. Would the company consider sponsoring my ${certName} cert (Rs.${certCost}L)? Pays back in ${breakEven} months through productivity gains. Happy to share the full ROI breakdown. Would you be open to sponsoring Rs.${certCost}L? `
+          : `Hi [Manager]! Any chance the company could sponsor my ${certName} cert? It's Rs.${certCost}L and pays back in ${breakEven} months. Direct benefit to the team. Would you be open to sponsoring Rs.${certCost}L? Thanks! `)
       } else {
         setError('Generation failed: ' + e.message)
       }
@@ -79,14 +79,14 @@ const PitchGenerator = ({ certName, certCost, currentSalary, hikePercent, onClos
         </div>
         <div>
           <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: '800', fontSize: '12px', color: PICTON, letterSpacing: '0.04em' }}>PITCH YOUR BOSS</div>
-          <div style={{ fontSize: '11px', color: '#1E293B', fontFamily: 'Inter, sans-serif' }}>Get your company to pay for this cert</div>
+          <div style={{ fontSize: '11px', color: '#1E293B', fontFamily: 'var(--font-sans)' }}>Get your company to pay for this cert</div>
         </div>
         <button onClick={onClose} style={{ marginLeft: 'auto', background: 'none', border: 'none', color: '#334155', cursor: 'pointer' }}><X size={14} /></button>
       </div>
 
       <div style={{ padding: '16px 18px' }}>
-        <div style={{ padding: '9px 12px', borderRadius: '8px', background: 'transparent', border: '1px solid transparent', marginBottom: '14px', fontSize: '12px', color: '#475569', fontFamily: 'Inter, sans-serif', lineHeight: '1.5' }}>
-          💡 Most Indian companies have unused L&D budgets every year. Most employees never ask.
+        <div style={{ padding: '9px 12px', borderRadius: '8px', background: 'transparent', border: '1px solid transparent', marginBottom: '14px', fontSize: '12px', color: '#475569', fontFamily: 'var(--font-sans)', lineHeight: '1.5' }}>
+           Most Indian companies have unused L&D budgets every year. Most employees never ask.
         </div>
 
         <div style={{ marginBottom: '14px' }}>
@@ -114,20 +114,20 @@ const PitchGenerator = ({ certName, certCost, currentSalary, hikePercent, onClos
           {loading ? <><div className="pulse-dot" />Writing...</> : <><Sparkles size={13} />Generate {type === 'email' ? 'Email' : type === 'slack' ? 'Slack Message' : 'WhatsApp'}</>}
         </button>
 
-        {error && <div style={{ padding: '9px 12px', borderRadius: '8px', background: 'transparent', border: '1px solid transparent', fontSize: '12px', color: '#FCA5A5', fontFamily: 'Inter, sans-serif' }}>{error}</div>}
+        {error && <div style={{ padding: '9px 12px', borderRadius: '8px', background: 'transparent', border: '1px solid transparent', fontSize: '12px', color: '#FCA5A5', fontFamily: 'var(--font-sans)' }}>{error}</div>}
 
         <AnimatePresence>
           {result && (
             <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.22 }}>
               <div style={{ position: 'relative' }}>
-                <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', padding: '14px', borderRadius: '9px', background: '#0D1117', border: '1px solid var(--border-subtle)', fontSize: '12px', color: '#94A3B8', lineHeight: '1.7', fontFamily: 'Inter, sans-serif', maxHeight: '300px', overflowY: 'auto' }}>
+                <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', padding: '14px', borderRadius: '9px', background: '#0D1117', border: '1px solid var(--border-subtle)', fontSize: '12px', color: '#94A3B8', lineHeight: '1.7', fontFamily: 'var(--font-sans)', maxHeight: '300px', overflowY: 'auto' }}>
                   {result}
                 </pre>
                 <button onClick={copy} style={{ position: 'absolute', top: '10px', right: '10px', display: 'flex', alignItems: 'center', gap: '4px', padding: '4px 9px', borderRadius: '6px', background: copied ? 'transparent' : '#121826', border: '1px solid ' + (copied ? 'transparent' : 'var(--border-subtle)'), color: copied ? EMERALD : '#475569', fontSize: '11px', cursor: 'pointer', fontFamily: 'JetBrains Mono, monospace', transition: 'all 0.18s' }}>
                   {copied ? <><Check size={10} />Copied</> : <><Copy size={10} />Copy</>}
                 </button>
               </div>
-              <p style={{ fontSize: '11px', color: '#1E293B', marginTop: '7px', fontFamily: 'Inter, sans-serif' }}>Replace [Your Name] and [Manager's Name] before sending.</p>
+              <p style={{ fontSize: '11px', color: '#1E293B', marginTop: '7px', fontFamily: 'var(--font-sans)' }}>Replace [Your Name] and [Manager's Name] before sending.</p>
             </motion.div>
           )}
         </AnimatePresence>

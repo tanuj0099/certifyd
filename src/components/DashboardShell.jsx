@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 
-const F_SANS = "'Inter', 'DM Sans', sans-serif"
-const F_MONO = "'JetBrains Mono', 'IBM Plex Mono', monospace"
+const F_SANS = "var(--font-sans)";
+const F_MONO = "var(--font-mono)";
 
 export function DashPanel({ children, style = {}, className = '' }) {
   return (

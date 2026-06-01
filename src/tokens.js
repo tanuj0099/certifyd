@@ -1230,4 +1230,4 @@ export const INDIA_CONTEXT = {
 }
 
 // ── GUEST LIMIT ───────────────────────────────────────────────
-export const GUEST_FREE_LIMIT = parseInt(import.meta.env.VITE_GUEST_FREE_LIMIT || '3')
+export const GUEST_FREE_LIMIT = parseInt(process.env.NEXT_PUBLIC_GUEST_FREE_LIMIT || '3')

@@ -9,9 +9,14 @@ export default {
     './src/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['var(--font-sans)', 'sans-serif'],
+        serif: ['var(--font-serif)', 'serif'],
+        mono: ['var(--font-mono)', 'monospace'],
+      },
+    },
   },
-  plugins: [],
   plugins: [
     require('@tailwindcss/typography'),
   ],

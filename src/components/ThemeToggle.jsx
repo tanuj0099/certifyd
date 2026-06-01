@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTheme, THEME_PRESETS } from '../hooks/useTheme'
 
-const FM = "'JetBrains Mono', monospace"
+const FM = "var(--font-mono)";
 
 export default function ThemeToggle() {
   const { themeId, toggleTheme } = useTheme()

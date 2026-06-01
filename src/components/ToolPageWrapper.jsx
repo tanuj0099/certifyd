@@ -1,5 +1,5 @@
 /**
- * ToolPageWrapper — Frameless edition
+ * ToolPageWrapper - Frameless edition
  *
  * Tools sit directly on the page background with zero wrapping container.
  * The heading area uses the same --bg surface; no card, no shadow, no rounded box.
@@ -10,7 +10,7 @@ import { MarketingFooter } from './MarketingPageShell.jsx'
 import FeedbackWidget from './FeedbackWidget.jsx'
 import SEOHead from './SEOHead.jsx'
 
-const FM = "'JetBrains Mono','IBM Plex Mono',monospace"
+const FM = "var(--font-mono)";
 const T  = { type: 'spring', stiffness: 120, damping: 22 }
 
 export default function ToolPageWrapper({
@@ -56,7 +56,7 @@ export default function ToolPageWrapper({
         }}
       />
 
-      {/* ── Page heading — zero elevation, no card ─────────────────── */}
+      {/*  Page heading - zero elevation, no card  */}
       <div className="page-top-pad" style={{ maxWidth: '100%', margin: '0', paddingLeft: '24px', paddingRight: '24px' }}>
         <motion.div
           initial={{ opacity: 0, y: 14 }}
@@ -93,7 +93,7 @@ export default function ToolPageWrapper({
           }}>
             {title}
             {subtitle
-              ? <span style={{ color: 'var(--text-2)' }}>{' — '}{subtitle}</span>
+              ? <span style={{ color: 'var(--text-2)' }}>{' - '}{subtitle}</span>
               : null}
           </h1>
 
@@ -111,7 +111,7 @@ export default function ToolPageWrapper({
         </motion.div>
       </div>
 
-      {/* ── Tool content — directly on background, hairline above ──── */}
+      {/*  Tool content - directly on background, hairline above  */}
       <div style={{ maxWidth: '100%', margin: '0', padding: '0 24px 80px' }}>
         <motion.div
           initial={{ opacity: 0, y: 10 }}

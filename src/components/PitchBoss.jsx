@@ -3,15 +3,15 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Briefcase, Copy, Check, ChevronDown, RefreshCw, Zap } from 'lucide-react'
 import { callGroqForPitch } from '../services/aiService.jsx'
 
-const F_HEAD = "'Bricolage Grotesque', 'Plus Jakarta Sans', sans-serif"
-const F_MONO = "'Commit Mono', 'JetBrains Mono', monospace"
-const F_BODY = "'Inter', sans-serif"
+const F_HEAD = "var(--font-head)";
+const F_MONO = "var(--font-mono)";
+const F_BODY = "var(--font-body)";
 const T = { duration: 0.28, ease: [0.4, 0, 0.2, 1] }
 const EMERALD = 'var(--linear-blue)'
 const VIOLET = 'var(--linear-blue)'
 const AMBER = 'var(--cool-grey)'
 
-// ── Build a structured JSON prompt ────────────────────────
+//  Build a structured JSON prompt 
 const buildCasePrompt = ({ certName, salary, certCost, hikePercent, name, company, role }) => `
 You are a concise financial analyst helping an Indian tech professional build a reimbursement business case for their manager.
 
@@ -26,14 +26,14 @@ Expected salary hike post-cert: ${hikePercent}%
 Respond in VALID JSON only, no markdown. Exactly this shape:
 {
   "cost":        "<one line: total cost including exam fee, materials, and time off if applicable>",
-  "companyGain": "<one line: specific skill or capability the company gets in-house — be concrete, not generic>",
+  "companyGain": "<one line: specific skill or capability the company gets in-house - be concrete, not generic>",
   "timeCommit":  "<one line: realistic study hours per week and total weeks, with impact on work hours>",
-  "roiStatement":"<one line: hard number — monthly salary cost increase vs. capability ROI, in rupees>",
-  "demandNote":  "<one line: India job market signal — Naukri/LinkedIn demand stat for this cert if you know it>"
+  "roiStatement":"<one line: hard number - monthly salary cost increase vs. capability ROI, in rupees>",
+  "demandNote":  "<one line: India job market signal - Naukri/LinkedIn demand stat for this cert if you know it>"
 }
 `
 
-// ── Render bullet with copy-able content ─────────────────
+//  Render bullet with copy-able content 
 function BulletRow({ icon, label, value, color }) {
   const [copied, setCopied] = useState(false)
   const handleCopy = () => {
@@ -61,10 +61,10 @@ function BulletRow({ icon, label, value, color }) {
   )
 }
 
-// ── Copy-all formatted text ───────────────────────────────
+//  Copy-all formatted text 
 function buildCopyText(bcase, certName, name) {
   return [
-    `Reimbursement request — ${certName}`,
+    `Reimbursement request - ${certName}`,
     '',
     `Cost: ${bcase.cost}`,
     `Company benefit: ${bcase.companyGain}`,
@@ -72,7 +72,7 @@ function buildCopyText(bcase, certName, name) {
     `ROI: ${bcase.roiStatement}`,
     `Market signal: ${bcase.demandNote}`,
     '',
-    `— ${name || '[Your Name]'}`,
+    `- ${name || '[Your Name]'}`,
   ].join('\n')
 }
 
@@ -98,7 +98,7 @@ const PitchBoss = ({ certName, salary, certCost, hikePercent, name, mode }) => {
       const jsonMatch = raw.match(/\{[\s\S]*\}/)
       if (!jsonMatch) throw new Error('Could not parse structured response.')
       const parsed = JSON.parse(jsonMatch[0])
-      if (!parsed.cost || !parsed.companyGain) throw new Error('Incomplete response — try again.')
+      if (!parsed.cost || !parsed.companyGain) throw new Error('Incomplete response - try again.')
       setBcase(parsed)
     } catch (e) {
       setError(e.message || 'Generation failed. Check API connection.')
@@ -133,13 +133,13 @@ const PitchBoss = ({ certName, salary, certCost, hikePercent, name, mode }) => {
             <div style={{ padding: '16px', marginTop: '8px', borderRadius: '12px', background: 'transparent', border: '1px solid transparent' }}>
               {/* Removed glass-border */}
               <div style={{ fontFamily: F_MONO, fontSize: '9px', color: VIOLET, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Briefcase size={9} /> REIMBURSEMENT BUSINESS CASE · {certName?.toUpperCase()}
+                <Briefcase size={9} /> REIMBURSEMENT BUSINESS CASE  {certName?.toUpperCase()}
               </div>
 
               {/* Callout: what this is */}
               <div style={{ padding: '10px 12px', borderRadius: '8px', background: 'transparent', border: '1px solid transparent', marginBottom: '14px' }}>
                 <div style={{ fontFamily: F_BODY, fontSize: '12px', color: 'var(--text-3)', lineHeight: '1.55' }}>
-                  This generates <strong style={{ color: 'var(--text-2)' }}>4–5 hard-hitting bullet points</strong> based on your numbers — not a generic email. Copy the points you need and write the greeting yourself.
+                  This generates <strong style={{ color: 'var(--text-2)' }}>4-5 hard-hitting bullet points</strong> based on your numbers - not a generic email. Copy the points you need and write the greeting yourself.
                 </div>
               </div>
 
@@ -196,15 +196,15 @@ const PitchBoss = ({ certName, salary, certCost, hikePercent, name, mode }) => {
 
                   {/* Instruction strip */}
                   <div style={{ fontFamily: F_MONO, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>
-                    Copy the points you need · write the greeting in your own voice
+                    Copy the points you need  write the greeting in your own voice
                   </div>
 
                   {/* Bullets */}
-                  <BulletRow icon="—" label="Cost" value={bcase.cost} color={AMBER} />
-                  <BulletRow icon="—" label="Company Benefit" value={bcase.companyGain} color={VIOLET} />
-                  <BulletRow icon="—" label="Time Commitment" value={bcase.timeCommit} color="#94A3B8" />
-                  <BulletRow icon="—" label="ROI" value={bcase.roiStatement} color={EMERALD} />
-                  <BulletRow icon="—" label="Market Signal" value={bcase.demandNote} color={AMBER} />
+                  <BulletRow icon="-" label="Cost" value={bcase.cost} color={AMBER} />
+                  <BulletRow icon="-" label="Company Benefit" value={bcase.companyGain} color={VIOLET} />
+                  <BulletRow icon="-" label="Time Commitment" value={bcase.timeCommit} color="#94A3B8" />
+                  <BulletRow icon="-" label="ROI" value={bcase.roiStatement} color={EMERALD} />
+                  <BulletRow icon="-" label="Market Signal" value={bcase.demandNote} color={AMBER} />
 
                   {/* Actions */}
                   <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>

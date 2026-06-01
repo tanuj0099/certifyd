@@ -25,12 +25,12 @@ import MarketPulseTicker from './MarketPulseTicker.jsx'
 import { HeroSkeleton, AIResultSkeleton, ConsensusGauge, RollNumber, resolveVerdictStatus, DataSyncBadge } from './PremiumDataViz.jsx'
 import BurnRate from './BurnRate.jsx'
 
-const GUEST_FREE_LIMIT = parseInt(import.meta.env.VITE_GUEST_FREE_LIMIT || '3', 10)
+const GUEST_FREE_LIMIT = parseInt(process.env.NEXT_PUBLIC_GUEST_FREE_LIMIT || '3', 10)
 
-// ── Font constants ────────────────────────────────────────
-const FH = 'var(--font-head)'
-const FM = 'var(--font-mono)'
-const FB = 'var(--font-body)'
+//  Font constants 
+const FH = "var(--font-head)";
+const FM = "var(--font-mono)";
+const FB = "var(--font-body)";
 
 const TT = { duration: 0.28, ease: [0.4, 0, 0.2, 1] }
 
@@ -47,17 +47,17 @@ function dc(d) {
   return '#94A3B8'
 }
 
-// ── Feature 1: Affordability band ─────────────────────────
+//  Feature 1: Affordability band 
 function getAffordabilityBand(certCostL, salaryL, isStudent) {
   const baseline = isStudent ? 4.8 : salaryL
   if (baseline <= 0 || certCostL <= 0) return null
   const ratio = certCostL / baseline
-  if (ratio <= 0.10) return { label: 'Good value', color: EMERALD, tip: 'Under 10% of salary — well within budget' }
-  if (ratio <= 0.25) return { label: 'Risky', color: AMBER, tip: '10–25% of salary — tight but manageable' }
-  return { label: 'Premium stretch', color: INDIGO, tip: 'Over 25% of salary — significant commitment' }
+  if (ratio <= 0.10) return { label: 'Good value', color: EMERALD, tip: 'Under 10% of salary - well within budget' }
+  if (ratio <= 0.25) return { label: 'Risky', color: AMBER, tip: '10-25% of salary - tight but manageable' }
+  return { label: 'Premium stretch', color: INDIGO, tip: 'Over 25% of salary - significant commitment' }
 }
 
-// ── Feature 3: Payback confidence ─────────────────────────
+//  Feature 3: Payback confidence 
 function getPaybackConfidence(demand, hikePercent) {
   if ((demand === 'Very High' || demand === 'High') && hikePercent >= 25)
     return { label: 'High confidence', color: EMERALD }
@@ -66,7 +66,7 @@ function getPaybackConfidence(demand, hikePercent) {
   return { label: 'Low confidence', color: '#94A3B8' }
 }
 
-// ── Feature 3b: Payback range (replaces exact month) ───────
+//  Feature 3b: Payback range (replaces exact month) 
 function getPaybackRange(months, demand, hikePercent) {
   if (!months || months <= 0) return '--'
   const conf = getPaybackConfidence(demand, hikePercent)
@@ -74,10 +74,10 @@ function getPaybackRange(months, demand, hikePercent) {
     : conf.label === 'Medium confidence' ? 0.25 : 0.35
   const lo = Math.max(1, Math.round(months * (1 - spread)))
   const hi = Math.round(months * (1 + spread))
-  return lo + '–' + hi + ' mo'
+  return lo + '-' + hi + ' mo'
 }
 
-// ── Feature 5: Per-cert readiness ─────────────────────────
+//  Feature 5: Per-cert readiness 
 function getCertReadiness(forWho = '') {
   const lower = forWho.toLowerCase()
   const beginnerSignals = ['fresher', 'entry', 'beginner', 'career switch', 'anyone entering', 'fresh', 'no experience']
@@ -87,7 +87,7 @@ function getCertReadiness(forWho = '') {
   return { label: 'Intermediate', color: AMBER }
 }
 
-// ── Feature 2: Not-ideal-for note ─────────────────────────
+//  Feature 2: Not-ideal-for note 
 function getNotIdealNote(cert) {
   if (!cert) return null
   const lower = (cert.forWho || '').toLowerCase()
@@ -99,13 +99,13 @@ function getNotIdealNote(cert) {
   return notes.length > 0 ? notes[0] : null
 }
 
-// ── Share ROI URL ─────────────────────────────────────
+//  Share ROI URL 
 function ShareURLButton({ certName, salary, certCost, hikePercent, mode }) {
   const [copied, setCopied] = useState(false)
   if (!certName) return null
 
   const handleCopy = () => {
-    const base = window.location.origin + '/app'
+    const base = window.location.origin + '/'
     const params = new URLSearchParams({
       cert: certName,
       sal: salary,
@@ -152,7 +152,7 @@ function ShareURLButton({ certName, salary, certCost, hikePercent, mode }) {
   )
 }
 
-// ── Student stepping-stone path ────────────────────────
+//  Student stepping-stone path 
 function getStudentPathSteps(domain, certName, firstSalary) {
   const domainSteps = {
     finance: [
@@ -375,9 +375,9 @@ function Slider({ label, value, min = 0, max = 100, step = 1, onChange, prefix =
   )
 }
 
-// ─────────────────────────────────────────────────────────
+// 
 // INLINE DATA SOURCE NOTE
-// ─────────────────────────────────────────────────────────
+// 
 function DataNote({ children }) {
   return (
     <div className="callout-card" style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', marginTop: '4px' }}>
@@ -389,9 +389,9 @@ function DataNote({ children }) {
   )
 }
 
-// ─────────────────────────────────────────────────────────
+// 
 // CERT LEADERBOARD
-// ─────────────────────────────────────────────────────────
+// 
 function Leadboard({ domainList, sorted, preferred, showAll, setShowAll, activeCertName, onPick, mappedDomain, isPrefilled, domains }) {
   const isSinglePrefilled = isPrefilled && preferred.length > 0
 
@@ -419,7 +419,7 @@ function Leadboard({ domainList, sorted, preferred, showAll, setShowAll, activeC
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px', flexWrap: isMobile ? 'wrap' : 'nowrap' }}>
           <div style={{ fontFamily: FM, fontSize: '10px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
             {mappedDomain
-              ? (domains.find(function (d) { return d.id === mappedDomain })?.label || mappedDomain) + ' · Top Picks'
+              ? (domains.find(function (d) { return d.id === mappedDomain })?.label || mappedDomain) + '  Top Picks'
               : 'Highest Demand Certs'}
           </div>
           {mappedDomain && (
@@ -427,7 +427,7 @@ function Leadboard({ domainList, sorted, preferred, showAll, setShowAll, activeC
               onClick={function () { setShowAll(function (v) { return !v }) }}
               style={{ fontFamily: FM, fontSize: '9px', color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer', letterSpacing: '0.06em', textTransform: 'uppercase', padding: 0 }}
             >
-              {showAll ? 'Show Less ▴' : 'Show All ▾'}
+              {showAll ? 'Show Less ' : 'Show All '}
             </button>
           )}
         </div>
@@ -501,9 +501,9 @@ function Leadboard({ domainList, sorted, preferred, showAll, setShowAll, activeC
   )
 }
 
-// ─────────────────────────────────────────────────────────
+// 
 // PICK MESSAGE
-// ─────────────────────────────────────────────────────────
+// 
 function PickMessage({ certName, prefilledCert, firstName }) {
   if (!certName) return null
   const prefersReduced = useReducedMotion()
@@ -567,9 +567,9 @@ function PickMessage({ certName, prefilledCert, firstName }) {
   )
 }
 
-// ── Payback range bar (confidence interval visual) ───────
+//  Payback range bar (confidence interval visual) 
 function PaybackRangeBar({ lo, hi, mid, color }) {
-  // Render a horizontal timeline: lo ─────[mid]───── hi
+  // Render a horizontal timeline: lo [mid] hi
   // The center "most likely" zone is highlighted
   const spread = hi - lo
   if (!spread || spread <= 0) return null
@@ -601,7 +601,7 @@ function PaybackRangeBar({ lo, hi, mid, color }) {
   )
 }
 
-// ── Stat card ─────────────────────────────────────────────
+//  Stat card 
 function StatCard({ label, value, sub, color, delay = 0, badge, rangeData }) {
   const prefersReduced = useReducedMotion()
   return (
@@ -632,7 +632,7 @@ function StatCard({ label, value, sub, color, delay = 0, badge, rangeData }) {
   )
 }
 
-// ── Chart tooltip ─────────────────────────────────────────
+//  Chart tooltip 
 function ChartTip({ active, payload, label }) {
   if (!active || !payload?.length) return null
   return (
@@ -652,9 +652,9 @@ function ChartTip({ active, payload, label }) {
   )
 }
 
-// ─────────────────────────────────────────────────────────
+// 
 // AI RESULT PANEL
-// ─────────────────────────────────────────────────────────
+// 
 function AIResult({ result, certName, onReset }) {
   const prefersReduced = useReducedMotion()
   const status = resolveVerdictStatus(result.verdict || '', result.breakEvenMonthsNum || 0)
@@ -673,7 +673,7 @@ function AIResult({ result, certName, onReset }) {
       className="glass"
       style={{ marginTop: '14px', borderRadius: '16px', overflow: 'hidden', minHeight: 320 }}
     >
-      {/* ── Status header (brutally honest) ── */}
+      {/*  Status header (brutally honest)  */}
       <div style={{ padding: '14px 16px', background: status.bg, borderBottom: '1px solid ' + status.border, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
         <div style={{ flex: 1 }}>
           <div style={{ fontFamily: FM, fontSize: 9, letterSpacing: '0.12em', color: 'transparent', marginBottom: 6, textTransform: 'uppercase' }}>ROI ASSESSMENT // {certName}</div>
@@ -719,7 +719,7 @@ function AIResult({ result, certName, onReset }) {
           {result.demand.map(function (d, i) {
             return (
               <div key={i} style={{ display: 'flex', gap: '8px', marginBottom: '5px' }}>
-                <span style={{ color: VIOLET, fontFamily: FM, fontSize: '11px', flexShrink: 0 }}>◆</span>
+                <span style={{ color: VIOLET, fontFamily: FM, fontSize: '11px', flexShrink: 0 }}></span>
                 <span style={{ fontSize: '12px', color: 'var(--text-2)', fontFamily: FB, lineHeight: '1.5' }}>{d}</span>
               </div>
             )
@@ -763,7 +763,7 @@ function AIResult({ result, certName, onReset }) {
         <div style={{ display: 'flex', gap: 7, alignItems: 'flex-start' }}>
           <Info size={11} color="var(--text-4)" style={{ flexShrink: 0, marginTop: '1px' }} />
           <div style={{ fontFamily: FM, fontSize: '10px', color: 'var(--text-4)', lineHeight: '1.6', letterSpacing: '0.02em' }}>
-            Estimates based on market medians — not guarantees. Results vary with company tier, negotiation, and conditions. Source: LinkedIn India · Naukri · NASSCOM · Q2 2026.
+            Estimates based on market medians - not guarantees. Results vary with company tier, negotiation, and conditions. Source: LinkedIn India  Naukri  NASSCOM  Q2 2026.
           </div>
         </div>
         <DataSyncBadge updatedAt={result.updatedAt} />
@@ -773,22 +773,22 @@ function AIResult({ result, certName, onReset }) {
 }
 
 
-// ─────────────────────────────────────────────────────────
+// 
 // MAIN HERO COMPONENT
-// ─────────────────────────────────────────────────────────
+// 
 function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
-  // ── Database State ──────────────────────────────────────
+  //  Database State 
   const [certificationsData, setCertificationsData] = useState([]);
   const [domainsData, setDomainsData] = useState([]);
   const [dbLoading, setDbLoading] = useState(true);
 
-  // ── The "Once and For All" Alias Fix ────────────────────
+  //  The "Once and For All" Alias Fix 
   const CERTIFICATIONS = certificationsData;
   const certifications = certificationsData;
   const CERT_DOMAINS = domainsData;
   const certDomains = domainsData;
 
-  // ── Fetch from Supabase on mount ────────────────────────
+  //  Fetch from Supabase on mount 
   useEffect(() => {
     async function fetchDatabase() {
       try {
@@ -808,7 +808,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
     fetchDatabase();
   }, []);
 
-  // ── Props with fallbacks ────────────────────────────────
+  //  Props with fallbacks 
   mode = mode || 'professional';
   prefilledCert = prefilledCert || '';
   resumeName = resumeName || '';
@@ -818,7 +818,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
   const isStudent = mode === 'student';
   const prefersReduced = useReducedMotion();
 
-  // ── Store: slider values ────────────────────────────────
+  //  Store: slider values 
   const salary = useJourneyStore(s => s.salary);
   const certCost = useJourneyStore(s => s.certCost);
   const hikePercent = useJourneyStore(s => s.hikePercent);
@@ -828,13 +828,13 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
   const setHikePercent = useJourneyStore(s => s.setHikePercent);
   const setExpectedFirstSalary = useJourneyStore(s => s.setExpectedFirstSalary);
 
-  // ── Store: selected cert ────────────────────────────────
+  //  Store: selected cert 
   const storeSelectedCert = useJourneyStore(s => s.selectedCert);
   const storeCertName = useJourneyStore(s => s.certName);
   const storeSetSelected = useJourneyStore(s => s.setSelectedCert);
   const storeClearCert = useJourneyStore(s => s.clearCert);
 
-  // ── Local UI state ──────────────────────────────────────
+  //  Local UI state 
   const [aiResult, setAiResult] = useState(null);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState(null);
@@ -842,7 +842,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
   const [cooldown, setCooldown] = useState(0);
   const [showAll, setShowAll] = useState(false);
 
-  // ── Derived state ───────────────────────────────────────
+  //  Derived state 
   const certName = storeCertName || prefilledCert;
   const selectedCert = storeSelectedCert || null;
 
@@ -853,7 +853,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
   const firstName = resumeName ? resumeName.split(' ')[0] : '';
   const displayCity = resumeCity;
 
-  // ── Hooks & Effects ─────────────────────────────────────
+  //  Hooks & Effects 
   useEffect(function () {
     if (cooldown <= 0) return;
     var t = setTimeout(function () { setCooldown(function (v) { return v - 1 }) }, 1000);
@@ -887,7 +887,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
 
   const analyse = useCallback(async function () {
     if (!certName.trim()) { setAiError('Select a certification first'); return; }
-    if (!user && guest.exceeded) { setAiError('Free limit reached — sign in for unlimited'); return; }
+    if (!user && guest.exceeded) { setAiError('Free limit reached - sign in for unlimited'); return; }
     if (cooldown > 0) return;
     setAiLoading(true);
     setAiResult(null);
@@ -932,21 +932,21 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
 
   const T = prefersReduced ? { duration: 0 } : TT;
 
-  // ── Early Return AFTER all hooks ────────────────────────
+  //  Early Return AFTER all hooks 
   if (dbLoading) {
     return <HeroSkeleton />;
   }
 
-  // ── Main UI Return ──────────────────────────────────────
+  //  Main UI Return 
   return (
     <div style={{ position: 'relative' }}>
 
-      {/* ── Market Pulse Ticker ─────────────────────────── */}
+      {/*  Market Pulse Ticker  */}
       <div style={{ marginBottom: 18, padding: '12px 16px', borderRadius: 12, border: '1px solid var(--border-subtle)', background: 'var(--border-subtle)' }}>
         <MarketPulseTicker compact={true} />
       </div>
 
-      {/* ── Personalisation banner ─────────────────────── */}
+      {/*  Personalisation banner  */}
       {(firstName || displayCity || prefilledCert) ? (
         <motion.div
           initial={prefersReduced ? false : { opacity: 0, y: -6 }}
@@ -974,16 +974,16 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
         </motion.div>
       ) : null}
 
-      {/* ── Guest counter ──────────────────────────────── */}
+      {/*  Guest counter  */}
       {!user ? (
         <div style={{ marginBottom: '12px', padding: '8px 12px', borderRadius: '9px', background: guest.exceeded ? 'transparent' : 'transparent', border: '1px solid ' + (guest.exceeded ? 'transparent' : 'transparent'), display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
           <span style={{ fontSize: '12px', color: guest.exceeded ? 'var(--cool-grey)' : VIOLET, fontFamily: FB }}>
-            {guest.exceeded ? 'Free AI analyses used — sign in to continue' : guest.remaining + ' free AI analyses left'}
+            {guest.exceeded ? 'Free AI analyses used - sign in to continue' : guest.remaining + ' free AI analyses left'}
           </span>
         </div>
       ) : null}
 
-      {/* ── Cert leaderboard ───────────────────────────── */}
+      {/*  Cert leaderboard  */}
       {!prefilledCert && (
         <Leadboard
           domainList={domainMatchList} sorted={sortedByDem} preferred={preferredCerts}
@@ -992,14 +992,14 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
         />
       )}
 
-      {/* ── Great / Interesting choice message ─────────── */}
+      {/*  Great / Interesting choice message  */}
       <AnimatePresence mode="wait">
         {certName ? (
           <PickMessage key={certName} certName={certName} prefilledCert={prefilledCert} firstName={firstName} />
         ) : null}
       </AnimatePresence>
 
-      {/* ── Selected cert detail strip ─────────────────── */}
+      {/*  Selected cert detail strip  */}
       <AnimatePresence>
         {selectedCert ? (() => {
           const stripReadiness = getCertReadiness(selectedCert.forWho)
@@ -1038,7 +1038,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
         })() : null}
       </AnimatePresence>
 
-      {/* ── Sliders ─────────────────────────────────────── */}
+      {/*  Sliders  */}
       <div style={{ marginBottom: '20px', padding: '20px 18px', borderRadius: '13px', background: 'transparent', border: 'none' }}>
 
         {isStudent ? (
@@ -1058,7 +1058,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
               note={displayCity || ''}
             />
             <DataNote>
-              Salary benchmarks: Naukri salary insights + LinkedIn India · Median values · {displayCity || 'India'} · Q1 2026
+              Salary benchmarks: Naukri salary insights + LinkedIn India  Median values  {displayCity || 'India'}  Q1 2026
             </DataNote>
           </>
         )}
@@ -1104,13 +1104,13 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
               color={EMERALD}
             />
             <DataNote>
-              Hike benchmarks: AmbitionBox post-cert salary data + NASSCOM 2026 · India median: 25–40% · Individual results vary by company tier and negotiation
+              Hike benchmarks: AmbitionBox post-cert salary data + NASSCOM 2026  India median: 25-40%  Individual results vary by company tier and negotiation
             </DataNote>
           </>
         ) : null}
       </div>
 
-      {/* ── Stat cards ─────────────────────────────────── */}
+      {/*  Stat cards  */}
       <AnimatePresence mode="wait">
         <motion.div
           key={salary + '-' + certCost + '-' + hikePercent + '-' + mode}
@@ -1126,7 +1126,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
             </div>
           ) : (
             <>
-              {/* ── Financial Hero Metrics ──────────────────────── */}
+              {/*  Financial Hero Metrics  */}
               <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2,1fr)', gap: '8px', marginBottom: '12px' }}>
                 <div style={{ padding: '24px 16px', textAlign: 'center', borderColor: 'var(--border-accent)', background: 'transparent', minHeight: 110, border: 'none' }}>
                   <div className="micro-label" style={{ color: 'var(--text-4)', marginBottom: '8px' }}>5-Yr Net Gain</div>
@@ -1138,7 +1138,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
                 </div>
               </div>
 
-              {/* ── Secondary Dash Stats ────────────────────────── */}
+              {/*  Secondary Dash Stats  */}
               <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px', marginBottom: '12px' }}>
                 <StatCard label="New Salary" value={'₹' + roi.newSalaryL + 'L/yr'} color={PICTON} delay={0} />
                 <StatCard label="Monthly +" value={'₹' + roi.monthlyGainK + 'K'} color={VIOLET} delay={0.05} />
@@ -1175,17 +1175,17 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
         </motion.div>
       </AnimatePresence>
 
-      {/* ── Student path graphic ───────────────────────── */}
+      {/*  Student path graphic  */}
       <AnimatePresence>
         {isStudent && certName ? (
           <StudentPath key={certName} certName={certName} certCost={certCost} />
         ) : null}
       </AnimatePresence>
 
-      {/* ── Chart ──────────────────────────────────────── */}
+      {/*  Chart  */}
       {!isStudent && roi.chartData && roi.chartData.length > 0 ? ( /* Removed glass class */
         <div className="glass" style={{ marginBottom: '20px', marginTop: '16px', padding: '16px', borderRadius: '13px' }}>
-          <div style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '10px' }}>CUMULATIVE GAIN — 24 MONTHS</div>
+          <div style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '10px' }}>CUMULATIVE GAIN - 24 MONTHS</div>
           <ResponsiveContainer width="100%" height={150}>
             <LineChart data={roi.chartData} margin={{ top: 4, right: 8, bottom: 0, left: -16 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="transparent" />
@@ -1200,7 +1200,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
         </div>
       ) : null}
 
-      {/* ── AI analyse button ──────────────────────────── */}
+      {/*  AI analyse button  */}
       <div style={{ marginBottom: '16px' }}>
         {aiError ? (
           <motion.div
@@ -1284,7 +1284,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
         </AnimatePresence>
       </div>
 
-      {/* ── Tools row ──────────────────────────────────── */}
+      {/*  Tools row  */}
       {certName ? (
         <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '8px' }}>
           <button
@@ -1297,7 +1297,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
         </div>
       ) : null}
 
-      {/* ── Verify hike panel ──────────────────────────── */}
+      {/*  Verify hike panel  */}
       <AnimatePresence>
         {showVerifier && certName ? (
           <motion.div
@@ -1312,7 +1312,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
         ) : null}
       </AnimatePresence>
 
-      {/* ── Pitch Boss + Share card ─────────────────────── */}
+      {/*  Pitch Boss + Share card  */}
       {certName ? (
         <div>
           <PitchBoss certName={certName} salary={salary} certCost={certCost} hikePercent={hikePercent} name={resumeName} mode={mode} />

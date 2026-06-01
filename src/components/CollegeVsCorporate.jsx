@@ -14,7 +14,7 @@ const SliderRow = ({ label, value, min, max, step, onChange, format, color }) =>
   return (
     <div style={{ marginBottom: '18px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-        <span style={{ fontSize: '12px', color: 'var(--text-3)', fontFamily: 'Inter, sans-serif' }}>{label}</span>
+        <span style={{ fontSize: '12px', color: 'var(--text-3)', fontFamily: 'var(--font-sans)' }}>{label}</span>
         <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '13px', color: color, fontWeight: '700' }}>{format(value)}</span>
       </div>
       <div style={{ position: 'relative', height: '20px', display: 'flex', alignItems: 'center' }}>
@@ -30,7 +30,7 @@ const SliderRow = ({ label, value, min, max, step, onChange, format, color }) =>
 const StatBox = ({ label, value, sub, color }) => (
   <div style={{ padding: '14px', borderRadius: '10px', background: `${color}08`, border: `1px solid ${color}20`, textAlign: 'center' }}>
     <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '1.5rem', color, fontWeight: '700', letterSpacing: '-0.03em', marginBottom: '3px' }}>{value}</div>
-    <div style={{ fontSize: '11px', color: 'var(--text-4)', fontFamily: 'Inter, sans-serif', marginBottom: sub ? '2px' : '0' }}>{label}</div>
+    <div style={{ fontSize: '11px', color: 'var(--text-4)', fontFamily: 'var(--font-sans)', marginBottom: sub ? '2px' : '0' }}>{label}</div>
     {sub && <div style={{ fontSize: '10px', color: 'var(--text-4)', fontFamily: 'JetBrains Mono, monospace', opacity: 0.7 }}>{sub}</div>}
   </div>
 )
@@ -76,7 +76,7 @@ const CollegeVsCorporate = () => {
     const cert5yrEarnings = certNewSalary * 5 - certTotalCost
     const certBreakEven = certAnnualGain > 0 ? (certTotalCost / certAnnualGain) * 12 : 0
 
-    // Chart data — 7 years
+    // Chart data - 7 years
     const chartData = Array.from({ length: 8 }, (_, i) => {
       const year = i
       // MBA: 2 years study (negative earnings), then higher salary
@@ -107,34 +107,21 @@ const CollegeVsCorporate = () => {
 
   const pros = {
     mba: [
-      'Brand signal from top IIM/ISB — still matters for consulting & banking',
+      'Brand signal from top IIM/ISB - still matters for consulting & banking',
       'Network & alumni access over entire career',
       'Opens doors to leadership tracks at MNCs',
-      'Strong for role shifts (engineer → management)',
+      'Strong for role shifts (engineer  management)',
     ],
     certs: [
-      'Earn while you learn — zero opportunity cost',
+      'Earn while you learn - zero opportunity cost',
       'Break-even in months, not years',
-      'Stacked over time — 4 certs beat 1 degree in visibility',
-      'Each cert targets a specific skill gap — no fluff',
+      'Stacked over time - 4 certs beat 1 degree in visibility',
+      'Each cert targets a specific skill gap - no fluff',
     ],
   }
 
   return (
     <div>
-      {/* Header */}
-      <div style={{ marginBottom: '24px' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '4px 12px', borderRadius: '20px', background: INDIGO + '10', border: '1px solid ' + INDIGO + '28', fontSize: '10px', color: INDIGO, marginBottom: '10px', letterSpacing: '0.08em', fontFamily: 'JetBrains Mono, monospace' }}>
-          <GraduationCap size={10} /> DEGREE VS CERTIFICATIONS · INDIA 2026
-        </div>
-        <h2 style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: '800', fontSize: 'clamp(1.8rem,4vw,2.6rem)', color: 'var(--text)', marginBottom: '6px', letterSpacing: '-0.02em' }}>
-          MBA OR <span style={{ color: INDIGO }}>4 CERTS?</span>
-        </h2>
-        <p style={{ fontSize: '14px', color: 'var(--text-3)', fontFamily: 'Inter, sans-serif' }}>
-          Run the actual numbers. Data over family pressure.
-        </p>
-      </div>
-
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', marginBottom: '20px' }}>
 
         {/* Inputs */}
@@ -163,7 +150,7 @@ const CollegeVsCorporate = () => {
             <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: '800', fontSize: '1.1rem', color: calc.winner === 'certs' ? EMERALD : INDIGO, marginBottom: '5px' }}>
               {calc.winner === 'certs' ? 'Certs Win This Scenario' : 'MBA Wins This Scenario'}
             </div>
-            <div style={{ fontSize: '13px', color: 'var(--text-3)', fontFamily: 'Inter, sans-serif' }}>
+            <div style={{ fontSize: '13px', color: 'var(--text-3)', fontFamily: 'var(--font-sans)' }}>
               ₹{calc.delta}L better over 5 years
             </div>
           </motion.div>
@@ -184,7 +171,7 @@ const CollegeVsCorporate = () => {
                   { label: 'Study Time', value: '2 years', color: 'var(--text-4)' },
                 ].map((s, i) => (
                   <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '11px', color: 'var(--text-4)', fontFamily: 'Inter, sans-serif' }}>{s.label}</span>
+                    <span style={{ fontSize: '11px', color: 'var(--text-4)', fontFamily: 'var(--font-sans)' }}>{s.label}</span>
                     <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '12px', color: s.color, fontWeight: '600' }}>{s.value}</span>
                   </div>
                 ))}
@@ -204,7 +191,7 @@ const CollegeVsCorporate = () => {
                   { label: 'Study Time', value: '4-8 months', color: 'var(--text-4)' },
                 ].map((s, i) => (
                   <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '11px', color: 'var(--text-4)', fontFamily: 'Inter, sans-serif' }}>{s.label}</span>
+                    <span style={{ fontSize: '11px', color: 'var(--text-4)', fontFamily: 'var(--font-sans)' }}>{s.label}</span>
                     <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '12px', color: s.color, fontWeight: '600' }}>{s.value}</span>
                   </div>
                 ))}
@@ -272,7 +259,7 @@ const CollegeVsCorporate = () => {
                   {col.items.map((item, i) => (
                     <div key={i} style={{ display: 'flex', gap: '8px', marginBottom: '9px', alignItems: 'flex-start' }}>
                       <CheckCircle size={12} color={col.color} style={{ flexShrink: 0, marginTop: '2px' }} />
-                      <span style={{ fontSize: '12px', color: 'var(--text-3)', lineHeight: '1.55', fontFamily: 'Inter, sans-serif' }}>{item}</span>
+                      <span style={{ fontSize: '12px', color: 'var(--text-3)', lineHeight: '1.55', fontFamily: 'var(--font-sans)' }}>{item}</span>
                     </div>
                   ))}
                 </div>
@@ -281,8 +268,8 @@ const CollegeVsCorporate = () => {
 
             <div style={{ padding: '14px 18px', borderRadius: '10px', background: 'transparent', border: '1px solid transparent', marginTop: '12px', display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
               <TrendingUp size={16} color={AMBER} style={{ flexShrink: 0, marginTop: '2px' }} />
-              <div style={{ fontSize: '13px', color: 'var(--text-2)', fontFamily: 'Inter, sans-serif', lineHeight: '1.65' }}>
-                <strong style={{ color: AMBER }}>India reality check:</strong> An IIM-A/B/C MBA still commands a network premium that certs cannot replicate. But for everyone else — Tier 2/3 colleges, private universities, or online MBAs — the cert stack almost always wins on pure ROI within 5 years.
+              <div style={{ fontSize: '13px', color: 'var(--text-2)', fontFamily: 'var(--font-sans)', lineHeight: '1.65' }}>
+                <strong style={{ color: AMBER }}>India reality check:</strong> An IIM-A/B/C MBA still commands a network premium that certs cannot replicate. But for everyone else - Tier 2/3 colleges, private universities, or online MBAs - the cert stack almost always wins on pure ROI within 5 years.
               </div>
             </div>
           </motion.div>

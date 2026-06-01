@@ -1,14 +1,14 @@
 /**
- * FilterGraphic — FIG 0.1 // THE FILTER
+ * FilterGraphic - FIG 0.1 // THE FILTER
  *
  * Linear-style isometric wireframe. Pure outline geometry, zero fills.
  * A flat isometric grid platform with a cluster of wireframe cubes rising from it.
  * A glowing scanner plane sweeps across. Signal cubes elevate with crisp mechanical motion.
- * Monochrome white strokes on dark background — matches Linear's aesthetic exactly.
+ * Monochrome white strokes on dark background - matches Linear's aesthetic exactly.
  */
 import { useEffect, useRef, useState } from 'react';
 
-// ─── Iso projection constants ───────────────────────────────
+//  Iso projection constants 
 const TW = 16;   // tile half-width
 const TH = 8;    // tile half-height = TW * 0.5
 const ROWS = 7;
@@ -16,7 +16,7 @@ const COLS = 7;
 const OX = 110;  // grid origin x (centred in 220px viewBox)
 const OY = 58;   // grid origin y
 
-// ─── Cube cluster — (row, col, height) ─────────────────────
+//  Cube cluster - (row, col, height) 
 // Mimics Linear's stacked cube cluster composition
 const CUBE_DEFS = [
   { r: 2, c: 3, h: 1, signal: false },
@@ -29,7 +29,7 @@ const CUBE_DEFS = [
   { r: 4, c: 2, h: 1, signal: false },
 ];
 
-// ─── Iso helpers ────────────────────────────────────────────
+//  Iso helpers 
 function isoCenter(r, c) {
   return {
     cx: OX + (c - r) * TW,
@@ -37,7 +37,7 @@ function isoCenter(r, c) {
   };
 }
 
-// Top face diamond — at vertical offset elev (upward = negative y)
+// Top face diamond - at vertical offset elev (upward = negative y)
 function topFacePts(cx, cy, elev = 0) {
   const ey = cy - elev;
   return [
@@ -74,7 +74,7 @@ function rightFacePts(cx, cy, elev) {
   ];
 }
 
-// Build sorted grid cells (painter's algo — back to front)
+// Build sorted grid cells (painter's algo - back to front)
 function buildGrid() {
   const cells = [];
   for (let r = 0; r < ROWS; r++) {
@@ -87,7 +87,7 @@ function buildGrid() {
 }
 const GRID = buildGrid();
 
-// ─── Easing ─────────────────────────────────────────────────
+//  Easing 
 function easeInOutCubic(t) {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 }
@@ -95,7 +95,7 @@ function easeOutExpo(t) {
   return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
 }
 
-// ─── Component ──────────────────────────────────────────────
+//  Component 
 export default function FilterGraphic() {
   const [scanProgress, setScanProgress]     = useState(-1);   // -1 = hidden, 0..1 = sweeping
   const [elevProgress, setElevProgress]     = useState(0);    // 0..1 cube elevation spring
@@ -104,7 +104,7 @@ export default function FilterGraphic() {
   const timerRef = useRef(null);
   const elevRef  = useRef(0);
 
-  // ─── Main animation loop ───────────────────────────────────
+  //  Main animation loop 
   useEffect(() => {
     const SCAN_DUR   = 1800;
     const ELEV_HOLD  = 2400;
@@ -159,7 +159,7 @@ export default function FilterGraphic() {
     };
   }, []);
 
-  // ─── Spring elevation ──────────────────────────────────────
+  //  Spring elevation 
   useEffect(() => {
     let raf;
     const target = elevated ? 1 : 0;
@@ -174,15 +174,15 @@ export default function FilterGraphic() {
     return () => cancelAnimationFrame(raf);
   }, [elevated]);
 
-  // ─── Scanner column depth ──────────────────────────────────
+  //  Scanner column depth 
   // Scanner sweeps from top-left to bottom-right in iso space
   const totalDepth  = ROWS + COLS; // 0 to 14
   const scanDepth   = scanProgress >= 0 ? scanProgress * (totalDepth + 2) - 1 : -999;
 
-  // ─── Cube elevation amounts ────────────────────────────────
+  //  Cube elevation amounts 
   const CUBE_H_UNIT = 18; // px per height unit
 
-  // ─── Stroke style constants ───────────────────────────────
+  //  Stroke style constants 
   const S_GRID   = { stroke: 'var(--border)',        strokeWidth: 0.5 };
   const S_CUBE   = { stroke: 'var(--border-mid)',     strokeWidth: 0.7 };
   const S_SIG    = { stroke: 'var(--text)',           strokeWidth: 0.8 };
@@ -211,7 +211,7 @@ export default function FilterGraphic() {
           </filter>
         </defs>
 
-        {/* ── Flat grid platform ─────────────────────────────── */}
+        {/*  Flat grid platform  */}
         <g>
           {GRID.map(({ r, c, depth }) => {
             const { cx, cy } = isoCenter(r, c);
@@ -233,7 +233,7 @@ export default function FilterGraphic() {
           })}
         </g>
 
-        {/* ── Scanner plane ──────────────────────────────────── */}
+        {/*  Scanner plane  */}
         {scanProgress >= 0 && (() => {
           // Iso-diagonal line at current scanDepth
           // All cells with r+c === scanDepth share a diagonal
@@ -273,7 +273,7 @@ export default function FilterGraphic() {
           );
         })()}
 
-        {/* ── Wireframe cube cluster ─────────────────────────── */}
+        {/*  Wireframe cube cluster  */}
         {/* Sort cubes back-to-front by depth */}
         {[...CUBE_DEFS]
           .sort((a, b) => (a.r + a.c) - (b.r + b.c) || a.r - b.r)
@@ -352,7 +352,7 @@ export default function FilterGraphic() {
             );
           })}
 
-        {/* ── Vertical guide lines from base to cube corners on signal cubes (ghosted) ── */}
+        {/*  Vertical guide lines from base to cube corners on signal cubes (ghosted)  */}
         {CUBE_DEFS.filter(c => c.signal && elevProgress > 0.1).map((cube, i) => {
           const { cx, cy } = isoCenter(cube.r, cube.c);
           const baseElev   = cube.h * CUBE_H_UNIT;

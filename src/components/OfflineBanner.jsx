@@ -5,7 +5,7 @@
  * connection. Matches the Certify brand aesthetic (Nordic dark / Ash light
  * via CSS variables). Animates in/out with Framer Motion.
  *
- * Usage — drop into AppRoot, rendered above everything else:
+ * Usage - drop into AppRoot, rendered above everything else:
  *   import OfflineBanner from './components/OfflineBanner.jsx'
  *   import { useNetworkStatus } from './hooks/useNetworkStatus.js'
  *
@@ -15,10 +15,10 @@
  */
 import { motion } from 'framer-motion'
 
-const FM = "'JetBrains Mono', 'IBM Plex Mono', monospace"
-const FS = "'Inter', 'DM Sans', sans-serif"
+const FM = "var(--font-mono)";
+const FS = "var(--font-sans)";
 
-// ── Animated signal bars icon ─────────────────────────────────────────────────
+//  Animated signal bars icon 
 function SignalOffIcon() {
   return (
     <svg
@@ -28,12 +28,12 @@ function SignalOffIcon() {
       fill="none"
       aria-hidden="true"
     >
-      {/* Three bars — progressively taller, all dimmed */}
+      {/* Three bars - progressively taller, all dimmed */}
       <rect x="4"  y="32" width="8" height="12" rx="2" fill="var(--text-4)" opacity="0.3" />
       <rect x="20" y="22" width="8" height="22" rx="2" fill="var(--text-4)" opacity="0.3" />
       <rect x="36" y="10" width="8" height="34" rx="2" fill="var(--text-4)" opacity="0.3" />
 
-      {/* Diagonal slash — the "off" indicator */}
+      {/* Diagonal slash - the "off" indicator */}
       <line
         x1="6"  y1="6"
         x2="42" y2="42"
@@ -45,7 +45,7 @@ function SignalOffIcon() {
   )
 }
 
-// ── Pulsing dot ───────────────────────────────────────────────────────────────
+//  Pulsing dot 
 function PulsingDot() {
   return (
     <motion.div
@@ -82,13 +82,13 @@ export default function OfflineBanner() {
         justifyContent: 'center',
         padding: '24px',
         background: 'var(--bg)',
-        // Subtle noise texture via repeating gradient — brand-consistent
+        // Subtle noise texture via repeating gradient - brand-consistent
         backgroundImage:
           'radial-gradient(circle at 50% 0%, rgba(255,255,255,0.03) 0%, transparent 60%)',
       }}
     >
       {/*
-        ── Outer card ──────────────────────────────────────────────────────────
+         Outer card 
         Matches the "glass" card aesthetic used throughout the app:
         transparent background, single hairline border, no shadow.
       */}
@@ -195,7 +195,7 @@ export default function OfflineBanner() {
         </div>
       </motion.div>
 
-      {/* Bottom brand mark — subtle, not distracting */}
+      {/* Bottom brand mark - subtle, not distracting */}
       <div
         style={{
           marginTop: '28px',
@@ -206,7 +206,7 @@ export default function OfflineBanner() {
           opacity: 0.5,
         }}
       >
-        Certify · certifyroi.in
+        Certify  certifyroi.in
       </div>
     </motion.div>
   )

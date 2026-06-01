@@ -1,15 +1,15 @@
-// ─────────────────────────────────────────────────────────
-// LiveDataViz.jsx — Market Intelligence Visualizers
+// 
+// LiveDataViz.jsx - Market Intelligence Visualizers
 // Salary Range Slider, Demand Gauge, Data Hydration Counter
-// ─────────────────────────────────────────────────────────
+// 
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-const FM = "'JetBrains Mono', monospace"
-const FS = "'Inter', sans-serif"
+const FM = "var(--font-mono)";
+const FS = "var(--font-sans)";
 const ACCENT = 'var(--accent)'
 
-// ─── Salary Range Slider ──────────────────────────────────
+//  Salary Range Slider 
 // Ultra-thin, non-interactive visual slider showing min/max
 export function SalaryRangeSlider({
   min = 400000,
@@ -49,7 +49,7 @@ export function SalaryRangeSlider({
         background: 'var(--border-mid)', borderRadius: '2px',
         marginBottom: '10px',
       }}>
-        {/* Range segment — gradient fill */}
+        {/* Range segment - gradient fill */}
         <motion.div
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
@@ -95,7 +95,7 @@ export function SalaryRangeSlider({
   )
 }
 
-// ─── Demand Gauge ─────────────────────────────────────────
+//  Demand Gauge 
 // Circular SVG progress with pulse animation
 export function DemandGauge({
   value = 2400,
@@ -171,7 +171,7 @@ export function DemandGauge({
   )
 }
 
-// ─── Hydration Counter ────────────────────────────────────
+//  Hydration Counter 
 // Counts up from 0 to value with easeOutCubic
 export function HydrationCounter({ value, duration = 800, prefix = '', suffix = '', style = {} }) {
   const [displayed, setDisplayed] = useState(0)
@@ -200,7 +200,7 @@ export function HydrationCounter({ value, duration = 800, prefix = '', suffix = 
   )
 }
 
-// ─── Live Data Badge ──────────────────────────────────────
+//  Live Data Badge 
 export function LiveBadge({ label = 'LIVE', updatedAt }) {
   const timeLabel = React.useMemo(() => {
     if (!updatedAt) return 'REAL-TIME'
@@ -240,7 +240,7 @@ export function LiveBadge({ label = 'LIVE', updatedAt }) {
   )
 }
 
-// ─── Sparkline (thin SVG) ─────────────────────────────────
+//  Sparkline (thin SVG) 
 export function Sparkline({ data = [], width = 120, height = 28, color = ACCENT }) {
   if (data.length < 2) return null
   const max = Math.max(...data)

@@ -1,10 +1,15 @@
+'use client';
+
 import React from 'react'
-import { Navigate, useLocation } from 'react-router-dom'
+import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation';
+import { Navigate } from 'react-router-dom';
+
 import { useAuth } from './useAuth.jsx'
 
 const AdminRoute = ({ children }) => {
   const { user, isAdmin, loading } = useAuth()
-  const location = useLocation()
+  const location = { pathname: usePathname() }
 
   if (loading) {
     // Render a loading indicator while the auth state is being determined.

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-// ─── live counter hook ──────────────────────────────────────────────────────
+//  live counter hook 
 function useLiveCounter(base = 4200, interval = 8000) {
   const [count, setCount] = useState(base);
   useEffect(() => {
@@ -12,7 +12,7 @@ function useLiveCounter(base = 4200, interval = 8000) {
   return count;
 }
 
-// ─── timestamp hook ─────────────────────────────────────────────────────────
+//  timestamp hook 
 function useLastSync() {
   const [label, setLabel] = useState('14 min ago');
   useEffect(() => {
@@ -29,30 +29,30 @@ function useLastSync() {
   return label;
 }
 
-// ─── ticker items ────────────────────────────────────────────────────────────
+//  ticker items 
 const ITEMS = [
   { label: 'AWS-SAA', value: '+28% YoY', positive: true },
   { label: 'PMP', value: '₹3.2L avg', positive: true },
   { label: 'CISSP', value: '+41% YoY', positive: true },
-  { label: 'Google Data', value: '↑ Very High demand' },
+  { label: 'Google Data', value: ' Very High demand' },
   { label: 'CFA L1', value: '+19% YoY', positive: true },
   { label: 'CPA', value: '₹8.5L avg', positive: true },
   { label: 'CISA', value: '+33% YoY', positive: true },
-  { label: 'Scrum Master', value: '↓ Saturating', positive: false },
+  { label: 'Scrum Master', value: ' Saturating', positive: false },
   { label: 'Azure AZ-900', value: '+22% YoY', positive: true },
   { label: 'CA Inter', value: '₹5.1L avg', positive: true },
 ];
 
-// ═══════════════════════════════════════════════════════════════════════════
+// 
 export default function MarketPulseTicker({ compact = false }) {
   const jobCount = useLiveCounter(4200);
   const lastSync = useLastSync();
 
-  const F_MONO = "'JetBrains Mono','IBM Plex Mono',monospace";
+  const F_MONO = "var(--font-mono)";
 
   return (
     <div style={{ width: '100%', fontFamily: F_MONO }}>
-      {/* ── Status header pill ── */}
+      {/*  Status header pill  */}
       <div style={{
         display: 'flex', alignItems: 'center', gap: compact ? 16 : 24,
         flexWrap: 'wrap', marginBottom: compact ? 0 : 10,
@@ -84,7 +84,7 @@ export default function MarketPulseTicker({ compact = false }) {
         </span>
       </div>
 
-      {/* ── Scrolling ticker strip ── */}
+      {/*  Scrolling ticker strip  */}
       {!compact && (
         <div style={{
           overflow: 'hidden', width: '100%',
@@ -107,7 +107,7 @@ export default function MarketPulseTicker({ compact = false }) {
                 }}>
                   {item.value}
                 </span>
-                <span style={{ color: 'transparent', marginLeft: 12 }}>◆</span>
+                <span style={{ color: 'transparent', marginLeft: 12 }}></span>
               </span>
             ))}
           </div>
@@ -117,10 +117,10 @@ export default function MarketPulseTicker({ compact = false }) {
   );
 }
 
-// ─── Compact inline version for ROI results ──────────────────────────────────
+//  Compact inline version for ROI results 
 export function DataSyncBadge({ hoursAgo }) {
   const lastSync = useLastSync();
-  const F_MONO = "'JetBrains Mono','IBM Plex Mono',monospace";
+  const F_MONO = "var(--font-mono)";
   return (
     <div style={{
       display: 'inline-flex', alignItems: 'center', gap: 6,

@@ -1,20 +1,20 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-const FM = "'JetBrains Mono','IBM Plex Mono',monospace";
+const FM = "var(--font-mono)";
 const EMERALD = 'var(--linear-blue)';
 const AMBER   = 'var(--cool-grey)';
 const ROSE    = 'var(--cool-grey)';
 const INDIGO  = 'var(--linear-blue)';
 
-// ─── SVG Consensus Gauge ─────────────────────────────────────────────────────
+//  SVG Consensus Gauge 
 // pct: 0-100   accent: css color string
 export function ConsensusGauge({ pct = 72, accent = EMERALD, label = 'ROI Score', size = 120 }) {
   const R    = 44;
   const cx   = size / 2;
   const cy   = size / 2;
   const circ = 2 * Math.PI * R;
-  // only draw the top 270° arc (like a gauge)
+  // only draw the top 270 arc (like a gauge)
   const arcLen   = circ * 0.75;
   const filled   = arcLen * (pct / 100);
   const rotation = 135; // start at bottom-left
@@ -70,7 +70,7 @@ export function ConsensusGauge({ pct = 72, accent = EMERALD, label = 'ROI Score'
   );
 }
 
-// ─── Skeleton card ────────────────────────────────────────────────────────────
+//  Skeleton card 
 function SkeletonBlock({ width = '100%', height = 14, radius = 4, style = {} }) {
   return (
     <div style={{
@@ -87,7 +87,7 @@ export function AIResultSkeleton() {
     <div style={{
       borderRadius: 16, border: '1px solid var(--border-subtle)',
       background: 'var(--border-subtle)', overflow: 'hidden',
-      // FIXED HEIGHT — prevents layout jump
+      // FIXED HEIGHT - prevents layout jump
       minHeight: 320,
     }}>
       {/* header */}
@@ -116,7 +116,7 @@ export function AIResultSkeleton() {
   );
 }
 
-// ─── Hero skeleton (replaces the generic "Connecting to live database..." text)
+//  Hero skeleton (replaces the generic "Connecting to live database..." text)
 export function HeroSkeleton() {
   return (
     <div style={{ display: 'grid', gap: 12 }}>
@@ -145,7 +145,7 @@ export function HeroSkeleton() {
   );
 }
 
-// ─── Number roll ticker ───────────────────────────────────────────────────────
+//  Number roll ticker 
 export function RollNumber({ value, prefix = '', suffix = '', color = EMERALD, fontSize = 'clamp(1.5rem,4vw,2.2rem)' }) {
   const [displayed, setDisplayed] = React.useState(0);
   const numVal = parseFloat(String(value).replace(/[^0-9.]/g, '')) || 0;
@@ -176,22 +176,22 @@ export function RollNumber({ value, prefix = '', suffix = '', color = EMERALD, f
   );
 }
 
-// ─── Verdict status resolver (brutally honest) ────────────────────────────────
+//  Verdict status resolver (brutally honest) 
 export function resolveVerdictStatus(verdict = '', breakEvenMonths = 0) {
   const v = verdict.toLowerCase();
   if (v.includes('strong') || v.includes('excellent') || v.includes('highly recommend')) {
     return { code: 'STRONG_BUY', label: 'STATUS: STRONG BUY', color: EMERALD, bg: 'transparent', border: 'transparent' };
   }
   if (v.includes('moderate') || v.includes('consider') || v.includes('conditional')) {
-    return { code: 'NEUTRAL', label: 'STATUS: NEUTRAL — VERIFY ASSUMPTIONS', color: AMBER, bg: 'transparent', border: 'transparent' };
+    return { code: 'NEUTRAL', label: 'STATUS: NEUTRAL - VERIFY ASSUMPTIONS', color: AMBER, bg: 'transparent', border: 'transparent' };
   }
   if (breakEvenMonths > 24 || v.includes('risk') || v.includes('not recommend') || v.includes('avoid')) {
     return { code: 'HIGH_RISK', label: 'STATUS: HIGH RISK. PAYBACK PERIOD > 24 MONTHS', color: ROSE, bg: 'transparent', border: 'transparent' };
   }
-  return { code: 'NEUTRAL', label: 'STATUS: NEUTRAL — VERIFY ASSUMPTIONS', color: AMBER, bg: 'transparent', border: 'transparent' };
+  return { code: 'NEUTRAL', label: 'STATUS: NEUTRAL - VERIFY ASSUMPTIONS', color: AMBER, bg: 'transparent', border: 'transparent' };
 }
 
-// ─── Data sync badge ──────────────────────────────────────────────────────────
+//  Data sync badge 
 export function DataSyncBadge({ updatedAt }) {
   // Format the Supabase timestamp if provided; else show live-synced label
   const label = React.useMemo(() => {

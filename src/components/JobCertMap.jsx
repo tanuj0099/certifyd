@@ -7,12 +7,12 @@ import {
 } from 'lucide-react'
 import { GOVT_DATA, PRIVATE_DATA, MANDATORY_FINANCIAL_CERTS } from '../data/jobCertData.js'
 
-const F_HEAD = "'Bricolage Grotesque','Plus Jakarta Sans',sans-serif"
-const F_MONO = "'Commit Mono','JetBrains Mono',monospace"
-const F_BODY = "'Inter',sans-serif"
+const F_HEAD = "var(--font-head)";
+const F_MONO = "var(--font-mono)";
+const F_BODY = "var(--font-body)";
 const T      = { duration: 0.25, ease: [0.4,0,0.2,1] }
 
-// ── Search bar ────────────────────────────────────────────────
+//  Search bar 
 const SearchBar = ({ value, onChange }) => (
   <div style={{ position: 'relative', marginBottom: '24px' }}>
     <Search size={14} color="var(--text-4)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
@@ -27,7 +27,7 @@ const SearchBar = ({ value, onChange }) => (
   </div>
 )
 
-// ── Verified badge ────────────────────────────────────────────
+//  Verified badge 
 const DataBadge = ({ verified, source }) => (
   <div style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '3px 8px', borderRadius: '5px', background: verified ? 'transparent' : 'transparent', border: `1px solid ${verified ? 'transparent' : 'transparent'}`, fontSize: '10px', color: verified ? 'var(--linear-blue)' : 'var(--cool-grey)', fontFamily: F_MONO }}>
     {verified ? <CheckCircle size={9} /> : <AlertCircle size={9} />}
@@ -35,7 +35,7 @@ const DataBadge = ({ verified, source }) => (
   </div>
 )
 
-// ── Govt org card ─────────────────────────────────────────────
+//  Govt org card 
 const GovtCard = ({ org }) => {
   const [open, setOpen] = useState(false)
   return (
@@ -131,7 +131,7 @@ const GovtCard = ({ org }) => {
   )
 }
 
-// ── Private company card ──────────────────────────────────────
+//  Private company card 
 const PrivateCard = ({ company }) => {
   const [open, setOpen] = useState(false)
   return (
@@ -176,7 +176,7 @@ const PrivateCard = ({ company }) => {
                   <span style={{ fontSize: '12px', fontFamily: F_HEAD, fontWeight: '700', color: company.color, padding: '4px 10px', borderRadius: '6px', background: `${company.color}10`, border: `1px solid ${company.color}25` }}>{track.to}</span>
                   <div style={{ marginLeft: 'auto', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                     {track.typicalTime && (
-                      <span style={{ fontSize: '10px', padding: '2px 7px', borderRadius: '4px', background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text-4)', fontFamily: F_MONO }}>⏱ {track.typicalTime}</span>
+                      <span style={{ fontSize: '10px', padding: '2px 7px', borderRadius: '4px', background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text-4)', fontFamily: F_MONO }}> {track.typicalTime}</span>
                     )}
                     {track.salaryJump && (
                       <span style={{ fontSize: '10px', padding: '2px 7px', borderRadius: '4px', background: 'transparent', border: '1px solid transparent', color: 'var(--linear-blue)', fontFamily: F_MONO }}>+{track.salaryJump} hike</span>
@@ -214,7 +214,7 @@ const PrivateCard = ({ company }) => {
   )
 }
 
-// ── Mandatory financial cert card ────────────────────────────
+//  Mandatory financial cert card 
 const MandatoryCertCard = ({ cert }) => (
   <div style={{ padding: '14px 16px', borderRadius: '12px', background: 'transparent', border: '1px solid transparent', marginBottom: '10px' }}>
     <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px', marginBottom: '8px', flexWrap: 'wrap' }}>
@@ -234,9 +234,9 @@ const MandatoryCertCard = ({ cert }) => (
   </div>
 )
 
-// ─────────────────────────────────────────────────────────────
+// 
 // MAIN COMPONENT
-// ─────────────────────────────────────────────────────────────
+// 
 const JobCertMap = () => {
   const [tab,    setTab]    = useState('govt')
   const [search, setSearch] = useState('')
@@ -268,18 +268,6 @@ const JobCertMap = () => {
   return (
     <div>
       {/* Page header */}
-      <div style={{ marginBottom: '24px' }}>
-        <div style={{ fontFamily: F_MONO, fontSize: '10px', color: 'var(--indigo-light)', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '8px' }}>
-          CERT REQUIREMENTS - INDIA 2026
-        </div>
-        <h2 style={{ fontFamily: F_HEAD, fontWeight: '800', fontSize: 'clamp(1.5rem,3vw,2rem)', color: 'var(--text)', letterSpacing: '-0.04em', marginBottom: '8px' }}>
-          Which Cert Gets You That Role?
-        </h2>
-        <p style={{ fontSize: '13px', color: 'var(--text-3)', fontFamily: F_BODY, lineHeight: '1.6', maxWidth: '600px' }}>
-          Government data is from official notifications. Private company data is reported by employees on AmbitionBox and LinkedIn — clearly labeled.
-        </p>
-      </div>
-
       {/* Tabs */}
       <div style={{ display: 'flex', gap: '4px', marginBottom: '20px', padding: '4px', background: 'transparent', borderRadius: '12px', border: '1px solid var(--border)', width: 'fit-content' }}>
         {[

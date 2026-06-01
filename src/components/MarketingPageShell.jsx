@@ -1,20 +1,20 @@
 import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
+import Link from 'next/link'
 import { ArrowRight, Mail, MapPin, TrendingUp } from 'lucide-react'
 import WaveBg from './WaveBg.jsx'
 import { AppSection } from './SharedUI.jsx'
 import SEOHead from './SEOHead.jsx'
 
-const FH = "'EB Garamond','Cormorant Garamond',Georgia,serif"
-const FB = "'Inter','DM Sans',sans-serif"
-const FM = "'JetBrains Mono','IBM Plex Mono',monospace"
+const FH = "var(--font-head)";
+const FB = "var(--font-body)";
+const FM = "var(--font-mono)";
 const MotionLink = motion.create(Link)
 
 const T = { duration: 0.34, ease: [0.16, 1, 0.3, 1] }
 
 export function PillButton({ children, href, onClick, type = 'button', wide = false, disabled = false }) {
   const Comp = href ? MotionLink : motion.button
-  const props = href ? { to: href } : { type, onClick, disabled }
+  const props = href ? { href: href } : { type, onClick, disabled }
 
   return (
     <Comp
@@ -126,12 +126,12 @@ export function MarketingFooter() {
               {[
                 { label: 'Home', to: '/' },
                 { label: 'Blog', to: '/blog' },
-                { label: 'Tools', to: '/app' },
+                { label: 'Tools', to: '/tools/roi' },
                 { label: 'About', to: '/about' },
                 { label: 'FAQ', to: '/faq' },
                 { label: 'Contact', to: '/contact' },
               ].map((item) => (
-                <Link key={item.label} to={item.to} style={{ fontFamily: FB, fontSize: '13px', color: 'var(--text-4)', textDecoration: 'none' }}>
+                <Link key={item.label} href={item.to || '#'} style={{ fontFamily: FB, fontSize: '13px', color: 'var(--text-4)', textDecoration: 'none' }}>
                   {item.label}
                 </Link>
               ))}
@@ -141,9 +141,9 @@ export function MarketingFooter() {
           <div>
             <div style={{ fontFamily: FM, fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-4)', marginBottom: '12px' }}>Resources</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <Link to="/blog" style={{ fontFamily: FB, fontSize: '13px', color: 'var(--text-4)', textDecoration: 'none' }}>Blog</Link>
-              <Link to="/terms" style={{ fontFamily: FB, fontSize: '13px', color: 'var(--text-4)', textDecoration: 'none' }}>Terms</Link>
-              <Link to="/privacy" style={{ fontFamily: FB, fontSize: '13px', color: 'var(--text-4)', textDecoration: 'none' }}>Privacy</Link>
+              <Link href="/blog" style={{ fontFamily: FB, fontSize: '13px', color: 'var(--text-4)', textDecoration: 'none' }}>Blog</Link>
+              <Link href="/terms" style={{ fontFamily: FB, fontSize: '13px', color: 'var(--text-4)', textDecoration: 'none' }}>Terms</Link>
+              <Link href="/privacy" style={{ fontFamily: FB, fontSize: '13px', color: 'var(--text-4)', textDecoration: 'none' }}>Privacy</Link>
             </div>
           </div>
 
@@ -181,7 +181,7 @@ export default function MarketingPageShell({ eyebrow, title, accent, subtitle, c
       />
       <WaveBg variant="landing" />
       <div style={{ position: 'relative', zIndex: 1, paddingTop: '112px' }}>
-        <AppSection id={eyebrow.substring(0,2).toUpperCase()} title={eyebrow} noBorderTop bg="transparent">
+        <AppSection id={eyebrow ? eyebrow.substring(0,2).toUpperCase() : 'PG'} title={eyebrow || 'PAGE'} noBorderTop bg="transparent">
           <div style={{ maxWidth: '880px', margin: '0 auto', width: '100%' }}>
             <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={T}>
               <h1 style={{ fontFamily: FH, fontSize: 'clamp(2.7rem, 6vw, 4.5rem)', fontWeight: '400', letterSpacing: '-0.03em', lineHeight: 0.95, margin: '0 0 18px', maxWidth: '14ch' }}>

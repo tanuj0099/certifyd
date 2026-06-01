@@ -3,8 +3,8 @@ import { Search, X, TrendingUp } from 'lucide-react'
 import { useEffect, useMemo, useState, useDeferredValue } from 'react'
 import { supabase } from '../lib/supabase.js'
 import { MarketingFooter } from './MarketingPageShell.jsx'
-const FM = "'JetBrains Mono','IBM Plex Mono',monospace"
-const FS = "'Inter','DM Sans',sans-serif"
+const FM = "var(--font-mono)";
+const FS = "var(--font-sans)";
 const DEFAULT_CERT_COST = 25_000
 const BASE_COLUMNS = 'domain_name, min_salary, max_salary, job_count_naukri, updated_at'
 const COST_COLUMNS = `${BASE_COLUMNS}, certification_cost`
@@ -77,15 +77,15 @@ function calcPaybackMonths(row) {
 }
 
 function fmtLpa(rupees) {
-  if (!rupees || rupees <= 0) return '—'
+  if (!rupees || rupees <= 0) return '-'
   return `INR ${(rupees / 100_000).toFixed(1)}L`
 }
 
 function fmtJobs(value) {
-  return value > 0 ? value.toLocaleString('en-IN') : '—'
+  return value > 0 ? value.toLocaleString('en-IN') : '-'
 }
 
-// ── Capsule filter pill ────────────────────────────────────────────────────
+//  Capsule filter pill 
 function Capsule({ active, label, onClick }) {
   return (
     <button
@@ -114,7 +114,7 @@ function Capsule({ active, label, onClick }) {
   )
 }
 
-// ── Search input (enhanced, pill style) ───────────────────────────────────
+//  Search input (enhanced, pill style) 
 function SearchBar({ value, onChange }) {
   return (
     <div
@@ -139,7 +139,7 @@ function SearchBar({ value, onChange }) {
         type="search"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Search role or domain…"
+        placeholder="Search role or domain..."
         aria-label="Search roles"
         style={{
           flex: 1,
@@ -174,7 +174,7 @@ function SearchBar({ value, onChange }) {
   )
 }
 
-// ── Table row ─────────────────────────────────────────────────────────────
+//  Table row 
 function RoleRow({ row, index, total, isPhone }) {
   const payback = calcPaybackMonths(row)
   const isLast = index === total - 1
@@ -208,7 +208,7 @@ function RoleRow({ row, index, total, isPhone }) {
             { label: 'Entry', val: fmtLpa(row.min_salary) },
             { label: 'Ceiling', val: fmtLpa(row.max_salary) },
             { label: 'Live Jobs', val: fmtJobs(row.job_count_naukri) },
-            { label: 'ROI Months', val: payback ? `${payback} mo` : '—' },
+            { label: 'ROI Months', val: payback ? `${payback} mo` : '-' },
           ].map(({ label, val }) => (
             <div key={label}>
               <span style={{
@@ -263,7 +263,7 @@ function RoleRow({ row, index, total, isPhone }) {
       >
         {row.domain_name}
       </span>
-      {[fmtLpa(row.min_salary), fmtLpa(row.max_salary), fmtJobs(row.job_count_naukri), payback ? `${payback} mo` : '—'].map(
+      {[fmtLpa(row.min_salary), fmtLpa(row.max_salary), fmtJobs(row.job_count_naukri), payback ? `${payback} mo` : '-'].map(
         (value, i) => (
           <span
             key={`${value}-${i}`}
@@ -384,15 +384,15 @@ export default function LiveMarketPulse() {
     const paybacks = rowsWithSalary.map(calcPaybackMonths).filter(Boolean)
     const avgPayback = paybacks.length
       ? `${Math.round(paybacks.reduce((sum, value) => sum + value, 0) / paybacks.length)} mo`
-      : '—'
+      : '-'
 
     return [
-      { label: 'Roles Tracked', value: rows.length || '—' },
-      { label: 'With Salary', value: rowsWithSalary.length || '—' },
+      { label: 'Roles Tracked', value: rows.length || '-' },
+      { label: 'With Salary', value: rowsWithSalary.length || '-' },
       { label: 'Avg Entry', value: fmtLpa(avgMin) },
       { label: 'Avg Ceiling', value: fmtLpa(avgMax) },
       { label: 'Avg ROI', value: avgPayback },
-      { label: 'Live Jobs', value: totalJobs ? totalJobs.toLocaleString('en-IN') : '—' },
+      { label: 'Live Jobs', value: totalJobs ? totalJobs.toLocaleString('en-IN') : '-' },
     ]
   }, [rows])
 
@@ -400,77 +400,20 @@ export default function LiveMarketPulse() {
 
   return (
     <>
-    <section
-      style={{
-        minHeight: '100vh',
-        padding: isPhone ? '104px 18px 56px' : '128px 24px 72px',
-        background: 'var(--bg)',
-        color: 'var(--text)',
-      }}
-    >
+    <>
       <div style={{ width: 'min(100%, 1120px)', margin: '0 auto' }}>
-
-        {/* ── Header ───────────────────────────────────────────── */}
+        {/* Sync Status */}
         <div
           style={{
-            display: 'grid',
-            gridTemplateColumns: isPhone ? '1fr' : 'minmax(0, 1fr) auto',
-            gap: '18px',
-            alignItems: 'end',
-            marginBottom: '32px',
+            display: 'flex',
+            justifyContent: 'flex-end',
+            marginBottom: '16px',
           }}
         >
-          <div>
-            <p
-              style={{
-                margin: '0 0 4px',
-                color: 'var(--text-4)',
-                fontFamily: FM,
-                fontSize: '10px',
-                letterSpacing: '0.14em',
-                textTransform: 'uppercase',
-              }}
-            >
-              Platform
-            </p>
-            <h1
-              style={{
-                margin: 0,
-                color: 'var(--text)',
-                fontFamily: FS,
-                fontSize: isPhone ? '28px' : '36px',
-                lineHeight: 1.06,
-                fontWeight: 800,
-                letterSpacing: '-0.02em',
-                display: 'flex',
-                alignItems: 'baseline',
-                gap: '10px',
-                flexWrap: 'wrap',
-              }}
-            >
-              Live Market Pulse
-              <span style={{ color: 'var(--text-3)', fontWeight: 400 }}>— Salary Intelligence</span>
-            </h1>
-            <p
-              style={{
-                maxWidth: '600px',
-                margin: '12px 0 0',
-                color: 'var(--text-3)',
-                fontFamily: FS,
-                fontSize: isPhone ? '14px' : '15px',
-                lineHeight: 1.7,
-              }}
-            >
-              Domain-level salary bands, Naukri demand, and certification payback windows — updated live from the{' '}
-              <code style={{ fontFamily: FM, fontSize: '12px', color: 'var(--text-2)' }}>market_intelligence</code> table.
-            </p>
-          </div>
-
           <div
             style={{
               display: 'inline-flex',
               alignItems: 'center',
-              justifyContent: isPhone ? 'flex-start' : 'flex-end',
               gap: '8px',
               color: 'var(--text-4)',
               fontFamily: FM,
@@ -489,11 +432,11 @@ export default function LiveMarketPulse() {
                 animation: rows.length && !error ? 'pdot 1.8s ease-in-out infinite' : 'none',
               }}
             />
-            {loading ? 'Syncing…' : error ? 'Unavailable' : lastSync ? `Synced ${new Date(lastSync).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}` : 'Live'}
+            {loading ? 'Syncing...' : error ? 'Unavailable' : lastSync ? `Synced ${new Date(lastSync).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}` : 'Live'}
           </div>
         </div>
 
-        {/* ── Stats bar ─────────────────────────────────────────── */}
+        {/*  Stats bar  */}
         {!loading && rows.length > 0 && (
           <div
             style={{
@@ -546,7 +489,7 @@ export default function LiveMarketPulse() {
           </div>
         )}
 
-        {/* ── Filters: Capsules + Search ─────────────────────────── */}
+        {/*  Filters: Capsules + Search  */}
         <div
           style={{
             display: 'flex',
@@ -591,7 +534,7 @@ export default function LiveMarketPulse() {
           </div>
         )}
 
-        {/* ── Table header ─────────────────────────────────────── */}
+        {/*  Table header  */}
         {!isPhone && (
           <div
             style={{
@@ -620,7 +563,7 @@ export default function LiveMarketPulse() {
           </div>
         )}
 
-        {/* ── Loading state ─────────────────────────────────────── */}
+        {/*  Loading state  */}
         {loading && (
           <div
             style={{
@@ -640,11 +583,11 @@ export default function LiveMarketPulse() {
               background: 'var(--text-4)',
               animation: 'pdot 1.4s ease-in-out infinite',
             }} />
-            Loading market rows…
+            Loading market rows...
           </div>
         )}
 
-        {/* ── Error state ────────────────────────────────────────── */}
+        {/*  Error state  */}
         {!loading && error && (
           <div
             style={{
@@ -659,7 +602,7 @@ export default function LiveMarketPulse() {
           </div>
         )}
 
-        {/* ── Empty state ───────────────────────────────────────── */}
+        {/*  Empty state  */}
         {!loading && !error && filtered.length === 0 && (
           <div
             style={{
@@ -680,7 +623,7 @@ export default function LiveMarketPulse() {
           </div>
         )}
 
-        {/* ── Data rows ─────────────────────────────────────────── */}
+        {/*  Data rows  */}
         {!loading && !error && filtered.length > 0 && (
           <AnimatePresence mode="wait">
             <motion.div
@@ -703,7 +646,7 @@ export default function LiveMarketPulse() {
           </AnimatePresence>
         )}
 
-        {/* ── Footer note ────────────────────────────────────────── */}
+        {/*  Footer note  */}
         {!loading && rows.length > 0 && (
           <p
             style={{
@@ -718,13 +661,12 @@ export default function LiveMarketPulse() {
               textTransform: 'uppercase',
             }}
           >
-            Source: market_intelligence table · ROI = cost ÷ ((ceiling − entry) ÷ 12) · Missing cost defaults to ₹25,000<br/>
+            Source: market_intelligence table  ROI = cost  ((ceiling  entry)  12)  Missing cost defaults to ₹25,000<br/>
             Data aggregated from Naukri, LinkedIn India, and AmbitionBox (Q1 2026). For informational purposes only.
           </p>
         )}
       </div>
-    </section>
-    <MarketingFooter />
+    </>
     </>
   )
 }

@@ -1,8 +1,11 @@
+'use client';
+
 import React from 'react';
-import { Link } from 'react-router-dom';
+import {     } from 'react-router-dom';
+import Link from 'next/link';
 import { Clock, DollarSign } from 'lucide-react';
 
-// ── Difficulty badge colours ──────────────────────────────
+//  Difficulty badge colours 
 const DIFFICULTY_STYLES = {
   foundational: { bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', text: 'text-emerald-400' },
   associate:    { bg: 'bg-blue-500/10',    border: 'border-blue-500/20',    text: 'text-blue-400'    },
@@ -22,7 +25,7 @@ function formatCost(cost) {
 }
 
 function formatValidity(months) {
-  if (!months) return '—';
+  if (!months) return '-';
   if (months >= 999) return 'Lifetime';
   return `${months}mo`;
 }
@@ -33,7 +36,7 @@ function vendorFromSlug(slug) {
   const MAP = {
     AWS: 'AWS', GCP: 'Google', AZURE: 'Azure', AZ: 'Azure',
     CKA: 'CNCF', CKAD: 'CNCF', CKS: 'CNCF',
-    CISSP: 'ISC²', CISM: 'ISACA', CISA: 'ISACA',
+    CISSP: 'ISC', CISM: 'ISACA', CISA: 'ISACA',
     PMP: 'PMI', CAPM: 'PMI',
     COMPTIA: 'CompTIA',
     RHCE: 'Red Hat', RHCSA: 'Red Hat',
@@ -49,11 +52,10 @@ const CertificationCard = ({ data }) => {
   const vendor = data.vendor || vendorFromSlug(data.slug);
   const description = data.about_description || data.description || '';
   // Slightly longer truncation on mobile since we have full width
-  const truncated = description.length > 120 ? description.slice(0, 120).trimEnd() + '…' : description;
+  const truncated = description.length > 120 ? description.slice(0, 120).trimEnd() + '...' : description;
 
   return (
-    <Link
-      to={`/cert-radar/${data.slug}`}
+    <Link href={`/tools/cert-radar/${data.slug}`}
       className="
         group relative flex flex-col
         p-4 md:p-5
@@ -77,7 +79,7 @@ const CertificationCard = ({ data }) => {
         e.currentTarget.style.borderColor = 'var(--border)';
       }}
     >
-      {/* ── Header: vendor + difficulty + track ── */}
+      {/*  Header: vendor + difficulty + track  */}
       <div className="flex flex-wrap items-center gap-1.5 md:gap-2 mb-3">
         {vendor && (
           <span className="px-2 py-1 text-[10px] uppercase tracking-widest font-semibold rounded-md transition-colors"
@@ -98,7 +100,7 @@ const CertificationCard = ({ data }) => {
         )}
       </div>
 
-      {/* ── Title + description ── */}
+      {/*  Title + description  */}
       <div className="flex-grow mb-4">
         <h3 className="text-sm md:text-base font-semibold mb-2 line-clamp-2 leading-snug group-hover:text-blue-500 transition-colors text-[var(--text)]">
           {data.name}
@@ -110,10 +112,10 @@ const CertificationCard = ({ data }) => {
         )}
       </div>
 
-      {/* ── Divider ── */}
+      {/*  Divider  */}
       <div className="h-px w-full mb-3 md:mb-4 bg-[var(--border)]" />
 
-      {/* ── Footer metrics ── */}
+      {/*  Footer metrics  */}
       <div className="grid grid-cols-2 gap-3">
         <div className="flex items-center gap-1.5">
           <DollarSign className="w-3.5 h-3.5 flex-shrink-0" style={{ color: 'var(--gold)' }} />
@@ -135,7 +137,7 @@ const CertificationCard = ({ data }) => {
         </div>
       </div>
 
-      {/* ── Hover arrow — desktop only ── */}
+      {/*  Hover arrow - desktop only  */}
       <div className="hidden md:block absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
         <svg className="w-4 h-4 text-[var(--text-3)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />

@@ -1,4 +1,4 @@
-﻿import { Component } from 'react'
+import { Component } from 'react'
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -19,11 +19,11 @@ class ErrorBoundary extends Component {
       return (
         <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg)', padding: '24px' }}>
           <div style={{ maxWidth: '480px', textAlign: 'center', background: 'transparent', border: '1px solid transparent', borderRadius: '16px', padding: '40px', boxShadow: 'none' }}>
-            <div style={{ fontSize: '3rem', marginBottom: '16px' }}>⚠️</div>
+            <div style={{ fontSize: '3rem', marginBottom: '16px' }}></div>
             <h2 style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: '800', fontSize: '1.4rem', color: 'var(--text)', marginBottom: '8px', letterSpacing: '-0.01em' }}>
               Something went wrong
             </h2>
-            <p style={{ fontSize: '13px', color: 'var(--text-3)', marginBottom: '8px', lineHeight: '1.65', fontFamily: 'Inter, sans-serif' }}>
+            <p style={{ fontSize: '13px', color: 'var(--text-3)', marginBottom: '8px', lineHeight: '1.65', fontFamily: 'var(--font-sans)' }}>
               {this.state.error?.message || 'An unexpected error occurred.'}
             </p>
             <p style={{ fontSize: '12px', color: 'var(--text-4)', marginBottom: '24px', fontFamily: 'JetBrains Mono, monospace' }}>
@@ -31,7 +31,7 @@ class ErrorBoundary extends Component {
             </p>
             <button
               onClick={() => { this.setState({ hasError: false, error: null }); window.location.reload() }}
-              style={{ padding: '11px 28px', borderRadius: '999px', background: 'var(--text)', border: '1px solid var(--text)', color: 'var(--bg)', fontSize: '14px', fontWeight: '800', cursor: 'pointer', fontFamily: 'Inter, sans-serif', boxShadow: 'none' }}
+              style={{ padding: '11px 28px', borderRadius: '999px', background: 'var(--text)', border: '1px solid var(--text)', color: 'var(--bg)', fontSize: '14px', fontWeight: '800', cursor: 'pointer', fontFamily: 'var(--font-sans)', boxShadow: 'none' }}
             >
               Reload App
             </button>

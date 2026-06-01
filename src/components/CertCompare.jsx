@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Award, ChevronDown, Scale, Info, Zap, DollarSign, TrendingUp } from 'lucide-react'
 import { supabase } from '../lib/supabase.js'
 
-// ── Font tokens → CSS variables ───────────────────────────
+//  Font tokens  CSS variables 
 // NOTE: SVG text elements cannot use CSS variables in presentation attributes.
 // All SVG <text> elements use style={{ fontFamily: 'var(--font-mono)' }} instead.
 var F_HEAD = 'var(--font-head)'
@@ -21,7 +21,7 @@ function demandScore(d) {
   return d === 'Very High' ? 4 : d === 'High' ? 3 : d === 'Medium' ? 2 : 1
 }
 
-// ── Normalize raw Supabase row → consistent camelCase shape ──
+//  Normalize raw Supabase row  consistent camelCase shape 
 // certifications table schema (public.certifications):
 //   id, name, provider, cost_inr, difficulty, time_commitment_months,
 //   median_roi_percent, description, slug
@@ -43,7 +43,7 @@ function normalizeCert(row) {
   }
 }
 
-// ── Cert selector dropdown ────────────────────────────────
+//  Cert selector dropdown 
 function CertSelector({ value, onChange, label, color, certifications, domains }) {
   var [open, setOpen] = useState(false)
   var [domain, setDomain] = useState('all')
@@ -56,7 +56,7 @@ function CertSelector({ value, onChange, label, color, certifications, domains }
   var selected = certifications.find(function (c) { return c.name === value })
 
   // FIX: close dropdown on outside click.
-  // Previously the dropdown stayed open when user clicked elsewhere — broke focus and created
+  // Previously the dropdown stayed open when user clicked elsewhere - broke focus and created
   // confusing state where two dropdowns could be open simultaneously.
   useEffect(function () {
     if (!open) return
@@ -90,7 +90,7 @@ function CertSelector({ value, onChange, label, color, certifications, domains }
         }}
       >
         <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-          {selected ? selected.name : 'Pick a certification…'}
+          {selected ? selected.name : 'Pick a certification...'}
         </span>
         <ChevronDown
           size={13}
@@ -166,7 +166,7 @@ function CertSelector({ value, onChange, label, color, certifications, domains }
   )
 }
 
-// ── Build radar data ──────────────────────────────────────
+//  Build radar data 
 function buildRadarData(certA, certB, roiA, roiB) {
   var maxSpeed = 24
 
@@ -207,16 +207,16 @@ function buildRadarData(certA, certB, roiA, roiB) {
       axis: 'Job Market',
       A: norm(demandScore(certA.demand) * 20 + certA.avgHike * 0.5, 0, 100),
       B: norm(demandScore(certB.demand) * 20 + certB.avgHike * 0.5, 0, 100),
-      rawA: certA.demand + ' · +' + certA.avgHike + '%',
-      rawB: certB.demand + ' · +' + certB.avgHike + '%',
+      rawA: certA.demand + '  +' + certA.avgHike + '%',
+      rawB: certB.demand + '  +' + certB.avgHike + '%',
     },
   ]
 }
 
-// ── Pure SVG Radar Chart ──────────────────────────────────
+//  Pure SVG Radar Chart 
 // FIX: All SVG <text> fontFamily moved from presentation attribute to style prop.
 // CSS custom properties (var(--font-mono)) are NOT resolved in SVG presentation
-// attributes — they only work inside style="..." or style={{ }}.
+// attributes - they only work inside style="..." or style={{ }}.
 function RadarChartSVG({ data, nameA, nameB, animate }) {
   var W = 440
   var H = 360
@@ -307,20 +307,20 @@ function RadarChartSVG({ data, nameA, nameB, animate }) {
           return <line key={i} x1={CX} y1={CY} x2={pt.x} y2={pt.y} stroke="transparent" strokeWidth="1" />
         })}
 
-        {/* Polygon A — fill */}
+        {/* Polygon A - fill */}
         <motion.polygon points={pointsA} fill="url(#fillA)" stroke="none"
           initial={{ opacity: 0 }} animate={{ opacity: animate ? 1 : 0 }} transition={{ duration: 0.6, delay: 0.1 }}
         />
-        {/* Polygon A — stroke */}
+        {/* Polygon A - stroke */}
         <motion.polygon points={pointsA} fill="none" stroke={COL_A} strokeWidth="2.5" strokeLinejoin="round" filter="url(#glowA)"
           initial={{ opacity: 0 }} animate={{ opacity: animate ? 1 : 0 }} transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
         />
 
-        {/* Polygon B — fill */}
+        {/* Polygon B - fill */}
         <motion.polygon points={pointsB} fill="url(#fillB)" stroke="none"
           initial={{ opacity: 0 }} animate={{ opacity: animate ? 1 : 0 }} transition={{ duration: 0.6, delay: 0.2 }}
         />
-        {/* Polygon B — stroke */}
+        {/* Polygon B - stroke */}
         <motion.polygon points={pointsB} fill="none" stroke={COL_B} strokeWidth="2.5" strokeLinejoin="round" filter="url(#glowB)"
           initial={{ opacity: 0 }} animate={{ opacity: animate ? 1 : 0 }} transition={{ duration: 0.7, delay: 0.25 }}
         />
@@ -328,7 +328,7 @@ function RadarChartSVG({ data, nameA, nameB, animate }) {
         {/* Center dot */}
         <circle cx={CX} cy={CY} r="3" fill="transparent" />
 
-        {/* Vertex dots — A */}
+        {/* Vertex dots - A */}
         {dotsA.map(function (dot, i) {
           return (
             <motion.circle key={'a' + i}
@@ -344,7 +344,7 @@ function RadarChartSVG({ data, nameA, nameB, animate }) {
           )
         })}
 
-        {/* Vertex dots — B */}
+        {/* Vertex dots - B */}
         {dotsB.map(function (dot, i) {
           return (
             <motion.circle key={'b' + i}
@@ -378,7 +378,7 @@ function RadarChartSVG({ data, nameA, nameB, animate }) {
             return (
               <g>
                 <rect x={TX} y={TY} width={TW} height={42} rx="7" fill="transparent" stroke={col} strokeWidth="1" strokeOpacity="0.5" />
-                {/* FIX: fontFamily moved to style prop — CSS vars don't resolve in SVG presentation attrs */}
+                {/* FIX: fontFamily moved to style prop - CSS vars don't resolve in SVG presentation attrs */}
                 <text x={TX + 8} y={TY + 14} fontSize="9" fill={col} style={{ fontFamily: 'var(--font-mono)' }} fontWeight="700">
                   {name.split(' ').slice(0, 2).join(' ')}
                 </text>
@@ -405,7 +405,7 @@ function RadarChartSVG({ data, nameA, nameB, animate }) {
 
           return (
             <g key={lb.i}>
-              {/* Axis name — FIX: style prop, not fontFamily attribute */}
+              {/* Axis name - FIX: style prop, not fontFamily attribute */}
               <text
                 x={ax} y={ay}
                 textAnchor={anchor}
@@ -465,22 +465,22 @@ function RadarChartSVG({ data, nameA, nameB, animate }) {
   )
 }
 
-// ─────────────────────────────────────────────────────────
+// 
 // MAIN COMPONENT
-// ─────────────────────────────────────────────────────────
+// 
 function CertCompare({ salary, prefilledCert }) {
-  // ── Database State ──────────────────────────────────────
+  //  Database State 
   const [certificationsData, setCertificationsData] = useState([]);
   const [domainsData, setDomainsData] = useState([]);
   const [dbLoading, setDbLoading] = useState(true);
 
-  // ── The "Once and For All" Alias Fix ────────────────────
+  //  The "Once and For All" Alias Fix 
   const CERTIFICATIONS = certificationsData;
   const certifications = certificationsData;
   const CERT_DOMAINS = domainsData;
   const certDomains = domainsData;
 
-  // ── Fetch from Supabase on mount ────────────────────────
+  //  Fetch from Supabase on mount 
   useEffect(() => {
     async function fetchDatabase() {
       try {
@@ -494,7 +494,7 @@ function CertCompare({ salary, prefilledCert }) {
           setCertificationsData(certsResponse.data.map(normalizeCert));
         }
         if (domainsResponse.data) {
-          // Domains table can have varied shapes — normalize to { id, label }
+          // Domains table can have varied shapes - normalize to { id, label }
           const normalized = domainsResponse.data.map(function(d) {
             return {
               id:    d.id    || d.domain_id || d.slug || String(d.name || d.label || ''),
@@ -512,7 +512,7 @@ function CertCompare({ salary, prefilledCert }) {
     fetchDatabase();
   }, []);
 
-  // ── Loading Fallback ────────────────────────────────────
+  //  Loading Fallback 
 
   salary = salary || 8
   prefilledCert = prefilledCert || ''
@@ -546,7 +546,7 @@ function CertCompare({ salary, prefilledCert }) {
   const INR_FMT = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 })
   var TABLE_ROWS = bothReady ? [
     { label: 'Expected Hike',   vA: '+' + dataA.avgHike + '%', vB: '+' + dataB.avgHike + '%', win: dataA.avgHike > dataB.avgHike ? 'A' : 'B', winIcon: <TrendingUp size={10} /> },
-    { label: 'Cert Cost',       vA: dataA.avgCost > 0 ? INR_FMT.format(dataA.avgCost) : '—', vB: dataB.avgCost > 0 ? INR_FMT.format(dataB.avgCost) : '—', win: (dataA.avgCost || Infinity) < (dataB.avgCost || Infinity) ? 'A' : 'B', winIcon: <DollarSign size={10} /> },
+    { label: 'Cert Cost',       vA: dataA.avgCost > 0 ? INR_FMT.format(dataA.avgCost) : '-', vB: dataB.avgCost > 0 ? INR_FMT.format(dataB.avgCost) : '-', win: (dataA.avgCost || Infinity) < (dataB.avgCost || Infinity) ? 'A' : 'B', winIcon: <DollarSign size={10} /> },
     { label: 'Study Time',      vA: dataA.timeMonths + ' mo', vB: dataB.timeMonths + ' mo', win: dataA.timeMonths < dataB.timeMonths ? 'A' : 'B', winIcon: <Zap size={10} /> },
     { label: '5-Yr Net Gain',   vA: '₹' + roiA.fiveYearNet + 'L', vB: '₹' + roiB.fiveYearNet + 'L', win: parseFloat(roiA.fiveYearNet) > parseFloat(roiB.fiveYearNet) ? 'A' : 'B', winIcon: <TrendingUp size={10} /> },
     { label: '5-Yr ROI %',      vA: roiA.roiPct + '%', vB: roiB.roiPct + '%', win: roiA.roiPct > roiB.roiPct ? 'A' : 'B', winIcon: <TrendingUp size={10} /> },
@@ -569,7 +569,7 @@ function CertCompare({ salary, prefilledCert }) {
           ))}
         </div>
         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-4)', letterSpacing: '0.14em', marginTop: '12px' }}>
-          LOADING CERTIFICATIONS…
+          LOADING CERTIFICATIONS...
         </div>
       </div>
     );
@@ -578,7 +578,7 @@ function CertCompare({ salary, prefilledCert }) {
   return (
     <div>
       <div style={{ fontFamily: F_MONO, fontSize: '10px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '18px' }}>
-        COMPARE TWO CERTIFICATIONS · SIDE BY SIDE
+        COMPARE TWO CERTIFICATIONS  SIDE BY SIDE
       </div>
 
       {/* Cert selectors */}
@@ -645,7 +645,7 @@ function CertCompare({ salary, prefilledCert }) {
                     MULTI-AXIS COMPARISON
                   </div>
                   <div style={{ fontSize: '11px', color: 'var(--text-4)', fontFamily: F_BODY }}>
-                    5 dimensions · hover dots to inspect
+                    5 dimensions  hover dots to inspect
                   </div>
                 </div>
 
@@ -717,12 +717,12 @@ function CertCompare({ salary, prefilledCert }) {
                 )
               })}
 
-              {/* FIX: DataNote added — comparison table showed calculated numbers with no source attribution.
+              {/* FIX: DataNote added - comparison table showed calculated numbers with no source attribution.
                   Users need to know where avgHike, avgCost, and timeMonths come from to trust the comparison. */}
               <div style={{ marginTop: '14px', padding: '10px 12px', borderRadius: '8px', background: 'transparent', border: '1px solid var(--border-mid)', display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
                 <Info size={11} color="var(--text-4)" style={{ flexShrink: 0, marginTop: '2px' }} />
                 <span style={{ fontFamily: F_BODY, fontSize: '11px', color: 'var(--text-4)', lineHeight: '1.55' }}>
-                  Data: NASSCOM 2026 · Naukri salary insights · AmbitionBox post-cert reports · cert provider pricing. All figures are India medians. Individual results vary.
+                  Data: NASSCOM 2026  Naukri salary insights  AmbitionBox post-cert reports  cert provider pricing. All figures are India medians. Individual results vary.
                 </span>
               </div>
             </motion.div>
@@ -766,7 +766,7 @@ function CertCompare({ salary, prefilledCert }) {
         ) : null}
       </AnimatePresence>
 
-      {/* Empty state — FIX: ⚖️ emoji → Scale icon from lucide-react */}
+      {/* Empty state - FIX:  emoji  Scale icon from lucide-react */}
       {(!dataA || !dataB) ? (
         <motion.div
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}
@@ -776,7 +776,7 @@ function CertCompare({ salary, prefilledCert }) {
           <div style={{ fontFamily: F_HEAD, fontWeight: '700', fontSize: '15px', color: 'var(--text-3)', marginBottom: '6px' }}>
             Pick two certifications to compare
           </div>
-          <div>Radar chart · Break-even · 5-year gain — side by side</div>
+          <div>Radar chart  Break-even  5-year gain - side by side</div>
         </motion.div>
       ) : null}
     </div>

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 
-const SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || ''
+const SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ''
 
 export function isTurnstileEnabled() {
   return Boolean(SITE_KEY)

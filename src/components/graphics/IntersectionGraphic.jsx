@@ -1,7 +1,7 @@
 /**
- * IntersectionGraphic — FIG 0.2 // THE INTERSECTION · "Calculate the payback"
+ * IntersectionGraphic - FIG 0.2 // THE INTERSECTION  "Calculate the payback"
  *
- * Concept: 5 stacked isometric rectangular slabs that mechanically breathe apart —
+ * Concept: 5 stacked isometric rectangular slabs that mechanically breathe apart -
  * separating to reveal glowing inner geometry/circuit traces between layers.
  * Represents the layers of salary, cost, and payback "opening up" for inspection.
  * Inspired by Linear's stacked-layers FIG 0.2 illustration.
@@ -14,7 +14,7 @@ import { useEffect, useRef, useState } from 'react';
 const VW = 220;
 const VH = 210;
 
-// ── Slab definitions ─────────────────────────────────────────
+//  Slab definitions 
 const SLABS = [
   { id: 0, hw: 52, hd: 24, detail: true,  label: '5YR GAIN'   },
   { id: 1, hw: 44, hd: 20, detail: false, label: null          },
@@ -27,7 +27,7 @@ const SLAB_THICK = 9;   // side-wall height px
 const REST_GAP   = 2;   // px gap between slabs at rest
 const MAX_SPREAD = 26;  // extra px gap at full explode
 
-// ── Iso slab geometry ─────────────────────────────────────────
+//  Iso slab geometry 
 // Top face: diamond parallelogram. Left + right side walls.
 function buildSlab(cx, cy, hw, hd, thick) {
   // Top face corners
@@ -45,7 +45,7 @@ function buildSlab(cx, cy, hw, hd, thick) {
 
   const topFace  = [N, E, S, W];
 
-  // Left wall: W → S → S+thick → W+thick
+  // Left wall: W  S  S+thick  W+thick
   const leftFace = [
     W,
     S,
@@ -53,7 +53,7 @@ function buildSlab(cx, cy, hw, hd, thick) {
     { x: W.x, y: W.y + thick },
   ];
 
-  // Right wall: S → E → E+thick → S+thick
+  // Right wall: S  E  E+thick  S+thick
   const rightFace = [
     S,
     E,
@@ -68,7 +68,7 @@ function pts(arr) {
   return arr.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
 }
 
-// ── Easing ────────────────────────────────────────────────────
+//  Easing 
 function easeOutExpo(t) {
   return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t);
 }
@@ -76,7 +76,7 @@ function easeInOutCubic(t) {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 }
 
-// ── Component ─────────────────────────────────────────────────
+//  Component 
 export default function IntersectionGraphic() {
   const [explodeT, setExplodeT] = useState(0);
   const rafRef = useRef(null);
@@ -118,7 +118,7 @@ export default function IntersectionGraphic() {
     return () => cancelAnimationFrame(rafRef.current);
   }, []);
 
-  // ── Layout: slabs spread upward as explodeT → 1 ───────────
+  //  Layout: slabs spread upward as explodeT  1 
   const CX      = VW * 0.5;
   const BASE_CY = VH * 0.72;
 
@@ -144,7 +144,7 @@ export default function IntersectionGraphic() {
           </filter>
         </defs>
 
-        {/* Draw bottom → top (painter's algorithm) */}
+        {/* Draw bottom  top (painter's algorithm) */}
         {[...slabData].map((slab) => {
           const { geom, hw, hd, cy, gapAbove, i } = slab;
           const isTop       = i === SLABS.length - 1;
@@ -202,7 +202,7 @@ export default function IntersectionGraphic() {
                 </g>
               )}
 
-              {/* ── Gap interior: circuit traces between layers ── */}
+              {/*  Gap interior: circuit traces between layers  */}
               {gapVisible && innerReveal > 0 && (
                 <g opacity={innerReveal * 0.75}>
                   {/* Horizontal trace lines inside the gap */}
@@ -283,7 +283,7 @@ export default function IntersectionGraphic() {
           );
         })}
 
-        {/* ── Top apex node — glows when exploded ── */}
+        {/*  Top apex node - glows when exploded  */}
         {(() => {
           const top = slabData[slabData.length - 1];
           const n   = top.geom.N;
@@ -306,7 +306,7 @@ export default function IntersectionGraphic() {
           );
         })()}
 
-        {/* ── Base shadow line ── */}
+        {/*  Base shadow line  */}
         <line
           x1={CX - 52} y1={BASE_CY + SLAB_THICK + 5}
           x2={CX + 52} y2={BASE_CY + SLAB_THICK + 5}

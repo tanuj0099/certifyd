@@ -1,15 +1,15 @@
 /**
- * PathGraphic — FIG 0.3 // THE PATH
+ * PathGraphic - FIG 0.3 // THE PATH
  *
  * Linear-style isometric wireframe network.
  * Crisp node circles + connector lines on an iso plane.
- * A bright tracer dot races the single optimal path — dead-end branches stay dim.
+ * A bright tracer dot races the single optimal path - dead-end branches stay dim.
  * Final destination node pulses with a slow-expanding ring on arrival.
- * Pure wireframe — no fills, ultra-thin strokes, monochrome.
+ * Pure wireframe - no fills, ultra-thin strokes, monochrome.
  */
 import { useEffect, useRef, useState } from 'react';
 
-// ─── Node layout in iso-local space ─────────────────────────
+//  Node layout in iso-local space 
 // Deliberately spread across the iso plane for a balanced composition
 const NODES = [
   { id: 'S',  x: -85, y:  35,  role: 'start' },
@@ -25,7 +25,7 @@ const NODES = [
   { id: 'E',  x:  82, y: -88,  role: 'end'   },
 ];
 
-// ─── All edges ───────────────────────────────────────────────
+//  All edges 
 const EDGES = [
   ['S',  'A'],
   ['A',  'B'],
@@ -39,10 +39,10 @@ const EDGES = [
   ['D',  'X5'],   // dead end
 ];
 
-// ─── Optimal path ────────────────────────────────────────────
+//  Optimal path 
 const PATH = ['S', 'A', 'B', 'C', 'D', 'E'];
 
-// ─── Helpers ─────────────────────────────────────────────────
+//  Helpers 
 function nodeById(id) { return NODES.find(n => n.id === id); }
 
 function lerp(a, b, t) {
@@ -80,7 +80,7 @@ function easeInOutCubic(t) {
 
 const PATH_SET = new Set(PATH);
 
-// ─── Component ───────────────────────────────────────────────
+//  Component 
 export default function PathGraphic() {
   const [tracerP,    setTracerP]    = useState(0);
   const [arrived,    setArrived]    = useState(false);
@@ -169,10 +169,10 @@ export default function PathGraphic() {
           </filter>
         </defs>
 
-        {/* ── Iso transform — same as other graphics for visual consistency ── */}
+        {/*  Iso transform - same as other graphics for visual consistency  */}
         <g transform="translate(78, 152) scale(1, 0.5) rotate(45)">
 
-          {/* ── Edges ── */}
+          {/*  Edges  */}
           {EDGES.map(([a, b]) => {
             const na = nodeById(a);
             const nb = nodeById(b);
@@ -210,7 +210,7 @@ export default function PathGraphic() {
             );
           })}
 
-          {/* ── Nodes ── */}
+          {/*  Nodes  */}
           {NODES.map(node => {
             const isEnd   = node.role === 'end';
             const isStart = node.role === 'start';
@@ -267,7 +267,7 @@ export default function PathGraphic() {
                     opacity={isArr ? 0.9 : 0.6}
                   />
                 )}
-                {/* Start node marker — small square inside circle */}
+                {/* Start node marker - small square inside circle */}
                 {isStart && (
                   <rect
                     x={node.x - 1.5} y={node.y - 1.5}
@@ -280,7 +280,7 @@ export default function PathGraphic() {
             );
           })}
 
-          {/* ── Destination arrival pulse rings ── */}
+          {/*  Destination arrival pulse rings  */}
           {arrived && pulseR > 0 && (
             <>
               <circle
@@ -311,7 +311,7 @@ export default function PathGraphic() {
             </>
           )}
 
-          {/* ── Tracer trail ── */}
+          {/*  Tracer trail  */}
           {!arrived && trailPts.length > 1 && trailPts.map((p, i) => (
             i < trailPts.length - 1 && (
               <line
@@ -326,7 +326,7 @@ export default function PathGraphic() {
             )
           ))}
 
-          {/* ── Tracer dot ── */}
+          {/*  Tracer dot  */}
           {!arrived && (
             <>
               {/* Outer halo */}
@@ -350,7 +350,7 @@ export default function PathGraphic() {
             </>
           )}
 
-          {/* ── Path label: subtle "OPTIMAL" text along the route ── */}
+          {/*  Path label: subtle "OPTIMAL" text along the route  */}
           {/* Shown as a faint dotted midpoint connector label */}
           {visited.size >= 3 && (
             <g opacity="0.2">

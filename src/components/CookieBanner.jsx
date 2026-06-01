@@ -1,7 +1,10 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import {     } from 'react-router-dom';
+import Link from 'next/link';
 
 const CookieBanner = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -91,8 +94,7 @@ const CookieBanner = () => {
             >
               Got it
             </button>
-            <Link
-              to="/cookies"
+            <Link href="/cookies"
               onClick={() => setIsVisible(false)}
               style={{
                 color: 'var(--text-4, #a1a1aa)',

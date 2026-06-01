@@ -4,11 +4,11 @@ import { Download, Copy, Check, Linkedin, LayoutTemplate } from 'lucide-react'
 import { useCanvasTheme } from '../hooks/useCanvasTheme'
 import { trackShareCardGenerated } from '../lib/analytics.js'
 
-const FM = "'JetBrains Mono','Commit Mono',monospace"
-const FH = "'Plus Jakarta Sans','Bricolage Grotesque',sans-serif"
-const FB = "'Inter',sans-serif"
+const FM = "var(--font-mono)";
+const FH = "var(--font-head)";
+const FB = "var(--font-body)";
 
-// ── Domain display labels ─────────────────────────────────
+//  Domain display labels 
 var DOMAIN_LABELS = {
   tech:          'Cloud & Tech',
   data:          'Data & AI',
@@ -28,7 +28,7 @@ var DOMAIN_LABELS = {
   business:      'Business & Ops',
 }
 
-// ── Demand colors ─────────────────────────────────────────
+//  Demand colors 
 var DEMAND_COLORS = {
   'Very High': '#4F7CF8',
   'High':      '#4F7CF8',
@@ -36,7 +36,7 @@ var DEMAND_COLORS = {
   'Low':       '#94A3B8',
 }
 
-// ── Domain accent colors (used for card glow) ─────────────
+//  Domain accent colors (used for card glow) 
 var DOMAIN_ACCENTS = {
   tech:          ['#4F7CF8', '#4F7CF8'],
   data:          ['#8B5CF6', '#06B6D4'],
@@ -56,7 +56,7 @@ var DOMAIN_ACCENTS = {
   business:      ['#4F7CF8', '#4F7CF8'],
 }
 
-// ── Rounded rect helper ───────────────────────────────────
+//  Rounded rect helper 
 function rr(ctx, x, y, w, h, r) {
   ctx.beginPath()
   ctx.moveTo(x + r, y)
@@ -71,7 +71,7 @@ function rr(ctx, x, y, w, h, r) {
   ctx.closePath()
 }
 
-// ── Text wrap helper ──────────────────────────────────────
+//  Text wrap helper 
 function wrapLines(ctx, text, maxWidth) {
   var words = text.split(' ')
   var lines = [], line = ''
@@ -84,11 +84,11 @@ function wrapLines(ctx, text, maxWidth) {
   return lines
 }
 
-// ─────────────────────────────────────────────────────────
-// VARIANT A — "MY 2026 CERT MOVE"
+// 
+// VARIANT A - "MY 2026 CERT MOVE"
 // Classic announcement. Cert name big, domain + demand pills,
 // clean footer. What someone shares when they've decided.
-// ─────────────────────────────────────────────────────────
+// 
 function drawCardA(canvas, opts) {
   var certName = opts.certName || 'Your Certification'
   var domain   = opts.domain   || 'tech'
@@ -107,14 +107,14 @@ function drawCardA(canvas, opts) {
   var theme    = opts.theme || {}
   var isDark   = theme.mode !== 'light'
 
-  // ── Background ───────────────────────────────────────────
+  //  Background 
   var bg = c.createLinearGradient(0, 0, W, H)
   bg.addColorStop(0,   isDark ? '#080E1E' : '#F8FAFC')
   bg.addColorStop(0.6, isDark ? '#0C1628' : '#E2E8F0')
   bg.addColorStop(1,   isDark ? '#060C18' : '#FFFFFF')
   c.fillStyle = bg; c.fillRect(0, 0, W, H)
 
-  // Dot grid — very subtle
+  // Dot grid - very subtle
   c.fillStyle = 'rgba(148,163,184,0.12)'
   for (var xi = 0; xi <= W; xi += 36) {
     for (var yi = 0; yi <= H; yi += 36) {
@@ -122,7 +122,7 @@ function drawCardA(canvas, opts) {
     }
   }
 
-  // Domain-specific radial glow — shifts based on domain color
+  // Domain-specific radial glow - shifts based on domain color
   var g1 = c.createRadialGradient(W * 0.3, H * 0.4, 0, W * 0.3, H * 0.4, 480)
   g1.addColorStop(0,   accent1 + '12')
   g1.addColorStop(0.5, accent1 + '06')
@@ -134,26 +134,26 @@ function drawCardA(canvas, opts) {
   g2.addColorStop(1,   'transparent')
   c.fillStyle = g2; c.fillRect(0, 0, W, H)
 
-  // ── Scan lines — very subtle horizontal texture ───────────
+  //  Scan lines - very subtle horizontal texture 
   for (var si = 0; si < H; si += 3) {
     c.fillStyle = 'transparent'
     c.fillRect(0, si, W, 1)
   }
 
-  // ── Inset border frame ───────────────────────────────────
+  //  Inset border frame 
   c.strokeStyle = 'rgba(148,163,184,0.12)'
   c.lineWidth = 1
   rr(c, 12, 12, W - 24, H - 24, 6)
   c.stroke()
 
-  // ── Top gradient bar ─────────────────────────────────────
+  //  Top gradient bar 
   var topBar = c.createLinearGradient(0, 0, W, 0)
   topBar.addColorStop(0,    accent1)
   topBar.addColorStop(0.5,  accent2)
   topBar.addColorStop(1,    accent1)
   c.fillStyle = topBar; c.fillRect(0, 0, W, 4)
 
-  // ── Top bar glow line ────────────────────────────────────
+  //  Top bar glow line 
   var topGlow = c.createLinearGradient(0, 0, W, 0)
   topGlow.addColorStop(0,   accent1 + '00')
   topGlow.addColorStop(0.3, accent1 + '40')
@@ -161,20 +161,20 @@ function drawCardA(canvas, opts) {
   topGlow.addColorStop(1,   accent1 + '00')
   c.fillStyle = topGlow; c.fillRect(0, 4, W, 18)
 
-  // ── Logo ─────────────────────────────────────────────────
+  //  Logo 
   var lgGrad = c.createLinearGradient(44, 34, 82, 72)
   lgGrad.addColorStop(0, '#4F7CF8'); lgGrad.addColorStop(1, '#4338CA')
   c.fillStyle = lgGrad; rr(c, 44, 34, 40, 40, 10); c.fill()
   c.fillStyle = 'white'; c.font = 'bold 22px Arial'; c.textAlign = 'center'
-  c.fillText('↗', 64, 62)
+  c.fillText('', 64, 62)
   c.textAlign = 'left'
   c.fillStyle = 'white'; c.font = 'bold 20px Arial'; c.fillText('Certify', 94, 62)
   var cw = c.measureText('Certify').width
   c.fillStyle = '#4F7CF8'; c.font = 'bold 20px Arial'; c.fillText('ROI', 94 + cw, 62)
 
-  // ── "INDIA · 2026" badge ─────────────────────────────────
+  //  "INDIA  2026" badge 
   c.font = '11px "Courier New", monospace'
-  var bt = 'INDIA · 2026', btw = c.measureText(bt).width
+  var bt = 'INDIA  2026', btw = c.measureText(bt).width
   var bW = btw + 28, bH = 26, bX = W - bW - 44, bY = 36
   c.fillStyle = 'transparent'
   rr(c, bX, bY, bW, bH, 7); c.fill()
@@ -183,11 +183,11 @@ function drawCardA(canvas, opts) {
   c.fillStyle = '#4F7CF8'; c.textAlign = 'center'
   c.fillText(bt, bX + bW / 2, bY + 17)
 
-  // ── Header divider ───────────────────────────────────────
+  //  Header divider 
   c.strokeStyle = 'rgba(148,163,184,0.18)'; c.lineWidth = 1
   c.beginPath(); c.moveTo(44, 90); c.lineTo(W - 44, 90); c.stroke()
 
-  // ── Eyebrow ──────────────────────────────────────────────
+  //  Eyebrow 
   var midY = 308
   c.font = '12px "Courier New", monospace'
   c.fillStyle = 'transparent'
@@ -205,14 +205,14 @@ function drawCardA(canvas, opts) {
   c.beginPath(); c.arc(W / 2 - 14, midY - 108, 1.8, 0, Math.PI * 2); c.fill()
   c.beginPath(); c.arc(W / 2 + 14, midY - 108, 1.8, 0, Math.PI * 2); c.fill()
 
-  // ── Cert name — hero ─────────────────────────────────────
+  //  Cert name - hero 
   var cLen = certName.length
   var cSize = cLen > 44 ? 50 : cLen > 34 ? 60 : cLen > 22 ? 72 : cLen > 16 ? 80 : 88
   c.font = 'bold ' + cSize + 'px Arial, sans-serif'
   var cLines = wrapLines(c, certName, 900)
   var lH     = cSize * 1.18
 
-  // Gradient text effect — white → light steel
+  // Gradient text effect - white  light steel
   var tGrad = c.createLinearGradient(W / 2 - 400, 0, W / 2 + 400, 0)
   tGrad.addColorStop(0,   'transparent')
   tGrad.addColorStop(0.5, '#FFFFFF')
@@ -230,7 +230,7 @@ function drawCardA(canvas, opts) {
 
   var afterCert = midY - 40 + cLines.length * lH
 
-  // ── Domain + Demand pills ────────────────────────────────
+  //  Domain + Demand pills 
   var pillY   = afterCert + 38
   var domLabel = DOMAIN_LABELS[domain] || domain
   c.font = '12px "Courier New", monospace'
@@ -255,7 +255,7 @@ function drawCardA(canvas, opts) {
   c.fillStyle = demColor; c.textAlign = 'center'
   c.fillText(p2t, p2x + p2w / 2, pillY + 5)
 
-  // ── Year progress arc — bottom right decorative element ──
+  //  Year progress arc - bottom right decorative element 
   var arcX = W - 80, arcY = H - 80, arcR = 36
   // Track ring
   c.strokeStyle = 'rgba(148,163,184,0.18)'
@@ -275,22 +275,22 @@ function drawCardA(canvas, opts) {
   c.fillStyle = 'transparent'; c.textAlign = 'center'
   c.fillText('2026', arcX, arcY + 4)
 
-  // ── Footer divider ───────────────────────────────────────
+  //  Footer divider 
   var fY = H - 58
   c.strokeStyle = 'rgba(148,163,184,0.18)'; c.lineWidth = 1
   c.beginPath(); c.moveTo(44, fY); c.lineTo(W - 130, fY); c.stroke()
 
-  // ── Footer — tagline left ────────────────────────────────
+  //  Footer - tagline left 
   c.fillStyle = 'transparent'
   c.font = '13px Arial, sans-serif'; c.textAlign = 'left'
   c.fillText('Backed by data. Decided with clarity.', 44, H - 28)
 
-  // ── Footer — URL (not in arc zone) ───────────────────────
+  //  Footer - URL (not in arc zone) 
   c.fillStyle = 'transparent'
   c.font = 'bold 13px "Courier New", monospace'; c.textAlign = 'right'
   c.fillText('certifyroi.vercel.app', W - 140, H - 28)
 
-  // ── Corner accents ───────────────────────────────────────
+  //  Corner accents 
   var aLen = 40, aA = 'transparent'
   c.strokeStyle = aA; c.lineWidth = 1.5
   c.beginPath(); c.moveTo(W - 44, 10); c.lineTo(W - 44, 10 + aLen); c.stroke()
@@ -299,12 +299,12 @@ function drawCardA(canvas, opts) {
   c.beginPath(); c.moveTo(44, H - 10); c.lineTo(44, H - 10 - aLen); c.stroke()
 }
 
-// ─────────────────────────────────────────────────────────
-// VARIANT B — "CAREER BADGE"
+// 
+// VARIANT B - "CAREER BADGE"
 // More badge-like. Left-aligned layout.
 // Looks like a verified credential / achievement card.
-// What someone shares after completing — "I mapped this out."
-// ─────────────────────────────────────────────────────────
+// What someone shares after completing - "I mapped this out."
+// 
 function drawCardB(canvas, opts) {
   var certName = opts.certName || 'Your Certification'
   var domain   = opts.domain   || 'tech'
@@ -324,13 +324,13 @@ function drawCardB(canvas, opts) {
   var theme    = opts.theme || {}
   var isDark   = theme.mode !== 'light'
 
-  // ── Background ───────────────────────────────────────────
+  //  Background 
   var bg = c.createLinearGradient(0, 0, 0, H)
   bg.addColorStop(0, isDark ? '#0A0F20' : '#F3F4F6')
   bg.addColorStop(1, isDark ? '#070B18' : '#FFFFFF')
   c.fillStyle = bg; c.fillRect(0, 0, W, H)
 
-  // Left panel background — slightly lighter
+  // Left panel background - slightly lighter
   c.fillStyle = 'rgba(148,163,184,0.08)'
   c.fillRect(0, 0, 420, H)
 
@@ -360,7 +360,7 @@ function drawCardB(canvas, opts) {
   c.strokeStyle = 'rgba(148,163,184,0.18)'; c.lineWidth = 1
   rr(c, 12, 12, W - 24, H - 24, 8); c.stroke()
 
-  // ── Left accent bar (vertical) ───────────────────────────
+  //  Left accent bar (vertical) 
   var lBar = c.createLinearGradient(0, 0, 0, H)
   lBar.addColorStop(0,   accent1 + '00')
   lBar.addColorStop(0.3, accent1)
@@ -368,16 +368,16 @@ function drawCardB(canvas, opts) {
   lBar.addColorStop(1,   accent2 + '00')
   c.fillStyle = lBar; c.fillRect(0, 0, 4, H)
 
-  // ── LEFT PANEL CONTENT ───────────────────────────────────
+  //  LEFT PANEL CONTENT 
   var lMid = H / 2
 
-  // Big domain letter — giant background character
+  // Big domain letter - giant background character
   c.font = 'bold 280px Arial'
   c.fillStyle = 'rgba(148,163,184,0.18)'
   c.textAlign = 'center'
   c.fillText(domLabel.charAt(0).toUpperCase(), 210, lMid + 90)
 
-  // Domain label — vertical text simulation via normal text
+  // Domain label - vertical text simulation via normal text
   c.font = 'bold 13px "Courier New", monospace'
   c.fillStyle = accent1 + 'CC'
   c.textAlign = 'center'
@@ -387,7 +387,7 @@ function drawCardB(canvas, opts) {
   c.strokeStyle = accent1 + '40'; c.lineWidth = 1
   c.beginPath(); c.moveTo(130, lMid - 115); c.lineTo(290, lMid - 115); c.stroke()
 
-  // Demand badge — centered in left panel
+  // Demand badge - centered in left panel
   var dbW = 140, dbH = 34, dbX = 210 - dbW / 2, dbY = lMid - 100
   c.fillStyle = demColor + '20'; rr(c, dbX, dbY, dbW, dbH, 17); c.fill()
   c.strokeStyle = demColor + '55'; c.lineWidth = 1; rr(c, dbX, dbY, dbW, dbH, 17); c.stroke()
@@ -395,16 +395,16 @@ function drawCardB(canvas, opts) {
   c.fillStyle = demColor; c.textAlign = 'center'
   c.fillText(demand.toUpperCase() + ' DEMAND', 210, dbY + 22)
 
-  // Certify badge — bottom of left panel
+  // Certify badge - bottom of left panel
   var lgGrad = c.createLinearGradient(170, H - 100, 250, H - 50)
   lgGrad.addColorStop(0, '#4F7CF8'); lgGrad.addColorStop(1, '#4338CA')
   c.fillStyle = lgGrad; rr(c, 170, H - 98, 36, 36, 9); c.fill()
   c.fillStyle = 'white'; c.font = 'bold 18px Arial'; c.textAlign = 'center'
-  c.fillText('↗', 188, H - 73)
+  c.fillText('', 188, H - 73)
   c.fillStyle = 'transparent'; c.font = '11px Arial'; c.textAlign = 'center'
   c.fillText('Certify', 210, H - 50)
 
-  // ── RIGHT PANEL CONTENT ──────────────────────────────────
+  //  RIGHT PANEL CONTENT 
   var rx = 470, rw = W - rx - 60
   var ry = H / 2 - 80
 
@@ -412,7 +412,7 @@ function drawCardB(canvas, opts) {
   c.font = '11px "Courier New", monospace'
   c.fillStyle = 'transparent'
   c.textAlign = 'left'
-  c.fillText('CERT PATH  ·  MAPPED  ·  2026', rx, ry - 40)
+  c.fillText('CERT PATH    MAPPED    2026', rx, ry - 40)
 
   // Eyebrow underline
   c.strokeStyle = 'transparent'; c.lineWidth = 1
@@ -443,7 +443,7 @@ function drawCardB(canvas, opts) {
   c.font = '16px Arial, sans-serif'
   c.fillStyle = 'transparent'
   c.textAlign = 'left'
-  c.fillText('Analysed · Data-backed · India Market', rx, afterCert + 28)
+  c.fillText('Analysed  Data-backed  India Market', rx, afterCert + 28)
 
   // 3 micro verification dots
   var dotsY = afterCert + 60
@@ -458,9 +458,9 @@ function drawCardB(canvas, opts) {
     c.fillText(dot, dx + 10, dotsY + 4)
   })
 
-  // ── Bottom right — INDIA · 2026 badge ───────────────────
+  //  Bottom right - INDIA  2026 badge 
   c.font = '11px "Courier New", monospace'
-  var bt = 'INDIA · 2026', btw = c.measureText(bt).width
+  var bt = 'INDIA  2026', btw = c.measureText(bt).width
   var bW = btw + 24, bH = 24, bX = W - bW - 24, bY = H - bH - 24
   c.fillStyle = 'transparent'
   rr(c, bX, bY, bW, bH, 6); c.fill()
@@ -470,17 +470,17 @@ function drawCardB(canvas, opts) {
   c.fillText(bt, bX + bW / 2, bY + 16)
 }
 
-// ─────────────────────────────────────────────────────────
-// POST TIPS — different copy per variant
-// ─────────────────────────────────────────────────────────
+// 
+// POST TIPS - different copy per variant
+// 
 var POST_TIPS = {
-  A: '"Ran the numbers before deciding. This is my 2026 cert move." — no salary, no bragging. Just looks like a researched career decision. Gets curiosity clicks.',
-  B: '"Mapped out my cert path for 2026. Data says go." — feels like a confident professional announcement, not job hunting. Perfect for LinkedIn.',
+  A: '"Ran the numbers before deciding. This is my 2026 cert move." - no salary, no bragging. Just looks like a researched career decision. Gets curiosity clicks.',
+  B: '"Mapped out my cert path for 2026. Data says go." - feels like a confident professional announcement, not job hunting. Perfect for LinkedIn.',
 }
 
-// ─────────────────────────────────────────────────────────
+// 
 // MAIN COMPONENT
-// ─────────────────────────────────────────────────────────
+// 
 function ShareROICard({ certName, domain, demand, name }) {
   var canvasRef             = useRef(null)
   var [open,    setOpen]    = useState(false)
@@ -490,7 +490,7 @@ function ShareROICard({ certName, domain, demand, name }) {
   var [copied,  setCopied]  = useState(false)
   var theme                 = useCanvasTheme()
 
-  // ── Draw ─────────────────────────────────────────────────
+  //  Draw 
   var render = useCallback(async function() {
     var canvas = canvasRef.current
     if (!canvas || !certName) return
@@ -518,7 +518,7 @@ function ShareROICard({ certName, domain, demand, name }) {
     return function() { cancelAnimationFrame(id1) }
   }, [open, variant]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // ── Download ──────────────────────────────────────────────
+  //  Download 
   var download = function() {
     var canvas = canvasRef.current
     if (!canvas || !done) return
@@ -529,7 +529,7 @@ function ShareROICard({ certName, domain, demand, name }) {
     try { trackShareCardGenerated({ certName, variant, method: 'download' }) } catch (_) {}
   }
 
-  // ── Copy to clipboard ─────────────────────────────────────
+  //  Copy to clipboard 
   var copyImg = async function() {
     var canvas = canvasRef.current
     if (!canvas || !done) return
@@ -554,7 +554,7 @@ function ShareROICard({ certName, domain, demand, name }) {
   return (
     <div style={{ marginTop: '8px' }}>
 
-      {/* ── Trigger button ───────────────────────────────── */}
+      {/*  Trigger button  */}
       <motion.button
         onClick={toggle}
         whileHover={{ scale: 1.01, y: -1 }}
@@ -582,11 +582,11 @@ function ShareROICard({ certName, domain, demand, name }) {
         </div>
         Share on LinkedIn
         <span style={{ marginLeft: 'auto', fontSize: '10px', opacity: 0.5, fontFamily: FM, letterSpacing: '0.05em', fontWeight: '400' }}>
-          PNG · 1200×628
+          PNG  1200628
         </span>
       </motion.button>
 
-      {/* ── Expandable panel ─────────────────────────────── */}
+      {/*  Expandable panel  */}
       <AnimatePresence>
         {open ? (
           <motion.div
@@ -598,7 +598,7 @@ function ShareROICard({ certName, domain, demand, name }) {
           >
             <div style={{ paddingTop: '12px' }}>
 
-              {/* ── Variant switcher ─────────────────────── */}
+              {/*  Variant switcher  */}
               <div style={{ display: 'flex', gap: '6px', marginBottom: '12px' }}>
                 {[
                   { key: 'A', label: 'Cert Move', desc: 'Announcement' },
@@ -639,7 +639,7 @@ function ShareROICard({ certName, domain, demand, name }) {
                 })}
               </div>
 
-              {/* ── Loading state ────────────────────────── */}
+              {/*  Loading state  */}
               {drawing ? (
                 <div style={{ height: '130px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', borderRadius: '12px', background: 'transparent', border: '1px solid var(--border)' }}>
                   <motion.div
@@ -651,20 +651,20 @@ function ShareROICard({ certName, domain, demand, name }) {
                 </div>
               ) : null}
 
-              {/* ── Canvas ───────────────────────────────── */}
+              {/*  Canvas  */}
               <canvas
                 ref={canvasRef}
                 style={{ width: '100%', height: 'auto', borderRadius: '12px', border: '1px solid var(--border)', display: done ? 'block' : 'none' }}
               />
 
-              {/* ── Dimension label ──────────────────────── */}
+              {/*  Dimension label  */}
               {done ? (
                 <div style={{ marginTop: '6px', marginBottom: '10px', fontSize: '10px', color: 'var(--text-4)', fontFamily: FM, textAlign: 'center', letterSpacing: '0.07em', textTransform: 'uppercase' }}>
-                  LinkedIn Post Card · 1200 × 628 px · {variant === 'A' ? 'Cert Move' : 'Career Badge'}
+                  LinkedIn Post Card  1200  628 px  {variant === 'A' ? 'Cert Move' : 'Career Badge'}
                 </div>
               ) : null}
 
-              {/* ── Action buttons ───────────────────────── */}
+              {/*  Action buttons  */}
               {done ? (
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <motion.button
@@ -687,11 +687,11 @@ function ShareROICard({ certName, domain, demand, name }) {
                 </div>
               ) : null}
 
-              {/* ── Post tip ─────────────────────────────── */}
+              {/*  Post tip  */}
               {done ? (
                 <div style={{ marginTop: '12px', padding: '12px 16px', borderRadius: '10px', background: 'transparent', border: '1px solid transparent' }}>
                   <div style={{ fontSize: '10px', color: 'var(--accent)', fontFamily: FM, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '6px' }}>
-                    Post tip · {variant === 'A' ? 'Cert Move' : 'Career Badge'}
+                    Post tip  {variant === 'A' ? 'Cert Move' : 'Career Badge'}
                   </div>
                   <div style={{ fontSize: '13px', color: 'var(--text-3)', fontFamily: FB, lineHeight: '1.65' }}>
                     {POST_TIPS[variant]}

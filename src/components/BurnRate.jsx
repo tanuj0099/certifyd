@@ -99,7 +99,7 @@ const BurnRate = ({ certName = 'Your Certification', breakEvenMonths = 6 }) => {
             <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: 'var(--text-4)' }}>{certName}</div>
           </div>
         </div>
-        <button onClick={() => setShowReset(v => !v)} style={{ background: 'none', border: 'none', color: 'var(--text-4)', cursor: 'pointer', fontSize: '12px', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', gap: '4px', transition: 'color 0.15s' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--cool-grey)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--text-4)'}>
+        <button onClick={() => setShowReset(v => !v)} style={{ background: 'none', border: 'none', color: 'var(--text-4)', cursor: 'pointer', fontSize: '12px', fontFamily: 'var(--font-sans)', display: 'flex', alignItems: 'center', gap: '4px', transition: 'color 0.15s' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--cool-grey)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--text-4)'}>
           <RotateCcw size={12} /> Reset
         </button>
       </div>
@@ -108,10 +108,10 @@ const BurnRate = ({ certName = 'Your Certification', breakEvenMonths = 6 }) => {
         {showReset && (
           <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={SPRING}
             style={{ padding: '12px 16px', borderRadius: '10px', background: 'transparent', border: '1px solid transparent', marginBottom: '14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
-            <span style={{ fontSize: '13px', color: 'var(--text-2)', fontFamily: 'Inter, sans-serif' }}>Reset all progress?</span>
+            <span style={{ fontSize: '13px', color: 'var(--text-2)', fontFamily: 'var(--font-sans)' }}>Reset all progress?</span>
             <div style={{ display: 'flex', gap: '8px' }}>
-              <button onClick={reset} style={{ padding: '5px 12px', borderRadius: '7px', background: 'transparent', border: '1px solid transparent', color: 'var(--cool-grey)', fontSize: '12px', cursor: 'pointer', fontFamily: 'Inter, sans-serif', fontWeight: '600' }}>Reset</button>
-              <button onClick={() => setShowReset(false)} style={{ padding: '5px 12px', borderRadius: '7px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-3)', fontSize: '12px', cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Cancel</button>
+              <button onClick={reset} style={{ padding: '5px 12px', borderRadius: '7px', background: 'transparent', border: '1px solid transparent', color: 'var(--cool-grey)', fontSize: '12px', cursor: 'pointer', fontFamily: 'var(--font-sans)', fontWeight: '600' }}>Reset</button>
+              <button onClick={() => setShowReset(false)} style={{ padding: '5px 12px', borderRadius: '7px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-3)', fontSize: '12px', cursor: 'pointer', fontFamily: 'var(--font-sans)' }}>Cancel</button>
             </div>
           </motion.div>
         )}
@@ -128,7 +128,7 @@ const BurnRate = ({ certName = 'Your Certification', breakEvenMonths = 6 }) => {
           <div key={i} style={{ padding: '11px 10px', borderRadius: '10px', background: `${s.color}08`, border: `1px solid ${s.color}20`, textAlign: 'center' }}>
             <s.icon size={13} color={s.color} style={{ display: 'block', margin: '0 auto 5px' }} />
             <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '14px', color: s.color, fontWeight: '700', letterSpacing: '-0.02em' }}>{s.value}</div>
-            <div style={{ fontSize: '10px', color: 'var(--text-4)', fontFamily: 'Inter, sans-serif', marginTop: '1px' }}>{s.sub}</div>
+            <div style={{ fontSize: '10px', color: 'var(--text-4)', fontFamily: 'var(--font-sans)', marginTop: '1px' }}>{s.sub}</div>
           </div>
         ))}
       </div>
@@ -149,7 +149,7 @@ const BurnRate = ({ certName = 'Your Certification', breakEvenMonths = 6 }) => {
 
       {/* Modules checklist */}
       <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '10px' }}>
-        MODULES — CLICK TO MARK DONE
+        MODULES - CLICK TO MARK DONE
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
         {modules.map((mod, i) => {
@@ -168,7 +168,7 @@ const BurnRate = ({ certName = 'Your Certification', breakEvenMonths = 6 }) => {
               <div style={{ width: 20, height: 20, borderRadius: '6px', flexShrink: 0, border: `2px solid ${done ? EMERALD : 'var(--border)'}`, background: done ? `${EMERALD}14` : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.18s' }}>
                 {done && <CheckCircle size={11} color={EMERALD} />}
               </div>
-              <span style={{ fontSize: '13px', color: done ? 'var(--text-3)' : 'var(--text)', fontFamily: 'Inter, sans-serif', textDecoration: done ? 'line-through' : 'none', flex: 1, transition: 'all 0.18s' }}>{mod}</span>
+              <span style={{ fontSize: '13px', color: done ? 'var(--text-3)' : 'var(--text)', fontFamily: 'var(--font-sans)', textDecoration: done ? 'line-through' : 'none', flex: 1, transition: 'all 0.18s' }}>{mod}</span>
               <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: 'var(--text-4)' }}>M{i + 1}</span>
             </motion.button>
           )
@@ -178,8 +178,8 @@ const BurnRate = ({ certName = 'Your Certification', breakEvenMonths = 6 }) => {
       {/* Break-even reminder */}
       <div style={{ marginTop: '16px', padding: '12px 14px', borderRadius: '10px', background: 'var(--indigo-dim)', border: '1px solid var(--border-accent)', display: 'flex', gap: '9px', alignItems: 'flex-start' }}>
         <Target size={14} color="var(--indigo-light)" style={{ flexShrink: 0, marginTop: '2px' }} />
-        <div style={{ fontSize: '13px', color: 'var(--text-2)', fontFamily: 'Inter, sans-serif', lineHeight: '1.6' }}>
-          Complete this cert and break even in <strong style={{ color: 'var(--indigo-light)', fontFamily: 'JetBrains Mono, monospace' }}>{breakEvenMonths} months</strong> — that's the average rent for a 1BHK in Bangalore recovered.
+        <div style={{ fontSize: '13px', color: 'var(--text-2)', fontFamily: 'var(--font-sans)', lineHeight: '1.6' }}>
+          Complete this cert and break even in <strong style={{ color: 'var(--indigo-light)', fontFamily: 'JetBrains Mono, monospace' }}>{breakEvenMonths} months</strong> - that's the average rent for a 1BHK in Bangalore recovered.
         </div>
       </div>
 

@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect, useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
@@ -7,19 +9,23 @@ import {
 } from 'lucide-react'
 import { useTheme } from '../hooks/useTheme.jsx'
 import UserAccountMenu from './UserAccountMenu.jsx'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { Playfair_Display } from 'next/font/google';
+
+const playfair = Playfair_Display({ subsets: ['latin'], weight: '900' });
+
 import { useJourneyStore } from '../store/useJourneyStore.js'
 
-const F_SANS = "'Inter', 'DM Sans', sans-serif"
-const F_MONO = "'JetBrains Mono', 'IBM Plex Mono', monospace"
+const F_SANS = "var(--font-sans)";
+const F_MONO = "var(--font-mono)";
 
-// ── Nav definitions ─────────────────────────────────────────
+//  Nav definitions 
 const ANON_NAV = [
   { label: 'Home',           pageId: 'home' },
   { label: 'Tools',          pageId: 'tools' },
-  { label: 'ROI Calculator', pageId: 'app', isRoi: true },
-  { label: 'Cert Radar',     pageId: 'tools/cert-radar' },
-  { label: 'Market Pulse',   pageId: 'tools/market' },
+  { label: 'ROI Calculator', href: '/tools/roi' },
+  { label: 'Cert Radar', href: '/tools/cert-radar' },
+  { label: 'Market Pulse', href: '/tools/market' },
   { label: 'Offer Analysis', pageId: 'offer-analysis' },
   { label: 'Blog',           pageId: 'blog' },
 ]
@@ -28,22 +34,22 @@ const ANON_NAV = [
 const AUTH_NAV = [
   { label: 'Home',           pageId: 'home' },
   { label: 'Tools',          pageId: 'tools' },
-  { label: 'ROI Calculator', pageId: 'app', isRoi: true },
-  { label: 'Cert Radar',     pageId: 'tools/cert-radar' },
-  { label: 'Market Pulse',   pageId: 'tools/market' },
+  { label: 'ROI Calculator', href: '/tools/roi' },
+  { label: 'Cert Radar', href: '/tools/cert-radar' },
+  { label: 'Market Pulse', href: '/tools/market' },
   { label: 'Offer Analysis', pageId: 'offer-analysis' },
   { label: 'Dashboard',      pageId: 'dashboard' },
   { label: 'Blog',           pageId: 'blog' },
 ]
 
-// ── Mobile bottom tab bar config ───────────────────────────
+//  Mobile bottom tab bar config 
 // Home | Cert Radar | ROI | Tools hub | Sign In / Profile
 // Tools hub (/tools) contains: Market Pulse, Offer Analysis, Resume Analyzer,
-// Cert Compare, CKA Roadmap etc. — all tool pages in one place.
+// Cert Compare, CKA Roadmap etc. - all tool pages in one place.
 const MOBILE_TABS_ANON = [
   { label: 'Home',      pageId: 'home',             Icon: Home },
-  { label: 'Cert Radar',pageId: 'tools/cert-radar', Icon: Radio },
-  { label: 'ROI',       pageId: 'app',              Icon: BarChart2, isRoi: true },
+  { label: 'Cert Radar', href: '/tools/cert-radar', Icon: Radio },
+  { label: 'ROI', href: '/tools/roi', Icon: BarChart2 },
   { label: 'Tools',     pageId: 'tools',            Icon: Wrench },
   { label: 'Sign In',   pageId: '__signin__',        Icon: User },
 ]
@@ -54,7 +60,7 @@ const MOBILE_TABS_AUTH = [
   { label: 'Profile',   pageId: 'profile',   Icon: User },
 ]
 
-// ── Helpers ────────────────────────────────────────────────
+//  Helpers 
 function hrefFor(itemOrPageId) {
   if (!itemOrPageId) return '/'
   if (typeof itemOrPageId === 'string') {
@@ -66,86 +72,80 @@ function hrefFor(itemOrPageId) {
   return pageId === 'home' ? '/' : `/${pageId}`
 }
 
-function isActivePage(currentPage, pageId) {
-  if (pageId === 'home') return currentPage === 'home'
-  if (pageId === 'app') return currentPage === 'app'
-  return currentPage === pageId
+function isActivePage(currentPage, pageIdOrHref) {
+  if (!pageIdOrHref) return false
+  if (pageIdOrHref === 'home') return currentPage === 'home'
+  
+  // Strip leading slash from href to match currentPage format (e.g. 'tools/roi')
+  const target = pageIdOrHref.startsWith('/') ? pageIdOrHref.slice(1) : pageIdOrHref;
+  return currentPage === target
 }
 
-function doNavigate(event, item, onNavigate, onActivate, onClose, navigate, onSignIn) {
+function doNavigate(event, item, onNavigate, onActivate, onClose, router, onSignIn) {
   event.preventDefault()
-  if (item.label === 'ROI Calculator') {
-    const s = useJourneyStore.getState();
-    if (s.resetMode) s.resetMode();
-    if (s.setActiveTab) s.setActiveTab('resume');
-  }
   if (item.pageId === '__signin__') { onSignIn?.(); onClose?.(); return }
-  if (item.isRoi) { navigate('/app'); onActivate?.('app'); onClose?.(); return }
+  
   if (item.href) {
     if (item.href.startsWith('#')) { window.location.hash = item.href.slice(1) }
-    else { navigate(item.href) }
+    else { router.push(item.href) }
     onClose?.(); return
   }
   const route = item.pageId === 'home' ? '/' : `/${item.pageId}`
-  navigate(route)
+  router.push(route)
   onActivate?.(item.pageId)
   onClose?.()
 }
 
-// ── Desktop NavLink ────────────────────────────────────────
-function NavLink({ item, active, onNavigate, onActivate, navigate }) {
+//  Desktop NavLink 
+function NavLink({ item, active, onNavigate, onActivate, router }) {
   const href = item.pageId ? `/${item.pageId}` : item.href
-  const F_SANS = 'Inter, -apple-system, sans-serif'
+  const F_SANS = "var(--font-sans)";
   const isDarkTheme = typeof document !== 'undefined' && document.documentElement.getAttribute('data-theme') === 'dark'
 
   return (
     <a
       href={href}
-      onClick={(e) => doNavigate(e, item, onNavigate, onActivate, undefined, navigate)}
+      onClick={(e) => doNavigate(e, item, onNavigate, onActivate, undefined, router)}
       style={{
         position: 'relative',
         display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-        minHeight: '34px', padding: '0 12px', borderRadius: '999px',
-        border: '1px solid transparent',
-        background: active ? 'var(--text)' : 'transparent',
-        color: active ? 'var(--bg)' : 'var(--text)',
-        opacity: active ? 1 : 0.7,
+        minHeight: '34px', padding: '0 16px', borderRadius: '999px',
+        color: active ? 'var(--text)' : 'var(--text)',
+        opacity: active ? 1 : 0.65,
         textDecoration: 'none', fontFamily: F_SANS,
-        fontSize: '13px', fontWeight: active ? 600 : 500, letterSpacing: '0.01em',
+        fontSize: '13.5px', fontWeight: active ? 600 : 500, letterSpacing: '0.01em',
         whiteSpace: 'nowrap',
         transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
       }}
       onMouseOver={(e) => {
-        if (!active) {
-          e.currentTarget.style.opacity = '1';
-          e.currentTarget.style.background = 'color-mix(in srgb, var(--text) 8%, transparent)';
-        }
+        if (!active) e.currentTarget.style.opacity = '1';
       }}
       onMouseOut={(e) => {
-        if (!active) {
-          e.currentTarget.style.opacity = '0.7';
-          e.currentTarget.style.background = 'transparent';
-        }
+        if (!active) e.currentTarget.style.opacity = '0.65';
       }}
     >
-      {item.label}
+      <span style={{ position: 'relative', zIndex: 2 }}>{item.label}</span>
       {active && (
-        <motion.span
-          layoutId="desktop-active-dot"
+        <motion.div
+          layoutId="desktop-active-pill"
           style={{
-            position: 'absolute', bottom: '4px', left: '50%',
-            width: '18px', height: '2px', borderRadius: '1px',
-            transform: 'translateX(-50%)',
-            background: 'var(--bg)',
+            position: 'absolute',
+            inset: 0,
+            borderRadius: '999px',
+            background: 'color-mix(in srgb, var(--text) 6%, transparent)',
+            backdropFilter: 'blur(12px)',
+            border: '1px solid color-mix(in srgb, var(--text) 8%, transparent)',
+            boxShadow: '0 2px 12px rgba(0,0,0,0.04), inset 0 1px 0 color-mix(in srgb, var(--bg) 20%, transparent)',
+            zIndex: 0,
           }}
-          transition={{ type: 'spring', stiffness: 420, damping: 34 }}
+          transition={{ type: 'spring', stiffness: 450, damping: 35 }}
         />
       )}
     </a>
   )
 }
 
-// ── Theme icons ────────────────────────────────────────────
+//  Theme icons 
 function SunIcon({ size = 16 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 16 16" fill="none">
@@ -189,8 +189,11 @@ function SystemIcon({ size = 16 }) {
   )
 }
 
-// ── Theme toggle ───────────────────────────────────────────
+//  Theme toggle 
 function ThemeToggle({ mode, onCycle }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+
   const handleCycle = () => {
     if (mode === 'dark') onCycle('light')
     else if (mode === 'light') onCycle('system')
@@ -204,6 +207,16 @@ function ThemeToggle({ mode, onCycle }) {
   ]
   const current = options.find(o => o.id === mode) || options[2]
   const CurrentIcon = current.Icon
+
+  if (!mounted) {
+    return (
+      <div style={{ position: 'relative' }}>
+        <button type="button" 
+          style={{ display:'inline-flex', width:'34px', height:'34px', borderRadius:'50%', border:'1px solid var(--border)', background:'transparent' }} />
+      </div>
+    )
+  }
+
   return (
     <div style={{ position: 'relative' }}>
       <button type="button" aria-label={`Theme: ${current.label}`} onClick={handleCycle}
@@ -218,10 +231,10 @@ function ThemeToggle({ mode, onCycle }) {
   )
 }
 
-// ── Mobile hamburger menu (full-screen overlay for extra items) ─
+//  Mobile hamburger menu (full-screen overlay for extra items) 
 function MobileMenu({ open, currentPage, onNavigate, onActivate, onClose, user, onSignIn, onSignOut, themeMode, onThemeCycle, navItems }) {
   const items = navItems || (user ? AUTH_NAV : ANON_NAV)
-  const navigate = useNavigate()
+  const router = useRouter()
 
   const themeOptions = [
     { id: 'light',  label: 'Light' },
@@ -242,10 +255,11 @@ function MobileMenu({ open, currentPage, onNavigate, onActivate, onClose, user, 
           <div style={{ margin:'0 0 8px 4px', color:'var(--text-4)', fontFamily:F_MONO, fontSize:'10px', letterSpacing:'0.12em', textTransform:'uppercase' }}>Navigate</div>
           <div style={{ display:'grid', gap:'5px', marginBottom:'16px' }}>
             {items.map(item => {
-              const active = isActivePage(currentPage, item.pageId)
+              const active = isActivePage(currentPage, item.pageId || item.href)
+
               return (
                 <a key={item.pageId||item.label} href={hrefFor(item)}
-                  onClick={(e) => doNavigate(e, item, onNavigate, onActivate, onClose, navigate, onSignIn)}
+                  onClick={(e) => doNavigate(e, item, onNavigate, onActivate, onClose, router, onSignIn)}
                   style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:'14px', padding:'12px 14px', borderRadius:'12px', border:'1px solid var(--border)', background: active ? 'var(--text)':'transparent', color: active ? 'var(--bg)':'var(--text)', textDecoration:'none', fontFamily:F_SANS }}>
                   <span style={{ fontSize:'15px', fontWeight:750 }}>{item.label}</span>
                   <ChevronRight size={14} color={active ? 'var(--bg)' : 'var(--text-4)'} />
@@ -267,7 +281,7 @@ function MobileMenu({ open, currentPage, onNavigate, onActivate, onClose, user, 
           </div>
 
           <button type="button"
-            onClick={() => { if (user) { navigate('/profile'); onClose() } else { onSignIn?.(); onClose() } }}
+            onClick={() => { if (user) { router.push('/profile'); onClose() } else { onSignIn?.(); onClose() } }}
             style={{ width:'100%', minHeight:'44px', borderRadius:'999px', border:'none', background:'var(--text)', color:'var(--bg)', fontFamily:F_SANS, fontSize:'14px', fontWeight:800, cursor:'pointer' }}>
             {user ? 'My profile' : 'Sign In'}
           </button>
@@ -277,9 +291,9 @@ function MobileMenu({ open, currentPage, onNavigate, onActivate, onClose, user, 
   )
 }
 
-// ── Mobile bottom tab bar (Spotify-style) ──────────────────
+//  Mobile bottom tab bar (Spotify-style) 
 function MobileBottomBar({ currentPage, user, onSignIn, onNavigate }) {
-  const navigate = useNavigate()
+  const router = useRouter()
   const tabs = user ? MOBILE_TABS_AUTH : MOBILE_TABS_ANON
 
   return (
@@ -304,15 +318,15 @@ function MobileBottomBar({ currentPage, user, onSignIn, onNavigate }) {
     >
       {tabs.map(tab => {
         const { Icon, label, pageId } = tab
-        const active = isActivePage(currentPage, pageId)
+        const active = isActivePage(currentPage, pageId || tab.href)
         return (
           <button
-            key={pageId}
+            key={pageId || tab.href || label}
             type="button"
             aria-label={label}
             onClick={(e) => {
               if (pageId === '__signin__') { onSignIn?.(); return }
-              if (pageId === 'profile') { navigate('/profile'); return }
+              if (pageId === 'profile') { router.push('/profile'); return }
               doNavigate(
                 { preventDefault: () => {} },
                 tab, onNavigate, undefined, undefined, navigate, onSignIn
@@ -368,14 +382,14 @@ function MobileBottomBar({ currentPage, user, onSignIn, onNavigate }) {
   )
 }
 
-// ── Main DynamicIslandNav ──────────────────────────────────
+//  Main DynamicIslandNav 
 const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, onSignOut }) => {
   const [activeHref, setActiveHref] = useState(currentPage || 'home')
   const [menuOpen, setMenuOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const { mode: themeMode, setThemeMode: cycleTheme } = useTheme()
-  const navigate = useNavigate()
-  const location = useLocation()
+  const router = useRouter()
+  const location = { pathname: usePathname() }
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 820)
@@ -400,7 +414,7 @@ const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, 
 
   return (
     <>
-      {/* ── Top Header — DESKTOP ONLY ─────────────────────────────── */}
+      {/*  Top Header - DESKTOP ONLY  */}
       {!isMobile && (
         <header 
           className="sticky top-0 z-50 w-full border-b backdrop-blur-md transition-colors duration-300"
@@ -413,13 +427,12 @@ const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, 
             {/* Far Left: Logo */}
             <div className="flex items-center flex-shrink-0">
               <button type="button" aria-label="Go to home"
-                onClick={() => { try { navigate(user ? '/dashboard' : '/') } catch (e) { window.location.href = user ? '/dashboard' : '/' } }}
+                onClick={() => { try { router.push('/') } catch (e) { window.location.href = '/' } }}
                 style={{ 
                   background:'none', border:'none', padding:'0', cursor:'pointer', 
-                  color:'var(--text)', fontFamily:F_SANS, fontSize:'16px', fontWeight:800, letterSpacing:'-0.01em',
-                  transition: 'color 0.2s ease'
+                  color:'var(--text)', transition: 'color 0.2s ease'
                 }}>
-                Certify
+                <span className={`${playfair.className} text-2xl font-black tracking-tight`}>Certifyd</span>
               </button>
             </div>
 
@@ -427,7 +440,7 @@ const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, 
             <div className="flex-1 flex justify-center px-8">
               <div style={{ display:'flex', alignItems:'center', gap:'12px' }}>
                 {navItems.map(item => (
-                  <NavLink key={item.pageId||item.label} item={item} active={isActivePage(activeHref, item.pageId)} onNavigate={onNavigate} onActivate={setActiveHref} navigate={navigate} />
+                  <NavLink key={item.pageId||item.label} item={item} active={isActivePage(activeHref, item.pageId || item.href)} onNavigate={onNavigate} onActivate={setActiveHref} router={router} />
                 ))}
               </div>
             </div>
@@ -463,7 +476,7 @@ const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, 
         </header>
       )}
 
-      {/* ── Mobile hamburger overlay ─────────────────── */}
+      {/*  Mobile hamburger overlay  */}
       <MobileMenu
         open={isMobile && menuOpen}
         currentPage={activeHref}
@@ -475,7 +488,7 @@ const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, 
         navItems={navItems}
       />
 
-      {/* ── Mobile bottom tab bar ─────────────────────── */}
+      {/*  Mobile bottom tab bar  */}
       {isMobile && (
         <MobileBottomBar
           currentPage={activeHref}

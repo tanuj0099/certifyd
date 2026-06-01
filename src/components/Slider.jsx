@@ -1,9 +1,9 @@
 import { useState, useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
 
-const FM = "'Commit Mono','JetBrains Mono',monospace"
-const FB = "'Inter',sans-serif"
-const FH = "'Bricolage Grotesque','Plus Jakarta Sans',sans-serif"
+const FM = "var(--font-mono)";
+const FB = "var(--font-body)";
+const FH = "var(--font-head)";
 
 function Slider({
   label,
@@ -126,7 +126,7 @@ function Slider({
         </motion.div>
       </div>
 
-      {/* Outer hit zone — tall for easy mobile touch */}
+      {/* Outer hit zone - tall for easy mobile touch */}
       <div
         ref={trackRef}
         onMouseDown={onMouseDown}
@@ -219,7 +219,7 @@ function Slider({
           justifyContent: 'center',
           border: '2px solid ' + color + 'cc',
         }}>
-          {/* 2×2 grip dots */}
+          {/* 22 grip dots */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
             {[0, 1].map(function (r) {
               return (
@@ -240,7 +240,7 @@ function Slider({
           </div>
         </div>
 
-        {/* Tick marks — subtle visual scale */}
+        {/* Tick marks - subtle visual scale */}
         {[0, 25, 50, 75, 100].map(function (tick) {
           return (
             <div key={tick} style={{

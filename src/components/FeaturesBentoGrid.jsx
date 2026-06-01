@@ -1,13 +1,16 @@
-import { Link } from 'react-router-dom'
+'use client';
+
+import Link from 'next/link';
 import { motion } from 'framer-motion'
 import { ArrowRight, MapPin } from 'lucide-react'
 import IntersectionGraphic from './graphics/IntersectionGraphic.jsx'
 import FilterGraphic from './graphics/FilterGraphic.jsx'
 import PathGraphic from './graphics/PathGraphic.jsx'
 import { useTheme } from '../hooks/useTheme.jsx'
+import { useJourneyStore } from '../store/useJourneyStore.js'
 
-const F_SANS = "'Inter', 'DM Sans', sans-serif"
-const F_MONO = "'JetBrains Mono', 'IBM Plex Mono', monospace"
+const F_SANS = "var(--font-sans)";
+const F_MONO = "var(--font-mono)";
 
 const trendingRoles = [
   { role: 'Cloud Security Engineer', jobs: '3,240', salary: 'INR 18.4L' },
@@ -17,8 +20,7 @@ const trendingRoles = [
 
 function TeaserLink({ to, children }) {
   return (
-    <Link
-      to={to}
+    <div
       style={{
         display: 'inline-flex',
         alignItems: 'center',
@@ -29,15 +31,16 @@ function TeaserLink({ to, children }) {
         fontFamily: F_SANS,
         fontSize: '13px',
         fontWeight: 800,
+        cursor: 'pointer'
       }}
     >
       {children}
       <ArrowRight size={14} />
-    </Link>
+    </div>
   )
 }
 
-function BoxShell({ label, title, copy, children, linkTo, linkLabel, isLast }) {
+function BoxShell({ label, title, copy, children, activeTab, linkLabel, isLast }) {
   return (
     <motion.article
       className="features-bento__box"
@@ -50,7 +53,12 @@ function BoxShell({ label, title, copy, children, linkTo, linkLabel, isLast }) {
         background: 'transparent',
         cursor: 'pointer',
       }}
-      onClick={() => window.location.href = linkTo}
+      onClick={() => {
+        if (activeTab) {
+          useJourneyStore.getState().setActiveTab(activeTab);
+        }
+        document.getElementById('workspace')?.scrollIntoView({ behavior: 'smooth' });
+      }}
     >
       <div
         style={{
@@ -89,7 +97,7 @@ function BoxShell({ label, title, copy, children, linkTo, linkLabel, isLast }) {
       >
         {copy}
       </p>
-      <TeaserLink to={linkTo}>{linkLabel}</TeaserLink>
+      <TeaserLink>{linkLabel}</TeaserLink>
     </motion.article>
   )
 }
@@ -223,32 +231,32 @@ export default function FeaturesBentoGrid() {
             background: 'transparent',
           }}
         >
-          {/* FIG 0.1 — Market Pulse / Cert Radar */}
+          {/* FIG 0.1 - Market Pulse / Cert Radar */}
           <BoxShell
             label="FIG 0.1 // THE FILTER"
             title="Scan the certification pipeline"
             copy="Instantly identify high-demand signals amidst global complexity with our live data integration."
-            linkTo="/tools/market"
+            activeTab="heatmap"
             linkLabel="View Market Pulse"
           >
             <CertRadarMock />
           </BoxShell>
-          {/* FIG 0.2 — ROI Calculator */}
+          {/* FIG 0.2 - ROI Calculator */}
           <BoxShell
             label="FIG 0.2 // THE INTERSECTION"
             title="Calculate the payback"
             copy="Move from vibe to numbers with city-calibrated salary delta and payback period math."
-            linkTo="/app"
+            activeTab="calculator"
             linkLabel="Calculate ROI"
           >
             <DashboardMock />
           </BoxShell>
-          {/* FIG 0.3 — Route Analysis */}
+          {/* FIG 0.3 - Route Analysis */}
           <BoxShell
             label="FIG 0.3 // THE PATH"
             title="Trace the optimal route"
             copy="Find the most efficient certification path for your specific career goals, skipping dead-ends."
-            linkTo="/tools/cert-radar"
+            activeTab="compare"
             linkLabel="Route Analysis"
             isLast
           >

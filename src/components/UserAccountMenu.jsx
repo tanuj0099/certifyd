@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronDown, LogOut, Settings, ShieldCheck, Trash2 } from 'lucide-react'
 import { supabase } from '../lib/supabase.js'
 
-const F_SANS = "'Inter', 'DM Sans', sans-serif"
+const F_SANS = "var(--font-sans)";
 
 function initialsFromUser(user) {
   const name = user?.user_metadata?.full_name || user?.email || 'U'
@@ -140,7 +140,7 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
                 )
               })}
 
-              {/* ── Sign out ──────────────────────────────── */}
+              {/*  Sign out  */}
               <button
                 type="button"
                 role="menuitem"

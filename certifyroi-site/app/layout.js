@@ -1,6 +1,6 @@
 import { Inter } from 'next/font/google'
 import '../globals.css'
-
+import { CSPostHogProvider } from '../components/providers/PostHogProvider'
 const inter = Inter({ subsets: ['latin'], display: 'swap' })
 
 export const metadata = {
@@ -38,7 +38,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className} style={{ margin: 0, background: '#f5f5f5' }}>
-        {children}
+        <CSPostHogProvider>
+          {children}
+        </CSPostHogProvider>
       </body>
     </html>
   )

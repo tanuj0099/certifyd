@@ -33,7 +33,7 @@ const AILoadingState = ({ certName }) => {
           Decision Engine Processing
         </span>
         <span style={{ marginLeft: 'auto', fontSize: '11px', color: 'var(--text-4)' }}>
-          {certName ? `• ${certName}` : ''}
+          {certName ? `- ${certName}` : ''}
         </span>
       </div>
 

@@ -2,10 +2,10 @@ import React, { useState, useEffect, createContext, useContext } from 'react'
 import { motion } from 'framer-motion'
 import { useTheme as useGlobalTheme, THEME_PRESETS } from '../hooks/useTheme'
 
-// ─────────────────────────────────────────────────────────
-// THEMES — Maps to 5-theme engine in useTheme.jsx
+// 
+// THEMES - Maps to 5-theme engine in useTheme.jsx
 // Components that use C.bg, C.text, etc. read from here.
-// ─────────────────────────────────────────────────────────
+// 
 export const THEMES = Object.fromEntries(
   Object.entries(THEME_PRESETS).map(([id, t]) => [id, {
     name:      id,
@@ -32,9 +32,9 @@ export const THEMES = Object.fromEntries(
 // Forward-compat aliases so any code doing THEMES.nordic still works
 if (!THEMES.nordic) Object.assign(THEMES, { nordic: THEMES.dark, ash: THEMES.light })
 
-export const F_SERIF = "'Inter', system-ui, sans-serif"
-export const F_SANS  = "'Inter', 'DM Sans', sans-serif"
-export const F_MONO  = "'JetBrains Mono', 'IBM Plex Mono', monospace"
+export const F_SERIF = "var(--font-serif)";
+export const F_SANS = "var(--font-sans)";
+export const F_MONO = "var(--font-mono)";
 
 // Spring-loaded entrance (stiffness: 120, damping: 20)
 export const RISE = {
@@ -54,14 +54,14 @@ export function useIsMobile() {
 
 export function useThemeContext() {
   const { current } = useGlobalTheme()
-  // Resolve: 'dark' → THEMES.dark, 'light' → THEMES.light
-  // Legacy fallback: 'nordic' → THEMES.dark, 'ash' → THEMES.light
+  // Resolve: 'dark'  THEMES.dark, 'light'  THEMES.light
+  // Legacy fallback: 'nordic'  THEMES.dark, 'ash'  THEMES.light
   return THEMES[current.id] || THEMES[current.id === 'light' ? 'light' : 'dark']
 }
 
-// ─────────────────────────────────────────────────────────
+// 
 // PRIMITIVES
-// ─────────────────────────────────────────────────────────
+// 
 export function CrosshairIcon({ color }) {
   return (
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none">

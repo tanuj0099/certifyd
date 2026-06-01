@@ -33,7 +33,7 @@ const ROIEngine = ({ currentSalary = DEFAULT_CURRENT_SALARY }) => {
     // 5. Payback Period (Months)
     // How many months of the "bump" does it take to pay off the total cost?
     const monthlyBump = netGainINR / 12;
-    const payback = monthlyBump > 0 ? (totalCostINR / monthlyBump).toFixed(1) : '∞';
+    const payback = monthlyBump > 0 ? (totalCostINR / monthlyBump).toFixed(1) : '';
 
     return {
       totalCost: totalCostINR,

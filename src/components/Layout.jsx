@@ -1,15 +1,18 @@
-// ─────────────────────────────────────────────────────────
-// Layout.jsx — Shared layout for all pages
-// ─────────────────────────────────────────────────────────
+'use client';
+
+// 
+// Layout.jsx - Shared layout for all pages
+// 
 
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import {     } from 'react-router-dom';
+import Link from 'next/link';
 import { Menu, X, Home, Info, HelpCircle, Zap, FileText, Phone, Mail } from 'lucide-react'
 
-const F_HEAD = "'Inter', sans-serif"
-const F_BODY = "'Inter', sans-serif"
-const F_MONO = "'JetBrains Mono', monospace"
+const F_HEAD = "var(--font-head)";
+const F_BODY = "var(--font-body)";
+const F_MONO = "var(--font-mono)";
 
 const NAV_ITEMS = [
   { label: 'Home',    href: '/',         icon: Home },
@@ -21,9 +24,9 @@ const NAV_ITEMS = [
   { label: 'Contact', href: '/contact',  icon: Phone },
 ]
 
-// ─────────────────────────────────────────────────────────
+// 
 // HEADER
-// ─────────────────────────────────────────────────────────
+// 
 export function Header({ currentPage }) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -52,7 +55,7 @@ export function Header({ currentPage }) {
           justifyContent: 'space-between', padding: '0 24px',
         }}>
           {/* Logo */}
-          <Link to="/" style={{ textDecoration: 'none' }}>
+          <Link href="/" style={{ textDecoration: 'none' }}>
             <motion.div
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
@@ -80,7 +83,7 @@ export function Header({ currentPage }) {
               return (
                 <Link
                   key={item.label}
-                  to={item.href}
+                  href={item.href}
                   style={{
                     textDecoration: 'none', padding: '8px 14px', borderRadius: '8px',
                     fontFamily: F_BODY, fontSize: '13px', fontWeight: isActive ? '600' : '500',
@@ -135,7 +138,7 @@ export function Header({ currentPage }) {
               return (
                 <Link
                   key={item.label}
-                  to={item.href}
+                  href={item.href}
                   onClick={() => setMobileOpen(false)}
                   style={{
                     textDecoration: 'none', padding: '12px 16px', borderRadius: '8px',
@@ -155,9 +158,9 @@ export function Header({ currentPage }) {
   )
 }
 
-// ─────────────────────────────────────────────────────────
+// 
 // FOOTER
-// ─────────────────────────────────────────────────────────
+// 
 export function Footer() {
   return (
     <footer style={{
@@ -201,7 +204,7 @@ export function Footer() {
             ].map((item) => (
               <Link
                 key={item.label}
-                to={item.href}
+                href={item.href}
                 style={{ fontFamily: F_BODY, fontSize: '13px', color: 'var(--text-2)', textDecoration: 'none' }}
               >
                 {item.label}
@@ -214,8 +217,8 @@ export function Footer() {
         <div>
           <h4 style={{ fontFamily: F_HEAD, fontSize: '12px', fontWeight: '700', color: 'var(--text)', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Legal</h4>
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <Link to="/terms" style={{ fontFamily: F_BODY, fontSize: '13px', color: 'var(--text-2)', textDecoration: 'none' }}>Terms of Service</Link>
-            <Link to="/privacy" style={{ fontFamily: F_BODY, fontSize: '13px', color: 'var(--text-2)', textDecoration: 'none' }}>Privacy Policy</Link>
+            <Link href="/terms" style={{ fontFamily: F_BODY, fontSize: '13px', color: 'var(--text-2)', textDecoration: 'none' }}>Terms of Service</Link>
+            <Link href="/privacy" style={{ fontFamily: F_BODY, fontSize: '13px', color: 'var(--text-2)', textDecoration: 'none' }}>Privacy Policy</Link>
           </nav>
         </div>
 
@@ -227,7 +230,7 @@ export function Footer() {
               <Mail size={14} /> hello@certifyroi.in
             </a>
             <span style={{ fontFamily: F_MONO, fontSize: '12px', color: 'var(--text-4)' }}>
-              Built in Bangalore · 2025–2026
+              Built in Bangalore  2025-2026
             </span>
           </div>
         </div>
@@ -241,19 +244,19 @@ export function Footer() {
         flexWrap: 'wrap', gap: '16px',
       }}>
         <p style={{ fontFamily: F_MONO, fontSize: '11px', color: 'var(--text-4)', margin: 0 }}>
-          © 2026 Certify. All rights reserved.
+           2026 Certify. All rights reserved.
         </p>
         <div className="mono-tag" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '10px', color: 'var(--accent)', letterSpacing: '0.05em', opacity: 0.8 }}>
-          Data: Q1 2026 · Naukri · LinkedIn India · NASSCOM · AmbitionBox
+          Data: Q1 2026  Naukri  LinkedIn India  NASSCOM  AmbitionBox
         </div>
       </div>
     </footer>
   )
 }
 
-// ─────────────────────────────────────────────────────────
+// 
 // PAGE WRAPPER
-// ─────────────────────────────────────────────────────────
+// 
 export function PageWrapper({ children, className = '' }) {
   return (
     <motion.div
@@ -271,9 +274,9 @@ export function PageWrapper({ children, className = '' }) {
   )
 }
 
-// ─────────────────────────────────────────────────────────
+// 
 // LAYOUT (COMBINED)
-// ─────────────────────────────────────────────────────────
+// 
 export default function Layout({ children, currentPage = '/' }) {
   return (
     <PageWrapper>

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { MapPin, Wifi, Building2, Globe } from 'lucide-react'
 import { supabase } from '../services/supabase.js'
 
-// ── Design tokens — read from CSS custom properties ───────
+//  Design tokens - read from CSS custom properties 
 var F_HEAD = "var(--font-head)"
 var F_BODY = "var(--font-body)"
 var F_MONO = "var(--font-mono)"
@@ -49,7 +49,7 @@ const DEMAND = {
   business:   { bangalore: 3, hyderabad: 3, pune: 4, mumbai: 4, delhi: 4, chennai: 3, kolkata: 3, ahmedabad: 5, insight: 'Six Sigma and supply chain certs in high demand in manufacturing hubs like Pune and Ahmedabad.', yoy: '+15%', avgHike: '25%', topHirers: ['Mahindra', 'Tata Motors', 'L&T', 'Asian Paints'] },
   finance:    { bangalore: 3, hyderabad: 3, pune: 3, mumbai: 5, delhi: 4, chennai: 3, kolkata: 4, ahmedabad: 4, insight: "CFA Level 1 opens doors in Mumbai's financial district. 1,200+ openings this quarter.", yoy: '+22%', avgHike: '35%', topHirers: ['HDFC', 'ICICI', 'Goldman Sachs', 'JP Morgan'] },
   marketing:  { bangalore: 4, hyderabad: 3, pune: 4, mumbai: 5, delhi: 5, chennai: 3, kolkata: 3, ahmedabad: 3, insight: 'Digital Marketing certs most valued in Delhi NCR and Mumbai. D2C boom driving demand.', yoy: '+28%', avgHike: '22%', topHirers: ['Nykaa', 'Meesho', 'Dentsu', 'WPP India'] },
-  product:    { bangalore: 5, hyderabad: 4, pune: 4, mumbai: 4, delhi: 3, chennai: 3, kolkata: 2, ahmedabad: 2, insight: 'Product Management certs most valued in Bangalore startup ecosystem. ₹25–40L roles.', yoy: '+35%', avgHike: '35%', topHirers: ['PhonePe', 'Razorpay', 'CRED', 'Freshworks'] },
+  product:    { bangalore: 5, hyderabad: 4, pune: 4, mumbai: 4, delhi: 3, chennai: 3, kolkata: 2, ahmedabad: 2, insight: 'Product Management certs most valued in Bangalore startup ecosystem. ₹25-40L roles.', yoy: '+35%', avgHike: '35%', topHirers: ['PhonePe', 'Razorpay', 'CRED', 'Freshworks'] },
   hr:         { bangalore: 3, hyderabad: 3, pune: 3, mumbai: 4, delhi: 4, chennai: 3, kolkata: 3, ahmedabad: 3, insight: 'SHRM-CP adds 25% to HR salaries. Demand highest in large corporates in Mumbai and Delhi.', yoy: '+12%', avgHike: '25%', topHirers: ['HCL', 'Tech Mahindra', 'Infosys HR', 'Capgemini'] },
 }
 
@@ -64,7 +64,7 @@ const LEVEL_CONFIG = {
 const CITY_ALIASES   = { 'bengaluru': 'bangalore', 'blr': 'bangalore', 'ncr': 'delhi', 'gurgaon': 'delhi', 'gurugram': 'delhi', 'noida': 'delhi', 'faridabad': 'delhi', 'bom': 'mumbai', 'hyd': 'hyderabad', 'pnq': 'pune', 'ccu': 'kolkata', 'maa': 'chennai', 'amd': 'ahmedabad' }
 const DOMAIN_ALIASES = { 'cloud': 'tech', 'devops': 'tech', 'security': 'tech', 'backend': 'tech', 'frontend': 'tech', 'ml': 'data', 'ai': 'data', 'analytics': 'data', 'pm': 'management', 'project': 'management', 'scrum': 'management', 'agile': 'management', 'supply chain': 'business', 'operations': 'business', 'ops': 'business', 'banking': 'finance', 'investment': 'finance', 'fintech': 'finance', 'digital marketing': 'marketing', 'seo': 'marketing', 'ux': 'product', 'design': 'product', 'people': 'hr', 'talent': 'hr', 'recruitment': 'hr' }
 
-// ── Demand bar ────────────────────────────────────────────
+//  Demand bar 
 const DemandBar = ({ level }) => {
   const cfg = LEVEL_CONFIG[level] || LEVEL_CONFIG[3]
   return (
@@ -84,7 +84,7 @@ const DemandBar = ({ level }) => {
   )
 }
 
-// ── City card ─────────────────────────────────────────────
+//  City card 
 const CityDemandCard = ({ city, domainData }) => {
   const level = domainData[city.id] || 3
   const cfg   = LEVEL_CONFIG[level]
@@ -117,20 +117,20 @@ const CityDemandCard = ({ city, domainData }) => {
   )
 }
 
-// ── Main ──────────────────────────────────────────────────
+//  Main 
 const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resumeName = '' }) => {
-  // ── Database State ──────────────────────────────────────
+  //  Database State 
   const [certificationsData, setCertificationsData] = useState([]);
   const [domainsData, setDomainsData] = useState([]);
   const [dbLoading, setDbLoading] = useState(true);
 
-  // ── The "Once and For All" Alias Fix ────────────────────
+  //  The "Once and For All" Alias Fix 
   const CERTIFICATIONS = certificationsData;
   const certifications = certificationsData;
   const CERT_DOMAINS = domainsData;
   const certDomains = domainsData;
 
-  // ── Fetch from Supabase on mount ────────────────────────
+  //  Fetch from Supabase on mount 
   useEffect(() => {
     async function fetchDatabase() {
       try {
@@ -150,7 +150,7 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
     fetchDatabase();
   }, []);
 
-  // ── Loading Fallback ────────────────────────────────────
+  //  Loading Fallback 
   
 
   const [selectedDomain, setSelectedDomain] = useState('tech')
@@ -189,17 +189,7 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
 
   return (
     <div>
-      {/* ── Header ─────────────────────────────────────── */}
-      <div style={{ marginBottom: '24px' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '4px 12px', borderRadius: '6px', background: 'transparent', border: '1px solid transparent', fontSize: '10px', color: PICTON, marginBottom: '12px', letterSpacing: '0.1em', fontFamily: F_MONO, textTransform: 'uppercase' }}>
-          <MapPin size={10} /> India demand intelligence · 2026
-        </div>
-        <h2 style={{ fontFamily: F_HEAD, fontWeight: '800', fontSize: 'clamp(1.5rem,3.2vw,2rem)', color: 'var(--text)', marginBottom: '6px', letterSpacing: '-0.03em' }}>
-          {headingText} <span style={{ color: PICTON }}>CITY</span>
-        </h2>
-        <p style={{ fontSize: '14px', color: 'var(--text-3)', fontFamily: F_BODY, lineHeight: '1.6' }}>
-          {subtitleText}
-        </p>
+
 
         {autoDetected && (prefilledCity || prefilledDomain) && (
           <motion.div
@@ -214,9 +204,8 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
             </div>
           </motion.div>
         )}
-      </div>
 
-      {/* ── Domain selector ────────────────────────────── */}
+      {/*  Domain selector  */}
       <div style={{ marginBottom: '20px' }}>
         <div style={{ fontFamily: F_MONO, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '10px' }}>
           Select your domain
@@ -234,17 +223,17 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
         </div>
       </div>
 
-      {/* ── Domain insight card ─────────────────────────── */}
+      {/*  Domain insight card  */}
       <AnimatePresence mode="wait">
         <motion.div key={selectedDomain} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
 
-          {/* Domain insight — plain bordered panel, no NeonCard */}
+          {/* Domain insight - plain bordered panel, no NeonCard */}
           <div style={{ padding: '18px 20px', borderRadius: '12px', background: 'transparent', border: '1px solid var(--border)', marginBottom: '18px' }}>
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap', marginBottom: '16px' }}>
               <div style={{ flex: 1 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '6px' }}>
                   <div style={{ fontFamily: F_MONO, fontSize: '9px', color: categoryInfo.color, textTransform: 'uppercase', letterSpacing: '0.12em' }}>
-                    {'Domain overview — ' + categoryInfo.label}
+                    {'Domain overview - ' + categoryInfo.label}
                   </div>
                   {/* Feature 4: Remote-friendly badge */}
                   {(() => {
@@ -268,7 +257,7 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
                   {domainData.insight}
                 </div>
                 <div style={{ fontFamily: F_MONO, fontSize: '11px', color: 'var(--text-3)', letterSpacing: '0.02em' }}>
-                  {'Key certs: ' + categoryInfo.certs.join(' · ')}
+                  {'Key certs: ' + categoryInfo.certs.join('  ')}
                 </div>
               </div>
               <div style={{ display: 'flex', gap: '24px', flexShrink: 0 }}>
@@ -305,7 +294,7 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
             </div>
           </div>
 
-          {/* ── Your city highlight ─────────────────────── */}
+          {/*  Your city highlight  */}
           {cityInfo && cityDemand && (
             <motion.div
               initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={SPRING}
@@ -314,7 +303,7 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
                 <MapPin size={12} color={LEVEL_CONFIG[cityDemand].color} />
                 <span style={{ fontFamily: F_MONO, fontSize: '10px', color: LEVEL_CONFIG[cityDemand].color, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                  {firstName ? (firstName + "'s city — " + cityInfo.label) : ('Your city — ' + cityInfo.label)}
+                  {firstName ? (firstName + "'s city - " + cityInfo.label) : ('Your city - ' + cityInfo.label)}
                 </span>
                 <div style={{ marginLeft: 'auto', padding: '3px 10px', borderRadius: '6px', background: LEVEL_CONFIG[cityDemand].color + '18', border: '1px solid ' + LEVEL_CONFIG[cityDemand].color + '30' }}>
                   <span style={{ fontFamily: F_MONO, fontSize: '10px', color: LEVEL_CONFIG[cityDemand].color, fontWeight: '700' }}>
@@ -328,13 +317,13 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
                   <strong style={{ color: LEVEL_CONFIG[cityDemand].color }}>{certName}</strong>
                   {' in ' + cityInfo.label + ': '}
                   <strong style={{ color: LEVEL_CONFIG[cityDemand].color }}>{LEVEL_CONFIG[cityDemand].label.toLowerCase() + ' demand'}</strong>
-                  {cityDemand >= 4 ? ' — strong negotiating position for your salary hike.' : cityDemand === 3 ? ' — moderate leverage. Pair with 2 portfolio projects to stand out.' : ' — consider targeting remote roles or Bangalore/Hyderabad opportunities.'}
+                  {cityDemand >= 4 ? ' - strong negotiating position for your salary hike.' : cityDemand === 3 ? ' - moderate leverage. Pair with 2 portfolio projects to stand out.' : ' - consider targeting remote roles or Bangalore/Hyderabad opportunities.'}
                 </div>
               )}
             </motion.div>
           )}
 
-          {/* ── City filter pills ───────────────────────── */}
+          {/*  City filter pills  */}
           <div style={{ marginBottom: '14px' }}>
             <div style={{ fontFamily: F_MONO, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '8px' }}>
               {selectedCity ? 'Filtered by city' : 'Select your city'}
@@ -355,7 +344,7 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
             </div>
           </div>
 
-          {/* ── City grid ───────────────────────────────── */}
+          {/*  City grid  */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(180px,1fr))', gap: '9px', marginBottom: '18px' }}>
             {(selectedCity ? CITIES.filter(c => c.id === selectedCity) : sortedCities).map(city => (
               <div key={city.id} onClick={() => setSelectedCity(selectedCity === city.id ? '' : city.id)} style={{ cursor: 'pointer' }}>
@@ -364,11 +353,11 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
             ))}
           </div>
 
-          {/* ── All domains ranked for selected city ─────── */}
+          {/*  All domains ranked for selected city  */}
           {selectedCity && (
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={SPRING}>
               <div style={{ fontFamily: F_MONO, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '10px' }}>
-                {'All domains in ' + (cityInfo?.label || '') + ' — ranked'}
+                {'All domains in ' + (cityInfo?.label || '') + ' - ranked'}
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '7px' }}>
                 {[...CERT_CATEGORIES].sort((a, b) => (DEMAND[b.id]?.[selectedCity] || 0) - (DEMAND[a.id]?.[selectedCity] || 0)).map((cat, i) => {
@@ -401,7 +390,7 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
             </motion.div>
           )}
 
-          {/* ── Legend + data source ─────────────────────── */}
+          {/*  Legend + data source  */}
           <div style={{ padding: '14px 16px', borderRadius: '9px', background: 'transparent', border: '1px solid var(--border)', marginTop: '18px' }}>
             <div style={{ fontFamily: F_MONO, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '10px' }}>
               Demand scale
@@ -415,7 +404,7 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
               ))}
             </div>
             <div style={{ fontSize: '11px', color: 'var(--text-4)', fontFamily: F_BODY, lineHeight: '1.5' }}>
-              Data: LinkedIn Economic Graph India · Naukri Job Index · NASSCOM Report 2026 · AmbitionBox · Q1 2026
+              Data: LinkedIn Economic Graph India  Naukri Job Index  NASSCOM Report 2026  AmbitionBox  Q1 2026
             </div>
           </div>
 

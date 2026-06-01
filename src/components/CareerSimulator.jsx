@@ -4,9 +4,9 @@ import { X, TrendingUp, ChevronDown, Route } from 'lucide-react'
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceLine } from 'recharts'
 import { CERTIFICATIONS, CERT_DOMAINS } from '../tokens.js'
 
-const FH = "'Bricolage Grotesque','Plus Jakarta Sans',sans-serif"
-const FM = "'Commit Mono','JetBrains Mono',monospace"
-const FB = "'Inter',sans-serif"
+const FH = "var(--font-head)";
+const FM = "var(--font-mono)";
+const FB = "var(--font-body)";
 const COLORS = ['var(--linear-blue)', 'var(--linear-blue)', 'var(--cool-grey)', 'var(--cool-grey)']
 
 function CertPicker({ value, onChange, exclude, index }) {
@@ -25,7 +25,7 @@ function CertPicker({ value, onChange, exclude, index }) {
         <span style={{ flex: 1, textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
           {selected ? selected.name : 'Add cert ' + (index + 1) + '...'}
         </span>
-        {selected ? <span style={{ fontFamily: FM, fontSize: '11px', color: color, flexShrink: 0 }}>+{selected.avgHike}% · {selected.timeMonths}mo</span> : null}
+        {selected ? <span style={{ fontFamily: FM, fontSize: '11px', color: color, flexShrink: 0 }}>+{selected.avgHike}%  {selected.timeMonths}mo</span> : null}
         <ChevronDown size={12} style={{ flexShrink: 0, transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
       </button>
       <AnimatePresence>

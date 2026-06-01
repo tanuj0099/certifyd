@@ -4,7 +4,7 @@ import { GraduationCap, Repeat, Briefcase, RotateCcw, ArrowRight } from 'lucide-
 
 const MODES = [
   { id: 'student',      label: 'Breaking In',  sub: 'No current salary',         color: '#4A8C6A', icon: GraduationCap, desc: 'Path to your first ₹4.8L+ offer' },
-  { id: 'switcher',     label: 'Domain Pivot', sub: 'Changing fields',            color: 'var(--cool-grey)', icon: Repeat,        desc: 'Switch domains in 5–8 months' },
+  { id: 'switcher',     label: 'Domain Pivot', sub: 'Changing fields',            color: 'var(--cool-grey)', icon: Repeat,        desc: 'Switch domains in 5-8 months' },
   { id: 'professional', label: 'Level Up',     sub: 'Upskilling for a promotion', color: 'var(--linear-blue)', icon: Briefcase, desc: 'Max ROI on your next cert' },
 ]
 
@@ -21,12 +21,12 @@ const SWITCH_DOMAINS = [
   { id: 'product',     label: 'Product Management',   short: 'PROD' },
 ]
 
-const FM = "'JetBrains Mono','Commit Mono',monospace"
-const FH = "'Plus Jakarta Sans','Bricolage Grotesque',sans-serif"
-const FB = "'Inter',sans-serif"
-const F_SERIF = "'EB Garamond', 'Cormorant Garamond', Georgia, serif"
+const FM = "var(--font-mono)";
+const FH = "var(--font-head)";
+const FB = "var(--font-body)";
+const F_SERIF = "var(--font-serif)";
 
-// ── Hook: isMobile ────────────────────────────────────────
+//  Hook: isMobile 
 function useIsMobile() {
   const [m, setM] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768)
   useEffect(() => {
@@ -37,7 +37,7 @@ function useIsMobile() {
   return m
 }
 
-// ── ModePill (for inside the ROI tool) ───────────────────
+//  ModePill (for inside the ROI tool) 
 export function ModePill({ mode, onReset }) {
   const current = MODES.find((item) => item.id === mode)
   if (!current) return null
@@ -72,7 +72,7 @@ export function ModePill({ mode, onReset }) {
   )
 }
 
-// ── Mobile Card Row (stacked, compact) ───────────────────
+//  Mobile Card Row (stacked, compact) 
 function MobileCards({ hovered, setHovered, onPick }) {
   return (
     <div style={{
@@ -144,7 +144,7 @@ function MobileCards({ hovered, setHovered, onPick }) {
   )
 }
 
-// ── Desktop Card Grid ─────────────────────────────────────
+//  Desktop Card Grid 
 function DesktopCards({ hovered, setHovered, onPick }) {
   return (
     <div style={{
@@ -215,7 +215,7 @@ function DesktopCards({ hovered, setHovered, onPick }) {
   )
 }
 
-// ── Domain Picker ─────────────────────────────────────────
+//  Domain Picker 
 function DomainPicker({ onConfirm, color, isMobile }) {
   const [selected, setSelected] = useState(null)
   const [customValue, setCustomValue] = useState('')
@@ -324,7 +324,7 @@ function DomainPicker({ onConfirm, color, isMobile }) {
             transition: 'box-shadow 0.2s, background 0.2s',
           }}
         >
-          {selected ? 'Start switching →' : 'Pick a domain first'}
+          {selected ? 'Start switching ' : 'Pick a domain first'}
         </motion.button>
 
         <button
@@ -343,7 +343,7 @@ function DomainPicker({ onConfirm, color, isMobile }) {
   )
 }
 
-// ── Main ModeSelector ─────────────────────────────────────
+//  Main ModeSelector 
 function ModeSelector({ onSelect }) {
   const [step, setStep] = useState('pick')
   const [hovered, setHovered] = useState(null)
@@ -421,7 +421,7 @@ function ModeSelector({ onSelect }) {
                 WHAT'S YOUR GOAL RIGHT NOW?
               </motion.div>
 
-              {/* Cards — compact on mobile, 3-col grid on desktop */}
+              {/* Cards - compact on mobile, 3-col grid on desktop */}
               {isMobile
                 ? <MobileCards hovered={hovered} setHovered={setHovered} onPick={handleWordPick} />
                 : <DesktopCards hovered={hovered} setHovered={setHovered} onPick={handleWordPick} />
@@ -438,7 +438,7 @@ function ModeSelector({ onSelect }) {
                   padding: '0 24px',
                 }}
               >
-                pick one — it shapes every recommendation and filter
+                pick one - it shapes every recommendation and filter
               </motion.div>
             </motion.div>
           ) : null}

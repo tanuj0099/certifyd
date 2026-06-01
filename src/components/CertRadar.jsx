@@ -6,7 +6,7 @@ import { AlertCircle } from 'lucide-react';
 
 const PAGE_SIZE = 20;
 
-// Filter pills — map to functional_track values in the DB
+// Filter pills - map to functional_track values in the DB
 const TRACK_FILTERS = [
   { label: 'All',            value: null },
   { label: 'Cloud & DevOps', value: 'Cloud' },
@@ -101,32 +101,17 @@ const CertRadar = () => {
   return (
     <div className="w-full pb-20" style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)' }}>
       {/*
-        ── Page wrapper ──────────────────────────────────────────
-        Mobile:  p-4  (16px sides — comfortable thumb reach)
+         Page wrapper 
+        Mobile:  p-4  (16px sides - comfortable thumb reach)
         Tablet:  p-6  (24px)
-        Desktop: p-12 (48px — generous breathing room)
+        Desktop: p-12 (48px - generous breathing room)
       */}
       <div className="max-w-[1400px] mx-auto p-4 md:p-6 lg:p-12">
 
-        {/* ── Page header ── */}
-        <header className="mb-6 md:mb-8">
-          {/*
-            Mobile:  text-2xl — prevents wrapping on 375px screens
-            Tablet:  text-3xl
-            Desktop: text-4xl
-          */}
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-1.5 md:mb-2" style={{ color: 'var(--text)' }}>
-            Certification Radar
-          </h1>
-          <p className="text-sm md:text-base leading-relaxed" style={{ color: 'var(--text-2)' }}>
-            Discover and analyze premium credentials to accelerate your career growth.
-          </p>
-        </header>
-
-        {/* ── Search & Filter ── */}
+        {/*  Search & Filter  */}
         <div className="mb-8 md:mb-10 space-y-4 md:space-y-6">
 
-          {/* Search bar — underline style */}
+          {/* Search bar - underline style */}
           <div className="flex items-center gap-3 border-b pb-3 transition-colors" style={{ borderColor: 'var(--border)' }}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -146,7 +131,7 @@ const CertRadar = () => {
               className="w-full min-h-[44px] bg-transparent border-none text-base md:text-lg focus:outline-none focus:ring-0 px-0"
               style={{ color: 'var(--text)' }}
             />
-            {/* Clear button — only visible when there's a query */}
+            {/* Clear button - only visible when there's a query */}
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
@@ -162,7 +147,7 @@ const CertRadar = () => {
           </div>
 
           {/*
-            Filter pills — horizontally scrollable on mobile.
+            Filter pills - horizontally scrollable on mobile.
             Each pill has min-h-[44px] so fat fingers don't misfire.
             `no-scrollbar` hides the scrollbar on WebKit/Firefox.
           */}
@@ -190,7 +175,7 @@ const CertRadar = () => {
           </div>
         </div>
 
-        {/* ── Error state ── */}
+        {/*  Error state  */}
         {error && (
           <div className="mb-6 p-4 border rounded-xl flex items-start gap-3" style={{ background: 'rgba(239, 68, 68, 0.1)', borderColor: 'rgba(239, 68, 68, 0.2)', color: '#ef4444' }}>
             <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
@@ -201,16 +186,16 @@ const CertRadar = () => {
           </div>
         )}
 
-        {/* ── Grid / Loading ── */}
+        {/*  Grid / Loading  */}
         {isLoading ? (
           <SkeletonGrid />
         ) : (
           <>
             {/*
               Responsive grid:
-              Mobile:  1 column  — full-width cards, easy to read
-              Tablet:  2 columns — side-by-side pairs
-              Desktop: 3 columns — premium density
+              Mobile:  1 column  - full-width cards, easy to read
+              Tablet:  2 columns - side-by-side pairs
+              Desktop: 3 columns - premium density
             */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {certifications.length > 0 ? (
@@ -243,7 +228,7 @@ const CertRadar = () => {
               )}
             </div>
 
-            {/* ── Load More ── */}
+            {/*  Load More  */}
             {hasMore && certifications.length > 0 && (
               <div className="mt-10 md:mt-12 flex justify-center">
                 <button
@@ -255,7 +240,7 @@ const CertRadar = () => {
                   {isLoadingMore ? (
                     <>
                       <div className="w-4 h-4 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: 'var(--text-3)', borderTopColor: 'var(--text)' }} />
-                      Loading…
+                      Loading...
                     </>
                   ) : (
                     'Load More'

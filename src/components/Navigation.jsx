@@ -1,4 +1,4 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { TrendingUp, LogIn, LogOut, User } from 'lucide-react'
 // Comment out useAuth for now - add later

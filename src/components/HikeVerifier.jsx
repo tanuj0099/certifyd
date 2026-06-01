@@ -5,7 +5,7 @@ import {
   X, Target, Zap, Clock
 } from 'lucide-react'
 
-// ── Design tokens — read from CSS custom properties ───────
+//  Design tokens - read from CSS custom properties 
 var F_HEAD = "var(--font-head)"
 var F_BODY = "var(--font-body)"
 var F_MONO = "var(--font-mono)"
@@ -20,7 +20,7 @@ const RED     = 'var(--cool-grey)'
 const SPRING = { type: 'spring', stiffness: 380, damping: 28 }
 const EASE   = { duration: 0.3, ease: [0.4, 0, 0.2, 1] }
 
-// ── Input row ─────────────────────────────────────────────
+//  Input row 
 function InputRow({ label, value, onChange, placeholder, prefix, suffix, note }) {
   return (
     <div style={{ marginBottom: '14px' }}>
@@ -53,7 +53,7 @@ function InputRow({ label, value, onChange, placeholder, prefix, suffix, note })
   )
 }
 
-// ── Animated score bar ────────────────────────────────────
+//  Animated score bar 
 function ScoreBar({ label, actual, projected, color }) {
   var maxVal    = Math.max(actual, projected, 1) * 1.3
   var pctActual = Math.min((actual / maxVal) * 100, 100)
@@ -85,29 +85,29 @@ function ScoreBar({ label, actual, projected, color }) {
   )
 }
 
-// ── Verdict logic ─────────────────────────────────────────
+//  Verdict logic 
 function getVerdict(actualHike, projectedHike) {
   var ratio = actualHike / Math.max(projectedHike, 1)
   if (ratio >= 1.3) return { label: 'Exceptional', color: AMBER,   headline: 'You crushed it.',            sub: 'Your actual hike was ' + (actualHike - projectedHike).toFixed(1) + '% above what most people get with this cert. Top ' + (ratio >= 1.5 ? '5%' : '15%') + ' outcome.' }
   if (ratio >= 1.0) return { label: 'On Target',   color: EMERALD, headline: 'The cert delivered.',        sub: 'You met or beat the projected hike. Your result is better than the majority of people who took this cert.' }
   if (ratio >= 0.75)return { label: 'Close',       color: PICTON,  headline: 'Solid, not spectacular.',    sub: 'You came within ' + (projectedHike - actualHike).toFixed(1) + '% of the projection. Market conditions, company, and negotiation skill all play a role here.' }
   if (ratio >= 0.5) return { label: 'Below Target',color: AMBER,   headline: 'Room to push further.',      sub: (projectedHike - actualHike).toFixed(1) + '% below projection. A job switch with this cert on your profile could close the gap fast.' }
-  return               { label: 'Needs Action', color: RED,    headline: "The cert alone wasn't enough.", sub: 'Significantly below projection. Consider stacking a second cert or switching companies — the market values this cert, but your current employer may not.' }
+  return               { label: 'Needs Action', color: RED,    headline: "The cert alone wasn't enough.", sub: 'Significantly below projection. Consider stacking a second cert or switching companies - the market values this cert, but your current employer may not.' }
 }
 
 function getComparisonText(actualHike, projectedHike) {
   var delta = actualHike - projectedHike
-  if (delta >= 15) return 'You beat the typical outcome by ' + delta.toFixed(1) + '% — better than ~90% of people who took this cert.'
-  if (delta >= 8)  return 'You beat the average by ' + delta.toFixed(1) + '% — stronger result than most.'
+  if (delta >= 15) return 'You beat the typical outcome by ' + delta.toFixed(1) + '% - better than ~90% of people who took this cert.'
+  if (delta >= 8)  return 'You beat the average by ' + delta.toFixed(1) + '% - stronger result than most.'
   if (delta >= 2)  return 'You came in ' + delta.toFixed(1) + '% above the projected hike. Solid result.'
-  if (delta >= -2) return 'Right on the projected average — exactly what the data predicted.'
+  if (delta >= -2) return 'Right on the projected average - exactly what the data predicted.'
   if (delta >= -8) return 'You came in ' + Math.abs(delta).toFixed(1) + '% below the typical outcome. Still a meaningful hike.'
   return 'You came in ' + Math.abs(delta).toFixed(1) + '% below projection. Your next move matters more than the cert now.'
 }
 
-// ─────────────────────────────────────────────────────────
+// 
 // MAIN COMPONENT
-// ─────────────────────────────────────────────────────────
+// 
 function HikeVerifier({ certName, projectedHike, onClose }) {
   certName      = certName      || 'Your Certification'
   projectedHike = projectedHike || 30
@@ -138,7 +138,7 @@ function HikeVerifier({ certName, projectedHike, onClose }) {
       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={SPRING}
       style={{ background: 'transparent', border: 'none', borderRadius: '14px', overflow: 'hidden', marginTop: '14px', boxShadow: 'none' }}
     >
-      {/* ── Header ─────────────────────────────────────── */}
+      {/*  Header  */}
       <div style={{ padding: '14px 18px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '10px' }}>
         <div style={{ width: 30, height: 30, borderRadius: '8px', background: 'transparent', border: '1px solid transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
           <Target size={14} color={EMERALD} />
@@ -146,7 +146,7 @@ function HikeVerifier({ certName, projectedHike, onClose }) {
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontFamily: F_HEAD, fontWeight: '800', fontSize: '12px', color: EMERALD, letterSpacing: '0.04em' }}>DID IT WORK?</div>
           <div style={{ fontSize: '11px', color: 'var(--text-4)', fontFamily: F_MONO, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', letterSpacing: '0.02em' }}>
-            {certName} · Projected +{projectedHike}%
+            {certName}  Projected +{projectedHike}%
           </div>
         </div>
         {onClose ? (
@@ -159,15 +159,15 @@ function HikeVerifier({ certName, projectedHike, onClose }) {
       <div style={{ padding: '18px' }}>
         <AnimatePresence mode="wait">
 
-          {/* ── FORM ───────────────────────────────────── */}
+          {/*  FORM  */}
           {step === 'form' ? (
             <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={EASE}>
               <p style={{ fontSize: '13px', color: 'var(--text-3)', marginBottom: '20px', lineHeight: '1.7', fontFamily: F_BODY }}>
-                Completed {certName.split(' ').slice(0, 3).join(' ')} and landed a hike? Enter your numbers — we'll tell you how your result compares to what the data predicted.
+                Completed {certName.split(' ').slice(0, 3).join(' ')} and landed a hike? Enter your numbers - we'll tell you how your result compares to what the data predicted.
               </p>
 
               <InputRow label="Salary Before Cert"       value={beforeSalary} onChange={setBeforeSalary} placeholder="e.g. 8"  prefix="₹" suffix="L/yr"  note="Your CTC before you got the cert" />
-              <InputRow label="New Salary After Cert"    value={afterSalary}  onChange={setAfterSalary}  placeholder="e.g. 11" prefix="₹" suffix="L/yr"  note="Your CTC after — new job or internal hike" />
+              <InputRow label="New Salary After Cert"    value={afterSalary}  onChange={setAfterSalary}  placeholder="e.g. 11" prefix="₹" suffix="L/yr"  note="Your CTC after - new job or internal hike" />
               <InputRow label="Time Taken to See Results" value={timeTaken}    onChange={setTimeTaken}    placeholder="e.g. 4"  suffix="months" note="From cert completion to salary change" />
 
               {/* Live preview */}
@@ -203,7 +203,7 @@ function HikeVerifier({ certName, projectedHike, onClose }) {
             </motion.div>
           ) : null}
 
-          {/* ── RESULT ─────────────────────────────────── */}
+          {/*  RESULT  */}
           {step === 'result' ? (
             <motion.div key="result" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={SPRING}>
 
@@ -211,7 +211,7 @@ function HikeVerifier({ certName, projectedHike, onClose }) {
               <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ ...SPRING, delay: 0.05 }}
                 style={{ padding: '20px 18px', borderRadius: '12px', background: verdict.color + '0c', border: '1px solid ' + verdict.color + '28', textAlign: 'center', marginBottom: '18px' }}>
                 <div style={{ fontFamily: F_HEAD, fontWeight: '800', fontSize: '1.1rem', color: verdict.color, letterSpacing: '-0.02em', marginBottom: '6px' }}>
-                  {verdict.label} — {verdict.headline}
+                  {verdict.label} - {verdict.headline}
                 </div>
                 <div style={{ fontSize: '13px', color: 'var(--text-3)', fontFamily: F_BODY, lineHeight: '1.65' }}>
                   {verdict.sub}
@@ -263,7 +263,7 @@ function HikeVerifier({ certName, projectedHike, onClose }) {
                 <Clock size={13} color={PICTON} style={{ flexShrink: 0 }} />
                 <span style={{ fontSize: '12px', color: 'var(--text-2)', fontFamily: F_BODY, lineHeight: '1.5' }}>
                   You saw results in <strong style={{ color: PICTON, fontFamily: F_MONO }}>{months} months</strong>
-                  {months <= 3 ? ' — faster than most. ' : months <= 6 ? ' — right on schedule. ' : ' — took longer than average, but the hike landed. '}
+                  {months <= 3 ? ' - faster than most. ' : months <= 6 ? ' - right on schedule. ' : ' - took longer than average, but the hike landed. '}
                   Annual gain: <strong style={{ color: VIOLET, fontFamily: F_MONO }}>₹{(after - before).toFixed(1)}L/yr</strong> extra.
                 </span>
               </motion.div>

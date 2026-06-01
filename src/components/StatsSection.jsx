@@ -27,7 +27,7 @@ export default function StatsSection() {
           style={{
             margin: '0 0 32px',
             color: 'var(--text-muted)',
-            fontFamily: "'Inter','DM Sans',sans-serif",
+            fontFamily: 'var(--font-sans)',
             fontSize: '16px',
           }}
         >
@@ -54,7 +54,7 @@ export default function StatsSection() {
                   display: 'block',
                   marginBottom: '18px',
                   color: 'var(--text-soft)',
-                  fontFamily: "'JetBrains Mono','IBM Plex Mono',monospace",
+                  fontFamily: 'var(--font-mono)',
                   fontSize: '11px',
                   letterSpacing: '0.12em',
                   textTransform: 'uppercase',
@@ -67,7 +67,7 @@ export default function StatsSection() {
                   display: 'block',
                   marginBottom: '16px',
                   color: 'var(--accent)',
-                  fontFamily: "'Inter','DM Sans',sans-serif",
+                  fontFamily: 'var(--font-sans)',
                   fontSize: '48px',
                   lineHeight: 1,
                   fontWeight: 800,
@@ -80,7 +80,7 @@ export default function StatsSection() {
                 style={{
                   margin: 0,
                   color: 'var(--text-muted)',
-                  fontFamily: "'Inter','DM Sans',sans-serif",
+                  fontFamily: 'var(--font-sans)',
                   fontSize: '15px',
                   lineHeight: 1.65,
                 }}
