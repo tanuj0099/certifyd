@@ -19,13 +19,16 @@ import { useJourneyStore } from '../store/useJourneyStore.js'
 const F_SANS = "var(--font-sans)";
 const F_MONO = "var(--font-mono)";
 
-//  Nav definitions 
+//  Nav definitions
+// workspaceTab: sets the active tab in the workspace and smooth-scrolls to
+// #workspace when on the home page. href: is the fallback page to push to
+// when #workspace is not present in the DOM (any other page).
 const ANON_NAV = [
   { label: 'Home',           pageId: 'home' },
   { label: 'Tools',          pageId: 'tools' },
-  { label: 'ROI Calculator', href: '/tools/roi' },
-  { label: 'Cert Radar', href: '/tools/cert-radar' },
-  { label: 'Market Pulse', href: '/tools/market' },
+  { label: 'ROI Calculator', workspaceTab: 'roi',        href: '/tools/roi' },
+  { label: 'Cert Radar',     workspaceTab: 'cert-radar', href: '/tools/cert-radar' },
+  { label: 'Market Pulse',   workspaceTab: 'market',     href: '/tools/market' },
   { label: 'Offer Analysis', pageId: 'offer-analysis' },
   { label: 'Blog',           pageId: 'blog' },
 ]
@@ -34,24 +37,22 @@ const ANON_NAV = [
 const AUTH_NAV = [
   { label: 'Home',           pageId: 'home' },
   { label: 'Tools',          pageId: 'tools' },
-  { label: 'ROI Calculator', href: '/tools/roi' },
-  { label: 'Cert Radar', href: '/tools/cert-radar' },
-  { label: 'Market Pulse', href: '/tools/market' },
+  { label: 'ROI Calculator', workspaceTab: 'roi',        href: '/tools/roi' },
+  { label: 'Cert Radar',     workspaceTab: 'cert-radar', href: '/tools/cert-radar' },
+  { label: 'Market Pulse',   workspaceTab: 'market',     href: '/tools/market' },
   { label: 'Offer Analysis', pageId: 'offer-analysis' },
   { label: 'Dashboard',      pageId: 'dashboard' },
   { label: 'Blog',           pageId: 'blog' },
 ]
 
-//  Mobile bottom tab bar config 
+//  Mobile bottom tab bar config
 // Home | Cert Radar | ROI | Tools hub | Sign In / Profile
-// Tools hub (/tools) contains: Market Pulse, Offer Analysis, Resume Analyzer,
-// Cert Compare, CKA Roadmap etc. - all tool pages in one place.
 const MOBILE_TABS_ANON = [
-  { label: 'Home',      pageId: 'home',             Icon: Home },
-  { label: 'Cert Radar', href: '/tools/cert-radar', Icon: Radio },
-  { label: 'ROI', href: '/tools/roi', Icon: BarChart2 },
-  { label: 'Tools',     pageId: 'tools',            Icon: Wrench },
-  { label: 'Sign In',   pageId: '__signin__',        Icon: User },
+  { label: 'Home',      pageId: 'home',                                      Icon: Home },
+  { label: 'Cert Radar', workspaceTab: 'cert-radar', href: '/tools/cert-radar', Icon: Radio },
+  { label: 'ROI',        workspaceTab: 'roi',        href: '/tools/roi',        Icon: BarChart2 },
+  { label: 'Tools',     pageId: 'tools',                                     Icon: Wrench },
+  { label: 'Sign In',   pageId: '__signin__',                                Icon: User },
 ]
 const MOBILE_TABS_AUTH = [
   { label: 'Home',      pageId: 'home',      Icon: Home },
@@ -81,10 +82,30 @@ function isActivePage(currentPage, pageIdOrHref) {
   return currentPage === target
 }
 
+function scrollToWorkspace(fallbackHref, router) {
+  const el = document.getElementById('workspace')
+  if (el) {
+    // #workspace exists on this page — smooth scroll to it
+    setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 50)
+  } else if (fallbackHref && router) {
+    // Not on the home page — navigate to the tool's dedicated page
+    router.push(fallbackHref)
+  }
+}
+
 function doNavigate(event, item, onNavigate, onActivate, onClose, router, onSignIn) {
   event.preventDefault()
   if (item.pageId === '__signin__') { onSignIn?.(); onClose?.(); return }
-  
+
+  // Workspace tab items: update store + scroll-or-navigate
+  if (item.workspaceTab) {
+    const s = useJourneyStore.getState()
+    if (s.setActiveTab) s.setActiveTab(item.workspaceTab)
+    scrollToWorkspace(item.href, router)
+    onClose?.()
+    return
+  }
+
   if (item.href) {
     if (item.href.startsWith('#')) { window.location.hash = item.href.slice(1) }
     else { router.push(item.href) }
@@ -96,34 +117,33 @@ function doNavigate(event, item, onNavigate, onActivate, onClose, router, onSign
   onClose?.()
 }
 
-//  Desktop NavLink 
+//  Desktop NavLink
 function NavLink({ item, active, onNavigate, onActivate, router }) {
-  const href = item.pageId ? `/${item.pageId}` : item.href
   const F_SANS = "var(--font-sans)";
-  const isDarkTheme = typeof document !== 'undefined' && document.documentElement.getAttribute('data-theme') === 'dark'
+  // For workspaceTab items we render a button (no page navigation)
+  const isWorkspace = !!item.workspaceTab
+  const href = isWorkspace ? undefined : (item.pageId ? `/${item.pageId}` : item.href)
 
-  return (
-    <a
-      href={href}
-      onClick={(e) => doNavigate(e, item, onNavigate, onActivate, undefined, router)}
-      style={{
-        position: 'relative',
-        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-        minHeight: '34px', padding: '0 16px', borderRadius: '999px',
-        color: active ? 'var(--text)' : 'var(--text)',
-        opacity: active ? 1 : 0.65,
-        textDecoration: 'none', fontFamily: F_SANS,
-        fontSize: '13.5px', fontWeight: active ? 600 : 500, letterSpacing: '0.01em',
-        whiteSpace: 'nowrap',
-        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-      }}
-      onMouseOver={(e) => {
-        if (!active) e.currentTarget.style.opacity = '1';
-      }}
-      onMouseOut={(e) => {
-        if (!active) e.currentTarget.style.opacity = '0.65';
-      }}
-    >
+  const sharedStyle = {
+    position: 'relative',
+    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+    minHeight: '34px', padding: '0 16px', borderRadius: '999px',
+    color: 'var(--text)',
+    opacity: active ? 1 : 0.65,
+    textDecoration: 'none', fontFamily: F_SANS,
+    fontSize: '13.5px', fontWeight: active ? 600 : 500, letterSpacing: '0.01em',
+    whiteSpace: 'nowrap',
+    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+    background: 'none', border: 'none', cursor: 'pointer',
+  }
+
+  const hoverHandlers = {
+    onMouseOver: (e) => { if (!active) e.currentTarget.style.opacity = '1'; },
+    onMouseOut:  (e) => { if (!active) e.currentTarget.style.opacity = '0.65'; },
+  }
+
+  const inner = (
+    <>
       <span style={{ position: 'relative', zIndex: 2 }}>{item.label}</span>
       {active && (
         <motion.div
@@ -141,9 +161,34 @@ function NavLink({ item, active, onNavigate, onActivate, router }) {
           transition={{ type: 'spring', stiffness: 450, damping: 35 }}
         />
       )}
+    </>
+  )
+
+  if (isWorkspace) {
+    return (
+      <button
+        type="button"
+        onClick={(e) => doNavigate(e, item, onNavigate, onActivate, undefined, router)}
+        style={sharedStyle}
+        {...hoverHandlers}
+      >
+        {inner}
+      </button>
+    )
+  }
+
+  return (
+    <a
+      href={href}
+      onClick={(e) => doNavigate(e, item, onNavigate, onActivate, undefined, router)}
+      style={sharedStyle}
+      {...hoverHandlers}
+    >
+      {inner}
     </a>
   )
 }
+
 
 //  Theme icons 
 function SunIcon({ size = 16 }) {
@@ -287,18 +332,11 @@ function MobileMenu({ open, currentPage, onNavigate, onActivate, onClose, user, 
               My profile
             </button>
           ) : (
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <button type="button"
-                onClick={() => { onSignIn?.(); onClose() }}
-                style={{ flex: 1, minHeight:'44px', borderRadius:'999px', border:'1px solid var(--border)', background:'transparent', color:'var(--text)', fontFamily:F_SANS, fontSize:'14px', fontWeight:800, cursor:'pointer' }}>
-                Sign In
-              </button>
-              <button type="button"
-                onClick={() => { onSignUp?.(); onClose() }}
-                style={{ flex: 1, minHeight:'44px', borderRadius:'999px', border:'none', background:'var(--text)', color:'var(--bg)', fontFamily:F_SANS, fontSize:'14px', fontWeight:800, cursor:'pointer' }}>
-                Sign Up
-              </button>
-            </div>
+            <button type="button"
+              onClick={() => { onSignIn?.(); onClose() }}
+              style={{ width:'100%', minHeight:'44px', borderRadius:'999px', border:'1px solid var(--border)', background:'transparent', color:'var(--text)', fontFamily:F_SANS, fontSize:'14px', fontWeight:800, cursor:'pointer' }}>
+              Sign In
+            </button>
           )}
         </motion.div>
       )}
@@ -342,9 +380,15 @@ function MobileBottomBar({ currentPage, user, onSignIn, onNavigate }) {
             onClick={(e) => {
               if (pageId === '__signin__') { onSignIn?.(); return }
               if (pageId === 'profile') { router.push('/profile'); return }
+              if (tab.workspaceTab) {
+                const s = useJourneyStore.getState()
+                if (s.setActiveTab) s.setActiveTab(tab.workspaceTab)
+                scrollToWorkspace(tab.href, router)
+                return
+              }
               doNavigate(
                 { preventDefault: () => {} },
-                tab, onNavigate, undefined, undefined, navigate, onSignIn
+                tab, onNavigate, undefined, undefined, router, onSignIn
               )
             }}
             style={{
@@ -401,17 +445,9 @@ function MobileBottomBar({ currentPage, user, onSignIn, onNavigate }) {
 const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, onSignUp, onSignOut }) => {
   const [activeHref, setActiveHref] = useState(currentPage || 'home')
   const [menuOpen, setMenuOpen] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
   const { mode: themeMode, setThemeMode: cycleTheme } = useTheme()
   const router = useRouter()
   const location = { pathname: usePathname() }
-
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 820)
-    check()
-    window.addEventListener('resize', check)
-    return () => window.removeEventListener('resize', check)
-  }, [])
 
   // Sync active page from prop OR from live URL path
   useEffect(() => {
@@ -429,90 +465,68 @@ const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, 
 
   return (
     <>
-      {/*  Top Header - DESKTOP ONLY  */}
-      {!isMobile && (
-        <header 
-          className="sticky top-0 z-50 w-full border-b backdrop-blur-md transition-colors duration-300"
-          style={{ 
-            backgroundColor: 'color-mix(in srgb, var(--bg) 85%, transparent)',
-            borderColor: 'var(--border-mid)'
-          }}
-        >
-          <div className="h-16 max-w-7xl mx-auto px-4 flex items-center justify-between">
-            {/* Far Left: Logo */}
-            <div className="flex items-center flex-shrink-0">
-              <button type="button" aria-label="Go to home"
-                onClick={() => { try { router.push('/') } catch (e) { window.location.href = '/' } }}
-                style={{ 
-                  background:'none', border:'none', padding:'0', cursor:'pointer', 
-                  color:'var(--text)', transition: 'color 0.2s ease'
-                }}>
-                <span className={`${playfair.className} text-2xl font-black tracking-tight`}>Certifyd</span>
-              </button>
-            </div>
+      {/*  Top Header — visible only on md+ via CSS (no JS, no SSR mismatch)  */}
+      <header 
+        className="hidden md:flex sticky top-0 z-50 w-full border-b backdrop-blur-md transition-colors duration-300"
+        style={{ 
+          backgroundColor: 'color-mix(in srgb, var(--bg) 85%, transparent)',
+          borderColor: 'var(--border-mid)'
+        }}
+      >
+        <div className="h-16 max-w-7xl mx-auto px-4 flex items-center justify-between w-full">
+          {/* Far Left: Logo */}
+          <div className="flex items-center flex-shrink-0">
+            <button type="button" aria-label="Go to home"
+              onClick={() => { try { router.push('/') } catch (e) { window.location.href = '/' } }}
+              style={{ 
+                background:'none', border:'none', padding:'0', cursor:'pointer', 
+                color:'var(--text)', transition: 'color 0.2s ease'
+              }}>
+              <span className={`${playfair.className} text-2xl font-black tracking-tight`}>Certifyd</span>
+            </button>
+          </div>
 
-            {/* Center: Main navigation links */}
-            <div className="flex-1 flex justify-center px-8">
-              <div style={{ display:'flex', alignItems:'center', gap:'12px' }}>
-                {navItems.map(item => (
-                  <NavLink key={item.pageId||item.label} item={item} active={isActivePage(activeHref, item.pageId || item.href)} onNavigate={onNavigate} onActivate={setActiveHref} router={router} />
-                ))}
-              </div>
-            </div>
-
-            {/* Far Right: Action buttons & Theme */}
-            <div className="flex items-center gap-4 flex-shrink-0">
-              <ThemeToggle mode={themeMode} onCycle={cycleTheme} />
-              {user
-                ? <UserAccountMenu user={user} onNavigate={onNavigate} onSignOut={onSignOut} />
-                : <div className="flex items-center gap-2">
-                    <button type="button" onClick={() => onSignIn?.()}
-                      style={{ 
-                        display:'inline-flex', alignItems:'center', justifyContent:'center', gap:'7px', 
-                        height:'34px', padding:'0 16px', borderRadius:'999px', border:'1px solid var(--border)', 
-                        background:'transparent', color:'var(--text)', 
-                        fontFamily:F_SANS, fontSize:'13px', fontWeight:600, cursor:'pointer',
-                        transition: 'all 0.2s ease',
-                      }}
-                      onMouseOver={(e) => {
-                        e.currentTarget.style.background = 'var(--hover-bg)';
-                      }}
-                      onMouseOut={(e) => {
-                        e.currentTarget.style.background = 'transparent';
-                      }}
-                    >
-                      <User size={14} strokeWidth={2.5} />Sign In
-                    </button>
-                    <button type="button" onClick={() => onSignUp?.()}
-                      style={{ 
-                        display:'inline-flex', alignItems:'center', justifyContent:'center', gap:'7px', 
-                        height:'34px', padding:'0 16px', borderRadius:'999px', border:'1px solid var(--border)', 
-                        background:'var(--text)', color:'var(--bg)', 
-                        fontFamily:F_SANS, fontSize:'13px', fontWeight:600, cursor:'pointer',
-                        transition: 'all 0.2s ease',
-                        boxShadow: '0 2px 10px rgba(0,0,0,0.05)'
-                      }}
-                      onMouseOver={(e) => {
-                        e.currentTarget.style.transform = 'translateY(-1px)';
-                        e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
-                      }}
-                      onMouseOut={(e) => {
-                        e.currentTarget.style.transform = 'none';
-                        e.currentTarget.style.boxShadow = '0 2px 10px rgba(0,0,0,0.05)';
-                      }}
-                    >
-                      Sign Up
-                    </button>
-                  </div>
-              }
+          {/* Center: Main navigation links */}
+          <div className="flex-1 flex justify-center px-8">
+            <div style={{ display:'flex', alignItems:'center', gap:'12px' }}>
+              {navItems.map(item => (
+                <NavLink key={item.pageId||item.label} item={item} active={isActivePage(activeHref, item.pageId || item.href)} onNavigate={onNavigate} onActivate={setActiveHref} router={router} />
+              ))}
             </div>
           </div>
-        </header>
-      )}
 
-      {/*  Mobile hamburger overlay  */}
+          {/* Far Right: Theme toggle + Sign In only */}
+          <div className="flex items-center gap-4 flex-shrink-0">
+            <ThemeToggle mode={themeMode} onCycle={cycleTheme} />
+            {user
+              ? <UserAccountMenu user={user} onNavigate={onNavigate} onSignOut={onSignOut} />
+              : (
+                  <button type="button" onClick={() => onSignIn?.()}
+                    style={{ 
+                      display:'inline-flex', alignItems:'center', justifyContent:'center', gap:'7px', 
+                      height:'34px', padding:'0 16px', borderRadius:'999px', border:'1px solid var(--border)', 
+                      background:'transparent', color:'var(--text)', 
+                      fontFamily:F_SANS, fontSize:'13px', fontWeight:600, cursor:'pointer',
+                      transition: 'all 0.2s ease',
+                    }}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.background = 'var(--hover-bg)';
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.background = 'transparent';
+                    }}
+                  >
+                    <User size={14} strokeWidth={2.5} />Sign In
+                  </button>
+                )
+            }
+          </div>
+        </div>
+      </header>
+
+      {/*  Mobile hamburger overlay — always rendered, visibility gated by `open`  */}
       <MobileMenu
-        open={isMobile && menuOpen}
+        open={menuOpen}
         currentPage={activeHref}
         onNavigate={onNavigate}
         onActivate={setActiveHref}
@@ -522,15 +536,15 @@ const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, 
         navItems={navItems}
       />
 
-      {/*  Mobile bottom tab bar  */}
-      {isMobile && (
+      {/*  Mobile bottom tab bar — visible only on <md via CSS  */}
+      <div className="flex md:hidden">
         <MobileBottomBar
           currentPage={activeHref}
           user={user}
           onSignIn={onSignIn}
           onNavigate={onNavigate}
         />
-      )}
+      </div>
     </>
   )
 })

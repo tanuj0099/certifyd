@@ -51,6 +51,11 @@ const CertRadar = () => {
         page === 0 ? setIsLoading(true) : setIsLoadingMore(true);
         setError(null);
 
+        // Guard: Supabase client is null when env vars are missing
+        if (!supabase) {
+          throw new Error('Database not configured. Check NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your .env.local, then restart the dev server.');
+        }
+
         const start = page * PAGE_SIZE;
         const end   = start + PAGE_SIZE - 1;
 
