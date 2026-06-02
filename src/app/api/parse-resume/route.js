@@ -16,6 +16,16 @@ export async function POST(request) {
     const arrayBuffer = await file.arrayBuffer();
     const data = new Uint8Array(arrayBuffer);
 
+    // Size Validation (4MB limit)
+    if (data.length > 4 * 1024 * 1024) {
+      return NextResponse.json({ error: 'File too large. Max size is 4MB.' }, { status: 413 });
+    }
+
+    // Magic Bytes Validation for PDF (%PDF- at the start)
+    if (data.length < 5 || String.fromCharCode(...data.subarray(0, 5)) !== '%PDF-') {
+      return NextResponse.json({ error: 'Invalid file format. Only PDFs are allowed.' }, { status: 400 });
+    }
+
     const loadingTask = pdfjs.getDocument({
       data,
       useSystemFonts: true,

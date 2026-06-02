@@ -127,7 +127,7 @@ export default function DashboardPage() {
         try {
           const { data: journeys, error: journeyErr } = await supabase
             .from('journey_tracking')
-            .select('id, cert_name, status, stage, current_status, domain, started_at, updated_at, notes, milestone_log')
+            .select('id, cert_name, stage, current_status, domain, started_at, updated_at, notes, milestone_log')
             .eq('user_id', userId)
             .order('updated_at', { ascending: false })
             .limit(20)
