@@ -25,6 +25,9 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Invalid file format. Only PDFs are allowed.' }, { status: 400 });
     }
 
+    // Force fake worker for Node.js
+    pdfjs.GlobalWorkerOptions.workerSrc = '';
+
     const loadingTask = pdfjs.getDocument({
       data,
       useSystemFonts: true,
