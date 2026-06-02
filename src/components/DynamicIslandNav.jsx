@@ -84,12 +84,16 @@ function isActivePage(currentPage, pageIdOrHref) {
 
 // pathname-aware workspace navigation:
 //   '/'        → stay on page, smooth scroll to #workspace
-//   anything else → go home so the workspace is available
-function scrollToWorkspace(pathname, router) {
+//   anything else → go to the requested tool's page
+function scrollToWorkspace(pathname, router, fallbackHref) {
   if (pathname === '/') {
     setTimeout(() => document.getElementById('workspace')?.scrollIntoView({ behavior: 'smooth' }), 50)
   } else {
-    router.push('/')
+    if (fallbackHref) {
+      router.push(fallbackHref)
+    } else {
+      router.push('/')
+    }
   }
 }
 
@@ -101,7 +105,7 @@ function doNavigate(event, item, onNavigate, onActivate, onClose, router, onSign
   if (item.workspaceTab) {
     const s = useJourneyStore.getState()
     if (s.setActiveTab) s.setActiveTab(item.workspaceTab)
-    scrollToWorkspace(pathname, router)
+    scrollToWorkspace(pathname, router, item.href)
     onClose?.()
     return
   }
@@ -383,7 +387,7 @@ function MobileBottomBar({ currentPage, user, onSignIn, onNavigate, pathname }) 
               if (tab.workspaceTab) {
                 const s = useJourneyStore.getState()
                 if (s.setActiveTab) s.setActiveTab(tab.workspaceTab)
-                scrollToWorkspace(pathname, router)
+                scrollToWorkspace(pathname, router, tab.href)
                 return
               }
               doNavigate(
