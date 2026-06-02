@@ -1,5 +1,12 @@
 import { NextResponse } from 'next/server';
-import pdf from 'pdf-parse';
+
+// Polyfill required by modern pdfjs-dist inside pdf-parse
+if (typeof globalThis.DOMMatrix === 'undefined') {
+  globalThis.DOMMatrix = class DOMMatrix {};
+}
+if (typeof globalThis.Path2D === 'undefined') {
+  globalThis.Path2D = class Path2D {};
+}
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -27,6 +34,11 @@ export async function POST(request) {
     }
 
     const buffer = Buffer.from(arrayBuffer);
+    
+    // Dynamically import pdf-parse AFTER the polyfills have run
+    // Depending on how it's bundled/exported, it might be the default export or the module itself
+    const pdfModule = await import('pdf-parse');
+    const pdf = pdfModule.default || pdfModule;
     
     // Parse the PDF text entirely in memory using pdf-parse
     const parsedData = await pdf(buffer);
