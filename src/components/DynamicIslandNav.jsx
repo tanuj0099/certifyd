@@ -82,26 +82,26 @@ function isActivePage(currentPage, pageIdOrHref) {
   return currentPage === target
 }
 
-function scrollToWorkspace(fallbackHref, router) {
-  const el = document.getElementById('workspace')
-  if (el) {
-    // #workspace exists on this page — smooth scroll to it
-    setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 50)
-  } else if (fallbackHref && router) {
-    // Not on the home page — navigate to the tool's dedicated page
-    router.push(fallbackHref)
+// pathname-aware workspace navigation:
+//   '/'        → stay on page, smooth scroll to #workspace
+//   anything else → go home so the workspace is available
+function scrollToWorkspace(pathname, router) {
+  if (pathname === '/') {
+    setTimeout(() => document.getElementById('workspace')?.scrollIntoView({ behavior: 'smooth' }), 50)
+  } else {
+    router.push('/')
   }
 }
 
-function doNavigate(event, item, onNavigate, onActivate, onClose, router, onSignIn) {
+function doNavigate(event, item, onNavigate, onActivate, onClose, router, onSignIn, pathname) {
   event.preventDefault()
   if (item.pageId === '__signin__') { onSignIn?.(); onClose?.(); return }
 
-  // Workspace tab items: update store + scroll-or-navigate
+  // Workspace tab items: update store + scroll-or-navigate home
   if (item.workspaceTab) {
     const s = useJourneyStore.getState()
     if (s.setActiveTab) s.setActiveTab(item.workspaceTab)
-    scrollToWorkspace(item.href, router)
+    scrollToWorkspace(pathname, router)
     onClose?.()
     return
   }
