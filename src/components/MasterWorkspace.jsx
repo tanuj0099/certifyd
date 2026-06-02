@@ -275,7 +275,12 @@ const AppPage = function ({ onCertSelected }) {
                             domain,
                             name,
                           ) {
-                            onCertSelected(certName, city, domain, name);
+                            if (onCertSelected) {
+                              onCertSelected(certName, city, domain, name);
+                            } else {
+                              useJourneyStore.getState().setResumeContext({ certName, city, domain, name });
+                              useJourneyStore.getState().setActiveTab("calculator");
+                            }
                           }}
                         />
                       </div>
