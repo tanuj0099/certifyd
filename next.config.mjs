@@ -1,6 +1,7 @@
 import { withSentryConfig } from "@sentry/nextjs";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  serverExternalPackages: ['pdfjs-dist', 'pdf-parse'],
   experimental: {
     serverActions: {
       bodySizeLimit: '5mb',

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import * as pdfjs from 'pdfjs-dist/legacy/build/pdf.mjs';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 export async function POST(request) {
   try {
@@ -25,26 +25,25 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Invalid file format. Only PDFs are allowed.' }, { status: 400 });
     }
 
-    // Force fake worker for Node.js
-    pdfjs.GlobalWorkerOptions.workerSrc = '';
-
+    const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
     const loadingTask = pdfjs.getDocument({
-      data,
+      data: new Uint8Array(arrayBuffer),
+      disableWorker: true,
       useSystemFonts: true,
-      disableFontFace: true,
     });
+    const pdfDocument = await loadingTask.promise;
+    const pageTexts = [];
 
-    const pdf = await loadingTask.promise;
-    let text = '';
-
-    for (let i = 1; i <= pdf.numPages; i++) {
-      const page = await pdf.getPage(i);
-      const textContent = await page.getTextContent();
-      const pageText = textContent.items.map((item) => item.str).join(' ');
-      text += pageText + '\n';
+    for (let pageNumber = 1; pageNumber <= pdfDocument.numPages; pageNumber += 1) {
+      const page = await pdfDocument.getPage(pageNumber);
+      const content = await page.getTextContent();
+      pageTexts.push(content.items.map((item) => item.str || '').join(' '));
+      page.cleanup();
     }
 
-    return NextResponse.json({ text });
+    await pdfDocument.destroy();
+
+    return NextResponse.json({ text: pageTexts.join('\n\n').trim() });
   } catch (error) {
     console.error('PDF parsing error:', error);
     return NextResponse.json(

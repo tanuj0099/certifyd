@@ -16,16 +16,30 @@ export const AuthProvider = ({ children }) => {
       return
     }
 
+    const clearStaleSession = async (message) => {
+      if (!/refresh token|invalid refresh|not found/i.test(message || '')) return false
+
+      try {
+        await supabase.auth.signOut({ scope: 'local' })
+      } catch (_) {}
+
+      setUser(null)
+      setAuthError(null)
+      return true
+    }
+
     // Get initial session safely
     const initializeAuth = async () => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession()
         if (error) {
+          if (await clearStaleSession(error.message)) return
           console.warn('Supabase session error:', error.message)
           setAuthError(error.message)
         }
         setUser(session?.user || null)
       } catch (err) {
+        if (await clearStaleSession(err?.message)) return
         console.warn('Auth initialization exception:', err)
         setAuthError(err.message)
       } finally {

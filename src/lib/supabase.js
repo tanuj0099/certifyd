@@ -14,5 +14,12 @@ if (!supabaseUrl || !supabaseKey) {
 export const supabase =
   supabaseUrl && supabaseKey
     ? globalThis[SUPABASE_SINGLETON_KEY] ||
-      (globalThis[SUPABASE_SINGLETON_KEY] = createClient(supabaseUrl, supabaseKey))
+      (globalThis[SUPABASE_SINGLETON_KEY] = createClient(supabaseUrl, supabaseKey, {
+        auth: {
+          storageKey: 'certifyroi-auth-v2',
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: true,
+        },
+      }))
     : null
