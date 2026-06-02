@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronDown, LogOut, Settings, ShieldCheck, Trash2 } from 'lucide-react'
 import { supabase } from '../lib/supabase.js'
+import { useRouter } from 'next/navigation'
 
 const F_SANS = "var(--font-sans)";
 
@@ -18,6 +19,7 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState('')
   const rootRef = useRef(null)
+  const router = useRouter()
 
   useEffect(() => {
     function handleClick(event) {
@@ -29,6 +31,7 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
 
   function go(pageId) {
     setOpen(false)
+    router.push(`/${pageId}`)
     onNavigate?.(pageId)
   }
 
