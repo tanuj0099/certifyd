@@ -800,10 +800,12 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
       // OPTIMISTIC: accept file immediately, extract in background
       setFileName(file.name); setText(''); setPdfLoading(true); setTextReady(false)
       try {
+        var formData = new FormData()
+        formData.append('file', file)
+
         var response = await fetch('/api/parse-resume', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/pdf' },
-          body: file
+          body: formData
         })
         if (!response.ok) {
           var errData = await response.json().catch(function() { return {} })

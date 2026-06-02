@@ -6,7 +6,14 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request) {
   try {
-    const arrayBuffer = await request.arrayBuffer();
+    const formData = await request.formData();
+    const file = formData.get('file');
+
+    if (!file) {
+      return NextResponse.json({ error: 'No file uploaded.' }, { status: 400 });
+    }
+
+    const arrayBuffer = await file.arrayBuffer();
     const data = new Uint8Array(arrayBuffer);
 
     const loadingTask = pdfjs.getDocument({
