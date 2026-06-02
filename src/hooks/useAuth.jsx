@@ -39,6 +39,10 @@ export const AuthProvider = ({ children }) => {
       setUser(session?.user || null)
       setLoading(false)
       
+      if (_event === 'SIGNED_IN') {
+        window.history.replaceState(null, '', window.location.pathname);
+      }
+
       // Auto-sync profile to Supabase on login
       if (session?.user) {
         import('../services/userProfileService.js')
