@@ -793,9 +793,10 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
   var readFile = async function (file) {
     if (!file) return
     var ext = file.name.split('.').pop().toLowerCase()
+    var isPdf = file.name.toLowerCase().endsWith('.pdf') || file.type === 'application/pdf'
     setError(null); setRejection(null)
     try { trackResumeUploaded({ filename: file.name, sizeBytes: file.size }) } catch (_) {}
-    if (ext === 'pdf') {
+    if (isPdf) {
       // OPTIMISTIC: accept file immediately, extract in background
       setFileName(file.name); setText(''); setPdfLoading(true); setTextReady(false)
       try {
@@ -1124,7 +1125,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
                 <input
                   ref={fileRef}
                   type="file"
-                  accept=".txt,.pdf,.doc,.docx"
+                  accept=".txt,.pdf,.doc,.docx,application/pdf"
                   style={{ display: 'none' }}
                   onChange={function (e) { readFile(e.target.files[0]) }}
                 />
