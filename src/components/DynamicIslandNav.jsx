@@ -118,7 +118,7 @@ function doNavigate(event, item, onNavigate, onActivate, onClose, router, onSign
 }
 
 //  Desktop NavLink
-function NavLink({ item, active, onNavigate, onActivate, router }) {
+function NavLink({ item, active, onNavigate, onActivate, router, pathname }) {
   const F_SANS = "var(--font-sans)";
   // For workspaceTab items we render a button (no page navigation)
   const isWorkspace = !!item.workspaceTab
@@ -168,7 +168,7 @@ function NavLink({ item, active, onNavigate, onActivate, router }) {
     return (
       <button
         type="button"
-        onClick={(e) => doNavigate(e, item, onNavigate, onActivate, undefined, router)}
+        onClick={(e) => doNavigate(e, item, onNavigate, onActivate, undefined, router, undefined, pathname)}
         style={sharedStyle}
         {...hoverHandlers}
       >
@@ -180,7 +180,7 @@ function NavLink({ item, active, onNavigate, onActivate, router }) {
   return (
     <a
       href={href}
-      onClick={(e) => doNavigate(e, item, onNavigate, onActivate, undefined, router)}
+      onClick={(e) => doNavigate(e, item, onNavigate, onActivate, undefined, router, undefined, pathname)}
       style={sharedStyle}
       {...hoverHandlers}
     >
@@ -276,8 +276,8 @@ function ThemeToggle({ mode, onCycle }) {
   )
 }
 
-//  Mobile hamburger menu (full-screen overlay for extra items) 
-function MobileMenu({ open, currentPage, onNavigate, onActivate, onClose, user, onSignIn, onSignUp, onSignOut, themeMode, onThemeCycle, navItems }) {
+//  Mobile hamburger menu (full-screen overlay for extra items)
+function MobileMenu({ open, currentPage, onNavigate, onActivate, onClose, user, onSignIn, onSignUp, onSignOut, themeMode, onThemeCycle, navItems, pathname }) {
   const items = navItems || (user ? AUTH_NAV : ANON_NAV)
   const router = useRouter()
 
@@ -304,7 +304,7 @@ function MobileMenu({ open, currentPage, onNavigate, onActivate, onClose, user, 
 
               return (
                 <a key={item.pageId||item.label} href={hrefFor(item)}
-                  onClick={(e) => doNavigate(e, item, onNavigate, onActivate, onClose, router, onSignIn)}
+                  onClick={(e) => doNavigate(e, item, onNavigate, onActivate, onClose, router, onSignIn, pathname)}
                   style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:'14px', padding:'12px 14px', borderRadius:'12px', border:'1px solid var(--border)', background: active ? 'var(--text)':'transparent', color: active ? 'var(--bg)':'var(--text)', textDecoration:'none', fontFamily:F_SANS }}>
                   <span style={{ fontSize:'15px', fontWeight:750 }}>{item.label}</span>
                   <ChevronRight size={14} color={active ? 'var(--bg)' : 'var(--text-4)'} />
@@ -344,8 +344,8 @@ function MobileMenu({ open, currentPage, onNavigate, onActivate, onClose, user, 
   )
 }
 
-//  Mobile bottom tab bar (Spotify-style) 
-function MobileBottomBar({ currentPage, user, onSignIn, onNavigate }) {
+//  Mobile bottom tab bar (Spotify-style)
+function MobileBottomBar({ currentPage, user, onSignIn, onNavigate, pathname }) {
   const router = useRouter()
   const tabs = user ? MOBILE_TABS_AUTH : MOBILE_TABS_ANON
 
@@ -383,12 +383,12 @@ function MobileBottomBar({ currentPage, user, onSignIn, onNavigate }) {
               if (tab.workspaceTab) {
                 const s = useJourneyStore.getState()
                 if (s.setActiveTab) s.setActiveTab(tab.workspaceTab)
-                scrollToWorkspace(tab.href, router)
+                scrollToWorkspace(pathname, router)
                 return
               }
               doNavigate(
                 { preventDefault: () => {} },
-                tab, onNavigate, undefined, undefined, router, onSignIn
+                tab, onNavigate, undefined, undefined, router, onSignIn, pathname
               )
             }}
             style={{
@@ -441,25 +441,25 @@ function MobileBottomBar({ currentPage, user, onSignIn, onNavigate }) {
   )
 }
 
-//  Main DynamicIslandNav 
+//  Main DynamicIslandNav
 const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, onSignUp, onSignOut }) => {
   const [activeHref, setActiveHref] = useState(currentPage || 'home')
   const [menuOpen, setMenuOpen] = useState(false)
   const { mode: themeMode, setThemeMode: cycleTheme } = useTheme()
   const router = useRouter()
-  const location = { pathname: usePathname() }
+  const pathname = usePathname() || '/'
 
   // Sync active page from prop OR from live URL path
   useEffect(() => {
     if (currentPage) {
       setActiveHref(currentPage)
     } else {
-      const path = (location.pathname || '').toLowerCase()
+      const path = pathname.toLowerCase()
       if (path === '/' || path === '') setActiveHref('home')
       else if (path.startsWith('/tools/')) setActiveHref(path.slice(1))
       else setActiveHref(path.slice(1) || 'home')
     }
-  }, [currentPage, location.pathname])
+  }, [currentPage, pathname])
 
   const navItems = useMemo(() => (user ? AUTH_NAV : ANON_NAV), [user])
 
@@ -490,7 +490,7 @@ const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, 
           <div className="flex-1 flex justify-center px-8">
             <div style={{ display:'flex', alignItems:'center', gap:'12px' }}>
               {navItems.map(item => (
-                <NavLink key={item.pageId||item.label} item={item} active={isActivePage(activeHref, item.pageId || item.href)} onNavigate={onNavigate} onActivate={setActiveHref} router={router} />
+                <NavLink key={item.pageId||item.label} item={item} active={isActivePage(activeHref, item.pageId || item.href)} onNavigate={onNavigate} onActivate={setActiveHref} router={router} pathname={pathname} />
               ))}
             </div>
           </div>
@@ -534,6 +534,7 @@ const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, 
         user={user} onSignIn={onSignIn} onSignOut={onSignOut}
         themeMode={themeMode} onThemeCycle={cycleTheme}
         navItems={navItems}
+        pathname={pathname}
       />
 
       {/*  Mobile bottom tab bar — visible only on <md via CSS  */}
@@ -543,6 +544,7 @@ const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, 
           user={user}
           onSignIn={onSignIn}
           onNavigate={onNavigate}
+          pathname={pathname}
         />
       </div>
     </>
