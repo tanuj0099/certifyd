@@ -8,7 +8,7 @@ import { ReactFlow, Background } from '@xyflow/react';
 import { ArrowLeft, Map, FolderGit2, LineChart, ChevronDown, CheckCircle2 } from 'lucide-react';
 import '@xyflow/react/dist/style.css';
 import TopCertsModule from '@/components/ui/TopCertsModule.jsx';
-import RoadmapNode from '@/components/ui/RoadmapNode.tsx';
+import RoadmapNode from '@/components/ui/RoadmapNode.jsx';
 import RoadmapDrawer from '@/components/ui/RoadmapDrawer.jsx';
 import { mapRoadmapDataToFlow } from '@/utils/roadmapMapper.ts';
 import { ROADMAP_INDEX } from '@/data/roadmapIndex.js';

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import pdf from 'pdf-parse';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -25,25 +26,12 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Invalid file format. Only PDFs are allowed.' }, { status: 400 });
     }
 
-    const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
-    const loadingTask = pdfjs.getDocument({
-      data: new Uint8Array(arrayBuffer),
-      disableWorker: true,
-      useSystemFonts: true,
-    });
-    const pdfDocument = await loadingTask.promise;
-    const pageTexts = [];
+    const buffer = Buffer.from(arrayBuffer);
+    
+    // Parse the PDF text entirely in memory using pdf-parse
+    const parsedData = await pdf(buffer);
 
-    for (let pageNumber = 1; pageNumber <= pdfDocument.numPages; pageNumber += 1) {
-      const page = await pdfDocument.getPage(pageNumber);
-      const content = await page.getTextContent();
-      pageTexts.push(content.items.map((item) => item.str || '').join(' '));
-      page.cleanup();
-    }
-
-    await pdfDocument.destroy();
-
-    return NextResponse.json({ text: pageTexts.join('\n\n').trim() });
+    return NextResponse.json({ text: parsedData.text.trim() });
   } catch (error) {
     console.error('PDF parsing error:', error);
     return NextResponse.json(
