@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import * as pdfjs from 'pdfjs-dist/legacy/build/pdf.mjs';
+import 'pdfjs-dist/legacy/build/pdf.worker.mjs';
 
-// Disable workers for Node.js environments
-pdfjs.GlobalWorkerOptions.workerSrc = false;
+export const dynamic = 'force-dynamic';
 
 export async function POST(request) {
   try {
