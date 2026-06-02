@@ -1,11 +1,17 @@
 import { withSentryConfig } from "@sentry/nextjs";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  serverExternalPackages: ['pdfjs-dist', 'pdf-parse'],
+  serverExternalPackages: ['pdf-parse', 'pdfjs-dist'],
   experimental: {
+    serverComponentsExternalPackages: ['pdf-parse', 'pdfjs-dist'],
     serverActions: {
       bodySizeLimit: '5mb',
     },
+  },
+  webpack: (config) => {
+    config.resolve.alias.canvas = false;
+    config.resolve.alias.encoding = false;
+    return config;
   },
 };
 
