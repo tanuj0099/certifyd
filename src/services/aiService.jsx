@@ -219,12 +219,20 @@ Examples:
   }
 }
 
-// ── Offer analysis via Claude ────────────────────────────
+// ── Offer analysis via Groq ────────────────────────────
 export const analyzeOffer = async ({ offerText, certStack, city, yoe }) => {
   const certLabels = certStack.map(c => c.name).join(', ')
-  const systemPrompt = 'You are a salary negotiation analyst for the Indian job market (2026). Analyze offer letters against market benchmarks. Respond with ONLY a valid JSON object — no markdown, no prose, no code fences. All currency in Indian Rupees (₹).'
+  const systemPrompt = 'You are an elite, brutally honest salary negotiation analyst for the Indian job market (2026). Respond with ONLY a valid JSON object — no markdown, no prose, no code fences. All currency in Indian Rupees (₹) rounded to 1 decimal place (e.g., 14.5).'
 
-  const userPrompt = `Analyze this job offer letter for an Indian professional:
+  const userPrompt = `Analyze this job offer letter for an Indian professional.
+  
+  First, strictly verify if the text is a genuine job offer letter or compensation details. If it is NOT an offer letter (e.g., resume, assignment, fee receipt, random text, generic article), you MUST return this exact JSON:
+  {
+    "is_valid_offer": false,
+    "rejection_reason": "Provide a blunt 1-sentence reason why this is not a valid offer letter."
+  }
+  
+  If it IS a valid offer letter, proceed with analysis:
 
 OFFER LETTER TEXT:
 """
@@ -232,51 +240,56 @@ ${offerText.substring(0, 6000)}
 """
 
 CANDIDATE PROFILE:
-- Certifications: ${certLabels}
+- Certifications: ${certLabels || 'None'}
 - City: ${city}
 - Years of Experience: ${yoe}
 
 Return ONLY this JSON:
 {
-  "offered_ctc": number_in_lakhs,
-  "offered_fixed": number_in_lakhs,
-  "offered_variable": number_in_lakhs,
-  "market_median": number_in_lakhs,
-  "market_75th": number_in_lakhs,
-  "percent_diff": number,
-  "assessment": "one sentence — is this above or below market",
-  "breakdown": { "base": number, "bonus": number, "stocks_esop": number, "benefits_note": "short string" },
-  "counter_offer_script": "2-3 sentence professional counter-offer script with specific number in ₹",
-  "red_flags": ["any red flags", "else empty array"],
+  "is_valid_offer": true,
+  "offered_ctc": number_in_lakhs_rounded_to_1_decimal,
+  "offered_fixed": number_in_lakhs_rounded_to_1_decimal,
+  "offered_variable": number_in_lakhs_rounded_to_1_decimal,
+  "market_median": number_in_lakhs_rounded_to_1_decimal,
+  "market_75th": number_in_lakhs_rounded_to_1_decimal,
+  "percent_diff": integer_percentage_difference,
+  "assessment": "one blunt sentence — is this above or below market for this specific city and YOE?",
+  "breakdown": {
+    "base": number_in_lakhs_rounded_to_1_decimal,
+    "bonus": number_in_lakhs_rounded_to_1_decimal,
+    "stocks_esop": number_in_lakhs_rounded_to_1_decimal,
+    "benefits_note": "short string about benefits included"
+  },
+  "counter_offer_script": "2-3 sentence professional counter-offer script with a specific mathematical justification and target number in ₹Lakhs",
+  "red_flags": ["any red flags found in offer (e.g. low fixed pay, toxic clauses)", "else empty array"],
   "strengths": ["strong points about the offer"],
-  "market_trend": "one sentence about hiring trend"
-}`
+  "market_trend": "one data-driven sentence about hiring trend for this profile in ${city}"
+}
 
-  const response = await fetch('/api/claude', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userPrompt },
-      ],
-      max_tokens: 1024,
-      temperature: 0.5,
-    }),
-  })
+Rules:
+- Be mathematically precise. Round all Lakh numbers to 1 decimal place.
+- Market median must be realistic for India 2026 (look at YOE, city, cert stack).
+- If text doesn't contain salary/CTC, set offered_ctc to 0 and note "CTC not found in offer text" in the assessment.
+- Do NOT hallucinate data.`
 
-  if (!response.ok) {
-    const err = await response.json().catch(() => ({}))
-    throw new Error(err?.error?.message || err?.error || 'Claude API: ' + response.status)
+  const text = await callGroq(
+    [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: userPrompt },
+    ],
+    1024,
+    0.3,
+    true // JSON mode
+  )
+
+  const parsed = safeParseJSON(text)
+  if (!parsed) {
+    throw new Error('Failed to parse analysis results from AI.')
+  }
+  
+  if (parsed.is_valid_offer === false) {
+    throw new Error(parsed.rejection_reason || 'This document does not appear to be a valid offer letter.')
   }
 
-  const data = await response.json()
-  const cleaned = (data.content || '').replace(/```(?:json)?\s*/gi, '').replace(/```\s*$/gi, '').trim()
-  try {
-    return JSON.parse(cleaned)
-  } catch {
-    const match = cleaned.match(/\{[\s\S]*\}/)
-    if (match) return JSON.parse(match[0])
-    throw new Error('Could not parse Claude response as JSON')
-  }
+  return parsed
 }
