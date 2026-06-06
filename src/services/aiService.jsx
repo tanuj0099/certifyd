@@ -173,16 +173,18 @@ export const validateDomain = async (domainInput, currentRole = '') => {
     return { isValid: false, normalized: '', reason: 'No domain entered', intent: 'Domain_Pivot' }
   }
 
-  const prompt = `You are a strict career domain classifier for a professional certification platform (India 2026).
+  const prompt = `You are a professional career domain classifier for a certification platform.
 
 The user entered this as their target career domain: "${domainInput.trim()}"
 ${currentRole ? `The user's current role is: "${currentRole.trim()}"` : ''}
 
 Your task:
-1. STRICT WHITELIST: Determine if this target domain is a real, recognized professional career field within the IT, Tech, or Corporate sectors (e.g., "Cybersecurity", "Cloud Computing", "Finance", "Data Science", "Project Management", "Marketing", "Healthcare IT", "HR", "Law/Legal Tech" etc.).
-2. If it is an out-of-scope domain (e.g., "Medical Surgeon", "Astronaut", "Plumber") or nonsense/gibberish, you MUST reject it by setting "Invalid_Domain": true.
-3. If it is valid, normalize it to a clean title-case label.
-4. INTENT CLASSIFICATION: Compare the target domain to the current role (if provided). If they are identical or highly related (e.g. Data Analyst -> Data Science), set "Determined_Intent" to "Level_Up". If they are distinct pivots (e.g., Sales -> Cybersecurity), set "Determined_Intent" to "Domain_Pivot".
+1. BROAD ACCEPTANCE: Accept ANY legitimate professional, corporate, business, management, or tech-adjacent domain. This includes (but is not limited to): Technology, IT, Cloud, Cybersecurity, Data, AI, Finance, Accounting, Marketing, Sales, HR, Legal, Healthcare Admin, Operations, Supply Chain, Project Management, Product Management, Sports Management, Media, Education, Consulting, Real Estate, and any other recognized professional field.
+2. ONLY reject (set "Invalid_Domain": true) if the input is:
+   - Complete gibberish or random characters (e.g., "asdfghjkl", "xkz123").
+   - A purely physical/manual trade that does not use professional certifications (e.g., "Plumber", "Electrician", "Astronaut", "Farmer").
+3. If it is valid, normalize it to a clean title-case label (e.g., "sports mgmt" → "Sports Management").
+4. INTENT CLASSIFICATION: Compare the target domain to the current role (if provided). If they are identical or highly related (e.g. Data Analyst → Data Science, Software Engineer → Cloud Computing), set "Determined_Intent" to "Level_Up". If they are clearly different fields, set "Determined_Intent" to "Domain_Pivot".
 
 Respond ONLY with a valid JSON object — no markdown, no prose:
 {
@@ -193,8 +195,10 @@ Respond ONLY with a valid JSON object — no markdown, no prose:
 }
 
 Examples:
-- Target: "cybersec", Current: "" → { "Invalid_Domain": false, "normalized": "Cybersecurity", "reason": "Recognized abbreviation of Cybersecurity domain.", "Determined_Intent": "Domain_Pivot" }
-- Target: "Surgeon", Current: "" → { "Invalid_Domain": true, "normalized": "", "reason": "Not a Corporate IT or Tech domain.", "Determined_Intent": "Domain_Pivot" }
+- Target: "Sports Management" → { "Invalid_Domain": false, "normalized": "Sports Management", "reason": "Recognized professional management domain.", "Determined_Intent": "Domain_Pivot" }
+- Target: "cybersec", Current: "" → { "Invalid_Domain": false, "normalized": "Cybersecurity", "reason": "Recognized abbreviation.", "Determined_Intent": "Domain_Pivot" }
+- Target: "asdfghjkl" → { "Invalid_Domain": true, "normalized": "", "reason": "Gibberish — not a recognized professional domain.", "Determined_Intent": "Domain_Pivot" }
+- Target: "Plumber" → { "Invalid_Domain": true, "normalized": "", "reason": "Manual trade — does not use professional certifications.", "Determined_Intent": "Domain_Pivot" }
 - Target: "Data Science", Current: "Data Analyst" → { "Invalid_Domain": false, "normalized": "Data Science", "reason": "Recognized domain.", "Determined_Intent": "Level_Up" }
 - Target: "Marketing", Current: "Software Engineer" → { "Invalid_Domain": false, "normalized": "Marketing", "reason": "Corporate domain.", "Determined_Intent": "Domain_Pivot" }
 `

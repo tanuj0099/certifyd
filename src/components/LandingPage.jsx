@@ -811,7 +811,7 @@ function PivotDomainsCard({ onEnter }) {
       const result = await validateDomain(domain.trim())
       if (!result.isValid) {
         setDomainError(
-          'Certifyd currently only maps transitions within the Tech and Corporate IT sectors. Please try a domain like Cloud, Data, or Product Management.'
+          "We couldn't recognize that industry. Please enter a valid professional or corporate domain (e.g., Sports Management, Finance, Cloud Computing)."
         )
         return
       }
