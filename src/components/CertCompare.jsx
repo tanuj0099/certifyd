@@ -11,8 +11,8 @@ var F_MONO = 'var(--font-mono)'
 var F_BODY = 'var(--font-body)'
 
 var COLORS = ['var(--linear-blue)', 'var(--linear-blue)', 'var(--cool-grey)', '#E11D48']
-var COL_A = 'var(--linear-blue)'
-var COL_B = 'var(--linear-blue)'
+var COL_A = '#F4F5F8'       // Cert A — crisp white
+var COL_B = '#60A5FA'       // Cert B — sky blue (distinct, accessible)
 
 function demandColor(d) {
   return d === 'Very High' ? 'var(--linear-blue)' : d === 'High' ? 'var(--linear-blue)' : d === 'Medium' ? 'var(--cool-grey)' : '#94A3B8'
@@ -213,19 +213,20 @@ function buildRadarData(certA, certB, roiA, roiB) {
   ]
 }
 
-//  Pure SVG Radar Chart 
-// FIX: All SVG <text> fontFamily moved from presentation attribute to style prop.
-// CSS custom properties (var(--font-mono)) are NOT resolved in SVG presentation
-// attributes - they only work inside style="..." or style={{ }}.
+//  Pure SVG Radar Chart — glassmorphism overhaul, no glow
+// Labels use a large LABEL_PUSH so axis names + raw values never overlap.
 function RadarChartSVG({ data, nameA, nameB, animate }) {
-  var W = 440
-  var H = 360
+  // Viewbox & geometry
+  var W = 480
+  var H = 400
   var CX = W / 2
   var CY = H / 2 + 10
-  var R = 120
+  var R  = 110          // inner web radius
+  var LABEL_R   = R + 34   // axis-name ring
+  var RAW_A_R   = R + 52   // cert A value ring
+  var RAW_B_R   = R + 70   // cert B value ring — enough breathing room
+  var RINGS = [0.25, 0.5, 0.75, 1.0]
   var N = data.length
-  var RINGS = [0.2, 0.4, 0.6, 0.8, 1.0]
-  var LABEL_PUSH = 30
 
   var [hovered, setHovered] = useState(null)
 
@@ -239,115 +240,222 @@ function RadarChartSVG({ data, nameA, nameB, animate }) {
     return scores.map(function (s, i) {
       var sSafe = isFinite(s) ? s : 0
       var p = polar(i, (sSafe / 100) * R)
-      return p.x.toFixed(4) + ',' + p.y.toFixed(4)
+      return p.x.toFixed(3) + ',' + p.y.toFixed(3)
     }).join(' ')
   }
 
-  var scoresA = data.map(function (d) { return d.A })
-  var scoresB = data.map(function (d) { return d.B })
-  var pointsA = toPoints(scoresA)
-  var pointsB = toPoints(scoresB)
+  var scoresA   = data.map(function (d) { return d.A })
+  var scoresB   = data.map(function (d) { return d.B })
+  var pointsA   = toPoints(scoresA)
+  var pointsB   = toPoints(scoresB)
 
+  // Web rings
   var rings = RINGS.map(function (pct) {
     return data.map(function (_, i) {
       var p = polar(i, R * pct)
-      return p.x + ',' + p.y
+      return p.x.toFixed(3) + ',' + p.y.toFixed(3)
     }).join(' ')
   })
 
-  var spokes = data.map(function (_, i) { return polar(i, R) })
+  var spokes  = data.map(function (_, i) { return polar(i, R) })
+  var dotsA   = scoresA.map(function (s, i) { return { ...polar(i, (s / 100) * R), score: s, raw: data[i].rawA } })
+  var dotsB   = scoresB.map(function (s, i) { return { ...polar(i, (s / 100) * R), score: s, raw: data[i].rawB } })
 
-  var labels = data.map(function (d, i) {
-    var p = polar(i, R + LABEL_PUSH)
-    var pRaw = polar(i, R + LABEL_PUSH + 14)
-    return { x: p.x, y: p.y, pRaw: pRaw, axis: d.axis, rawA: d.rawA, rawB: d.rawB, i: i }
+  // Label positions — pushed well outside the web
+  var labelNodes = data.map(function (d, i) {
+    var angle   = (2 * Math.PI * i / N) - Math.PI / 2
+    var dx      = Math.cos(angle)
+    var dy      = Math.sin(angle)
+    var anchor  = Math.abs(dx) < 0.15 ? 'middle' : dx > 0 ? 'start' : 'end'
+    return {
+      i, axis: d.axis, rawA: d.rawA, rawB: d.rawB, anchor,
+      ax:  CX + LABEL_R   * dx,   ay:  CY + LABEL_R   * dy,
+      rax: CX + RAW_A_R   * dx,   ray: CY + RAW_A_R   * dy,
+      rbx: CX + RAW_B_R   * dx,   rby: CY + RAW_B_R   * dy,
+    }
   })
-
-  var dotsA = scoresA.map(function (s, i) { return { ...polar(i, (s / 100) * R), score: s, raw: data[i].rawA } })
-  var dotsB = scoresB.map(function (s, i) { return { ...polar(i, (s / 100) * R), score: s, raw: data[i].rawB } })
 
   return (
     <div style={{ position: 'relative', width: '100%' }}>
       <svg viewBox={'0 0 ' + W + ' ' + H} width="100%" style={{ overflow: 'visible', display: 'block' }}>
-        <defs>
-          <radialGradient id="fillA" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor={COL_A} stopOpacity="0.35" />
-            <stop offset="100%" stopColor={COL_A} stopOpacity="0.06" />
-          </radialGradient>
-          <radialGradient id="fillB" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor={COL_B} stopOpacity="0.28" />
-            <stop offset="100%" stopColor={COL_B} stopOpacity="0.05" />
-          </radialGradient>
-          <filter id="glowA" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="3" result="blur" />
-            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-          </filter>
-          <filter id="glowB" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="3" result="blur" />
-            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-          </filter>
-        </defs>
 
-        {/* Background rings */}
+        {/* ── Web rings — clean dashed, no glow ── */}
         {rings.map(function (pts, ri) {
+          var isOuter = ri === rings.length - 1
           return (
             <polygon
               key={ri}
               points={pts}
               fill="none"
-              stroke={ri === rings.length - 1 ? 'transparent' : 'transparent'}
-              strokeWidth={ri === rings.length - 1 ? '1' : '0.7'}
-              strokeDasharray={ri < rings.length - 1 ? '3 4' : 'none'}
+              stroke={isOuter ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.07)'}
+              strokeWidth={isOuter ? '1.2' : '0.8'}
+              strokeDasharray={isOuter ? 'none' : '3 5'}
             />
           )
         })}
 
-        {/* Axis spokes */}
+        {/* ── Axis spokes ── */}
         {spokes.map(function (pt, i) {
-          return <line key={i} x1={CX} y1={CY} x2={pt.x} y2={pt.y} stroke="transparent" strokeWidth="1" />
+          return <line key={i} x1={CX} y1={CY} x2={pt.x} y2={pt.y} stroke="rgba(255,255,255,0.10)" strokeWidth="1" />
         })}
 
-        {/* Polygon A - fill */}
-        <motion.polygon points={pointsA} fill="url(#fillA)" stroke="none"
-          initial={{ opacity: 0 }} animate={{ opacity: animate ? 1 : 0 }} transition={{ duration: 0.6, delay: 0.1 }}
+        {/* ── Polygon A — fill, then crisp solid stroke ── */}
+        <motion.polygon
+          points={pointsA}
+          fill={COL_A}
+          fillOpacity="0.08"
+          stroke="none"
+          initial={{ opacity: 0 }} animate={{ opacity: animate ? 1 : 0 }} transition={{ duration: 0.5, delay: 0.1 }}
         />
-        {/* Polygon A - stroke */}
-        <motion.polygon points={pointsA} fill="none" stroke={COL_A} strokeWidth="2.5" strokeLinejoin="round" filter="url(#glowA)"
-          initial={{ opacity: 0 }} animate={{ opacity: animate ? 1 : 0 }} transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+        <motion.polygon
+          points={pointsA}
+          fill="none"
+          stroke={COL_A}
+          strokeWidth="2"
+          strokeLinejoin="round"
+          strokeOpacity="0.85"
+          initial={{ opacity: 0 }} animate={{ opacity: animate ? 1 : 0 }} transition={{ duration: 0.6, delay: 0.15 }}
         />
 
-        {/* Polygon B - fill */}
-        <motion.polygon points={pointsB} fill="url(#fillB)" stroke="none"
-          initial={{ opacity: 0 }} animate={{ opacity: animate ? 1 : 0 }} transition={{ duration: 0.6, delay: 0.2 }}
+        {/* ── Polygon B — fill, then crisp solid stroke ── */}
+        <motion.polygon
+          points={pointsB}
+          fill={COL_B}
+          fillOpacity="0.08"
+          stroke="none"
+          initial={{ opacity: 0 }} animate={{ opacity: animate ? 1 : 0 }} transition={{ duration: 0.5, delay: 0.2 }}
         />
-        {/* Polygon B - stroke */}
-        <motion.polygon points={pointsB} fill="none" stroke={COL_B} strokeWidth="2.5" strokeLinejoin="round" filter="url(#glowB)"
-          initial={{ opacity: 0 }} animate={{ opacity: animate ? 1 : 0 }} transition={{ duration: 0.7, delay: 0.25 }}
+        <motion.polygon
+          points={pointsB}
+          fill="none"
+          stroke={COL_B}
+          strokeWidth="2"
+          strokeLinejoin="round"
+          strokeOpacity="0.80"
+          initial={{ opacity: 0 }} animate={{ opacity: animate ? 1 : 0 }} transition={{ duration: 0.6, delay: 0.25 }}
         />
 
-        {/* Center dot */}
-        <circle cx={CX} cy={CY} r="3" fill="transparent" />
-
-        {/* Vertex dots - A */}
+        {/* ── Vertex dots — A (no filter/glow) ── */}
         {dotsA.map(function (dot, i) {
           return (
             <motion.circle key={'a' + i}
-              cx={dot.x} cy={dot.y} r={hovered === 'A' + i ? 7 : 5}
-              fill={COL_A} stroke="var(--bg)" strokeWidth="2" filter="url(#glowA)"
+              cx={dot.x} cy={dot.y}
+              r={hovered === 'A' + i ? 7 : 4.5}
+              fill={COL_A}
+              stroke="rgba(11,11,15,0.9)"
+              strokeWidth="1.5"
               style={{ cursor: 'pointer' }}
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: animate ? 1 : 0, scale: 1 }}
-              transition={{ duration: 0.4, delay: 0.35 + i * 0.05, ease: [0.34, 1.56, 0.64, 1] }}
+              transition={{ duration: 0.4, delay: 0.4 + i * 0.05 }}
               onMouseEnter={function () { setHovered('A' + i) }}
               onMouseLeave={function () { setHovered(null) }}
             />
           )
         })}
 
-        {/* Vertex dots - B */}
+        {/* ── Vertex dots — B (no filter/glow) ── */}
         {dotsB.map(function (dot, i) {
           return (
             <motion.circle key={'b' + i}
+              cx={dot.x} cy={dot.y}
+              r={hovered === 'B' + i ? 7 : 4.5}
+              fill={COL_B}
+              stroke="rgba(11,11,15,0.9)"
+              strokeWidth="1.5"
+              style={{ cursor: 'pointer' }}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: animate ? 1 : 0, scale: 1 }}
+              transition={{ duration: 0.4, delay: 0.45 + i * 0.05 }}
+              onMouseEnter={function () { setHovered('B' + i) }}
+              onMouseLeave={function () { setHovered(null) }}
+            />
+          )
+        })}
+
+        {/* ── Hover tooltip (clean, no glow) ── */}
+        {hovered && (
+          (function () {
+            var isA  = hovered.startsWith('A')
+            var idx  = parseInt(hovered.slice(1))
+            var dots = isA ? dotsA : dotsB
+            var dot  = dots[idx]
+            var raw  = isA ? data[idx].rawA : data[idx].rawB
+            var col  = isA ? COL_A : COL_B
+            var name = isA ? nameA : nameB
+            var TW   = 130
+            var TX   = dot.x + 14
+            var TY   = dot.y - 34
+            if (TX + TW > W) TX = dot.x - TW - 14
+            if (TY < 10)     TY = dot.y + 14
+            return (
+              <g>
+                <rect
+                  x={TX} y={TY} width={TW} height={44} rx="8"
+                  fill="rgba(22,22,26,0.92)"
+                  stroke={col}
+                  strokeWidth="1"
+                  strokeOpacity="0.4"
+                />
+                <text x={TX + 10} y={TY + 15} fontSize="9" fill={col} style={{ fontFamily: 'var(--font-mono)' }} fontWeight="700">
+                  {name.split(' ').slice(0, 3).join(' ')}
+                </text>
+                <text x={TX + 10} y={TY + 31} fontSize="12" fill="rgba(255,255,255,0.9)" style={{ fontFamily: 'var(--font-mono)' }} fontWeight="700">
+                  {raw}
+                </text>
+              </g>
+            )
+          })()
+        )}
+
+        {/* ── Axis labels + raw values — wide spacing, never overlapping ── */}
+        {labelNodes.map(function (lb) {
+          return (
+            <g key={lb.i}>
+              {/* Axis name */}
+              <text
+                x={lb.ax} y={lb.ay}
+                textAnchor={lb.anchor}
+                dominantBaseline="middle"
+                fontSize="9.5"
+                style={{ fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.06em' }}
+                fill="rgba(255,255,255,0.45)"
+              >
+                {lb.axis}
+              </text>
+              {/* Cert A raw value */}
+              <text
+                x={lb.rax} y={lb.ray}
+                textAnchor={lb.anchor}
+                dominantBaseline="middle"
+                fontSize="8.5"
+                style={{ fontFamily: 'var(--font-mono)' }}
+                fontWeight="700"
+                fill={COL_A}
+                fillOpacity="0.80"
+              >
+                {lb.rawA}
+              </text>
+              {/* Cert B raw value */}
+              <text
+                x={lb.rbx} y={lb.rby}
+                textAnchor={lb.anchor}
+                dominantBaseline="middle"
+                fontSize="8.5"
+                style={{ fontFamily: 'var(--font-mono)' }}
+                fontWeight="700"
+                fill={COL_B}
+                fillOpacity="0.75"
+              >
+                {lb.rawB}
+              </text>
+            </g>
+          )
+        })}
+      </svg>
+    </div>
+  )
+}
               cx={dot.x} cy={dot.y} r={hovered === 'B' + i ? 7 : 5}
               fill={COL_B} stroke="var(--bg)" strokeWidth="2" filter="url(#glowB)"
               style={{ cursor: 'pointer' }}
@@ -591,6 +699,70 @@ function CertCompare({ salary, prefilledCert }) {
       </div>
 
       <AnimatePresence>
+        {/* ── Empty state: strict guard when either cert or salary is missing ── */}
+        {!bothReady && (
+          <motion.div
+            key="empty"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}
+            style={{
+              width: '100%',
+              minHeight: '320px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              background: 'rgba(255,255,255,0.04)',
+              border: '1px solid rgba(255,255,255,0.09)',
+              borderRadius: '20px',
+              padding: '40px 32px',
+              textAlign: 'center',
+              gap: '16px',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.22)',
+            }}
+          >
+            {/* Icon */}
+            <div style={{
+              width: '56px', height: '56px', borderRadius: '16px',
+              background: 'rgba(255,255,255,0.06)',
+              border: '1px solid rgba(255,255,255,0.12)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              marginBottom: '4px',
+            }}>
+              <Scale size={24} color="rgba(255,255,255,0.30)" />
+            </div>
+            {/* Heading */}
+            <div style={{ fontFamily: F_HEAD, fontSize: '16px', fontWeight: '700', color: 'rgba(255,255,255,0.70)', letterSpacing: '-0.02em' }}>
+              Multi-Axis Comparison
+            </div>
+            {/* Body */}
+            <div style={{ fontFamily: F_BODY, fontSize: '14px', color: 'rgba(255,255,255,0.35)', lineHeight: '1.6', maxWidth: '32ch' }}>
+              Select two certifications and enter your current salary to unlock the multi-axis comparison.
+            </div>
+            {/* Checklist chips */}
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center', marginTop: '4px' }}>
+              {[
+                { label: 'Cert A', done: !!dataA },
+                { label: 'Cert B', done: !!dataB },
+                { label: 'Salary', done: !!actualSalary },
+              ].map(function (item) {
+                return (
+                  <span key={item.label} style={{
+                    padding: '4px 12px', borderRadius: '100px', fontSize: '11px',
+                    fontFamily: F_MONO, fontWeight: '700', letterSpacing: '0.06em',
+                    background: item.done ? 'rgba(96,165,250,0.15)' : 'rgba(255,255,255,0.06)',
+                    border: '1px solid ' + (item.done ? 'rgba(96,165,250,0.35)' : 'rgba(255,255,255,0.10)'),
+                    color: item.done ? '#60A5FA' : 'rgba(255,255,255,0.30)',
+                  }}>
+                    {item.done ? '✓ ' : ''}{item.label}
+                  </span>
+                )
+              })}
+            </div>
+          </motion.div>
+        )}
+
         {bothReady ? (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
 
@@ -632,29 +804,39 @@ function CertCompare({ salary, prefilledCert }) {
               </div>
             </motion.div>
 
-            {/* Radar chart */}
+            {/* Radar chart — Glassmorphism container */}
             <motion.div
-              initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.15 }} /* Removed glass class */
-              style={{ marginBottom: '24px', borderRadius: '18px', background: 'transparent', border: '1px solid var(--glass-border)', overflow: 'hidden', position: 'relative' }}
+              initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.15 }}
+              style={{
+                marginBottom: '24px',
+                borderRadius: '20px',
+                background: 'rgba(255,255,255,0.04)',
+                backdropFilter: 'blur(24px)',
+                WebkitBackdropFilter: 'blur(24px)',
+                border: '1px solid rgba(255,255,255,0.10)',
+                overflow: 'hidden',
+                position: 'relative',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.06)',
+              }}
             >
-              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '2px', background: 'transparent' }} />
-
-              <div style={{ padding: '18px 20px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px' }}>
+              {/* Chart header */}
+              <div style={{ padding: '18px 22px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px' }}>
                 <div>
-                  <div style={{ fontFamily: F_MONO, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '3px' }}>
+                  <div style={{ fontFamily: F_MONO, fontSize: '9px', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '3px' }}>
                     MULTI-AXIS COMPARISON
                   </div>
-                  <div style={{ fontSize: '11px', color: 'var(--text-4)', fontFamily: F_BODY }}>
-                    5 dimensions  hover dots to inspect
+                  <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', fontFamily: F_BODY }}>
+                    5 dimensions · hover dots to inspect
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: '10px' }}>
+                {/* Legend pills — A=white, B=blue */}
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                   {[{ name: dataA.name, color: COL_A }, { name: dataB.name, color: COL_B }].map(function (item, i) {
                     return (
-                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '5px 10px', borderRadius: '20px', background: item.color + '12', border: '1px solid ' + item.color + '30' }}>
-                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: item.color, boxShadow: 'none' + item.color + '80' }} />
-                        <span style={{ fontFamily: F_MONO, fontSize: '10px', color: item.color, fontWeight: '700', maxWidth: '100px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '5px 12px', borderRadius: '100px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }}>
+                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: item.color, flexShrink: 0 }} />
+                        <span style={{ fontFamily: F_MONO, fontSize: '10px', color: item.color, fontWeight: '700', maxWidth: '110px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                           {item.name.split(' ').slice(0, 3).join(' ')}
                         </span>
                       </div>
@@ -663,25 +845,9 @@ function CertCompare({ salary, prefilledCert }) {
                 </div>
               </div>
 
-              <div style={{ padding: '0 12px 4px' }}>
+              {/* SVG chart area */}
+              <div style={{ padding: '0 16px 16px' }}>
                 <RadarChartSVG data={radarData} nameA={dataA.name} nameB={dataB.name} animate={true} />
-              </div>
-
-              <div style={{ padding: '0 16px 16px', display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '6px' }}>
-                {[
-                  { axis: 'Hike %', desc: 'Salary increase' },
-                  { axis: 'Demand', desc: 'Job market' },
-                  { axis: 'Speed', desc: 'Time to complete' },
-                  { axis: 'Cost Eff.', desc: '5-yr ROI vs cost' },
-                  { axis: 'Job Market', desc: 'Demand + salary' },
-                ].map(function (item, i) {
-                  return (
-                    <div key={i} style={{ padding: '7px 8px', borderRadius: '8px', background: 'transparent', border: '1px solid var(--border-mid)', textAlign: 'center' }}>
-                      <div style={{ fontFamily: F_MONO, fontSize: '8px', color: 'transparent', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '2px' }}>{item.axis}</div>
-                      <div style={{ fontFamily: F_BODY, fontSize: '10px', color: 'var(--text-4)', lineHeight: '1.3' }}>{item.desc}</div>
-                    </div>
-                  )
-                })}
               </div>
             </motion.div>
 
