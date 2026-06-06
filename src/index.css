@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -33,9 +33,9 @@
     --bg-alt:       var(--card);
     --surface:      var(--card);
     --text:         #F4F5F8;
-    --text-2:       #A0A3AB;
-    --text-3:       #6B6E76;
-    --text-4:       #44474F;
+    --text-2:       #E5E7EB;
+    --text-3:       #9CA3AF;
+    --text-4:       #6B7280;
     --accent:       #F4F5F8;
     --gold:         #C9A84C;
     --border:       #222326;
@@ -117,9 +117,9 @@
     --ease-out:  cubic-bezier(0.16,1,0.3,1);
     --ease-snap: cubic-bezier(0.2,0.8,0.2,1);
 
-    --font-sans:  var(--font-playfair), system-ui, sans-serif;
+    --font-sans:  'Inter', 'Plus Jakarta Sans', system-ui, sans-serif;
     --font-head:  var(--font-playfair), system-ui, sans-serif;
-    --font-body:  var(--font-playfair), system-ui, sans-serif;
+    --font-body:  'Inter', 'Plus Jakarta Sans', system-ui, sans-serif;
     --font-mono:  var(--font-jetbrains), ui-monospace, monospace;
     --font-serif: var(--font-playfair), system-ui, sans-serif;
   }
@@ -134,9 +134,9 @@
     --card:       #FFFFFF;
     --card-hover: #FAFAFA;
     --text:       #121212;
-    --text-2:     #3a3d42;
-    --text-3:     #62666D;
-    --text-4:     #9a9ea6;
+    --text-2:     #1f2937;
+    --text-3:     #374151;
+    --text-4:     #4b5563;
     --accent:     #121212;
     --gold:       #8a6d2f;
     --border:     rgba(0,0,0,0.07);
@@ -156,8 +156,8 @@
     --surface-high:  #FAFAFA;
     --bg-page:       #F4F5F6;
     --text-primary:  #121212;
-    --text-secondary:#3a3d42;
-    --text-muted:    #62666D;
+    --text-secondary:#1f2937;
+    --text-muted:    #374151;
     --accent-light:  #222326;
     --gold-val:      #8a6d2f;
     --gold-light:    #a07830;
@@ -202,9 +202,9 @@
       --card:       #FFFFFF;
       --card-hover: #FAFAFA;
       --text:       #121212;
-      --text-2:     #3a3d42;
-      --text-3:     #62666D;
-      --text-4:     #9a9ea6;
+      --text-2:     #1f2937;
+      --text-3:     #374151;
+      --text-4:     #4b5563;
       --accent:     #121212;
       --gold:       #8a6d2f;
       --border:     rgba(0,0,0,0.07);
@@ -220,8 +220,8 @@
       --surface-high:#FAFAFA;
       --bg-page:    #F4F5F6;
       --text-primary:#121212;
-      --text-secondary:#3a3d42;
-      --text-muted: #62666D;
+      --text-secondary:#1f2937;
+      --text-muted: #374151;
       --accent-light:#222326;
       --border-subtle:rgba(0,0,0,0.07);
       --border-strong:rgba(0,0,0,0.12);
@@ -239,7 +239,7 @@
     background: var(--bg);
     color: var(--text);
     font-family: var(--font-sans);
-    font-size: 1rem;
+    font-size: 16px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
@@ -255,6 +255,12 @@
     body {
       padding-bottom: calc(56px + env(safe-area-inset-bottom));
     }
+  }
+
+  /* ── Spinner animation for Loader2 icon ──────────────────── */
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
   }
 
   /* Suspense loading dot */

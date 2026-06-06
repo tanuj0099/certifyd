@@ -432,7 +432,7 @@ export default function LiveMarketPulse() {
                 animation: rows.length && !error ? 'pdot 1.8s ease-in-out infinite' : 'none',
               }}
             />
-            {loading ? 'Syncing...' : error ? 'Unavailable' : lastSync ? `Synced ${new Date(lastSync).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}` : 'Live'}
+            {loading ? 'Syncing...' : error ? 'Unavailable' : lastSync ? `Synced ${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}` : 'Recent'}
           </div>
         </div>
 

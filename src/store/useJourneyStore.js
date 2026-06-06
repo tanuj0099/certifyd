@@ -66,6 +66,10 @@ export const useJourneyStore = create(
       targetDomain: '',
       setTargetDomain: (v) => set({ targetDomain: v || '' }),
 
+      // Journey intent: "Level_Up" | "Domain_Pivot" | "Breaking_In"
+      journeyIntent: '',
+      setJourneyIntent: (v) => set({ journeyIntent: v || '' }),
+
       // ── Pipeline & Roadmap State (persisted) ───────────
       
       // What the user wants to become (e.g., "Senior Backend Engineer")
@@ -123,6 +127,8 @@ export const useJourneyStore = create(
         targetDomain: state.targetDomain,
         targetRole: state.targetRole,
         activeRoadmapProgress: state.activeRoadmapProgress,
+        certName: state.certName,
+        selectedCert: state.selectedCert,
       }),
     }
   )

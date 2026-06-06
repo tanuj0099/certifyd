@@ -106,7 +106,7 @@ const CertificationCard = ({ data }) => {
           {data.name}
         </h3>
         {truncated && (
-          <p className="text-xs leading-relaxed line-clamp-3 text-[var(--text-2)]">
+          <p className="text-sm leading-relaxed line-clamp-3 text-[var(--text-2)]">
             {truncated}
           </p>
         )}

@@ -168,32 +168,35 @@ export const getMockResponse = ({ certName, currentSalary, certCost, hikePercent
 
 // ── Domain validation via Groq ────────────────────────────
 // Returns { isValid: bool, normalized: string, reason: string }
-export const validateDomain = async (domainInput) => {
+export const validateDomain = async (domainInput, currentRole = '') => {
   if (!domainInput || !domainInput.trim()) {
-    return { isValid: false, normalized: '', reason: 'No domain entered' }
+    return { isValid: false, normalized: '', reason: 'No domain entered', intent: 'Domain_Pivot' }
   }
 
   const prompt = `You are a strict career domain classifier for a professional certification platform (India 2026).
 
 The user entered this as their target career domain: "${domainInput.trim()}"
+${currentRole ? `The user's current role is: "${currentRole.trim()}"` : ''}
 
 Your task:
-1. Determine if this is a real, recognized professional career field or domain (e.g., "Cybersecurity", "Cloud Computing", "Finance", "Data Science", "Project Management", "Marketing", "Healthcare", "HR", "Law", "Architecture" etc.).
-2. If it is valid, normalize it to a clean title-case label.
-3. If it is nonsense, gibberish, a random word, an insult, or not a professional domain, mark it invalid.
+1. STRICT WHITELIST: Determine if this target domain is a real, recognized professional career field within the IT, Tech, or Corporate sectors (e.g., "Cybersecurity", "Cloud Computing", "Finance", "Data Science", "Project Management", "Marketing", "Healthcare IT", "HR", "Law/Legal Tech" etc.).
+2. If it is an out-of-scope domain (e.g., "Medical Surgeon", "Astronaut", "Plumber") or nonsense/gibberish, you MUST reject it by setting "Invalid_Domain": true.
+3. If it is valid, normalize it to a clean title-case label.
+4. INTENT CLASSIFICATION: Compare the target domain to the current role (if provided). If they are identical or highly related (e.g. Data Analyst -> Data Science), set "Determined_Intent" to "Level_Up". If they are distinct pivots (e.g., Sales -> Cybersecurity), set "Determined_Intent" to "Domain_Pivot".
 
 Respond ONLY with a valid JSON object — no markdown, no prose:
 {
-  "isValid": true or false,
+  "Invalid_Domain": true or false,
   "normalized": "Clean Title Case Domain Name or empty string if invalid",
-  "reason": "One sentence explanation"
+  "reason": "One sentence explanation",
+  "Determined_Intent": "Level_Up" or "Domain_Pivot"
 }
 
 Examples:
-- "cybersec" → { "isValid": true, "normalized": "Cybersecurity", "reason": "Recognized abbreviation of Cybersecurity domain." }
-- "asdfghjkl" → { "isValid": false, "normalized": "", "reason": "Not a recognized professional domain." }
-- "rubbish" → { "isValid": false, "normalized": "", "reason": "Not a recognized professional domain." }
-- "data analytics" → { "isValid": true, "normalized": "Data & Analytics", "reason": "Recognized data domain." }
+- Target: "cybersec", Current: "" → { "Invalid_Domain": false, "normalized": "Cybersecurity", "reason": "Recognized abbreviation of Cybersecurity domain.", "Determined_Intent": "Domain_Pivot" }
+- Target: "Surgeon", Current: "" → { "Invalid_Domain": true, "normalized": "", "reason": "Not a Corporate IT or Tech domain.", "Determined_Intent": "Domain_Pivot" }
+- Target: "Data Science", Current: "Data Analyst" → { "Invalid_Domain": false, "normalized": "Data Science", "reason": "Recognized domain.", "Determined_Intent": "Level_Up" }
+- Target: "Marketing", Current: "Software Engineer" → { "Invalid_Domain": false, "normalized": "Marketing", "reason": "Corporate domain.", "Determined_Intent": "Domain_Pivot" }
 `
 
   try {
@@ -202,20 +205,21 @@ Examples:
         { role: 'system', content: 'You are a strict domain validator. Respond ONLY with valid JSON.' },
         { role: 'user', content: prompt },
       ],
-      150,
+      250,
       0.1,
       true  // JSON mode
     )
     const cleaned = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').trim()
     const parsed = JSON.parse(cleaned)
     return {
-      isValid:    !!parsed.isValid,
+      isValid:    !parsed.Invalid_Domain,
       normalized: parsed.normalized || '',
       reason:     parsed.reason || '',
+      intent:     parsed.Determined_Intent || 'Domain_Pivot'
     }
   } catch {
     // If API fails, allow through (fail open — don't block user)
-    return { isValid: true, normalized: domainInput.trim(), reason: 'Validation skipped (API unavailable)' }
+    return { isValid: true, normalized: domainInput.trim(), reason: 'Validation skipped (API unavailable)', intent: 'Domain_Pivot' }
   }
 }
 

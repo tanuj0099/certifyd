@@ -1,6 +1,7 @@
 import { supabase } from '../services/supabase.js';
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
+import { useRouter } from 'next/navigation'
 import {
   Zap, AlertTriangle, CheckCircle, RefreshCw,
   TrendingUp, MapPin, User, Star, ArrowRight,
@@ -309,17 +310,6 @@ function Slider({ label, value, min = 0, max = 100, step = 1, onChange, prefix =
           <div className="control-label">{label}</div>
           <div style={{ fontFamily: FH, fontSize: '0.92rem', fontWeight: 700, color: color, marginTop: '6px' }}>{display}</div>
         </div>
-        <input
-          type="number"
-          value={value}
-          min={min}
-          max={max}
-          step={step}
-          disabled={disabled}
-          onChange={e => onChange(Math.min(max, Math.max(min, parseFloat(e.target.value) || min)))}
-          className="input-number"
-          style={{ maxWidth: '140px' }}
-        />
       </div>
 
       <div
@@ -852,6 +842,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
 
   const firstName = resumeName ? resumeName.split(' ')[0] : '';
   const displayCity = resumeCity;
+  const router = useRouter();
 
   //  Hooks & Effects 
   useEffect(function () {
@@ -1273,12 +1264,6 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
               transition={prefersReduced ? { duration: 0 } : { type: 'spring', duration: 0.45, bounce: 0 }}
             >
               <AIResult result={aiResult} certName={certName} onReset={function () { setAiResult(null) }} />
-              <div style={{ marginTop: '24px' }}>
-                <BurnRate
-                  certName={certName}
-                  breakEvenMonths={roi.breakEvenMonths > 0 ? Math.round(roi.breakEvenMonths) : 6}
-                />
-              </div>
             </motion.div>
           ) : null}
         </AnimatePresence>
@@ -1287,38 +1272,51 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
       {/*  Tools row  */}
       {certName ? (
         <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '8px' }}>
-          <button
-            onClick={function () { setShowVerifier(function (v) { return !v }) }}
-            style={{ padding: '8px 14px', borderRadius: '9px', background: showVerifier ? 'transparent' : 'transparent', border: '1px solid ' + (showVerifier ? 'transparent' : 'var(--border)'), color: showVerifier ? EMERALD : 'var(--text-3)', fontSize: '12px', cursor: 'pointer', fontFamily: FB, fontWeight: '600', display: 'flex', alignItems: 'center', gap: '5px', transition: 'all 0.18s' }}
+          <a
+            href="/offer-analysis"
+            title="Upload an offer letter to verify if this hike is accurate"
+            style={{ padding: '8px 14px', borderRadius: '9px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-3)', fontSize: '12px', cursor: 'pointer', fontFamily: FB, fontWeight: '600', display: 'flex', alignItems: 'center', gap: '5px', transition: 'all 0.18s', textDecoration: 'none' }}
           >
             <CheckCircle size={12} /> Verify My Hike
-          </button>
+          </a>
           <ShareURLButton certName={certName} salary={salary} certCost={certCost} hikePercent={hikePercent} mode={mode} />
         </div>
       ) : null}
 
-      {/*  Verify hike panel  */}
-      <AnimatePresence>
-        {showVerifier && certName ? (
-          <motion.div
-            key="hv"
-            initial={prefersReduced ? false : { opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={T}
-          >
-            <HikeVerifier certName={certName} projectedHike={hikePercent} onClose={function () { setShowVerifier(false) }} />
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
+      {/*  Verify hike panel removed in favor of /offer-analysis route  */}
 
-      {/*  Pitch Boss + Share card  */}
+      {/*  Pitch Boss + Share card + CTA  */}
       {certName ? (
-        <div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <PitchBoss certName={certName} salary={salary} certCost={certCost} hikePercent={hikePercent} name={resumeName} mode={mode} />
           {!isStudent ? (
             <ShareROICard certName={certName} domain={selectedCert ? selectedCert.domain : ''} demand={selectedCert ? selectedCert.demand : 'High'} name={resumeName} />
           ) : null}
+          <motion.button
+            onClick={() => router.push('/dashboard')}
+            whileHover={!prefersReduced ? { y: -2, scale: 1.01 } : {}}
+            whileTap={!prefersReduced ? { scale: 0.98 } : {}}
+            style={{
+              width: '100%',
+              padding: '16px',
+              borderRadius: '12px',
+              background: 'var(--text)',
+              color: 'var(--bg)',
+              border: 'none',
+              fontFamily: 'var(--font-head)',
+              fontSize: '16px',
+              fontWeight: '800',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              marginTop: '12px',
+              boxShadow: '0 4px 14px rgba(0,0,0,0.1)',
+            }}
+          >
+            Commit to this Certification <ArrowRight size={16} />
+          </motion.button>
         </div>
       ) : null}
 

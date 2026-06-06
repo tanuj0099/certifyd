@@ -9,6 +9,7 @@ import { supabase } from '../services/supabase.js'
 import { trackResumeUploaded } from '../lib/analytics.js'
 import { callGroqForResume, validateDomain } from '../services/aiService.jsx'
 import { useJourneyStore } from '../store/useJourneyStore.js'
+import { useAuth } from '../hooks/useAuth.jsx'
 
 //  Font tokens  CSS variables 
 var FM = 'var(--font-mono)'
@@ -145,7 +146,10 @@ var buildPrompt = function (resumeText, mode, timeline, domainIntent, switchTarg
   return 'You are Certify, a career advisor for Indian professionals (2026).\n' +
     'Mode: ' + mode + '\nTimeline: ' + timelineNote + '\nDomain: ' + domainNote + '\n\n' +
     'Resume:\n' + resumeText.slice(0, 2200) + '\n\n' +
-    'Respond with ONLY a valid JSON object - no markdown, no prose, no code fences.\n\n' +
+    'GEOGRAPHIC RULE: If the extracted location from the resume is NOT within India (e.g., US, UK, Canada, UAE, etc.), you MUST abort the ROI calculation and return EXACTLY this JSON error flag:\n' +
+    '{"Unsupported_Region": true, "Message": "Certifyd MVP currently only supports salary intelligence for the Indian IT market."}\n' +
+    'Do not attempt to calculate INR for foreign resumes.\n\n' +
+    'If the location is in India or ambiguous/missing, respond with ONLY a valid JSON object - no markdown, no prose, no code fences.\n\n' +
     '{\n' +
     '  "name": "full name or empty string",\n' +
     '  "summary": "2-3 sentences on background and biggest career opportunity",\n' +
@@ -171,6 +175,10 @@ var safeParseResumeJSON = function (text) {
   try {
     var cleaned = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').trim()
     var obj = JSON.parse(cleaned)
+
+    if (obj.Unsupported_Region) {
+      return { Unsupported_Region: true, Message: obj.Message, parseError: false }
+    }
 
     // Normalise city to a known Indian city
     var cityRaw = (obj.city || '').toLowerCase()
@@ -338,8 +346,8 @@ var PreferencesPanel = function ({ timeline, onTimeline, domainIntent, onDomain,
                   textAlign: 'left',
                 }}
               >
-                <span style={{ fontSize: '13px', fontFamily: FH, fontWeight: active ? '700' : '500' }}>{opt.label}</span>
-                <span style={{ fontSize: '10px', fontFamily: FM, color: active ? VIOLET + 'AA' : 'var(--text-2)' }}>{opt.sub}</span>
+                <span style={{ fontSize: '16px', fontFamily: FH, fontWeight: active ? '700' : '500' }}>{opt.label}</span>
+                <span style={{ fontSize: '14px', fontFamily: FM, color: active ? VIOLET + 'AA' : 'var(--text-2)' }}>{opt.sub}</span>
               </button>
             )
           })}
@@ -403,8 +411,13 @@ var PersonalisedHero = function ({ name, city, domain, primaryCert, mode, certDo
     return function () { clearTimeout(t1); clearTimeout(t2) }
   }, [])
 
+  var { user } = useAuth()
+  var userProfileData = {
+    userName: user?.user_metadata?.full_name || user?.displayName || user?.email?.split('@')[0]
+  }
   var domainLabel = certDomains && certDomains.length > 0 ? certDomains.find(function (d) { return d.id === domain })?.label || domain : domain
-  var firstName = name ? name.split(' ')[0] : ''
+  var authName = userProfileData.userName ? userProfileData.userName.split(' ')[0] : ''
+  var firstName = authName || (name ? name.split(' ')[0] : '')
   var intro = firstName
     ? firstName + ', out of 103 certifications analysed for ' + (city ? 'a professional in ' + city : 'your profile') + ' right now -'
     : 'For a ' + (mode === 'student' ? 'student' : mode === 'switcher' ? 'career switcher' : 'professional') + ' in ' + domainLabel + ' right now -'
@@ -820,6 +833,16 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
           setTextReady(true)
           return
         }
+
+        // FIX: validate BEFORE setting text state
+        var validation = validateDocument(extracted)
+        if (!validation.isResume) {
+          setFileName('')
+          setRejection(validation.rejectedBy || 'default')
+          setTextReady(true)
+          return
+        }
+
         setText(extracted)
         setTextReady(true)
       } catch (e) {
@@ -833,7 +856,18 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
     }
     setFileName(file.name); setText(''); setTextReady(false)
     var reader = new FileReader()
-    reader.onload = function (e) { setText(e.target.result || ''); setTextReady(true) }
+    reader.onload = function (e) { 
+      var extracted = e.target.result || ''
+      var validation = validateDocument(extracted)
+      if (!validation.isResume) {
+        setFileName('')
+        setRejection(validation.rejectedBy || 'default')
+        setTextReady(true)
+        return
+      }
+      setText(extracted)
+      setTextReady(true) 
+    }
     reader.onerror = function () { setError('Could not read file. Try pasting text instead.'); setFileName(''); setTextReady(true) }
     reader.readAsText(file)
   }
@@ -844,13 +878,12 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
     setText(''); setFileName(''); setResult(null); setError(null); setRejection(null); setTextReady(true)
   }
 
-  // FIX: separate dismiss-rejection from clear-all.
-  // On rejection dismiss, only clear the rejection + file - NOT the pasted text.
-  // If a user pasted text that failed, they shouldn't have to re-paste after dismissing.
+  // FIX: completely nullify all text states on reset
   var dismissRejection = function () {
     setRejection(null)
     setFileName('')   // clear any file reference
-    // setText preserved intentionally
+    setText('')       // clear extracted text
+    setError(null)
   }
 
   var handleAnalyse = async function () {
@@ -898,6 +931,11 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
       var raw = await callGroqForResume(null, buildPrompt(safeText, mode, timeline, domainIntent, switchTarget, domainOverride || targetDomain))
       if (!raw || raw.length < 30) throw new Error('Empty response - try again')
       var parsed = safeParseResumeJSON(raw)
+      
+      if (parsed.Unsupported_Region) {
+        throw new Error(parsed.Message || 'Certifyd MVP currently only supports salary intelligence for the Indian IT market.')
+      }
+
       setResult(parsed.certs?.length ? parsed : {
         ...parsed,
         summary: parsed.summary || 'Analysis complete',

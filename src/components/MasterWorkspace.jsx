@@ -8,7 +8,7 @@ import Hero from './Hero.jsx';
 import Heatmap from './Heatmap.jsx';
 import CertCompare from './CertCompare.jsx';
 import { useIsMobile } from './SharedUI.jsx';
-import { FileText, TrendingUp, Map, ArrowRight } from 'lucide-react';
+import { FileText, TrendingUp, Map, ArrowRight, Check } from 'lucide-react';
 
 const T = { duration: 0.32, ease: [0.4, 0, 0.2, 1] };
 const FM = "var(--font-mono)";
@@ -229,7 +229,7 @@ const AppPage = function ({ onCertSelected }) {
                                   fontWeight: "700",
                                 }}
                               >
-                                {isCompleted ? "" : tab.num}
+                                {isCompleted ? <Check size={14} strokeWidth={3} /> : tab.num}
                               </div>
                               <tab.icon size={16} />
                               <span

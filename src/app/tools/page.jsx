@@ -43,7 +43,7 @@ const TOOLS = [
     id: 'offer-analysis',
     path: '/offer-analysis',
     icon: CheckCircle,
-    label: 'Offer Analysis',
+    label: 'Offer Letter Analysis',
     tag: 'NEGOTIATE',
     desc: 'Paste a job offer and get a precision breakdown - is this number fair for your city and cert stack?',
   },

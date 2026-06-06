@@ -1,11 +1,12 @@
 import { motion, useScroll, AnimatePresence } from 'framer-motion'
 import React, { useRef, useState, useEffect } from 'react'
-import { ArrowRight, ChevronDown, BarChart2, CheckCircle2 } from 'lucide-react'
+import { ArrowRight, ChevronDown, BarChart2, CheckCircle2, Loader2, AlertCircle } from 'lucide-react'
 import FeaturesBentoGrid from './FeaturesBentoGrid.jsx'
 import { useJourneyStore } from '../store/useJourneyStore.js'
 import { THEMES, useThemeContext } from './SharedUI.jsx'
 import { useRouter } from 'next/navigation'
 import SEOHead from './SEOHead.jsx'
+import { validateDomain } from '../services/aiService.jsx'
 
 function useTheme() {
   return useThemeContext()
@@ -781,19 +782,58 @@ function HowItWorks({ onEnter }) {
 function PivotDomainsCard({ onEnter }) {
   const C = useTheme()
   const isMobile = useIsMobile()
+  const router = useRouter()
   const setTargetDomain = useJourneyStore(function (s) { return s.setTargetDomain })
+  const setMode = useJourneyStore(function (s) { return s.setMode })
+  const setJourneyIntent = useJourneyStore(function (s) { return s.setJourneyIntent })
   const storedDomain    = useJourneyStore(function (s) { return s.targetDomain || '' })
 
   const [domain, setDomain]   = useState(storedDomain)
   const [pivotFocus, setPivotFocus] = useState(false)
+  const [validating, setValidating] = useState(false)
+  const [domainError, setDomainError] = useState('')
 
   const FM = F_MONO
   const LINEAR_BLUE = 'var(--accent)'
   const COOL_GREY   = C.text3
 
-  function handleStartSwitching() {
-    setTargetDomain(domain)
-    onEnter()
+  async function handleStartSwitching() {
+    // If no domain typed → route to /choose-path for manual selection
+    if (!domain.trim()) {
+      router.push('/choose-path')
+      return
+    }
+
+    // Domain typed → validate it and route directly to /find-a-cert
+    setValidating(true)
+    setDomainError('')
+    try {
+      const result = await validateDomain(domain.trim())
+      if (!result.isValid) {
+        setDomainError(
+          'Certifyd currently only maps transitions within the Tech and Corporate IT sectors. Please try a domain like Cloud, Data, or Product Management.'
+        )
+        return
+      }
+      // Persist domain + intent, then fast-route to cert-radar
+      const normalizedDomain = result.normalized || domain.trim()
+      setTargetDomain(normalizedDomain)
+      setJourneyIntent(result.intent)
+      // Set mode based on LLM-determined intent
+      if (result.intent === 'Level_Up') {
+        setMode('professional')
+      } else {
+        setMode('switcher')
+      }
+      router.push(`/tools/cert-radar?intent=${result.intent}&target=${encodeURIComponent(normalizedDomain)}`)
+    } catch {
+      // Fail open — don't block user
+      setTargetDomain(domain.trim())
+      setMode('switcher')
+      router.push(`/tools/cert-radar?intent=Domain_Pivot&target=${encodeURIComponent(domain.trim())}`)
+    } finally {
+      setValidating(false)
+    }
   }
 
   return (
@@ -801,15 +841,15 @@ function PivotDomainsCard({ onEnter }) {
       <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }}>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '32px' : '64px', alignItems: 'start' }}>
 
-          {/*  Left: Optimize Current Path  */}
+          {/*  Left: Optimize Current Path — routes to /choose-path  */}
           <div>
             <div style={{ fontFamily: FM, fontSize: '10px', color: COOL_GREY, letterSpacing: '0.14em', marginBottom: '14px' }}>// OPTIMIZE CURRENT PATH</div>
             <div style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: '20px', color: C.text, letterSpacing: '-0.02em', marginBottom: '10px', lineHeight: 1.2 }}>Already in your lane.<br />Go deeper, not wider.</div>
             <div style={{ fontFamily: F_SANS, fontSize: '14px', color: C.text2, lineHeight: '1.7', marginBottom: '22px' }}>
               Select a cert, input your current salary, and we calculate the exact payback window and 5-year gain - down to the rupee.
             </div>
-            <PillBtn onClick={onEnter}>
-              Calculate ROI <ArrowRight size={13} />
+            <PillBtn onClick={() => router.push('/choose-path')}>
+              Get Started <ArrowRight size={13} />
             </PillBtn>
           </div>
 
@@ -818,64 +858,80 @@ function PivotDomainsCard({ onEnter }) {
             <div style={{ fontFamily: FM, fontSize: '10px', color: COOL_GREY, letterSpacing: '0.14em', marginBottom: '14px' }}>// PIVOT DOMAINS</div>
             <div style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: '20px', color: C.text, letterSpacing: '-0.02em', marginBottom: '10px', lineHeight: 1.2 }}>Switch fields.<br />Get a cert-first roadmap.</div>
             <div style={{ fontFamily: F_SANS, fontSize: '14px', color: C.text2, lineHeight: '1.7', marginBottom: '18px' }}>
-              Enter the domain you want to break into. We validate it, then surface certifications specifically for switchers.
+              Enter the domain you want to break into — we validate it and surface certs specifically for switchers. Or leave it blank and <strong style={{ color: C.text }}>choose your path</strong> manually.
             </div>
 
             {/* Input + state machine */}
             <div style={{ position: 'relative' }}>
-              {/*
-                BEFORE: padding: '4px 4px 4px 14px' - the input row was ~40px tall,
-                below the 48px minimum for form inputs.
-                FIX: minHeight: '52px' on the wrapper ensures the whole row
-                (input + button) meets the fat-finger target.
-                fontSize: '16px' on the input prevents iOS Safari from
-                auto-zooming the viewport when the field is focused.
-              */}
               <div style={{
                 display: 'flex', gap: '8px', alignItems: 'center',
                 padding: '4px 4px 4px 14px',
                 minHeight: '52px',
                 borderRadius: '8px',
-                border: '1px solid ' + (pivotFocus ? LINEAR_BLUE + '60' : (!C.isLight ? 'var(--border-subtle)' : 'transparent')),
+                border: '1px solid ' + (pivotFocus ? LINEAR_BLUE + '60' : domainError ? '#D94848' : (!C.isLight ? 'var(--border-subtle)' : 'transparent')),
                 background: !C.isLight ? 'var(--border-subtle)' : 'transparent',
                 transition: 'border-color 0.18s',
               }}>
                 <input
                   value={domain}
-                  onChange={function (e) { setDomain(e.target.value) }}
+                  onChange={function (e) { setDomain(e.target.value); setDomainError('') }}
                   onFocus={function () { setPivotFocus(true) }}
                   onBlur={function () { setPivotFocus(false) }}
-                  onKeyDown={function (e) { if (e.key === 'Enter' && domain.trim()) handleStartSwitching() }}
-                  placeholder="e.g. Cybersecurity, Data Science, Finance..."
+                  onKeyDown={function (e) { if (e.key === 'Enter') handleStartSwitching() }}
+                  placeholder="e.g. Cybersecurity, Data Science... (or leave blank)"
                   style={{
                     flex: 1, background: 'transparent', border: 'none', outline: 'none',
                     fontFamily: FM,
-                    fontSize: '16px', /* prevents iOS Safari viewport zoom on focus */
+                    fontSize: '16px',
                     color: C.text,
                   }}
                 />
                 <button
                   onClick={handleStartSwitching}
-                  disabled={!domain.trim()}
+                  disabled={validating}
                   style={{
-                    padding: '11px 16px', /* bumped from 9px  11px for 44px+ touch target */
+                    padding: '11px 16px',
                     borderRadius: '6px',
-                    background: domain.trim() ? LINEAR_BLUE : 'transparent',
-                    border: '1px solid ' + (domain.trim() ? LINEAR_BLUE : 'var(--border-subtle)'),
-                    color: domain.trim() ? C.text : C.text3,
+                    background: LINEAR_BLUE,
+                    border: '1px solid ' + LINEAR_BLUE,
+                    color: 'var(--bg)',
                     fontFamily: FM, fontSize: '11px', fontWeight: '700',
-                    cursor: domain.trim() ? 'pointer' : 'not-allowed',
+                    cursor: validating ? 'wait' : 'pointer',
                     letterSpacing: '0.06em', whiteSpace: 'nowrap',
                     transition: 'all 0.18s',
                     minHeight: '44px',
+                    display: 'flex', alignItems: 'center', gap: '6px',
+                    opacity: validating ? 0.7 : 1,
                   }}
                 >
-                  START SWITCHING 
+                  {validating
+                    ? <><Loader2 size={13} style={{ animation: 'spin 1s linear infinite' }} /> CHECKING...</>
+                    : domain.trim() ? 'START SWITCHING' : 'GET STARTED'
+                  }
                 </button>
               </div>
 
-              {/* Validation note - appears when domain is non-empty */}
-              {domain.trim() && (
+              {/* Error message */}
+              <AnimatePresence>
+                {domainError && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}
+                    style={{
+                      marginTop: '8px', padding: '10px 14px', borderRadius: '8px',
+                      background: '#D9484812',
+                      border: '1px solid #D9484830',
+                      fontFamily: F_SANS, fontSize: '13px', color: '#D94848', lineHeight: '1.5',
+                      display: 'flex', gap: '8px', alignItems: 'flex-start',
+                    }}
+                  >
+                    <AlertCircle size={15} style={{ flexShrink: 0, marginTop: '1px' }} />
+                    {domainError}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Validation hint - appears when domain is non-empty and no error */}
+              {domain.trim() && !domainError && !validating && (
                 <motion.div
                   initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}
                   style={{
@@ -885,7 +941,7 @@ function PivotDomainsCard({ onEnter }) {
                     fontFamily: FM, fontSize: '10px', color: COOL_GREY, letterSpacing: '0.08em',
                   }}
                 >
-                  VALIDATION WILL RUN ON ANALYSIS // {domain.trim().toUpperCase()}
+                  WILL VALIDATE + ROUTE DIRECTLY → /FIND-A-CERT
                 </motion.div>
               )}
             </div>

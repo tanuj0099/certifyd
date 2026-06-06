@@ -123,7 +123,7 @@ const BurnRate = ({ certName = 'Your Certification', breakEvenMonths = 6 }) => {
           { icon: Flame,       color: AMBER,   label: 'Streak',    value: data.streak + (stats.streakAlive ? '' : ' (paused)'), sub: 'days' },
           { icon: CheckCircle, color: EMERALD, label: 'Done',      value: stats.completedCount + '/' + totalModules, sub: 'modules' },
           { icon: Target,      color: PICTON,  label: 'Progress',  value: stats.pct + '%', sub: 'complete' },
-          { icon: Clock,       color: 'var(--accent)', label: 'ETA',     value: stats.daysToFinish > 365 ? '1yr+' : stats.daysToFinish + 'd', sub: 'remaining' },
+          { icon: Clock,       color: 'var(--accent)', label: 'ETA',     value: stats.completedCount === 0 ? '--' : stats.daysToFinish > 365 ? '1yr+' : stats.daysToFinish + 'd', sub: 'remaining' },
         ].map((s, i) => (
           <div key={i} style={{ padding: '11px 10px', borderRadius: '10px', background: `${s.color}08`, border: `1px solid ${s.color}20`, textAlign: 'center' }}>
             <s.icon size={13} color={s.color} style={{ display: 'block', margin: '0 auto 5px' }} />
@@ -142,7 +142,7 @@ const BurnRate = ({ certName = 'Your Certification', breakEvenMonths = 6 }) => {
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '5px' }}>
           <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: 'var(--text-4)' }}>Started {data.startDate}</span>
           <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: stats.pct === 100 ? EMERALD : 'var(--text-4)' }}>
-            {stats.pct === 100 ? 'Complete' : 'Est. ' + stats.estFinishDate.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+            {stats.pct === 100 ? 'Complete' : stats.pct === 0 ? 'Not started' : 'Est. ' + stats.estFinishDate.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
           </span>
         </div>
       </div>

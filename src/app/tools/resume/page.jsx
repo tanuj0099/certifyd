@@ -6,12 +6,14 @@ import ResumeAnalyzer from '@/components/ResumeAnalyzer.jsx'
 import ModeSelector, { ModePill } from '@/components/ModeSelector.jsx'
 import ToolPageWrapper from '@/components/ToolPageWrapper.jsx'
 import { AnimatePresence } from 'framer-motion'
+import { useRouter } from 'next/navigation'
 
 const T = { duration: 0.32, ease: [0.4, 0, 0.2, 1] }
 
 export default function ResumeToolPage() {
   const [mode, setMode] = useState('professional')
   const [modeLocked, setModeLocked] = useState(false)
+  const router = useRouter()
 
   const handleModeSelect = (id) => {
     setMode(id)
@@ -24,7 +26,11 @@ export default function ResumeToolPage() {
   }
 
   const handleCertSelected = (certName, city, domain, name) => {
-    // Can add navigation to ROI calculator page here in future
+    import('@/store/useJourneyStore.js').then(({ useJourneyStore }) => {
+      useJourneyStore.getState().setResumeContext({ certName, city, domain, name })
+      useJourneyStore.getState().setActiveTab('calculator')
+      router.push('/tools/roi')
+    })
   }
 
   return (

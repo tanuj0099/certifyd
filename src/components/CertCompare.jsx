@@ -497,8 +497,8 @@ function CertCompare({ salary, prefilledCert }) {
           // Domains table can have varied shapes - normalize to { id, label }
           const normalized = domainsResponse.data.map(function(d) {
             return {
-              id:    d.id    || d.domain_id || d.slug || String(d.name || d.label || ''),
-              label: d.label || d.name      || d.id   || 'Unknown',
+              id:    d.id    || d.domain_id || d.slug || String(d.name || d.domain_name || d.label || ''),
+              label: d.domain_name || d.label || d.name      || d.id   || 'Unknown',
             }
           })
           setDomainsData(normalized);
@@ -514,7 +514,7 @@ function CertCompare({ salary, prefilledCert }) {
 
   //  Loading Fallback 
 
-  salary = salary || 8
+  const actualSalary = salary > 0 ? salary : null
   prefilledCert = prefilledCert || ''
 
   var [certA, setCertA] = useState(prefilledCert || '')
@@ -533,8 +533,8 @@ function CertCompare({ salary, prefilledCert }) {
     return { breakEven: breakEven, fiveYearNet: fiveYearNet, roiPct: roiPct, annualGain: annualGainL }
   }, [])
 
-  var roiA = roiCalc(dataA, salary)
-  var roiB = roiCalc(dataB, salary)
+  var roiA = roiCalc(dataA, actualSalary)
+  var roiB = roiCalc(dataB, actualSalary)
 
   var bothReady = dataA && dataB && roiA && roiB
   var radarData = bothReady ? buildRadarData(dataA, dataB, roiA, roiB) : []
@@ -545,14 +545,14 @@ function CertCompare({ salary, prefilledCert }) {
 
   const INR_FMT = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 })
   var TABLE_ROWS = bothReady ? [
-    { label: 'Expected Hike',   vA: '+' + dataA.avgHike + '%', vB: '+' + dataB.avgHike + '%', win: dataA.avgHike > dataB.avgHike ? 'A' : 'B', winIcon: <TrendingUp size={10} /> },
-    { label: 'Cert Cost',       vA: dataA.avgCost > 0 ? INR_FMT.format(dataA.avgCost) : '-', vB: dataB.avgCost > 0 ? INR_FMT.format(dataB.avgCost) : '-', win: (dataA.avgCost || Infinity) < (dataB.avgCost || Infinity) ? 'A' : 'B', winIcon: <DollarSign size={10} /> },
-    { label: 'Study Time',      vA: dataA.timeMonths + ' mo', vB: dataB.timeMonths + ' mo', win: dataA.timeMonths < dataB.timeMonths ? 'A' : 'B', winIcon: <Zap size={10} /> },
-    { label: '5-Yr Net Gain',   vA: '₹' + roiA.fiveYearNet + 'L', vB: '₹' + roiB.fiveYearNet + 'L', win: parseFloat(roiA.fiveYearNet) > parseFloat(roiB.fiveYearNet) ? 'A' : 'B', winIcon: <TrendingUp size={10} /> },
-    { label: '5-Yr ROI %',      vA: roiA.roiPct + '%', vB: roiB.roiPct + '%', win: roiA.roiPct > roiB.roiPct ? 'A' : 'B', winIcon: <TrendingUp size={10} /> },
-    { label: 'Break-even',      vA: roiA.breakEven + ' mo', vB: roiB.breakEven + ' mo', win: roiA.breakEven < roiB.breakEven ? 'A' : 'B', winIcon: <Zap size={10} /> },
-    { label: 'Market Demand',   vA: dataA.demand, vB: dataB.demand, win: demandScore(dataA.demand) >= demandScore(dataB.demand) ? 'A' : 'B', winIcon: <TrendingUp size={10} /> },
-    { label: 'Annual Salary +', vA: '₹' + roiA.annualGain + 'L', vB: '₹' + roiB.annualGain + 'L', win: parseFloat(roiA.annualGain) > parseFloat(roiB.annualGain) ? 'A' : 'B', winIcon: <DollarSign size={10} /> },
+    { label: 'Expected Hike',   vA: dataA.avgHike > 0 ? '+' + dataA.avgHike + '%' : '--', vB: dataB.avgHike > 0 ? '+' + dataB.avgHike + '%' : '--', win: dataA.avgHike > dataB.avgHike ? 'A' : 'B', winIcon: <TrendingUp size={10} /> },
+    { label: 'Cert Cost',       vA: dataA.avgCost > 0 ? INR_FMT.format(dataA.avgCost) : '--', vB: dataB.avgCost > 0 ? INR_FMT.format(dataB.avgCost) : '--', win: (dataA.avgCost || Infinity) < (dataB.avgCost || Infinity) ? 'A' : 'B', winIcon: <DollarSign size={10} /> },
+    { label: 'Study Time',      vA: dataA.timeMonths > 0 ? dataA.timeMonths + ' mo' : '--', vB: dataB.timeMonths > 0 ? dataB.timeMonths + ' mo' : '--', win: dataA.timeMonths < dataB.timeMonths ? 'A' : 'B', winIcon: <Zap size={10} /> },
+    { label: '5-Yr Net Gain',   vA: parseFloat(roiA.fiveYearNet) > 0 ? '₹' + roiA.fiveYearNet + 'L' : '--', vB: parseFloat(roiB.fiveYearNet) > 0 ? '₹' + roiB.fiveYearNet + 'L' : '--', win: parseFloat(roiA.fiveYearNet) > parseFloat(roiB.fiveYearNet) ? 'A' : 'B', winIcon: <TrendingUp size={10} /> },
+    { label: '5-Yr ROI %',      vA: roiA.roiPct > 0 ? roiA.roiPct + '%' : '--', vB: roiB.roiPct > 0 ? roiB.roiPct + '%' : '--', win: roiA.roiPct > roiB.roiPct ? 'A' : 'B', winIcon: <TrendingUp size={10} /> },
+    { label: 'Break-even',      vA: roiA.breakEven > 0 ? roiA.breakEven + ' mo' : '--', vB: roiB.breakEven > 0 ? roiB.breakEven + ' mo' : '--', win: roiA.breakEven < roiB.breakEven ? 'A' : 'B', winIcon: <Zap size={10} /> },
+    { label: 'Market Demand',   vA: dataA.demand || '--', vB: dataB.demand || '--', win: demandScore(dataA.demand) >= demandScore(dataB.demand) ? 'A' : 'B', winIcon: <TrendingUp size={10} /> },
+    { label: 'Annual Salary +', vA: parseFloat(roiA.annualGain) > 0 ? '₹' + roiA.annualGain + 'L' : '--', vB: parseFloat(roiB.annualGain) > 0 ? '₹' + roiB.annualGain + 'L' : '--', win: parseFloat(roiA.annualGain) > parseFloat(roiB.annualGain) ? 'A' : 'B', winIcon: <DollarSign size={10} /> },
   ] : []
 
   if (dbLoading) {
@@ -617,10 +617,10 @@ function CertCompare({ salary, prefilledCert }) {
               {/* Confidence breakdown chips */}
               <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                 {[
-                  { label: 'Faster', ok: (winner === 'A' ? dataA : dataB).timeMonths <= (winner === 'A' ? dataB : dataA).timeMonths },
-                  { label: 'Cheaper', ok: (winner === 'A' ? dataA : dataB).avgCost <= (winner === 'A' ? dataB : dataA).avgCost },
-                  { label: 'Higher hike', ok: (winner === 'A' ? dataA : dataB).avgHike >= (winner === 'A' ? dataB : dataA).avgHike },
-                  { label: 'Higher demand', ok: demandScore((winner === 'A' ? dataA : dataB).demand) >= demandScore((winner === 'A' ? dataB : dataA).demand) },
+                  { label: Math.abs(dataA.timeMonths - dataB.timeMonths) > 0 ? `${Math.abs(dataA.timeMonths - dataB.timeMonths)} mo faster` : 'Faster', ok: (winner === 'A' ? dataA : dataB).timeMonths < (winner === 'A' ? dataB : dataA).timeMonths },
+                  { label: Math.abs(dataA.avgCost - dataB.avgCost) > 0 ? `₹${Math.abs(dataA.avgCost - dataB.avgCost).toLocaleString('en-IN')} less` : 'Cheaper', ok: (winner === 'A' ? dataA : dataB).avgCost < (winner === 'A' ? dataB : dataA).avgCost },
+                  { label: Math.abs(dataA.avgHike - dataB.avgHike) > 0 ? `${Math.abs(dataA.avgHike - dataB.avgHike)}% higher hike` : 'Higher hike', ok: (winner === 'A' ? dataA : dataB).avgHike > (winner === 'A' ? dataB : dataA).avgHike },
+                  { label: 'Higher demand', ok: demandScore((winner === 'A' ? dataA : dataB).demand) > demandScore((winner === 'A' ? dataB : dataA).demand) },
                 ].map(function (chip, i) {
                   var col = winner === 'A' ? COL_A : COL_B
                   return chip.ok ? (
@@ -767,14 +767,14 @@ function CertCompare({ salary, prefilledCert }) {
       </AnimatePresence>
 
       {/* Empty state - FIX:  emoji  Scale icon from lucide-react */}
-      {(!dataA || !dataB) ? (
+      {!bothReady ? (
         <motion.div
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}
           style={{ textAlign: 'center', padding: '48px 24px', color: 'var(--text-4)', fontSize: '13px', fontFamily: F_BODY }}
         >
           <Scale size={32} color="var(--text-4)" style={{ margin: '0 auto 14px', display: 'block', opacity: 0.4 }} />
           <div style={{ fontFamily: F_HEAD, fontWeight: '700', fontSize: '15px', color: 'var(--text-3)', marginBottom: '6px' }}>
-            Pick two certifications to compare
+            Select a certification and enter your salary to see the comparison
           </div>
           <div>Radar chart  Break-even  5-year gain - side by side</div>
         </motion.div>

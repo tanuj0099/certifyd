@@ -76,7 +76,15 @@ function buildCopyText(bcase, certName, name) {
   ].join('\n')
 }
 
+import { useAuth } from '../hooks/useAuth.jsx'
+
 const PitchBoss = ({ certName, salary, certCost, hikePercent, name, mode }) => {
+  const { user } = useAuth()
+  const userProfileData = {
+    userName: user?.user_metadata?.full_name || user?.displayName || user?.email?.split('@')[0]
+  }
+  const authName = userProfileData.userName ? userProfileData.userName.split(' ')[0] : ''
+  const finalName = authName || name
   const [open, setOpen] = useState(false)
   const [company, setCompany] = useState('')
   const [role, setRole] = useState('')
@@ -92,7 +100,7 @@ const PitchBoss = ({ certName, salary, certCost, hikePercent, name, mode }) => {
     setLoading(true); setError(null); setBcase(null)
     try {
       const raw = await callGroqForPitch(null, buildCasePrompt({
-        certName, salary, certCost, hikePercent, name, company, role,
+        certName, salary, certCost, hikePercent, name: finalName, company, role,
       }))
       // Extract JSON from response
       const jsonMatch = raw.match(/\{[\s\S]*\}/)
@@ -107,7 +115,7 @@ const PitchBoss = ({ certName, salary, certCost, hikePercent, name, mode }) => {
 
   const handleCopyAll = () => {
     if (!bcase) return
-    navigator.clipboard.writeText(buildCopyText(bcase, certName, name))
+    navigator.clipboard.writeText(buildCopyText(bcase, certName, finalName))
     setCopied(true)
     setTimeout(() => setCopied(false), 2500)
   }

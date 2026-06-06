@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../lib/supabase.js';
 import CertificationCard from './CertificationCard.jsx';
 import SkeletonGrid from './SkeletonGrid.jsx';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, ArrowRight, X, TrendingUp, Compass } from 'lucide-react';
+import { useJourneyStore } from '../store/useJourneyStore.js';
 
 const PAGE_SIZE = 20;
 
@@ -16,11 +19,108 @@ const TRACK_FILTERS = [
   { label: 'Management',     value: 'Management' },
 ];
 
+// ── Active Journey Capsule ─────────────────────────────────────────────────
+function ActiveJourneyCapsule({ currentRole, targetDomain, intent, onDismiss }) {
+  if (!targetDomain) return null;
+
+  const isLevelUp = intent === 'Level_Up';
+  const accentColor = isLevelUp ? 'var(--gold, #C9A84C)' : 'var(--accent)';
+  const IconComponent = isLevelUp ? TrendingUp : Compass;
+  const intentLabel = isLevelUp ? 'Level Up' : 'Domain Pivot';
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -8 }}
+        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          padding: '10px 14px',
+          borderRadius: '100px',
+          background: 'var(--surface)',
+          border: `1px solid ${accentColor}30`,
+          marginBottom: '20px',
+          width: 'fit-content',
+          maxWidth: '100%',
+          flexWrap: 'wrap',
+        }}
+      >
+        {/* Intent badge */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '5px',
+          padding: '3px 10px',
+          borderRadius: '100px',
+          background: `${accentColor}15`,
+          border: `1px solid ${accentColor}30`,
+        }}>
+          <IconComponent size={11} color={accentColor} />
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', fontWeight: '700', color: accentColor, letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>
+            {intentLabel.toUpperCase()}
+          </span>
+        </div>
+
+        {/* Breadcrumb trail */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+          {currentRole && (
+            <>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-3)', whiteSpace: 'nowrap' }}>
+                {currentRole}
+              </span>
+              <ArrowRight size={12} color="var(--text-4)" style={{ flexShrink: 0 }} />
+            </>
+          )}
+          <span style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: '12px',
+            fontWeight: '700',
+            color: 'var(--text)',
+            whiteSpace: 'nowrap',
+          }}>
+            {targetDomain}
+          </span>
+        </div>
+
+        {/* Dismiss */}
+        <button
+          onClick={onDismiss}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '2px', color: 'var(--text-4)', display: 'flex', alignItems: 'center', marginLeft: '4px', flexShrink: 0 }}
+          title="Clear journey context"
+        >
+          <X size={13} />
+        </button>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+// ── CertRadar ──────────────────────────────────────────────────────────────
 const CertRadar = () => {
+  const searchParams = useSearchParams();
+  const targetDomain = useJourneyStore(s => s.targetDomain);
+  const resumeDomain = useJourneyStore(s => s.resumeDomain);
+  const setTargetDomain = useJourneyStore(s => s.setTargetDomain);
+
+  // Read intent + target from URL (set by LandingPage routing)
+  const urlIntent = searchParams?.get('intent') || '';
+  const urlTarget = searchParams?.get('target') || '';
+
+  // Resolve the active target: URL param > store > empty
+  const activeTarget = urlTarget || targetDomain || '';
+  const activeIntent = urlIntent || 'Domain_Pivot';
+  // Current role comes from the resume context in the store
+  const currentRole = resumeDomain || '';
+
   const [certifications, setCertifications] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState(null);
+  const [showCapsule, setShowCapsule] = useState(true);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
@@ -51,7 +151,6 @@ const CertRadar = () => {
         page === 0 ? setIsLoading(true) : setIsLoadingMore(true);
         setError(null);
 
-        // Guard: Supabase client is null when env vars are missing
         if (!supabase) {
           throw new Error('Database not configured. Check NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your .env.local, then restart the dev server.');
         }
@@ -103,17 +202,26 @@ const CertRadar = () => {
     if (!isLoadingMore && hasMore) setPage((prev) => prev + 1);
   };
 
+  const handleDismissCapsule = () => {
+    setShowCapsule(false);
+    setTargetDomain('');
+  };
+
   return (
     <div className="w-full pb-20" style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)' }}>
-      {/*
-         Page wrapper 
-        Mobile:  p-4  (16px sides - comfortable thumb reach)
-        Tablet:  p-6  (24px)
-        Desktop: p-12 (48px - generous breathing room)
-      */}
       <div className="max-w-[1400px] mx-auto p-4 md:p-6 lg:p-12">
 
-        {/*  Search & Filter  */}
+        {/* ── Active Journey Capsule ── */}
+        {showCapsule && activeTarget && (
+          <ActiveJourneyCapsule
+            currentRole={currentRole}
+            targetDomain={activeTarget}
+            intent={activeIntent}
+            onDismiss={handleDismissCapsule}
+          />
+        )}
+
+        {/* Search & Filter */}
         <div className="mb-8 md:mb-10 space-y-4 md:space-y-6">
 
           {/* Search bar - underline style */}
@@ -130,13 +238,12 @@ const CertRadar = () => {
             </svg>
             <input
               type="text"
-              placeholder="Search certifications..."
+              placeholder={activeTarget ? `Searching for ${activeTarget} certs...` : "Search certifications..."}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full min-h-[44px] bg-transparent border-none text-base md:text-lg focus:outline-none focus:ring-0 px-0"
               style={{ color: 'var(--text)' }}
             />
-            {/* Clear button - only visible when there's a query */}
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
@@ -151,11 +258,7 @@ const CertRadar = () => {
             )}
           </div>
 
-          {/*
-            Filter pills - horizontally scrollable on mobile.
-            Each pill has min-h-[44px] so fat fingers don't misfire.
-            `no-scrollbar` hides the scrollbar on WebKit/Firefox.
-          */}
+          {/* Filter pills */}
           <div
             className="flex items-center gap-2 overflow-x-auto pb-1"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
@@ -180,7 +283,7 @@ const CertRadar = () => {
           </div>
         </div>
 
-        {/*  Error state  */}
+        {/* Error state */}
         {error && (
           <div className="mb-6 p-4 border rounded-xl flex items-start gap-3" style={{ background: 'rgba(239, 68, 68, 0.1)', borderColor: 'rgba(239, 68, 68, 0.2)', color: '#ef4444' }}>
             <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
@@ -191,17 +294,11 @@ const CertRadar = () => {
           </div>
         )}
 
-        {/*  Grid / Loading  */}
+        {/* Grid / Loading */}
         {isLoading ? (
           <SkeletonGrid />
         ) : (
           <>
-            {/*
-              Responsive grid:
-              Mobile:  1 column  - full-width cards, easy to read
-              Tablet:  2 columns - side-by-side pairs
-              Desktop: 3 columns - premium density
-            */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {certifications.length > 0 ? (
                 certifications.map((cert) => (
@@ -217,10 +314,10 @@ const CertRadar = () => {
                     </div>
                     <h3 className="text-lg font-medium mb-2" style={{ color: 'var(--text)' }}>No certifications found</h3>
                     <p className="text-sm max-w-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>
-                      We couldn't find any certifications matching "{searchQuery}" in the {activeTrack || 'All'} track. Try adjusting your filters.
+                      We couldn&apos;t find any certifications matching &quot;{searchQuery}&quot; in the {activeTrack || 'All'} track. Try adjusting your filters.
                     </p>
                     {searchQuery && (
-                      <button 
+                      <button
                         onClick={() => { setSearchQuery(''); setActiveTrack(null); }}
                         className="mt-6 px-4 py-2 text-sm font-medium rounded-full transition-colors"
                         style={{ background: 'var(--border)', color: 'var(--text)' }}
@@ -233,7 +330,7 @@ const CertRadar = () => {
               )}
             </div>
 
-            {/*  Load More  */}
+            {/* Load More */}
             {hasMore && certifications.length > 0 && (
               <div className="mt-10 md:mt-12 flex justify-center">
                 <button
