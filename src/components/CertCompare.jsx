@@ -216,15 +216,15 @@ function buildRadarData(certA, certB, roiA, roiB) {
 //  Pure SVG Radar Chart — glassmorphism overhaul, no glow
 // Labels use a large LABEL_PUSH so axis names + raw values never overlap.
 function RadarChartSVG({ data, nameA, nameB, animate }) {
-  // Viewbox & geometry
-  var W = 480
-  var H = 400
+  // Viewbox & geometry — generous padding so labels never clip
+  var W = 560
+  var H = 460
   var CX = W / 2
   var CY = H / 2 + 10
   var R  = 110          // inner web radius
-  var LABEL_R   = R + 34   // axis-name ring
-  var RAW_A_R   = R + 52   // cert A value ring
-  var RAW_B_R   = R + 70   // cert B value ring — enough breathing room
+  var LABEL_R  = R + 30    // axis-name ring (axis label)
+  var RAW_A_R  = R + 50    // cert A value ring
+  var RAW_B_R  = R + 68    // cert B value ring
   var RINGS = [0.25, 0.5, 0.75, 1.0]
   var N = data.length
 
@@ -261,17 +261,18 @@ function RadarChartSVG({ data, nameA, nameB, animate }) {
   var dotsA   = scoresA.map(function (s, i) { return { ...polar(i, (s / 100) * R), score: s, raw: data[i].rawA } })
   var dotsB   = scoresB.map(function (s, i) { return { ...polar(i, (s / 100) * R), score: s, raw: data[i].rawB } })
 
-  // Label positions — pushed well outside the web
+  // Label positions — pushed well outside the web, A and B on separate lines
   var labelNodes = data.map(function (d, i) {
     var angle   = (2 * Math.PI * i / N) - Math.PI / 2
     var dx      = Math.cos(angle)
     var dy      = Math.sin(angle)
-    var anchor  = Math.abs(dx) < 0.15 ? 'middle' : dx > 0 ? 'start' : 'end'
+    // textAnchor based on which side of center the label falls
+    var anchor  = Math.abs(dx) < 0.2 ? 'middle' : dx > 0 ? 'start' : 'end'
     return {
       i, axis: d.axis, rawA: d.rawA, rawB: d.rawB, anchor,
-      ax:  CX + LABEL_R   * dx,   ay:  CY + LABEL_R   * dy,
-      rax: CX + RAW_A_R   * dx,   ray: CY + RAW_A_R   * dy,
-      rbx: CX + RAW_B_R   * dx,   rby: CY + RAW_B_R   * dy,
+      ax:  CX + LABEL_R  * dx,   ay:  CY + LABEL_R  * dy,
+      rax: CX + RAW_A_R  * dx,   ray: CY + RAW_A_R  * dy,
+      rbx: CX + RAW_B_R  * dx,   rby: CY + RAW_B_R  * dy,
     }
   })
 
@@ -279,7 +280,7 @@ function RadarChartSVG({ data, nameA, nameB, animate }) {
     <div style={{ position: 'relative', width: '100%' }}>
       <svg viewBox={'0 0 ' + W + ' ' + H} width="100%" style={{ overflow: 'visible', display: 'block' }}>
 
-        {/* ── Web rings — clean dashed, no glow ── */}
+        {/* ── Web rings — theme-aware via opacity ── */}
         {rings.map(function (pts, ri) {
           var isOuter = ri === rings.length - 1
           return (
@@ -287,23 +288,24 @@ function RadarChartSVG({ data, nameA, nameB, animate }) {
               key={ri}
               points={pts}
               fill="none"
-              stroke={isOuter ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.07)'}
+              stroke="var(--text-3)"
+              strokeOpacity={isOuter ? '0.30' : '0.12'}
               strokeWidth={isOuter ? '1.2' : '0.8'}
               strokeDasharray={isOuter ? 'none' : '3 5'}
             />
           )
         })}
 
-        {/* ── Axis spokes ── */}
+        {/* ── Axis spokes — theme-aware ── */}
         {spokes.map(function (pt, i) {
-          return <line key={i} x1={CX} y1={CY} x2={pt.x} y2={pt.y} stroke="rgba(255,255,255,0.10)" strokeWidth="1" />
+          return <line key={i} x1={CX} y1={CY} x2={pt.x} y2={pt.y} stroke="var(--text-3)" strokeOpacity="0.15" strokeWidth="1" />
         })}
 
         {/* ── Polygon A — fill, then crisp solid stroke ── */}
         <motion.polygon
           points={pointsA}
           fill={COL_A}
-          fillOpacity="0.08"
+          fillOpacity="0.07"
           stroke="none"
           initial={{ opacity: 0 }} animate={{ opacity: animate ? 1 : 0 }} transition={{ duration: 0.5, delay: 0.1 }}
         />
@@ -321,7 +323,7 @@ function RadarChartSVG({ data, nameA, nameB, animate }) {
         <motion.polygon
           points={pointsB}
           fill={COL_B}
-          fillOpacity="0.08"
+          fillOpacity="0.07"
           stroke="none"
           initial={{ opacity: 0 }} animate={{ opacity: animate ? 1 : 0 }} transition={{ duration: 0.5, delay: 0.2 }}
         />
@@ -342,7 +344,7 @@ function RadarChartSVG({ data, nameA, nameB, animate }) {
               cx={dot.x} cy={dot.y}
               r={hovered === 'A' + i ? 7 : 4.5}
               fill={COL_A}
-              stroke="rgba(11,11,15,0.9)"
+              stroke="var(--bg)"
               strokeWidth="1.5"
               style={{ cursor: 'pointer' }}
               initial={{ opacity: 0, scale: 0 }}
@@ -361,7 +363,7 @@ function RadarChartSVG({ data, nameA, nameB, animate }) {
               cx={dot.x} cy={dot.y}
               r={hovered === 'B' + i ? 7 : 4.5}
               fill={COL_B}
-              stroke="rgba(11,11,15,0.9)"
+              stroke="var(--bg)"
               strokeWidth="1.5"
               style={{ cursor: 'pointer' }}
               initial={{ opacity: 0, scale: 0 }}
@@ -373,7 +375,7 @@ function RadarChartSVG({ data, nameA, nameB, animate }) {
           )
         })}
 
-        {/* ── Hover tooltip (clean, no glow) ── */}
+        {/* ── Hover tooltip ── */}
         {hovered && (
           (function () {
             var isA  = hovered.startsWith('A')
@@ -392,15 +394,15 @@ function RadarChartSVG({ data, nameA, nameB, animate }) {
               <g>
                 <rect
                   x={TX} y={TY} width={TW} height={44} rx="8"
-                  fill="rgba(22,22,26,0.92)"
+                  fill="var(--card)"
                   stroke={col}
                   strokeWidth="1"
-                  strokeOpacity="0.4"
+                  strokeOpacity="0.5"
                 />
                 <text x={TX + 10} y={TY + 15} fontSize="9" fill={col} style={{ fontFamily: 'var(--font-mono)' }} fontWeight="700">
                   {name.split(' ').slice(0, 3).join(' ')}
                 </text>
-                <text x={TX + 10} y={TY + 31} fontSize="12" fill="rgba(255,255,255,0.9)" style={{ fontFamily: 'var(--font-mono)' }} fontWeight="700">
+                <text x={TX + 10} y={TY + 31} fontSize="12" fill="var(--text)" style={{ fontFamily: 'var(--font-mono)' }} fontWeight="700">
                   {raw}
                 </text>
               </g>
@@ -419,11 +421,11 @@ function RadarChartSVG({ data, nameA, nameB, animate }) {
                 dominantBaseline="middle"
                 fontSize="9.5"
                 style={{ fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.06em' }}
-                fill="rgba(255,255,255,0.45)"
+                fill="var(--text-3)"
               >
                 {lb.axis}
               </text>
-              {/* Cert A raw value */}
+              {/* Cert A raw value — line above axis label area */}
               <text
                 x={lb.rax} y={lb.ray}
                 textAnchor={lb.anchor}
@@ -432,11 +434,11 @@ function RadarChartSVG({ data, nameA, nameB, animate }) {
                 style={{ fontFamily: 'var(--font-mono)' }}
                 fontWeight="700"
                 fill={COL_A}
-                fillOpacity="0.80"
+                fillOpacity="0.85"
               >
                 {lb.rawA}
               </text>
-              {/* Cert B raw value */}
+              {/* Cert B raw value — separate line further out */}
               <text
                 x={lb.rbx} y={lb.rby}
                 textAnchor={lb.anchor}
@@ -445,7 +447,7 @@ function RadarChartSVG({ data, nameA, nameB, animate }) {
                 style={{ fontFamily: 'var(--font-mono)' }}
                 fontWeight="700"
                 fill={COL_B}
-                fillOpacity="0.75"
+                fillOpacity="0.80"
               >
                 {lb.rawB}
               </text>
