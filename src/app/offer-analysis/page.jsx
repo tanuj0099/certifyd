@@ -320,7 +320,7 @@ export default function OfferAnalysisPage() {
       footer={false}
       showFeedback={false}
     >
-      <div style={{ maxWidth: '820px', margin: '0 auto' }}>
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Stepper Capsules */}
         {!hasResult && (
@@ -481,7 +481,7 @@ export default function OfferAnalysisPage() {
                         <div className="md:col-span-3 flex flex-wrap gap-6">
                           <div className="flex-1 min-w-[280px] p-8 text-center bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl">
                             <div style={{ fontFamily: FM }} className="text-xs tracking-[0.06em] text-gray-400 mb-3">STATED CTC (INFLATED)</div>
-                            <div className="font-sans tracking-tight tabular-nums text-4xl md:text-5xl font-bold text-gray-500 line-through decoration-red-500/50">
+                            <div className="font-sans tracking-tight tabular-nums text-4xl md:text-5xl font-bold text-gray-500 line-through decoration-red-500/70 decoration-[3px]">
                               ₹{Math.round(ctcValue).toLocaleString('en-IN')}
                             </div>
                             <div style={{ fontFamily: FB }} className="text-sm text-gray-400 mt-2">Per annum</div>
@@ -500,15 +500,15 @@ export default function OfferAnalysisPage() {
                         {/* ROW 2 LEFT: Donut Chart */}
                         <div className="md:col-span-2 p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl flex flex-col justify-center items-center min-h-[300px]">
                           <div style={{ fontFamily: FM }} className="text-[10px] tracking-[0.06em] text-gray-400 w-full mb-4 uppercase">Compensation Composition</div>
-                          <div className="w-full h-64">
-                            <ResponsiveContainer width="100%" height="100%">
+                          <div className="w-full">
+                            <ResponsiveContainer width="100%" height={300}>
                               <PieChart>
                                 <Pie
                                   data={pieData}
                                   cx="50%"
                                   cy="50%"
-                                  innerRadius={70}
-                                  outerRadius={95}
+                                  innerRadius={90}
+                                  outerRadius={120}
                                   paddingAngle={4}
                                   dataKey="value"
                                   stroke="none"
