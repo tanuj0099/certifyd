@@ -12,6 +12,7 @@ with sync_playwright() as p:
     browser = p.chromium.launch_persistent_context(
         user_data_dir=str(PROFILE_PATH),
         headless=False,
+        channel="chrome",
         args=["--disable-blink-features=AutomationControlled"],
     )
     page = browser.pages[0] if browser.pages else browser.new_page()
