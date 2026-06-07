@@ -42,13 +42,19 @@ export const parseOfferLetter = async (offerLetterText, userProfileData) => {
 - EXPERIENCE MISMATCH: Compare the Resume's YoE with the Offer Job Title. If the user claims 3+ years of experience but the offer is for a "Trainee" or "Fresher", set "Profile_Mismatch_Flag" to TRUE and generate a warning.
 
 === 7. INDIAN PAYROLL MATH & BUCKETING ===
-Group the CTC components EXACTLY as follows:
-- "Total_CTC_Stated": You MUST extract the absolute highest total compensation figure presented by the company (e.g., 'Total Indicative Package', 'Total Rewards', 'Total Cash CTC'). The Total_CTC_Stated MUST ALWAYS be mathematically greater than or equal to the Fixed_Base. Never calculate this yourself; extract the inflated HR number directly from the document.
-- "Fixed_Base": Basic Salary + HRA + Conveyance + LTA + Special/Guaranteed monthly allowances.
-- "Variable_Bonus": Annual Bonus + Performance Pay + Relocation.
-- "Retirals_And_Hidden": You must sum ALL non-liquid components, including Employer PF, Gratuity, NPS (National Pension Scheme), and mandatory insurance deductions.
-- "ESOP_Stocks": Value of vested stock options for year 1.
-- "Estimated_Monthly_In_Hand": (Fixed_Base / 12) MINUS (Employee PF + ESI monthly deductions).
+Extract the individual CTC components. If a component is missing, set its value to 0:
+- "Total_CTC_Stated": You MUST extract the absolute highest total compensation figure presented by the company. Never calculate this yourself; extract the inflated HR number directly from the document.
+- "Basic_Salary": Core basic pay.
+- "HRA": House Rent Allowance.
+- "Special_Allowance": Special or guaranteed monthly allowances.
+- "LTA": Leave Travel Allowance.
+- "Transport_Medical_Flexi": Sum of transport, medical, internet, and other flexi/basket allowances.
+- "Employer_PF": Employer's contribution to Provident Fund.
+- "NPS_Contribution": National Pension Scheme contribution.
+- "Gratuity_Provision": Gratuity.
+- "Variable_PLVP": Annual Bonus, Performance Pay, PLI, or Relocation bonuses.
+- "ESOP_Annual_Vesting_Value": Value of vested stock options for year 1.
+- "Estimated_Monthly_In_Hand": ( (Basic_Salary + HRA + Special_Allowance + Transport_Medical_Flexi) / 12 ) MINUS (Employee PF + ESI deductions).
 All numerical outputs in the \`CTC_Breakdown\` object MUST be rounded to the nearest whole integer. Do not output any decimals.
 
 === 8. CONTEXTUAL AWARENESS ===
@@ -69,10 +75,16 @@ If the region is supported (India), output a valid JSON object matching this exa
   },
   "CTC_Breakdown": {
     "Total_CTC_Stated": number,
-    "Fixed_Base_Annual": number,
-    "Variable_Bonus_Annual": number,
-    "Retirals_And_Hidden_Annual": number,
-    "ESOP_Stocks_Annual": number,
+    "Basic_Salary": number,
+    "HRA": number,
+    "Special_Allowance": number,
+    "LTA": number,
+    "Transport_Medical_Flexi": number,
+    "Employer_PF": number,
+    "NPS_Contribution": number,
+    "Gratuity_Provision": number,
+    "Variable_PLVP": number,
+    "ESOP_Annual_Vesting_Value": number,
     "Estimated_Monthly_In_Hand": number
   },
   "Market_Context": {

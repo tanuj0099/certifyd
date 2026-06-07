@@ -469,29 +469,49 @@ export default function OfferAnalysisPage() {
                 {/* Market Comparison Bento Grid */}
                 <AppSection id="COMPARISON" title="CTC ANALYSIS & BENCHMARKS">
                   {(() => {
-                    const ctcValue = result.CTC_Breakdown?.Total_CTC_Stated || 0;
-                    const median = marketMedian || (ctcValue * 1.1);
-                    const percentile = calculatePercentile(ctcValue, marketMedian > 0 ? marketMedian : median);
+                    const calculatedFallback = (() => {
+                      const expStr = result.Market_Context?.Calculated_Experience_Level_For_Offer || '0';
+                      const expNum = parseInt(expStr.match(/\d+/) ? expStr.match(/\d+/)[0] : 0);
+                      const titleLower = (result.Analysis_Metadata?.Target_Job_Title || '').toLowerCase();
+                      if (titleLower.includes('architect') || titleLower.includes('principal') || titleLower.includes('staff') || titleLower.includes('director') || titleLower.includes('vp')) {
+                         return 3500000 + (expNum * 300000);
+                      } else if (titleLower.includes('senior') || titleLower.includes('lead') || titleLower.includes('manager')) {
+                         return 2000000 + (expNum * 250000);
+                      } else if (titleLower.includes('sde ii') || titleLower.includes('sde 2')) {
+                         return 1500000 + (expNum * 250000);
+                      }
+                      return 800000 + (expNum * 250000);
+                    })();
 
-                    let gaugeColor = 'bg-teal-400';
-                    let gaugeShadow = 'shadow-[0_0_12px_rgba(45,212,191,0.8)]';
-                    let gaugeText = 'text-teal-400';
+                    const finalMedian = marketMedian > 0 ? marketMedian : calculatedFallback;
+                    const ctcValue = result.CTC_Breakdown?.Total_CTC_Stated || 0;
+                    const percentile = calculatePercentile(ctcValue, finalMedian);
+
+                    let gaugeColor = 'bg-teal-500 dark:bg-teal-400';
+                    let gaugeShadow = 'shadow-[0_0_12px_rgba(20,184,166,0.8)] dark:shadow-[0_0_12px_rgba(45,212,191,0.8)]';
+                    let gaugeText = 'text-teal-600 dark:text-teal-400';
 
                     if (percentile < 40) {
-                      gaugeColor = 'bg-red-500';
-                      gaugeShadow = 'shadow-[0_0_12px_rgba(239,68,68,0.8)]';
-                      gaugeText = 'text-red-500';
+                      gaugeColor = 'bg-red-600 dark:bg-red-500';
+                      gaugeShadow = 'shadow-[0_0_12px_rgba(220,38,38,0.8)] dark:shadow-[0_0_12px_rgba(239,68,68,0.8)]';
+                      gaugeText = 'text-red-600 dark:text-red-500';
                     } else if (percentile <= 60) {
                       gaugeColor = 'bg-yellow-500';
                       gaugeShadow = 'shadow-[0_0_12px_rgba(234,179,8,0.8)]';
-                      gaugeText = 'text-yellow-500';
+                      gaugeText = 'text-yellow-600 dark:text-yellow-500';
                     }
                     
                     const pieData = [
-                      { name: 'Fixed Base', value: result.CTC_Breakdown?.Fixed_Base_Annual || 0, color: '#10b981' },
-                      { name: 'Variable/Bonus', value: result.CTC_Breakdown?.Variable_Bonus_Annual || 0, color: '#f59e0b' },
-                      { name: 'Retirals & Hidden', value: result.CTC_Breakdown?.Retirals_And_Hidden_Annual || 0, color: '#64748b' },
-                      { name: 'ESOP/Stocks', value: result.CTC_Breakdown?.ESOP_Stocks_Annual || 0, color: '#6366f1' }
+                      { name: 'Basic Salary', value: result.CTC_Breakdown?.Basic_Salary || 0, color: '#059669' },
+                      { name: 'HRA', value: result.CTC_Breakdown?.HRA || 0, color: '#10b981' },
+                      { name: 'Special Allowance', value: result.CTC_Breakdown?.Special_Allowance || 0, color: '#34d399' },
+                      { name: 'Transport/Medical', value: result.CTC_Breakdown?.Transport_Medical_Flexi || 0, color: '#6ee7b7' },
+                      { name: 'LTA', value: result.CTC_Breakdown?.LTA || 0, color: '#a7f3d0' },
+                      { name: 'Variable/Bonus', value: result.CTC_Breakdown?.Variable_PLVP || 0, color: '#f59e0b' },
+                      { name: 'Employer PF', value: result.CTC_Breakdown?.Employer_PF || 0, color: '#475569' },
+                      { name: 'Gratuity', value: result.CTC_Breakdown?.Gratuity_Provision || 0, color: '#64748b' },
+                      { name: 'NPS', value: result.CTC_Breakdown?.NPS_Contribution || 0, color: '#94a3b8' },
+                      { name: 'ESOP/Stocks', value: result.CTC_Breakdown?.ESOP_Annual_Vesting_Value || 0, color: '#6366f1' }
                     ].filter(d => d.value > 0);
 
                     return (
@@ -499,27 +519,27 @@ export default function OfferAnalysisPage() {
                         
                         {/* ROW 1: Reality Check */}
                         <div className="md:col-span-3 flex flex-wrap gap-6">
-                          <div className="flex-1 min-w-[280px] p-8 text-center bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl">
-                            <div style={{ fontFamily: FM }} className="text-xs tracking-[0.06em] text-gray-400 mb-3">STATED CTC (INFLATED)</div>
-                            <div className="font-sans tracking-tight tabular-nums text-4xl md:text-5xl font-bold text-gray-500 line-through decoration-red-500/70 decoration-[3px]">
+                          <div className="flex-1 min-w-[280px] p-8 text-center bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-3xl shadow-2xl">
+                            <div style={{ fontFamily: FM }} className="text-xs tracking-[0.06em] text-slate-500 dark:text-slate-400 mb-3">STATED CTC (INFLATED)</div>
+                            <div className="font-sans tracking-tight tabular-nums text-4xl md:text-5xl font-bold text-slate-900 dark:text-slate-400 line-through decoration-red-500/70 decoration-[3px]">
                               ₹{Math.round(ctcValue).toLocaleString('en-IN')}
                             </div>
-                            <div style={{ fontFamily: FB }} className="text-sm text-gray-400 mt-2">Per annum</div>
+                            <div style={{ fontFamily: FB }} className="text-sm text-slate-500 dark:text-slate-400 mt-2">Per annum</div>
                           </div>
                           
-                          <div className="flex-1 min-w-[280px] p-8 text-center bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl relative overflow-hidden">
+                          <div className="flex-1 min-w-[280px] p-8 text-center bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-3xl shadow-2xl relative overflow-hidden">
                             <div className="absolute inset-0 bg-teal-500/5 blur-[60px] pointer-events-none"></div>
-                            <div style={{ fontFamily: FM }} className="text-xs tracking-[0.06em] text-gray-400 mb-3 relative">IN-HAND ESTIMATE</div>
-                            <div className="font-sans tracking-tight tabular-nums text-5xl md:text-6xl font-black text-teal-400 drop-shadow-[0_0_15px_rgba(45,212,191,0.3)] relative">
+                            <div style={{ fontFamily: FM }} className="text-xs tracking-[0.06em] text-slate-500 dark:text-slate-400 mb-3 relative">IN-HAND ESTIMATE</div>
+                            <div className="font-sans tracking-tight tabular-nums text-5xl md:text-6xl font-black text-teal-600 dark:text-teal-400 drop-shadow-[0_0_15px_rgba(20,184,166,0.2)] dark:drop-shadow-[0_0_15px_rgba(45,212,191,0.3)] relative">
                               ₹{Math.round(result.CTC_Breakdown?.Estimated_Monthly_In_Hand || 0).toLocaleString('en-IN')}
                             </div>
-                            <div style={{ fontFamily: FB }} className="text-sm text-gray-400 mt-2 relative">Per month approx</div>
+                            <div style={{ fontFamily: FB }} className="text-sm text-slate-500 dark:text-slate-400 mt-2 relative">Per month approx</div>
                           </div>
                         </div>
 
                         {/* ROW 2 LEFT: Donut Chart */}
-                        <div className="md:col-span-2 p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl flex flex-col justify-center items-center min-h-[300px]">
-                          <div style={{ fontFamily: FM }} className="text-[10px] tracking-[0.06em] text-gray-400 w-full mb-4 uppercase">Compensation Composition</div>
+                        <div className="md:col-span-2 p-8 bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-3xl shadow-2xl flex flex-col justify-center items-center min-h-[300px]">
+                          <div style={{ fontFamily: FM }} className="text-[10px] tracking-[0.06em] text-slate-500 dark:text-slate-400 w-full mb-4 uppercase">Compensation Composition</div>
                           <div className="w-full">
                             <ResponsiveContainer width="100%" height={300}>
                               <PieChart>
@@ -549,23 +569,28 @@ export default function OfferAnalysisPage() {
 
                         {/* ROW 2 RIGHT: Market Context & Breakdowns */}
                         <div className="md:col-span-1 flex flex-col gap-6">
-                          <div className="p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl flex-1 flex flex-col justify-center">
-                            <div style={{ fontFamily: FM }} className="text-[10px] tracking-[0.06em] text-gray-400 mb-2">MARKET MEDIAN</div>
-                            <div className="font-sans tracking-tight tabular-nums text-2xl font-bold text-gray-200 mb-1">
-                              ₹{Math.round(marketMedian).toLocaleString('en-IN')}
+                          <div className="p-8 bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-3xl shadow-2xl flex-1 flex flex-col justify-center">
+                            <div style={{ fontFamily: FM }} className="text-[10px] tracking-[0.06em] text-slate-500 dark:text-slate-400 mb-2">MARKET MEDIAN</div>
+                            <div className="font-sans tracking-tight tabular-nums text-2xl font-bold text-slate-900 dark:text-slate-100 mb-1">
+                              ₹{Math.round(finalMedian).toLocaleString('en-IN')}
                             </div>
-                            <div style={{ fontFamily: FB }} className="text-[11px] text-gray-400 mb-6">
+                            <div style={{ fontFamily: FB }} className="text-[11px] text-slate-500 dark:text-slate-400 mb-6">
                               For {result.Analysis_Metadata?.Target_Location || 'India'}
-                              {!tierMatched && marketMedian > 0 && <span className="text-yellow-500 block mt-1">General market median shown.</span>}
+                              {!tierMatched && marketMedian > 0 && <span className="text-yellow-600 dark:text-yellow-500 block mt-1">General market median shown.</span>}
+                              {marketMedian === 0 && <span className="text-indigo-600 dark:text-indigo-400 block mt-1">Simulated industry baseline shown.</span>}
                             </div>
                             
-                            <div style={{ fontFamily: FM }} className="text-[10px] tracking-[0.06em] text-gray-400 mb-3">POSITION ({percentile}TH %ILE)</div>
-                            <div className="w-full h-2 bg-gray-800 rounded-full relative">
+                            <div className="flex justify-between text-xs text-slate-500 dark:text-slate-500 font-medium mb-3">
+                              <span>Low</span>
+                              <span className={`${gaugeText} font-bold font-sans tabular-nums`}>{percentile}th Percentile for {result.Analysis_Metadata?.Target_Location || 'Bengaluru'}</span>
+                              <span>High</span>
+                            </div>
+                            <div className="w-full h-2 bg-slate-200 dark:bg-gray-800 rounded-full relative">
                               <div className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full ${gaugeColor} ${gaugeShadow}`} style={{ left: `${percentile}%`, transition: 'left 1s ease-out' }} />
                             </div>
                           </div>
 
-                          <div className="p-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl flex flex-col gap-3">
+                          <div className="p-6 bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-3xl shadow-2xl flex flex-col gap-3 max-h-[300px] overflow-y-auto custom-scrollbar">
                             {pieData.map((d, i) => (
                               <BreakdownChip key={i} label={d.name} value={d.value} color={d.color} />
                             ))}
@@ -573,27 +598,27 @@ export default function OfferAnalysisPage() {
                         </div>
 
                         {/* ROW 3: Intelligence Summary */}
-                        <div className="md:col-span-3 p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl">
+                        <div className="md:col-span-3 p-8 bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-3xl shadow-2xl">
                           {result.Market_Context?.UI_Status_Message && (
                             <div className="flex items-start gap-4 mb-6">
-                              <Sparkles className="text-teal-400 mt-1 flex-shrink-0" size={24} />
-                              <div style={{ fontFamily: FB }} className="text-base md:text-lg text-gray-200 leading-relaxed">
+                              <Sparkles className="text-teal-600 dark:text-teal-400 mt-1 flex-shrink-0" size={24} />
+                              <div style={{ fontFamily: FB }} className="text-base md:text-lg text-slate-800 dark:text-slate-200 leading-relaxed">
                                 {result.Market_Context.UI_Status_Message}
                               </div>
                             </div>
                           )}
                           
                           <div className="flex gap-3 flex-wrap">
-                            <div className="px-3 py-1.5 rounded-lg bg-black/30 border border-white/5 text-xs text-gray-400 font-mono">
-                              Role: <span className="text-white ml-1 font-sans">{result.Analysis_Metadata?.Target_Job_Title || 'Unknown'}</span>
+                            <div className="px-3 py-1.5 rounded-lg bg-slate-100 border border-slate-200 dark:bg-black/30 dark:border-white/5 text-xs text-slate-600 dark:text-slate-400 font-mono">
+                              Role: <span className="text-slate-900 dark:text-white ml-1 font-sans">{result.Analysis_Metadata?.Target_Job_Title || 'Unknown'}</span>
                             </div>
                             {result.Analysis_Metadata?.Company_Tier && result.Analysis_Metadata.Company_Tier !== 'Unknown' && (
-                              <div className="px-3 py-1.5 rounded-lg bg-teal-500/10 border border-teal-500/20 text-xs text-teal-400 font-mono">
+                              <div className="px-3 py-1.5 rounded-lg bg-teal-50 border border-teal-200 dark:bg-teal-500/10 dark:border-teal-500/20 text-xs text-teal-700 dark:text-teal-400 font-mono">
                                 Tier: <span className="font-bold ml-1 font-sans">{result.Analysis_Metadata.Company_Tier.replace(/_/g, ' ')}</span>
                               </div>
                             )}
-                            <div className="px-3 py-1.5 rounded-lg bg-black/30 border border-white/5 text-xs text-gray-400 font-mono">
-                              Evaluated Exp: <span className="text-white ml-1 font-sans">{result.Market_Context?.Calculated_Experience_Level_For_Offer || 'Unknown'}</span>
+                            <div className="px-3 py-1.5 rounded-lg bg-slate-100 border border-slate-200 dark:bg-black/30 dark:border-white/5 text-xs text-slate-600 dark:text-slate-400 font-mono">
+                              Evaluated Exp: <span className="text-slate-900 dark:text-white ml-1 font-sans">{result.Market_Context?.Calculated_Experience_Level_For_Offer || 'Unknown'}</span>
                             </div>
                           </div>
                         </div>
@@ -625,10 +650,10 @@ export default function OfferAnalysisPage() {
 function BreakdownChip({ label, value, color }) {
   if (!value || value === 0) return null;
   return (
-    <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 backdrop-blur-md">
+    <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-100 border border-slate-200 dark:bg-white/5 dark:border-white/10 backdrop-blur-md">
       <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }}></div>
-      <span style={{ fontFamily: FB }} className="text-gray-400 text-[11px] uppercase tracking-wider">{label}:</span>
-      <span className="font-sans tracking-tight tabular-nums text-gray-200 text-sm font-bold">₹{Math.round(Number(value)).toLocaleString('en-IN')}</span>
+      <span style={{ fontFamily: FB }} className="text-slate-500 dark:text-gray-400 text-[10px] uppercase tracking-wider line-clamp-1 flex-1">{label}</span>
+      <span className="font-sans tracking-tight tabular-nums text-slate-800 dark:text-gray-200 text-sm font-bold">₹{Math.round(Number(value)).toLocaleString('en-IN')}</span>
     </div>
   )
 }
