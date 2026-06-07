@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useJourneyStore } from '@/store/useJourneyStore.js'
 import BurnRate from '@/components/BurnRate.jsx'
@@ -117,6 +117,18 @@ export default function DashboardPage() {
   const breakEvenMonths = 6
 
   const [activeSection, setActiveSection] = useState('active-paths')
+  const [activeCert, setActiveCert] = useState(null)
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('activeCert')
+      if (stored) {
+        setActiveCert(JSON.parse(stored))
+      }
+    } catch (e) {
+      console.warn('Failed to parse activeCert from localStorage', e)
+    }
+  }, [])
 
   const SECTIONS = [
     { id: 'active-paths',  label: 'Active Paths' },
@@ -226,7 +238,7 @@ export default function DashboardPage() {
               {activeSection === 'study-tracker' && (
                 certName ? (
                   <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '24px' }}>
-                    <BurnRate certName={certName} breakEvenMonths={breakEvenMonths} />
+                    <BurnRate certName={certName} breakEvenMonths={breakEvenMonths} activeCert={activeCert} />
                   </div>
                 ) : (
                   <EmptyPaths onBrowse={() => router.push('/cert-radar')} onROI={() => router.push('/')} />

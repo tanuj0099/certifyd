@@ -227,7 +227,7 @@ export default function Onboarding() {
                     autoFocus
                     value={workspaceName}
                     onChange={(e) => setWorkspaceName(e.target.value)}
-                    placeholder="e.g. Tanuj's Career Hub"
+                    placeholder="e.g. Your Career Hub"
                     style={{
                       width: '100%', boxSizing: 'border-box',
                       padding: '12px 14px',

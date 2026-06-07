@@ -9,7 +9,7 @@ import {
 } from 'lucide-react'
 import {
   LineChart, Line, XAxis, YAxis, Tooltip,
-  ResponsiveContainer, ReferenceLine, CartesianGrid
+  ResponsiveContainer, ReferenceLine, CartesianGrid, Legend
 } from 'recharts'
 import { useROICalc, useGuestCounter } from '../hooks/hooks.jsx'
 import { useAuth } from '../hooks/useAuth.jsx'
@@ -75,6 +75,7 @@ function getPaybackRange(months, demand, hikePercent) {
     : conf.label === 'Medium confidence' ? 0.25 : 0.35
   const lo = Math.max(1, Math.round(months * (1 - spread)))
   const hi = Math.round(months * (1 + spread))
+  if (lo === hi) return lo + ' mo'
   return lo + '-' + hi + ' mo'
 }
 
@@ -154,7 +155,7 @@ function ShareURLButton({ certName, salary, certCost, hikePercent, mode }) {
 }
 
 //  Student stepping-stone path 
-function getStudentPathSteps(domain, certName, firstSalary) {
+function getStudentPathSteps(domain, certName, targetOfferLakhs) {
   const domainSteps = {
     finance: [
       { label: 'Build Models', detail: '3-statement model and valuation case', time: '3-4 wk', color: VIOLET },
@@ -186,13 +187,13 @@ function getStudentPathSteps(domain, certName, firstSalary) {
     { num: '01', label: 'Get Certified', detail: certName.split(' ').slice(0, 3).join(' '), time: '2-4 mo', color: INDIGO },
     { num: '02', ...middle[0] },
     { num: '03', ...middle[1] },
-    { num: '04', label: 'First Offer', detail: 'Rs.' + firstSalary.toFixed(1) + 'L target package', time: '', color: EMERALD },
+    { num: '04', label: 'First Offer', detail: '₹' + targetOfferLakhs + 'L target package', time: '', color: EMERALD },
   ]
 }
 
-function StudentPath({ certName, certCost, domain, firstSalary }) {
+function StudentPath({ certName, certCost, domain, targetOfferLakhs }) {
   if (!certName) return null
-  const steps = getStudentPathSteps(domain || 'tech', certName, firstSalary || 4.8)
+  const steps = getStudentPathSteps(domain || 'tech', certName, targetOfferLakhs || 4.8)
 
   return (
     <motion.div
@@ -202,9 +203,8 @@ function StudentPath({ certName, certCost, domain, firstSalary }) {
       className="glass"
       style={{ marginBottom: '16px', padding: '18px', borderRadius: '13px' }}
     >
-      <div style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-        <Star size={9} color={VIOLET} />
-        Your path to Rs.{(firstSalary || 4.8).toFixed(1)}L+
+      <div className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4">
+        YOUR PATH TO ₹{targetOfferLakhs}L+
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
@@ -221,12 +221,12 @@ function StudentPath({ certName, certCost, domain, firstSalary }) {
 
             <div style={{ paddingBottom: i < steps.length - 1 ? '14px' : '0', flex: 1 }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2px' }}>
-                <span style={{ fontFamily: FH, fontWeight: '800', fontSize: '13px', color: step.color, letterSpacing: '-0.01em' }}>{step.label}</span>
+                <span className="text-lg font-bold text-slate-900">{step.label}</span>
                 {step.time && (
                   <span style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)', padding: '2px 7px', borderRadius: '99px', background: step.color + '10', border: '1px solid ' + step.color + '20' }}>{step.time}</span>
                 )}
               </div>
-              <div style={{ fontFamily: FB, fontSize: '12px', color: i === steps.length - 1 ? EMERALD : 'var(--text-3)', fontWeight: i === steps.length - 1 ? '700' : '400' }}>
+              <div className={i === steps.length - 1 ? "text-base font-bold text-slate-900 mt-1" : "text-sm font-medium text-slate-600 leading-relaxed"}>
                 {step.detail}
               </div>
             </div>
@@ -234,8 +234,8 @@ function StudentPath({ certName, certCost, domain, firstSalary }) {
         ))}
       </div>
 
-      <div style={{ marginTop: '14px', padding: '9px 12px', borderRadius: '8px', background: 'transparent', border: '1px solid transparent', fontSize: '11px', color: 'var(--text-4)', fontFamily: FB, lineHeight: '1.6' }}>
-        Total investment: Rs.{certCost}L / Timeline: 4-7 months / Target: verified entry roles in {domain || 'your domain'}
+      <div className="text-sm font-medium text-slate-600 mt-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
+        Total investment: ₹{(certCost).toFixed(2)}L / Timeline: 4-7 months / Target: verified roles in your domain
       </div>
     </motion.div>
   )
@@ -645,7 +645,7 @@ function ChartTip({ active, payload, label }) {
 // 
 // AI RESULT PANEL
 // 
-function AIResult({ result, certName, onReset }) {
+function AIResult({ result, certName, onReset, paybackMonths, fiveYearNetGain, certCostINR }) {
   const prefersReduced = useReducedMotion()
   const status = resolveVerdictStatus(result.verdict || '', result.breakEvenMonthsNum || 0)
   const vc = status.color
@@ -664,7 +664,7 @@ function AIResult({ result, certName, onReset }) {
       style={{ marginTop: '14px', borderRadius: '16px', overflow: 'hidden', minHeight: 320 }}
     >
       {/*  Status header (brutally honest)  */}
-      <div style={{ padding: '14px 16px', background: status.bg, borderBottom: '1px solid ' + status.border, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
+      <div className="flex items-center justify-between" style={{ padding: '14px 16px', background: status.bg, borderBottom: '1px solid ' + status.border, gap: '12px' }}>
         <div style={{ flex: 1 }}>
           <div style={{ fontFamily: FM, fontSize: 9, letterSpacing: '0.12em', color: 'transparent', marginBottom: 6, textTransform: 'uppercase' }}>ROI ASSESSMENT // {certName}</div>
           <div style={{ fontFamily: FM, fontSize: 13, fontWeight: 700, color: vc, letterSpacing: '0.04em', lineHeight: 1.3 }}>
@@ -674,9 +674,11 @@ function AIResult({ result, certName, onReset }) {
             {result.verdict}
           </div>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-          <ConsensusGauge pct={gaugeScore} accent={vc} label="Score" size={90} />
-          <button onClick={onReset} style={{ background: 'none', border: 'none', color: 'var(--text-4)', cursor: 'pointer', padding: '4px' }}>
+        <div className="w-16 h-16 flex-shrink-0 relative">
+          <div className="flex shrink-0 items-center justify-center w-16 h-16 rounded-full border-[5px] border-emerald-500 text-xl font-black text-slate-900 shadow-sm bg-white">
+            {gaugeScore}
+          </div>
+          <button onClick={onReset} style={{ position: 'absolute', top: -8, right: -8, background: 'none', border: 'none', color: 'var(--text-4)', cursor: 'pointer', padding: '4px' }}>
             <RefreshCw size={13} />
           </button>
         </div>
@@ -684,22 +686,20 @@ function AIResult({ result, certName, onReset }) {
 
       {(result.breakEven || result.projection) && (
         <div style={{ padding: '14px 16px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: '10px' }}>
-          {result.breakEven && (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: '10px' }}>
-              {result.breakEven && (
-                <div style={{ padding: '14px 16px', borderRadius: '16px', background: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)' }}>
-                  <div className="label-box" style={{ marginBottom: '6px' }}>Break-even</div>
-                  <div style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', fontFamily: FB, lineHeight: 1.6 }}>{result.breakEven}</div>
-                </div>
-              )}
-              {result.projection && (
-                <div style={{ padding: '14px 16px', borderRadius: '16px', background: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)' }}>
-                  <div className="label-box" style={{ marginBottom: '6px' }}>5-Yr projection</div>
-                  <div style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', fontFamily: FB, lineHeight: 1.6 }}>{result.projection}</div>
-                </div>
-              )}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: '10px' }}>
+            <div style={{ padding: '14px 16px', borderRadius: '16px', background: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)' }}>
+              <div className="label-box" style={{ marginBottom: '6px' }}>Break-even</div>
+              <div style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', fontFamily: FB, lineHeight: 1.6 }}>
+                {paybackMonths} months
+              </div>
             </div>
-          )}
+            <div style={{ padding: '14px 16px', borderRadius: '16px', background: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)' }}>
+              <div className="label-box" style={{ marginBottom: '6px' }}>5-Yr projection</div>
+              <div style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', fontFamily: FB, lineHeight: 1.6 }}>
+                ₹{fiveYearNetGain !== undefined ? (fiveYearNetGain / 100000).toFixed(1) : 0}L
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
@@ -745,7 +745,7 @@ function AIResult({ result, certName, onReset }) {
       {result.bottomLine && (
         <div style={{ margin: '0 16px 12px', padding: '10px 13px', borderRadius: '9px', background: vc + '0d', border: '1px solid ' + vc + '22' }}>
           <div style={{ fontFamily: FM, fontSize: '9px', color: vc, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>BOTTOM LINE</div>
-          <div style={{ fontSize: '13px', fontWeight: '700', color: vc, fontFamily: FH }}>{result.bottomLine}</div>
+          <div className="font-bold text-slate-900 mt-2">Invest ₹{(certCostINR / 1000).toFixed(0)}K in this certification to unlock a potential ₹{(fiveYearNetGain / 100000).toFixed(1)}L net gain over 5 years.</div>
         </div>
       )}
 
@@ -868,7 +868,46 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
     if (isStudent) setSalary(0);
   }, [isStudent, setSalary]);
 
-  const roi = useROICalc({ currentSalary: isStudent ? expectedFirstSalary : salary, certCost, hikePercent: isStudent ? 0 : hikePercent });
+  const targetOfferLakhs = salary === 0 ? (expectedFirstSalary || 4.8).toFixed(1) : (salary * (1 + (hikePercent / 100))).toFixed(1);
+
+  const currentSalaryINR = salary * 100000;
+  const certCostINR = certCost * 100000;
+  const expectedHike = hikePercent;
+
+  const annualHikeAmount = salary > 0 ? currentSalaryINR * (expectedHike / 100) : targetOfferLakhs * 100000;
+  const monthlyHikeAmount = annualHikeAmount / 12;
+  const totalFiveYearHike = annualHikeAmount * 5;
+  const fiveYearNetGain = totalFiveYearHike - certCostINR;
+
+  // CAGR = ((1 + NetGain/Cost)^(1/5) - 1) * 100
+  const cagr = certCostINR > 0 ? (Math.pow(1 + (fiveYearNetGain / certCostINR), 1 / 5) - 1) * 100 : 0;
+  const isImmediate = certCostINR === 0;
+
+  const marketDemandScore = selectedCert && selectedCert.demand ? Math.min(40, (selectedCert.demand / 5000) * 40) : 30;
+  const costSensitivityScore = currentSalaryINR > 0 ? Math.max(0, 30 - ((certCostINR / currentSalaryINR) * 100)) : 15;
+  const historicalSuccessScore = 20; 
+  const confidenceScore = Math.round(marketDemandScore + costSensitivityScore + historicalSuccessScore);
+
+  let confidenceLabel = "Speculative";
+  let confidenceColor = "#eab308"; // Yellow
+  if (confidenceScore >= 71) {
+    confidenceLabel = "High Probability";
+    confidenceColor = "#10b981"; // Emerald
+  } else if (confidenceScore >= 41) {
+    confidenceLabel = "Balanced";
+    confidenceColor = "#3b82f6"; // Blue
+  }
+
+  // Payback = Cost / Monthly Hike
+  const paybackMonths = monthlyHikeAmount > 0 ? Math.ceil(certCostINR / monthlyHikeAmount) : 0;
+
+  const roi = useROICalc({ 
+    currentSalary: salary, 
+    certCost, 
+    hikePercent, 
+    isStudent: isStudent || salary === 0, 
+    targetOfferLakhs 
+  });
 
   const pickCert = useCallback(function (cert) {
     storeSetSelected(cert);
@@ -1057,34 +1096,41 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
         <div style={{ marginTop: isStudent ? '0' : '16px' }}>
           <Slider
             label="Cert Cost"
-            value={certCost}
-            min={0} max={6} step={0.1}
-            onChange={setCertCost}
-            prefix="₹" suffix="L"
+            value={certCost * 100000}
+            min={0} max={100000} step={5000}
+            onChange={(val) => setCertCost(val / 100000)}
+            formatDisplay={(val) => val >= 100000 ? `₹${(val / 100000).toFixed(1)}L` : `₹${val / 1000}K`}
+            prefix="₹" suffix=""
             color={INDIGO}
           />
           {(() => {
-            const band = getAffordabilityBand(certCost, salary, isStudent)
-            if (!band) return null
+            const currentBase = isStudent ? 4.8 : salary;
+            if (currentBase <= 0 || certCost <= 0) return null;
+            const costPercentage = ((certCost / currentBase) * 100).toFixed(1);
+            const bandLabel = costPercentage > 10 ? 'Risky' : 'Good value';
+            const bandColor = costPercentage > 10 ? AMBER : EMERALD;
+            
             return (
               <motion.div
-                key={band.label}
+                key={bandLabel}
                 initial={prefersReduced ? false : { opacity: 0, scale: 0.92 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.2 }}
                 style={{ marginTop: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}
               >
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '3px 10px', borderRadius: '9999px', background: band.color + '13', border: '1px solid ' + band.color + '28' }}>
-                  <div style={{ width: 5, height: 5, borderRadius: '50%', background: band.color }} />
-                  <span style={{ fontFamily: FM, fontSize: '10px', color: band.color, fontWeight: '700', letterSpacing: '0.06em' }}>{band.label}</span>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '3px 10px', borderRadius: '9999px', background: bandColor + '13', border: '1px solid ' + bandColor + '28' }}>
+                  <div style={{ width: 5, height: 5, borderRadius: '50%', background: bandColor }} />
+                  <span className="text-sm font-medium" style={{ color: bandColor }}>{bandLabel}</span>
                 </div>
-                <span style={{ fontFamily: FM, fontSize: '10px', color: 'var(--text-4)', letterSpacing: '0.02em' }}>{band.tip}</span>
+                <span className="text-sm font-medium text-slate-600">
+                  {costPercentage}% of your current base - {costPercentage > 10 ? 'High investment, requires commitment' : 'Low risk investment'}
+                </span>
               </motion.div>
             )
           })()}
         </div>
 
-        {!isStudent ? (
+        {!isStudent && salary > 0 ? (
           <>
             <Slider
               label="Expected Hike"
@@ -1112,7 +1158,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
         >
           {isStudent ? (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '8px', marginBottom: '12px' }}>
-              <StatCard label="Target Offer" value="₹4.8L+" color={VIOLET} delay={0} />
+              <StatCard label="Target Offer" value={`₹${(4.8 * (1 + (hikePercent / 100))).toFixed(1)}L+`} color={VIOLET} delay={0} />
               <StatCard label="Investment" value={'₹' + certCost + 'L'} color={AMBER} delay={0.05} /> {/* Changed color to AMBER */}
             </div>
           ) : (
@@ -1120,39 +1166,33 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
               {/*  Financial Hero Metrics  */}
               <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2,1fr)', gap: '8px', marginBottom: '12px' }}>
                 <div style={{ padding: '24px 16px', textAlign: 'center', borderColor: 'var(--border-accent)', background: 'transparent', minHeight: 110, border: 'none' }}>
-                  <div className="micro-label" style={{ color: 'var(--text-4)', marginBottom: '8px' }}>5-Yr Net Gain</div>
-                  <RollNumber value={roi.fiveYearGainL} prefix="₹" suffix="L" color={EMERALD} />
+                  <div className="micro-label" style={{ color: 'var(--text-4)', marginBottom: '8px' }}>PROJECTED 5-YR VALUE ADD</div>
+                  <div style={{ fontFamily: 'var(--font-head)', fontSize: 'clamp(1.5rem,4vw,2.2rem)', fontWeight: '800', color: EMERALD }}>
+                    ₹{(fiveYearNetGain / 100000).toFixed(1)}L
+                  </div>
+                  <div className="text-xs text-slate-500 mt-2 font-medium">Inflation-adjusted estimate based on {expectedHike}% market movement</div>
                 </div>
-                <div style={{ padding: '24px 16px', textAlign: 'center', borderColor: roi.roiPercent > 200 ? 'var(--border-accent)' : 'var(--border)', background: 'transparent', minHeight: 110, border: 'none' }}>
-                  <div className="micro-label" style={{ color: 'var(--text-4)', marginBottom: '8px' }}>Projected ROI</div>
-                  <RollNumber value={roi.roiPercent} suffix="%" color={roi.roiPercent > 200 ? EMERALD : VIOLET} />
+                <div style={{ padding: '24px 16px', textAlign: 'center', borderColor: 'var(--border)', background: 'transparent', minHeight: 110, border: 'none' }}>
+                  <div className="micro-label" style={{ color: 'var(--text-4)', marginBottom: '8px' }}>ANNUALIZED RETURN (CAGR)</div>
+                  <div style={{ fontFamily: 'var(--font-head)', fontSize: 'clamp(1.5rem,4vw,2.2rem)', fontWeight: '800', color: VIOLET }}>
+                    {isImmediate ? 'Immediate' : `${cagr.toFixed(1)}%`}
+                  </div>
+                  <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border bg-white shadow-sm" style={{ borderColor: confidenceColor + '40' }}>
+                    <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: confidenceColor }} />
+                    <span className="text-xs font-bold" style={{ color: confidenceColor }}>{confidenceLabel} ({confidenceScore}%)</span>
+                  </div>
                 </div>
               </div>
 
               {/*  Secondary Dash Stats  */}
               <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px', marginBottom: '12px' }}>
-                <StatCard label="New Salary" value={'₹' + roi.newSalaryL + 'L/yr'} color={PICTON} delay={0} />
-                <StatCard label="Monthly +" value={'₹' + roi.monthlyGainK + 'K'} color={VIOLET} delay={0.05} />
+                <StatCard label="New Salary" value={`₹${targetOfferLakhs}L/yr`} color={PICTON} delay={0} />
+                <StatCard label="ADDITIONAL MONTHLY PAY" value={<span className="text-emerald-600">+₹{Math.round(monthlyHikeAmount / 1000)}K</span>} color={VIOLET} delay={0.05} />
                 <StatCard
                   label="Payback Window"
-                  value={
-                    selectedCert
-                      ? getPaybackRange(roi.breakEvenMonths, selectedCert.demand, hikePercent)
-                      : (roi.breakEvenMonths > 0 ? roi.breakEvenMonths + ' mo' : '--')
-                  }
-                  sub={roi.anchor}
+                  value={`${paybackMonths} mo`}
                   color={AMBER}
                   delay={0.1}
-                  badge={selectedCert ? getPaybackConfidence(selectedCert.demand, hikePercent) : null}
-                  rangeData={selectedCert && roi.breakEvenMonths > 0 ? (() => {
-                    const conf = getPaybackConfidence(selectedCert.demand, hikePercent)
-                    const spread = conf.label === 'High confidence' ? 0.15 : conf.label === 'Medium confidence' ? 0.25 : 0.35
-                    return {
-                      lo: Math.max(1, Math.round(roi.breakEvenMonths * (1 - spread))),
-                      hi: Math.round(roi.breakEvenMonths * (1 + spread)),
-                      mid: roi.breakEvenMonths,
-                    }
-                  })() : null}
                 />
               </div>
             </>
@@ -1169,7 +1209,12 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
       {/*  Student path graphic  */}
       <AnimatePresence>
         {isStudent && certName ? (
-          <StudentPath key={certName} certName={certName} certCost={certCost} />
+          <StudentPath 
+            key={certName} 
+            certName={certName} 
+            certCost={certCost} 
+            targetOfferLakhs={targetOfferLakhs} 
+          />
         ) : null}
       </AnimatePresence>
 
@@ -1182,10 +1227,11 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
               <CartesianGrid strokeDasharray="3 3" stroke="transparent" />
               <XAxis dataKey="label" tick={{ fontSize: 9, fill: 'var(--text-4)', fontFamily: FM }} axisLine={false} tickLine={false} interval={4} />
               <YAxis tick={{ fontSize: 9, fill: 'var(--text-4)', fontFamily: FM }} axisLine={false} tickLine={false} tickFormatter={function (v) { return '₹' + v + 'K' }} />
-              <Tooltip content={ChartTip} />
+              <Tooltip formatter={(value) => [`₹${value.toLocaleString()}K`, '']} />
+              <Legend verticalAlign="top" align="right" iconType="circle" wrapperStyle={{ fontSize: '14px', fontWeight: '500', color: '#475569', paddingBottom: '20px' }} />
               <ReferenceLine y={0} stroke="transparent" strokeDasharray="4 4" />
-              <Line type="monotone" dataKey="action" name="With Cert" stroke={EMERALD} strokeWidth={2.5} dot={false} activeDot={{ r: 4, fill: EMERALD }} />
-              <Line type="monotone" dataKey="inaction" name="Inaction" stroke="#475569" strokeWidth={1.5} strokeDasharray="5 4" dot={false} />
+              <Line type="monotone" dataKey="action" name="With Certification" stroke="#10b981" strokeWidth={3} dot={false} activeDot={{ r: 4, fill: "#10b981" }} />
+              <Line type="monotone" dataKey="inaction" name="Without Certification (Inaction)" stroke="#94a3b8" strokeWidth={2} strokeDasharray="5 5" dot={false} />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -1263,7 +1309,14 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
               exit={{ opacity: 0, y: -4, filter: 'blur(4px)' }}
               transition={prefersReduced ? { duration: 0 } : { type: 'spring', duration: 0.45, bounce: 0 }}
             >
-              <AIResult result={aiResult} certName={certName} onReset={function () { setAiResult(null) }} />
+              <AIResult 
+                result={aiResult} 
+                certName={certName} 
+                onReset={function () { setAiResult(null) }}
+                paybackMonths={paybackMonths}
+                fiveYearNetGain={fiveYearNetGain}
+                certCostINR={certCostINR}
+              />
             </motion.div>
           ) : null}
         </AnimatePresence>
@@ -1293,7 +1346,18 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
             <ShareROICard certName={certName} domain={selectedCert ? selectedCert.domain : ''} demand={selectedCert ? selectedCert.demand : 'High'} name={resumeName} />
           ) : null}
           <motion.button
-            onClick={() => router.push('/dashboard')}
+            onClick={() => {
+              const activeCertData = {
+                name: certName || "Google Data Analytics",
+                totalHours: 120,
+                completedHours: 12,
+                week: 1,
+                totalWeeks: 12,
+                nextMilestone: "Complete Module 1: Data Types"
+              };
+              localStorage.setItem('activeCert', JSON.stringify(activeCertData));
+              router.push('/dashboard');
+            }}
             whileHover={!prefersReduced ? { y: -2, scale: 1.01 } : {}}
             whileTap={!prefersReduced ? { scale: 0.98 } : {}}
             style={{

@@ -58,9 +58,10 @@ export const getLifeAnchor = (amountINR, isStudent = false) => {
 }
 
 // ── ROI calculator ────────────────────────────────────────
-export const useROICalc = ({ currentSalary, certCost, hikePercent }) => {
-  const isStudent = currentSalary === 0
-  const STUDENT_BASELINE = 480000 // ₹4.8L
+export const useROICalc = ({ currentSalary: initialSalary, certCost, hikePercent, isStudent, targetOfferLakhs }) => {
+  // Sane fallback if missing or 0 (defaults to 4 LPA / 400000 INR)
+  const currentSalary = (initialSalary && initialSalary > 0) ? initialSalary : 0;
+  const STUDENT_BASELINE = targetOfferLakhs ? targetOfferLakhs * 100000 : 400000 // fallback
 
   const annualSalaryINR = isStudent ? 0 : currentSalary * 100000
   const baselineINR     = isStudent ? STUDENT_BASELINE : annualSalaryINR
@@ -77,9 +78,10 @@ export const useROICalc = ({ currentSalary, certCost, hikePercent }) => {
   const monthlyGain   = annualGainINR / 12
   const breakEvenMonths = isStudent ? 0 : roi.breakEvenMonths
   const fiveYearGainINR = isStudent ? STUDENT_BASELINE * 5 - certCostINR : roi.fiveYearGainINR
-  const roiPercent = isStudent
-    ? (certCostINR > 0 ? Math.round((fiveYearGainINR / certCostINR) * 100) : 0)
-    : roi.roiPercent
+  
+  // Math safeguard for ROI Calculation
+  const rawRoi = currentSalary > 0 ? (((fiveYearGainINR - certCostINR) / certCostINR) * 100) : 0;
+  const roiPercent = Math.min(Math.round(rawRoi), 1000);
 
   // Career multiplier for students
   const careerMultiplier = isStudent && certCost > 0
@@ -88,10 +90,21 @@ export const useROICalc = ({ currentSalary, certCost, hikePercent }) => {
 
   // Chart: action vs inaction (inflation-adjusted flat)
   const chartData = Array.from({ length: 25 }, (_, month) => {
-    const inactionCumulative = baselineINR / 12 * month * Math.pow(1 + inflationRate / 12, month) - baselineINR / 12 * month
-    const actionCumulative   = month === 0
-      ? -certCostINR
-      : -certCostINR + monthlyGain * month
+    let inactionCumulative = 0;
+    let actionCumulative = 0;
+
+    if (currentSalary === 0 || isStudent) {
+      inactionCumulative = 0;
+      if (month <= 6) {
+        actionCumulative = -certCostINR;
+      } else {
+        const targetOfferINR = targetOfferLakhs * 100000;
+        actionCumulative = -certCostINR + ((targetOfferINR / 12) * (month - 6));
+      }
+    } else {
+      inactionCumulative = baselineINR / 12 * month * Math.pow(1 + inflationRate / 12, month) - baselineINR / 12 * month;
+      actionCumulative = month === 0 ? -certCostINR : -certCostINR + monthlyGain * month;
+    }
 
     return {
       month,

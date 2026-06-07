@@ -185,7 +185,7 @@ const PitchBoss = ({ certName, salary, certCost, hikePercent, name, mode }) => {
                 <motion.button
                   onClick={handleGenerate}
                   whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
-                  style={{ width: '100%', padding: '11px', borderRadius: '9px', background: `transparent`, border: 'none', color: 'white', fontSize: '13px', fontWeight: '700', cursor: 'pointer', fontFamily: F_HEAD, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '7px', letterSpacing: '-0.01em', boxShadow: 'none' }}
+                  className="w-full md:w-auto bg-slate-900 text-white font-bold py-3 px-8 rounded-xl shadow-md hover:bg-slate-800 transition-colors flex items-center justify-center gap-2 mt-4"
                 >
                   <Zap size={14} /> Build Reimbursement Case
                 </motion.button>

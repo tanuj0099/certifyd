@@ -17,8 +17,9 @@ const CERT_MODULES = {
 
 const getDayKey = (date = new Date()) => date.toISOString().split('T')[0]
 
-const BurnRate = ({ certName = 'Your Certification', breakEvenMonths = 6 }) => {
-  const storageKey = `croi_burnrate_${certName.replace(/\s/g, '_').toLowerCase()}`
+const BurnRate = ({ certName = 'Your Certification', breakEvenMonths = 6, activeCert }) => {
+  const displayCertName = activeCert?.name || certName
+  const storageKey = `croi_burnrate_${displayCertName.replace(/\s/g, '_').toLowerCase()}`
 
   const [data, setData] = useState(() => {
     try {
@@ -31,7 +32,7 @@ const BurnRate = ({ certName = 'Your Certification', breakEvenMonths = 6 }) => {
   const [justChecked, setJustChecked] = useState(false)
   const [showReset,   setShowReset]   = useState(false)
 
-  const modules = CERT_MODULES[certName] || CERT_MODULES.default
+  const modules = CERT_MODULES[displayCertName] || CERT_MODULES.default
   const totalModules = modules.length
 
   useEffect(() => {
@@ -96,7 +97,7 @@ const BurnRate = ({ certName = 'Your Certification', breakEvenMonths = 6 }) => {
           </div>
           <div>
             <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: '800', fontSize: '14px', color: 'var(--text)' }}>STUDY TRACKER</div>
-            <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: 'var(--text-4)' }}>{certName}</div>
+            <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: 'var(--text-4)' }}>{displayCertName}</div>
           </div>
         </div>
         <button onClick={() => setShowReset(v => !v)} style={{ background: 'none', border: 'none', color: 'var(--text-4)', cursor: 'pointer', fontSize: '12px', fontFamily: 'var(--font-sans)', display: 'flex', alignItems: 'center', gap: '4px', transition: 'color 0.15s' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--cool-grey)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--text-4)'}>

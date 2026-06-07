@@ -143,7 +143,8 @@ var buildPrompt = function (resumeText, mode, timeline, domainIntent, switchTarg
       ? 'User wants to grow in: ' + domainIntent + '. Prioritise certs in that domain.'
       : 'Auto-detect best domain from resume.'
 
-  return 'You are Certify, a career advisor for Indian professionals (2026).\n' +
+  return 'CRITICAL GUARDRAIL: First, determine if the provided text is actually a Resume/CV. If the document is an Offer Letter, an Appointment Letter, or completely lacks standard resume sections (like Education or Work History), you MUST immediately return a JSON error: { "error": "INVALID_DOCUMENT", "message": "This appears to be an offer letter. Please upload a resume to establish your baseline." } and halt all other extraction.\n\n' +
+    'You are Certify, a career advisor for Indian professionals (2026).\n' +
     'Mode: ' + mode + '\nTimeline: ' + timelineNote + '\nDomain: ' + domainNote + '\n\n' +
     'Resume:\n' + resumeText.slice(0, 2200) + '\n\n' +
     'GEOGRAPHIC RULE: If the extracted location from the resume is NOT within India (e.g., US, UK, Canada, UAE, etc.), you MUST abort the ROI calculation and return EXACTLY this JSON error flag:\n' +
@@ -175,6 +176,10 @@ var safeParseResumeJSON = function (text) {
   try {
     var cleaned = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').trim()
     var obj = JSON.parse(cleaned)
+
+    if (obj.error === 'INVALID_DOCUMENT') {
+      return { error: 'INVALID_DOCUMENT', Message: obj.message, parseError: false }
+    }
 
     if (obj.Unsupported_Region) {
       return { Unsupported_Region: true, Message: obj.Message, parseError: false }
@@ -436,7 +441,12 @@ var PersonalisedHero = function ({ name, city, domain, primaryCert, mode, certDo
           className="micro-label uppercase tracking-widest text-xs"
           style={{ color: 'var(--text-4)', marginBottom: '10px', lineHeight: 1.6 }}
         >
-          {intro}
+          {(() => {
+            const profileData = { name: name || authName, location: city };
+            return (
+              <span className="text-xs font-bold tracking-widest text-slate-500 uppercase">{profileData?.name ? profileData.name.split(' ')[0].toUpperCase() : 'ARJUN'}, OUT OF 103 CERTIFICATIONS ANALYSED FOR A PROFESSIONAL IN {profileData?.location ? profileData.location.toUpperCase() : 'BENGALURU'} RIGHT NOW -</span>
+            );
+          })()}
         </motion.p>
       )}
       {phase >= 1 && (
@@ -444,7 +454,7 @@ var PersonalisedHero = function ({ name, city, domain, primaryCert, mode, certDo
           initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
           style={{ marginBottom: '14px' }}
         >
-          <h2 className="text-4xl font-extrabold text-slate-900 tracking-tight dark:text-white">
+          <h2 className="text-4xl font-black text-slate-900 tracking-tight block w-full mt-2">
             Your Recommended Path
           </h2>
         </motion.div>
@@ -926,7 +936,13 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
       if (!raw || raw.length < 30) throw new Error('Empty response - try again')
       var parsed = safeParseResumeJSON(raw)
       
-      if (parsed.Unsupported_Region) {
+      if (parsed && parsed.error === 'INVALID_DOCUMENT') {
+        setError(parsed.Message)
+        setPdfLoading(false)
+        return
+      }
+
+      if (parsed && parsed.Unsupported_Region) {
         throw new Error(parsed.Message || 'Certifyd MVP currently only supports salary intelligence for the Indian IT market.')
       }
 
