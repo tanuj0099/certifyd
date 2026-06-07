@@ -5,23 +5,34 @@ export const parseOfferLetter = async (offerLetterText, userProfileData) => {
 1. USER PROFILE DATA: ${userProfileData}
 2. OFFER LETTER TEXT: ${offerLetterText.substring(0, 8000)}
 
-=== RULE 1: THE GEOGRAPHIC GATEKEEPER (CRITICAL) ===
-Check the locations mentioned in the Resume and the Offer Letter. If EITHER document indicates a primary location outside of India (e.g., "Los Angeles, CA", "USA", "London", "Dubai"), you must ABORT the analysis. 
-Note: Cities like Navi Mumbai, Mumbai, Bangalore, Pune, NCR, etc., ARE in India. Do not incorrectly flag Indian cities as unsupported.
-Output ONLY this JSON:
-{
-  "Analysis_Metadata": {
-    "Unsupported_Region": true,
-    "Mismatch_Warning_Message": "Certifyd MVP currently only supports salary intelligence for the Indian IT market. Global support is coming soon."
-  }
-}
+=== STRICT SEMANTIC REASONING RULES ===
 
-=== RULE 2: THE HIERARCHY OF TRUTH (Conflict Resolution) ===
-- LOCATION: If the Offer Letter explicitly states an Indian job location (e.g., "Hyderabad"), this OVERRIDES the Resume's city (e.g., "Bangalore"). 
-- JOB TITLE: The \`Target_Job_Title\` must be the exact title on the Offer Letter. 
+=== 1. THE GEO-REASONING RULE (Client vs. Residence) ===
+- Determine the candidate's ACTUAL PHYSICAL RESIDENCE or base of operations. 
+- If a candidate lives in India (e.g., Gorakhpur, Hubballi, Bangalore, NCR) but works remotely for an international client or states a past international stint, the profile IS SUPPORTED. 
+- Do not blindly reject a profile if a foreign city (e.g., "London", "USA", "Dubai") is mentioned as a client location or past role.
+- ONLY abort/reject if the candidate's primary residence/work location is currently outside of India.
+- Output for unsupported: { "Analysis_Metadata": { "Unsupported_Region": true, "Mismatch_Warning_Message": "Certifyd MVP currently only supports salary intelligence for the Indian IT market. Global support is coming soon." } }
+
+=== 2. THE RELEVANT EXPERIENCE RULE (The Time Splitter) ===
+- Candidates often list total chronological experience, which includes irrelevant past careers (e.g., farming, retail, physical labor).
+- You MUST separate "Total Experience" from "Relevant Tech/Corporate Experience".
+- Calculate the \`Calculated_Experience_Level_For_Offer\` ONLY based on the months/years spent in IT, Tech, or standard Corporate roles. Ignore time spent in unrelated fields.
+
+=== 3. THE FUNCTIONAL TITLE OVERRIDE ===
+- Ignore HR payroll glitches or nominal titles if they conflict with the actual day-to-day work.
+- If a nominal title is "Marketing Executive" or "Data Plumber", but the bullet points explicitly describe writing Python, managing databases, and using AWS, you MUST classify their \`Target_Job_Title\` as the functional equivalent (e.g., "Junior Backend Engineer" or "Cloud Engineer").
+- The \`Target_Job_Title\` normally matches the exact title on the Offer Letter, unless overridden by this rule.
+
+=== 4. NOISE FILTERING & TYPO NORMALIZATION ===
+- Resumes contain fluff. Completely ignore hobbies, non-professional certifications (e.g., "Master Scuba Diver"), and physical labor skills.
+- Normalize spelling errors in the tech stack (e.g., map "Pythn" to "Python", "devOOps" to "DevOps", "Certifid" to "Certified"). Only extract valid, recognized IT/Corporate skills and certifications.
+
+=== 5. THE HIERARCHY OF TRUTH (Conflict Resolution) ===
+- LOCATION: If the Offer Letter explicitly states an Indian job location (e.g., "Hyderabad"), this OVERRIDES the Resume's city. 
 - EXPERIENCE MISMATCH: Compare the Resume's YoE with the Offer Job Title. If the user claims 3+ years of experience but the offer is for a "Trainee" or "Fresher", set "Profile_Mismatch_Flag" to TRUE and generate a warning.
 
-=== RULE 3: INDIAN PAYROLL MATH & BUCKETING ===
+=== 6. INDIAN PAYROLL MATH & BUCKETING ===
 Group the CTC components EXACTLY as follows:
 - "Fixed_Base": Basic Salary + HRA + Conveyance + LTA + Special/Guaranteed monthly allowances.
 - "Variable_Bonus": Annual Bonus + Performance Pay + Relocation.
@@ -30,7 +41,7 @@ Group the CTC components EXACTLY as follows:
 - "Estimated_Monthly_In_Hand": (Fixed_Base / 12) MINUS (Employee PF + ESI monthly deductions).
 All numerical outputs in the \`CTC_Breakdown\` object MUST be rounded to the nearest whole integer. Do not output any decimals.
 
-=== RULE 4: CONTEXTUAL AWARENESS ===
+=== 7. CONTEXTUAL AWARENESS ===
 - Extract the Date/Year of the Offer Letter. If from a past year (e.g., 2017), set "Historical_Data_Flag" to TRUE.
 
 === OUTPUT FORMAT ===
@@ -39,7 +50,7 @@ If the region is supported (India), output a valid JSON object matching this exa
   "Analysis_Metadata": {
     "Unsupported_Region": false,
     "Target_Location": "[Resolved Location]",
-    "Target_Job_Title": "[Exact title from offer]",
+    "Target_Job_Title": "[Resolved Functional Title or Exact title from offer]",
     "Offer_Year": "[YYYY]",
     "Historical_Data_Flag": boolean,
     "Profile_Mismatch_Flag": boolean,
@@ -54,12 +65,12 @@ If the region is supported (India), output a valid JSON object matching this exa
     "Estimated_Monthly_In_Hand": number
   },
   "Market_Context": {
-    "Calculated_Experience_Level_For_Offer": "[e.g., 0 years / Fresher]",
+    "Calculated_Experience_Level_For_Offer": "[e.g., 0 years / Fresher, based ONLY on relevant tech/corporate experience]",
     "UI_Status_Message": "[Generate a precise UI message explaining the evaluation]"
   }
 }
 
-CRITICAL: You must output ONLY raw, valid JSON. DO NOT wrap the JSON in markdown code blocks (e.g., no \`\`\`json). DO NOT include any conversational text before or after the JSON.`
+CRITICAL: You must output ONLY raw, valid JSON. DO NOT wrap the JSON in markdown code blocks (e.g., no \`\`\`json). DO NOT include any conversational text before or after the JSON.\`;
 
   const response = await fetch('/api/groq', {
     method: 'POST',
