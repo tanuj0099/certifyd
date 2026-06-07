@@ -458,27 +458,27 @@ export default function OfferAnalysisPage() {
                 {/* Market Comparison */}
                 <AppSection id="COMPARISON" title="CTC ANALYSIS & BENCHMARKS">
                   <div className="flex gap-4 flex-wrap">
-                    <div className="flex-1 min-w-[140px] p-6 text-center backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl shadow-2xl">
+                    <div className="flex-1 min-w-[140px] p-6 text-center backdrop-blur-2xl bg-white/5 border border-white/10 rounded-2xl shadow-2xl">
                       <div style={{ fontFamily: FM }} className="text-[10px] tracking-[0.06em] text-gray-400 mb-2">STATED CTC (INFLATED)</div>
-                      <div style={{ fontFamily: FH }} className="text-2xl font-bold text-gray-500 line-through decoration-red-500/50">
+                      <div className="font-sans tracking-tight tabular-nums text-2xl font-bold text-gray-500 line-through decoration-red-500/50">
                         ₹{Math.round(result.CTC_Breakdown?.Total_CTC_Stated || 0).toLocaleString('en-IN')}
                       </div>
                       <div style={{ fontFamily: FB }} className="text-[11px] text-gray-400 mt-1">Per annum</div>
                     </div>
                     
-                    <div className="flex-1 min-w-[140px] p-6 text-center backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl shadow-2xl relative overflow-hidden">
-                      <div className="absolute inset-0 bg-emerald-500/5 blur-[50px] pointer-events-none"></div>
+                    <div className="flex-1 min-w-[140px] p-6 text-center backdrop-blur-2xl bg-white/5 border border-white/10 rounded-2xl shadow-2xl relative overflow-hidden">
+                      <div className="absolute inset-0 bg-teal-500/5 blur-[50px] pointer-events-none"></div>
                       <div style={{ fontFamily: FM }} className="text-[10px] tracking-[0.06em] text-gray-400 mb-2 relative">IN-HAND ESTIMATE</div>
-                      <div style={{ fontFamily: FH }} className="text-4xl font-black text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.3)] relative">
+                      <div className="font-sans tracking-tight tabular-nums text-4xl font-black text-teal-400 drop-shadow-[0_0_15px_rgba(45,212,191,0.3)] relative">
                         ₹{Math.round(result.CTC_Breakdown?.Estimated_Monthly_In_Hand || 0).toLocaleString('en-IN')}
                       </div>
                       <div style={{ fontFamily: FB }} className="text-[11px] text-gray-400 mt-1 relative">Per month approx</div>
                     </div>
 
                     {marketMedian > 0 && (
-                      <div className="flex-1 min-w-[140px] p-6 text-center backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl shadow-2xl">
+                      <div className="flex-1 min-w-[140px] p-6 text-center backdrop-blur-2xl bg-white/5 border border-white/10 rounded-2xl shadow-2xl">
                         <div style={{ fontFamily: FM }} className="text-[10px] tracking-[0.06em] text-gray-400 mb-2">MARKET MEDIAN</div>
-                        <div style={{ fontFamily: FH }} className="text-2xl font-bold text-gray-200">
+                        <div className="font-sans tracking-tight tabular-nums text-2xl font-bold text-gray-200">
                           ₹{Math.round(marketMedian).toLocaleString('en-IN')}
                         </div>
                         <div style={{ fontFamily: FB }} className="text-[11px] text-gray-400 mt-1">
@@ -504,14 +504,14 @@ export default function OfferAnalysisPage() {
                       percentile = 45; // specific mock requested
                     }
                     return (
-                      <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-6 shadow-2xl mt-4">
+                      <div className="backdrop-blur-2xl bg-white/5 border border-white/10 rounded-2xl p-6 shadow-2xl mt-4">
                         <div style={{ fontFamily: FM }} className="text-[10px] text-gray-400 tracking-[0.06em] mb-4">MARKET POSITION</div>
                         <div className="w-full h-2 bg-gray-800 rounded-full relative mb-3">
-                          <div className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.8)]" style={{ left: `${Math.round(percentile)}%`, transition: 'left 1s ease-out' }} />
+                          <div className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-teal-400 shadow-[0_0_12px_rgba(45,212,191,0.8)]" style={{ left: `${Math.round(percentile)}%`, transition: 'left 1s ease-out' }} />
                         </div>
                         <div className="flex justify-between text-xs text-gray-500 font-medium">
                           <span>Low</span>
-                          <span className="text-emerald-400 font-bold">{Math.round(percentile)}th Percentile for {result.Analysis_Metadata?.Target_Location || 'Bengaluru'}</span>
+                          <span className="text-teal-400 font-bold font-sans tabular-nums">{Math.round(percentile)}th Percentile for {result.Analysis_Metadata?.Target_Location || 'Bengaluru'}</span>
                           <span>High</span>
                         </div>
                       </div>
@@ -534,7 +534,7 @@ export default function OfferAnalysisPage() {
 
                   {/* Component Breakdown */}
                   {result.CTC_Breakdown && (
-                    <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-6 shadow-2xl mt-4">
+                    <div className="backdrop-blur-2xl bg-white/5 border border-white/10 rounded-2xl p-6 shadow-2xl mt-4">
                       <div style={{ fontFamily: FM }} className="text-[10px] text-gray-400 tracking-[0.06em] mb-4">COMPONENT BREAKDOWN</div>
                       
                       <div className="h-12 w-full mb-6">
@@ -548,17 +548,17 @@ export default function OfferAnalysisPage() {
                           }]} layout="vertical" margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
                             <XAxis type="number" hide />
                             <YAxis dataKey="name" type="category" hide />
-                            <Tooltip cursor={{fill: 'transparent'}} contentStyle={{ background: '#111', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff', fontSize: '12px', fontFamily: FB }} itemStyle={{ color: '#fff', fontFamily: FH, fontWeight: '600' }} formatter={(value) => `₹${Math.round(value).toLocaleString('en-IN')}`} />
-                            <Bar dataKey="Fixed_Base" stackId="a" fill="#10B981" radius={[6, 0, 0, 6]} name="Fixed Base" />
-                            <Bar dataKey="Variable_Bonus" stackId="a" fill="#F59E0B" name="Variable/Bonus" />
-                            <Bar dataKey="ESOP_Stocks" stackId="a" fill="#6366F1" name="ESOP/Stocks" />
-                            <Bar dataKey="Retirals_Hidden" stackId="a" fill="#9CA3AF" radius={[0, 6, 6, 0]} name="Retirals & Hidden" />
+                            <Tooltip cursor={{fill: 'transparent'}} contentStyle={{ background: '#111', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff', fontSize: '12px', fontFamily: FB }} itemStyle={{ color: '#fff', fontWeight: '600' }} formatter={(value) => `₹${Math.round(value).toLocaleString('en-IN')}`} />
+                            <Bar dataKey="Fixed_Base" stackId="a" fill="#2DD4BF" stroke="#111827" strokeWidth={2} radius={[6, 0, 0, 6]} name="Fixed Base" />
+                            <Bar dataKey="Variable_Bonus" stackId="a" fill="#F59E0B" stroke="#111827" strokeWidth={2} name="Variable/Bonus" />
+                            <Bar dataKey="ESOP_Stocks" stackId="a" fill="#6366F1" stroke="#111827" strokeWidth={2} name="ESOP/Stocks" />
+                            <Bar dataKey="Retirals_Hidden" stackId="a" fill="#9CA3AF" stroke="#111827" strokeWidth={2} radius={[0, 6, 6, 0]} name="Retirals & Hidden" />
                           </BarChart>
                         </ResponsiveContainer>
                       </div>
 
                       <div className="flex flex-wrap gap-3">
-                        <BreakdownChip label="Fixed Base" value={result.CTC_Breakdown.Fixed_Base_Annual} color="#10B981" />
+                        <BreakdownChip label="Fixed Base" value={result.CTC_Breakdown.Fixed_Base_Annual} color="#2DD4BF" />
                         <BreakdownChip label="Variable/Bonus" value={result.CTC_Breakdown.Variable_Bonus_Annual} color="#F59E0B" />
                         <BreakdownChip label="ESOP/Stocks" value={result.CTC_Breakdown.ESOP_Stocks_Annual} color="#6366F1" />
                         <BreakdownChip label="Retirals" value={result.CTC_Breakdown.Retirals_And_Hidden_Annual} color="#9CA3AF" />
@@ -610,7 +610,7 @@ function BreakdownChip({ label, value, color }) {
     <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 backdrop-blur-md">
       <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }}></div>
       <span style={{ fontFamily: FB }} className="text-gray-400 text-[11px] uppercase tracking-wider">{label}:</span>
-      <span style={{ fontFamily: FH }} className="text-gray-200 text-sm font-bold">₹{Math.round(Number(value)).toLocaleString('en-IN')}</span>
+      <span className="font-sans tracking-tight tabular-nums text-gray-200 text-sm font-bold">₹{Math.round(Number(value)).toLocaleString('en-IN')}</span>
     </div>
   )
 }

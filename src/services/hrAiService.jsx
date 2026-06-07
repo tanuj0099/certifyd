@@ -43,9 +43,10 @@ export const parseOfferLetter = async (offerLetterText, userProfileData) => {
 
 === 7. INDIAN PAYROLL MATH & BUCKETING ===
 Group the CTC components EXACTLY as follows:
+- "Total_CTC_Stated": You MUST extract the absolute highest total compensation figure presented by the company (e.g., 'Total Indicative Package', 'Total Rewards', 'Total Cash CTC'). The Total_CTC_Stated MUST ALWAYS be mathematically greater than or equal to the Fixed_Base. Never calculate this yourself; extract the inflated HR number directly from the document.
 - "Fixed_Base": Basic Salary + HRA + Conveyance + LTA + Special/Guaranteed monthly allowances.
 - "Variable_Bonus": Annual Bonus + Performance Pay + Relocation.
-- "Retirals_And_Hidden": Provident Fund (Employer & Employee) + Gratuity + ESI. 
+- "Retirals_And_Hidden": You must sum ALL non-liquid components, including Employer PF, Gratuity, NPS (National Pension Scheme), and mandatory insurance deductions.
 - "ESOP_Stocks": Value of vested stock options for year 1.
 - "Estimated_Monthly_In_Hand": (Fixed_Base / 12) MINUS (Employee PF + ESI monthly deductions).
 All numerical outputs in the \`CTC_Breakdown\` object MUST be rounded to the nearest whole integer. Do not output any decimals.
@@ -95,7 +96,9 @@ CRITICAL: You must output ONLY raw, valid JSON. DO NOT wrap the JSON in markdown
   });
 
   if (!response.ok) {
-    throw new Error('Failed to parse offer letter via AI');
+    const errData = await response.json().catch(() => ({}));
+    console.error('AI API Error Details:', errData);
+    throw new Error(`Failed to parse offer letter via AI: ${errData.error?.message || response.statusText}`);
   }
 
   const data = await response.json();
