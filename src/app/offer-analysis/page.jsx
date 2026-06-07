@@ -27,6 +27,18 @@ const STEP_TABS = [
   { id: 2, label: '2. Analyze Offer Letter' }
 ]
 
+function calculatePercentile(userSalary, marketMedian) {
+  if (!marketMedian || marketMedian === 0) return 45;
+  const ratio = userSalary / marketMedian;
+  let p = 50;
+  if (ratio < 1) {
+    p = 50 - ((1 - ratio) * 100);
+  } else {
+    p = 50 + ((ratio - 1) * 116.6);
+  }
+  return Math.min(Math.max(Math.round(p), 1), 99);
+}
+
 export default function OfferAnalysisPage() {
   const { user } = useAuth()
   
@@ -139,11 +151,10 @@ export default function OfferAnalysisPage() {
         return { median: calcMedian(exactData), tierMatched: true };
       }
 
-      // Attempt 2: Fallback to just City and Title
+      // Attempt 2: Fallback to just Title (National Median)
       const { data: fallbackData, error: fallbackError } = await supabase
         .from('offer_analyses')
         .select('offered_ctc')
-        .ilike('city', `%${city}%`)
         .ilike('target_job_title', `%${targetTitle}%`);
 
       if (!fallbackError && fallbackData && fallbackData.length > 0) {
@@ -460,11 +471,20 @@ export default function OfferAnalysisPage() {
                   {(() => {
                     const ctcValue = result.CTC_Breakdown?.Total_CTC_Stated || 0;
                     const median = marketMedian || (ctcValue * 1.1);
-                    let percentile = 50;
-                    if (median > 0 && ctcValue !== median) {
-                      percentile = ctcValue < median ? Math.max(5, (ctcValue / median) * 50) : Math.min(99, 50 + ((ctcValue - median) / median) * 50);
-                    } else if (marketMedian === 0) {
-                      percentile = 45;
+                    const percentile = calculatePercentile(ctcValue, marketMedian > 0 ? marketMedian : median);
+
+                    let gaugeColor = 'bg-teal-400';
+                    let gaugeShadow = 'shadow-[0_0_12px_rgba(45,212,191,0.8)]';
+                    let gaugeText = 'text-teal-400';
+
+                    if (percentile < 40) {
+                      gaugeColor = 'bg-red-500';
+                      gaugeShadow = 'shadow-[0_0_12px_rgba(239,68,68,0.8)]';
+                      gaugeText = 'text-red-500';
+                    } else if (percentile <= 60) {
+                      gaugeColor = 'bg-yellow-500';
+                      gaugeShadow = 'shadow-[0_0_12px_rgba(234,179,8,0.8)]';
+                      gaugeText = 'text-yellow-500';
                     }
                     
                     const pieData = [
@@ -539,9 +559,9 @@ export default function OfferAnalysisPage() {
                               {!tierMatched && marketMedian > 0 && <span className="text-yellow-500 block mt-1">General market median shown.</span>}
                             </div>
                             
-                            <div style={{ fontFamily: FM }} className="text-[10px] tracking-[0.06em] text-gray-400 mb-3">POSITION ({Math.round(percentile)}TH %ILE)</div>
+                            <div style={{ fontFamily: FM }} className="text-[10px] tracking-[0.06em] text-gray-400 mb-3">POSITION ({percentile}TH %ILE)</div>
                             <div className="w-full h-2 bg-gray-800 rounded-full relative">
-                              <div className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-teal-400 shadow-[0_0_12px_rgba(45,212,191,0.8)]" style={{ left: `${Math.round(percentile)}%`, transition: 'left 1s ease-out' }} />
+                              <div className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full ${gaugeColor} ${gaugeShadow}`} style={{ left: `${percentile}%`, transition: 'left 1s ease-out' }} />
                             </div>
                           </div>
 
