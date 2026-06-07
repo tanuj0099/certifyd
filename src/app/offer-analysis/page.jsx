@@ -332,7 +332,7 @@ export default function OfferAnalysisPage() {
       footer={false}
       showFeedback={false}
     >
-      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full mx-auto" style={{ margin: '0 -24px', width: 'calc(100% + 48px)' }}>
 
         {/* ROI-style Flow Stepper */}
         {!hasResult && (
@@ -497,7 +497,7 @@ export default function OfferAnalysisPage() {
                 )}
 
                 {/* Market Comparison Bento Grid */}
-                <AppSection id="COMPARISON" title="CTC ANALYSIS & BENCHMARKS" bg="transparent" noBorderTop>
+                <div className="w-full mt-4">
                   {(() => {
                     const calculatedFallback = (() => {
                       const expStr = result.Market_Context?.Calculated_Experience_Level_For_Offer || '0';
@@ -687,7 +687,7 @@ export default function OfferAnalysisPage() {
                       </div>
                     );
                   })()}
-                </AppSection>
+                </div>
 
                 {/* Reset */}
                 <motion.button
