@@ -1,313 +1,335 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { motion } from 'framer-motion'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useJourneyStore } from '@/store/useJourneyStore.js'
 import BurnRate from '@/components/BurnRate.jsx'
-import ToolPageWrapper from '@/components/ToolPageWrapper.jsx'
+import { MarketingFooter } from '@/components/MarketingPageShell.jsx'
 import {
-  BookOpen, TrendingUp, Target, Clock, CheckCircle2,
-  ArrowRight, Award, BarChart2, Zap, Calendar, MapPin,
-  ChevronRight, Flame, Brain, FileText
+  Award, TrendingUp, BarChart2, Zap, MapPin,
+  ChevronRight, BookOpen, Compass, Target, Bookmark,
+  Star, Activity, FileSearch
 } from 'lucide-react'
 
 const FH = "var(--font-head)";
 const FM = "var(--font-mono)";
 const FB = "var(--font-body)";
 
-function StatCard({ icon: Icon, label, value, accent = false }) {
-  return (
-    <div style={{
-      background: accent ? 'var(--accent)' : 'var(--bg-surface)',
-      border: `1px solid ${accent ? 'var(--accent)' : 'var(--border)'}`,
-      borderRadius: '16px',
-      padding: '20px',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '8px',
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <Icon size={16} color={accent ? 'var(--bg)' : 'var(--text-3)'} />
-        <span style={{ fontFamily: FM, fontSize: '10px', color: accent ? 'var(--bg)' : 'var(--text-3)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-          {label}
-        </span>
-      </div>
-      <div style={{ fontFamily: FH, fontSize: '28px', fontWeight: '700', color: accent ? 'var(--bg)' : 'var(--text)', lineHeight: 1 }}>
-        {value}
-      </div>
-    </div>
-  )
-}
-
-function QuickLink({ icon: Icon, label, href, desc }) {
-  const router = useRouter()
+// ─── Sidebar nav item ────────────────────────────────────────────────────────
+function NavItem({ label, active, onClick }) {
   return (
     <button
-      onClick={() => router.push(href)}
+      onClick={onClick}
       style={{
-        display: 'flex', alignItems: 'center', gap: '12px',
-        padding: '12px 16px', borderRadius: '12px', width: '100%',
-        background: 'transparent', border: '1px solid var(--border)',
-        cursor: 'pointer', transition: 'all 0.2s',
-        textAlign: 'left',
+        width: '100%', textAlign: 'left', padding: '8px 12px',
+        borderRadius: '8px', border: 'none', cursor: 'pointer',
+        background: active ? 'var(--bg-surface)' : 'transparent',
+        color: active ? 'var(--text)' : 'var(--text-3)',
+        fontFamily: FH, fontSize: '13px', fontWeight: active ? '600' : '500',
+        transition: 'all 0.15s',
       }}
-      onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = 'var(--bg-surface)' }}
-      onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'transparent' }}
+      onMouseEnter={e => { if (!active) e.currentTarget.style.background = 'var(--bg-surface)' }}
+      onMouseLeave={e => { if (!active) e.currentTarget.style.background = 'transparent' }}
     >
-      <div style={{
-        width: '36px', height: '36px', borderRadius: '10px',
-        background: 'var(--bg-surface)', border: '1px solid var(--border)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-      }}>
-        <Icon size={16} color="var(--text-2)" />
-      </div>
-      <div style={{ flex: 1 }}>
-        <div style={{ fontFamily: FH, fontSize: '13px', fontWeight: '600', color: 'var(--text)' }}>{label}</div>
-        <div style={{ fontFamily: FB, fontSize: '11px', color: 'var(--text-3)', marginTop: '2px' }}>{desc}</div>
-      </div>
-      <ChevronRight size={14} color="var(--text-4)" />
+      {label}
     </button>
   )
 }
 
-function StudyStreakWidget({ certName }) {
-  const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
-  const studied = [true, true, false, true, true, false, false] // mock data
-
+// ─── Right sidebar action button ─────────────────────────────────────────────
+function ActionBtn({ label, onClick }) {
   return (
-    <div style={{
-      background: 'var(--bg-surface)',
-      border: '1px solid var(--border)',
-      borderRadius: '16px',
-      padding: '20px',
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
-        <Flame size={16} color="#f97316" />
-        <span style={{ fontFamily: FH, fontSize: '14px', fontWeight: '700', color: 'var(--text)' }}>Study Streak</span>
-        <span style={{
-          marginLeft: 'auto', fontFamily: FM, fontSize: '11px',
-          background: 'var(--bg)', border: '1px solid var(--border)',
-          padding: '2px 8px', borderRadius: '99px', color: 'var(--text-3)'
-        }}>This week</span>
-      </div>
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
-        {days.map((day, i) => (
-          <div key={i} style={{ flex: 1, textAlign: 'center' }}>
-            <div style={{
-              width: '100%', aspectRatio: '1', borderRadius: '8px', marginBottom: '6px',
-              background: studied[i] ? 'var(--accent)' : 'var(--bg)',
-              border: `1px solid ${studied[i] ? 'var(--accent)' : 'var(--border)'}`,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>
-              {studied[i] && <CheckCircle2 size={12} color="var(--bg)" />}
-            </div>
-            <span style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)' }}>{day}</span>
-          </div>
-        ))}
-      </div>
-      <div style={{ fontFamily: FB, fontSize: '12px', color: 'var(--text-3)' }}>
-        <span style={{ color: '#f97316', fontWeight: '700' }}>4 day</span> streak · Keep it up to hit your exam date!
+    <button
+      onClick={onClick}
+      style={{
+        width: '100%', textAlign: 'left', padding: '9px 12px',
+        borderRadius: '8px', border: '1px solid var(--border)',
+        background: 'transparent', color: 'var(--text)',
+        fontFamily: FH, fontSize: '12px', fontWeight: '500',
+        cursor: 'pointer', transition: 'all 0.15s',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      }}
+      onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)' }}
+      onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text)' }}
+    >
+      {label}
+      <ChevronRight size={12} />
+    </button>
+  )
+}
+
+// ─── Section label ────────────────────────────────────────────────────────────
+function SideLabel({ children }) {
+  return (
+    <div style={{ fontFamily: FM, fontSize: '9px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--text-4)', marginBottom: '8px', marginTop: '16px' }}>
+      {children}
+    </div>
+  )
+}
+
+// ─── Empty active paths panel ─────────────────────────────────────────────────
+function EmptyPaths({ onBrowse, onROI }) {
+  return (
+    <div style={{ padding: '32px 0' }}>
+      <h2 style={{ fontFamily: FH, fontSize: '20px', fontWeight: '700', color: 'var(--text)', margin: '0 0 8px' }}>No active certification paths yet</h2>
+      <p style={{ fontFamily: FB, fontSize: '13px', color: 'var(--text-3)', margin: '0 0 24px', maxWidth: '480px', lineHeight: 1.6 }}>
+        Start by exploring certifications on Cert Radar, or run an ROI analysis to find your best path.
+      </p>
+      <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+        <button
+          onClick={onBrowse}
+          style={{
+            padding: '10px 20px', borderRadius: '8px',
+            background: 'var(--text)', color: 'var(--bg)',
+            border: 'none', cursor: 'pointer',
+            fontFamily: FH, fontSize: '13px', fontWeight: '700',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.opacity = '0.85' }}
+          onMouseLeave={e => { e.currentTarget.style.opacity = '1' }}
+        >
+          Browse Cert Radar
+        </button>
+        <button
+          onClick={onROI}
+          style={{
+            padding: '10px 20px', borderRadius: '8px',
+            background: 'transparent', color: 'var(--text)',
+            border: '1px solid var(--border)', cursor: 'pointer',
+            fontFamily: FH, fontSize: '13px', fontWeight: '600',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)' }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text)' }}
+        >
+          ROI Calculator
+        </button>
       </div>
     </div>
   )
 }
 
-function ExamCountdown({ certName }) {
-  return (
-    <div style={{
-      background: 'var(--bg-surface)',
-      border: '1px solid var(--border)',
-      borderRadius: '16px',
-      padding: '20px',
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-        <Calendar size={16} color="var(--text-3)" />
-        <span style={{ fontFamily: FH, fontSize: '14px', fontWeight: '700', color: 'var(--text)' }}>Exam Countdown</span>
-      </div>
-      <div style={{ fontFamily: FH, fontSize: '36px', fontWeight: '800', color: 'var(--accent)', lineHeight: 1 }}>
-        47
-        <span style={{ fontSize: '16px', fontWeight: '500', color: 'var(--text-3)', marginLeft: '6px' }}>days left</span>
-      </div>
-      <div style={{ fontFamily: FB, fontSize: '12px', color: 'var(--text-3)', marginTop: '8px' }}>
-        At current pace · ~2hr/day needed
-      </div>
-      <div style={{ marginTop: '14px', background: 'var(--bg)', borderRadius: '99px', height: '6px', overflow: 'hidden' }}>
-        <div style={{ width: '38%', height: '100%', background: 'var(--accent)', borderRadius: '99px', transition: 'width 1s ease' }} />
-      </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '6px' }}>
-        <span style={{ fontFamily: FM, fontSize: '10px', color: 'var(--text-4)' }}>38% prepared</span>
-        <span style={{ fontFamily: FM, fontSize: '10px', color: 'var(--text-4)' }}>Target: 80%</span>
-      </div>
-    </div>
-  )
-}
-
+// ─── Main Page ─────────────────────────────────────────────────────────────────
 export default function DashboardPage() {
   const router = useRouter()
-  const certName = useJourneyStore(s => s.certName)
-  const resumeCity = useJourneyStore(s => s.resumeCity)
-  const resumeName = useJourneyStore(s => s.resumeName)
+  const certName    = useJourneyStore(s => s.certName)
+  const resumeName  = useJourneyStore(s => s.resumeName)
+  const resumeCity  = useJourneyStore(s => s.resumeCity)
   const breakEvenMonths = 6
 
-  if (!certName) {
-    return (
-      <ToolPageWrapper title="Your" subtitle="Dashboard" description="Track your certification progress and career ROI." footer={true} showFeedback={false}>
-        <div style={{
-          display: 'flex', flexDirection: 'column', alignItems: 'center',
-          justifyContent: 'center', textAlign: 'center',
-          padding: '60px 24px', gap: '16px'
-        }}>
+  const [activeSection, setActiveSection] = useState('active-paths')
+
+  const SECTIONS = [
+    { id: 'active-paths',  label: 'Active Paths' },
+    { id: 'study-tracker', label: 'Study Tracker' },
+    { id: 'target',        label: 'Target Profiles' },
+    { id: 'milestones',    label: 'Milestone Moats' },
+    { id: 'saved',         label: 'Saved Future Explorations' },
+  ]
+
+  return (
+    <div style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)', paddingTop: '64px' }}>
+
+      {/* ── Page header ── */}
+      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '32px 24px 0' }}>
+        <div style={{ fontFamily: FM, fontSize: '10px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--text-4)', marginBottom: '6px' }}>CAREER TOOLS</div>
+        <h1 style={{ fontFamily: FH, fontSize: '32px', fontWeight: '700', color: 'var(--text)', margin: 0 }}>
+          {resumeName ? `${resumeName.split(' ')[0]}'s` : 'Your'} workspace
+        </h1>
+        {resumeCity && (
+          <div style={{ fontFamily: FB, fontSize: '13px', color: 'var(--text-3)', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+            <MapPin size={12} /> {resumeCity}
+          </div>
+        )}
+      </div>
+
+      {/* ── 3-column layout ── */}
+      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '24px 24px 80px', display: 'grid', gridTemplateColumns: '200px 1fr 280px', gap: '24px', alignItems: 'start' }}>
+
+        {/* ── LEFT: sidebar nav ── */}
+        <div style={{ position: 'sticky', top: '80px' }}>
+          {/* User card */}
           <div style={{
-            width: '64px', height: '64px', borderRadius: '16px',
             background: 'var(--bg-surface)', border: '1px solid var(--border)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            borderRadius: '12px', padding: '14px', marginBottom: '16px',
+            display: 'flex', alignItems: 'center', gap: '10px',
           }}>
-            <Award size={28} color="var(--text-3)" />
-          </div>
-          <div>
-            <h2 style={{ fontFamily: FH, fontSize: '22px', color: 'var(--text)', margin: '0 0 8px' }}>No certification selected yet</h2>
-            <p style={{ fontFamily: FB, fontSize: '14px', color: 'var(--text-3)', margin: 0, maxWidth: '360px' }}>
-              Use the ROI Calculator to pick a cert and your dashboard will populate automatically.
-            </p>
-          </div>
-          <div style={{ display: 'flex', gap: '12px', marginTop: '8px', flexWrap: 'wrap', justifyContent: 'center' }}>
-            <button
-              onClick={() => router.push('/')}
-              style={{
-                padding: '12px 24px', borderRadius: '10px',
-                background: 'var(--accent)', color: 'var(--bg)',
-                border: 'none', cursor: 'pointer',
-                fontFamily: FH, fontWeight: '700', fontSize: '14px',
-                display: 'inline-flex', alignItems: 'center', gap: '8px'
-              }}
-            >
-              <TrendingUp size={15} /> ROI Calculator <ArrowRight size={14} />
-            </button>
-            <button
-              onClick={() => router.push('/offer-analysis')}
-              style={{
-                padding: '12px 24px', borderRadius: '10px',
-                background: 'transparent', color: 'var(--text)',
-                border: '1px solid var(--border)', cursor: 'pointer',
-                fontFamily: FH, fontWeight: '600', fontSize: '14px',
-                display: 'inline-flex', alignItems: 'center', gap: '8px'
-              }}
-            >
-              <Brain size={15} /> Analyze an Offer
-            </button>
+            <div style={{
+              width: '36px', height: '36px', borderRadius: '9px',
+              background: 'var(--accent)', color: 'var(--bg)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontFamily: FH, fontWeight: '800', fontSize: '16px', flexShrink: 0,
+            }}>
+              {(resumeName || 'U').charAt(0).toUpperCase()}
+            </div>
+            <div style={{ overflow: 'hidden' }}>
+              <div style={{ fontFamily: FH, fontSize: '13px', fontWeight: '700', color: 'var(--text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {resumeName || 'Your workspace'}
+              </div>
+              <div style={{ fontFamily: FM, fontSize: '10px', color: 'var(--text-4)' }}>Career Tools</div>
+            </div>
           </div>
 
-          {/* Preview cards */}
-          <div style={{
-            marginTop: '32px', width: '100%', maxWidth: '800px',
-            display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px',
-          }}>
-            {[
-              { icon: TrendingUp, label: 'Break-even Months', preview: '—' },
-              { icon: Clock, label: 'Salary Boost', preview: '—' },
-              { icon: Flame, label: 'Study Streak', preview: '0 days' },
-              { icon: Target, label: 'Exam Readiness', preview: '—' },
-            ].map(({ icon: Icon, label, preview }) => (
-              <div key={label} style={{
-                background: 'var(--bg-surface)', border: '1px solid var(--border)',
-                borderRadius: '16px', padding: '20px', opacity: 0.5,
-              }}>
-                <Icon size={18} color="var(--text-4)" style={{ marginBottom: '8px' }} />
-                <div style={{ fontFamily: FM, fontSize: '10px', color: 'var(--text-4)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '4px' }}>{label}</div>
-                <div style={{ fontFamily: FH, fontSize: '22px', fontWeight: '700', color: 'var(--text-3)' }}>{preview}</div>
-              </div>
+          {/* Nav items */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+            {SECTIONS.map(s => (
+              <NavItem key={s.id} label={s.label} active={activeSection === s.id} onClick={() => setActiveSection(s.id)} />
             ))}
           </div>
         </div>
-      </ToolPageWrapper>
-    )
-  }
 
-  return (
-    <ToolPageWrapper
-      title={resumeName ? `${resumeName.split(' ')[0]}'s` : "Study"}
-      subtitle="Dashboard"
-      description={`Tracking your journey to ${certName}${resumeCity ? ` · ${resumeCity}` : ''}`}
-      footer={true}
-      showFeedback={false}
-    >
-      <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
-
-        {/* Stats Row */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '16px', marginBottom: '28px' }}>
-          <StatCard icon={Award} label="Target Cert" value={certName.split(' ').slice(0, 2).join(' ')} />
-          <StatCard icon={Clock} label="Break-even" value={`${breakEvenMonths}mo`} accent />
-          <StatCard icon={TrendingUp} label="ROI Gain" value="+28%" />
-          <StatCard icon={MapPin} label="Location" value={resumeCity || 'India'} />
-        </div>
-
-        {/* Main 3-column grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 320px', gap: '24px', alignItems: 'start' }}>
-
-          {/* LEFT: BurnRate / ROI Engine */}
-          <div style={{ gridColumn: '1 / 3', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
-              <BurnRate certName={certName} breakEvenMonths={breakEvenMonths} />
-            </motion.div>
-
-            {/* Study streak */}
-            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }}>
-              <StudyStreakWidget certName={certName} />
-            </motion.div>
+        {/* ── CENTRE: main content ── */}
+        <div style={{ minWidth: 0 }}>
+          {/* Section heading */}
+          <div style={{ marginBottom: '24px', borderBottom: '1px solid var(--border)', paddingBottom: '16px' }}>
+            <h2 style={{ fontFamily: FH, fontSize: '22px', fontWeight: '700', color: 'var(--text)', margin: 0 }}>
+              {SECTIONS.find(s => s.id === activeSection)?.label}
+            </h2>
           </div>
 
-          {/* RIGHT: Sidebar */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.05 }}>
-              <ExamCountdown certName={certName} />
-            </motion.div>
+          <AnimatePresence mode="wait">
+            <motion.div key={activeSection} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
 
-            {/* Quick Links */}
-            <motion.div
-              initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.15 }}
-              style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: '16px', padding: '20px' }}
-            >
-              <div style={{ fontFamily: FH, fontSize: '14px', fontWeight: '700', color: 'var(--text)', marginBottom: '12px' }}>Quick Actions</div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <QuickLink icon={TrendingUp} label="ROI Calculator" desc="Recalculate with updated salary" href="/" />
-                <QuickLink icon={BarChart2} label="City Demand" desc={`See ${certName} demand heatmap`} href="/" />
-                <QuickLink icon={Brain} label="Offer Analyzer" desc="Benchmark a job offer" href="/offer-analysis" />
-                <QuickLink icon={FileText} label="Resume Analyzer" desc="Get cert recommendations" href="/" />
-              </div>
-            </motion.div>
+              {/* Active Paths */}
+              {activeSection === 'active-paths' && (
+                certName ? (
+                  <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+                      <Award size={18} color="var(--accent)" />
+                      <div style={{ fontFamily: FH, fontSize: '16px', fontWeight: '700', color: 'var(--text)' }}>{certName}</div>
+                      <span style={{ marginLeft: 'auto', fontFamily: FM, fontSize: '10px', padding: '3px 8px', borderRadius: '99px', background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text-3)' }}>Active</span>
+                    </div>
+                    <div style={{ fontFamily: FB, fontSize: '13px', color: 'var(--text-3)', lineHeight: 1.6 }}>
+                      Break-even in <strong style={{ color: 'var(--text)', fontFamily: FM }}>{breakEvenMonths} months</strong>
+                      {resumeCity && <> · {resumeCity} market</>}
+                    </div>
+                    <div style={{ display: 'flex', gap: '10px', marginTop: '16px' }}>
+                      <button
+                        onClick={() => setActiveSection('study-tracker')}
+                        style={{ padding: '8px 16px', borderRadius: '8px', background: 'var(--accent)', color: 'var(--bg)', border: 'none', cursor: 'pointer', fontFamily: FH, fontSize: '12px', fontWeight: '700' }}
+                      >
+                        Open Study Tracker
+                      </button>
+                      <button
+                        onClick={() => router.push('/')}
+                        style={{ padding: '8px 16px', borderRadius: '8px', background: 'transparent', color: 'var(--text-2)', border: '1px solid var(--border)', cursor: 'pointer', fontFamily: FH, fontSize: '12px' }}
+                      >
+                        Recalculate ROI
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <EmptyPaths onBrowse={() => router.push('/cert-radar')} onROI={() => router.push('/')} />
+                )
+              )}
 
-            {/* Next milestone */}
-            <motion.div
-              initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2 }}
-              style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: '16px', padding: '20px' }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-                <Zap size={15} color="var(--accent)" />
-                <span style={{ fontFamily: FH, fontSize: '14px', fontWeight: '700', color: 'var(--text)' }}>Next Milestone</span>
-              </div>
-              {[
-                { label: 'Complete Domain 1', done: true },
-                { label: 'Mock Test 1 (>70%)', done: false },
-                { label: 'Book exam slot', done: false },
-              ].map((m, i) => (
-                <div key={i} style={{
-                  display: 'flex', alignItems: 'center', gap: '10px',
-                  padding: '8px 0',
-                  borderBottom: i < 2 ? '1px solid var(--border)' : 'none'
-                }}>
-                  <CheckCircle2 size={14} color={m.done ? 'var(--accent)' : 'var(--border)'} />
-                  <span style={{
-                    fontFamily: FB, fontSize: '13px',
-                    color: m.done ? 'var(--text-3)' : 'var(--text)',
-                    textDecoration: m.done ? 'line-through' : 'none',
-                  }}>{m.label}</span>
+              {/* Study Tracker */}
+              {activeSection === 'study-tracker' && (
+                certName ? (
+                  <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '24px' }}>
+                    <BurnRate certName={certName} breakEvenMonths={breakEvenMonths} />
+                  </div>
+                ) : (
+                  <EmptyPaths onBrowse={() => router.push('/cert-radar')} onROI={() => router.push('/')} />
+                )
+              )}
+
+              {/* Target Profiles */}
+              {activeSection === 'target' && (
+                <div>
+                  <p style={{ fontFamily: FB, fontSize: '13px', color: 'var(--text-3)', marginBottom: '20px', lineHeight: 1.6 }}>
+                    Save job profiles you're targeting — salary, role, company tier — to benchmark your cert journey against real offers.
+                  </p>
+                  <button
+                    onClick={() => router.push('/offer-analysis')}
+                    style={{ padding: '10px 20px', borderRadius: '8px', background: 'var(--text)', color: 'var(--bg)', border: 'none', cursor: 'pointer', fontFamily: FH, fontSize: '13px', fontWeight: '700', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+                  >
+                    <FileSearch size={14} /> Analyze an Offer Letter
+                  </button>
                 </div>
-              ))}
+              )}
+
+              {/* Milestone Moats */}
+              {activeSection === 'milestones' && (
+                <div>
+                  <p style={{ fontFamily: FB, fontSize: '13px', color: 'var(--text-3)', marginBottom: '16px', lineHeight: 1.6 }}>
+                    Track the certifications and skills that build your long-term career moat.
+                  </p>
+                  {certName ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      {[
+                        { label: `Complete ${certName}`, done: false },
+                        { label: 'Score 80%+ on mock exam', done: false },
+                        { label: 'Apply to 3 roles after certification', done: false },
+                        { label: 'Negotiate using market data', done: false },
+                      ].map((m, i) => (
+                        <label key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', padding: '10px 14px', borderRadius: '10px', border: '1px solid var(--border)', background: 'transparent' }}>
+                          <input type="checkbox" defaultChecked={m.done} style={{ accentColor: 'var(--accent)', width: '16px', height: '16px' }} />
+                          <span style={{ fontFamily: FB, fontSize: '13px', color: 'var(--text)' }}>{m.label}</span>
+                        </label>
+                      ))}
+                    </div>
+                  ) : (
+                    <EmptyPaths onBrowse={() => router.push('/cert-radar')} onROI={() => router.push('/')} />
+                  )}
+                </div>
+              )}
+
+              {/* Saved Future Explorations */}
+              {activeSection === 'saved' && (
+                <div>
+                  <p style={{ fontFamily: FB, fontSize: '13px', color: 'var(--text-3)', marginBottom: '16px', lineHeight: 1.6 }}>
+                    Certs you've bookmarked for later. Use Cert Radar to explore and save more.
+                  </p>
+                  <div style={{ padding: '32px', border: '1px dashed var(--border)', borderRadius: '10px', textAlign: 'center', color: 'var(--text-4)', fontFamily: FB, fontSize: '13px' }}>
+                    No saved certs yet.
+                  </div>
+                  <button
+                    onClick={() => router.push('/cert-radar')}
+                    style={{ marginTop: '16px', padding: '10px 20px', borderRadius: '8px', background: 'transparent', color: 'var(--text)', border: '1px solid var(--border)', cursor: 'pointer', fontFamily: FH, fontSize: '13px', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+                  >
+                    <Compass size={14} /> Browse Cert Radar
+                  </button>
+                </div>
+              )}
+
             </motion.div>
-          </div>
+          </AnimatePresence>
         </div>
+
+        {/* ── RIGHT: stats sidebar ── */}
+        <div style={{ position: 'sticky', top: '80px', background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '18px', display: 'flex', flexDirection: 'column' }}>
+
+          <SideLabel>Milestone Moats</SideLabel>
+          <div style={{ fontFamily: FH, fontSize: '28px', fontWeight: '800', color: 'var(--text)', lineHeight: 1 }}>{certName ? 1 : 0}</div>
+          <div style={{ fontFamily: FB, fontSize: '12px', color: 'var(--text-3)', marginTop: '4px', marginBottom: '4px' }}>active cert paths tracked!</div>
+
+          <SideLabel>Quick Actions</SideLabel>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <ActionBtn label="Run ROI Calculator" onClick={() => router.push('/')} />
+            <ActionBtn label="Cert Radar" onClick={() => router.push('/cert-radar')} />
+            <ActionBtn label="Market Pulse" onClick={() => router.push('/market-pulse')} />
+            <ActionBtn label="Analyze Offer Letter" onClick={() => router.push('/offer-analysis')} />
+          </div>
+
+          <SideLabel>Saved Future Explorations</SideLabel>
+          <div style={{ fontFamily: FB, fontSize: '12px', color: 'var(--text-4)', padding: '10px', borderRadius: '8px', background: 'var(--bg)', border: '1px solid var(--border)', textAlign: 'center' }}>
+            No saved certs yet
+          </div>
+
+          {certName && (
+            <>
+              <SideLabel>Current Path</SideLabel>
+              <div style={{ padding: '10px 12px', borderRadius: '8px', background: 'var(--bg)', border: '1px solid var(--border)' }}>
+                <div style={{ fontFamily: FH, fontSize: '12px', fontWeight: '600', color: 'var(--text)', marginBottom: '4px' }}>{certName}</div>
+                <div style={{ fontFamily: FM, fontSize: '10px', color: 'var(--text-3)' }}>Break-even: {breakEvenMonths} months</div>
+              </div>
+            </>
+          )}
+        </div>
+
       </div>
-    </ToolPageWrapper>
+
+      <MarketingFooter />
+    </div>
   )
 }
