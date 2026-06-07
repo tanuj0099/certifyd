@@ -80,7 +80,7 @@ If the region is supported (India), output a valid JSON object matching this exa
   }
 }
 
-CRITICAL: You must output ONLY raw, valid JSON. DO NOT wrap the JSON in markdown code blocks (e.g., no \`\`\`json). DO NOT include any conversational text before or after the JSON.\`;
+CRITICAL: You must output ONLY raw, valid JSON. DO NOT wrap the JSON in markdown code blocks (e.g., no \`\`\`json). DO NOT include any conversational text before or after the JSON.`;
 
   const response = await fetch('/api/groq', {
     method: 'POST',
