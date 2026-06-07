@@ -332,7 +332,7 @@ export default function OfferAnalysisPage() {
       footer={false}
       showFeedback={false}
     >
-      <div className="w-full mx-auto" style={{ margin: '0 -24px', width: 'calc(100% + 48px)' }}>
+      <div className="w-full mx-auto" style={{ margin: '0 -12px', width: 'calc(100% + 24px)' }}>
 
         {/* ROI-style Flow Stepper */}
         {!hasResult && (
