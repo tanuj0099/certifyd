@@ -176,7 +176,7 @@ export function AppSection({ id = '', title = '', children, bg = '', noBorderTop
             </div>
           </div>
         )}
-        <div style={{ flex: 1, padding: isMobile ? '32px 16px' : '64px 4vw', position: 'relative', overflow: 'visible' }}>
+        <div style={{ flex: 1, padding: isMobile ? '16px' : '24px 16px', position: 'relative', overflow: 'visible' }}>
           {isMobile && (
             <div style={{ marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px' }}>
               <span style={{ fontFamily: F_MONO, fontSize: '11px', color: C.gold, fontWeight: '700', letterSpacing: '0.12em' }}>{id}</span>

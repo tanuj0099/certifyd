@@ -5,12 +5,12 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   Upload, FileText, X, Sparkles, AlertTriangle,
   ArrowRight, RefreshCw, TrendingUp, CheckCircle,
-  AlertCircle, ExternalLink, Briefcase, FileSignature
+  AlertCircle, ExternalLink, Briefcase, FileSignature, Check
 } from 'lucide-react'
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
 import { supabase } from '@/lib/supabase.js'
 import { useAuth } from '@/hooks/useAuth.jsx'
-import { AppSection } from '@/components/SharedUI.jsx'
+import { AppSection, useThemeContext } from '@/components/SharedUI.jsx'
 import ToolPageWrapper from '@/components/ToolPageWrapper.jsx'
 import { parseOfferLetter } from '@/services/hrAiService.jsx'
 
@@ -23,8 +23,8 @@ const PICTON = 'var(--linear-blue)'
 const EMERALD = 'var(--linear-blue)'
 
 const STEP_TABS = [
-  { id: 1, label: '1. Establish Baseline (Resume)' },
-  { id: 2, label: '2. Analyze Offer Letter' }
+  { id: 1, num: '1', label: 'Establish Baseline', icon: FileText, desc: 'Upload resume for context' },
+  { id: 2, num: '2', label: 'Analyze Offer Letter', icon: Briefcase, desc: 'AI benchmarks your CTC' },
 ]
 
 function calculatePercentile(userSalary, marketMedian) {
@@ -41,9 +41,10 @@ function calculatePercentile(userSalary, marketMedian) {
 
 export default function OfferAnalysisPage() {
   const { user } = useAuth()
-  
+  const C = useThemeContext()
+
   const [step, setStep] = useState(1)
-  
+
   // Step 1: Resume State
   const resumeFileInputRef = useRef(null)
   const [resumeText, setResumeText] = useState('')
@@ -57,7 +58,7 @@ export default function OfferAnalysisPage() {
   const [offerFileName, setOfferFileName] = useState('')
   const [offerDragging, setOfferDragging] = useState(false)
   const [offerPdfLoading, setOfferPdfLoading] = useState(false)
-  
+
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState(null)
   const [marketMedian, setMarketMedian] = useState(0)
@@ -71,7 +72,7 @@ export default function OfferAnalysisPage() {
     if (!file) return
     const isPdf = file.name.toLowerCase().endsWith('.pdf') || file.type === 'application/pdf'
     setErrorState('')
-    
+
     if (isPdf) {
       setFileName(file.name); setText(''); setPdfLoadState(true);
       try {
@@ -103,7 +104,7 @@ export default function OfferAnalysisPage() {
       }
       return
     }
-    
+
     // For txt or doc
     setFileName(file.name); setText('');
     const reader = new FileReader()
@@ -124,7 +125,7 @@ export default function OfferAnalysisPage() {
 
   const fetchMedianFromDB = async (city, targetTitle, companyTier) => {
     if (!supabase || !city || !targetTitle) return { median: 0, tierMatched: false };
-    
+
     const calcMedian = (data) => {
       if (!data || data.length === 0) return 0;
       const ctcs = data.map(d => Number(d.offered_ctc)).filter(c => c > 0).sort((a, b) => a - b);
@@ -140,13 +141,13 @@ export default function OfferAnalysisPage() {
         .select('offered_ctc')
         .ilike('city', `%${city}%`)
         .ilike('target_job_title', `%${targetTitle}%`);
-      
+
       if (companyTier && companyTier !== 'Unknown') {
         exactQuery = exactQuery.eq('raw_json->Analysis_Metadata->>Company_Tier', companyTier);
       }
 
       const { data: exactData, error: exactError } = await exactQuery;
-      
+
       if (!exactError && exactData && exactData.length > 0) {
         return { median: calcMedian(exactData), tierMatched: true };
       }
@@ -191,7 +192,7 @@ export default function OfferAnalysisPage() {
       const title = analysis.Analysis_Metadata?.Target_Job_Title || ''
       const tier = analysis.Analysis_Metadata?.Company_Tier || 'Unknown'
       const ctcStated = analysis.CTC_Breakdown?.Total_CTC_Stated || 0
-      
+
       // Fetch dynamic median
       const medianResult = await fetchMedianFromDB(location, title, tier)
       setMarketMedian(medianResult.median)
@@ -245,7 +246,7 @@ export default function OfferAnalysisPage() {
                 style={{ padding: '32px 22px', cursor: 'pointer', textAlign: 'center' }}
               >
                 <input ref={inputRef} type="file" accept=".pdf,.txt,.doc,.docx" style={{ display: 'none' }} onChange={e => readFileFn(e.target.files[0])} />
-                
+
                 {loadingState ? (
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
                     <motion.div
@@ -327,38 +328,70 @@ export default function OfferAnalysisPage() {
     <ToolPageWrapper
       title="Offer Letter"
       subtitle="Analysis"
-      description="Compare your job offer against verified Indian market benchmarks using AI."
+      description="Compare your job offer against verified Indian market benchmarks. "
       footer={false}
       showFeedback={false}
     >
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Stepper Capsules */}
+
+        {/* ROI-style Flow Stepper */}
         {!hasResult && (
-          <div style={{ display: 'flex', gap: '8px', marginBottom: '32px', overflowX: 'auto', paddingBottom: '4px' }}>
-            {STEP_TABS.map((tab) => {
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '16px',
+            marginBottom: '36px',
+            flexWrap: 'wrap',
+          }}>
+            {STEP_TABS.map((tab, i) => {
               const isActive = step === tab.id;
               const isCompleted = step > tab.id;
+              const Icon = tab.icon;
               return (
-                <div key={tab.id} style={{
-                  padding: '8px 16px', borderRadius: '999px',
-                  background: isActive ? 'var(--text)' : isCompleted ? 'var(--bg-surface)' : 'transparent',
-                  border: isActive ? '1px solid var(--text)' : '1px solid var(--border)',
-                  color: isActive ? 'var(--bg)' : 'var(--text-3)',
-                  fontFamily: FH, fontSize: '12px', fontWeight: '700',
-                  display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap',
-                  transition: 'all 0.2s ease', cursor: isCompleted ? 'pointer' : 'default'
-                }} onClick={() => { if (isCompleted) setStep(tab.id) }}>
-                  {isCompleted && <CheckCircle size={12} color="var(--accent)" />}
-                  {tab.label}
+                <div key={tab.id} style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                  {i > 0 && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', opacity: isCompleted || isActive ? 1 : 0.35 }}>
+                      <div style={{ width: '6px', height: '1px', background: 'var(--text)' }} />
+                      <ArrowRight size={14} color="var(--text)" />
+                      <div style={{ width: '6px', height: '1px', background: 'var(--text)' }} />
+                    </div>
+                  )}
+                  <button
+                    onClick={() => { if (isCompleted) { setStep(tab.id); setError('') } }}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: '12px',
+                      padding: '12px 20px', borderRadius: '100px',
+                      border: isActive ? '1px solid var(--border-accent)' : '1px solid var(--border)',
+                      background: 'transparent',
+                      color: isActive ? 'var(--accent)' : isCompleted ? 'var(--text-3)' : 'var(--text-4)',
+                      cursor: isCompleted ? 'pointer' : 'default',
+                      fontFamily: FH, transition: 'all 0.3s ease',
+                    }}
+                  >
+                    <div style={{
+                      width: '24px', height: '24px', borderRadius: '50%',
+                      background: isActive ? 'var(--accent)' : 'transparent',
+                      border: isActive ? 'none' : '1px solid var(--border)',
+                      color: isActive ? 'var(--bg)' : isCompleted ? 'var(--text-2)' : 'var(--text-4)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontSize: '11px', fontFamily: FM, fontWeight: '700', flexShrink: 0,
+                    }}>
+                      {isCompleted ? <Check size={13} strokeWidth={3} /> : tab.num}
+                    </div>
+                    <Icon size={16} />
+                    <span style={{ fontSize: '14px', fontWeight: isActive ? '700' : '600', letterSpacing: '-0.01em', whiteSpace: 'nowrap' }}>
+                      {tab.label}
+                    </span>
+                  </button>
                 </div>
-              )
+              );
             })}
           </div>
         )}
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          
+
           {/* Error */}
           {error && (
             <div style={{ padding: '12px 16px', borderRadius: '8px', background: 'rgba(239, 68, 68, 0.08)', border: '1px solid rgba(239, 68, 68, 0.25)', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -374,7 +407,7 @@ export default function OfferAnalysisPage() {
                 <h3 style={{ fontFamily: FH, fontSize: '18px', color: 'var(--text)', margin: '0 0 4px 0' }}>Establish Baseline</h3>
                 <p style={{ fontFamily: FB, fontSize: '13px', color: 'var(--text-3)', margin: 0 }}>Upload your resume to establish your current experience level, role, and location.</p>
               </div>
-              
+
               {renderUploadZone(
                 "Drop your Resume PDF", resumeDragging, setResumeDragging, !!resumeFileName, resumeFileName, resumeLoading, handleResumeDrop, resumeFileInputRef,
                 (file) => readFile(file, setResumeFileName, setResumeText, setResumeLoading, setError),
@@ -467,18 +500,18 @@ export default function OfferAnalysisPage() {
                 )}
 
                 {/* Market Comparison Bento Grid */}
-                <AppSection id="COMPARISON" title="CTC ANALYSIS & BENCHMARKS">
+                <AppSection id="COMPARISON" title="CTC ANALYSIS & BENCHMARKS" bg="transparent" noBorderTop>
                   {(() => {
                     const calculatedFallback = (() => {
                       const expStr = result.Market_Context?.Calculated_Experience_Level_For_Offer || '0';
                       const expNum = parseInt(expStr.match(/\d+/) ? expStr.match(/\d+/)[0] : 0);
                       const titleLower = (result.Analysis_Metadata?.Target_Job_Title || '').toLowerCase();
                       if (titleLower.includes('architect') || titleLower.includes('principal') || titleLower.includes('staff') || titleLower.includes('director') || titleLower.includes('vp')) {
-                         return 3500000 + (expNum * 300000);
+                        return 3500000 + (expNum * 300000);
                       } else if (titleLower.includes('senior') || titleLower.includes('lead') || titleLower.includes('manager')) {
-                         return 2000000 + (expNum * 250000);
+                        return 2000000 + (expNum * 250000);
                       } else if (titleLower.includes('sde ii') || titleLower.includes('sde 2')) {
-                         return 1500000 + (expNum * 250000);
+                        return 1500000 + (expNum * 250000);
                       }
                       return 800000 + (expNum * 250000);
                     })();
@@ -488,19 +521,16 @@ export default function OfferAnalysisPage() {
                     const percentile = calculatePercentile(ctcValue, finalMedian);
 
                     let gaugeColor = 'bg-teal-500 dark:bg-teal-400';
-                    let gaugeShadow = 'shadow-[0_0_12px_rgba(20,184,166,0.8)] dark:shadow-[0_0_12px_rgba(45,212,191,0.8)]';
                     let gaugeText = 'text-teal-600 dark:text-teal-400';
 
                     if (percentile < 40) {
                       gaugeColor = 'bg-red-600 dark:bg-red-500';
-                      gaugeShadow = 'shadow-[0_0_12px_rgba(220,38,38,0.8)] dark:shadow-[0_0_12px_rgba(239,68,68,0.8)]';
                       gaugeText = 'text-red-600 dark:text-red-500';
                     } else if (percentile <= 60) {
                       gaugeColor = 'bg-yellow-500';
-                      gaugeShadow = 'shadow-[0_0_12px_rgba(234,179,8,0.8)]';
                       gaugeText = 'text-yellow-600 dark:text-yellow-500';
                     }
-                    
+
                     const pieData = [
                       { name: 'Basic Salary', value: result.CTC_Breakdown?.Basic_Salary || 0, color: '#059669' },
                       { name: 'HRA', value: result.CTC_Breakdown?.HRA || 0, color: '#10b981' },
@@ -516,39 +546,88 @@ export default function OfferAnalysisPage() {
 
                     return (
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        
+
                         {/* ROW 1: Reality Check */}
                         <div className="md:col-span-3 flex flex-wrap gap-6">
-                          <div className="flex-1 min-w-[280px] p-8 text-center bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-3xl shadow-2xl">
-                            <div style={{ fontFamily: FM }} className="text-xs tracking-[0.06em] text-slate-500 dark:text-slate-400 mb-3">STATED CTC (INFLATED)</div>
-                            <div className="font-sans tracking-tight tabular-nums text-4xl md:text-5xl font-bold text-slate-900 dark:text-slate-400 line-through decoration-red-500/70 decoration-[3px]">
+                          <div className="flex-1 min-w-[280px] text-center rounded-3xl p-6 shadow-sm transition-all duration-300"
+                            style={{ backgroundColor: C.isLight ? '#ffffff' : C.surface, border: `1px solid ${C.border}` }}>
+                            <div style={{ fontFamily: FM, color: C.text3 }} className="text-xs tracking-[0.06em] mb-3">STATED CTC (INFLATED)</div>
+                            <div className="font-sans tracking-tight tabular-nums text-4xl md:text-5xl font-bold line-through decoration-red-500/70 decoration-[3px]"
+                              style={{ color: C.text }}>
                               ₹{Math.round(ctcValue).toLocaleString('en-IN')}
                             </div>
-                            <div style={{ fontFamily: FB }} className="text-sm text-slate-500 dark:text-slate-400 mt-2">Per annum</div>
+                            <div style={{ fontFamily: FB, color: C.text3 }} className="text-sm mt-2">Per annum</div>
                           </div>
-                          
-                          <div className="flex-1 min-w-[280px] p-8 text-center bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-3xl shadow-2xl relative overflow-hidden">
-                            <div className="absolute inset-0 bg-teal-500/5 blur-[60px] pointer-events-none"></div>
-                            <div style={{ fontFamily: FM }} className="text-xs tracking-[0.06em] text-slate-500 dark:text-slate-400 mb-3 relative">IN-HAND ESTIMATE</div>
-                            <div className="font-sans tracking-tight tabular-nums text-5xl md:text-6xl font-black text-teal-600 dark:text-teal-400 drop-shadow-[0_0_15px_rgba(20,184,166,0.2)] dark:drop-shadow-[0_0_15px_rgba(45,212,191,0.3)] relative">
+
+                          <div className="flex-1 min-w-[280px] text-center rounded-3xl p-6 shadow-sm transition-all duration-300 relative overflow-hidden"
+                            style={{ backgroundColor: C.isLight ? '#ffffff' : C.surface, border: `1px solid ${C.border}` }}>
+                            <div style={{ fontFamily: FM, color: C.text3 }} className="text-xs tracking-[0.06em] mb-3 relative">IN-HAND ESTIMATE</div>
+                            <div className="font-sans tracking-tight tabular-nums text-5xl md:text-6xl font-black text-teal-600 dark:text-teal-400 relative">
                               ₹{Math.round(result.CTC_Breakdown?.Estimated_Monthly_In_Hand || 0).toLocaleString('en-IN')}
                             </div>
-                            <div style={{ fontFamily: FB }} className="text-sm text-slate-500 dark:text-slate-400 mt-2 relative">Per month approx</div>
+                            <div style={{ fontFamily: FB, color: C.text3 }} className="text-sm mt-2 relative">Per month approx</div>
                           </div>
                         </div>
 
-                        {/* ROW 2 LEFT: Donut Chart */}
-                        <div className="md:col-span-2 p-8 bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-3xl shadow-2xl flex flex-col justify-center items-center min-h-[300px]">
-                          <div style={{ fontFamily: FM }} className="text-[10px] tracking-[0.06em] text-slate-500 dark:text-slate-400 w-full mb-4 uppercase">Compensation Composition</div>
-                          <div className="w-full">
-                            <ResponsiveContainer width="100%" height={300}>
+                        {/* ROW 2 LEFT: AI Negotiation Hub */}
+                        <div className="md:col-span-2 p-6 w-full bg-slate-900 text-white rounded-3xl shadow-xl border border-slate-800 flex flex-col justify-center">
+                          <div style={{ fontFamily: FM }} className="text-[10px] tracking-[0.06em] text-slate-400 mb-2 uppercase">AI Negotiator & Strategy</div>
+
+                          {/* Negotiation Target */}
+                          <div className="mb-4">
+                            <div className="text-xs text-slate-300 mb-1 font-medium font-sans">Target Counter-Offer Range</div>
+                            <div className="text-emerald-400 font-bold text-3xl font-sans tracking-tight tabular-nums">
+                              ₹{Math.round(Math.max(ctcValue * 1.15, finalMedian * 0.95)).toLocaleString('en-IN')} - ₹{Math.round(Math.max(ctcValue * 1.25, finalMedian * 1.15)).toLocaleString('en-IN')}
+                            </div>
+                          </div>
+
+                          {/* Negotiation Script */}
+                          <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700">
+                            <div className="text-xs text-emerald-400 mb-2 font-mono flex items-center gap-2">
+                              <Sparkles size={12} /> Actionable Talking Point
+                            </div>
+                            <div className="text-sm text-slate-300 font-sans leading-relaxed">
+                              {result.Market_Context?.Negotiation_Strategy || `Your current offer puts you at the ${percentile}th percentile for ${result.Analysis_Metadata?.Target_Location || 'your region'}. Leverage your relevant experience and core expertise to negotiate a 15-25% bump on the basic salary, or request that the performance variable pay be converted into guaranteed fixed components to align with the market.`}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* ROW 2 RIGHT: Market Context (Median/Gauge) */}
+                        <div className="md:col-span-1 rounded-3xl p-6 shadow-sm transition-all duration-300 flex flex-col justify-center"
+                          style={{ backgroundColor: C.isLight ? '#ffffff' : C.surface, border: `1px solid ${C.border}` }}>
+                          <div style={{ fontFamily: FM, color: C.text3 }} className="text-[10px] tracking-[0.06em] mb-2 uppercase tracking-widest">Market Median</div>
+                          <div className="text-3xl font-black tracking-tight tabular-nums block my-2" style={{ color: C.text }}>
+                            ₹{Math.round(finalMedian).toLocaleString('en-IN')}
+                          </div>
+                          <div style={{ fontFamily: FB, color: C.text3 }} className="text-[11px] mb-6">
+                            For {result.Analysis_Metadata?.Target_Location || 'India'}
+                            {!tierMatched && marketMedian > 0 && <span className="text-yellow-600 block mt-1">General market median shown.</span>}
+                            {marketMedian === 0 && <span className="text-indigo-500 block mt-1">Simulated industry baseline shown.</span>}
+                          </div>
+
+                          <div className="flex justify-between text-xs font-medium mb-3" style={{ color: C.text3 }}>
+                            <span>Low</span>
+                            <span className={`${gaugeText} font-bold font-sans tabular-nums`}>{percentile}th Percentile for {result.Analysis_Metadata?.Target_Location || 'Bengaluru'}</span>
+                            <span>High</span>
+                          </div>
+                          <div className="w-full h-2 rounded-full relative" style={{ backgroundColor: C.isLight ? '#e2e8f0' : '#1e293b' }}>
+                            <div className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full ${gaugeColor}`} style={{ left: `${percentile}%`, transition: 'left 1s ease-out' }} />
+                          </div>
+                        </div>
+
+                        {/* ROW 3 LEFT: Donut Chart */}
+                        <div className="md:col-span-2 rounded-3xl p-6 shadow-sm transition-all duration-300 flex flex-col justify-center items-center h-[360px]"
+                          style={{ backgroundColor: C.isLight ? '#ffffff' : C.surface, border: `1px solid ${C.border}` }}>
+                          <div style={{ fontFamily: FM, color: C.text3 }} className="text-[10px] tracking-[0.06em] w-full mb-4 uppercase tracking-widest">Compensation Composition</div>
+                          <div className="w-full h-full min-h-[250px]">
+                            <ResponsiveContainer width="100%" height="100%">
                               <PieChart>
                                 <Pie
                                   data={pieData}
                                   cx="50%"
                                   cy="50%"
-                                  innerRadius={90}
-                                  outerRadius={120}
+                                  innerRadius={70}
+                                  outerRadius={100}
                                   paddingAngle={4}
                                   dataKey="value"
                                   stroke="none"
@@ -557,7 +636,7 @@ export default function OfferAnalysisPage() {
                                     <Cell key={`cell-${index}`} fill={entry.color} />
                                   ))}
                                 </Pie>
-                                <Tooltip 
+                                <Tooltip
                                   contentStyle={{ background: '#111', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff', fontSize: '13px', fontFamily: FB }}
                                   itemStyle={{ color: '#fff', fontWeight: '600', fontFamily: 'sans-serif' }}
                                   formatter={(value) => `₹${Math.round(value).toLocaleString('en-IN')}`}
@@ -567,58 +646,40 @@ export default function OfferAnalysisPage() {
                           </div>
                         </div>
 
-                        {/* ROW 2 RIGHT: Market Context & Breakdowns */}
-                        <div className="md:col-span-1 flex flex-col gap-6">
-                          <div className="p-8 bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-3xl shadow-2xl flex-1 flex flex-col justify-center">
-                            <div style={{ fontFamily: FM }} className="text-[10px] tracking-[0.06em] text-slate-500 dark:text-slate-400 mb-2">MARKET MEDIAN</div>
-                            <div className="font-sans tracking-tight tabular-nums text-2xl font-bold text-slate-900 dark:text-slate-100 mb-1">
-                              ₹{Math.round(finalMedian).toLocaleString('en-IN')}
-                            </div>
-                            <div style={{ fontFamily: FB }} className="text-[11px] text-slate-500 dark:text-slate-400 mb-6">
-                              For {result.Analysis_Metadata?.Target_Location || 'India'}
-                              {!tierMatched && marketMedian > 0 && <span className="text-yellow-600 dark:text-yellow-500 block mt-1">General market median shown.</span>}
-                              {marketMedian === 0 && <span className="text-indigo-600 dark:text-indigo-400 block mt-1">Simulated industry baseline shown.</span>}
-                            </div>
-                            
-                            <div className="flex justify-between text-xs text-slate-500 dark:text-slate-500 font-medium mb-3">
-                              <span>Low</span>
-                              <span className={`${gaugeText} font-bold font-sans tabular-nums`}>{percentile}th Percentile for {result.Analysis_Metadata?.Target_Location || 'Bengaluru'}</span>
-                              <span>High</span>
-                            </div>
-                            <div className="w-full h-2 bg-slate-200 dark:bg-gray-800 rounded-full relative">
-                              <div className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full ${gaugeColor} ${gaugeShadow}`} style={{ left: `${percentile}%`, transition: 'left 1s ease-out' }} />
-                            </div>
-                          </div>
-
-                          <div className="p-6 bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-3xl shadow-2xl flex flex-col gap-3 max-h-[300px] overflow-y-auto custom-scrollbar">
-                            {pieData.map((d, i) => (
-                              <BreakdownChip key={i} label={d.name} value={d.value} color={d.color} />
-                            ))}
-                          </div>
+                        {/* ROW 3 RIGHT: Breakdowns (Numerical Item List) */}
+                        <div className="md:col-span-1 rounded-3xl p-6 shadow-sm transition-all duration-300 flex flex-col gap-3 h-[360px] overflow-y-auto custom-scrollbar"
+                          style={{ backgroundColor: C.isLight ? '#ffffff' : C.surface, border: `1px solid ${C.border}` }}>
+                          {pieData.map((d, i) => (
+                            <BreakdownChip key={i} label={d.name} value={d.value} color={d.color} theme={C} />
+                          ))}
                         </div>
 
-                        {/* ROW 3: Intelligence Summary */}
-                        <div className="md:col-span-3 p-8 bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-3xl shadow-2xl">
+                        {/* ROW 4: Intelligence Summary */}
+                        <div className="md:col-span-3 rounded-3xl p-6 shadow-sm transition-all duration-300"
+                          style={{ backgroundColor: C.isLight ? '#ffffff' : C.surface, border: `1px solid ${C.border}` }}>
                           {result.Market_Context?.UI_Status_Message && (
                             <div className="flex items-start gap-4 mb-6">
                               <Sparkles className="text-teal-600 dark:text-teal-400 mt-1 flex-shrink-0" size={24} />
-                              <div style={{ fontFamily: FB }} className="text-base md:text-lg text-slate-800 dark:text-slate-200 leading-relaxed">
+                              <div style={{ fontFamily: FB, color: C.text2 }} className="font-medium text-base leading-relaxed">
                                 {result.Market_Context.UI_Status_Message}
                               </div>
                             </div>
                           )}
-                          
+
                           <div className="flex gap-3 flex-wrap">
-                            <div className="px-3 py-1.5 rounded-lg bg-slate-100 border border-slate-200 dark:bg-black/30 dark:border-white/5 text-xs text-slate-600 dark:text-slate-400 font-mono">
-                              Role: <span className="text-slate-900 dark:text-white ml-1 font-sans">{result.Analysis_Metadata?.Target_Job_Title || 'Unknown'}</span>
+                            <div className="px-3 py-1.5 rounded-lg border text-xs font-mono"
+                              style={{ backgroundColor: C.isLight ? '#f1f5f9' : C.bgAlt, borderColor: C.border, color: C.text2 }}>
+                              Role: <span className="font-semibold ml-1" style={{ color: C.text }}>{result.Analysis_Metadata?.Target_Job_Title || 'Unknown'}</span>
                             </div>
                             {result.Analysis_Metadata?.Company_Tier && result.Analysis_Metadata.Company_Tier !== 'Unknown' && (
-                              <div className="px-3 py-1.5 rounded-lg bg-teal-50 border border-teal-200 dark:bg-teal-500/10 dark:border-teal-500/20 text-xs text-teal-700 dark:text-teal-400 font-mono">
-                                Tier: <span className="font-bold ml-1 font-sans">{result.Analysis_Metadata.Company_Tier.replace(/_/g, ' ')}</span>
+                              <div className="px-3 py-1.5 rounded-lg border text-xs font-mono"
+                                style={{ backgroundColor: C.isLight ? '#f1f5f9' : C.bgAlt, borderColor: C.border, color: C.text2 }}>
+                                Tier: <span className="font-bold ml-1" style={{ color: C.text }}>{result.Analysis_Metadata.Company_Tier.replace(/_/g, ' ')}</span>
                               </div>
                             )}
-                            <div className="px-3 py-1.5 rounded-lg bg-slate-100 border border-slate-200 dark:bg-black/30 dark:border-white/5 text-xs text-slate-600 dark:text-slate-400 font-mono">
-                              Evaluated Exp: <span className="text-slate-900 dark:text-white ml-1 font-sans">{result.Market_Context?.Calculated_Experience_Level_For_Offer || 'Unknown'}</span>
+                            <div className="px-3 py-1.5 rounded-lg border text-xs font-mono"
+                              style={{ backgroundColor: C.isLight ? '#f1f5f9' : C.bgAlt, borderColor: C.border, color: C.text2 }}>
+                              Evaluated Exp: <span className="font-semibold ml-1" style={{ color: C.text }}>{result.Market_Context?.Calculated_Experience_Level_For_Offer || 'Unknown'}</span>
                             </div>
                           </div>
                         </div>
@@ -647,13 +708,17 @@ export default function OfferAnalysisPage() {
   )
 }
 
-function BreakdownChip({ label, value, color }) {
+function BreakdownChip({ label, value, color, theme }) {
   if (!value || value === 0) return null;
+  const chipBg = theme?.isLight ? '#f8fafc' : (theme?.surface || '#1e293b');
+  const labelColor = theme?.isLight ? '#475569' : (theme?.text3 || '#94a3b8');
+  const valueColor = theme?.isLight ? '#0f172a' : (theme?.text || '#f1f5f9');
+  const borderColor = theme?.border || '#e2e8f0';
   return (
-    <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-100 border border-slate-200 dark:bg-white/5 dark:border-white/10 backdrop-blur-md">
-      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }}></div>
-      <span style={{ fontFamily: FB }} className="text-slate-500 dark:text-gray-400 text-[10px] uppercase tracking-wider line-clamp-1 flex-1">{label}</span>
-      <span className="font-sans tracking-tight tabular-nums text-slate-800 dark:text-gray-200 text-sm font-bold">₹{Math.round(Number(value)).toLocaleString('en-IN')}</span>
+    <div className="flex items-center gap-2 px-3 py-2 rounded-xl border" style={{ backgroundColor: chipBg, borderColor }}>
+      <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: color }}></div>
+      <span className="text-xs font-bold tracking-wide uppercase line-clamp-1 flex-1" style={{ color: labelColor }}>{label}</span>
+      <span className="text-sm font-bold font-mono tabular-nums" style={{ color: valueColor }}>₹{Math.round(Number(value)).toLocaleString('en-IN')}</span>
     </div>
   )
 }
