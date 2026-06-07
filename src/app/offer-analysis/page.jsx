@@ -549,8 +549,8 @@ export default function OfferAnalysisPage() {
                           <div className="w-full md:flex-1 text-center rounded-3xl p-5 md:p-6 shadow-sm transition-all duration-300"
                             style={{ backgroundColor: C.isLight ? '#ffffff' : C.surface, border: `1px solid ${C.border}` }}>
                             <div style={{ fontFamily: FM, color: C.text3 }} className="text-[10px] md:text-xs tracking-[0.06em] mb-2 md:mb-3">STATED CTC (INFLATED)</div>
-                            <div className="font-sans tracking-tight tabular-nums text-3xl sm:text-4xl md:text-5xl font-bold line-through decoration-red-500/70 decoration-[3px]"
-                              style={{ color: C.text, wordBreak: 'break-word' }}>
+                            <div className="font-sans tracking-tight tabular-nums text-2xl sm:text-4xl md:text-5xl font-bold line-through decoration-red-500/70 decoration-[2px] md:decoration-[3px]"
+                              style={{ color: C.text }}>
                               ₹{Math.round(ctcValue).toLocaleString('en-IN')}
                             </div>
                             <div style={{ fontFamily: FB, color: C.text3 }} className="text-xs md:text-sm mt-1 md:mt-2">Per annum</div>
@@ -559,7 +559,7 @@ export default function OfferAnalysisPage() {
                           <div className="w-full md:flex-1 text-center rounded-3xl p-5 md:p-6 shadow-sm transition-all duration-300 relative overflow-hidden"
                             style={{ backgroundColor: C.isLight ? '#ffffff' : C.surface, border: `1px solid ${C.border}` }}>
                             <div style={{ fontFamily: FM, color: C.text3 }} className="text-[10px] md:text-xs tracking-[0.06em] mb-2 md:mb-3 relative">IN-HAND ESTIMATE</div>
-                            <div className="font-sans tracking-tight tabular-nums text-4xl sm:text-5xl md:text-6xl font-black text-teal-600 dark:text-teal-400 relative" style={{ wordBreak: 'break-word' }}>
+                            <div className="font-sans tracking-tight tabular-nums text-3xl sm:text-5xl md:text-6xl font-black text-teal-600 dark:text-teal-400 relative">
                               ₹{Math.round(result.CTC_Breakdown?.Estimated_Monthly_In_Hand || 0).toLocaleString('en-IN')}
                             </div>
                             <div style={{ fontFamily: FB, color: C.text3 }} className="text-xs md:text-sm mt-1 md:mt-2 relative">Per month approx</div>
@@ -568,22 +568,25 @@ export default function OfferAnalysisPage() {
 
                         {/* ROW 2 LEFT: AI Negotiation Hub */}
                         <div className="md:col-span-2 p-5 md:p-6 w-full bg-slate-900 text-white rounded-3xl shadow-xl border border-slate-800 flex flex-col justify-center">
-                          <div style={{ fontFamily: FM }} className="text-[10px] tracking-[0.06em] text-slate-400 mb-2 uppercase">AI Negotiator & Strategy</div>
+                          <div style={{ fontFamily: FM }} className="text-[10px] tracking-[0.06em] text-slate-400 mb-3 uppercase">AI Negotiator & Strategy</div>
 
                           {/* Negotiation Target */}
-                          <div className="mb-4">
-                            <div className="text-xs text-slate-300 mb-1 font-medium font-sans">Target Counter-Offer Range</div>
-                            <div className="text-emerald-400 font-bold text-2xl sm:text-3xl font-sans tracking-tight tabular-nums break-words">
-                              ₹{Math.round(Math.max(ctcValue * 1.15, finalMedian * 0.95)).toLocaleString('en-IN')} - ₹{Math.round(Math.max(ctcValue * 1.25, finalMedian * 1.15)).toLocaleString('en-IN')}
+                          <div className="mb-5">
+                            <div className="text-xs text-slate-300 mb-2 font-medium font-sans">Target Counter-Offer Range</div>
+                            <div className="text-emerald-400 font-bold text-2xl sm:text-3xl font-sans tracking-tight tabular-nums flex flex-col sm:flex-row sm:items-center sm:gap-2">
+                              <span>₹{Math.round(Math.max(ctcValue * 1.15, finalMedian * 0.95)).toLocaleString('en-IN')}</span>
+                              <span className="hidden sm:inline text-slate-500 font-normal">-</span>
+                              <span className="sm:hidden text-slate-500 text-sm font-medium my-0.5">to</span>
+                              <span>₹{Math.round(Math.max(ctcValue * 1.25, finalMedian * 1.15)).toLocaleString('en-IN')}</span>
                             </div>
                           </div>
 
                           {/* Negotiation Script */}
-                          <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700">
+                          <div className="bg-slate-800/50 p-4 sm:p-5 rounded-2xl border border-slate-700">
                             <div className="text-xs text-emerald-400 mb-2 font-mono flex items-center gap-2">
                               <Sparkles size={12} className="flex-shrink-0" /> Actionable Talking Point
                             </div>
-                            <div className="text-sm text-slate-300 font-sans leading-relaxed">
+                            <div className="text-sm sm:text-base text-slate-200 font-sans leading-relaxed">
                               {result.Market_Context?.Negotiation_Strategy || `Your current offer puts you at the ${percentile}th percentile for ${result.Analysis_Metadata?.Target_Location || 'your region'}. Leverage your relevant experience and core expertise to negotiate a 15-25% bump on the basic salary, or request that the performance variable pay be converted into guaranteed fixed components to align with the market.`}
                             </div>
                           </div>
@@ -593,10 +596,10 @@ export default function OfferAnalysisPage() {
                         <div className="md:col-span-1 rounded-3xl p-5 md:p-6 shadow-sm transition-all duration-300 flex flex-col justify-center"
                           style={{ backgroundColor: C.isLight ? '#ffffff' : C.surface, border: `1px solid ${C.border}` }}>
                           <div style={{ fontFamily: FM, color: C.text3 }} className="text-[10px] tracking-[0.06em] mb-2 uppercase tracking-widest">Market Median</div>
-                          <div className="text-2xl sm:text-3xl font-black tracking-tight tabular-nums block my-1 md:my-2 break-words" style={{ color: C.text }}>
+                          <div className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight tabular-nums block my-1 md:my-2" style={{ color: C.text }}>
                             ₹{Math.round(finalMedian).toLocaleString('en-IN')}
                           </div>
-                          <div style={{ fontFamily: FB, color: C.text3 }} className="text-[11px] mb-4 md:mb-6 leading-relaxed">
+                          <div style={{ fontFamily: FB, color: C.text3 }} className="text-[11px] sm:text-xs mb-5 md:mb-6 leading-relaxed">
                             For {result.Analysis_Metadata?.Target_Location || 'India'}
                             {!tierMatched && marketMedian > 0 && <span className="text-yellow-600 block mt-1">General market median shown.</span>}
                             {marketMedian === 0 && <span className="text-indigo-500 block mt-1">Simulated industry baseline shown.</span>}
@@ -613,7 +616,7 @@ export default function OfferAnalysisPage() {
                         </div>
 
                         {/* ROW 3 LEFT: Donut Chart */}
-                        <div className="md:col-span-2 rounded-3xl p-4 md:p-6 shadow-sm transition-all duration-300 flex flex-col justify-center items-center h-[280px] md:h-[360px] w-full overflow-hidden"
+                        <div className="md:col-span-2 rounded-3xl p-4 md:p-6 shadow-sm transition-all duration-300 flex flex-col justify-center items-center h-[280px] md:h-[360px] w-full"
                           style={{ backgroundColor: C.isLight ? '#ffffff' : C.surface, border: `1px solid ${C.border}` }}>
                           <div style={{ fontFamily: FM, color: C.text3 }} className="text-[10px] tracking-[0.06em] w-full mb-2 md:mb-4 uppercase tracking-widest text-center md:text-left">Compensation Composition</div>
                           <div className="w-full h-full min-h-[200px] md:min-h-[250px]">
@@ -623,8 +626,8 @@ export default function OfferAnalysisPage() {
                                   data={pieData}
                                   cx="50%"
                                   cy="50%"
-                                  innerRadius={50}
-                                  outerRadius={80}
+                                  innerRadius="50%"
+                                  outerRadius="80%"
                                   paddingAngle={4}
                                   dataKey="value"
                                   stroke="none"
