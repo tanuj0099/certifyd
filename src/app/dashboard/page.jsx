@@ -152,25 +152,73 @@ export default function DashboardPage() {
 
   if (!certName) {
     return (
-      <ToolPageWrapper title="Your" subtitle="Dashboard" description="Track your certification progress and career ROI." footer={false}>
-        <div style={{ textAlign: 'center', padding: '60px 24px', color: 'var(--text-3)' }}>
-          <Award size={48} color="var(--text-4)" style={{ marginBottom: '16px' }} />
-          <h2 style={{ fontFamily: FH, fontSize: '22px', color: 'var(--text)', margin: '0 0 8px' }}>No certification selected yet</h2>
-          <p style={{ fontFamily: FB, fontSize: '14px', color: 'var(--text-3)', marginBottom: '24px' }}>
-            Use the ROI Calculator to pick a cert and your dashboard will populate automatically.
-          </p>
-          <button
-            onClick={() => router.push('/')}
-            style={{
-              padding: '12px 24px', borderRadius: '10px',
-              background: 'var(--accent)', color: 'var(--bg)',
-              border: 'none', cursor: 'pointer',
-              fontFamily: FH, fontWeight: '700', fontSize: '14px',
-              display: 'inline-flex', alignItems: 'center', gap: '8px'
-            }}
-          >
-            <TrendingUp size={15} /> Go to ROI Calculator <ArrowRight size={14} />
-          </button>
+      <ToolPageWrapper title="Your" subtitle="Dashboard" description="Track your certification progress and career ROI." footer={true} showFeedback={false}>
+        <div style={{
+          display: 'flex', flexDirection: 'column', alignItems: 'center',
+          justifyContent: 'center', textAlign: 'center',
+          padding: '60px 24px', gap: '16px'
+        }}>
+          <div style={{
+            width: '64px', height: '64px', borderRadius: '16px',
+            background: 'var(--bg-surface)', border: '1px solid var(--border)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <Award size={28} color="var(--text-3)" />
+          </div>
+          <div>
+            <h2 style={{ fontFamily: FH, fontSize: '22px', color: 'var(--text)', margin: '0 0 8px' }}>No certification selected yet</h2>
+            <p style={{ fontFamily: FB, fontSize: '14px', color: 'var(--text-3)', margin: 0, maxWidth: '360px' }}>
+              Use the ROI Calculator to pick a cert and your dashboard will populate automatically.
+            </p>
+          </div>
+          <div style={{ display: 'flex', gap: '12px', marginTop: '8px', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <button
+              onClick={() => router.push('/')}
+              style={{
+                padding: '12px 24px', borderRadius: '10px',
+                background: 'var(--accent)', color: 'var(--bg)',
+                border: 'none', cursor: 'pointer',
+                fontFamily: FH, fontWeight: '700', fontSize: '14px',
+                display: 'inline-flex', alignItems: 'center', gap: '8px'
+              }}
+            >
+              <TrendingUp size={15} /> ROI Calculator <ArrowRight size={14} />
+            </button>
+            <button
+              onClick={() => router.push('/offer-analysis')}
+              style={{
+                padding: '12px 24px', borderRadius: '10px',
+                background: 'transparent', color: 'var(--text)',
+                border: '1px solid var(--border)', cursor: 'pointer',
+                fontFamily: FH, fontWeight: '600', fontSize: '14px',
+                display: 'inline-flex', alignItems: 'center', gap: '8px'
+              }}
+            >
+              <Brain size={15} /> Analyze an Offer
+            </button>
+          </div>
+
+          {/* Preview cards */}
+          <div style={{
+            marginTop: '32px', width: '100%', maxWidth: '800px',
+            display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px',
+          }}>
+            {[
+              { icon: TrendingUp, label: 'Break-even Months', preview: '—' },
+              { icon: Clock, label: 'Salary Boost', preview: '—' },
+              { icon: Flame, label: 'Study Streak', preview: '0 days' },
+              { icon: Target, label: 'Exam Readiness', preview: '—' },
+            ].map(({ icon: Icon, label, preview }) => (
+              <div key={label} style={{
+                background: 'var(--bg-surface)', border: '1px solid var(--border)',
+                borderRadius: '16px', padding: '20px', opacity: 0.5,
+              }}>
+                <Icon size={18} color="var(--text-4)" style={{ marginBottom: '8px' }} />
+                <div style={{ fontFamily: FM, fontSize: '10px', color: 'var(--text-4)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '4px' }}>{label}</div>
+                <div style={{ fontFamily: FH, fontSize: '22px', fontWeight: '700', color: 'var(--text-3)' }}>{preview}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </ToolPageWrapper>
     )
@@ -181,7 +229,7 @@ export default function DashboardPage() {
       title={resumeName ? `${resumeName.split(' ')[0]}'s` : "Study"}
       subtitle="Dashboard"
       description={`Tracking your journey to ${certName}${resumeCity ? ` · ${resumeCity}` : ''}`}
-      footer={false}
+      footer={true}
       showFeedback={false}
     >
       <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
