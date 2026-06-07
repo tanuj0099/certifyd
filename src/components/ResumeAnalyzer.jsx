@@ -418,10 +418,9 @@ var PersonalisedHero = function ({ name, city, domain, primaryCert, mode, certDo
   var domainLabel = certDomains && certDomains.length > 0 ? certDomains.find(function (d) { return d.id === domain })?.label || domain : domain
   var authName = userProfileData.userName ? userProfileData.userName.split(' ')[0] : ''
   var firstName = authName || (name ? name.split(' ')[0] : '')
-  var intro = firstName
-    ? firstName + ', out of 103 certifications analysed for ' + (city ? 'a professional in ' + city : 'your profile') + ' right now -'
-    : 'For a ' + (mode === 'student' ? 'student' : mode === 'switcher' ? 'career switcher' : 'professional') + ' in ' + domainLabel + ' right now -'
-  var callout = firstName ? 'this is your move.' : 'one cert stands clearly above the rest.'
+  
+  var displayName = firstName ? firstName.toUpperCase() : 'PROFESSIONAL'
+  var intro = `${displayName}, OUT OF 103 CERTIFICATIONS ANALYSED FOR ${city ? `A PROFESSIONAL IN ${city.toUpperCase()}` : 'YOUR PROFILE'} RIGHT NOW -`
 
   return (
     <div style={{ marginBottom: '22px' }}>
@@ -434,7 +433,7 @@ var PersonalisedHero = function ({ name, city, domain, primaryCert, mode, certDo
       {phase >= 0 && (
         <motion.p
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
-          className="micro-label"
+          className="micro-label uppercase tracking-widest text-xs"
           style={{ color: 'var(--text-4)', marginBottom: '10px', lineHeight: 1.6 }}
         >
           {intro}
@@ -445,14 +444,9 @@ var PersonalisedHero = function ({ name, city, domain, primaryCert, mode, certDo
           initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
           style={{ marginBottom: '14px' }}
         >
-          <div style={{ fontFamily: FH, fontWeight: '800', lineHeight: 1.15, letterSpacing: '-0.025em' }}>
-            <span style={{ fontSize: 'clamp(20px, 4.5vw, 30px)', color: 'var(--text)' }}>
-              {callout.split(' ').slice(0, -1).join(' ')}{' '}
-            </span>
-            <span style={{ fontSize: 'clamp(20px, 4.5vw, 30px)', background: 'transparent', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-              {callout.split(' ').at(-1)}
-            </span>
-          </div>
+          <h2 className="text-4xl font-extrabold text-slate-900 tracking-tight dark:text-white">
+            Your Recommended Path
+          </h2>
         </motion.div>
       )}
       {phase >= 2 && primaryCert && (
@@ -488,9 +482,9 @@ var PrimaryCertHero = function ({ cert }) {
           <Star size={12} color={EMERALD} fill={EMERALD} />
           <span className="micro-label" style={{ color: EMERALD }}>Primary Move</span>
         </div>
-        <div style={{ display: 'flex', gap: '5px' }}>
-          <span className="tabular-nums" style={{ fontFamily: FM, fontSize: '9px', padding: '3px 7px', borderRadius: '5px', background: 'transparent', border: '1px solid transparent', color: EMERALD }}>+{cert.roi}</span>
-          <span className="tabular-nums" style={{ fontFamily: FM, fontSize: '9px', padding: '3px 7px', borderRadius: '5px', background: 'transparent', border: '1px solid transparent', color: PICTON }}>{cert.timeline}</span>
+        <div className="flex gap-3 items-center">
+          <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-sm dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800">+{cert.roi}</span>
+          <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-bold bg-blue-50 text-blue-800 border border-blue-200 shadow-sm dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800">{cert.timeline}</span>
         </div>
       </div>
       <h2 style={{ fontSize: 'clamp(16px, 3.5vw, 23px)', color: 'var(--text)', marginBottom: '8px' }}>
