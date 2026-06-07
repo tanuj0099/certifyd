@@ -48,6 +48,7 @@ export default function OfferAnalysisPage() {
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState(null)
   const [marketMedian, setMarketMedian] = useState(0)
+  const [tierMatched, setTierMatched] = useState(true)
   const [error, setError] = useState('')
 
   const hasResult = !!result
@@ -105,26 +106,53 @@ export default function OfferAnalysisPage() {
     setStep(1)
     setResumeText(''); setResumeFileName('');
     setOfferText(''); setOfferFileName('');
-    setResult(null); setError(''); setMarketMedian(0);
+    setResult(null); setError(''); setMarketMedian(0); setTierMatched(true);
   }
 
-  const fetchMedianFromDB = async (city) => {
-    if (!supabase || !city) return 0;
-    try {
-      const { data, error } = await supabase
-        .from('offer_analyses')
-        .select('offered_ctc')
-        .ilike('city', `%${city}%`)
-      
-      if (error || !data || data.length === 0) return 0;
-      
+  const fetchMedianFromDB = async (city, targetTitle, companyTier) => {
+    if (!supabase || !city || !targetTitle) return { median: 0, tierMatched: false };
+    
+    const calcMedian = (data) => {
+      if (!data || data.length === 0) return 0;
       const ctcs = data.map(d => Number(d.offered_ctc)).filter(c => c > 0).sort((a, b) => a - b);
       if (ctcs.length === 0) return 0;
       const mid = Math.floor(ctcs.length / 2);
       return ctcs.length % 2 !== 0 ? ctcs[mid] : (ctcs[mid - 1] + ctcs[mid]) / 2;
+    };
+
+    try {
+      // Attempt 1: Exact match on City, Title, and Tier
+      let exactQuery = supabase
+        .from('offer_analyses')
+        .select('offered_ctc')
+        .ilike('city', `%${city}%`)
+        .ilike('target_job_title', `%${targetTitle}%`);
+      
+      if (companyTier && companyTier !== 'Unknown') {
+        exactQuery = exactQuery.eq('raw_json->Analysis_Metadata->>Company_Tier', companyTier);
+      }
+
+      const { data: exactData, error: exactError } = await exactQuery;
+      
+      if (!exactError && exactData && exactData.length > 0) {
+        return { median: calcMedian(exactData), tierMatched: true };
+      }
+
+      // Attempt 2: Fallback to just City and Title
+      const { data: fallbackData, error: fallbackError } = await supabase
+        .from('offer_analyses')
+        .select('offered_ctc')
+        .ilike('city', `%${city}%`)
+        .ilike('target_job_title', `%${targetTitle}%`);
+
+      if (!fallbackError && fallbackData && fallbackData.length > 0) {
+        return { median: calcMedian(fallbackData), tierMatched: false };
+      }
+
+      return { median: 0, tierMatched: false };
     } catch (e) {
       console.warn("Failed to fetch median:", e);
-      return 0;
+      return { median: 0, tierMatched: false };
     }
   }
 
@@ -148,11 +176,14 @@ export default function OfferAnalysisPage() {
       }
 
       const location = analysis.Analysis_Metadata?.Target_Location || 'India'
+      const title = analysis.Analysis_Metadata?.Target_Job_Title || ''
+      const tier = analysis.Analysis_Metadata?.Company_Tier || 'Unknown'
       const ctcStated = analysis.CTC_Breakdown?.Total_CTC_Stated || 0
       
       // Fetch dynamic median
-      const median = await fetchMedianFromDB(location)
-      setMarketMedian(median)
+      const medianResult = await fetchMedianFromDB(location, title, tier)
+      setMarketMedian(medianResult.median)
+      setTierMatched(medianResult.tierMatched)
 
       setResult(analysis)
 
@@ -161,9 +192,9 @@ export default function OfferAnalysisPage() {
         supabase.from('offer_analyses').insert({
           user_id: user?.uid || null,
           city: location,
-          target_job_title: analysis.Analysis_Metadata?.Target_Job_Title || '',
+          target_job_title: title,
           offered_ctc: ctcStated,
-          market_median: median,
+          market_median: medianResult.median,
           raw_json: analysis
         }).then(({ error: insertErr }) => {
           if (insertErr) console.warn('Failed to save analysis:', insertErr.message)
@@ -455,6 +486,11 @@ export default function OfferAnalysisPage() {
                         <div style={{ fontFamily: FB, fontSize: '11px', color: 'var(--text-4)', marginTop: '2px' }}>
                           For {result.Analysis_Metadata?.Target_Location || 'India'}
                         </div>
+                        {!tierMatched && (
+                          <div style={{ fontFamily: FB, fontSize: '11px', color: '#EAB308', marginTop: '8px', lineHeight: 1.3, fontWeight: '600' }}>
+                            General market median shown; specific company tier data unavailable.
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -491,6 +527,11 @@ export default function OfferAnalysisPage() {
                     <div style={{ display: 'inline-block', padding: '4px 8px', borderRadius: '4px', background: 'var(--bg-surface)', border: '1px solid var(--border)', fontSize: '11px', fontFamily: FM, color: 'var(--text-3)' }}>
                       Role: {result.Analysis_Metadata?.Target_Job_Title || 'Unknown'}
                     </div>
+                    {result.Analysis_Metadata?.Company_Tier && result.Analysis_Metadata.Company_Tier !== 'Unknown' && (
+                      <div className="text-gray-900 dark:text-white font-bold" style={{ display: 'inline-block', padding: '4px 8px', borderRadius: '4px', background: 'var(--accent-dim)', border: '1px solid var(--accent)', fontSize: '11px', fontFamily: FM }}>
+                        Tier: {result.Analysis_Metadata.Company_Tier.replace(/_/g, ' ')}
+                      </div>
+                    )}
                     <div style={{ display: 'inline-block', padding: '4px 8px', borderRadius: '4px', background: 'var(--bg-surface)', border: '1px solid var(--border)', fontSize: '11px', fontFamily: FM, color: 'var(--text-3)' }}>
                       Location: {result.Analysis_Metadata?.Target_Location || 'Unknown'}
                     </div>

@@ -30,11 +30,18 @@ export const parseOfferLetter = async (offerLetterText, userProfileData) => {
 - Resumes contain fluff. Completely ignore hobbies, non-professional certifications (e.g., "Master Scuba Diver"), and physical labor skills.
 - Normalize spelling errors in the tech stack (e.g., map "Pythn" to "Python", "devOOps" to "DevOps", "Certifid" to "Certified"). Only extract valid, recognized IT/Corporate skills and certifications.
 
-=== 5. THE HIERARCHY OF TRUTH (Conflict Resolution) ===
+=== 5. COMPANY TIERING ===
+- You must identify the hiring company from the offer letter and classify its tier.
+- "Tier_1_Product": Big Tech (Google, Amazon, Microsoft, etc.), global investment banks, or massive unicorns.
+- "Tier_2_MidMarket": Growth-stage startups, mid-sized product companies, and established regional tech firms.
+- "Tier_3_Services": IT Service/Consulting firms (TCS, Wipro, Infosys, Cognizant, Tech Mahindra), mass recruiters, or extremely small early-stage startups.
+- "Unknown": If the company name is not discernible.
+
+=== 6. THE HIERARCHY OF TRUTH (Conflict Resolution) ===
 - LOCATION: If the Offer Letter explicitly states an Indian job location (e.g., "Hyderabad"), this OVERRIDES the Resume's city. 
 - EXPERIENCE MISMATCH: Compare the Resume's YoE with the Offer Job Title. If the user claims 3+ years of experience but the offer is for a "Trainee" or "Fresher", set "Profile_Mismatch_Flag" to TRUE and generate a warning.
 
-=== 6. INDIAN PAYROLL MATH & BUCKETING ===
+=== 7. INDIAN PAYROLL MATH & BUCKETING ===
 Group the CTC components EXACTLY as follows:
 - "Fixed_Base": Basic Salary + HRA + Conveyance + LTA + Special/Guaranteed monthly allowances.
 - "Variable_Bonus": Annual Bonus + Performance Pay + Relocation.
@@ -43,7 +50,7 @@ Group the CTC components EXACTLY as follows:
 - "Estimated_Monthly_In_Hand": (Fixed_Base / 12) MINUS (Employee PF + ESI monthly deductions).
 All numerical outputs in the \`CTC_Breakdown\` object MUST be rounded to the nearest whole integer. Do not output any decimals.
 
-=== 7. CONTEXTUAL AWARENESS ===
+=== 8. CONTEXTUAL AWARENESS ===
 - Extract the Date/Year of the Offer Letter. If from a past year (e.g., 2017), set "Historical_Data_Flag" to TRUE.
 
 === OUTPUT FORMAT ===
@@ -53,6 +60,7 @@ If the region is supported (India), output a valid JSON object matching this exa
     "Unsupported_Region": false,
     "Target_Location": "[Resolved Location]",
     "Target_Job_Title": "[Resolved Functional Title or Exact title from offer]",
+    "Company_Tier": "Tier_1_Product" | "Tier_2_MidMarket" | "Tier_3_Services" | "Unknown",
     "Offer_Year": "[YYYY]",
     "Historical_Data_Flag": boolean,
     "Profile_Mismatch_Flag": boolean,
