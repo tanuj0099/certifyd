@@ -37,8 +37,9 @@ export async function POST(request) {
   let body;
   try {
     body = await request.json();
-  } catch {
-    return json({ error: 'Invalid request body' }, { status: 400 });
+  } catch (err) {
+    console.error('request.json() failed:', err);
+    return json({ error: 'Invalid request body', details: err.message }, { status: 400 });
   }
 
   if (isServerTestMode()) {
@@ -98,7 +99,7 @@ export async function POST(request) {
 
   const safeMessages = body.messages.map((message) => ({
     role: ['user', 'assistant', 'system'].includes(message.role) ? message.role : 'user',
-    content: typeof message.content === 'string' ? message.content.replace(/<[^>]*>?/gm, '') : '',
+    content: typeof message.content === 'string' ? message.content : '',
   }));
 
   try {
@@ -115,10 +116,14 @@ export async function POST(request) {
     });
 
     const data = await response.json();
-    if (!response.ok) return json(data, { status: response.status });
+    if (!response.ok) {
+      console.error('Groq API Error:', response.status, data);
+      return json(data, { status: response.status });
+    }
 
     return json(data);
   } catch (error) {
+    console.error('Proxy error:', error);
     return json({ error: 'Proxy error: ' + error.message }, { status: 500 });
   }
 }
