@@ -456,7 +456,7 @@ export default function OfferAnalysisPage() {
                   marginTop: '20px', width: '100%', padding: '16px', borderRadius: '12px',
                   background: loading ? 'var(--bg-surface)' : (offerText.trim() || offerFileName) ? 'var(--accent)' : 'var(--bg-surface)',
                   border: loading ? '1px solid var(--border)' : (offerText.trim() || offerFileName) ? 'none' : '1px solid var(--border)',
-                  color: loading ? 'var(--text-4)' : (offerText.trim() || offerFileName) ? '#fff' : 'var(--text-4)',
+                  color: loading ? 'var(--text-4)' : (offerText.trim() || offerFileName) ? 'var(--bg)' : 'var(--text-4)',
                   fontSize: '15px', fontFamily: FH, fontWeight: '800',
                   cursor: loading ? 'not-allowed' : (offerText.trim() || offerFileName) ? 'pointer' : 'not-allowed',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
