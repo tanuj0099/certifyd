@@ -429,8 +429,8 @@ export default function OfferAnalysisPage() {
                     <div className="glass" style={{
                       flex: 1, minWidth: '140px', padding: '20px', borderRadius: '10px', textAlign: 'center',
                     }}>
-                      <div style={{ fontFamily: FM, fontSize: '10px', color: 'var(--text-4)', letterSpacing: '0.06em', marginBottom: '6px' }}>YOUR OFFER (CTC)</div>
-                      <div style={{ fontFamily: FH, fontSize: '1.6rem', fontWeight: '800', color: 'var(--text)' }}>
+                      <div style={{ fontFamily: FM, fontSize: '10px', color: '#EF4444', letterSpacing: '0.06em', marginBottom: '6px' }}>STATED CTC (INFLATED)</div>
+                      <div style={{ fontFamily: FH, fontSize: '1.6rem', fontWeight: '800', color: '#EF4444' }}>
                         ₹{Math.round(result.CTC_Breakdown?.Total_CTC_Stated || 0).toLocaleString('en-IN')}
                       </div>
                       <div style={{ fontFamily: FB, fontSize: '11px', color: 'var(--text-4)', marginTop: '2px' }}>Per annum</div>
@@ -478,7 +478,7 @@ export default function OfferAnalysisPage() {
                     <div style={{ marginTop: '20px' }}>
                       <div style={{ fontFamily: FM, fontSize: '10px', color: 'var(--text-4)', letterSpacing: '0.06em', marginBottom: '10px' }}>COMPONENT BREAKDOWN</div>
                       <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                        <BreakdownChip label="Fixed Base" value={result.CTC_Breakdown.Fixed_Base_Annual} />
+                        <BreakdownChip label="Fixed Base" value={result.CTC_Breakdown.Fixed_Base_Annual} highlight={true} />
                         <BreakdownChip label="Variable/Bonus" value={result.CTC_Breakdown.Variable_Bonus_Annual} />
                         <BreakdownChip label="ESOP/Stocks" value={result.CTC_Breakdown.ESOP_Stocks_Annual} />
                         <BreakdownChip label="Retirals" value={result.CTC_Breakdown.Retirals_And_Hidden_Annual} />
@@ -519,15 +519,16 @@ export default function OfferAnalysisPage() {
   )
 }
 
-function BreakdownChip({ label, value }) {
+function BreakdownChip({ label, value, highlight = false }) {
   if (!value || value === 0) return null;
   return (
     <div style={{
       padding: '10px 14px', borderRadius: '8px',
-      background: 'var(--bg-surface)', border: '1px solid var(--border)',
-      fontFamily: FH, fontSize: '14px', fontWeight: '700', color: 'var(--text)',
+      background: highlight ? 'var(--accent-dim)' : 'var(--bg-surface)', 
+      border: highlight ? '1px solid var(--border-accent)' : '1px solid var(--border)',
+      fontFamily: FH, fontSize: '14px', fontWeight: '700', color: highlight ? 'var(--accent)' : 'var(--text)',
     }}>
-      <span style={{ color: 'var(--text-4)', fontWeight: '400', marginRight: '6px', fontSize: '12px' }}>{label}:</span>
+      <span style={{ color: highlight ? 'var(--accent)' : 'var(--text-4)', fontWeight: '400', marginRight: '6px', fontSize: '12px' }}>{label}:</span>
       ₹{Math.round(Number(value)).toLocaleString('en-IN')}
     </div>
   )

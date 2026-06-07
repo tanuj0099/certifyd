@@ -18,11 +18,13 @@ export const parseOfferLetter = async (offerLetterText, userProfileData) => {
 - Candidates often list total chronological experience, which includes irrelevant past careers (e.g., farming, retail, physical labor).
 - You MUST separate "Total Experience" from "Relevant Tech/Corporate Experience".
 - Calculate the \`Calculated_Experience_Level_For_Offer\` ONLY based on the months/years spent in IT, Tech, or standard Corporate roles. Ignore time spent in unrelated fields.
+- STRICT EXPERIENCE MATH: You must mathematically calculate the years of experience from the user's provided resume text. Subtract the earliest relevant start year from the current year (2026). If the resume shows work from 2022 to 2026, the experience is 4 years. Output in the format: "X years". Do NOT default to 0 unless no history is provided.
 
 === 3. THE FUNCTIONAL TITLE OVERRIDE ===
 - Ignore HR payroll glitches or nominal titles if they conflict with the actual day-to-day work.
 - If a nominal title is "Marketing Executive" or "Data Plumber", but the bullet points explicitly describe writing Python, managing databases, and using AWS, you MUST classify their \`Target_Job_Title\` as the functional equivalent (e.g., "Junior Backend Engineer" or "Cloud Engineer").
 - The \`Target_Job_Title\` normally matches the exact title on the Offer Letter, unless overridden by this rule.
+- STRICT TITLE NORMALIZATION: NEVER output startup jargon, "ninja", "rockstar", or internal band codes (like "SDE-1" without context) as the final title. You MUST map the job to a clean, standard industry benchmark title (e.g., "Backend Software Engineer", "Data Analyst"). If the letter says "Code Ninja", output "Backend Engineer".
 
 === 4. NOISE FILTERING & TYPO NORMALIZATION ===
 - Resumes contain fluff. Completely ignore hobbies, non-professional certifications (e.g., "Master Scuba Diver"), and physical labor skills.
