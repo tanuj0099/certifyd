@@ -7,7 +7,7 @@ import {
   ArrowRight, RefreshCw, TrendingUp, CheckCircle,
   AlertCircle, ExternalLink, Briefcase, FileSignature
 } from 'lucide-react'
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
 import { supabase } from '@/lib/supabase.js'
 import { useAuth } from '@/hooks/useAuth.jsx'
 import { AppSection } from '@/components/SharedUI.jsx'
@@ -455,134 +455,132 @@ export default function OfferAnalysisPage() {
                   </div>
                 )}
 
-                {/* Market Comparison */}
+                {/* Market Comparison Bento Grid */}
                 <AppSection id="COMPARISON" title="CTC ANALYSIS & BENCHMARKS">
-                  <div className="flex gap-4 flex-wrap">
-                    <div className="flex-1 min-w-[140px] p-6 text-center backdrop-blur-2xl bg-white/5 border border-white/10 rounded-2xl shadow-2xl">
-                      <div style={{ fontFamily: FM }} className="text-[10px] tracking-[0.06em] text-gray-400 mb-2">STATED CTC (INFLATED)</div>
-                      <div className="font-sans tracking-tight tabular-nums text-2xl font-bold text-gray-500 line-through decoration-red-500/50">
-                        ₹{Math.round(result.CTC_Breakdown?.Total_CTC_Stated || 0).toLocaleString('en-IN')}
-                      </div>
-                      <div style={{ fontFamily: FB }} className="text-[11px] text-gray-400 mt-1">Per annum</div>
-                    </div>
-                    
-                    <div className="flex-1 min-w-[140px] p-6 text-center backdrop-blur-2xl bg-white/5 border border-white/10 rounded-2xl shadow-2xl relative overflow-hidden">
-                      <div className="absolute inset-0 bg-teal-500/5 blur-[50px] pointer-events-none"></div>
-                      <div style={{ fontFamily: FM }} className="text-[10px] tracking-[0.06em] text-gray-400 mb-2 relative">IN-HAND ESTIMATE</div>
-                      <div className="font-sans tracking-tight tabular-nums text-4xl font-black text-teal-400 drop-shadow-[0_0_15px_rgba(45,212,191,0.3)] relative">
-                        ₹{Math.round(result.CTC_Breakdown?.Estimated_Monthly_In_Hand || 0).toLocaleString('en-IN')}
-                      </div>
-                      <div style={{ fontFamily: FB }} className="text-[11px] text-gray-400 mt-1 relative">Per month approx</div>
-                    </div>
-
-                    {marketMedian > 0 && (
-                      <div className="flex-1 min-w-[140px] p-6 text-center backdrop-blur-2xl bg-white/5 border border-white/10 rounded-2xl shadow-2xl">
-                        <div style={{ fontFamily: FM }} className="text-[10px] tracking-[0.06em] text-gray-400 mb-2">MARKET MEDIAN</div>
-                        <div className="font-sans tracking-tight tabular-nums text-2xl font-bold text-gray-200">
-                          ₹{Math.round(marketMedian).toLocaleString('en-IN')}
-                        </div>
-                        <div style={{ fontFamily: FB }} className="text-[11px] text-gray-400 mt-1">
-                          For {result.Analysis_Metadata?.Target_Location || 'India'}
-                        </div>
-                        {!tierMatched && (
-                          <div style={{ fontFamily: FB }} className="text-[10px] text-yellow-500 mt-2 leading-tight font-medium">
-                            General market median shown; specific company tier data unavailable.
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Market Position Gauge */}
                   {(() => {
                     const ctcValue = result.CTC_Breakdown?.Total_CTC_Stated || 0;
-                    const median = marketMedian || (ctcValue * 1.1); // mock 45th percentile if no median
+                    const median = marketMedian || (ctcValue * 1.1);
                     let percentile = 50;
                     if (median > 0 && ctcValue !== median) {
                       percentile = ctcValue < median ? Math.max(5, (ctcValue / median) * 50) : Math.min(99, 50 + ((ctcValue - median) / median) * 50);
                     } else if (marketMedian === 0) {
-                      percentile = 45; // specific mock requested
+                      percentile = 45;
                     }
+                    
+                    const pieData = [
+                      { name: 'Fixed Base', value: result.CTC_Breakdown?.Fixed_Base_Annual || 0, color: '#10b981' },
+                      { name: 'Variable/Bonus', value: result.CTC_Breakdown?.Variable_Bonus_Annual || 0, color: '#f59e0b' },
+                      { name: 'Retirals & Hidden', value: result.CTC_Breakdown?.Retirals_And_Hidden_Annual || 0, color: '#64748b' },
+                      { name: 'ESOP/Stocks', value: result.CTC_Breakdown?.ESOP_Stocks_Annual || 0, color: '#6366f1' }
+                    ].filter(d => d.value > 0);
+
                     return (
-                      <div className="backdrop-blur-2xl bg-white/5 border border-white/10 rounded-2xl p-6 shadow-2xl mt-4">
-                        <div style={{ fontFamily: FM }} className="text-[10px] text-gray-400 tracking-[0.06em] mb-4">MARKET POSITION</div>
-                        <div className="w-full h-2 bg-gray-800 rounded-full relative mb-3">
-                          <div className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-teal-400 shadow-[0_0_12px_rgba(45,212,191,0.8)]" style={{ left: `${Math.round(percentile)}%`, transition: 'left 1s ease-out' }} />
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        
+                        {/* ROW 1: Reality Check */}
+                        <div className="md:col-span-3 flex flex-wrap gap-6">
+                          <div className="flex-1 min-w-[280px] p-8 text-center bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl">
+                            <div style={{ fontFamily: FM }} className="text-xs tracking-[0.06em] text-gray-400 mb-3">STATED CTC (INFLATED)</div>
+                            <div className="font-sans tracking-tight tabular-nums text-4xl md:text-5xl font-bold text-gray-500 line-through decoration-red-500/50">
+                              ₹{Math.round(ctcValue).toLocaleString('en-IN')}
+                            </div>
+                            <div style={{ fontFamily: FB }} className="text-sm text-gray-400 mt-2">Per annum</div>
+                          </div>
+                          
+                          <div className="flex-1 min-w-[280px] p-8 text-center bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl relative overflow-hidden">
+                            <div className="absolute inset-0 bg-teal-500/5 blur-[60px] pointer-events-none"></div>
+                            <div style={{ fontFamily: FM }} className="text-xs tracking-[0.06em] text-gray-400 mb-3 relative">IN-HAND ESTIMATE</div>
+                            <div className="font-sans tracking-tight tabular-nums text-5xl md:text-6xl font-black text-teal-400 drop-shadow-[0_0_15px_rgba(45,212,191,0.3)] relative">
+                              ₹{Math.round(result.CTC_Breakdown?.Estimated_Monthly_In_Hand || 0).toLocaleString('en-IN')}
+                            </div>
+                            <div style={{ fontFamily: FB }} className="text-sm text-gray-400 mt-2 relative">Per month approx</div>
+                          </div>
                         </div>
-                        <div className="flex justify-between text-xs text-gray-500 font-medium">
-                          <span>Low</span>
-                          <span className="text-teal-400 font-bold font-sans tabular-nums">{Math.round(percentile)}th Percentile for {result.Analysis_Metadata?.Target_Location || 'Bengaluru'}</span>
-                          <span>High</span>
+
+                        {/* ROW 2 LEFT: Donut Chart */}
+                        <div className="md:col-span-2 p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl flex flex-col justify-center items-center min-h-[300px]">
+                          <div style={{ fontFamily: FM }} className="text-[10px] tracking-[0.06em] text-gray-400 w-full mb-4 uppercase">Compensation Composition</div>
+                          <div className="w-full h-64">
+                            <ResponsiveContainer width="100%" height="100%">
+                              <PieChart>
+                                <Pie
+                                  data={pieData}
+                                  cx="50%"
+                                  cy="50%"
+                                  innerRadius={70}
+                                  outerRadius={95}
+                                  paddingAngle={4}
+                                  dataKey="value"
+                                  stroke="none"
+                                >
+                                  {pieData.map((entry, index) => (
+                                    <Cell key={`cell-${index}`} fill={entry.color} />
+                                  ))}
+                                </Pie>
+                                <Tooltip 
+                                  contentStyle={{ background: '#111', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff', fontSize: '13px', fontFamily: FB }}
+                                  itemStyle={{ color: '#fff', fontWeight: '600', fontFamily: 'sans-serif' }}
+                                  formatter={(value) => `₹${Math.round(value).toLocaleString('en-IN')}`}
+                                />
+                              </PieChart>
+                            </ResponsiveContainer>
+                          </div>
                         </div>
+
+                        {/* ROW 2 RIGHT: Market Context & Breakdowns */}
+                        <div className="md:col-span-1 flex flex-col gap-6">
+                          <div className="p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl flex-1 flex flex-col justify-center">
+                            <div style={{ fontFamily: FM }} className="text-[10px] tracking-[0.06em] text-gray-400 mb-2">MARKET MEDIAN</div>
+                            <div className="font-sans tracking-tight tabular-nums text-2xl font-bold text-gray-200 mb-1">
+                              ₹{Math.round(marketMedian).toLocaleString('en-IN')}
+                            </div>
+                            <div style={{ fontFamily: FB }} className="text-[11px] text-gray-400 mb-6">
+                              For {result.Analysis_Metadata?.Target_Location || 'India'}
+                              {!tierMatched && marketMedian > 0 && <span className="text-yellow-500 block mt-1">General market median shown.</span>}
+                            </div>
+                            
+                            <div style={{ fontFamily: FM }} className="text-[10px] tracking-[0.06em] text-gray-400 mb-3">POSITION ({Math.round(percentile)}TH %ILE)</div>
+                            <div className="w-full h-2 bg-gray-800 rounded-full relative">
+                              <div className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-teal-400 shadow-[0_0_12px_rgba(45,212,191,0.8)]" style={{ left: `${Math.round(percentile)}%`, transition: 'left 1s ease-out' }} />
+                            </div>
+                          </div>
+
+                          <div className="p-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl flex flex-col gap-3">
+                            {pieData.map((d, i) => (
+                              <BreakdownChip key={i} label={d.name} value={d.value} color={d.color} />
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* ROW 3: Intelligence Summary */}
+                        <div className="md:col-span-3 p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl">
+                          {result.Market_Context?.UI_Status_Message && (
+                            <div className="flex items-start gap-4 mb-6">
+                              <Sparkles className="text-teal-400 mt-1 flex-shrink-0" size={24} />
+                              <div style={{ fontFamily: FB }} className="text-base md:text-lg text-gray-200 leading-relaxed">
+                                {result.Market_Context.UI_Status_Message}
+                              </div>
+                            </div>
+                          )}
+                          
+                          <div className="flex gap-3 flex-wrap">
+                            <div className="px-3 py-1.5 rounded-lg bg-black/30 border border-white/5 text-xs text-gray-400 font-mono">
+                              Role: <span className="text-white ml-1 font-sans">{result.Analysis_Metadata?.Target_Job_Title || 'Unknown'}</span>
+                            </div>
+                            {result.Analysis_Metadata?.Company_Tier && result.Analysis_Metadata.Company_Tier !== 'Unknown' && (
+                              <div className="px-3 py-1.5 rounded-lg bg-teal-500/10 border border-teal-500/20 text-xs text-teal-400 font-mono">
+                                Tier: <span className="font-bold ml-1 font-sans">{result.Analysis_Metadata.Company_Tier.replace(/_/g, ' ')}</span>
+                              </div>
+                            )}
+                            <div className="px-3 py-1.5 rounded-lg bg-black/30 border border-white/5 text-xs text-gray-400 font-mono">
+                              Evaluated Exp: <span className="text-white ml-1 font-sans">{result.Market_Context?.Calculated_Experience_Level_For_Offer || 'Unknown'}</span>
+                            </div>
+                          </div>
+                        </div>
+
                       </div>
                     );
                   })()}
-
-                  {result.Market_Context?.UI_Status_Message && (
-                    <div style={{
-                      marginTop: '16px', padding: '14px 18px', borderRadius: '10px',
-                      background: 'var(--accent-dim)', border: '1px solid var(--border-accent)',
-                    }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <CheckCircle size={16} color="var(--accent)" />
-                        <span style={{ fontFamily: FB, fontSize: '14px', color: 'var(--text)', lineHeight: 1.5 }}>
-                          {result.Market_Context.UI_Status_Message}
-                        </span>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Component Breakdown */}
-                  {result.CTC_Breakdown && (
-                    <div className="backdrop-blur-2xl bg-white/5 border border-white/10 rounded-2xl p-6 shadow-2xl mt-4">
-                      <div style={{ fontFamily: FM }} className="text-[10px] text-gray-400 tracking-[0.06em] mb-4">COMPONENT BREAKDOWN</div>
-                      
-                      <div className="h-12 w-full mb-6">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <BarChart data={[{
-                            name: 'CTC',
-                            Fixed_Base: result.CTC_Breakdown.Fixed_Base_Annual || 0,
-                            Variable_Bonus: result.CTC_Breakdown.Variable_Bonus_Annual || 0,
-                            Retirals_Hidden: result.CTC_Breakdown.Retirals_And_Hidden_Annual || 0,
-                            ESOP_Stocks: result.CTC_Breakdown.ESOP_Stocks_Annual || 0,
-                          }]} layout="vertical" margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
-                            <XAxis type="number" hide />
-                            <YAxis dataKey="name" type="category" hide />
-                            <Tooltip cursor={{fill: 'transparent'}} contentStyle={{ background: '#111', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff', fontSize: '12px', fontFamily: FB }} itemStyle={{ color: '#fff', fontWeight: '600' }} formatter={(value) => `₹${Math.round(value).toLocaleString('en-IN')}`} />
-                            <Bar dataKey="Fixed_Base" stackId="a" fill="#2DD4BF" stroke="#111827" strokeWidth={2} radius={[6, 0, 0, 6]} name="Fixed Base" />
-                            <Bar dataKey="Variable_Bonus" stackId="a" fill="#F59E0B" stroke="#111827" strokeWidth={2} name="Variable/Bonus" />
-                            <Bar dataKey="ESOP_Stocks" stackId="a" fill="#6366F1" stroke="#111827" strokeWidth={2} name="ESOP/Stocks" />
-                            <Bar dataKey="Retirals_Hidden" stackId="a" fill="#9CA3AF" stroke="#111827" strokeWidth={2} radius={[0, 6, 6, 0]} name="Retirals & Hidden" />
-                          </BarChart>
-                        </ResponsiveContainer>
-                      </div>
-
-                      <div className="flex flex-wrap gap-3">
-                        <BreakdownChip label="Fixed Base" value={result.CTC_Breakdown.Fixed_Base_Annual} color="#2DD4BF" />
-                        <BreakdownChip label="Variable/Bonus" value={result.CTC_Breakdown.Variable_Bonus_Annual} color="#F59E0B" />
-                        <BreakdownChip label="ESOP/Stocks" value={result.CTC_Breakdown.ESOP_Stocks_Annual} color="#6366F1" />
-                        <BreakdownChip label="Retirals" value={result.CTC_Breakdown.Retirals_And_Hidden_Annual} color="#9CA3AF" />
-                      </div>
-                    </div>
-                  )}
-                  
-                  {/* Metadata Context */}
-                  <div style={{ display: 'flex', gap: '12px', marginTop: '16px', flexWrap: 'wrap' }}>
-                    <div style={{ display: 'inline-block', padding: '4px 8px', borderRadius: '4px', background: 'var(--bg-surface)', border: '1px solid var(--border)', fontSize: '11px', fontFamily: FM, color: 'var(--text-3)' }}>
-                      Role: {result.Analysis_Metadata?.Target_Job_Title || 'Unknown'}
-                    </div>
-                    {result.Analysis_Metadata?.Company_Tier && result.Analysis_Metadata.Company_Tier !== 'Unknown' && (
-                      <div className="text-gray-900 dark:text-white font-bold" style={{ display: 'inline-block', padding: '4px 8px', borderRadius: '4px', background: 'var(--accent-dim)', border: '1px solid var(--accent)', fontSize: '11px', fontFamily: FM }}>
-                        Tier: {result.Analysis_Metadata.Company_Tier.replace(/_/g, ' ')}
-                      </div>
-                    )}
-                    <div style={{ display: 'inline-block', padding: '4px 8px', borderRadius: '4px', background: 'var(--bg-surface)', border: '1px solid var(--border)', fontSize: '11px', fontFamily: FM, color: 'var(--text-3)' }}>
-                      Location: {result.Analysis_Metadata?.Target_Location || 'Unknown'}
-                    </div>
-                    <div style={{ display: 'inline-block', padding: '4px 8px', borderRadius: '4px', background: 'var(--bg-surface)', border: '1px solid var(--border)', fontSize: '11px', fontFamily: FM, color: 'var(--text-3)' }}>
-                      Evaluated Exp: {result.Market_Context?.Calculated_Experience_Level_For_Offer || 'Unknown'}
-                    </div>
-                  </div>
                 </AppSection>
 
                 {/* Reset */}
