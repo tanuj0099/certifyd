@@ -176,12 +176,11 @@ var buildPrompt = function (resumeText, mode, timeline, domainIntent, switchTarg
     '    "current_salary": 0\n' +
     '  }\n' +
     '}\n\n' +
-    'Rules: India-specific. Under 380 words total. Be specific to their actual resume. EDUCATION FIX: If the resume lacks an explicit education section, you MUST output [{"degree": "Not provided", "institution": "Not provided"}] for education_history to prevent UI breakage. GUARDRAIL: If the text lacks mandatory sections completely, output EXACTLY {"error": "INVALID_DOCUMENT"}.'
+    'Rules: India-specific. Under 380 words total. Be specific to their actual resume. EDUCATION FIX: If the resume lacks an explicit education section, you MUST output [{"degree": "Not provided", "institution": "Not provided"}] for education_history to prevent UI breakage. GUARDRAIL: If the text lacks mandatory sections completely, output EXACTLY {"error": "INVALID_DOCUMENT"}. CRITICAL PRIVACY INSTRUCTION: Do NOT extract the candidate\'s actual name, email address, phone number, or physical address. For the `name` and `full_name` fields, you MUST return the exact string "ANONYMIZED".'
 }
 
 //  Safe JSON parser - never throws 
-var INDIA_CITIES = ['Bangalore', 'Bengaluru', 'Hyderabad', 'Pune', 'Mumbai', 'Delhi', 'Chennai', 'Kolkata', 'Noida', 'Gurgaon', 'Gurugram', 'Ahmedabad', 'Kochi', 'Vadodara', 'Jaipur']
-var DOMAIN_MAP = ['tech', 'data', 'cybersecurity', 'finance', 'management', 'marketing', 'hr', 'government', 'medical', 'business']
+// We rely on the LLM to extract the exact Indian city/town natively. No hardcoded arrays needed.
 
 var safeParseResumeJSON = function (text) {
   try {
@@ -196,13 +195,11 @@ var safeParseResumeJSON = function (text) {
       return { Unsupported_Region: true, Message: obj.Message, parseError: false }
     }
 
-    // Normalise city to a known Indian city
-    var cityRaw = (obj.city || '').toLowerCase()
-    var city = INDIA_CITIES.find(function (c) { return cityRaw.includes(c.toLowerCase()) }) || ''
+    // Let the AI extract the raw city/town naturally (supports Tier 2/3 and edge cases)
+    var city = String(obj.city || '').trim();
 
-    // Normalise domain
-    var domainRaw = (obj.domain || '').toLowerCase()
-    var domain = DOMAIN_MAP.find(function (k) { return domainRaw.includes(k) }) || 'business'
+    // Preserve the raw domain natively identified by the AI
+    var domain = String(obj.domain || '').trim() || 'business';
 
     // Ensure certs is an array with primary flag
     var certs = (Array.isArray(obj.certs) ? obj.certs : []).slice(0, 3).map(function (c, i) {
@@ -434,10 +431,14 @@ var PersonalisedHero = function ({ name, city, domain, primaryCert, mode, certDo
     userName: user?.user_metadata?.full_name || user?.displayName || user?.email?.split('@')[0]
   }
   var domainLabel = certDomains && certDomains.length > 0 ? certDomains.find(function (d) { return d.id === domain })?.label || domain : domain
-  var authName = userProfileData.userName ? userProfileData.userName.split(' ')[0] : ''
-  var firstName = authName || (name ? name.split(' ')[0] : '')
   
-  var displayName = firstName ? firstName.toUpperCase() : 'PROFESSIONAL'
+  // Extract auth name but ignore if it's anonymized
+  var rawAuthName = userProfileData.userName ? userProfileData.userName.split(' ')[0] : ''
+  var authName = (rawAuthName && rawAuthName.toUpperCase() !== 'ANONYMIZED') ? rawAuthName : ''
+  
+  var firstName = authName || (name && name.toUpperCase() !== 'ANONYMIZED' ? name.split(' ')[0] : '')
+  
+  var displayName = firstName ? firstName.toUpperCase() : 'CANDIDATE PROFILE'
   var intro = `${displayName}, OUT OF 103 CERTIFICATIONS ANALYSED FOR ${city ? `A PROFESSIONAL IN ${city.toUpperCase()}` : 'YOUR PROFILE'} RIGHT NOW -`
 
   return (
@@ -454,12 +455,7 @@ var PersonalisedHero = function ({ name, city, domain, primaryCert, mode, certDo
           className="micro-label uppercase tracking-widest text-sm font-medium text-slate-600"
           style={{ color: 'var(--text-4)', marginBottom: '10px', lineHeight: 1.6 }}
         >
-          {(() => {
-            const profileData = { name: name || authName, location: city };
-            return (
-              <span className="text-sm font-medium text-slate-600 font-bold tracking-widest text-slate-500 uppercase">{profileData?.name ? profileData.name.split(' ')[0].toUpperCase() : 'ARJUN'}, OUT OF 103 CERTIFICATIONS ANALYSED FOR A PROFESSIONAL IN {profileData?.location ? profileData.location.toUpperCase() : 'BENGALURU'} RIGHT NOW -</span>
-            );
-          })()}
+          <span className="text-sm font-medium text-slate-600 font-bold tracking-widest text-slate-500 uppercase">{displayName}, OUT OF 103 CERTIFICATIONS ANALYSED FOR A PROFESSIONAL IN {city ? city.toUpperCase() : 'INDIA'} RIGHT NOW -</span>
         </motion.p>
       )}
       {phase >= 1 && (
@@ -791,7 +787,23 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
   var [text, setText] = useState('')
   var [fileName, setFileName] = useState('')
   var [loading, setLoading] = useState(false)
-  var [result, setResult] = useState(null)
+  var [result, setResult] = useState(() => {
+    if (typeof window !== 'undefined') {
+      var saved = sessionStorage.getItem('resumeAnalyzerResult');
+      if (saved) {
+        try { return JSON.parse(saved); } catch (e) { console.error(e); }
+      }
+    }
+    return null;
+  })
+
+  useEffect(() => {
+    if (result) {
+      sessionStorage.setItem('resumeAnalyzerResult', JSON.stringify(result));
+    } else {
+      sessionStorage.removeItem('resumeAnalyzerResult');
+    }
+  }, [result]);
   var [error, setError] = useState(null)
   var [rejection, setRejection] = useState(null)
   var [dragging, setDragging] = useState(false)
@@ -817,6 +829,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
   var [domainValidationError, setDomainValidationError] = useState(null)
   var [domainOverride, setDomainOverride]               = useState('')
   var [domainValidating, setDomainValidating]           = useState(false)
+  var [consentGiven, setConsentGiven]                   = useState(false)
 
   var hasFile = !!fileName
   var hasResult = !!result
@@ -825,8 +838,47 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
     if (!file) return
     var ext = file.name.split('.').pop().toLowerCase()
     var isPdf = file.name.toLowerCase().endsWith('.pdf') || file.type === 'application/pdf'
+    var isDocx = file.name.toLowerCase().endsWith('.docx') || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     setError(null); setRejection(null)
     try { trackResumeUploaded({ filename: file.name, sizeBytes: file.size }) } catch (_) {}
+    
+    if (isDocx) {
+      setFileName(file.name); setText(''); setPdfLoading(true); setTextReady(false)
+      var reader = new FileReader()
+      reader.onload = async function (e) {
+        try {
+          var arrayBuffer = e.target.result;
+          var mammoth = await import('mammoth');
+          var result = await (mammoth.default || mammoth).extractRawText({ arrayBuffer: arrayBuffer });
+          var extracted = result.value || '';
+          
+          if (!extracted || !extracted.trim()) {
+            setFileName('')
+            setError('Could not extract text from this DOCX. Please paste your resume below.')
+            setTextReady(true); setPdfLoading(false)
+            return
+          }
+          
+          var validation = validateDocument(extracted)
+          if (!validation.isResume) {
+            setFileName('')
+            setRejection(validation.rejectedBy || 'default')
+            setTextReady(true); setPdfLoading(false)
+            return
+          }
+          setText(extracted)
+          setTextReady(true); setPdfLoading(false)
+        } catch (err) {
+          setFileName('')
+          setError('Failed to parse DOCX file. Please paste text instead.')
+          setTextReady(true); setPdfLoading(false)
+        }
+      }
+      reader.onerror = function () { setError('Could not read file.'); setFileName(''); setTextReady(true); setPdfLoading(false) }
+      reader.readAsArrayBuffer(file)
+      return
+    }
+    
     if (isPdf) {
       // OPTIMISTIC: accept file immediately, extract in background
       setFileName(file.name); setText(''); setPdfLoading(true); setTextReady(false)
@@ -1308,43 +1360,62 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
       </AnimatePresence>
 
       {/* Analyse button - enabled as soon as file is selected (optimistic) */}
+      {/* Analyse button - enabled as soon as file is selected (optimistic) */}
       {!hasResult && !loading && (
-        <motion.button
-          onClick={handleAnalyse}
-          disabled={!text.trim() && !hasFile && !(inputMode === 'skills' && pickedSkills.length >= 3)}
-          whileHover={(text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3)) ? { scale: 1.01, y: -1 } : {}}
-          whileTap={(text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3)) ? { scale: 0.98 } : {}}
-          style={{
-            width: '100%', fontSize: '15px', padding: '14px',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '9px',
-            background: (text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3))
-              ? 'var(--text)'
-              : 'transparent',
-            border: (text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3)) ? 'none' : '1px solid var(--border)',
-            borderRadius: '12px',
-            color: (text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3)) ? 'var(--bg)' : 'var(--text-4)',
-            fontFamily: FH, fontWeight: '800',
-            cursor: (text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3)) ? 'pointer' : 'not-allowed',
-            boxShadow: (text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3)) ? '0 4px 16px transparent' : 'none',
-            letterSpacing: '-0.015em',
-            transition: 'all 0.2s',
-            position: 'relative',
-          }}
-        >
-          {pdfLoading ? (
-            <>
-              <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                style={{ width: 14, height: 14, borderRadius: '50%', border: '2px solid transparent', borderTopColor: 'var(--bg)' }} />
-              Analyse Profile
-              <span style={{ fontSize: '11px', opacity: 0.75, marginLeft: '4px' }}>(reading file...)</span>
-            </>
-          ) : (
-            <>
-              <Sparkles size={15} />
-              Analyse Profile
-            </>
-          )}
-        </motion.button>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '0 4px' }}>
+            <input 
+              type="checkbox" 
+              id="dpdpConsent"
+              checked={consentGiven}
+              onChange={(e) => {
+                setConsentGiven(e.target.checked);
+                if (e.target.checked) setError(null);
+              }}
+              style={{ cursor: 'pointer', width: '16px', height: '16px', flexShrink: 0 }}
+            />
+            <label htmlFor="dpdpConsent" className="text-[15px] text-slate-500 dark:text-slate-400 cursor-pointer relative" style={{ fontFamily: FB, display: 'inline-block' }}>
+              I agree to the <a href="/terms" className="text-emerald-600 hover:underline">Terms and Conditions</a> and <a href="/privacy" className="text-emerald-600 hover:underline">Privacy Policy</a>.
+              <span className="text-red-500 absolute -right-3 -top-1 font-bold text-lg leading-none">*</span>
+            </label>
+          </div>
+          <motion.button
+            onClick={handleAnalyse}
+            disabled={(!text.trim() && !hasFile && !(inputMode === 'skills' && pickedSkills.length >= 3)) || !consentGiven}
+            whileHover={(text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3)) && consentGiven ? { scale: 1.01, y: -1 } : {}}
+            whileTap={(text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3)) && consentGiven ? { scale: 0.98 } : {}}
+            style={{
+              width: '100%', fontSize: '15px', padding: '14px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '9px',
+              background: (text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3)) && consentGiven
+                ? 'var(--text)'
+                : 'transparent',
+              border: (text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3)) && consentGiven ? 'none' : '1px solid var(--border)',
+              borderRadius: '12px',
+              color: (text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3)) && consentGiven ? 'var(--bg)' : 'var(--text-4)',
+              fontFamily: FH, fontWeight: '800',
+              cursor: (text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3)) && consentGiven ? 'pointer' : 'not-allowed',
+              boxShadow: (text.trim() || hasFile || (inputMode === 'skills' && pickedSkills.length >= 3)) && consentGiven ? '0 4px 16px transparent' : 'none',
+              letterSpacing: '-0.015em',
+              transition: 'all 0.2s',
+              position: 'relative',
+            }}
+          >
+            {pdfLoading ? (
+              <>
+                <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                  style={{ width: 14, height: 14, borderRadius: '50%', border: '2px solid transparent', borderTopColor: 'var(--bg)' }} />
+                Analyse Profile
+                <span style={{ fontSize: '11px', opacity: 0.75, marginLeft: '4px' }}>(reading file...)</span>
+              </>
+            ) : (
+              <>
+                <Sparkles size={15} />
+                Analyse Profile
+              </>
+            )}
+          </motion.button>
+        </div>
       )}
 
       {loading && <CleanLoader />}

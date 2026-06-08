@@ -7,7 +7,11 @@ import { useRouter } from 'next/navigation'
 const F_SANS = "var(--font-sans)";
 
 function initialsFromUser(user) {
-  const name = user?.user_metadata?.full_name || user?.email || 'U'
+  const metaName = user?.user_metadata?.full_name;
+  let name = metaName && metaName.toUpperCase() !== 'ANONYMIZED' 
+    ? metaName 
+    : (user?.email || 'Professional');
+    
   const parts = name.trim().split(/\s+/).filter(Boolean)
   if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase()
   return name.slice(0, 2).toUpperCase()
@@ -87,7 +91,12 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
           </span>
         )}
         <span style={{ fontSize: '12px', fontWeight: 700, maxWidth: 120, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-          {user?.user_metadata?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || 'Tanuj Rajdev'}
+          {(() => {
+            const mName = user?.user_metadata?.full_name;
+            if (mName && mName.toUpperCase() !== 'ANONYMIZED') return mName.split(' ')[0];
+            if (user?.email) return user.email.split('@')[0];
+            return 'Professional';
+          })()}
         </span>
         <ChevronDown size={14} style={{ color: 'var(--text-3)', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 180ms ease' }} />
       </button>
@@ -117,7 +126,11 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
                 animate={{ opacity: 1 }}
               >
                 <motion.div className="text-zinc-900 dark:text-white font-medium text-sm">
-                  {user?.user_metadata?.full_name || 'Tanuj Rajdev'}
+                  {(() => {
+                    const fullName = user?.user_metadata?.full_name;
+                    if (fullName && fullName.toUpperCase() !== 'ANONYMIZED') return fullName;
+                    return 'Candidate Profile';
+                  })()}
                 </motion.div>
                 <motion.div className="text-zinc-500 dark:text-zinc-400 text-sm font-medium text-slate-600 mt-1 break-all">
                   {user?.email || ''}

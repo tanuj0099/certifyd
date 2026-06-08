@@ -60,41 +60,36 @@ const CertificationCard = ({ data }) => {
         group relative flex flex-col
         p-4 md:p-5
         rounded-2xl
-        border
-        md:hover:scale-[1.015] md:hover:shadow-xl md:hover:shadow-black/10
+        backdrop-blur-xl bg-white/60 dark:bg-white/5 border border-white/40 dark:border-white/10 shadow-2xl shadow-black/10
+        md:hover:scale-[1.015] md:hover:shadow-black/20
         transition-all duration-200
         cursor-pointer outline-none
-        focus-visible:ring-2 focus-visible:ring-[var(--border-mid)]
+        focus-visible:ring-2 focus-visible:ring-white/20
       "
       style={{
-        background: 'var(--card)',
-        borderColor: 'var(--border)'
+        /* Using Tailwind for glassmorphism */
       }}
       onMouseOver={(e) => {
-        e.currentTarget.style.background = 'var(--card-hover)';
-        e.currentTarget.style.borderColor = 'var(--border-mid)';
+        e.currentTarget.style.transform = 'scale(1.015)';
       }}
       onMouseOut={(e) => {
-        e.currentTarget.style.background = 'var(--card)';
-        e.currentTarget.style.borderColor = 'var(--border)';
+        e.currentTarget.style.transform = 'scale(1)';
       }}
     >
       {/*  Header: vendor + difficulty + track  */}
       <div className="flex flex-wrap items-center gap-1.5 md:gap-2 mb-3">
         {vendor && (
-          <span className="px-2 py-1 text-sm font-medium text-slate-600 uppercase tracking-widest font-semibold rounded-md transition-colors"
-                style={{ background: 'var(--border)', color: 'var(--text-3)' }}>
+          <span className="px-2 py-1 text-sm font-semibold uppercase tracking-widest rounded-md transition-colors bg-slate-200/50 dark:bg-slate-800/50 backdrop-blur-md border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300">
             {vendor}
           </span>
         )}
         {data.difficulty_level && (
-          <span className={`px-2 py-1 text-sm font-medium text-slate-600 uppercase tracking-widest font-semibold rounded-md border ${diffStyle.bg} ${diffStyle.border} ${diffStyle.text}`}>
+          <span className={`px-2 py-1 text-sm font-semibold uppercase tracking-widest rounded-md backdrop-blur-md border ${diffStyle.bg} ${diffStyle.border} ${diffStyle.text}`}>
             {data.difficulty_level}
           </span>
         )}
         {data.functional_track && (
-          <span className="ml-auto px-2 py-1 text-sm font-medium text-slate-600 uppercase tracking-widest font-semibold rounded-md truncate max-w-[100px] md:max-w-[130px]"
-                style={{ background: 'var(--border)', color: 'var(--text-3)' }}>
+          <span className="ml-auto px-2 py-1 text-sm font-semibold uppercase tracking-widest rounded-md truncate max-w-[100px] md:max-w-[130px] bg-slate-200/50 dark:bg-slate-800/50 backdrop-blur-md border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300">
             {data.functional_track}
           </span>
         )}

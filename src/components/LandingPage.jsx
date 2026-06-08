@@ -1388,7 +1388,7 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
                 textShadow: '0 1px 20px transparent',
               }}
             >
-              Know the exact payback period before you pay the fee. Calculated for your city and current salary.
+              Identify high-ROI certifications backed by verified market data and project your exact salary uplift before you invest.
             </motion.p>
 
             {/* CTA - button only, no pill box */}

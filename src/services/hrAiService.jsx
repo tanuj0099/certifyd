@@ -11,6 +11,8 @@ export const parseOfferLetter = async (offerLetterText, userProfileData) => {
 
 === STRICT SEMANTIC REASONING RULES ===
 
+CRITICAL PRIVACY INSTRUCTION: Do NOT extract the candidate's actual name, email address, phone number, or physical address. For the \`full_name\` field, you MUST return the exact string "ANONYMIZED".
+
 === 1. THE GEO-REASONING RULE (Client vs. Residence) ===
 - Determine the candidate's ACTUAL PHYSICAL RESIDENCE or base of operations. 
 - If a candidate lives in India (e.g., Gorakhpur, Hubballi, Bangalore, NCR) but works remotely for an international client or states a past international stint, the profile IS SUPPORTED. 

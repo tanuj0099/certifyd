@@ -88,13 +88,13 @@ function vendorFromSlug(slug) {
 // 
 // StatCard - hero row
 // 
-function StatCard({ icon: Icon, label, value, valueClass = 'text-white', accent }) {
+function StatCard({ icon: Icon, label, value, valueClass = 'text-[var(--text)]', accent }) {
   return (
     /*
       min-h-[80px] ensures the card is tall enough to be a comfortable
       touch target even on the smallest phones.
     */
-    <div className="flex flex-col gap-2 md:gap-3 p-3.5 md:p-5 rounded-2xl bg-zinc-900/40 border border-white/[0.07] min-h-[80px] md:min-h-0">
+    <div className="flex flex-col gap-2 md:gap-3 p-3.5 md:p-5 rounded-2xl backdrop-blur-xl bg-white/60 dark:bg-white/5 border border-white/40 dark:border-white/10 shadow-2xl shadow-black/10 min-h-[80px] md:min-h-0">
       <div className="flex items-center gap-1.5 md:gap-2">
         <div
           className="w-6 h-6 md:w-7 md:h-7 rounded-lg flex items-center justify-center flex-shrink-0"
@@ -123,12 +123,12 @@ function StatCard({ icon: Icon, label, value, valueClass = 'text-white', accent 
 function CustomTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-zinc-900 border border-white/10 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600 shadow-xl max-w-[160px]">
-      <p className="text-zinc-400 mb-1 truncate">{label}</p>
+    <div className="backdrop-blur-xl bg-white/60 dark:bg-white/5 border border-white/40 dark:border-white/10 shadow-2xl shadow-black/10 rounded-xl px-3 py-2.5 text-sm font-medium shadow-xl max-w-[160px]">
+      <p className="text-[var(--text-3)] mb-1 truncate">{label}</p>
       {payload.map((entry) => (
         <p key={entry.name} className="font-semibold" style={{ color: entry.fill }}>
           {entry.name}:{' '}
-          <span className="text-white">{entry.value}</span>
+          <span className="text-[var(--text)]">{entry.value}</span>
         </p>
       ))}
     </div>
@@ -153,8 +153,8 @@ function ComparisonChart({ title, thisValue, avgValue, unit, thisLabel, color })
     : 'Matches industry average';
 
   return (
-    <div className="p-4 md:p-5 rounded-2xl bg-zinc-900/40 border border-white/[0.07]">
-      <h4 className="text-sm font-medium text-slate-600 md:text-sm font-medium text-slate-600 uppercase tracking-widest font-semibold text-zinc-500 mb-3 md:mb-4">
+    <div className="p-4 md:p-5 rounded-2xl backdrop-blur-xl bg-white/60 dark:bg-white/5 border border-white/40 dark:border-white/10 shadow-2xl shadow-black/10">
+      <h4 className="text-sm font-bold uppercase tracking-widest text-[var(--text-3)] mb-3 md:mb-4">
         {title}
       </h4>
 
@@ -172,12 +172,13 @@ function ComparisonChart({ title, thisValue, avgValue, unit, thisLabel, color })
         >
           <CartesianGrid
             strokeDasharray="3 3"
-            stroke="rgba(255,255,255,0.04)"
+            stroke="#e2e8f0"
+            className="dark:stroke-slate-800"
             horizontal={false}
           />
           <XAxis
             type="number"
-            tick={{ fill: '#52525b', fontSize: 9 }}
+            tick={{ fill: '#64748b', fontSize: 9 }}
             axisLine={false}
             tickLine={false}
             tickFormatter={(v) => `${v}${unit}`}
@@ -185,7 +186,7 @@ function ComparisonChart({ title, thisValue, avgValue, unit, thisLabel, color })
           <YAxis
             type="category"
             dataKey="name"
-            tick={{ fill: '#a1a1aa', fontSize: 10 }}
+            tick={{ fill: '#64748b', fontSize: 10 }}
             axisLine={false}
             tickLine={false}
             width={76}
@@ -206,7 +207,7 @@ function ComparisonChart({ title, thisValue, avgValue, unit, thisLabel, color })
         </BarChart>
       </ResponsiveContainer>
 
-      <p className="text-sm font-medium text-slate-600 text-zinc-600 mt-2">{comparison}</p>
+      <p className="text-sm font-medium text-[var(--text-3)] mt-2">{comparison}</p>
     </div>
   );
 }
@@ -216,30 +217,30 @@ function ComparisonChart({ title, thisValue, avgValue, unit, thisLabel, color })
 // 
 function LoadingSkeleton() {
   return (
-    <div className="min-h-screen bg-black w-full text-white p-4 md:p-8">
+    <div className="min-h-screen bg-[var(--bg)] w-full text-[var(--text)] p-4 md:p-8">
       <div className="max-w-[1100px] mx-auto animate-pulse space-y-6 md:space-y-8">
         {/* Back nav */}
-        <div className="h-4 w-24 bg-white/5 rounded" />
+        <div className="h-4 w-24 bg-[var(--border)] rounded" />
         {/* Badges */}
         <div className="flex gap-2">
-          <div className="h-6 w-16 bg-white/5 rounded-full" />
-          <div className="h-6 w-24 bg-white/5 rounded-full" />
+          <div className="h-6 w-16 bg-[var(--border)] rounded-full" />
+          <div className="h-6 w-24 bg-[var(--border)] rounded-full" />
         </div>
         {/* Title */}
-        <div className="h-8 md:h-12 w-3/4 bg-white/10 rounded" />
+        <div className="h-8 md:h-12 w-3/4 bg-[var(--border)] rounded" />
         {/* Stat cards - 22 on mobile, 4 across on desktop */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-20 md:h-28 bg-zinc-900/30 border border-white/5 rounded-2xl" />
+            <div key={i} className="h-20 md:h-28 backdrop-blur-xl bg-white/60 dark:bg-white/5 border border-white/40 dark:border-white/10 shadow-2xl shadow-black/10 rounded-2xl" />
           ))}
         </div>
         {/* Body */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-4">
-            <div className="h-40 md:h-48 bg-zinc-900/30 border border-white/5 rounded-2xl" />
-            <div className="h-28 md:h-32 bg-zinc-900/30 border border-white/5 rounded-2xl" />
+            <div className="h-40 md:h-48 backdrop-blur-xl bg-white/60 dark:bg-white/5 border border-white/40 dark:border-white/10 shadow-2xl shadow-black/10 rounded-2xl" />
+            <div className="h-28 md:h-32 backdrop-blur-xl bg-white/60 dark:bg-white/5 border border-white/40 dark:border-white/10 shadow-2xl shadow-black/10 rounded-2xl" />
           </div>
-          <div className="h-56 md:h-64 bg-zinc-900/30 border border-white/5 rounded-2xl" />
+          <div className="h-56 md:h-64 backdrop-blur-xl bg-white/60 dark:bg-white/5 border border-white/40 dark:border-white/10 shadow-2xl shadow-black/10 rounded-2xl" />
         </div>
       </div>
     </div>
@@ -288,13 +289,13 @@ const CertDetail = () => {
 
   if (error || !cert) {
     return (
-      <div className="min-h-screen bg-black w-full text-white p-4 md:p-8 flex flex-col items-center justify-center gap-4">
-        <p className="text-zinc-500 text-sm text-center px-4">
+      <div className="min-h-screen bg-[var(--bg)] w-full text-[var(--text)] p-4 md:p-8 flex flex-col items-center justify-center gap-4">
+        <p className="text-[var(--text-3)] text-sm text-center px-4">
           {error || 'Certification not found.'}
         </p>
         <Link
           href="/tools/cert-radar"
-          className="inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-full border border-white/10 text-sm font-medium text-zinc-400 hover:text-white hover:border-white/20 transition-colors"
+          className="inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-full border border-[var(--border)] text-sm font-medium text-[var(--text-3)] hover:text-[var(--text)] hover:border-[var(--text-4)] transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Cert Radar
@@ -309,7 +310,7 @@ const CertDetail = () => {
   const durationValue = Number(cert.exam_duration_minutes) || 0;
 
   return (
-    <div className="min-h-screen bg-black w-full text-white pb-20 md:pb-24">
+    <div className="min-h-screen bg-[var(--bg)] w-full text-[var(--text)] pb-20 md:pb-24">
       {/*
         Page wrapper:
         Mobile:  px-4  py-6   - tight but breathable
@@ -325,8 +326,8 @@ const CertDetail = () => {
             className="
               inline-flex items-center gap-2
               min-h-[44px] pr-4
-              text-sm font-medium text-zinc-500
-              hover:text-white active:text-white
+              text-sm font-medium text-[var(--text-3)]
+              hover:text-[var(--text)] active:text-[var(--text)]
               transition-colors
             "
           >
@@ -342,17 +343,17 @@ const CertDetail = () => {
           {/* Badges row - wraps naturally on mobile */}
           <div className="flex flex-wrap items-center gap-2 mb-4 md:mb-5">
             {vendor && (
-              <span className="px-3 py-1.5 text-sm font-medium text-slate-600 uppercase tracking-widest font-semibold bg-white/5 border border-white/10 text-zinc-400 rounded-full">
+              <span className="px-3 py-1.5 text-sm font-medium text-[var(--text-3)] uppercase tracking-widest backdrop-blur-xl bg-white/60 dark:bg-white/5 border border-white/40 dark:border-white/10 shadow-2xl shadow-black/10 rounded-full">
                 {vendor}
               </span>
             )}
             {cert.difficulty_level && (
-              <span className={`px-3 py-1.5 text-sm font-medium text-slate-600 uppercase tracking-widest font-semibold rounded-full border ${diffStyle.bg} ${diffStyle.border} ${diffStyle.text}`}>
+              <span className={`px-3 py-1.5 text-sm font-medium uppercase tracking-widest font-semibold rounded-full border ${diffStyle.bg} ${diffStyle.border} ${diffStyle.text}`}>
                 {cert.difficulty_level}
               </span>
             )}
             {cert.functional_track && (
-              <span className="px-3 py-1.5 text-sm font-medium text-slate-600 uppercase tracking-widest font-semibold bg-white/5 border border-white/10 text-zinc-400 rounded-full">
+              <span className="px-3 py-1.5 text-sm font-medium text-[var(--text-3)] uppercase tracking-widest backdrop-blur-xl bg-white/60 dark:bg-white/5 border border-white/40 dark:border-white/10 shadow-2xl shadow-black/10 rounded-full">
                 {cert.functional_track}
               </span>
             )}
@@ -364,7 +365,7 @@ const CertDetail = () => {
             Tablet:  text-3xl (30px)
             Desktop: text-5xl (48px) - premium impact
           */}
-          <h1 className="text-2xl md:text-3xl lg:text-5xl font-extrabold tracking-tight leading-[1.05] text-white">
+          <h1 className="text-2xl md:text-3xl lg:text-5xl font-extrabold tracking-tight leading-[1.05] text-[var(--text)]">
             {cert.name}
           </h1>
         </header>
@@ -420,8 +421,8 @@ const CertDetail = () => {
               lg:sticky:      sticks while scrolling on desktop
            */}
           <aside className="w-full order-first lg:order-last lg:sticky lg:top-6">
-            <div className="p-4 md:p-6 rounded-2xl bg-zinc-900/50 border border-white/[0.09] space-y-4 md:space-y-5">
-              <h3 className="text-sm font-medium text-slate-600 md:text-sm font-bold uppercase tracking-widest text-zinc-400">
+            <div className="p-4 md:p-6 rounded-2xl backdrop-blur-xl bg-white/60 dark:bg-white/5 border border-white/40 dark:border-white/10 shadow-2xl shadow-black/10 space-y-4 md:space-y-5">
+              <h3 className="text-sm font-bold uppercase tracking-widest text-[var(--text-3)]">
                 Exam Logistics
               </h3>
 
@@ -432,10 +433,10 @@ const CertDetail = () => {
                     <HelpCircle className="w-4 h-4 text-blue-400" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-slate-600 uppercase tracking-widest font-semibold text-zinc-600 mb-1">
+                    <p className="text-sm font-medium text-[var(--text-3)] uppercase tracking-widest mb-1">
                       Exam Format
                     </p>
-                    <p className="text-sm text-zinc-200 font-medium">{cert.exam_format_type}</p>
+                    <p className="text-sm text-[var(--text)] font-medium">{cert.exam_format_type}</p>
                   </div>
                 </div>
               )}
@@ -447,10 +448,10 @@ const CertDetail = () => {
                     <Monitor className="w-4 h-4 text-violet-400" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-slate-600 uppercase tracking-widest font-semibold text-zinc-600 mb-1">
+                    <p className="text-sm font-medium text-[var(--text-3)] uppercase tracking-widest mb-1">
                       Testing Method
                     </p>
-                    <p className="text-sm text-zinc-200 font-medium">{cert.testing_method}</p>
+                    <p className="text-sm text-[var(--text)] font-medium">{cert.testing_method}</p>
                   </div>
                 </div>
               )}
@@ -461,10 +462,10 @@ const CertDetail = () => {
                   <CalendarDays className="w-4 h-4 text-emerald-400" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-slate-600 uppercase tracking-widest font-semibold text-zinc-600 mb-1">
+                  <p className="text-sm font-medium text-[var(--text-3)] uppercase tracking-widest mb-1">
                     Validity Period
                   </p>
-                  <p className="text-sm text-zinc-200 font-medium">
+                  <p className="text-sm text-[var(--text)] font-medium">
                     {formatValidity(cert.validity_period_months)}
                   </p>
                 </div>
@@ -486,7 +487,7 @@ const CertDetail = () => {
               )}
 
               {/* Divider */}
-              <div className="h-px bg-white/[0.06]" />
+              <div className="h-px bg-[var(--border)]" />
 
               {/* Quick stats summary */}
               <div className="space-y-3">
@@ -496,8 +497,8 @@ const CertDetail = () => {
                   { label: 'Exam Cost',        value: formatCost(cert.base_cost_usd) },
                 ].map(({ label, value }) => (
                   <div key={label} className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-slate-600 text-zinc-500">{label}</span>
-                    <span className="text-sm font-medium text-slate-600 font-semibold text-zinc-200">{value}</span>
+                    <span className="text-sm font-medium text-[var(--text-3)]">{label}</span>
+                    <span className="text-sm font-semibold text-[var(--text)]">{value}</span>
                   </div>
                 ))}
               </div>
@@ -508,8 +509,8 @@ const CertDetail = () => {
                 className="
                   mt-1 w-full flex items-center justify-center gap-2
                   min-h-[44px] py-3 px-4
-                  rounded-xl bg-white text-black text-sm font-bold
-                  hover:bg-zinc-100 active:bg-zinc-200
+                  rounded-xl bg-[var(--text)] text-[var(--bg)] text-sm font-bold
+                  hover:bg-[var(--text-2)] active:bg-[var(--text-3)]
                   transition-colors
                 "
               >
@@ -520,7 +521,7 @@ const CertDetail = () => {
               </Link>
 
               {/* Affiliate Disclosure */}
-              <p className="text-sm font-medium text-slate-600 text-zinc-500 text-center pt-2 leading-relaxed">
+              <p className="text-sm font-medium text-[var(--text-3)] text-center pt-2 leading-relaxed">
                 If you purchase training through links on this page, we may earn a commission. This does not affect our ROI calculations.
               </p>
             </div>
@@ -534,14 +535,14 @@ const CertDetail = () => {
 
             {/* What is it? */}
             {cert.about_description && (
-              <section className="p-4 md:p-6 rounded-2xl bg-zinc-900/30 border border-white/[0.07]">
+              <section className="p-4 md:p-6 rounded-2xl backdrop-blur-xl bg-white/60 dark:bg-white/5 border border-white/40 dark:border-white/10 shadow-2xl shadow-black/10">
                 <div className="flex items-center gap-2 mb-3 md:mb-4">
                   <BookOpen className="w-4 h-4 text-blue-400 flex-shrink-0" />
-                  <h2 className="text-sm font-medium text-slate-600 md:text-sm font-semibold uppercase tracking-widest text-zinc-400">
+                  <h2 className="text-sm font-semibold uppercase tracking-widest text-[var(--text-3)]">
                     What is it?
                   </h2>
                 </div>
-                <p className="text-zinc-200 text-sm md:text-[15px] leading-[1.8] font-normal">
+                <p className="text-[var(--text)] text-sm md:text-[15px] leading-[1.8] font-normal">
                   {cert.about_description}
                 </p>
               </section>
@@ -552,7 +553,7 @@ const CertDetail = () => {
               <section className="p-4 md:p-6 rounded-2xl bg-amber-500/[0.04] border border-amber-500/[0.15]">
                 <div className="flex items-center gap-2 mb-3 md:mb-4">
                   <ShieldCheck className="w-4 h-4 text-amber-400 flex-shrink-0" />
-                  <h2 className="text-sm font-medium text-slate-600 md:text-sm font-semibold uppercase tracking-widest text-amber-400/80">
+                  <h2 className="text-sm font-semibold uppercase tracking-widest text-amber-500 dark:text-amber-400/80">
                     Eligibility &amp; Prerequisites
                   </h2>
                 </div>
@@ -566,11 +567,11 @@ const CertDetail = () => {
             <section>
               {/* Section divider label */}
               <div className="flex items-center gap-2 mb-4">
-                <div className="h-px flex-1 bg-white/[0.06]" />
-                <span className="text-sm font-medium text-slate-600 uppercase tracking-widest font-semibold text-zinc-600 px-2 whitespace-nowrap">
+                <div className="h-px flex-1 bg-[var(--border)]" />
+                <span className="text-sm font-semibold uppercase tracking-widest text-[var(--text-3)] px-2 whitespace-nowrap">
                   Market Context
                 </span>
-                <div className="h-px flex-1 bg-white/[0.06]" />
+                <div className="h-px flex-1 bg-[var(--border)]" />
               </div>
 
               {/*

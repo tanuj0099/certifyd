@@ -64,6 +64,7 @@ export default function OfferAnalysisPage() {
   const [marketMedian, setMarketMedian] = useState(0)
   const [tierMatched, setTierMatched] = useState(true)
   const [error, setError] = useState('')
+  const [consentGiven, setConsentGiven] = useState(false)
 
   const hasResult = !!result
 
@@ -71,6 +72,7 @@ export default function OfferAnalysisPage() {
   const readFile = async (file, setFileName, setText, setPdfLoadState, setErrorState) => {
     if (!file) return
     const isPdf = file.name.toLowerCase().endsWith('.pdf') || file.type === 'application/pdf'
+    const isDocx = file.name.toLowerCase().endsWith('.docx') || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     setErrorState('')
 
     if (isPdf) {
@@ -105,7 +107,36 @@ export default function OfferAnalysisPage() {
       return
     }
 
-    // For txt or doc
+    if (isDocx) {
+      setFileName(file.name); setText(''); setPdfLoadState(true);
+      const reader = new FileReader()
+      reader.onload = async (e) => {
+        try {
+          const arrayBuffer = e.target.result;
+          const mammoth = await import('mammoth');
+          const result = await (mammoth.default || mammoth).extractRawText({ arrayBuffer: arrayBuffer });
+          const extracted = result.value || '';
+          
+          if (!extracted || !extracted.trim()) {
+            setFileName('')
+            setErrorState('Could not extract text from this DOCX. Please paste your text below.')
+            setPdfLoadState(false)
+            return
+          }
+          setText(extracted)
+          setPdfLoadState(false)
+        } catch (err) {
+          setFileName('')
+          setErrorState('Failed to parse DOCX file. Please paste text instead.')
+          setPdfLoadState(false)
+        }
+      }
+      reader.onerror = () => { setErrorState('Could not read file.'); setFileName(''); setPdfLoadState(false) }
+      reader.readAsArrayBuffer(file)
+      return
+    }
+
+    // For txt
     setFileName(file.name); setText('');
     const reader = new FileReader()
     reader.onload = (e) => { setText(e.target.result || '') }
@@ -248,11 +279,29 @@ export default function OfferAnalysisPage() {
             transition={{ duration: 0.2 }}
             style={{ overflow: 'hidden' }}
           >
+            <div style={{ marginBottom: '16px', display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+              <input 
+                type="checkbox" 
+                id={`dpdpConsent_${title.replace(/\s+/g, '')}`}
+                checked={consentGiven}
+                onChange={(e) => {
+                  setConsentGiven(e.target.checked);
+                  if (e.target.checked) setError('');
+                }}
+                style={{ marginTop: '3px', cursor: 'pointer' }}
+              />
+              <label htmlFor={`dpdpConsent_${title.replace(/\s+/g, '')}`} className="text-xs text-slate-600 leading-relaxed cursor-pointer">
+                I consent to the extraction of my salary, skills, and professional metrics for market benchmarking. I understand that all Personally Identifiable Information (PII) like my name and contact details will be automatically anonymized and ignored per DPDP Act standards.
+              </label>
+            </div>
+            
             <div className="glass" style={{
               borderRadius: '11px',
               border: '1.5px dashed ' + (dragging ? PICTON : 'var(--border)'),
               background: dragging ? PICTON + '08' : 'transparent',
               transition: 'border-color 0.2s, background 0.2s',
+              opacity: consentGiven ? 1 : 0.5,
+              pointerEvents: consentGiven ? 'auto' : 'none'
             }}>
               <div
                 onDragOver={e => { e.preventDefault(); setDragging(true) }}

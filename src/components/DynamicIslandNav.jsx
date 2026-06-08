@@ -26,9 +26,9 @@ const F_MONO = "var(--font-mono)";
 const ANON_NAV = [
   { label: 'Home',           pageId: 'home' },
   { label: 'Tools',          pageId: 'tools' },
-  { label: 'ROI Calculator', workspaceTab: 'roi',        href: '/tools/roi' },
-  { label: 'Cert Radar',     workspaceTab: 'cert-radar', href: '/tools/cert-radar' },
-  { label: 'Market Pulse',   workspaceTab: 'market',     href: '/tools/market' },
+  { label: 'ROI Calculator', pageId: 'tools/roi' },
+  { label: 'Cert Radar',     pageId: 'tools/cert-radar' },
+  { label: 'Market Pulse',   pageId: 'tools/market' },
   { label: 'Offer Analysis', pageId: 'offer-analysis' },
   { label: 'Blog',           pageId: 'blog' },
 ]
@@ -37,9 +37,9 @@ const ANON_NAV = [
 const AUTH_NAV = [
   { label: 'Home',           pageId: 'home' },
   { label: 'Tools',          pageId: 'tools' },
-  { label: 'ROI Calculator', workspaceTab: 'roi',        href: '/tools/roi' },
-  { label: 'Cert Radar',     workspaceTab: 'cert-radar', href: '/tools/cert-radar' },
-  { label: 'Market Pulse',   workspaceTab: 'market',     href: '/tools/market' },
+  { label: 'ROI Calculator', pageId: 'tools/roi' },
+  { label: 'Cert Radar',     pageId: 'tools/cert-radar' },
+  { label: 'Market Pulse',   pageId: 'tools/market' },
   { label: 'Offer Analysis', pageId: 'offer-analysis' },
   { label: 'Dashboard',      pageId: 'dashboard' },
   { label: 'Blog',           pageId: 'blog' },
@@ -48,11 +48,11 @@ const AUTH_NAV = [
 //  Mobile bottom tab bar config
 // Home | Cert Radar | ROI | Tools hub | Sign In / Profile
 const MOBILE_TABS_ANON = [
-  { label: 'Home',      pageId: 'home',                                      Icon: Home },
-  { label: 'Cert Radar', workspaceTab: 'cert-radar', href: '/tools/cert-radar', Icon: Radio },
-  { label: 'ROI',        workspaceTab: 'roi',        href: '/tools/roi',        Icon: BarChart2 },
-  { label: 'Tools',     pageId: 'tools',                                     Icon: Wrench },
-  { label: 'Sign In',   pageId: '__signin__',                                Icon: User },
+  { label: 'Home',       pageId: 'home',             Icon: Home },
+  { label: 'Cert Radar', pageId: 'tools/cert-radar', Icon: Radio },
+  { label: 'ROI',        pageId: 'tools/roi',        Icon: BarChart2 },
+  { label: 'Tools',      pageId: 'tools',            Icon: Wrench },
+  { label: 'Sign In',    pageId: '__signin__',       Icon: User },
 ]
 const MOBILE_TABS_AUTH = [
   { label: 'Home',      pageId: 'home',      Icon: Home },

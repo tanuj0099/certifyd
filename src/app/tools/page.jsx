@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import {
   Search, BarChart2, TrendingUp, FileText, Map,
-  Cpu, GraduationCap, CheckCircle, ArrowRight,
+  Cpu, GraduationCap, CheckCircle, ArrowRight, Compass,
 } from 'lucide-react'
 import { MarketingFooter } from '@/components/MarketingPageShell.jsx'
 
@@ -102,6 +102,14 @@ const TOOLS = [
     label: 'College vs Corporate',
     tag: 'DECIDE',
     desc: 'MBA vs certifications? Run the financial model - net cost, opportunity cost, and 5-year ROI.',
+  },
+  {
+    id: 'roadmaps',
+    path: '/roadmaps',
+    icon: Compass,
+    label: 'Career Roadmaps',
+    tag: 'GUIDE',
+    desc: 'Step-by-step certification roadmaps to transition into high-paying tech and management roles.',
   },
 ]
 

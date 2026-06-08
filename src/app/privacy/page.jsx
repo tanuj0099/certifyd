@@ -41,7 +41,12 @@ export default function PrivacyPage() {
           </section>
 
           <section style={{ marginBottom: '40px' }}>
-            <h2 style={{ fontFamily: FH, color: 'var(--text)', fontSize: '24px', marginBottom: '16px' }}>5. Your Rights</h2>
+            <h2 style={{ fontFamily: FH, color: 'var(--text)', fontSize: '24px', marginBottom: '16px' }}>5. DPDP Act Compliance & Data Minimization</h2>
+            <p style={{ marginBottom: '16px' }}>We strictly adhere to Data Minimization. We do not store your name, email (other than for secure authentication), or phone number from uploaded documents. Our AI extracts only professional and financial metrics to calculate accurate market benchmarks. Your identity is completely anonymized in our database.</p>
+          </section>
+
+          <section style={{ marginBottom: '40px' }}>
+            <h2 style={{ fontFamily: FH, color: 'var(--text)', fontSize: '24px', marginBottom: '16px' }}>6. Your Rights</h2>
             <p style={{ marginBottom: '16px' }}>Depending on your location, you may have the right to access, correct, or delete your personal data. You can manage your account settings or contact us directly to exercise these rights.</p>
           </section>
         </div>
