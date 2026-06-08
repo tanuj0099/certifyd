@@ -26,7 +26,7 @@ export default function RoadmapDrawer({ isOpen, onClose, nodeData, isCompleted, 
         <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-white sticky top-0 z-10">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className={`text-[10px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full ${
+              <span className={`text-sm font-medium text-slate-600 font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full ${
                 isCompleted ? 'bg-emerald-50 text-emerald-600' : 'bg-indigo-50 text-indigo-600'
               }`}>
                 {isCompleted ? 'Completed' : (nodeData.variant === 'checkpoint' ? 'Core Skill' : 'Standard Skill')}

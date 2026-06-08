@@ -146,7 +146,7 @@ export default function RoadmapsHub() {
               {/* Popular badge */}
               {roadmap.isPopular && (
                 <div
-                  className="absolute top-4 right-4 flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider"
+                  className="absolute top-4 right-4 flex items-center gap-1 text-sm font-medium text-slate-600 font-bold px-2.5 py-1 rounded-full uppercase tracking-wider"
                   style={{ background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text-3)' }}
                 >
                   <Sparkles size={12} /> Hot

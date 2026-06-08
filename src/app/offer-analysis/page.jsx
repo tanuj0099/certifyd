@@ -212,6 +212,22 @@ export default function OfferAnalysisPage() {
         }).then(({ error: insertErr }) => {
           if (insertErr) console.warn('Failed to save analysis:', insertErr.message)
         })
+
+        if (analysis.Database_Payload) {
+          supabase.from('offer_letters').insert({
+            user_id: user?.id || user?.uid || null,
+            fixed_base: analysis.Database_Payload.fixed_base,
+            variable_pay: analysis.Database_Payload.variable_pay,
+            hra: analysis.Database_Payload.hra,
+            special_allowance: analysis.Database_Payload.special_allowance,
+            pf: analysis.Database_Payload.pf,
+            company_tier: analysis.Database_Payload.company_tier,
+            role: analysis.Database_Payload.role,
+            experience_years: analysis.Database_Payload.experience_years
+          }).then(({ error: insertErr }) => {
+            if (insertErr) console.warn('Failed to save structured offer letter to DB:', insertErr.message)
+          })
+        }
       }
     } catch (err) {
       setError(err.message || 'Analysis failed. Please try again.')
@@ -548,31 +564,31 @@ export default function OfferAnalysisPage() {
                         <div className="md:col-span-3 flex flex-col md:flex-row gap-4 md:gap-6 w-full">
                           <div className="w-full md:flex-1 text-center rounded-3xl p-5 md:p-6 shadow-sm transition-all duration-300"
                             style={{ backgroundColor: C.isLight ? '#ffffff' : C.surface, border: `1px solid ${C.border}` }}>
-                            <div style={{ fontFamily: FM, color: C.text3 }} className="text-[10px] md:text-xs tracking-[0.06em] mb-2 md:mb-3">STATED CTC (INFLATED)</div>
+                            <div style={{ fontFamily: FM, color: C.text3 }} className="text-sm font-medium text-slate-600 md:text-sm font-medium text-slate-600 tracking-[0.06em] mb-2 md:mb-3">STATED CTC (INFLATED)</div>
                             <div className="font-sans tracking-tight tabular-nums text-2xl sm:text-4xl md:text-5xl font-bold line-through decoration-red-500/70 decoration-[2px] md:decoration-[3px]"
                               style={{ color: C.text }}>
                               ₹{Math.round(ctcValue).toLocaleString('en-IN')}
                             </div>
-                            <div style={{ fontFamily: FB, color: C.text3 }} className="text-xs md:text-sm mt-1 md:mt-2">Per annum</div>
+                            <div style={{ fontFamily: FB, color: C.text3 }} className="text-sm font-medium text-slate-600 md:text-sm mt-1 md:mt-2">Per annum</div>
                           </div>
 
                           <div className="w-full md:flex-1 text-center rounded-3xl p-5 md:p-6 shadow-sm transition-all duration-300 relative overflow-hidden"
                             style={{ backgroundColor: C.isLight ? '#ffffff' : C.surface, border: `1px solid ${C.border}` }}>
-                            <div style={{ fontFamily: FM, color: C.text3 }} className="text-[10px] md:text-xs tracking-[0.06em] mb-2 md:mb-3 relative">IN-HAND ESTIMATE</div>
+                            <div style={{ fontFamily: FM, color: C.text3 }} className="text-sm font-medium text-slate-600 md:text-sm font-medium text-slate-600 tracking-[0.06em] mb-2 md:mb-3 relative">IN-HAND ESTIMATE</div>
                             <div className="font-sans tracking-tight tabular-nums text-3xl sm:text-5xl md:text-6xl font-black text-teal-600 dark:text-teal-400 relative">
                               ₹{Math.round(result.CTC_Breakdown?.Estimated_Monthly_In_Hand || 0).toLocaleString('en-IN')}
                             </div>
-                            <div style={{ fontFamily: FB, color: C.text3 }} className="text-xs md:text-sm mt-1 md:mt-2 relative">Per month approx</div>
+                            <div style={{ fontFamily: FB, color: C.text3 }} className="text-sm font-medium text-slate-600 md:text-sm mt-1 md:mt-2 relative">Per month approx</div>
                           </div>
                         </div>
 
                         {/* ROW 2 LEFT: AI Negotiation Hub */}
                         <div className="md:col-span-2 p-5 md:p-6 w-full bg-slate-900 text-white rounded-3xl shadow-xl border border-slate-800 flex flex-col justify-center">
-                          <div style={{ fontFamily: FM }} className="text-[10px] tracking-[0.06em] text-slate-400 mb-3 uppercase">AI Negotiator & Strategy</div>
+                          <div style={{ fontFamily: FM }} className="text-sm font-medium text-slate-600 tracking-[0.06em] text-slate-400 mb-3 uppercase">AI Negotiator & Strategy</div>
 
                           {/* Negotiation Target */}
                           <div className="mb-5">
-                            <div className="text-xs text-slate-300 mb-2 font-medium font-sans">Target Counter-Offer Range</div>
+                            <div className="text-sm font-medium text-slate-600 text-slate-300 mb-2 font-medium font-sans">Target Counter-Offer Range</div>
                             <div className="text-emerald-400 font-bold text-2xl sm:text-3xl font-sans tracking-tight tabular-nums flex flex-col sm:flex-row sm:items-center sm:gap-2">
                               <span>₹{Math.round(Math.max(ctcValue * 1.15, finalMedian * 0.95)).toLocaleString('en-IN')}</span>
                               <span className="hidden sm:inline text-slate-500 font-normal">-</span>
@@ -583,7 +599,7 @@ export default function OfferAnalysisPage() {
 
                           {/* Negotiation Script */}
                           <div className="bg-slate-800/50 p-4 sm:p-5 rounded-2xl border border-slate-700">
-                            <div className="text-xs text-emerald-400 mb-2 font-mono flex items-center gap-2">
+                            <div className="text-sm font-medium text-slate-600 text-emerald-400 mb-2 font-mono flex items-center gap-2">
                               <Sparkles size={12} className="flex-shrink-0" /> Actionable Talking Point
                             </div>
                             <div className="text-sm sm:text-base text-slate-200 font-sans leading-relaxed">
@@ -595,17 +611,17 @@ export default function OfferAnalysisPage() {
                         {/* ROW 2 RIGHT: Market Context (Median/Gauge) */}
                         <div className="md:col-span-1 rounded-3xl p-5 md:p-6 shadow-sm transition-all duration-300 flex flex-col justify-center"
                           style={{ backgroundColor: C.isLight ? '#ffffff' : C.surface, border: `1px solid ${C.border}` }}>
-                          <div style={{ fontFamily: FM, color: C.text3 }} className="text-[10px] tracking-[0.06em] mb-2 uppercase tracking-widest">Market Median</div>
+                          <div style={{ fontFamily: FM, color: C.text3 }} className="text-sm font-medium text-slate-600 tracking-[0.06em] mb-2 uppercase tracking-widest">Market Median</div>
                           <div className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight tabular-nums block my-1 md:my-2" style={{ color: C.text }}>
                             ₹{Math.round(finalMedian).toLocaleString('en-IN')}
                           </div>
-                          <div style={{ fontFamily: FB, color: C.text3 }} className="text-[11px] sm:text-xs mb-5 md:mb-6 leading-relaxed">
+                          <div style={{ fontFamily: FB, color: C.text3 }} className="text-[11px] sm:text-sm font-medium text-slate-600 mb-5 md:mb-6 leading-relaxed">
                             For {result.Analysis_Metadata?.Target_Location || 'India'}
                             {!tierMatched && marketMedian > 0 && <span className="text-yellow-600 block mt-1">General market median shown.</span>}
                             {marketMedian === 0 && <span className="text-indigo-500 block mt-1">Simulated industry baseline shown.</span>}
                           </div>
 
-                          <div className="flex justify-between text-[10px] sm:text-xs font-medium mb-2 md:mb-3" style={{ color: C.text3 }}>
+                          <div className="flex justify-between text-sm font-medium text-slate-600 sm:text-sm font-medium text-slate-600 font-medium mb-2 md:mb-3" style={{ color: C.text3 }}>
                             <span>Low</span>
                             <span className={`${gaugeText} font-bold font-sans tabular-nums text-center px-1`}>{percentile}th %ile</span>
                             <span>High</span>
@@ -618,7 +634,7 @@ export default function OfferAnalysisPage() {
                         {/* ROW 3 LEFT: Donut Chart */}
                         <div className="md:col-span-2 rounded-3xl p-4 md:p-6 shadow-sm transition-all duration-300 flex flex-col justify-center items-center h-[280px] md:h-[360px] w-full"
                           style={{ backgroundColor: C.isLight ? '#ffffff' : C.surface, border: `1px solid ${C.border}` }}>
-                          <div style={{ fontFamily: FM, color: C.text3 }} className="text-[10px] tracking-[0.06em] w-full mb-2 md:mb-4 uppercase tracking-widest text-center md:text-left">Compensation Composition</div>
+                          <div style={{ fontFamily: FM, color: C.text3 }} className="text-sm font-medium text-slate-600 tracking-[0.06em] w-full mb-2 md:mb-4 uppercase tracking-widest text-center md:text-left">Compensation Composition</div>
                           <div className="w-full h-full min-h-[200px] md:min-h-[250px]">
                             <ResponsiveContainer width="100%" height="100%">
                               <PieChart>
@@ -667,17 +683,17 @@ export default function OfferAnalysisPage() {
                           )}
 
                           <div className="flex gap-2 md:gap-3 flex-wrap">
-                            <div className="px-2 md:px-3 py-1.5 rounded-lg border text-[10px] md:text-xs font-mono break-words"
+                            <div className="px-2 md:px-3 py-1.5 rounded-lg border text-sm font-medium text-slate-600 md:text-sm font-medium text-slate-600 font-mono break-words"
                               style={{ backgroundColor: C.isLight ? '#f1f5f9' : C.bgAlt, borderColor: C.border, color: C.text2 }}>
                               Role: <span className="font-semibold ml-1" style={{ color: C.text }}>{result.Analysis_Metadata?.Target_Job_Title || 'Unknown'}</span>
                             </div>
                             {result.Analysis_Metadata?.Company_Tier && result.Analysis_Metadata.Company_Tier !== 'Unknown' && (
-                              <div className="px-2 md:px-3 py-1.5 rounded-lg border text-[10px] md:text-xs font-mono"
+                              <div className="px-2 md:px-3 py-1.5 rounded-lg border text-sm font-medium text-slate-600 md:text-sm font-medium text-slate-600 font-mono"
                                 style={{ backgroundColor: C.isLight ? '#f1f5f9' : C.bgAlt, borderColor: C.border, color: C.text2 }}>
                                 Tier: <span className="font-bold ml-1" style={{ color: C.text }}>{result.Analysis_Metadata.Company_Tier.replace(/_/g, ' ')}</span>
                               </div>
                             )}
-                            <div className="px-2 md:px-3 py-1.5 rounded-lg border text-[10px] md:text-xs font-mono"
+                            <div className="px-2 md:px-3 py-1.5 rounded-lg border text-sm font-medium text-slate-600 md:text-sm font-medium text-slate-600 font-mono"
                               style={{ backgroundColor: C.isLight ? '#f1f5f9' : C.bgAlt, borderColor: C.border, color: C.text2 }}>
                               Evaluated Exp: <span className="font-semibold ml-1" style={{ color: C.text }}>{result.Market_Context?.Calculated_Experience_Level_For_Offer || 'Unknown'}</span>
                             </div>
@@ -717,7 +733,7 @@ function BreakdownChip({ label, value, color, theme }) {
   return (
     <div className="flex items-center gap-2 px-3 py-2 rounded-xl border" style={{ backgroundColor: chipBg, borderColor }}>
       <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: color }}></div>
-      <span className="text-xs font-bold tracking-wide uppercase line-clamp-1 flex-1" style={{ color: labelColor }}>{label}</span>
+      <span className="text-sm font-medium text-slate-600 font-bold tracking-wide uppercase line-clamp-1 flex-1" style={{ color: labelColor }}>{label}</span>
       <span className="text-sm font-bold font-mono tabular-nums" style={{ color: valueColor }}>₹{Math.round(Number(value)).toLocaleString('en-IN')}</span>
     </div>
   )

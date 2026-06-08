@@ -3,6 +3,9 @@ import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
 import { createMockGroqResponse, isServerTestMode } from '../../../../server/testMode.js';
 
+// Bypass corporate firewall/SSL inspection certificate errors (e.g. Zscaler)
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 

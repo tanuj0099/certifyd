@@ -1,4 +1,8 @@
 export const parseOfferLetter = async (offerLetterText, userProfileData) => {
+  if (!offerLetterText || offerLetterText.trim().length < 500) {
+    return { error: "INVALID_DOCUMENT", message: "Document too short to be a valid offer letter." };
+  }
+
   const prompt = `You are an expert Compensation Analyst and Data Extraction Engine specializing ONLY in the Indian IT sector. Your job is to analyze an uploaded Job Offer Letter alongside the candidate's self-reported Resume/Profile data.
 
 === INPUT DATA ===
@@ -90,8 +94,24 @@ If the region is supported (India), output a valid JSON object matching this exa
   "Market_Context": {
     "Calculated_Experience_Level_For_Offer": "[e.g., 0 years / Fresher, based ONLY on relevant tech/corporate experience]",
     "UI_Status_Message": "[Generate a precise UI message explaining the evaluation]"
+  },
+  "Database_Payload": {
+    "fixed_base": number,
+    "variable_pay": number,
+    "hra": number,
+    "special_allowance": number,
+    "pf": number,
+    "company_tier": "string",
+    "role": "string",
+    "experience_years": number,
+    "esop_units": number,
+    "notice_period_days": number
   }
 }
+
+=== 9. INVALID DOCUMENT GUARDRAIL ===
+If the document completely lacks mandatory compensation data, role details, or appears to be a random document (not an offer letter), you MUST return EXACTLY:
+{"error": "INVALID_DOCUMENT"}
 
 CRITICAL: You must output ONLY raw, valid JSON. DO NOT wrap the JSON in markdown code blocks (e.g., no \`\`\`json). DO NOT include any conversational text before or after the JSON.`;
 

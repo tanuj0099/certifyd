@@ -745,7 +745,7 @@ function AIResult({ result, certName, onReset, paybackMonths, fiveYearNetGain, c
       {result.bottomLine && (
         <div style={{ margin: '0 16px 12px', padding: '10px 13px', borderRadius: '9px', background: vc + '0d', border: '1px solid ' + vc + '22' }}>
           <div style={{ fontFamily: FM, fontSize: '9px', color: vc, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>BOTTOM LINE</div>
-          <div className="font-bold text-slate-900 mt-2">Invest ₹{(certCostINR / 1000).toFixed(0)}K in this certification to unlock a potential ₹{(fiveYearNetGain / 100000).toFixed(1)}L net gain over 5 years.</div>
+          <div className="text-base font-bold text-slate-900 mt-2">Invest ₹{(certCost/1000).toFixed(0)}K to unlock a potential ₹{(fiveYearNetGain/100000).toFixed(1)}L net gain over 5 years.</div>
         </div>
       )}
 
@@ -1170,7 +1170,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
                   <div style={{ fontFamily: 'var(--font-head)', fontSize: 'clamp(1.5rem,4vw,2.2rem)', fontWeight: '800', color: EMERALD }}>
                     ₹{(fiveYearNetGain / 100000).toFixed(1)}L
                   </div>
-                  <div className="text-xs text-slate-500 mt-2 font-medium">Inflation-adjusted estimate based on {expectedHike}% market movement</div>
+                  <div className="text-sm text-slate-600 mt-2 font-medium">Inflation-adjusted estimate based on {expectedHike}% market movement</div>
                 </div>
                 <div style={{ padding: '24px 16px', textAlign: 'center', borderColor: 'var(--border)', background: 'transparent', minHeight: 110, border: 'none' }}>
                   <div className="micro-label" style={{ color: 'var(--text-4)', marginBottom: '8px' }}>ANNUALIZED RETURN (CAGR)</div>
@@ -1179,7 +1179,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
                   </div>
                   <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border bg-white shadow-sm" style={{ borderColor: confidenceColor + '40' }}>
                     <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: confidenceColor }} />
-                    <span className="text-xs font-bold" style={{ color: confidenceColor }}>{confidenceLabel} ({confidenceScore}%)</span>
+                    <span className="text-sm font-bold" style={{ color: confidenceColor }}>{confidenceLabel} ({confidenceScore}%)</span>
                   </div>
                 </div>
               </div>
@@ -1187,7 +1187,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
               {/*  Secondary Dash Stats  */}
               <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px', marginBottom: '12px' }}>
                 <StatCard label="New Salary" value={`₹${targetOfferLakhs}L/yr`} color={PICTON} delay={0} />
-                <StatCard label="ADDITIONAL MONTHLY PAY" value={<span className="text-emerald-600">+₹{Math.round(monthlyHikeAmount / 1000)}K</span>} color={VIOLET} delay={0.05} />
+                <StatCard label="ADDITIONAL MONTHLY PAY" value={<span className="text-emerald-600 font-bold">+₹{Math.round(monthlyHikeAmount / 1000)}K</span>} color={VIOLET} delay={0.05} />
                 <StatCard
                   label="Payback Window"
                   value={`${paybackMonths} mo`}
@@ -1231,7 +1231,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
               <Legend verticalAlign="top" align="right" iconType="circle" wrapperStyle={{ fontSize: '14px', fontWeight: '500', color: '#475569', paddingBottom: '20px' }} />
               <ReferenceLine y={0} stroke="transparent" strokeDasharray="4 4" />
               <Line type="monotone" dataKey="action" name="With Certification" stroke="#10b981" strokeWidth={3} dot={false} activeDot={{ r: 4, fill: "#10b981" }} />
-              <Line type="monotone" dataKey="inaction" name="Without Certification (Inaction)" stroke="#94a3b8" strokeWidth={2} strokeDasharray="5 5" dot={false} />
+              <Line type="monotone" dataKey="inaction" name="Inaction" stroke="#94a3b8" strokeWidth={2} strokeDasharray="5 5" dot={false} />
             </LineChart>
           </ResponsiveContainer>
         </div>

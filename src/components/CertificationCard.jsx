@@ -82,18 +82,18 @@ const CertificationCard = ({ data }) => {
       {/*  Header: vendor + difficulty + track  */}
       <div className="flex flex-wrap items-center gap-1.5 md:gap-2 mb-3">
         {vendor && (
-          <span className="px-2 py-1 text-[10px] uppercase tracking-widest font-semibold rounded-md transition-colors"
+          <span className="px-2 py-1 text-sm font-medium text-slate-600 uppercase tracking-widest font-semibold rounded-md transition-colors"
                 style={{ background: 'var(--border)', color: 'var(--text-3)' }}>
             {vendor}
           </span>
         )}
         {data.difficulty_level && (
-          <span className={`px-2 py-1 text-[10px] uppercase tracking-widest font-semibold rounded-md border ${diffStyle.bg} ${diffStyle.border} ${diffStyle.text}`}>
+          <span className={`px-2 py-1 text-sm font-medium text-slate-600 uppercase tracking-widest font-semibold rounded-md border ${diffStyle.bg} ${diffStyle.border} ${diffStyle.text}`}>
             {data.difficulty_level}
           </span>
         )}
         {data.functional_track && (
-          <span className="ml-auto px-2 py-1 text-[10px] uppercase tracking-widest font-semibold rounded-md truncate max-w-[100px] md:max-w-[130px]"
+          <span className="ml-auto px-2 py-1 text-sm font-medium text-slate-600 uppercase tracking-widest font-semibold rounded-md truncate max-w-[100px] md:max-w-[130px]"
                 style={{ background: 'var(--border)', color: 'var(--text-3)' }}>
             {data.functional_track}
           </span>
@@ -120,7 +120,7 @@ const CertificationCard = ({ data }) => {
         <div className="flex items-center gap-1.5">
           <DollarSign className="w-3.5 h-3.5 flex-shrink-0" style={{ color: 'var(--gold)' }} />
           <div>
-            <p className="text-[10px] uppercase tracking-wider font-semibold leading-none mb-0.5 text-[var(--text-3)]">Cost</p>
+            <p className="text-sm font-medium text-slate-600 uppercase tracking-wider font-semibold leading-none mb-0.5 text-[var(--text-3)]">Cost</p>
             <p className="text-sm font-semibold text-[var(--text)]">
               {formatCost(data.base_cost_usd)}
             </p>
@@ -129,7 +129,7 @@ const CertificationCard = ({ data }) => {
         <div className="flex items-center gap-1.5">
           <Clock className="w-3.5 h-3.5 flex-shrink-0 text-blue-500" />
           <div>
-            <p className="text-[10px] uppercase tracking-wider font-semibold leading-none mb-0.5 text-[var(--text-3)]">Validity</p>
+            <p className="text-sm font-medium text-slate-600 uppercase tracking-wider font-semibold leading-none mb-0.5 text-[var(--text-3)]">Validity</p>
             <p className="text-sm font-semibold text-[var(--text)]">
               {formatValidity(data.validity_period_months)}
             </p>

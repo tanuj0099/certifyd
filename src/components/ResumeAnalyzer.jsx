@@ -119,7 +119,10 @@ var validateDocument = function (text) {
   if (verbHits.length >= 4) score += 1
   var tools = ['excel', 'powerpoint', 'canva', 'python', 'java', 'sql', 'tableau', 'figma', 'aws', 'azure', 'docker', 'git', 'tally', 'powerbi']
   if (tools.filter(function (t2) { return t.includes(t2) }).length >= 2) score += 2
-  if (text.trim().length < 150) return { isResume: false, rejectedBy: 'too short', score: score }
+  
+  if (text.trim().length < 500) return { isResume: false, rejectedBy: 'INVALID_DOCUMENT', score: score }
+  if (!t.includes('education') && !t.includes('skills') && !t.includes('experience')) return { isResume: false, rejectedBy: 'INVALID_DOCUMENT', score: score }
+
   return { isResume: score >= 8, score: score, sectionHits: sectionHits, verbHits: verbHits }
 }
 
@@ -163,9 +166,17 @@ var buildPrompt = function (resumeText, mode, timeline, domainIntent, switchTarg
     '    { "name": "exact cert name", "why": "specific reason", "roi": "hike % range", "timeline": "X months", "fastTrack": "one concrete first step" }\n' +
     '  ],\n' +
     '  "immediateAction": "one thing to do this week with platform name",\n' +
-    '  "marketInsight": "one sentence on India demand for top cert in their city"\n' +
+    '  "marketInsight": "one sentence on India demand for top cert in their city",\n' +
+    '  "Database_Payload": {\n' +
+    '    "full_name": "string",\n' +
+    '    "current_role": "string",\n' +
+    '    "experience_years": 0,\n' +
+    '    "technical_skills": ["skill1", "skill2"],\n' +
+    '    "education_history": [{"degree": "string", "institution": "string", "year": "string"}],\n' +
+    '    "current_salary": 0\n' +
+    '  }\n' +
     '}\n\n' +
-    'Rules: India-specific. Under 380 words total. Be specific to their actual resume.'
+    'Rules: India-specific. Under 380 words total. Be specific to their actual resume. EDUCATION FIX: If the resume lacks an explicit education section, you MUST output [{"degree": "Not provided", "institution": "Not provided"}] for education_history to prevent UI breakage. GUARDRAIL: If the text lacks mandatory sections completely, output EXACTLY {"error": "INVALID_DOCUMENT"}.'
 }
 
 //  Safe JSON parser - never throws 
@@ -218,6 +229,7 @@ var safeParseResumeJSON = function (text) {
       certs: certs,
       immediateAction: String(obj.immediateAction || ''),
       marketInsight: String(obj.marketInsight || ''),
+      Database_Payload: obj.Database_Payload || null,
       raw: text,
       parseError: false,
     }
@@ -247,6 +259,7 @@ var NotAResumeError = function ({ rejectedBy, onDismiss }) {
     'research report': { title: "That's a research report", desc: "Please upload your personal resume." },
     'academic paper': { title: "That's an academic paper", desc: "Please upload your resume." },
     'too short': { title: "Too short to be a resume", desc: "Please paste more of your profile - work experience, education, skills." },
+    'INVALID_DOCUMENT': { title: "Invalid Document", desc: "Please ensure your upload contains clear sections like 'Education', 'Skills', or 'Experience'." },
     default: { title: "That doesn't look like a resume", desc: "We need your work experience, education, skills, and contact details." },
   }
   var msg = messages[rejectedBy] || messages.default
@@ -438,13 +451,13 @@ var PersonalisedHero = function ({ name, city, domain, primaryCert, mode, certDo
       {phase >= 0 && (
         <motion.p
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
-          className="micro-label uppercase tracking-widest text-xs"
+          className="micro-label uppercase tracking-widest text-sm font-medium text-slate-600"
           style={{ color: 'var(--text-4)', marginBottom: '10px', lineHeight: 1.6 }}
         >
           {(() => {
             const profileData = { name: name || authName, location: city };
             return (
-              <span className="text-xs font-bold tracking-widest text-slate-500 uppercase">{profileData?.name ? profileData.name.split(' ')[0].toUpperCase() : 'ARJUN'}, OUT OF 103 CERTIFICATIONS ANALYSED FOR A PROFESSIONAL IN {profileData?.location ? profileData.location.toUpperCase() : 'BENGALURU'} RIGHT NOW -</span>
+              <span className="text-sm font-medium text-slate-600 font-bold tracking-widest text-slate-500 uppercase">{profileData?.name ? profileData.name.split(' ')[0].toUpperCase() : 'ARJUN'}, OUT OF 103 CERTIFICATIONS ANALYSED FOR A PROFESSIONAL IN {profileData?.location ? profileData.location.toUpperCase() : 'BENGALURU'} RIGHT NOW -</span>
             );
           })()}
         </motion.p>
@@ -743,6 +756,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
   const [certificationsData, setCertificationsData] = useState([]);
   const [domainsData, setDomainsData] = useState([]);
   const [dbLoading, setDbLoading] = useState(true);
+  const { user } = useAuth();
 
   //  The "Once and For All" Alias Fix 
   const CERTIFICATIONS = certificationsData;
@@ -944,6 +958,37 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
 
       if (parsed && parsed.Unsupported_Region) {
         throw new Error(parsed.Message || 'Certifyd MVP currently only supports salary intelligence for the Indian IT market.')
+      }
+
+      if (parsed.Database_Payload) {
+        console.log("Checking Auth User ID for RLS:", user?.id || user?.uid);
+        if (user?.id || user?.uid) {
+          const dbPayload = {
+            user_id: user.id || user.uid,
+            full_name: parsed.Database_Payload.full_name,
+            current_role: parsed.Database_Payload.current_role,
+            experience_years: parsed.Database_Payload.experience_years,
+            technical_skills: parsed.Database_Payload.technical_skills,
+            education_history: parsed.Database_Payload.education_history,
+            current_salary: parsed.Database_Payload.current_salary
+          };
+          console.log("Exact JSON being sent to Supabase 'resumes' table:", JSON.stringify(dbPayload, null, 2));
+          
+          try {
+            const { error: insertError } = await supabase.from('resumes').insert(dbPayload);
+            if (insertError) {
+              console.error('Supabase DB Error message:', insertError.message);
+              console.error('Supabase DB Error code:', insertError.code);
+              console.error('Supabase DB Error details:', insertError.details);
+              console.error('Supabase DB Error hint:', insertError.hint);
+              console.error('Full Supabase Error Object:', JSON.stringify(insertError));
+            }
+          } catch (dbErr) {
+            console.error('Caught exception during Supabase resume upsert:', dbErr);
+          }
+        } else {
+          console.warn('Skipping resume save: user is null or missing ID.');
+        }
       }
 
       setResult(parsed.certs?.length ? parsed : {

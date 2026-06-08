@@ -171,7 +171,7 @@ export default function RoadmapTool() {
                 color: 'var(--text-2)',
               }}
             >
-              <span className="flex items-center gap-2 text-xs md:text-sm">
+              <span className="flex items-center gap-2 text-sm font-medium text-slate-600 md:text-sm">
                 <CheckCircle2 size={16} style={{ color: '#d97706' }} />
                 Tracking progress across {nodes.length} skills
               </span>

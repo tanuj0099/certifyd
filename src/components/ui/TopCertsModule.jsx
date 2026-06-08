@@ -48,7 +48,7 @@ export default function TopCertsModule({ roadmapId }) {
                   </div>
                   <div>
                     <h3 className="text-lg md:text-xl font-bold text-slate-900">{cert.name}</h3>
-                    <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">{cert.issuer}</p>
+                    <p className="text-sm font-medium text-slate-600 font-bold text-slate-500 uppercase tracking-widest">{cert.issuer}</p>
                   </div>
                 </div>
 
@@ -68,13 +68,13 @@ export default function TopCertsModule({ roadmapId }) {
                     {/* The "Why & How" (Takes up 2 columns) */}
                     <div className="md:col-span-2 space-y-6">
                       <div>
-                        <h4 className="flex items-center gap-2 text-xs font-black text-indigo-900 uppercase tracking-widest mb-2">
+                        <h4 className="flex items-center gap-2 text-sm font-medium text-slate-600 font-black text-indigo-900 uppercase tracking-widest mb-2">
                           <Target size={16} className="text-indigo-500"/> Why it matters
                         </h4>
                         <p className="text-slate-700 text-sm leading-relaxed">{cert.whyItMatters}</p>
                       </div>
                       <div>
-                        <h4 className="flex items-center gap-2 text-xs font-black text-indigo-900 uppercase tracking-widest mb-2">
+                        <h4 className="flex items-center gap-2 text-sm font-medium text-slate-600 font-black text-indigo-900 uppercase tracking-widest mb-2">
                           <BookOpen size={16} className="text-indigo-500"/> How to prepare
                         </h4>
                         <p className="text-slate-700 text-sm leading-relaxed">{cert.howToPrepare}</p>
@@ -84,20 +84,20 @@ export default function TopCertsModule({ roadmapId }) {
                     {/* Logistics Card (Takes up 1 column) */}
                     <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4 h-fit">
                       <div>
-                        <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Difficulty</span>
+                        <span className="block text-sm font-medium text-slate-600 font-bold text-slate-400 uppercase tracking-widest mb-1">Difficulty</span>
                         <span className="text-slate-900 font-bold text-sm">{cert.difficulty}</span>
                       </div>
                       <div className="w-full h-px bg-slate-100"></div>
                       <div>
-                        <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Time to Prep</span>
+                        <span className="block text-sm font-medium text-slate-600 font-bold text-slate-400 uppercase tracking-widest mb-1">Time to Prep</span>
                         <div className="flex items-center gap-1.5 text-slate-900 font-bold text-sm">
                           <Clock size={14} className="text-amber-500"/> {cert.timeToPrep}
                         </div>
                       </div>
                       <div className="w-full h-px bg-slate-100"></div>
                       <div>
-                        <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Eligibility Criteria</span>
-                        <p className="text-slate-700 text-xs leading-relaxed">{cert.eligibility}</p>
+                        <span className="block text-sm font-medium text-slate-600 font-bold text-slate-400 uppercase tracking-widest mb-1">Eligibility Criteria</span>
+                        <p className="text-slate-700 text-sm font-medium text-slate-600 leading-relaxed">{cert.eligibility}</p>
                       </div>
                     </div>
 

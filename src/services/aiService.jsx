@@ -25,8 +25,8 @@ Respond with ONLY a valid JSON object — no markdown, no prose, no code fences.
 
 {
   "verdict": "Strong ROI / Moderate ROI / Weak ROI — one sentence with % and timeline",
-  "breakEven": "X months — real-world India anchor e.g. = 6 months Pune PG rent",
-  "projection": "Rs.X.XL — anchor e.g. = Honda City down payment twice over",
+  "breakEven": "X months",
+  "projection": "Rs.X.XL",
   "demand": [
     "specific Naukri/LinkedIn demand signal with number",
     "top 2 hiring companies in India",

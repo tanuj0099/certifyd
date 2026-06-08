@@ -119,7 +119,7 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
                 <motion.div className="text-zinc-900 dark:text-white font-medium text-sm">
                   {user?.user_metadata?.full_name || 'Tanuj Rajdev'}
                 </motion.div>
-                <motion.div className="text-zinc-500 dark:text-zinc-400 text-xs mt-1 break-all">
+                <motion.div className="text-zinc-500 dark:text-zinc-400 text-sm font-medium text-slate-600 mt-1 break-all">
                   {user?.email || ''}
                 </motion.div>
               </motion.div>

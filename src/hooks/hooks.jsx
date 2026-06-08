@@ -39,22 +39,7 @@ export const useGuestCounter = (limit = 3) => {
 
 // ── Life anchor helper ────────────────────────────────────
 export const getLifeAnchor = (amountINR, isStudent = false) => {
-  const abs = Math.abs(amountINR)
-  if (isStudent) {
-    if (abs < 50000)  return 'a semester of online courses'
-    if (abs < 120000) return '1 year of Bangalore PG rent'
-    if (abs < 200000) return 'a two-wheeler bought outright'
-    if (abs < 400000) return '3 years of PG + food in Bangalore'
-    if (abs < 700000) return 'a used car down payment'
-    return `${Math.round(abs / 120000)} years of Bangalore living costs`
-  }
-  if (abs < 50000)   return 'a month of Koramangala rent'
-  if (abs < 150000)  return 'a round trip to Europe'
-  if (abs < 300000)  return '18 months of Bangalore rent'
-  if (abs < 600000)  return 'a Honda City down payment'
-  if (abs < 1000000) return 'a luxury hatchback — outright'
-  if (abs < 2000000) return 'a Whitefield flat down payment'
-  return `${Math.round(abs / 1200000)} years of total Bangalore living`
+  return '';
 }
 
 // ── ROI calculator ────────────────────────────────────────
