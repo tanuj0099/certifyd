@@ -41,7 +41,8 @@ function GlobalUI({ children }) {
   const PAGES_WITH_OWN_FOOTER = new Set([
     'app', 'about', 'features', 'how-it-works', 'pricing', 'blog', 
     'faq', 'contact', 'profile', 'cert-radar', 'tools',
-    'dashboard', 'offer-analysis', 'market-pulse', 'choose-path'
+    'dashboard', 'offer-analysis', 'market-pulse', 'choose-path',
+    'privacy', 'terms'
   ]);
 
   const isToolPage = currentPage.startsWith('tools/') ||
