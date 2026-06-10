@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import {
   Menu, User, X, Home, BookOpen,
   LayoutDashboard, ChevronRight,
-  Radio, BarChart2, Wrench,
+  Radio, BarChart2, Wrench, Briefcase,
 } from 'lucide-react'
 import { useTheme } from '../hooks/useTheme.jsx'
 import UserAccountMenu from './UserAccountMenu.jsx'
@@ -48,11 +48,11 @@ const AUTH_NAV = [
 //  Mobile bottom tab bar config
 // Home | Cert Radar | ROI | Tools hub | Sign In / Profile
 const MOBILE_TABS_ANON = [
-  { label: 'Home',       pageId: 'home',             Icon: Home },
-  { label: 'Cert Radar', pageId: 'tools/cert-radar', Icon: Radio },
-  { label: 'ROI',        pageId: 'tools/roi',        Icon: BarChart2 },
-  { label: 'Tools',      pageId: 'tools',            Icon: Wrench },
-  { label: 'Sign In',    pageId: '__signin__',       Icon: User },
+  { label: 'Home',           pageId: 'home',             Icon: Home },
+  { label: 'Offer Analysis', pageId: 'offer-analysis',   Icon: Briefcase },
+  { label: 'ROI',            pageId: 'tools/roi',        Icon: BarChart2 },
+  { label: 'Tools',          pageId: 'tools',            Icon: Wrench },
+  { label: 'Sign In',        pageId: '__signin__',       Icon: User },
 ]
 const MOBILE_TABS_AUTH = [
   { label: 'Home',      pageId: 'home',      Icon: Home },
@@ -396,6 +396,7 @@ function MobileBottomBar({ currentPage, user, onSignIn, onNavigate, pathname }) 
               )
             }}
             style={{
+              position: 'relative',
               flex: 1,
               display: 'flex', flexDirection: 'column',
               alignItems: 'center', justifyContent: 'center',
@@ -404,34 +405,38 @@ function MobileBottomBar({ currentPage, user, onSignIn, onNavigate, pathname }) 
               cursor: 'pointer',
               color: active ? 'var(--text)' : 'var(--text-4)',
               transition: 'color 160ms ease',
-              padding: '0 4px',
+              padding: '6px 4px',
               minWidth: 0,
             }}
           >
-            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {active && (
+              <motion.div
+                layoutId="mobile-active-pill"
+                style={{
+                  position: 'absolute',
+                  inset: '4px',
+                  borderRadius: '12px',
+                  background: 'color-mix(in srgb, var(--text) 6%, transparent)',
+                  backdropFilter: 'blur(12px)',
+                  border: '1px solid color-mix(in srgb, var(--text) 8%, transparent)',
+                  boxShadow: '0 2px 12px rgba(0,0,0,0.04), inset 0 1px 0 color-mix(in srgb, var(--bg) 20%, transparent)',
+                  zIndex: 0,
+                }}
+                transition={{ type: 'spring', stiffness: 450, damping: 35 }}
+              />
+            )}
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1 }}>
               <Icon
                 size={active ? 22 : 20}
                 strokeWidth={active ? 2.2 : 1.6}
                 style={{ transition: 'all 160ms ease' }}
               />
-              {active && (
-                <motion.div
-                  layoutId="bottom-tab-indicator"
-                  style={{
-                    position: 'absolute',
-                    bottom: '-6px',
-                    left: '50%', transform: 'translateX(-50%)',
-                    width: '16px', height: '2px',
-                    borderRadius: '999px',
-                    background: 'var(--text)',
-                  }}
-                  transition={{ type: 'spring', stiffness: 500, damping: 36 }}
-                />
-              )}
             </div>
             <span style={{
+              position: 'relative',
+              zIndex: 1,
               fontFamily: F_SANS,
-              fontSize: '9px',
+              fontSize: '10px',
               fontWeight: active ? 800 : 500,
               letterSpacing: '0.02em',
               lineHeight: 1,
