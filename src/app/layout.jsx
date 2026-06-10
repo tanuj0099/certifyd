@@ -1,4 +1,5 @@
 import { Inter, Plus_Jakarta_Sans, JetBrains_Mono, Playfair_Display } from 'next/font/google';
+import Script from 'next/script';
 import { Providers } from './providers';
 import '@/index.css';
 
@@ -17,6 +18,20 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${inter.variable} ${plusJakarta.variable} ${jetbrains.variable} ${playfair.variable}`} suppressHydrationWarning>
       <body suppressHydrationWarning>
+        <Script
+          strategy="afterInteractive"
+          src={`https://www.googletagmanager.com/gtag/js?id=G-VMZZP1RZYC`}
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-VMZZP1RZYC', {
+              page_path: window.location.pathname,
+            });
+          `}
+        </Script>
         <Providers>
           {children}
         </Providers>
