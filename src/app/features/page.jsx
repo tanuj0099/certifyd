@@ -122,7 +122,7 @@ export default function FeaturesPage() {
       eyebrow="FEATURES"
       title="Everything You Need"
       accent="To Decide"
-      subtitle='Certify combines real India salary data with AI analysis to give you bounded, specific answers, not "it depends."'
+      subtitle='Certifyd combines real India salary data with AI analysis to give you bounded, specific answers, not "it depends."'
     >
       <div style={{
         maxWidth: '1200px', margin: '0 auto',

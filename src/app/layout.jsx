@@ -9,8 +9,8 @@ const jetbrains = JetBrains_Mono({ subsets: ['latin'], variable: '--font-jetbrai
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair', display: 'swap' });
 
 export const metadata = {
-  metadataBase: new URL('https://certifyroi.in'),
-  title: 'Certify | ROI Projections & Career Tools',
+  metadataBase: new URL('https://certifyd.in'),
+  title: 'Certifyd | ROI Projections & Career Tools',
   description: 'AI-powered resume analysis, certification ROI projections, and career roadmaps.',
 };
 

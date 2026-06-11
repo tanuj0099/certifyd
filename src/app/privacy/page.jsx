@@ -11,8 +11,8 @@ export default function PrivacyPage() {
   return (
     <>
       <SEOHead
-        title="Privacy Policy | Certify"
-        description="Privacy Policy for Certify ROI Calculator."
+        title="Privacy Policy | Certifyd"
+        description="Privacy Policy for Certifyd ROI Calculator."
         path="/privacy"
       />
       <MarketingPageShell
@@ -22,7 +22,7 @@ export default function PrivacyPage() {
         <div style={{ maxWidth: '800px', margin: '0 auto', fontFamily: FB, color: 'var(--text-3)', lineHeight: 1.8 }}>
           <section style={{ marginBottom: '40px' }}>
             <h2 style={{ fontFamily: FH, color: 'var(--text)', fontSize: '24px', marginBottom: '16px' }}>1. Information We Collect</h2>
-            <p style={{ marginBottom: '16px' }}>When you use Certify, we may collect information such as your account details (email, name), usage data (searches, calculators used, preferences), and device information (browser type, IP address) to improve our service.</p>
+            <p style={{ marginBottom: '16px' }}>When you use Certifyd, we may collect information such as your account details (email, name), usage data (searches, calculators used, preferences), and device information (browser type, IP address) to improve our service.</p>
           </section>
 
           <section style={{ marginBottom: '40px' }}>

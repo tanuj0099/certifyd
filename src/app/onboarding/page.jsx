@@ -184,7 +184,7 @@ export default function Onboarding() {
         {/* Brand mark */}
         <div className="text-center mb-10">
           <div className="font-mono text-[11px] text-zinc-500 dark:text-white/30 tracking-[0.22em] uppercase mb-2">
-            Certify
+            Certifyd
           </div>
           <div className="font-sans text-[22px] font-extrabold text-zinc-900 dark:text-[#f4f5f8] tracking-tight">
             Set up your workspace
@@ -247,7 +247,7 @@ export default function Onboarding() {
                   </label>
                   <div style={{ display: 'flex', alignItems: 'center', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.04)', overflow: 'hidden' }}>
                     <span style={{ padding: '12px 10px 12px 14px', fontSize: '13px', color: 'rgba(255,255,255,0.25)', fontFamily: FM, whiteSpace: 'nowrap', flexShrink: 0 }}>
-                      certifyroi.in/ws/
+                      certifyd.in/ws/
                     </span>
                     <input
                       value={workspaceSlug}
@@ -446,7 +446,7 @@ export default function Onboarding() {
                       {workspaceName || 'My Workspace'}
                     </div>
                     <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.3)', fontFamily: FM, letterSpacing: '0.06em' }}>
-                      certifyroi.in/ws/{workspaceSlug || 'workspace'}
+                      certifyd.in/ws/{workspaceSlug || 'workspace'}
                     </div>
                   </div>
                 </div>

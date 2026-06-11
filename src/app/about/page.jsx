@@ -39,9 +39,9 @@ export default function AboutPage() {
   return (
     <MarketingPageShell
       eyebrow="ABOUT"
-      title="Why Certify"
+      title="Why Certifyd"
       accent="exists"
-      subtitle="We built Certify to answer the question every professional eventually asks: will this certification actually pay for itself in my city, at my current salary, and in my real career path?"
+      subtitle="We built Certifyd to answer the question every professional eventually asks: will this certification actually pay for itself in my city, at my current salary, and in my real career path?"
     >
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={T} style={{ display: 'flex', flexDirection: 'column', gap: '26px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
@@ -117,7 +117,7 @@ export default function AboutPage() {
                 You should know the answer before you pay the exam fee.
               </p>
               <p style={{ fontFamily: FB, fontSize: '14px', lineHeight: '1.8', color: 'var(--text-2)', margin: 0 }}>
-                Certify is built to make that answer visible, explainable, and fast to evaluate.
+                Certifyd is built to make that answer visible, explainable, and fast to evaluate.
               </p>
             </div>
 
@@ -125,8 +125,8 @@ export default function AboutPage() {
               <PillButton href="/#workspace" wide>
                 Calculate ROI <ArrowRight size={15} />
               </PillButton>
-              <a href="mailto:hello@certifyroi.in" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontFamily: FB, fontSize: '13px', color: 'var(--text-2)', textDecoration: 'none' }}>
-                <Mail size={14} /> hello@certifyroi.in
+              <a href="mailto:hello@certifyd.in" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontFamily: FB, fontSize: '13px', color: 'var(--text-2)', textDecoration: 'none' }}>
+                <Mail size={14} /> hello@certifyd.in
               </a>
             </div>
           </div>

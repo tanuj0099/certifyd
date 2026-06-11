@@ -489,9 +489,11 @@ const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, 
               onClick={() => { try { router.push('/') } catch (e) { window.location.href = '/' } }}
               style={{ 
                 background:'none', border:'none', padding:'0', cursor:'pointer', 
+                display: 'flex', alignItems: 'center', gap: '8px',
                 color:'var(--text)', transition: 'color 0.2s ease'
               }}>
-              <span className={`${playfair.className} text-2xl font-black tracking-tight`}>Certifyd</span>
+              <img src="/logo.svg" alt="Certifyd Logo" style={{ height: '32px', width: 'auto' }} />
+              <span className={`${playfair.className} text-2xl font-black tracking-tight`}>Certifyd.in</span>
             </button>
           </div>
 

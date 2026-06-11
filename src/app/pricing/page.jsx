@@ -46,7 +46,7 @@ export default function PricingPage() {
       eyebrow="PRICING"
       title="Free Forever"
       accent="No Catch"
-      subtitle="Certify is completely free. Sign in with Google or phone OTP after 3 guest analyses to continue using all features at no cost."
+      subtitle="Certifyd is completely free. Sign in with Google or phone OTP after 3 guest analyses to continue using all features at no cost."
     >
       <div style={{
         maxWidth: '900px',
