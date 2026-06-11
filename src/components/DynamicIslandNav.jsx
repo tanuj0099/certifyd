@@ -492,7 +492,7 @@ const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, 
                 display: 'flex', alignItems: 'center', gap: '8px',
                 color:'var(--text)', transition: 'color 0.2s ease'
               }}>
-              <img src="/logo.svg" alt="Certifyd Logo" style={{ height: '32px', width: 'auto' }} />
+              <img src="/logo.svg" alt="Certifyd Logo" style={{ height: '64px', width: 'auto' }} />
               <span className={`${playfair.className} text-2xl font-black tracking-tight`}>Certifyd.in</span>
             </button>
           </div>
