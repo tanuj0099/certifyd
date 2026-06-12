@@ -226,8 +226,8 @@ export function Footer() {
         <div>
           <h4 style={{ fontFamily: F_HEAD, fontSize: '12px', fontWeight: '700', color: 'var(--text)', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Contact</h4>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <a href="mailto:hello@certifyroi.in" style={{ fontFamily: F_BODY, fontSize: '13px', color: 'var(--text-2)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Mail size={14} /> hello@certifyroi.in
+            <a href="mailto:hello@certifyd.in" style={{ fontFamily: F_BODY, fontSize: '13px', color: 'var(--text-2)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Mail size={14} /> hello@certifyd.in
             </a>
             <span style={{ fontFamily: F_MONO, fontSize: '12px', color: 'var(--text-4)' }}>
               Built in Bangalore  2025-2026

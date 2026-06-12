@@ -48,17 +48,18 @@ const AUTH_NAV = [
 //  Mobile bottom tab bar config
 // Home | Cert Radar | ROI | Tools hub | Sign In / Profile
 const MOBILE_TABS_ANON = [
-  { label: 'Home',           pageId: 'home',             Icon: Home },
-  { label: 'Offer Analysis', pageId: 'offer-analysis',   Icon: Briefcase },
-  { label: 'ROI',            pageId: 'tools/roi',        Icon: BarChart2 },
-  { label: 'Tools',          pageId: 'tools',            Icon: Wrench },
-  { label: 'Sign In',        pageId: '__signin__',       Icon: User },
+  { label: 'Home',       pageId: 'home',             Icon: Home },
+  { label: 'Cert Radar', pageId: 'tools/cert-radar', Icon: Radio },
+  { label: 'ROI Calc',   pageId: 'tools/roi',        Icon: BarChart2 },
+  { label: 'Tools',      pageId: 'tools',            Icon: Wrench },
+  { label: 'Sign In',    pageId: '__signin__',       Icon: User },
 ]
 const MOBILE_TABS_AUTH = [
-  { label: 'Home',      pageId: 'home',      Icon: Home },
-  { label: 'Blog',      pageId: 'blog',      Icon: BookOpen },
-  { label: 'Dashboard', pageId: 'dashboard', Icon: LayoutDashboard },
-  { label: 'Profile',   pageId: 'profile',   Icon: User },
+  { label: 'Home',       pageId: 'home',             Icon: Home },
+  { label: 'Cert Radar', pageId: 'tools/cert-radar', Icon: Radio },
+  { label: 'ROI Calc',   pageId: 'tools/roi',        Icon: BarChart2 },
+  { label: 'Dashboard',  pageId: 'dashboard',        Icon: LayoutDashboard },
+  { label: 'Profile',    pageId: 'profile',          Icon: User },
 ]
 
 //  Helpers 
@@ -360,17 +361,19 @@ function MobileBottomBar({ currentPage, user, onSignIn, onNavigate, pathname }) 
       transition={{ type: 'spring', stiffness: 200, damping: 28, delay: 0.2 }}
       style={{
         position: 'fixed',
-        bottom: 0, left: 0, right: 0,
+        bottom: '20px', left: '16px', right: '16px',
         zIndex: 9999,
-        background: 'var(--bg)',
-        borderTop: '1px solid var(--border)',
-        backdropFilter: 'blur(20px) saturate(180%)',
-        WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+        background: 'color-mix(in srgb, var(--bg) 85%, transparent)',
+        border: '1px solid var(--border-mid)',
+        borderRadius: '24px',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
+        backdropFilter: 'blur(24px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
         display: 'flex',
         alignItems: 'stretch',
         justifyContent: 'space-around',
-        paddingBottom: 'env(safe-area-inset-bottom)',
-        height: 'calc(56px + env(safe-area-inset-bottom))',
+        padding: '6px 8px',
+        height: '64px',
       }}
     >
       {tabs.map(tab => {
@@ -415,20 +418,18 @@ function MobileBottomBar({ currentPage, user, onSignIn, onNavigate, pathname }) 
                 style={{
                   position: 'absolute',
                   inset: '4px',
-                  borderRadius: '12px',
-                  background: 'color-mix(in srgb, var(--text) 6%, transparent)',
-                  backdropFilter: 'blur(12px)',
-                  border: '1px solid color-mix(in srgb, var(--text) 8%, transparent)',
-                  boxShadow: '0 2px 12px rgba(0,0,0,0.04), inset 0 1px 0 color-mix(in srgb, var(--bg) 20%, transparent)',
+                  borderRadius: '16px',
+                  background: 'color-mix(in srgb, var(--accent) 15%, transparent)',
+                  border: '1px solid color-mix(in srgb, var(--accent) 30%, transparent)',
                   zIndex: 0,
                 }}
-                transition={{ type: 'spring', stiffness: 450, damping: 35 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 30 }}
               />
             )}
-            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1 }}>
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, color: active ? 'var(--accent)' : 'inherit' }}>
               <Icon
                 size={active ? 22 : 20}
-                strokeWidth={active ? 2.2 : 1.6}
+                strokeWidth={active ? 2.5 : 1.8}
                 style={{ transition: 'all 160ms ease' }}
               />
             </div>
@@ -440,6 +441,8 @@ function MobileBottomBar({ currentPage, user, onSignIn, onNavigate, pathname }) 
               fontWeight: active ? 800 : 500,
               letterSpacing: '0.02em',
               lineHeight: 1,
+              color: active ? 'var(--accent)' : 'inherit',
+              marginTop: '2px'
             }}>
               {label}
             </span>

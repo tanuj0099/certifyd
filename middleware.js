@@ -19,9 +19,9 @@ export default function middleware(req) {
   if (url.pathname.startsWith('/api/')) {
     const origin = req.headers.get('origin');
     const allowedOrigins = [
-      'https://certifyroi.com',
-      'https://www.certifyroi.com',
-      'https://certifyroi.vercel.app'
+      'https://certifyd.com',
+      'https://www.certifyd.com',
+      'https://certifyd.vercel.app'
     ];
     
     // For localhost development, you might want to allow it
@@ -55,7 +55,7 @@ export default function middleware(req) {
 
   // 3. Staging Basic Auth
   // Check if it's the staging branch or your specific vercel domain
-  if (url.hostname.includes('staging') || url.hostname.includes('certifyroi.vercel.app')) {
+  if (url.hostname.includes('staging') || url.hostname.includes('certifyd.vercel.app')) {
     const basicAuth = req.headers.get('authorization');
 
     if (basicAuth) {
@@ -72,7 +72,7 @@ export default function middleware(req) {
     return new Response('Unauthorized Access', {
       status: 401,
       headers: {
-        'WWW-Authenticate': 'Basic realm="CertifyROI Staging Area"',
+        'WWW-Authenticate': 'Basic realm="Certifyd Staging Area"',
       },
     });
   }

@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Award, ChevronDown, Scale, Info, Zap, DollarSign, TrendingUp } from 'lucide-react'
+import { Award, ChevronDown, Scale, Info, Zap, DollarSign, TrendingUp, Search } from 'lucide-react'
 import { supabase } from '../lib/supabase.js'
 import {
   BarChart,
@@ -80,8 +80,12 @@ function CertSelector({ value, onChange, label, color, certifications, domains }
   // FIX: ref for outside-click detection
   var wrapRef = useRef(null)
 
+  var [searchQuery, setSearchQuery] = useState('')
+
   var filtered = certifications.filter(function (c) {
-    return domain === 'all' || c.domain === domain
+    const domainMatch = domain === 'all' || c.domain === domain;
+    const searchMatch = !searchQuery || c.name.toLowerCase().includes(searchQuery.toLowerCase());
+    return domainMatch && searchMatch;
   })
   var selected = certifications.find(function (c) { return c.name === value })
 
@@ -159,6 +163,21 @@ function CertSelector({ value, onChange, label, color, certifications, domains }
                   </button>
                 )
               })}
+            </div>
+
+            <div style={{ padding: '8px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Search size={14} color="var(--text-4)" />
+              <input 
+                type="text" 
+                autoFocus
+                placeholder="Search certifications..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{ 
+                  flex: 1, background: 'transparent', border: 'none', 
+                  color: 'var(--text)', fontSize: '12px', fontFamily: F_BODY, outline: 'none' 
+                }}
+              />
             </div>
 
             <div style={{ maxHeight: '240px', overflowY: 'auto' }}>

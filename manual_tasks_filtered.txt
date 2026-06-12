@@ -7,7 +7,7 @@ I have created an [Implementation Plan](file:///C:/Users/Tanuj%20Rajdev/.gemini/
 
 Please review the plan, especially the **User Review Required** sections regarding the **File Uploads** architecture and **Supabase RLS**. Let me know if you approve or if you'd like to make any adjustments!
 ---
-I have completed the security audit and implemented all of the requested hardening measures across both the `certifyroi` and `certifyroi-site` projects. 
+I have completed the security audit and implemented all of the requested hardening measures across both the `certifyd` and `certifyd-site` projects. 
 
 Here is a summary of the work completed:
 
@@ -19,7 +19,7 @@ Here is a summary of the work completed:
 You can view the full details of the implementation in the [Walkthrough](file:///C:/Users/Tanuj%20Rajdev/.gemini/antigravity-ide/brain/b6f8b1d1-e9f3-4463-8f8f-200e344b6f95/walkthrough.md).
 
 > [!IMPORTANT]
-> **Manual Step Required:** You need to copy the contents of the generated [supabase_rls_policies.sql](file:///c:/Users/Tanuj%20Rajdev/Downloads/certifyroi/certifyroi/supabase_rls_policies.sql) file and run it directly in your Supabase SQL Editor. This will enforce the Row Level Security policies we discussed on all your database tables.
+> **Manual Step Required:** You need to copy the contents of the generated [supabase_rls_policies.sql](file:///c:/Users/Tanuj%20Rajdev/Downloads/certifyd/certifyd/supabase_rls_policies.sql) file and run it directly in your Supabase SQL Editor. This will enforce the Row Level Security policies we discussed on all your database tables.
 
 Let me know if you would like me to test any of the rate limits, or if you'd like to proceed to the next task on your list!
 ---
@@ -54,7 +54,7 @@ Here is a quick breakdown of what was completed:
 I have documented all of this in the updated [walkthrough](file:///C:/Users/Tanuj%20Rajdev/.gemini/antigravity-ide/brain/b6f8b1d1-e9f3-4463-8f8f-200e344b6f95/walkthrough.md).
 
 > [!IMPORTANT]
-> To finalize the database soft-deletes, you will need to take the SQL inside [supabase_soft_deletes.sql](file:///c:/Users/Tanuj%20Rajdev/Downloads/certifyroi/certifyroi/supabase_soft_deletes.sql) and run it in your Supabase SQL Editor. 
+> To finalize the database soft-deletes, you will need to take the SQL inside [supabase_soft_deletes.sql](file:///c:/Users/Tanuj%20Rajdev/Downloads/certifyd/certifyd/supabase_soft_deletes.sql) and run it in your Supabase SQL Editor. 
 
 You are now in a great position to tackle the remaining manual configuration items (like configuring the Vercel env vars, getting your custom domains live, and drafting your Reddit posts). Let me know if you need help with anything else!
 ---

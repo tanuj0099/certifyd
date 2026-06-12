@@ -1,7 +1,7 @@
 # PRD
 
 ## Product
-Name: CertifyROI
+Name: Certifyd
 
 One-line summary:
 A premium India-focused certification ROI platform that helps users understand whether a certification is worth the time, fee, and career effort.

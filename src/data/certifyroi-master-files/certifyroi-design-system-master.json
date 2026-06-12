@@ -6973,7 +6973,7 @@
       "focusable": true
     }
   ],
-  "certifyroi_content": {
+  "certifyd_content": {
     "ab-tests--experiments@ILRDAnpfGHCZq-FBlbfDO": "# A/B Tests and Experiments\r\n\r\nUnderstand how the team implements A/B tests and experiments on different screens and if the new design system should accommodate any necessary requirements.\r\n",
     "accessibility-testing@yhP8EhyCWWRBLkYPyOFeg": "# Accessibility Testing\r\n\r\nDesign systems should cover accessibility as much as possible. Making this automatic reduces the risk of inaccessible components or user flows in the product.\r\n",
     "accessibility@aLtOGjNFxaRzg0PI-ed99": "# Accessibility\r\n\r\nGuidelines for how you approach accessibility and how you leverage colour, hierarchy and assistive technologies to help your users.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@article@Introduction to Web Accessibility](https://www.w3.org/WAI/fundamentals/accessibility-intro/)\r\n- [@article@What is Accessibility? by Mozilla](https://developer.mozilla.org/en-US/docs/Learn/Accessibility/What_is_accessibility)\r\n- [@article@Accessibility Principles](https://www.w3.org/WAI/fundamentals/accessibility-principles/)\r\n- [@article@WebAIMs Website (Web Accessibility In Mind)](https://webaim.org/)\r\n- [@article@WAVE Web Accessibility Evaluation Tool](https://wave.webaim.org/)\r\n- [@feed@Explore top posts about Accessibility](https://app.daily.dev/tags/accessibility?ref=roadmapsh)\r\n",

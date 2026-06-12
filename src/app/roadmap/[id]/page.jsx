@@ -25,14 +25,14 @@ export default function RoadmapTool() {
 
   const [completedNodes, setCompletedNodes] = useState(() => {
     if (typeof window !== 'undefined') {
-        const saved = localStorage.getItem(`certifyroi-progress-${id}`);
+        const saved = localStorage.getItem(`certifyd-progress-${id}`);
         return saved ? JSON.parse(saved) : [];
     }
     return [];
   });
 
   useEffect(() => {
-    localStorage.setItem(`certifyroi-progress-${id}`, JSON.stringify(completedNodes));
+    localStorage.setItem(`certifyd-progress-${id}`, JSON.stringify(completedNodes));
   }, [completedNodes, id]);
 
   const toggleNodeCompletion = (nodeId) => {
@@ -52,7 +52,7 @@ export default function RoadmapTool() {
         setEdges([]);
         setError(null);
         const module = await import(
-          `../../../data/certifyroi-master-files/certifyroi-${id}-master.json`
+          `../../../data/certifyd-master-files/certifyd-${id}-master.json`
         );
         const { nodes: mappedNodes, edges: mappedEdges } = mapRoadmapDataToFlow(module.default);
         if (mappedNodes.length > 0) {

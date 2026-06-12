@@ -8958,7 +8958,7 @@
       "focusable": true
     }
   ],
-  "certifyroi_content": {
+  "certifyd_content": {
     "--hard@V_joZNpQsS9G9PI-o-GmC": "# --hard\r\n\r\nWith this option, both the HEAD pointer and the working directory's contents are updated to match the specified commit. Any changes made since then will be lost.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@--hard documentation](https://git-scm.com/docs/git-reset#Documentation/git-reset.txt---hard)",
     "--mixed@qis7Z5VRxMcOmbesQlegZ": "# --mixed\r\n\r\nWhen using mixed mode, the HEAD pointer is moved to the specified commit. However, files in your working directory remain as they were before the reset. The staging area (index) is updated to match the specified commit.\r\n\r\nVisit the following resources to learn more:\r\n\r\n- [@official@--mixed documentation](https://git-scm.com/docs/git-reset#Documentation/git-reset.txt---mixed)",
     "--soft@Uc7FyfAKpDFRGRNHwztFo": "# --soft\r\n\r\nIn this mode, only the HEAD pointer is moved to the specified commit. The files in your working directory are not modified, but they remain as they were when you started the reset.\r\n\r\n- [@official@--soft documentation](https://git-scm.com/docs/git-reset#Documentation/git-reset.txt---soft)",

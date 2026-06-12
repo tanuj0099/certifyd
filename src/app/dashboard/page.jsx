@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useJourneyStore } from '@/store/useJourneyStore.js'
 import BurnRate from '@/components/BurnRate.jsx'
 import { MarketingFooter } from '@/components/MarketingPageShell.jsx'
+import { useIsMobile } from '@/components/SharedUI.jsx'
 import {
   Award, TrendingUp, BarChart2, Zap, MapPin,
   ChevronRight, BookOpen, Compass, Target, Bookmark,
@@ -24,6 +25,8 @@ function NavItem({ label, active, onClick }) {
       style={{
         width: '100%', textAlign: 'left', padding: '8px 12px',
         borderRadius: '8px', border: 'none', cursor: 'pointer',
+        whiteSpace: 'nowrap', flexShrink: 0,
+
         background: active ? 'var(--bg-surface)' : 'transparent',
         color: active ? 'var(--text)' : 'var(--text-3)',
         fontFamily: FH, fontSize: '13px', fontWeight: active ? '600' : '500',
@@ -115,6 +118,7 @@ export default function DashboardPage() {
   const resumeName  = useJourneyStore(s => s.resumeName)
   const resumeCity  = useJourneyStore(s => s.resumeCity)
   const breakEvenMonths = 6
+  const isMobile = useIsMobile()
 
   const [activeSection, setActiveSection] = useState('active-paths')
   const [activeCert, setActiveCert] = useState(null)
@@ -142,7 +146,7 @@ export default function DashboardPage() {
     <div style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)', paddingTop: '64px' }}>
 
       {/* ── Page header ── */}
-      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '32px 24px 0' }}>
+      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: isMobile ? '24px 16px 0' : '32px 24px 0' }}>
         <div style={{ fontFamily: FM, fontSize: '10px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--text-4)', marginBottom: '6px' }}>CAREER TOOLS</div>
         <h1 style={{ fontFamily: FH, fontSize: '32px', fontWeight: '700', color: 'var(--text)', margin: 0 }}>
           {resumeName ? `${resumeName.split(' ')[0]}'s` : 'Your'} workspace
@@ -155,10 +159,22 @@ export default function DashboardPage() {
       </div>
 
       {/* ── 3-column layout ── */}
-      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '24px 24px 80px', display: 'grid', gridTemplateColumns: '200px 1fr 280px', gap: '24px', alignItems: 'start' }}>
+      <div style={{ 
+        maxWidth: '1400px', margin: '0 auto', 
+        padding: isMobile ? '20px 16px 80px' : '24px 24px 80px', 
+        display: 'grid', 
+        gridTemplateColumns: isMobile ? '1fr' : '200px 1fr 280px', 
+        gap: '24px', 
+        alignItems: 'start' 
+      }}>
 
         {/* ── LEFT: sidebar nav ── */}
-        <div style={{ position: 'sticky', top: '80px' }}>
+        <div style={{ 
+          position: isMobile ? 'static' : 'sticky', 
+          top: isMobile ? 'auto' : '80px',
+          display: isMobile ? 'flex' : 'block',
+          flexDirection: 'column'
+        }}>
           {/* User card */}
           <div style={{
             background: 'var(--bg-surface)', border: '1px solid var(--border)',
@@ -182,7 +198,15 @@ export default function DashboardPage() {
           </div>
 
           {/* Nav items */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+          <div style={{ 
+            display: 'flex', 
+            flexDirection: isMobile ? 'row' : 'column', 
+            gap: '8px',
+            overflowX: isMobile ? 'auto' : 'visible',
+            paddingBottom: isMobile ? '12px' : '0',
+            scrollbarWidth: 'none', // hide scrollbar for firefox
+            WebkitOverflowScrolling: 'touch',
+          }} className="hide-scrollbar">
             {SECTIONS.map(s => (
               <NavItem key={s.id} label={s.label} active={activeSection === s.id} onClick={() => setActiveSection(s.id)} />
             ))}
@@ -214,16 +238,16 @@ export default function DashboardPage() {
                       Break-even in <strong style={{ color: 'var(--text)', fontFamily: FM }}>{breakEvenMonths} months</strong>
                       {resumeCity && <> · {resumeCity} market</>}
                     </div>
-                    <div style={{ display: 'flex', gap: '10px', marginTop: '16px' }}>
+                    <div style={{ display: 'flex', gap: '10px', marginTop: '16px', flexDirection: isMobile ? 'column' : 'row' }}>
                       <button
                         onClick={() => setActiveSection('study-tracker')}
-                        style={{ padding: '8px 16px', borderRadius: '8px', background: 'var(--accent)', color: 'var(--bg)', border: 'none', cursor: 'pointer', fontFamily: FH, fontSize: '12px', fontWeight: '700' }}
+                        style={{ width: isMobile ? '100%' : 'auto', padding: '8px 16px', borderRadius: '8px', background: 'var(--accent)', color: 'var(--bg)', border: 'none', cursor: 'pointer', fontFamily: FH, fontSize: '12px', fontWeight: '700' }}
                       >
                         Open Study Tracker
                       </button>
                       <button
                         onClick={() => router.push('/')}
-                        style={{ padding: '8px 16px', borderRadius: '8px', background: 'transparent', color: 'var(--text-2)', border: '1px solid var(--border)', cursor: 'pointer', fontFamily: FH, fontSize: '12px' }}
+                        style={{ width: isMobile ? '100%' : 'auto', padding: '8px 16px', borderRadius: '8px', background: 'transparent', color: 'var(--text-2)', border: '1px solid var(--border)', cursor: 'pointer', fontFamily: FH, fontSize: '12px' }}
                       >
                         Recalculate ROI
                       </button>
@@ -309,7 +333,17 @@ export default function DashboardPage() {
         </div>
 
         {/* ── RIGHT: stats sidebar ── */}
-        <div style={{ position: 'sticky', top: '80px', background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '18px', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ 
+          position: isMobile ? 'static' : 'sticky', 
+          top: isMobile ? 'auto' : '80px', 
+          background: 'var(--bg-surface)', 
+          border: '1px solid var(--border)', 
+          borderRadius: '12px', 
+          padding: '18px', 
+          display: 'flex', 
+          flexDirection: 'column',
+          marginTop: isMobile ? '24px' : '0'
+        }}>
 
           <SideLabel>Milestone Moats</SideLabel>
           <div style={{ fontFamily: FH, fontSize: '28px', fontWeight: '800', color: 'var(--text)', lineHeight: 1 }}>{certName ? 1 : 0}</div>

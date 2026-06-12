@@ -5686,7 +5686,7 @@
       "focusable": true
     }
   ],
-  "certifyroi_content": {
+  "certifyd_content": {
     "2-3-trees@o0fNAhJ1LsCdmGzY2ni_x": "# Complex Data Structures\r\n\r\nComplex data structures are advanced structures that are used for storing and organizing data in a more specialized way to manage larger amounts of data more effectively. These include Trees, Graphs, Hash Tables, and Heaps. Trees allow for hierarchical data structures and can be utilized in many ways like Binary Trees, AVL Trees etc. Graphs are networks consisting of nodes or vertices, connected by edges. Hash Tables use a hash function to compute an index into an array of buckets or slots, from which the desired value can be found. Heaps are a special case of a binary tree where the parent nodes are compared to their children with specific rules.",
     "a-algorithm@AabJqPUwFVBVS02YPDPvL": "# A* Algorithm",
     "advanced-data-structures@KnyUHDvpDTUO0EkAs9pT8": "# Advanced Data Structures\r\n\r\nAdvanced data structures are an integral part of advanced programming. They include structures such as Binary Search Trees (BST), Balanced trees like AVL Trees, Red-Black Trees, Heap, Disjoint Data Set, Trie, Suffix Array, Suffix tree and others. BST is a node-based data structure where each node contains a key, a pointer to left child and a pointer to right child. AVL and Red-Black trees are self-balancing binary search trees. Disjoint set data structure supports union and find operations making them useful in computer vision for segmentation. Trie is an ordered tree structure used for faster retrievals, while Suffix Array and Suffix tree are data structures used in pattern matching algorithms. These structures offer an efficient way of manipulating and storing data.",

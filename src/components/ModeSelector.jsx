@@ -28,8 +28,9 @@ const F_SERIF = "var(--font-serif)";
 
 //  Hook: isMobile 
 function useIsMobile() {
-  const [m, setM] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768)
+  const [m, setM] = useState(false)
   useEffect(() => {
+    setM(window.innerWidth < 768)
     const fn = () => setM(window.innerWidth < 768)
     window.addEventListener('resize', fn)
     return () => window.removeEventListener('resize', fn)
@@ -364,9 +365,9 @@ function ModeSelector({ onSelect }) {
 
   function handleDomainConfirm(domainId) {
     if (domainId && domainId !== 'auto') {
-      try { localStorage.setItem('certifyroi_switch_domain', domainId) } catch (e) {}
+      try { localStorage.setItem('certifyd_switch_domain', domainId) } catch (e) {}
     } else {
-      try { localStorage.removeItem('certifyroi_switch_domain') } catch (e) {}
+      try { localStorage.removeItem('certifyd_switch_domain') } catch (e) {}
     }
     setStep('exiting')
     setTimeout(() => onSelect('switcher'), 500)

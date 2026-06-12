@@ -9,7 +9,7 @@ export function mapRoadmapDataToFlow(rawJson: any): MappedRoadmap {
   const flowNodes: Node[] = [];
   const flowEdges: Edge[] = [];
 
-  const contentDict = rawJson.certifyroi_content || {};
+  const contentDict = rawJson.certifyd_content || {};
   const rawNodes = Array.isArray(rawJson.nodes) ? rawJson.nodes : [];
   let rawEdges = Array.isArray(rawJson.edges) ? rawJson.edges : [];
 

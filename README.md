@@ -1,4 +1,4 @@
-# CertifyROI 🚀
+# Certifyd 🚀
 
 **Bangalore's #1 Certification ROI Calculator** — powered by Groq AI (llama3-70b-8192, ~500 tokens/sec).
 
@@ -66,7 +66,7 @@ npm run build && vercel
 ## 📁 Project Structure
 
 ```
-certifyroi/
+certifyd/
 ├── src/
 │   ├── components/
 │   │   ├── Hero.jsx        ← Main calculator UI

@@ -11,7 +11,7 @@ const CookieBanner = () => {
 
   useEffect(() => {
     // Check if user has already accepted cookies
-    const hasAccepted = localStorage.getItem('certifyroi_cookie_consent');
+    const hasAccepted = localStorage.getItem('certifyd_cookie_consent');
     if (!hasAccepted) {
       // Delay showing the banner slightly for better UX
       const timer = setTimeout(() => {
@@ -22,7 +22,7 @@ const CookieBanner = () => {
   }, []);
 
   const handleAccept = () => {
-    localStorage.setItem('certifyroi_cookie_consent', 'true');
+    localStorage.setItem('certifyd_cookie_consent', 'true');
     setIsVisible(false);
   };
 

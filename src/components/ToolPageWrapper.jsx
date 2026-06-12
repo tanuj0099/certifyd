@@ -42,12 +42,12 @@ export default function ToolPageWrapper({
             "@type": "ListItem",
             "position": 1,
             "name": "Home",
-            "item": "https://certifyroi.in/"
+            "item": "https://certifyd.in/"
           },{
             "@type": "ListItem",
             "position": 2,
             "name": "Tools",
-            "item": "https://certifyroi.in/app"
+            "item": "https://certifyd.in/app"
           },{
             "@type": "ListItem",
             "position": 3,
@@ -57,7 +57,7 @@ export default function ToolPageWrapper({
       />
 
       {/*  Page heading - zero elevation, no card  */}
-      <div className="page-top-pad" style={{ maxWidth: '100%', margin: '0', paddingLeft: '24px', paddingRight: '24px' }}>
+      <div className="page-top-pad" style={{ maxWidth: '100%', margin: '0', padding: '0 clamp(16px, 4vw, 24px)' }}>
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}

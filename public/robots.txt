@@ -3,4 +3,4 @@ Allow: /
 Disallow: /profile
 Disallow: /dashboard
 
-Sitemap: https://certifyroi.in/sitemap.xml
+Sitemap: https://certifyd.in/sitemap.xml

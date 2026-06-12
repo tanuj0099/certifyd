@@ -89,7 +89,7 @@ export const FAQ_ITEMS = [
   {
     category: "Technical",
     q: "Is there a mobile app?",
-    a: "Certify is a mobile-optimised web app. Open certifyroi.vercel.app in your mobile browser — all tools work fully on any screen size. You can add it to your home screen from Safari or Chrome for an app-like experience without an App Store install.",
+    a: "Certify is a mobile-optimised web app. Open certifyd.vercel.app in your mobile browser — all tools work fully on any screen size. You can add it to your home screen from Safari or Chrome for an app-like experience without an App Store install.",
   },
   {
     category: "Technical",

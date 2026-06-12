@@ -18,8 +18,9 @@ const FM = "var(--font-mono)";
 
 //  isMobile hook 
 function useIsMobile() {
-  const [m, setM] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768)
+  const [m, setM] = useState(false)
   useEffect(() => {
+    setM(window.innerWidth < 768)
     const fn = () => setM(window.innerWidth < 768)
     window.addEventListener('resize', fn)
     return () => window.removeEventListener('resize', fn)

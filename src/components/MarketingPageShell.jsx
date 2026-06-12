@@ -149,8 +149,8 @@ export function MarketingFooter() {
 
           <div>
             <div style={{ fontFamily: FM, fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-4)', marginBottom: '12px' }}>Contact</div>
-            <a href="mailto:hello@certifyroi.in" style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', fontFamily: FB, fontSize: '13px', color: 'var(--text-4)', textDecoration: 'none' }}>
-              <Mail size={14} /> hello@certifyroi.in
+            <a href="mailto:hello@certifyd.in" style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', fontFamily: FB, fontSize: '13px', color: 'var(--text-4)', textDecoration: 'none' }}>
+              <Mail size={14} /> hello@certifyd.in
             </a>
             <div style={{ display: 'flex', alignItems: 'center', gap: '7px', marginTop: '10px', fontFamily: FB, fontSize: '13px', color: 'var(--text-4)' }}>
               <MapPin size={14} /> Bangalore, India

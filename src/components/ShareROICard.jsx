@@ -288,7 +288,7 @@ function drawCardA(canvas, opts) {
   //  Footer - URL (not in arc zone) 
   c.fillStyle = 'transparent'
   c.font = 'bold 13px "Courier New", monospace'; c.textAlign = 'right'
-  c.fillText('certifyroi.vercel.app', W - 140, H - 28)
+  c.fillText('certifyd.vercel.app', W - 140, H - 28)
 
   //  Corner accents 
   var aLen = 40, aA = 'transparent'
@@ -447,7 +447,7 @@ function drawCardB(canvas, opts) {
 
   // 3 micro verification dots
   var dotsY = afterCert + 60
-  var dots = ['Data-backed decision', 'India market 2026', 'certifyroi.vercel.app']
+  var dots = ['Data-backed decision', 'India market 2026', 'certifyd.vercel.app']
   dots.forEach(function(dot, i) {
     var dx = rx + i * 220
     c.fillStyle = accent1 + 'CC'
@@ -523,7 +523,7 @@ function ShareROICard({ certName, domain, demand, name }) {
     var canvas = canvasRef.current
     if (!canvas || !done) return
     var a = document.createElement('a')
-    a.download = 'certifyroi-' + (certName || 'card').replace(/\s+/g, '-').toLowerCase() + '-' + variant.toLowerCase() + '.png'
+    a.download = 'certifyd-' + (certName || 'card').replace(/\s+/g, '-').toLowerCase() + '-' + variant.toLowerCase() + '.png'
     a.href = canvas.toDataURL('image/png')
     a.click()
     try { trackShareCardGenerated({ certName, variant, method: 'download' }) } catch (_) {}

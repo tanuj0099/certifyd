@@ -116,7 +116,7 @@ export default function ProfilePage() {
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = `certifyroi-data-${user.uid}.json`
+      a.download = `certifyd-data-${user.uid}.json`
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)

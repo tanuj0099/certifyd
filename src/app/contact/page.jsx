@@ -252,8 +252,8 @@ export default function ContactPage() {
                 <Mail size={18} color="var(--accent)" />
                 <h3 style={{ fontFamily: FH, fontSize: '15px', fontWeight: '800', margin: 0 }}>Email</h3>
               </div>
-              <a href="mailto:hello@certifyroi.in" style={{ fontFamily: FB, fontSize: '15px', color: 'var(--accent)', textDecoration: 'none', fontWeight: '700' }}>
-                hello@certifyroi.in
+              <a href="mailto:hello@certifyd.in" style={{ fontFamily: FB, fontSize: '15px', color: 'var(--accent)', textDecoration: 'none', fontWeight: '700' }}>
+                hello@certifyd.in
               </a>
               <p style={{ fontFamily: FB, fontSize: '13px', lineHeight: '1.75', color: 'var(--text-3)', margin: '8px 0 0' }}>
                 We usually reply within 24 business hours.

@@ -1,4 +1,4 @@
-# CertifyROI Verification Matrix
+# Certifyd Verification Matrix
 
 This matrix converts architecture behavior into binary assertions. Each row must resolve to `PASS` or `FAIL`; "partially works" is a failure until the assertion is narrowed or fixed.
 
@@ -112,7 +112,7 @@ For Jira, create one issue per row with:
 - Summary: `<ID> - <Assertion>`
 - Issue type: `Test`
 - Priority: security/privacy negatives as `Highest`; financial and auth correctness as `High`; remaining UX telemetry as `Medium`
-- Labels: phase slug, test type, `certifyroi-verification`
+- Labels: phase slug, test type, `certifyd-verification`
 - Acceptance criteria: `Pass Condition`
 - Rejection criteria: `Fail Condition`
 - Evidence required: `Evidence`

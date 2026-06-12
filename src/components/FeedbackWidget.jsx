@@ -137,7 +137,7 @@ export default function FeedbackWidget({ source }) {
                   >
                     <div>
                       <h3 style={{ fontFamily: 'var(--font-head)', fontSize: '20px', fontWeight: 700, color: 'var(--text)', marginBottom: '8px' }}>
-                        Help us improve CertifyROI
+                        Help us improve Certifyd
                       </h3>
                       <p style={{ fontFamily: 'var(--font-sans)', fontSize: '13px', color: 'var(--text-3)' }}>
                         Your feedback helps us provide more accurate and useful data.

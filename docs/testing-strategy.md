@@ -1,4 +1,4 @@
-# CertifyROI Test Strategy
+# Certifyd Test Strategy
 
 This project has several paid or flaky external systems: LLM providers, PostHog, Supabase, and future S3 upload flows. Automated CI must prove behavior without depending on those live services.
 

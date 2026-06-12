@@ -169,7 +169,7 @@ function CertROICurve({ costValue, hikePercent, color, title }) {
   }
 
   return (
-    <div className="p-4 md:p-5 glass">
+    <div className="p-4 md:p-5 glass" style={{ overflow: 'hidden' }}>
       <h4 className="text-sm font-bold uppercase tracking-widest text-[var(--text-3)] mb-2">
         {title}
       </h4>

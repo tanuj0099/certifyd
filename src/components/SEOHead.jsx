@@ -7,7 +7,7 @@ export default function SEOHead({
   schema,
   children 
 }) {
-  const url = `https://certifyroi.in${path}`
+  const url = `https://certifyd.in${path}`
   
   return (
     <Helmet>
@@ -20,13 +20,13 @@ export default function SEOHead({
       <meta property="og:description" content={description} />
       <meta property="og:url" content={url} />
       <meta property="og:type" content="website" />
-      <meta property="og:image" content="https://certifyroi.in/og-image.png" />
+      <meta property="og:image" content="https://certifyd.in/og-image.png" />
       
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content="https://certifyroi.in/og-image.png" />
+      <meta name="twitter:image" content="https://certifyd.in/og-image.png" />
       
       {schema && (
         <script type="application/ld+json">

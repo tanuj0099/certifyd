@@ -206,7 +206,7 @@ export default function OfflineBanner() {
           opacity: 0.5,
         }}
       >
-        Certify  certifyroi.in
+        Certify  certifyd.in
       </div>
     </motion.div>
   )

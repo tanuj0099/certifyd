@@ -4,7 +4,7 @@ import { CSPostHogProvider } from '../components/providers/PostHogProvider'
 const inter = Inter({ subsets: ['latin'], display: 'swap' })
 
 export const metadata = {
-  metadataBase: new URL('https://certifyroi.in'),
+  metadataBase: new URL('https://certifyd.in'),
   title: 'Live Market Pulse | Certify',
   description: 'Real-time salary floors and dynamic demand metrics for elite tech roles in India.',
   robots: {
@@ -14,11 +14,11 @@ export const metadata = {
   openGraph: {
     title: 'Live Market Pulse | Certify',
     description: 'Real-time salary floors and dynamic demand metrics for elite tech roles in India.',
-    url: 'https://certifyroi.in/market-pulse',
+    url: 'https://certifyd.in/market-pulse',
     siteName: 'Certify',
     images: [
       {
-        url: 'https://certifyroi.in/og-image.png',
+        url: 'https://certifyd.in/og-image.png',
         width: 1200,
         height: 630,
         alt: 'Certify Market Pulse',
@@ -30,7 +30,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'Live Market Pulse | Certify',
     description: 'Real-time salary floors and dynamic demand metrics for elite tech roles in India.',
-    images: ['https://certifyroi.in/og-image.png'],
+    images: ['https://certifyd.in/og-image.png'],
   },
 }
 
