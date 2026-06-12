@@ -1,18 +1,24 @@
 {
-    "source_url": "https://learn.microsoft.com/en-in/credentials/certifications/m365-administrator-expert/",
-    "title": "Microsoft 365 Certified: Administrator Expert",
-    "tagline": "If you\u2019re an administrator who deploys and manages Microsoft 365 and performs Microsoft 365 tenant-level implementation and administration of cloud and hybrid environments, this certification is designed for you.",
-    "overview": "Certifications If you\u2019re an administrator who deploys and manages Microsoft 365 and performs Microsoft 365 tenant-level implementation and administration of cloud and hybrid environments, this certification is designed for you. As a Microsoft 365 administrator, you: As a candidate for this certification, you have functional experience with all Microsoft 365 workloads and Microsoft Entra ID and have administered at least one of these. You should also have a working knowledge of the following: To become a Microsoft 365 Certified: Administrator Expert, you must earn at least one of the following: Microsoft 365 Certified: Endpoint Administrator Associate, Microsoft 365 Certified: Teams Administrator Associate, Microsoft Certified: Identity and Access Administrator Associate, and Microsoft Certified: Information Security Administrator Associate certification. Important",
-    "skills_measured": [],
-    "prerequisites": [],
-    "exam_code": "MS-102",
-    "cost_inr": 406227.5,
-    "cost_usd": 4865.0,
-    "eligibility": "As a candidate for this certification, you have functional experience with all Microsoft 365 workloads and Microsoft Entra ID and have administered at least one of these. You should also have a working knowledge of the following: Networking Active Directory Domain Services DNS PowerShell",
-    "level": "",
-    "job_roles": [],
-    "languages": [
-        "English"
-    ],
-    "retirement_date": null
+  "source_url": "https://www.isc2.org/certifications/issep",
+  "title": "ISSEP – Information Systems Security Engineering Professional",
+  "slug": "isc2-issep",
+  "overview": "Execute system security engineering processes Technical procurement and management Security risk management and operations Security planning and engineering Security design and systems requirement setting Security solutions, operations and management  ISSEP Exam Outline",
+  "cost_usd": 599.0,
+  "cost_inr": 57312.32,
+  "eligibility": "See ISC2 official site.",
+  "level": "Professional",
+  "job_roles": [],
+  "skills_measured": [
+    "A demonstration of excellence. You want to stand out. This concentration proves you have an elite level of knowledge and expertise.",
+    "New opportunities. The ISSEP opens doors – from new career paths and jobs to more exciting work.",
+    "Growth and learning. This is an opportunity to dive deep and hone your craft. You’ll find new ways to grow and stay on the forefront of information security. And earning your certification is a big challenge.",
+    "Are a life-long learner who craves a new challenge.",
+    "Have a competitive spirit and want to stand out from your peers.",
+    "Want to be seen as a subject matter expert and prove your knowledge in a more focused area."
+  ],
+  "exam_duration_minutes": 180,
+  "total_questions": 125,
+  "exam_format_type": "Standard Proctored Exam",
+  "testing_method": "Online Proctored & Testing Center",
+  "validity_period_months": 36
 }

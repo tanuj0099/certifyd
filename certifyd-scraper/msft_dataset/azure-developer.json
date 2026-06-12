@@ -1,0 +1,28 @@
+{
+  "source_url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-developer/",
+  "title": "Microsoft Certified: Azure Developer Associate",
+  "slug": "msft-azure-developer",
+  "overview": "Build end-to-end solutions in Microsoft Azure to create Azure Functions, implement and manage web apps, develop solutions utilizing Azure storage, and more.",
+  "cost_usd": 165.0,
+  "cost_inr": 15787.2,
+  "eligibility": "None strictly required. Prior knowledge of Microsoft cloud technologies recommended.",
+  "level": "Professional",
+  "job_roles": [
+    "Developer\n\nSubject\n\nApplication development"
+  ],
+  "skills_measured": [
+    "Documentation",
+    "All product documentation",
+    "Azure documentation",
+    "Dynamics 365 documentation",
+    "Microsoft Copilot documentation",
+    "Microsoft 365 documentation",
+    "Power Platform documentation",
+    "Code samples"
+  ],
+  "exam_duration_minutes": 120,
+  "total_questions": 60,
+  "exam_format_type": "Multiple choice, case studies, and performance-based labs",
+  "testing_method": "Pearson VUE testing center or online proctored",
+  "validity_period_months": 12
+}

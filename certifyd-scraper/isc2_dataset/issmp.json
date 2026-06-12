@@ -1,0 +1,24 @@
+{
+  "source_url": "https://www.isc2.org/certifications/issmp",
+  "title": "ISSMP – Information Systems Security Management Professional",
+  "slug": "isc2-issmp",
+  "overview": "Align security with organizational governance Security policies and agreements Integrate security through organizational initiatives Develop and manage risk through the supply chain and beyond Security operations, threat intelligence and incident management Contingency planning, resilience and recovery  ISSMP Exam Outline",
+  "cost_usd": 599.0,
+  "cost_inr": 57312.32,
+  "eligibility": "CISSP + 2 Years or 7 years cumulative",
+  "level": "Professional",
+  "job_roles": [],
+  "skills_measured": [
+    "A demonstration of excellence. You want to stand out. This concentration proves you have an elite level of knowledge and expertise.",
+    "New opportunities. The ISSMP opens doors: from new career paths and jobs, to more exciting work.",
+    "Are a life-long learner who craves a new challenge.",
+    "Have a competitive spirit and want to stand out from your peers.",
+    "Want to be seen as a subject matter expert and prove your knowledge in a more focused area.",
+    "Are looking ahead in your career. The ISSMP will help you achieve an even higher level of success."
+  ],
+  "exam_duration_minutes": 180,
+  "total_questions": 125,
+  "exam_format_type": "Standard Proctored Exam",
+  "testing_method": "Online Proctored & Testing Center",
+  "validity_period_months": 36
+}

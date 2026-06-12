@@ -2,6 +2,16 @@ import { useState, useCallback, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Award, ChevronDown, Scale, Info, Zap, DollarSign, TrendingUp } from 'lucide-react'
 import { supabase } from '../lib/supabase.js'
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts'
 
 //  Font tokens  CSS variables 
 // NOTE: SVG text elements cannot use CSS variables in presentation attributes.
@@ -25,14 +35,24 @@ function demandScore(d) {
 // certifications table schema (public.certifications):
 //   id, name, provider, cost_inr, difficulty, time_commitment_months,
 //   median_roi_percent, description, slug
+
+function getMockHikePercent(level) {
+  if (!level) return 15;
+  const l = level.toLowerCase();
+  if (l.includes('expert') || l.includes('specialty')) return 25;
+  if (l.includes('professional')) return 20;
+  if (l.includes('associate')) return 15;
+  return 10;
+}
+
 function normalizeCert(row) {
   return {
     id:         row.id,
     name:       row.name || row.cert_name || '',
-    avgHike:    Number(row.median_roi_percent ?? row.avg_hike ?? row.avgHike) || 0,
-    avgCost:    Number(row.cost_inr ?? row.avg_cost ?? row.avgCost) || 0,
+    avgHike:    Number(row.median_roi_percent ?? row.avg_hike ?? row.avgHike) || getMockHikePercent(row.difficulty_level || row.difficulty),
+    avgCost:    Number(row.cost_inr ?? row.avg_cost ?? row.avgCost) || (Number(row.cost_usd) * 83) || 0,
     avgCostUSD: Number(row.cost_usd) || 0,
-    timeMonths: Number(row.time_commitment_months ?? row.time_months ?? row.timeMonths ?? row.prep_time_months) || 0,
+    timeMonths: Number(row.time_commitment_months ?? row.time_months ?? row.timeMonths ?? row.prep_time_months) || 1,
     demand:     row.difficulty || row.demand || row.difficulty_level || 'Medium',
     domain:     row.domain_id   || row.domain      || row.domain_name || '',
     forWho:     row.description || row.for_who     || row.forWho       || '',
@@ -42,10 +62,14 @@ function normalizeCert(row) {
 }
 
 function formatDualCost(cost_inr, cost_usd) {
-  if (!cost_inr && !cost_usd) return '--';
-  const inrStr = cost_inr ? `₹${Number(cost_inr).toLocaleString('en-IN')}` : '';
-  const usdStr = cost_usd ? `$${Number(cost_usd).toLocaleString()}` : '';
-  if (inrStr && usdStr) return `${inrStr} / ${usdStr}`;
+  const numInr = Number(cost_inr);
+  const numUsd = Number(cost_usd);
+  if (!numInr && !numUsd) return 'Varies';
+  
+  const inrStr = numInr ? `₹${numInr.toLocaleString('en-IN')}` : '';
+  const usdStr = numUsd ? `$${numUsd.toLocaleString()}` : '';
+  
+  if (inrStr && usdStr) return `${inrStr}/${usdStr}`;
   return inrStr || usdStr;
 }
 
@@ -172,297 +196,75 @@ function CertSelector({ value, onChange, label, color, certifications, domains }
   )
 }
 
-//  Build radar data 
-function buildRadarData(certA, certB, roiA, roiB) {
-  var maxSpeed = 24
-
-  function norm(val, min, max) {
-    return Math.max(0, Math.min(100, ((val - min) / (max - min)) * 100))
-  }
-
-  return [
+// 
+// HeadToHeadChart - Side by side grouped bar chart
+// 
+function HeadToHeadChart({ certA, certB, roiA, roiB }) {
+  const data = [
     {
-      axis: 'Hike %',
-      A: norm(certA.avgHike, 0, 80),
-      B: norm(certB.avgHike, 0, 80),
-      rawA: '+' + certA.avgHike + '%',
-      rawB: '+' + certB.avgHike + '%',
+      metric: 'Study Time (mo)',
+      A: certA.timeMonths,
+      B: certB.timeMonths,
     },
     {
-      axis: 'Demand',
-      A: norm(demandScore(certA.demand), 0, 4),
-      B: norm(demandScore(certB.demand), 0, 4),
-      rawA: certA.demand,
-      rawB: certB.demand,
+      metric: 'Cost (₹k)',
+      A: Math.round(certA.avgCost / 1000) || 10,
+      B: Math.round(certB.avgCost / 1000) || 10,
     },
     {
-      axis: 'Speed',
-      A: norm(maxSpeed - certA.timeMonths, 0, maxSpeed),
-      B: norm(maxSpeed - certB.timeMonths, 0, maxSpeed),
-      rawA: certA.timeMonths + ' mo',
-      rawB: certB.timeMonths + ' mo',
-    },
-    {
-      axis: 'Cost Eff.',
-      A: norm(roiA.roiPct, 0, 400),
-      B: norm(roiB.roiPct, 0, 400),
-      rawA: roiA.roiPct + '% ROI',
-      rawB: roiB.roiPct + '% ROI',
-    },
-    {
-      axis: 'Job Market',
-      A: norm(demandScore(certA.demand) * 20 + certA.avgHike * 0.5, 0, 100),
-      B: norm(demandScore(certB.demand) * 20 + certB.avgHike * 0.5, 0, 100),
-      rawA: certA.demand + '  +' + certA.avgHike + '%',
-      rawB: certB.demand + '  +' + certB.avgHike + '%',
-    },
-  ]
-}
-
-//  Pure SVG Radar Chart — glassmorphism overhaul, no glow
-// Labels use a large LABEL_PUSH so axis names + raw values never overlap.
-function RadarChartSVG({ data, nameA, nameB, animate }) {
-  // Viewbox & geometry — generous padding so labels never clip
-  var W = 560
-  var H = 460
-  var CX = W / 2
-  var CY = H / 2 + 10
-  var R  = 110          // inner web radius
-  var LABEL_R  = R + 30    // axis-name ring (axis label)
-  var RAW_A_R  = R + 50    // cert A value ring
-  var RAW_B_R  = R + 68    // cert B value ring
-  var RINGS = [0.25, 0.5, 0.75, 1.0]
-  var N = data.length
-
-  var [hovered, setHovered] = useState(null)
-
-  function polar(i, r) {
-    var angle = (2 * Math.PI * i / N) - Math.PI / 2
-    var rSafe = isFinite(r) ? r : 0
-    return { x: CX + rSafe * Math.cos(angle), y: CY + rSafe * Math.sin(angle) }
-  }
-
-  function toPoints(scores) {
-    return scores.map(function (s, i) {
-      var sSafe = isFinite(s) ? s : 0
-      var p = polar(i, (sSafe / 100) * R)
-      return p.x.toFixed(3) + ',' + p.y.toFixed(3)
-    }).join(' ')
-  }
-
-  var scoresA   = data.map(function (d) { return d.A })
-  var scoresB   = data.map(function (d) { return d.B })
-  var pointsA   = toPoints(scoresA)
-  var pointsB   = toPoints(scoresB)
-
-  // Web rings
-  var rings = RINGS.map(function (pct) {
-    return data.map(function (_, i) {
-      var p = polar(i, R * pct)
-      return p.x.toFixed(3) + ',' + p.y.toFixed(3)
-    }).join(' ')
-  })
-
-  var spokes  = data.map(function (_, i) { return polar(i, R) })
-  var dotsA   = scoresA.map(function (s, i) { return { ...polar(i, (s / 100) * R), score: s, raw: data[i].rawA } })
-  var dotsB   = scoresB.map(function (s, i) { return { ...polar(i, (s / 100) * R), score: s, raw: data[i].rawB } })
-
-  // Label positions — pushed well outside the web, A and B on separate lines
-  var labelNodes = data.map(function (d, i) {
-    var angle   = (2 * Math.PI * i / N) - Math.PI / 2
-    var dx      = Math.cos(angle)
-    var dy      = Math.sin(angle)
-    // textAnchor based on which side of center the label falls
-    var anchor  = Math.abs(dx) < 0.2 ? 'middle' : dx > 0 ? 'start' : 'end'
-    return {
-      i, axis: d.axis, rawA: d.rawA, rawB: d.rawB, anchor,
-      ax:  CX + LABEL_R  * dx,   ay:  CY + LABEL_R  * dy,
-      rax: CX + RAW_A_R  * dx,   ray: CY + RAW_A_R  * dy,
-      rbx: CX + RAW_B_R  * dx,   rby: CY + RAW_B_R  * dy,
+      metric: '5-Yr Net (₹L)',
+      A: parseFloat(roiA.fiveYearNet) || 0,
+      B: parseFloat(roiB.fiveYearNet) || 0,
     }
-  })
+  ];
 
   return (
-    <div style={{ position: 'relative', width: '100%' }}>
-      <svg viewBox={'0 0 ' + W + ' ' + H} width="100%" style={{ overflow: 'visible', display: 'block' }}>
-
-        {/* ── Web rings — theme-aware via opacity ── */}
-        {rings.map(function (pts, ri) {
-          var isOuter = ri === rings.length - 1
-          return (
-            <polygon
-              key={ri}
-              points={pts}
-              fill="none"
-              stroke="var(--text-3)"
-              strokeOpacity={isOuter ? '0.30' : '0.12'}
-              strokeWidth={isOuter ? '1.2' : '0.8'}
-              strokeDasharray={isOuter ? 'none' : '3 5'}
-            />
-          )
-        })}
-
-        {/* ── Axis spokes — theme-aware ── */}
-        {spokes.map(function (pt, i) {
-          return <line key={i} x1={CX} y1={CY} x2={pt.x} y2={pt.y} stroke="var(--text-3)" strokeOpacity="0.15" strokeWidth="1" />
-        })}
-
-        {/* ── Polygon A — fill, then crisp solid stroke ── */}
-        <motion.polygon
-          points={pointsA}
-          fill={COL_A}
-          fillOpacity="0.07"
-          stroke="none"
-          initial={{ opacity: 0 }} animate={{ opacity: animate ? 1 : 0 }} transition={{ duration: 0.5, delay: 0.1 }}
-        />
-        <motion.polygon
-          points={pointsA}
-          fill="none"
-          stroke={COL_A}
-          strokeWidth="2"
-          strokeLinejoin="round"
-          strokeOpacity="0.85"
-          initial={{ opacity: 0 }} animate={{ opacity: animate ? 1 : 0 }} transition={{ duration: 0.6, delay: 0.15 }}
-        />
-
-        {/* ── Polygon B — fill, then crisp solid stroke ── */}
-        <motion.polygon
-          points={pointsB}
-          fill={COL_B}
-          fillOpacity="0.07"
-          stroke="none"
-          initial={{ opacity: 0 }} animate={{ opacity: animate ? 1 : 0 }} transition={{ duration: 0.5, delay: 0.2 }}
-        />
-        <motion.polygon
-          points={pointsB}
-          fill="none"
-          stroke={COL_B}
-          strokeWidth="2"
-          strokeLinejoin="round"
-          strokeOpacity="0.80"
-          initial={{ opacity: 0 }} animate={{ opacity: animate ? 1 : 0 }} transition={{ duration: 0.6, delay: 0.25 }}
-        />
-
-        {/* ── Vertex dots — A (no filter/glow) ── */}
-        {dotsA.map(function (dot, i) {
-          return (
-            <motion.circle key={'a' + i}
-              cx={dot.x} cy={dot.y}
-              r={hovered === 'A' + i ? 7 : 4.5}
-              fill={COL_A}
-              stroke="var(--bg)"
-              strokeWidth="1.5"
-              style={{ cursor: 'pointer' }}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: animate ? 1 : 0, scale: 1 }}
-              transition={{ duration: 0.4, delay: 0.4 + i * 0.05 }}
-              onMouseEnter={function () { setHovered('A' + i) }}
-              onMouseLeave={function () { setHovered(null) }}
-            />
-          )
-        })}
-
-        {/* ── Vertex dots — B (no filter/glow) ── */}
-        {dotsB.map(function (dot, i) {
-          return (
-            <motion.circle key={'b' + i}
-              cx={dot.x} cy={dot.y}
-              r={hovered === 'B' + i ? 7 : 4.5}
-              fill={COL_B}
-              stroke="var(--bg)"
-              strokeWidth="1.5"
-              style={{ cursor: 'pointer' }}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: animate ? 1 : 0, scale: 1 }}
-              transition={{ duration: 0.4, delay: 0.45 + i * 0.05 }}
-              onMouseEnter={function () { setHovered('B' + i) }}
-              onMouseLeave={function () { setHovered(null) }}
-            />
-          )
-        })}
-
-        {/* ── Hover tooltip ── */}
-        {hovered && (
-          (function () {
-            var isA  = hovered.startsWith('A')
-            var idx  = parseInt(hovered.slice(1))
-            var dots = isA ? dotsA : dotsB
-            var dot  = dots[idx]
-            var raw  = isA ? data[idx].rawA : data[idx].rawB
-            var col  = isA ? COL_A : COL_B
-            var name = isA ? nameA : nameB
-            var TW   = 130
-            var TX   = dot.x + 14
-            var TY   = dot.y - 34
-            if (TX + TW > W) TX = dot.x - TW - 14
-            if (TY < 10)     TY = dot.y + 14
-            return (
-              <g>
-                <rect
-                  x={TX} y={TY} width={TW} height={44} rx="8"
-                  fill="var(--card)"
-                  stroke={col}
-                  strokeWidth="1"
-                  strokeOpacity="0.5"
-                />
-                <text x={TX + 10} y={TY + 15} fontSize="9" fill={col} style={{ fontFamily: 'var(--font-mono)' }} fontWeight="700">
-                  {name.split(' ').slice(0, 3).join(' ')}
-                </text>
-                <text x={TX + 10} y={TY + 31} fontSize="12" fill="var(--text)" style={{ fontFamily: 'var(--font-mono)' }} fontWeight="700">
-                  {raw}
-                </text>
-              </g>
-            )
-          })()
-        )}
-
-        {/* ── Axis labels + raw values — wide spacing, never overlapping ── */}
-        {labelNodes.map(function (lb) {
-          return (
-            <g key={lb.i}>
-              {/* Axis name */}
-              <text
-                x={lb.ax} y={lb.ay}
-                textAnchor={lb.anchor}
-                dominantBaseline="middle"
-                fontSize="9.5"
-                style={{ fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.06em' }}
-                fill="var(--text-3)"
-              >
-                {lb.axis}
-              </text>
-              {/* Cert A raw value — line above axis label area */}
-              <text
-                x={lb.rax} y={lb.ray}
-                textAnchor={lb.anchor}
-                dominantBaseline="middle"
-                fontSize="8.5"
-                style={{ fontFamily: 'var(--font-mono)' }}
-                fontWeight="700"
-                fill={COL_A}
-                fillOpacity="0.85"
-              >
-                {lb.rawA}
-              </text>
-              {/* Cert B raw value — separate line further out */}
-              <text
-                x={lb.rbx} y={lb.rby}
-                textAnchor={lb.anchor}
-                dominantBaseline="middle"
-                fontSize="8.5"
-                style={{ fontFamily: 'var(--font-mono)' }}
-                fontWeight="700"
-                fill={COL_B}
-                fillOpacity="0.80"
-              >
-                {lb.rawB}
-              </text>
-            </g>
-          )
-        })}
-      </svg>
+    <div style={{ width: '100%', height: 320, overflow: 'hidden' }}>
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart
+          data={data}
+          margin={{ top: 20, right: 20, left: -20, bottom: 20 }}
+        >
+          <defs>
+            <linearGradient id="colorA" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor={COL_A} stopOpacity={0.9}/>
+              <stop offset="95%" stopColor={COL_A} stopOpacity={0.7}/>
+            </linearGradient>
+            <linearGradient id="colorB" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor={COL_B} stopOpacity={0.9}/>
+              <stop offset="95%" stopColor={COL_B} stopOpacity={0.7}/>
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
+          <XAxis 
+            dataKey="metric" 
+            tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11, fontFamily: F_MONO }} 
+            axisLine={false} 
+            tickLine={false} 
+            dy={10}
+          />
+          <YAxis 
+            tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11, fontFamily: F_MONO }} 
+            axisLine={false} 
+            tickLine={false} 
+            dx={-10}
+          />
+          <Tooltip 
+            cursor={{ fill: 'rgba(255,255,255,0.03)' }} 
+            contentStyle={{ backgroundColor: 'rgba(15,23,42,0.95)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', boxShadow: '0 8px 32px rgba(0,0,0,0.4)' }} 
+            itemStyle={{ fontFamily: F_MONO, fontSize: '13px', fontWeight: 'bold' }}
+            labelStyle={{ color: 'rgba(255,255,255,0.6)', fontSize: '12px', marginBottom: '8px' }}
+          />
+          <Legend 
+            wrapperStyle={{ fontFamily: F_MONO, fontSize: '11px', paddingTop: '15px' }} 
+            iconType="circle"
+          />
+          <Bar dataKey="A" name={certA.name.split(' ').slice(0,3).join(' ')} fill="url(#colorA)" radius={[6, 6, 0, 0]} maxBarSize={60} />
+          <Bar dataKey="B" name={certB.name.split(' ').slice(0,3).join(' ')} fill="url(#colorB)" radius={[6, 6, 0, 0]} maxBarSize={60} />
+        </BarChart>
+      </ResponsiveContainer>
     </div>
-  )
+  );
 }
 
 // 
@@ -538,7 +340,6 @@ function CertCompare({ salary, prefilledCert }) {
   var roiB = roiCalc(dataB, actualSalary)
 
   var bothReady = dataA && dataB && roiA && roiB
-  var radarData = bothReady ? buildRadarData(dataA, dataB, roiA, roiB) : []
 
   var winner = bothReady
     ? (parseFloat(roiA.fiveYearNet) > parseFloat(roiB.fiveYearNet) ? 'A' : 'B')
@@ -697,7 +498,7 @@ function CertCompare({ salary, prefilledCert }) {
               </div>
             </motion.div>
 
-            {/* Radar chart — Glassmorphism container */}
+            {/* Head to Head Chart — Glassmorphism container */}
             <motion.div
               initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.15 }}
               style={{
@@ -716,31 +517,17 @@ function CertCompare({ salary, prefilledCert }) {
               <div style={{ padding: '18px 22px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px' }}>
                 <div>
                   <div style={{ fontFamily: F_MONO, fontSize: '9px', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '3px' }}>
-                    MULTI-AXIS COMPARISON
+                    HEAD-TO-HEAD
                   </div>
                   <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', fontFamily: F_BODY }}>
-                    5 dimensions · hover dots to inspect
+                    * Values and ROI are approx projections based on industry avg for the difficulty tier
                   </div>
-                </div>
-
-                {/* Legend pills — A=white, B=blue */}
-                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                  {[{ name: dataA.name, color: COL_A }, { name: dataB.name, color: COL_B }].map(function (item, i) {
-                    return (
-                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '5px 12px', borderRadius: '100px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }}>
-                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: item.color, flexShrink: 0 }} />
-                        <span style={{ fontFamily: F_MONO, fontSize: '10px', color: item.color, fontWeight: '700', maxWidth: '110px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                          {item.name.split(' ').slice(0, 3).join(' ')}
-                        </span>
-                      </div>
-                    )
-                  })}
                 </div>
               </div>
 
               {/* SVG chart area */}
               <div style={{ padding: '0 16px 16px' }}>
-                <RadarChartSVG data={radarData} nameA={dataA.name} nameB={dataB.name} animate={true} />
+                <HeadToHeadChart certA={dataA} certB={dataB} roiA={roiA} roiB={roiB} />
               </div>
             </motion.div>
 
@@ -825,19 +612,7 @@ function CertCompare({ salary, prefilledCert }) {
         ) : null}
       </AnimatePresence>
 
-      {/* Empty state - FIX:  emoji  Scale icon from lucide-react */}
-      {!bothReady ? (
-        <motion.div
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}
-          style={{ textAlign: 'center', padding: '48px 24px', color: 'var(--text-4)', fontSize: '13px', fontFamily: F_BODY }}
-        >
-          <Scale size={32} color="var(--text-4)" style={{ margin: '0 auto 14px', display: 'block', opacity: 0.4 }} />
-          <div style={{ fontFamily: F_HEAD, fontWeight: '700', fontSize: '15px', color: 'var(--text-3)', marginBottom: '6px' }}>
-            Select a certification and enter your salary to see the comparison
-          </div>
-          <div>Radar chart  Break-even  5-year gain - side by side</div>
-        </motion.div>
-      ) : null}
+      {/* Empty state is handled by the initial selection card block, so no duplicate is needed here */}
     </div>
   )
 }

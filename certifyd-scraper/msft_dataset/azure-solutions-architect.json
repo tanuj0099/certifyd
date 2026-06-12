@@ -1,0 +1,28 @@
+{
+  "source_url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-solutions-architect/",
+  "title": "Microsoft Certified: Azure Solutions Architect Expert",
+  "slug": "msft-azure-solutions-architect",
+  "overview": "Your responsibilities for this role include advising stakeholders and translating business requirements into designs for Azure solutions that align with the Azure Well-Architected Framework and Cloud Adoption Framework for Azure. In this role, you implement solutions on Azure by partnering with various other job roles, including:",
+  "cost_usd": 165.0,
+  "cost_inr": 15787.2,
+  "eligibility": "None strictly required. Prior knowledge of Microsoft cloud technologies recommended.",
+  "level": "Professional",
+  "job_roles": [
+    "IT Professional"
+  ],
+  "skills_measured": [
+    "Documentation",
+    "All product documentation",
+    "Azure documentation",
+    "Dynamics 365 documentation",
+    "Microsoft Copilot documentation",
+    "Microsoft 365 documentation",
+    "Power Platform documentation",
+    "Code samples"
+  ],
+  "exam_duration_minutes": 120,
+  "total_questions": 60,
+  "exam_format_type": "Multiple choice, case studies, and performance-based labs",
+  "testing_method": "Pearson VUE testing center or online proctored",
+  "validity_period_months": 12
+}

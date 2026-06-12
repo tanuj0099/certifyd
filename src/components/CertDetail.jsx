@@ -14,14 +14,13 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import {
-  BarChart,
-  Bar,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Cell,
 } from 'recharts';
 
 // 
@@ -34,9 +33,13 @@ const INDUSTRY_AVG_DURATION = 100;  // minutes
 // Helpers
 // 
 function formatDualCost(cost_inr, cost_usd) {
-  if (!cost_inr && !cost_usd) return 'Free';
-  const inrStr = cost_inr ? `₹${Number(cost_inr).toLocaleString('en-IN')}` : '';
-  const usdStr = cost_usd ? `$${Number(cost_usd).toLocaleString()}` : '';
+  const numInr = Number(cost_inr);
+  const numUsd = Number(cost_usd);
+  if (!numInr && !numUsd) return 'Varies';
+  
+  const inrStr = numInr ? `₹${numInr.toLocaleString('en-IN')}` : '';
+  const usdStr = numUsd ? `$${numUsd.toLocaleString()}` : '';
+  
   if (inrStr && usdStr) return `${inrStr} / ${usdStr}`;
   return inrStr || usdStr;
 }
@@ -137,78 +140,86 @@ function CustomTooltip({ active, payload, label }) {
 }
 
 // 
-// ComparisonChart - horizontal bar chart
+// Mock Hike Helper
 // 
-function ComparisonChart({ title, thisValue, avgValue, unit, thisLabel, color }) {
-  const data = [
-    { name: thisLabel,      value: thisValue },
-    { name: 'Industry Avg', value: avgValue  },
-  ];
+function getMockHikePercent(level) {
+  if (!level) return 15;
+  const l = level.toLowerCase();
+  if (l.includes('expert') || l.includes('specialty')) return 25;
+  if (l.includes('professional')) return 20;
+  if (l.includes('associate')) return 15;
+  return 10; // foundational
+}
 
-  const pct = avgValue > 0
-    ? Math.round(Math.abs(thisValue - avgValue) / avgValue * 100)
-    : 0;
-  const comparison =
-    thisValue > avgValue ? `${pct}% above industry average`
-    : thisValue < avgValue ? `${pct}% below industry average`
-    : 'Matches industry average';
+// 
+// CertROICurve - Area chart for 5-Year Projection
+// 
+function CertROICurve({ costValue, hikePercent, color, title }) {
+  // Assume a base salary of 100,000 for calculation to show tangible curve
+  const BASE_SALARY = 100000;
+  const annualGain = (BASE_SALARY * hikePercent) / 100;
+  
+  const data = [];
+  let cumulative = -costValue; // Start at year 0 after paying for cert
+  data.push({ year: 'Year 0', netValue: cumulative });
+
+  for (let i = 1; i <= 5; i++) {
+    cumulative += annualGain;
+    data.push({ year: `Year ${i}`, netValue: cumulative });
+  }
 
   return (
     <div className="p-4 md:p-5 glass">
-      <h4 className="text-sm font-bold uppercase tracking-widest text-[var(--text-3)] mb-3 md:mb-4">
+      <h4 className="text-sm font-bold uppercase tracking-widest text-[var(--text-3)] mb-2">
         {title}
       </h4>
+      <p className="text-[11px] text-[var(--text-4)] mb-4">
+        * Based on a {hikePercent}% avg hike projection (Assumes $100k base salary)
+      </p>
 
-      {/*
-        ResponsiveContainer width="100%" is critical - it lets Recharts
-        measure the parent div and never overflow the viewport.
-        height is taller on mobile (110px) so bars are finger-friendly.
-        YAxis width is reduced on mobile to reclaim horizontal space.
-      */}
-      <ResponsiveContainer width="100%" height={110}>
-        <BarChart
+      <ResponsiveContainer width="100%" height={180}>
+        <AreaChart
           data={data}
-          layout="vertical"
-          margin={{ top: 0, right: 12, left: 0, bottom: 0 }}
+          margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
         >
+          <defs>
+            <linearGradient id="colorNetValue" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor={color} stopOpacity={0.4}/>
+              <stop offset="95%" stopColor={color} stopOpacity={0.0}/>
+            </linearGradient>
+          </defs>
           <CartesianGrid
             strokeDasharray="3 3"
-            stroke="#e2e8f0"
-            className="dark:stroke-slate-800"
-            horizontal={false}
+            stroke="var(--border)"
+            vertical={false}
           />
           <XAxis
-            type="number"
-            tick={{ fill: '#64748b', fontSize: 9 }}
-            axisLine={false}
-            tickLine={false}
-            tickFormatter={(v) => `${v}${unit}`}
-          />
-          <YAxis
-            type="category"
-            dataKey="name"
+            dataKey="year"
             tick={{ fill: '#64748b', fontSize: 10 }}
             axisLine={false}
             tickLine={false}
-            width={76}
           />
-          {/*
-            position="left" keeps the tooltip from clipping off the
-            right edge on narrow mobile screens.
-          */}
+          <YAxis
+            tick={{ fill: '#64748b', fontSize: 10 }}
+            axisLine={false}
+            tickLine={false}
+            tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`}
+          />
           <Tooltip
             content={<CustomTooltip />}
-            cursor={{ fill: 'rgba(255,255,255,0.03)' }}
-            position={{ x: 0 }}
+            cursor={{ stroke: 'var(--border)', strokeWidth: 1, strokeDasharray: '3 3' }}
           />
-          <Bar dataKey="value" radius={[0, 6, 6, 0]} maxBarSize={30}>
-            <Cell fill={color} />
-            <Cell fill="#3f3f46" />
-          </Bar>
-        </BarChart>
+          <Area 
+            type="monotone" 
+            dataKey="netValue" 
+            name="Net ROI" 
+            stroke={color} 
+            strokeWidth={3}
+            fillOpacity={1} 
+            fill="url(#colorNetValue)" 
+          />
+        </AreaChart>
       </ResponsiveContainer>
-
-      <p className="text-sm font-medium text-[var(--text-3)] mt-2">{comparison}</p>
     </div>
   );
 }
@@ -275,7 +286,7 @@ const CertDetail = () => {
         if (fetchError) throw fetchError;
         if (active) setCert(data);
       } catch (err) {
-        console.error('Error fetching cert details:', err);
+        console.error('Error fetching cert details:', err.message || err);
         if (active) setError(err.message || 'Failed to load certification details.');
       } finally {
         if (active) setIsLoading(false);
@@ -546,7 +557,7 @@ const CertDetail = () => {
             )}
 
             {/* Eligibility & Prerequisites */}
-            {cert.eligibility_criteria && (
+            {cert.eligibility && (
               <section className="p-4 md:p-6 rounded-2xl bg-amber-500/[0.04] border border-amber-500/[0.15]">
                 <div className="flex items-center gap-2 mb-3 md:mb-4">
                   <ShieldCheck className="w-4 h-4 text-amber-400 flex-shrink-0" />
@@ -554,9 +565,56 @@ const CertDetail = () => {
                     Eligibility &amp; Prerequisites
                   </h2>
                 </div>
-                <p className="text-zinc-300 text-sm md:text-[14px] leading-[1.8]">
-                  {cert.eligibility_criteria}
+                <p className="text-[var(--text-2)] text-sm md:text-[14px] leading-[1.8] whitespace-pre-wrap">
+                  {cert.eligibility}
                 </p>
+              </section>
+            )}
+
+            {/* Target Job Roles */}
+            {cert.job_roles && cert.job_roles.length > 0 && (
+              <section className="p-4 md:p-6 rounded-2xl glass">
+                <div className="flex items-center gap-2 mb-3 md:mb-4">
+                  <div className="w-4 h-4 text-emerald-400 flex items-center justify-center">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <h2 className="text-sm font-semibold uppercase tracking-widest text-[var(--text-3)]">
+                    Target Job Roles
+                  </h2>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {cert.job_roles.map((role, idx) => (
+                    <span key={idx} className="px-3 py-1.5 bg-[var(--bg)] border border-[var(--border)] rounded-lg text-[13px] font-medium text-[var(--text-2)]">
+                      {role}
+                    </span>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Skills Measured */}
+            {cert.skills_measured && cert.skills_measured.length > 0 && (
+              <section className="p-4 md:p-6 rounded-2xl glass">
+                <div className="flex items-center gap-2 mb-3 md:mb-4">
+                  <div className="w-4 h-4 text-violet-400 flex items-center justify-center">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                  </div>
+                  <h2 className="text-sm font-semibold uppercase tracking-widest text-[var(--text-3)]">
+                    Skills Measured
+                  </h2>
+                </div>
+                <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {cert.skills_measured.map((skill, idx) => (
+                    <li key={idx} className="flex items-start gap-2.5">
+                      <div className="w-1.5 h-1.5 rounded-full bg-violet-400/50 mt-2 flex-shrink-0" />
+                      <span className="text-[14px] text-[var(--text-2)] leading-relaxed">{skill}</span>
+                    </li>
+                  ))}
+                </ul>
               </section>
             )}
 
@@ -574,24 +632,14 @@ const CertDetail = () => {
               {/*
                 Charts grid:
                 Mobile:  1 column - each chart gets full width, no overflow
-                Tablet+: 2 columns side by side
+                Tablet+: 1 column taking up the full width for the AreaChart
               */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <ComparisonChart
-                  title="Exam Cost vs. Industry Avg"
-                  thisValue={costValue || 0}
-                  avgValue={INDUSTRY_AVG_COST}
-                  unit="$"
-                  thisLabel={vendor || 'This Cert'}
+              <div className="grid grid-cols-1 gap-4">
+                <CertROICurve
+                  title="5-Year Projected Value Trajectory"
+                  costValue={costValue || 0}
+                  hikePercent={cert.median_roi_percent || getMockHikePercent(cert.difficulty_level)}
                   color="#10b981"
-                />
-                <ComparisonChart
-                  title="Expected Salary Hike vs. Industry Avg"
-                  thisValue={cert.median_roi_percent || 20}
-                  avgValue={15}
-                  unit="%"
-                  thisLabel={vendor || 'This Cert'}
-                  color="#8b5cf6"
                 />
               </div>
             </section>

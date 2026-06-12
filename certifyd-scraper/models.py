@@ -278,15 +278,20 @@ class Certification(BaseModel):
     """
     source_url: str
     title: str
-    tagline: str
+    tagline: str | None = ""
     overview: str
-    skills_measured: list[str]
-    prerequisites: list[str]
-    exam_code: str
+    skills_measured: list[str] | None = []
+    prerequisites: list[str] | None = []
+    exam_code: str | None = ""
     cost_inr: float
     cost_usd: float
     eligibility: str
     level: str
-    job_roles: list[str]
-    languages: list[str]
+    job_roles: list[str] | None = []
+    languages: list[str] | None = ["English"]
     retirement_date: str | None = None
+    exam_duration_minutes: int | None = 120
+    total_questions: int | None = 60
+    exam_format_type: str | None = "Standard Proctored Exam"
+    testing_method: str | None = "Online Proctored & Testing Center"
+    validity_period_months: int | None = 36

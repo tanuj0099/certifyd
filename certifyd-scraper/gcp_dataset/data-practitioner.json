@@ -1,0 +1,26 @@
+{
+  "source_url": "https://cloud.google.com/learn/certification/data-practitioner",
+  "title": "Associate Data Practitioner",
+  "slug": "gcp-data-practitioner",
+  "overview": "The Associate Data Practitioner secures and manages data on Google Cloud. This individual has experience using Google Cloud data services for tasks like data ingestion, transformation, pipeline management, analysis, machine learning, and visualization. Candidates have a basic understanding of cloud computing concepts like infrastructure as a service (IaaS), platform as a service (PaaS), and software as a service (SaaS).",
+  "cost_usd": 125.0,
+  "cost_inr": 11960.0,
+  "eligibility": "6+ months of experience working with data on Google Cloud.",
+  "level": "Associate",
+  "job_roles": [
+    "Cloud Engineer",
+    "Cloud Architect",
+    "Data Engineer"
+  ],
+  "skills_measured": [
+    "Design cloud solutions",
+    "Manage infrastructure",
+    "Security and compliance",
+    "Optimize processes"
+  ],
+  "exam_duration_minutes": 120,
+  "total_questions": 50,
+  "exam_format_type": "Multiple choice and multiple select",
+  "testing_method": "Testing center or online proctored",
+  "validity_period_months": 24
+}

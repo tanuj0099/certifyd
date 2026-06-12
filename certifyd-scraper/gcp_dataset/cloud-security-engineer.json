@@ -1,0 +1,26 @@
+{
+  "source_url": "https://cloud.google.com/learn/certification/cloud-security-engineer",
+  "title": "Professional Cloud Security Engineer",
+  "slug": "gcp-cloud-security-engineer",
+  "overview": "A Cloud Security Engineer allows organizations to design and implement secure workloads and infrastructure on Google Cloud. Through an understanding of security best practices and industry requirements, this individual designs, develops, and manages a secure solution by using Google security technologies. A Cloud Security Engineer is proficient in identity and access management, defining the resource hierarchy and policies, using Google Cloud technologies to provide data protection, configuring network security defenses, monitoring environments for threats, configuring security automation, securing AI workloads, securing the software supply chain, and enforcing regulatory controls.",
+  "cost_usd": 200.0,
+  "cost_inr": 19136.0,
+  "eligibility": "3+ years of industry experience including more than 1 year designing and managing solutions using Google Cloud",
+  "level": "Professional",
+  "job_roles": [
+    "Cloud Engineer",
+    "Cloud Architect",
+    "Data Engineer"
+  ],
+  "skills_measured": [
+    "Design cloud solutions",
+    "Manage infrastructure",
+    "Security and compliance",
+    "Optimize processes"
+  ],
+  "exam_duration_minutes": 120,
+  "total_questions": 50,
+  "exam_format_type": "Multiple choice and multiple select",
+  "testing_method": "Testing center or online proctored",
+  "validity_period_months": 24
+}

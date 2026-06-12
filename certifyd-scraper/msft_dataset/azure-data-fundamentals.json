@@ -1,0 +1,28 @@
+{
+  "source_url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-data-fundamentals/",
+  "title": "Microsoft Certified: Azure Data Fundamentals",
+  "slug": "msft-azure-data-fundamentals",
+  "overview": "This certification is an opportunity to demonstrate your knowledge of core data concepts and related Microsoft Azure data services. As a candidate for this exam, you should have familiarity with Exam DP-900’s self-paced or instructor-led learning material.",
+  "cost_usd": 99.0,
+  "cost_inr": 9472.32,
+  "eligibility": "None strictly required. Prior knowledge of Microsoft cloud technologies recommended.",
+  "level": "Foundational",
+  "job_roles": [
+    "IT Professional"
+  ],
+  "skills_measured": [
+    "Documentation",
+    "All product documentation",
+    "Azure documentation",
+    "Dynamics 365 documentation",
+    "Microsoft Copilot documentation",
+    "Microsoft 365 documentation",
+    "Power Platform documentation",
+    "Code samples"
+  ],
+  "exam_duration_minutes": 100,
+  "total_questions": 45,
+  "exam_format_type": "Multiple choice, case studies, and performance-based labs",
+  "testing_method": "Pearson VUE testing center or online proctored",
+  "validity_period_months": 12
+}

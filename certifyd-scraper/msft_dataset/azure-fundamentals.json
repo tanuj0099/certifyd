@@ -1,0 +1,28 @@
+{
+  "source_url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-fundamentals/",
+  "title": "Microsoft Certified: Azure Fundamentals",
+  "slug": "msft-azure-fundamentals",
+  "overview": "As a candidate for this certification, you’re a technology professional who wants to demonstrate foundational knowledge of cloud concepts in general and Microsoft Azure in particular. This certification is a common starting point in a journey towards a career in Azure.",
+  "cost_usd": 99.0,
+  "cost_inr": 9472.32,
+  "eligibility": "None strictly required. Prior knowledge of Microsoft cloud technologies recommended.",
+  "level": "Foundational",
+  "job_roles": [
+    "IT Professional"
+  ],
+  "skills_measured": [
+    "Documentation",
+    "All product documentation",
+    "Azure documentation",
+    "Dynamics 365 documentation",
+    "Microsoft Copilot documentation",
+    "Microsoft 365 documentation",
+    "Power Platform documentation",
+    "Code samples"
+  ],
+  "exam_duration_minutes": 100,
+  "total_questions": 45,
+  "exam_format_type": "Multiple choice, case studies, and performance-based labs",
+  "testing_method": "Pearson VUE testing center or online proctored",
+  "validity_period_months": 12
+}

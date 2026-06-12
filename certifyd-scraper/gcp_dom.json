@@ -1,0 +1,60 @@
+{
+  "links": [
+    "https://cloud.google.com/learn/certification/data-practitioner",
+    "https://cloud.google.com/learn/certification/security-operations-engineer",
+    "https://cloud.google.com/learn/certification/generative-ai-leader"
+  ],
+  "detail": {
+    "h1": "Professional Cloud Architect",
+    "ps": [
+      "A Professional Cloud Architect is able to leverage Google Cloud technologies to design, develop, and manage robust, secure, scalable, efficient, cost-effective, highly available, and flexible solutions that drive business objectives. The Professional Cloud Architect should be proficient in enterprise cloud strategy, solution design, workload migration approaches, deployment and orchestration, optimization, and architectural best practices. This individual is also experienced with common open-source technologies and software development methodologies for designing multitiered distributed applications across legacy, multicloud, or hybrid environments.",
+      "Familiarity with the Google Cloud Well-Architected Framework is a key requirement for this role. The Well-Architected Framework provides guidance and best practices on how to design, build, and operate reliable, secure, efficient, and cost-optimized workloads in Google Cloud. For a Professional Cloud Architect, understanding and applying the principles of the framework is paramount to designing and managing successful cloud solutions. The framework's pillars (operational excellence, security, reliability, performance optimization, cost optimization, and sustainability) are implicitly and explicitly woven throughout the exam objectives and should be a guiding principle in architectural decisions.",
+      "The Professional Cloud Architect certification exam assesses your ability to:",
+      "Train for the exam",
+      "Review sample questions",
+      "View standard exam guide",
+      "View renewal exam guide",
+      "Partner training for the exam",
+      "Join the learning community",
+      "Renew your certification",
+      "If this is your first time getting certified, or your certification has expired, you must take the standard exam.",
+      "If you are renewing your certification, you can choose to take the shorter renewal exam or the standard exam starting 60 days before your certification expiration date.",
+      "Standard exam information",
+      "Length: 2 hours",
+      "Registration fee: $200 (plus tax where applicable)"
+    ],
+    "lis": [
+      "Accelerate your digital transformation",
+      "Whether your business is early in its journey or well on its way to digital transformation, Google Cloud can help solve your toughest challenges.",
+      "Learn more",
+      "Key benefits",
+      "Why Google Cloud\n                    \n                    \n                    \n                      Top reasons businesses choose us.",
+      "AI and Agents\n                    \n                    \n                    \n                      Get enterprise-ready AI.",
+      "Multicloud\n                    \n                    \n                    \n                      Run your apps wherever you need them.",
+      "Data Cloud\n                    \n                    \n                    \n                      Make smarter decisions with unified data.",
+      "Security\n                    \n                    \n                    \n                      Protect your users, data, and apps.",
+      "Reports and insights",
+      "Executive insights\n                    \n                    \n                    \n                      Curated C-suite perspectives.",
+      "Analyst reports\n                    \n                    \n                    \n                      Read what industry analysts say about us.",
+      "Whitepapers\n                    \n                    \n                    \n                      Browse and download popular whitepapers.",
+      "Customer stories\n                    \n                    \n                    \n                      Explore case studies and videos.",
+      "Industry Solutions",
+      "Application Modernization",
+      "Artificial Intelligence",
+      "APIs and Applications",
+      "Data Analytics",
+      "Databases",
+      "Infrastructure",
+      "Productivity and Collaboration",
+      "Security",
+      "Startups and SMB",
+      "Games\n                    \n                    \n                    \n                      AI-driven solutions to build and scale games faster.",
+      "Not seeing what you're looking for?",
+      "See all industry solutions",
+      "Not seeing what you're looking for?",
+      "See all solutions",
+      "SRE Principles\n                    \n                    \n                    \n                      Tools and resources for adopting SRE in your org."
+    ],
+    "bodyText": "Skip to main content\nOverview\nSolutions\nProducts\nPricing\nResources\n/\nDocs\nSupport\nConsole\nSign in\nLearn\nHome\nCertificates\nTraining\nCertification\nContact Us\nStart free\nThis exam will soon be updated to reflect the transition from Vertex AI to Gemini Enterprise Agent Platform. Refer to the exam guide to review product names used on the exam.\nBack to Google Cloud Certification\nProfessional Cloud Architect\n\nA Professional Cloud Architect is able to leverage Google Cloud technologies to design, develop, and manage robust, secure, scalable, efficient, cost-effective, highly available, and flexible solutions that drive business objectives. The Professional Cloud Architect should be proficient in enterprise cloud strategy, solution design, workload migration approaches, deployment and orchestration, optimization, and architectural best practices. This individual is also experienced with common open-source technologies and software development methodologies for designing multitiered distributed applications across legacy, multicloud, or hybrid environments.\n\nFamiliarity with the Google Cloud Well-Architected Framework is a key requirement for this role. The Well-Architected Framework provides guidance and best practices on how to design, build, and operate reliable, secure, efficient, and cost-optimized workloads in Google Cloud. For a Professional Cloud Architect, understanding and applying the principles of the framework is paramount to designing and managing successful cloud solutions. The framework's pillars (operational excellence, security, reliability, performance optimization, cost optimization, and sustainability) are implicitly and explicitly woven throughout the exam objectives and should be a guiding principle in architectural decisions.\n\nThe Professional Cloud Architect certification exam assesses your ability to:\n\nDesign and plan a cloud solution architecture\nManage and provision the cloud solution infrastructure\nDesign for security and compliance\nAnalyze and optimize technical and business processes\nManage implementations of cloud architecture\nEnsure solution and operations excellence\nRegister View FAQs\nQuick links\n\nTrain for the exam\n\nReview sample questions\n\nView standard exam guide\n\nView renewal exam guide\n\nPartner training for the exam\n\nJoin the learning community\n\nRenew your certification\n\n\n\nAbout this certification\n\nIf this is your first time getting certified, or your certification has expired, you must take the standard exam.\n\nIf you are renewing your certification, you can choose to take the shorter renewal exam or the standard exam starting 60 days before your certification expiration date.\n\nStandard exam information\n\nLength: 2 hours\n\nRegistration fee: $200 (plus tax where applicable)\n\nLanguages: English, Japanese\n\nExam format: 50-60 multiple choice and multiple select questions\n\nContent: See the Standard Exam Guide\n\nCase studies: Each exam includes 2 case studies. Case study questions make up 20-30% of the exam and assess your ability to apply your knowledge to a realistic business situation. You can view the case studies on a split screen during the exam. See the standard Exam Guide for the 4 available case studies.\n\nPreparation: Prepare for the exam by following the Professional Cloud Architect Exam Learning Path.\n\nExam delivery method:  \n\na. Take the online-proctored exam from a remote location.\n\nb. Take the onsite-proctored exam at a testing center - search for Google Cloud.\n\nValidity period: 2 years\n\nPrerequisites: None\n\nRecommended experience: 3+ years of industry experience including 1+ years designing and managing solutions using Google Cloud\n\nRenewal exam information\n\nLength: 1 hour\n\nRegistration fee: $100 (plus tax where applicable)\n\nLanguages: English, Japanese\n\nExam format: 25 multiple choice and multiple select questions\n\nContent: See the Renewal Exam Guide.\n\nCase Studies: Each exam includes 1 case study aligned to generative AI solutions. Case study questions make up 90-100% of the exam and asses"
+  }
+}

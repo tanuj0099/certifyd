@@ -236,6 +236,9 @@ const CertRadar = () => {
             setFilters={setFilters} 
             isMobileOpen={isMobileSidebarOpen} 
             setIsMobileOpen={setIsMobileSidebarOpen} 
+            activeIntent={activeIntent}
+            activeTarget={activeTarget}
+            resumeDomain={resumeDomain}
           />
 
           {/* Main Content Column */}

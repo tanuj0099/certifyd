@@ -9,8 +9,19 @@ logger = logging.getLogger(__name__)
 
 def main():
     logger.info("Reading extracted records from dataset...")
-    dataset_dir = os.path.join("storage", "datasets", "default")
-    json_files = glob.glob(os.path.join(dataset_dir, "*.json"))
+    dataset_dirs = [
+        os.path.join("storage", "datasets", "default"),
+        "isc2_dataset",
+        "comptia_dataset",
+        "aws_dataset",
+        "msft_dataset",
+        "gcp_dataset",
+        "cisco_dataset"
+    ]
+    
+    json_files = []
+    for d in dataset_dirs:
+        json_files.extend(glob.glob(os.path.join(d, "*.json")))
     
     scraped_data_list = []
     for filepath in json_files:

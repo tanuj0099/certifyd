@@ -31,7 +31,7 @@ function useIsMobile() {
 const INR_FMT = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 })
 function formatCurrency(value) {
   const n = Number(value)
-  if (!Number.isFinite(n) || n <= 0) return '-'
+  if (!Number.isFinite(n) || n <= 0) return 'Varies'
   return INR_FMT.format(n)
 }
 function formatMonths(value) {

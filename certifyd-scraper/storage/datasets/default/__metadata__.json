@@ -1,10 +1,10 @@
 {
-    "id": "ubvMO1Uk2NbDun4P0",
-    "name": null,
-    "accessed_at": "2026-06-11 17:40:05.910035+00:00",
-    "created_at": "2026-06-11 10:14:56.453223+00:00",
-    "modified_at": "2026-06-11 17:40:05.910035+00:00",
-    "item_count": 78,
-    "cost_usd": 200.0,
-    "cost_inr": 16700.0
+  "id": "ubvMO1Uk2NbDun4P0",
+  "name": null,
+  "accessed_at": "2026-06-12 16:43:18.193125+00:00",
+  "created_at": "2026-06-11 10:14:56.453223+00:00",
+  "modified_at": "2026-06-12 16:43:18.193125+00:00",
+  "item_count": 9,
+  "cost_usd": 200.0,
+  "cost_inr": 16700.0
 }

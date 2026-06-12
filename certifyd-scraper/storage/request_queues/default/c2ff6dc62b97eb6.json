@@ -1,0 +1,19 @@
+{
+  "unique_key": "https://www.cisco.com/site/us/en/learn/training-certifications/certifications/security/ccnp-security/index.html",
+  "url": "https://www.cisco.com/site/us/en/learn/training-certifications/certifications/security/ccnp-security/index.html",
+  "method": "GET",
+  "payload": null,
+  "headers": {},
+  "user_data": {
+    "__crawlee": {
+      "enqueueStrategy": "same-hostname",
+      "state": 4,
+      "crawlDepth": 1
+    },
+    "label": "CISCO_DETAIL"
+  },
+  "retry_count": 1,
+  "no_retry": false,
+  "loaded_url": "https://www.cisco.com/site/us/en/learn/training-certifications/certifications/security/ccnp-security/index.html",
+  "handled_at": "2026-06-12 17:22:53.884767+00:00"
+}

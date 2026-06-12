@@ -1,0 +1,26 @@
+{
+  "source_url": "https://cloud.google.com/learn/certification/generative-ai-leader",
+  "title": "Google Cloud Generative AI Leader",
+  "slug": "gcp-generative-ai-leader",
+  "overview": "A Generative AI Leader is a visionary professional with comprehensive knowledge of how generative AI (gen AI) can transform businesses. They have business-level knowledge of Google Cloud's gen AI offerings and understand how Google's AI-first approach can lead organizations toward innovative and responsible AI adoption. They influence gen AI-powered initiatives and identify opportunities across business functions and industries, using Google Cloud's enterprise-ready offerings to accelerate innovation.",
+  "cost_usd": 99.0,
+  "cost_inr": 9472.32,
+  "eligibility": "None",
+  "level": "Foundational",
+  "job_roles": [
+    "Cloud Engineer",
+    "Cloud Architect",
+    "Data Engineer"
+  ],
+  "skills_measured": [
+    "Design cloud solutions",
+    "Manage infrastructure",
+    "Security and compliance",
+    "Optimize processes"
+  ],
+  "exam_duration_minutes": 90,
+  "total_questions": 50,
+  "exam_format_type": "Multiple choice and multiple select",
+  "testing_method": "Testing center or online proctored",
+  "validity_period_months": 36
+}

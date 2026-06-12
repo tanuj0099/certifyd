@@ -20,9 +20,13 @@ function getDifficultyStyle(level) {
 }
 
 function formatDualCost(cost_inr, cost_usd) {
-  if (!cost_inr && !cost_usd) return 'Free';
-  const inrStr = cost_inr ? `₹${Number(cost_inr).toLocaleString('en-IN')}` : '';
-  const usdStr = cost_usd ? `$${Number(cost_usd).toLocaleString()}` : '';
+  const numInr = Number(cost_inr);
+  const numUsd = Number(cost_usd);
+  if (!numInr && !numUsd) return 'Varies';
+  
+  const inrStr = numInr ? `₹${numInr.toLocaleString('en-IN')}` : '';
+  const usdStr = numUsd ? `$${numUsd.toLocaleString()}` : '';
+  
   if (inrStr && usdStr) return `${inrStr}/${usdStr}`;
   return inrStr || usdStr;
 }

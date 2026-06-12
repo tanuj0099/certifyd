@@ -40,6 +40,19 @@ const FILTER_SECTIONS = [
   }
 ];
 
+const VALID_PIVOTS = {
+  tech: ['Cloud', 'Security', 'Data', 'Networking', 'Management'],
+  data: ['Cloud', 'Security', 'Management'],
+  cybersecurity: ['Cloud', 'Networking', 'Management'],
+  finance: ['Data', 'Management'],
+  management: ['Data', 'Management'],
+  marketing: ['Data', 'Management'],
+  hr: ['Data', 'Management'],
+  business: ['Data', 'Management'],
+  government: ['Data', 'Management', 'Security'],
+  medical: ['Data', 'Management'],
+};
+
 // Reusable Accordion Component
 const FilterAccordion = ({ section, selectedOptions, toggleOption }) => {
   const [isOpen, setIsOpen] = useState(true);
@@ -109,7 +122,10 @@ export default function FilterSidebar({
   filters, 
   setFilters, 
   isMobileOpen, 
-  setIsMobileOpen 
+  setIsMobileOpen,
+  activeIntent,
+  activeTarget,
+  resumeDomain
 }) {
   const toggleOption = (category, optionId) => {
     setFilters(prev => {
@@ -133,6 +149,27 @@ export default function FilterSidebar({
                             (filters.difficulties?.length || 0) + 
                             (filters.tracks?.length || 0);
 
+  const dynamicSections = React.useMemo(() => {
+    return FILTER_SECTIONS.map(section => {
+      if (section.id === 'tracks' && activeIntent === 'Domain_Pivot') {
+        // If they already chose a target domain, hide the 'tracks' filter
+        // because it is strictly filtered at the database level.
+        if (activeTarget) {
+          return null;
+        }
+        // Otherwise, only show realistic pivot destinations based on their current domain.
+        if (resumeDomain && VALID_PIVOTS[resumeDomain]) {
+          const allowed = VALID_PIVOTS[resumeDomain];
+          return {
+            ...section,
+            options: section.options.filter(o => allowed.includes(o.id))
+          };
+        }
+      }
+      return section;
+    }).filter(Boolean);
+  }, [activeIntent, activeTarget, resumeDomain]);
+
   const SidebarContent = () => (
     <div className="h-full flex flex-col bg-transparent md:bg-transparent">
       {/* Header */}
@@ -154,7 +191,7 @@ export default function FilterSidebar({
 
       {/* Scrollable Filters */}
       <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar mt-2" style={{ scrollbarWidth: 'thin' }}>
-        {FILTER_SECTIONS.map((section) => (
+        {dynamicSections.map((section) => (
           <FilterAccordion 
             key={section.id} 
             section={section} 

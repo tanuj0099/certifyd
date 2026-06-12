@@ -1,30 +1,24 @@
 {
-    "source_url": "https://learn.microsoft.com/en-in/credentials/certifications/github-actions/",
-    "title": "GitHub Actions",
-    "tagline": "This exam is designed for DevOps engineers, software developers, and IT professionals with intermediate level experience in GitHub Actions, including workflow creation, automation, and CI/CD pipeline management.",
-    "overview": "Candidates for this certification should have expertise in automating software development workflows with GitHub Actions. This includes creating and maintaining workflows and actions, managing GitHub Actions at scale, and ensuring secure and efficient automation for organizations and enterprises. Candidates should also be familiar with CI/CD, GitHub repositories, GitHub Packages, and integrating third-party services. Experience the look and feel of the exam before taking it. You'll be able to interact with different question types in the same user interface you'll use during the exam.",
-    "skills_measured": [
-        "Author and manage workflows",
-        "Consume and troubleshoot workflows",
-        "Author and maintain actions",
-        "Manage GitHub Actions for the enterprise",
-        "Secure and optimize automation"
-    ],
-    "prerequisites": [],
-    "exam_code": "GH-200",
-    "cost_inr": 308198.5,
-    "cost_usd": 3691.0,
-    "eligibility": "Candidates for this certification should have expertise in automating software development workflows with GitHub Actions. This includes creating and maintaining workflows and actions, managing GitHub Actions at scale, and ensuring secure and efficient automation for organizations and enterprises. Candidates should also be familiar with CI/CD, GitHub repositories, GitHub Packages, and integrating third-party services. Experience the look and feel of the exam before taking it. You'll be able to interact with different question types in the same user interface you'll use during the exam.",
-    "level": "Intermediate",
-    "job_roles": [
-        "Administrator",
-        "Developer",
-        "DevOps Engineer",
-        "Solution Architect",
-        "Student"
-    ],
-    "languages": [
-        "English"
-    ],
-    "retirement_date": null
+  "source_url": "https://www.isc2.org/certifications/cissp",
+  "title": "CISSP - Certified Information Systems Security Professional",
+  "slug": "isc2-cissp",
+  "overview": "Official ISC2 Certification.",
+  "cost_usd": 749.0,
+  "cost_inr": 71664.32,
+  "eligibility": "See ISC2 official site.",
+  "level": "Professional",
+  "job_roles": [],
+  "skills_measured": [
+    "Chief Information Security Officer",
+    "Chief Information Officer",
+    "Director of Security",
+    "IT Director/Manager",
+    "Security Systems Engineer",
+    "Security Analyst"
+  ],
+  "exam_duration_minutes": 180,
+  "total_questions": 125,
+  "exam_format_type": "Standard Proctored Exam",
+  "testing_method": "Online Proctored & Testing Center",
+  "validity_period_months": 36
 }
