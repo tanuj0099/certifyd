@@ -21,8 +21,8 @@ var F_MONO = 'var(--font-mono)'
 var F_BODY = 'var(--font-body)'
 
 var COLORS = ['var(--linear-blue)', 'var(--linear-blue)', 'var(--cool-grey)', '#E11D48']
-var COL_A = '#8B5CF6'       // Cert A — vibrant violet (visible in both modes)
-var COL_B = '#3B82F6'       // Cert B — sky blue (distinct, accessible)
+var COL_A = '#10B981'       // Cert A — Professional Emerald
+var COL_B = '#F59E0B'       // Cert B — Professional Amber
 
 function demandColor(d) {
   return d === 'Very High' ? 'var(--linear-blue)' : d === 'High' ? 'var(--linear-blue)' : d === 'Medium' ? 'var(--cool-grey)' : '#94A3B8'
@@ -364,9 +364,18 @@ function CertCompare({ salary, prefilledCert }) {
     var annualGain = sal * 100000 * cert.avgHike / 100
     var breakEven = annualGain > 0 ? Math.ceil(cert.avgCost / (annualGain / 12)) : 0
     var fiveYearNet = ((annualGain * 5 - cert.avgCost) / 100000).toFixed(1)
-    var roiPct = cert.avgCost > 0 ? Math.round((annualGain * 5 - cert.avgCost) / cert.avgCost * 100) : 0
+    
+    // Calculate 5-Yr CAGR % instead of raw ROI
+    var cagrPct = 0;
+    if (cert.avgCost > 0 && annualGain > 0) {
+      // Future value is 5 years of annual gain
+      const fv = annualGain * 5;
+      const pv = cert.avgCost;
+      cagrPct = Math.round((Math.pow(fv / pv, 1/5) - 1) * 100);
+    }
+    
     var annualGainL = (annualGain / 100000).toFixed(1)
-    return { breakEven: breakEven, fiveYearNet: fiveYearNet, roiPct: roiPct, annualGain: annualGainL }
+    return { breakEven: breakEven, fiveYearNet: fiveYearNet, cagrPct: cagrPct, annualGain: annualGainL }
   }, [])
 
   var roiA = roiCalc(dataA, actualSalary)
@@ -384,7 +393,7 @@ function CertCompare({ salary, prefilledCert }) {
     { label: 'Cert Cost',       vA: formatDualCost(dataA.avgCost, dataA.avgCostUSD), vB: formatDualCost(dataB.avgCost, dataB.avgCostUSD), win: (dataA.avgCost || Infinity) < (dataB.avgCost || Infinity) ? 'A' : 'B', winIcon: <DollarSign size={10} /> },
     { label: 'Study Time',      vA: dataA.timeMonths > 0 ? dataA.timeMonths + ' mo' : '--', vB: dataB.timeMonths > 0 ? dataB.timeMonths + ' mo' : '--', win: dataA.timeMonths < dataB.timeMonths ? 'A' : 'B', winIcon: <Zap size={10} /> },
     { label: '5-Yr Net Gain',   vA: parseFloat(roiA.fiveYearNet) > 0 ? '₹' + roiA.fiveYearNet + 'L' : '--', vB: parseFloat(roiB.fiveYearNet) > 0 ? '₹' + roiB.fiveYearNet + 'L' : '--', win: parseFloat(roiA.fiveYearNet) > parseFloat(roiB.fiveYearNet) ? 'A' : 'B', winIcon: <TrendingUp size={10} /> },
-    { label: '5-Yr ROI %',      vA: roiA.roiPct > 0 ? roiA.roiPct + '%' : '--', vB: roiB.roiPct > 0 ? roiB.roiPct + '%' : '--', win: roiA.roiPct > roiB.roiPct ? 'A' : 'B', winIcon: <TrendingUp size={10} /> },
+    { label: 'CAGR %',          vA: roiA.cagrPct > 0 ? roiA.cagrPct + '%' : '--', vB: roiB.cagrPct > 0 ? roiB.cagrPct + '%' : '--', win: roiA.cagrPct > roiB.cagrPct ? 'A' : 'B', winIcon: <TrendingUp size={10} /> },
     { label: 'Break-even',      vA: roiA.breakEven > 0 ? roiA.breakEven + ' mo' : '--', vB: roiB.breakEven > 0 ? roiB.breakEven + ' mo' : '--', win: roiA.breakEven < roiB.breakEven ? 'A' : 'B', winIcon: <Zap size={10} /> },
     { label: 'Market Demand',   vA: dataA.demand || '--', vB: dataB.demand || '--', win: demandScore(dataA.demand) >= demandScore(dataB.demand) ? 'A' : 'B', winIcon: <TrendingUp size={10} /> },
     { label: 'Annual Salary +', vA: parseFloat(roiA.annualGain) > 0 ? '₹' + roiA.annualGain + 'L' : '--', vB: parseFloat(roiB.annualGain) > 0 ? '₹' + roiB.annualGain + 'L' : '--', win: parseFloat(roiA.annualGain) > parseFloat(roiB.annualGain) ? 'A' : 'B', winIcon: <DollarSign size={10} /> },
@@ -612,7 +621,12 @@ function CertCompare({ salary, prefilledCert }) {
             >
               {[{ cert: dataA, color: COL_A }, { cert: dataB, color: COL_B }].map(function (item, i) {
                 var tags = Array.isArray(item.cert.tags) ? item.cert.tags : []
-                var domain = item.cert.domain_name || item.cert.domain || item.cert.provider || null
+                var rawDomain = item.cert.domain_name || item.cert.domain || item.cert.provider || null
+                var domain = rawDomain;
+                if (rawDomain && CERT_DOMAINS && CERT_DOMAINS.length > 0) {
+                  const match = CERT_DOMAINS.find(function(d) { return d.id === rawDomain });
+                  if (match) domain = match.label;
+                }
                 return (
                   <div key={i} style={{ padding: '14px', borderRadius: '10px', background: item.color + '07', border: '1px solid ' + item.color + '20' }}>
                     <div style={{ fontFamily: F_MONO, fontSize: '9px', color: item.color, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '7px' }}>Best for</div>
