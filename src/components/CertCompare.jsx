@@ -426,8 +426,8 @@ function CertCompare({ salary, prefilledCert }) {
               justifyContent: 'center',
               backdropFilter: 'blur(12px)',
               WebkitBackdropFilter: 'blur(12px)',
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.09)',
+              background: 'var(--bg-surface)',
+              border: '1px solid var(--border)',
               borderRadius: '20px',
               padding: '40px 32px',
               textAlign: 'center',
@@ -436,21 +436,20 @@ function CertCompare({ salary, prefilledCert }) {
             }}
           >
             {/* Icon */}
-            <div style={{
               width: '56px', height: '56px', borderRadius: '16px',
-              background: 'rgba(255,255,255,0.06)',
-              border: '1px solid rgba(255,255,255,0.12)',
+              background: 'color-mix(in srgb, var(--text) 4%, transparent)',
+              border: '1px solid color-mix(in srgb, var(--text) 10%, transparent)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               marginBottom: '4px',
             }}>
-              <Scale size={24} color="rgba(255,255,255,0.30)" />
+              <Scale size={24} color="var(--text-4)" />
             </div>
             {/* Heading */}
-            <div style={{ fontFamily: F_HEAD, fontSize: '16px', fontWeight: '700', color: 'rgba(255,255,255,0.70)', letterSpacing: '-0.02em' }}>
+            <div style={{ fontFamily: F_HEAD, fontSize: '16px', fontWeight: '700', color: 'var(--text-2)', letterSpacing: '-0.02em' }}>
               Multi-Axis Comparison
             </div>
             {/* Body */}
-            <div style={{ fontFamily: F_BODY, fontSize: '14px', color: 'rgba(255,255,255,0.35)', lineHeight: '1.6', maxWidth: '32ch' }}>
+            <div style={{ fontFamily: F_BODY, fontSize: '14px', color: 'var(--text-3)', lineHeight: '1.6', maxWidth: '32ch' }}>
               Select two certifications and enter your current salary to unlock the multi-axis comparison.
             </div>
             {/* Checklist chips */}
@@ -464,9 +463,9 @@ function CertCompare({ salary, prefilledCert }) {
                   <span key={item.label} style={{
                     padding: '4px 12px', borderRadius: '100px', fontSize: '11px',
                     fontFamily: F_MONO, fontWeight: '700', letterSpacing: '0.06em',
-                    background: item.done ? 'rgba(96,165,250,0.15)' : 'rgba(255,255,255,0.06)',
-                    border: '1px solid ' + (item.done ? 'rgba(96,165,250,0.35)' : 'rgba(255,255,255,0.10)'),
-                    color: item.done ? '#60A5FA' : 'rgba(255,255,255,0.30)',
+                    background: item.done ? 'rgba(96,165,250,0.15)' : 'color-mix(in srgb, var(--text) 4%, transparent)',
+                    border: '1px solid ' + (item.done ? 'rgba(96,165,250,0.35)' : 'color-mix(in srgb, var(--text) 10%, transparent)'),
+                    color: item.done ? '#60A5FA' : 'var(--text-4)',
                   }}>
                     {item.done ? '✓ ' : ''}{item.label}
                   </span>
