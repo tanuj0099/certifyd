@@ -107,12 +107,10 @@ export function MarketingFooter() {
       <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '24px', marginBottom: '28px' }}>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
-              <div style={{ width: '26px', height: '26px', background: 'var(--accent)', borderRadius: '7px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <TrendingUp size={13} color="var(--bg)" />
-              </div>
-              <span style={{ fontFamily: FH, fontWeight: '800', fontSize: '15px', color: 'var(--text)', letterSpacing: '-0.01em' }}>
-                Certify<span style={{ color: 'var(--accent)' }}>d</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+              <img src="/logo.svg" alt="Certifyd Logo" style={{ height: '28px', width: 'auto' }} />
+              <span style={{ fontFamily: '"Playfair Display", serif', fontWeight: '900', fontSize: '20px', color: 'var(--text)', letterSpacing: '-0.03em' }}>
+                Certifyd.in
               </span>
             </div>
             <p style={{ fontFamily: FB, fontSize: '13px', lineHeight: '1.7', color: 'var(--text-4)', maxWidth: '260px', margin: 0 }}>
