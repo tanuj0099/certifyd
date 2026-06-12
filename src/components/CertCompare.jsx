@@ -177,7 +177,6 @@ function CertSelector({ value, onChange, label, color, certifications, domains }
                   </button>
                 )
               })}
-              <div style={{fontSize: '10px', color: 'red'}}>DEBUG domain: {domain} | Filtered: {filtered.length}</div>
             </div>
 
             <div style={{ padding: '8px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '8px' }}>
