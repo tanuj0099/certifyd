@@ -42,7 +42,8 @@ function GlobalUI({ children }) {
     'app', 'about', 'features', 'how-it-works', 'pricing', 'blog', 
     'faq', 'contact', 'profile', 'cert-radar', 'tools',
     'dashboard', 'offer-analysis', 'market-pulse', 'choose-path',
-    'privacy', 'terms'
+    'privacy', 'terms', 'cookies', 'unauthorized', 'not-found',
+    'sentry-example-page', 'user-profile', 'onboarding'
   ]);
 
   const isToolPage = currentPage.startsWith('tools/') ||
