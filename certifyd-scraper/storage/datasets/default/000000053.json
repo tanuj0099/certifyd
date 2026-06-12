@@ -1,0 +1,22 @@
+{
+  "source_url": "https://www.lpi.org/our-certifications/linux-essentials-overview/",
+  "title": "Linux Professional Institute Linux Essentials",
+  "tagline": "Linux Professional Institute Linux Essentials",
+  "overview": "Linux adoption continues to rise worldwide as individual users, government entities and industries ranging from automotive to space exploration embrace open source technologies. This expansion of open source in enterprise is redefining traditional Information and Communication Technology (ICT) job roles to require more Linux skills. Whether you’re starting your career in open source, or looking for advancement, independently verifying your skill set can help you stand out to hiring managers or your management team. The Linux Essentials certificate also serves as a great introduction to the more complete and advanced Linux Professional certification track.",
+  "skills_measured": [
+    "Review the official LPI exam blueprint for a detailed breakdown of skills measured."
+  ],
+  "prerequisites": [],
+  "exam_code": "PENDING-linux-essentials-overview",
+  "cost_usd": 200.0,
+  "cost_inr": 19074.0,
+  "eligibility": "None stated.",
+  "level": "Foundational",
+  "job_roles": [
+    "Linux Professional"
+  ],
+  "languages": [
+    "English"
+  ],
+  "retirement_date": null
+}

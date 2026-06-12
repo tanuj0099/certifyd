@@ -1,0 +1,24 @@
+{
+    "source_url": "https://www.comptia.org/en-us/certifications/cybersecurity-analyst/v3/",
+    "title": "CySA+ V3",
+    "tagline": "CySA+ V3",
+    "overview": "CompTIA Cybersecurity Analyst (CySA+) is the premier certification for cyber professionals tasked with incident detection, prevention, and response through continuous security monitoring. It validates a tech professional's expertise in incident response and vulnerability management processes, emphasizing the critical communication skills necessary for effective security analysis and compliance. Build skills with CompTIA training and validate them with CySA+ certification.",
+    "skills_measured": [
+        "Review the official CompTIA exam blueprint for a detailed breakdown of skills measured."
+    ],
+    "prerequisites": [
+        "Recommended experience: Network+, Security+, or equivalent knowledge, with a minimum of 4 years of hands-on experience as an incident response analyst, security operations center (SOC) analyst, or equivalent experience"
+    ],
+    "exam_code": "PENDING-",
+    "cost_usd": 200.0,
+    "cost_inr": 16700.0,
+    "eligibility": "None stated.",
+    "level": "Foundational",
+    "job_roles": [
+        "IT Professional"
+    ],
+    "languages": [
+        "English"
+    ],
+    "retirement_date": null
+}

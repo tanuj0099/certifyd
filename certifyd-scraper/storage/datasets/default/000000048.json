@@ -1,0 +1,22 @@
+{
+    "source_url": "https://www.comptia.org/en-us/certifications/tech/",
+    "title": "Tech+",
+    "tagline": "Tech+",
+    "overview": "CompTIA Tech+ is the essential certification for anyone exploring a career in tech. It provides you with the foundational knowledge and hands-on skills needed to navigate today\u2019s digital world, giving you the confidence to take the first step toward a tech-related career. CompTIA Tech+ focuses on practical, real-world skills that help you understand core tech concepts, troubleshoot basic issues, and build a strong foundation for future learning and growth in the tech industry. Understand notational systems, computing basics, the value of data, and troubleshooting methodology.",
+    "skills_measured": [
+        "Review the official CompTIA exam blueprint for a detailed breakdown of skills measured."
+    ],
+    "prerequisites": [],
+    "exam_code": "PENDING-",
+    "cost_usd": 200.0,
+    "cost_inr": 16700.0,
+    "eligibility": "None stated.",
+    "level": "Foundational",
+    "job_roles": [
+        "IT Professional"
+    ],
+    "languages": [
+        "English"
+    ],
+    "retirement_date": null
+}

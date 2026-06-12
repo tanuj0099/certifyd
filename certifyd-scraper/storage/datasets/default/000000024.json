@@ -1,0 +1,26 @@
+{
+    "source_url": "https://learn.microsoft.com/en-in/credentials/certifications/azure-database-administrator-associate/",
+    "title": "Microsoft Certified: Azure Database Administrator Associate",
+    "tagline": "Administer an SQL Server database infrastructure for cloud, on-premises and hybrid relational databases using the Microsoft PaaS relational database offerings.",
+    "overview": "As a candidate for this certification, you should have subject matter expertise in building database solutions that are designed to support multiple workloads built with: Azure SQL services SQL Server on-premises You\u2019re a database administrator who manages cloud and on-premises databases built with Azure SQL services and SQL Server. As the Azure database administrator, you implement and manage the operational aspects of cloud-native and hybrid data platform solutions built on Azure SQL services and SQL Server. You use a variety of methods and tools to perform and automate day-to-day operations, including applying knowledge of using Transact-SQL (T-SQL) and other tools for administrative management purposes. You\u2019re responsible for the following concerning database solutions: Management Availability Security Performance monitoring and optimization You evaluate and implement migration strategies for moving databases between Azure and on-premises. Plus, you work with Azure data engineers, Azure solution architects, Azure developers, data scientists, and other professionals to manage operational aspects of data platform solutions. As a candidate for this certification, you should have knowledge of and experience with: Azure SQL Database Azure SQL Managed Instance SQL Server on Azure Virtual Machines (Windows and Linux) SQL Server on-premises",
+    "skills_measured": [
+        "Plan and implement data platform resources",
+        "Implement a secure environment",
+        "Monitor, configure, and optimize database resources",
+        "Configure and manage automation of tasks",
+        "Plan and configure a high availability and disaster recovery (HA/DR) environment"
+    ],
+    "prerequisites": [],
+    "exam_code": "DP-300",
+    "cost_inr": 406227.5,
+    "cost_usd": 4865.0,
+    "eligibility": "As a candidate for this certification, you should have subject matter expertise in building database solutions that are designed to support multiple workloads built with: Azure SQL services SQL Server on-premises You\u2019re a database administrator who manages cloud and on-premises databases built with Azure SQL services and SQL Server. As the Azure database administrator, you implement and manage the operational aspects of cloud-native and hybrid data platform solutions built on Azure SQL services and SQL Server. You use a variety of methods and tools to perform and automate day-to-day operations, including applying knowledge of using Transact-SQL (T-SQL) and other tools for administrative management purposes. You\u2019re responsible for the following concerning database solutions: Management Availability Security Performance monitoring and optimization You evaluate and implement migration strategies for moving databases between Azure and on-premises. Plus, you work with Azure data engineers, Azure solution architects, Azure developers, data scientists, and other professionals to manage operational aspects of data platform solutions. As a candidate for this certification, you should have knowledge of and experience with: Azure SQL Database Azure SQL Managed Instance SQL Server on Azure Virtual Machines (Windows and Linux) SQL Server on-premises",
+    "level": "Intermediate",
+    "job_roles": [
+        "Database Administrator"
+    ],
+    "languages": [
+        "English"
+    ],
+    "retirement_date": null
+}

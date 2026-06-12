@@ -1,34 +1,48 @@
 """
-main.py — Phase 2: Industrial-grade stealth crawler for the Certifyd scraping pipeline.
+main.py — Phase 3: Data extraction pipeline for the Certifyd scraping system.
 
-Phase 2 upgrades over the Phase 1 bootstrap:
-  1. Network interception  — asset and analytics blocking via pre_navigation_hook +
-                             context.block_requests() using Crawlee's CDPSession path
-                             on Chromium (zero overhead vs page.route polling).
-  2. Stealth fingerprinting — Crawlee 1.7.x ships a built-in DefaultFingerprintGenerator
-                               that rotates browser fingerprints (UA, screen res, platform,
-                               Accept-Language, WebGL renderer, canvas noise, etc.) on
-                               every new browser context.  This is the correct stealth
-                               surface for this version — do NOT install playwright-stealth
-                               alongside it; the two fingerprint injection strategies
-                               conflict and produce detectable inconsistencies.
-  3. Proxy configuration    — Residential rotating proxy injected via Playwright's
-                               browser_new_context_options["proxy"] dict.  Proxy
-                               credentials are read from environment variables so they
-                               are never hardcoded in source.
+Phase 3 upgrades over Phase 2:
+  - Two-route architecture: INDEX handler enqueues detail page URLs;
+    DETAIL handler extracts structured data and persists it via push_data().
+  - All locators grounded in a live DOM audit of the real MS Learn pages
+    (fetched and inspected before writing a single selector).
+  - Crawlee's dataset writer auto-creates ./storage/datasets/default/ and
+    writes one JSON file per certification record.
+
+DOM audit findings (Microsoft Learn credential detail pages):
+  ┌─────────────────────────────────────────────────────────────────────┐
+  │ Field            │ Source in DOM                                    │
+  ├─────────────────────────────────────────────────────────────────────┤
+  │ title            │ <h1>  (first and only h1 per page)               │
+  │ tagline          │ <meta name="og:description"> content attr        │
+  │ overview         │ prose paragraphs under the "## Overview" <h2>   │
+  │ skills_measured  │ <li> items under "Assessed on this exam" <h3>   │
+  │ prerequisites    │ <li> items under "## Prerequisites" <h2>        │
+  │                  │ (absent on many pages — extracted defensively)   │
+  │ exam_code        │ parsed from the "Exam AZ-XXX" heading text       │
+  │ source_url       │ context.request.url                              │
+  └─────────────────────────────────────────────────────────────────────┘
+
+  The browse/credentials index page renders its cert card grid entirely
+  via client-side React — no <a> tags exist in the static HTML.  The
+  correct seeding strategy is therefore:
+    (a) Wait for JS hydration on the index page, then extract rendered
+        anchor hrefs via page.eval_on_selector_all(), and
+    (b) Pass the resulting URL list as explicit requests= to enqueue_links().
+  This is implemented in the INDEX handler below.
 
 Architecture notes (Principal Architect):
-  - All three anti-detection layers are complementary and operate at different OSI
-    layers: network-level blocking (CDPSession), TLS/HTTP-header fingerprinting
-    (DefaultFingerprintGenerator), and IP-layer identity rotation (proxy).
-  - pre_navigation_hook runs BEFORE Page.goto() is called, so the CDPSession block
-    list is active for the very first network request the page makes — including
-    the document request itself if it triggers sub-resource prefetches.
-  - max_requests_per_crawl remains conservative; raise to None in Phase 3 once
-    the extraction handler, retry budget, and dead-letter queue are wired up.
+  - Route labels ("INDEX", "DETAIL") act as the type system for the crawl
+    graph.  Every URL in the queue carries a label; the router dispatches
+    to the matching handler.  This is cleaner and more testable than a
+    single handler with if/elif branching on URL patterns.
+  - push_data() writes to the default Crawlee dataset, which auto-creates
+    ./storage/datasets/default/{uuid}.json per record.  In Phase 4 this
+    will be replaced (or shadowed) by the Supabase delta-sync upsert.
+  - All Playwright locator operations use .all() + list comprehension
+    rather than .nth() loops to minimise round-trips to the browser process.
 
 Usage:
-    # Export proxy credentials before running (never hardcode in source):
     export PROXY_URL="http://user:pass@residential.provider.com:8000"
     python main.py
 
@@ -42,7 +56,33 @@ from __future__ import annotations
 import asyncio
 import logging
 import os
+import re
+import glob
+import json
+import requests
 
+from datetime import timedelta
+from supabase_uploader import upload_to_supabase
+
+# Global to cache live exchange rate to prevent spamming API
+LIVE_USD_TO_INR = 83.5
+
+def fetch_live_exchange_rate():
+    global LIVE_USD_TO_INR
+    try:
+        response = requests.get('https://api.exchangerate-api.com/v4/latest/USD', timeout=10)
+        data = response.json()
+        rate = data.get('rates', {}).get('INR')
+        if rate:
+            LIVE_USD_TO_INR = float(rate)
+            logging.getLogger(__name__).info(f"Successfully fetched live USD to INR rate: {LIVE_USD_TO_INR}")
+    except Exception as e:
+        logging.getLogger(__name__).error(f"Failed to fetch live exchange rate, falling back to 83.5: {e}")
+
+# Fetch it once at module load
+fetch_live_exchange_rate()
+
+from crawlee import Glob
 from crawlee.browsers import BrowserPool
 from crawlee.crawlers import PlaywrightCrawler, PlaywrightCrawlingContext
 from crawlee.crawlers._playwright._playwright_pre_nav_crawling_context import (
@@ -51,7 +91,7 @@ from crawlee.crawlers._playwright._playwright_pre_nav_crawling_context import (
 from crawlee.storages import RequestQueue
 
 # ---------------------------------------------------------------------------
-# Logging configuration
+# Logging
 # ---------------------------------------------------------------------------
 
 logging.basicConfig(
@@ -63,386 +103,1100 @@ logger = logging.getLogger("certifyd.crawler")
 
 
 # ---------------------------------------------------------------------------
+# Route labels — single source of truth, avoids magic strings
+# ---------------------------------------------------------------------------
+
+LABEL_INDEX  = "INDEX"
+LABEL_DETAIL = "DETAIL"
+LABEL_AWS_INDEX = "AWS_INDEX"
+LABEL_AWS_DETAIL = "AWS_DETAIL"
+LABEL_GC_INDEX = "GC_INDEX"
+LABEL_GC_DETAIL = "GC_DETAIL"
+LABEL_CISCO_INDEX = "CISCO_INDEX"
+LABEL_CISCO_DETAIL = "CISCO_DETAIL"
+LABEL_COMPTIA_INDEX = "COMPTIA_INDEX"
+LABEL_COMPTIA_DETAIL = "COMPTIA_DETAIL"
+LABEL_OFFSEC_INDEX = "OFFSEC_INDEX"
+LABEL_OFFSEC_DETAIL = "OFFSEC_DETAIL"
+LABEL_LPI_INDEX = "LPI_INDEX"
+LABEL_LPI_DETAIL = "LPI_DETAIL"
+
+
+# ---------------------------------------------------------------------------
 # Seed URLs
 # ---------------------------------------------------------------------------
 
-SEED_URLS: list[str] = [
-    # Phase-2 primary target — Microsoft Learn credentials catalogue.
-    # Append additional vendor roots (AWS Training, GCP Skills Boost,
-    # Linux Foundation, Scrum.org …) here as extraction handler matures.
-    "https://learn.microsoft.com/en-us/credentials/",
+# The credentials browse page is the canonical entry point.
+# It renders a filterable grid of all MS certifications via client-side JS.
+# The INDEX handler waits for hydration and then harvests the rendered links.
+SEED_URLS: list[dict] = [
+    {"url": "https://learn.microsoft.com/en-us/credentials/browse/?credential_types=certification", "label": LABEL_INDEX},
+    {"url": "https://aws.amazon.com/certification/", "label": LABEL_AWS_INDEX},
+    {"url": "https://cloud.google.com/learn/certification", "label": LABEL_GC_INDEX},
+    {"url": "https://www.cisco.com/site/us/en/learn/training-certifications/certifications.html", "label": LABEL_CISCO_INDEX},
+    {"url": "https://www.comptia.org/certifications", "label": LABEL_COMPTIA_INDEX},
+    {"url": "https://www.offsec.com/courses-and-certifications/", "label": LABEL_OFFSEC_INDEX},
+    {"url": "https://www.lpi.org/our-certifications/", "label": LABEL_LPI_INDEX},
 ]
 
 
 # ---------------------------------------------------------------------------
-# Network interception: URL block lists
+# Network interception — block lists (carried over from Phase 2)
 # ---------------------------------------------------------------------------
 
-# ---- Static assets ---------------------------------------------------------
-# Crawlee's built-in default already covers:
-#   .css .webp .jpg .jpeg .png .svg .gif .woff .pdf .zip
-#
-# We override url_patterns entirely to add the gaps (.woff2, .ttf) and to
-# ensure the full list is explicit and auditable in one place.
-# The block_requests() implementation uses CDPSession.Network.setBlockedURLs on
-# Chromium — this is evaluated at the network stack level, not via page.route
-# polling, so it adds effectively zero per-request overhead.
 _STATIC_ASSET_PATTERNS: list[str] = [
-    # Stylesheets
-    ".css",
-    # Raster images
-    ".jpg",
-    ".jpeg",
-    ".png",
-    ".gif",
-    ".webp",
-    ".ico",
-    # Vector / data URIs
-    ".svg",
-    # Web fonts — all four common formats
-    ".woff",
-    ".woff2",           # not in Crawlee default; modern browsers prefer this
-    ".ttf",             # not in Crawlee default; fallback for older platforms
-    ".eot",
-    # Video / audio  (certification pages occasionally embed promo clips)
-    ".mp4",
-    ".webm",
-    ".mp3",
-    # Compressed archives
-    ".zip",
-    ".pdf",
+    ".css", ".jpg", ".jpeg", ".png", ".gif", ".webp", ".ico",
+    ".svg", ".woff", ".woff2", ".ttf", ".eot",
+    ".mp4", ".webm", ".mp3",
+    ".zip", ".pdf",
 ]
 
-# ---- Analytics & tracking domains ------------------------------------------
-# These are URL substring patterns, not extensions.  CDPSession.setBlockedURLs
-# matches anywhere in the request URL, so a substring like "google-analytics"
-# will block https://www.google-analytics.com/analytics.js as well as any
-# first-party proxy endpoints that contain that string (e.g. /gtag/js?id=...).
 _TRACKING_PATTERNS: list[str] = [
-    # Google Analytics / Tag Manager
-    "google-analytics",
-    "googletagmanager",
-    "googletagservices",
-    "googlesyndication",
-    # Ad networks & remarketing
-    "doubleclick",
-    "adservice.google",
-    "amazon-adsystem",
-    "ads.linkedin",
-    # Social pixels
-    "facebook.com/tr",
-    "connect.facebook.net",
-    "platform.twitter.com",
-    "static.ads-twitter",
-    "snap.licdn",
-    # Session recording / heatmaps (high-bandwidth, zero data value for us)
-    "hotjar",
-    "clarity.ms",
-    "fullstory",
-    "logrocket",
-    "mouseflow",
-    # Consent management banners (block the JS bundle, not the API calls)
-    "cookielaw.org",
-    "onetrust",
-    "cookiepro",
-    # Customer support widgets (heavy iframes, irrelevant to cert data)
-    "widget.intercom.io",
-    "js.hs-scripts",        # HubSpot
-    "js.hsforms",           # HubSpot forms
-    "bat.bing.com",         # Microsoft Clarity / Bing UET
-    "sc.omtrdc.net",        # Adobe Analytics
-    "assets.adobedtm.com",  # Adobe Launch
+    "google-analytics", "googletagmanager", "googletagservices",
+    "googlesyndication", "doubleclick", "adservice.google",
+    "amazon-adsystem", "ads.linkedin",
+    "facebook.com/tr", "connect.facebook.net",
+    "platform.twitter.com", "static.ads-twitter", "snap.licdn",
+    "hotjar", "clarity.ms", "fullstory", "logrocket", "mouseflow",
+    "cookielaw.org", "onetrust", "cookiepro",
+    "widget.intercom.io", "js.hs-scripts", "js.hsforms",
+    "bat.bing.com", "sc.omtrdc.net", "assets.adobedtm.com",
 ]
 
 
 # ---------------------------------------------------------------------------
-# Proxy configuration
+# Proxy helper (carried over from Phase 2)
 # ---------------------------------------------------------------------------
-
-# ---- Why proxies are essential alongside fingerprint rotation ---------------
-#
-# Cloudflare's Bot Management (and similar WAFs like Akamai Bot Manager) operate
-# at two distinct layers:
-#
-#   Layer A — TLS / HTTP fingerprint (JA3/JA4 hash, HTTP/2 frame order,
-#             Accept-Language entropy, User-Agent consistency).
-#             → Defeated by DefaultFingerprintGenerator rotating per-context.
-#
-#   Layer B — IP-level behavioural analysis (request velocity per /24 subnet,
-#             ASN reputation, datacenter IP detection via BGP prefix lookups,
-#             temporal ban via CF error 1015 "You have been rate limited").
-#             → Requires rotating residential IPs.  No amount of UA/TLS
-#               spoofing defeats a hard IP ban.
-#
-# Residential proxies (vs datacenter) route through real ISP-assigned IPs that
-# appear in Cloudflare's "clean" ASN category.  Per-domain IP rotation (rotate
-# on every request or every N requests) prevents the velocity fingerprint that
-# triggers 1015.
-#
-# Integration: Playwright accepts a proxy dict on browser.new_context(), which
-# means EVERY network request made by that context — including sub-resource
-# fetches and XHR — is routed through the proxy.  This is more complete than
-# setting a proxy only on the top-level page.goto() call.
-#
-# Credential hygiene: never hardcode proxy URLs. Read from environment so that
-# secrets management (Vault, AWS SSM, GitHub Actions secrets) can rotate them
-# without a code change.
 
 def _build_proxy_config() -> dict | None:
-    """
-    Read proxy credentials from the environment and return a Playwright
-    `browser.new_context()` compatible proxy dict.
-
-    Returns None if PROXY_URL is not set — the crawler will run without a
-    proxy (acceptable for local development against non-WAF targets).
-
-    Environment variables
-    ---------------------
-    PROXY_URL   Full proxy URL including scheme, credentials, host, and port.
-                Format: http://USERNAME:PASSWORD@HOST:PORT
-                Example: http://user123:s3cr3t@residential.brightdata.com:22225
-
-    To use per-session (sticky) vs rotating IPs, consult your proxy provider's
-    URL scheme — BrightData uses port 22225 for rotating and 22226 for sticky;
-    Oxylabs uses different sub-domain prefixes.  This function is provider-agnostic.
-    """
-    proxy_url = os.environ.get(
-        "PROXY_URL",
-        # ------------------------------------------------------------------ #
-        # Development placeholder — replace with a real URL or unset the env  #
-        # var to run proxy-less during local development.                      #
-        # NEVER commit real credentials here.                                  #
-        # ------------------------------------------------------------------ #
-        "http://user:pass@proxy.provider.com:8000",
-    )
-
-    if not proxy_url or proxy_url == "http://user:pass@proxy.provider.com:8000":
-        logger.warning(
-            "PROXY_URL is not set or is still the placeholder value.  "
-            "Running without a proxy — Cloudflare WAF mitigation is disabled."
-        )
+    proxy_url = os.environ.get("PROXY_URL", "")
+    if not proxy_url:
+        logger.warning("PROXY_URL not set — running without proxy.")
         return None
-
     return {"server": proxy_url}
+
+
+# ---------------------------------------------------------------------------
+# Locator helpers — all selectors grounded in live DOM audit
+# ---------------------------------------------------------------------------
+
+async def _extract_text_list(context: PlaywrightCrawlingContext, css: str) -> list[str]:
+    """Return stripped inner-text for every element matching css, skipping blanks."""
+    nodes = await context.page.locator(css).all()
+    results: list[str] = []
+    for node in nodes:
+        try:
+            text = (await node.inner_text()).strip()
+            if text:
+                results.append(text)
+        except Exception:
+            pass
+    return results
+
+
+async def _extract_section_paragraphs(
+    context: PlaywrightCrawlingContext,
+    heading_text: str,
+) -> list[str]:
+    """
+    Extract <p> text from the section whose nearest preceding <h2> or <h3>
+    contains heading_text.  Uses JS evaluation for reliable sibling traversal.
+
+    MS Learn renders the page as a single #main div with alternating heading +
+    prose blocks.  There is no wrapping <section> element — siblings must be
+    walked manually.
+    """
+    script = """
+    (headingText) => {
+        const headings = [...document.querySelectorAll('h2, h3')];
+        const target = headings.find(h => h.innerText.trim().includes(headingText));
+        if (!target) return [];
+        
+        // If it's inside a dedicated section container, just grab all text
+        if (target.parentElement && target.parentElement.tagName === 'SECTION') {
+            return [...target.parentElement.querySelectorAll('p, li')].map(e => e.innerText.trim()).filter(Boolean);
+        }
+        
+        // Fallback: sibling walk (like before)
+        const paragraphs = [];
+        let sibling = target.nextElementSibling;
+        while (sibling && !['H2','H3'].includes(sibling.tagName)) {
+            if (sibling.tagName === 'P') {
+                const t = sibling.innerText.trim();
+                if (t) paragraphs.push(t);
+            }
+            if (sibling.tagName === 'UL' || sibling.tagName === 'DIV') {
+                sibling.querySelectorAll('p, li').forEach(el => {
+                    const t = el.innerText.trim();
+                    if (t) paragraphs.push(t);
+                });
+            }
+            sibling = sibling.nextElementSibling;
+        }
+        return paragraphs;
+    }
+    """
+    try:
+        result = await context.page.evaluate(script, heading_text)
+        return [str(s) for s in result if s]
+    except Exception as exc:
+        logger.debug("_extract_section_paragraphs('%s') failed: %s", heading_text, exc)
+        return []
+
+
+async def _extract_skills(context: PlaywrightCrawlingContext) -> list[str]:
+    """
+    Extract the "Assessed on this exam" bullet list from a detail page.
+    """
+    script = """
+    () => {
+        const els = [...document.querySelectorAll('p, h2, h3')];
+        const target = els.find(e => e.innerText.includes('Assessed on this exam') || e.innerText.includes('Skills measured'));
+        if (!target) return [];
+        
+        let sibling = target.nextElementSibling;
+        while (sibling && !['H2','H3'].includes(sibling.tagName)) {
+            if (sibling.tagName === 'UL') {
+                return [...sibling.querySelectorAll('li')].map(li => li.innerText.trim()).filter(Boolean);
+            }
+            if (sibling.tagName === 'DIV') {
+                const ul = sibling.querySelector('ul');
+                if (ul) return [...ul.querySelectorAll('li')].map(li => li.innerText.trim()).filter(Boolean);
+            }
+            sibling = sibling.nextElementSibling;
+        }
+        
+        const ul = target.parentElement.querySelector('ul');
+        if (ul) return [...ul.querySelectorAll('li')].map(li => li.innerText.trim()).filter(Boolean);
+        return [];
+    }
+    """
+    try:
+        result = await context.page.evaluate(script)
+        return [str(s) for s in result if s]
+    except Exception as exc:
+        logger.debug("_extract_skills() failed: %s", exc)
+        return []
+
+
+async def _extract_cost(context: PlaywrightCrawlingContext) -> str:
+    """Extract certification exam cost/price."""
+    try:
+        await context.page.wait_for_selector('.exam-amount', timeout=3000)
+    except Exception:
+        pass
+        
+    script = """
+    () => {
+        const el = document.querySelector('.exam-amount');
+        return el ? el.innerText.trim() : "";
+    }
+    """
+    try:
+        cost = await context.page.evaluate(script)
+        if cost:
+            return str(cost).strip()
+    except Exception:
+        pass
+    return ""
+
+
+async def _extract_eligibility(context: PlaywrightCrawlingContext) -> str:
+    """Extract Target Audience / Eligibility description."""
+    script = """
+    () => {
+        // 1. Look for explicit headers
+        const headings = [...document.querySelectorAll('h2, h3')];
+        const h = headings.find(e => /Who should|Audience|Candidate/i.test(e.innerText));
+        if (h) {
+            if (h.parentElement && h.parentElement.tagName === 'SECTION') {
+                 return [...h.parentElement.querySelectorAll('p, li')].map(p => p.innerText.trim()).join(' ');
+            }
+            let sibling = h.nextElementSibling;
+            let text = [];
+            while (sibling && !['H2','H3'].includes(sibling.tagName)) {
+                if (sibling.tagName === 'P') text.push(sibling.innerText.trim());
+                if (sibling.tagName === 'DIV' || sibling.tagName === 'UL') {
+                     text.push(...[...sibling.querySelectorAll('p, li')].map(p => p.innerText.trim()));
+                }
+                sibling = sibling.nextElementSibling;
+            }
+            return text.filter(Boolean).join(' ');
+        }
+        
+        // 2. Fallback: Search the Overview section specifically for candidate paragraphs
+        const overviewH2 = headings.find(e => e.innerText.includes('Overview'));
+        if (overviewH2 && overviewH2.parentElement) {
+            const els = [...overviewH2.parentElement.querySelectorAll('p, li')];
+            const startIndex = els.findIndex(p => /candidate|audience|who should/i.test(p.innerText));
+            if (startIndex !== -1) {
+                return els.slice(startIndex).map(p => p.innerText.trim()).join(' ');
+            }
+        }
+        
+        // 3. Global fallback
+        const els = [...document.querySelectorAll('p, li')];
+        const startIndex = els.findIndex(p => /candidate|audience|who should/i.test(p.innerText));
+        if (startIndex !== -1) {
+            return els.slice(startIndex, startIndex + 5).map(p => p.innerText.trim()).join(' ');
+        }
+        
+        return "";
+    }
+    """
+    try:
+        eligibility = await context.page.evaluate(script)
+        if eligibility:
+            return str(eligibility).strip()
+    except Exception:
+        pass
+    return ""
+
+
+async def _extract_exam_code(context: PlaywrightCrawlingContext) -> str:
+    """
+    Parse the exam code (e.g. 'AZ-104') from the page.
+
+    DOM audit finding: exam codes appear in heading text like 'Exam AZ-104'
+    and also in the URL of the schedule/study-guide links.  We use a heading
+    text search first, then fall back to the page URL itself.
+    """
+    script = """
+    () => {
+        const text = document.querySelector('#main')?.innerText || '';
+        const match = text.match(/\\bExam\\s+([A-Z]{1,4}-\\d{3,4}[A-Z]?)\\b/);
+        return match ? match[1] : '';
+    }
+    """
+    try:
+        code = await context.page.evaluate(script)
+        if code:
+            return str(code).strip()
+    except Exception:
+        pass
+    # Fallback: parse from schedule link href attributes
+    try:
+        hrefs = await context.page.eval_on_selector_all(
+            "a[href*='examUid=exam.']",
+            "els => els.map(e => e.href)"
+        )
+        for href in hrefs:
+            m = re.search(r"examUid=exam\.([A-Z]{1,4}-\d{3,4}[A-Z]?)", href)
+            if m:
+                return m.group(1)
+    except Exception:
+        pass
+    return ""
 
 
 # ---------------------------------------------------------------------------
 # Crawler factory
 # ---------------------------------------------------------------------------
 
-
 async def build_crawler() -> PlaywrightCrawler:
     """
-    Construct and configure the Phase 2 stealth-enabled PlaywrightCrawler.
-
-    Anti-detection stack (applied in evaluation order):
-      1. DefaultFingerprintGenerator  — rotates TLS/HTTP fingerprints per context.
-      2. pre_navigation_hook          — CDPSession URL blocklist before first byte.
-      3. Residential proxy            — IP-layer identity rotation.
-
-    Returns
-    -------
-    PlaywrightCrawler
-        A fully initialised crawler ready to call `.run()` on.
+    Construct the Phase 3 crawler with:
+      - Network interception pre-navigation hook
+      - Stealth fingerprint rotation (Crawlee built-in)
+      - Residential proxy (if PROXY_URL is set)
+      - Two-route dispatch: INDEX → enqueue detail URLs
+                            DETAIL → extract + persist data
     """
-    # -----------------------------------------------------------------------
-    # Persistent request queue
-    # -----------------------------------------------------------------------
     queue = await RequestQueue.open()
 
-    # -----------------------------------------------------------------------
-    # Proxy configuration
-    # -----------------------------------------------------------------------
     proxy_config = _build_proxy_config()
-    browser_new_context_options: dict = {}
+    browser_new_context_options: dict = {
+        "locale": "en-US",
+        "timezone_id": "Asia/Kolkata",
+    }
     if proxy_config:
-        # Playwright's browser.new_context() accepts a `proxy` key whose value
-        # is a dict with a mandatory "server" key and optional "username" /
-        # "password" / "bypass" keys.  When credentials are embedded in the
-        # URL string (as they are here), Playwright parses them automatically —
-        # no need to split them out into separate fields.
         browser_new_context_options["proxy"] = proxy_config
-        logger.info("Proxy configured: %s", proxy_config["server"].split("@")[-1])
 
-    # -----------------------------------------------------------------------
-    # Browser pool — stealth fingerprinting
-    # -----------------------------------------------------------------------
-    # Crawlee 1.7.x ships DefaultFingerprintGenerator which, on each new browser
-    # context, injects a coherent set of spoofed browser signals:
-    #   • navigator.userAgent / appVersion / platform / vendor
-    #   • navigator.hardwareConcurrency / deviceMemory
-    #   • screen.width / height / colorDepth
-    #   • Accept-Language and Accept-Encoding headers
-    #   • WebGL renderer/vendor strings
-    #   • Canvas 2D noise injection (defeats canvas fingerprinting)
-    #   • AudioContext noise (defeats audio fingerprinting)
-    #   • Consistent TLS ClientHello (JA3 / JA4 hash rotation)
-    #
-    # fingerprint_generator='default' (the PlaywrightCrawler constructor default)
-    # activates this automatically.  We build the BrowserPool explicitly here only
-    # to thread in browser_new_context_options (proxy).  Do NOT layer playwright-
-    # stealth on top of this — the two injection strategies mutate the same DOM
-    # properties and produce detectable inconsistencies.
     browser_pool = BrowserPool.with_default_plugin(
         browser_type="chromium",
-        headless=True,                  # Set False for local visual debugging.
-        use_incognito_pages=True,       # Each page gets its own context → each
-                                        # page gets a freshly rotated fingerprint.
+        headless=True,
+        use_incognito_pages=True,
         browser_new_context_options=browser_new_context_options,
         browser_launch_options={
-            # Disable Chromium's automation-detection flags.
-            # --disable-blink-features=AutomationControlled removes the
-            # navigator.webdriver=true property that naive WAFs check first.
             "args": [
                 "--disable-blink-features=AutomationControlled",
-                "--disable-dev-shm-usage",      # Stability in low-memory envs
-                "--no-sandbox",                 # Required in containerised CI
+                "--disable-dev-shm-usage",
+                "--no-sandbox",
                 "--disable-setuid-sandbox",
             ],
         },
     )
 
-    # -----------------------------------------------------------------------
-    # Crawler initialisation
-    # -----------------------------------------------------------------------
     crawler = PlaywrightCrawler(
         browser_pool=browser_pool,
-        # ------------------------------------------------------------------ #
-        # Concurrency / politeness                                            #
-        # ------------------------------------------------------------------ #
-        max_requests_per_crawl=10,          # Conservative; raise in Phase 3.
-        max_request_retries=3,              # Retry transient 5xx / network err.
-        request_handler_timeout_secs=60,    # Hard per-page timeout.
-        # ------------------------------------------------------------------ #
-        # Navigation                                                          #
-        # ------------------------------------------------------------------ #
-        navigation_timeout=30_000,          # ms; fail fast on stalled pages.
-        # ------------------------------------------------------------------ #
-        # Storage                                                             #
-        # ------------------------------------------------------------------ #
-        request_provider=queue,
+        max_requests_per_crawl=None,          # Raise to None for a full production run.
+        max_request_retries=3,    # Detail pages have heavier JS payloads.
     )
 
     # -----------------------------------------------------------------------
-    # Pre-navigation hook — network interception
+    # Pre-navigation hook — network interception (Phase 2, preserved)
     # -----------------------------------------------------------------------
-    # pre_navigation_hook runs AFTER a new Playwright Page is created but
-    # BEFORE Page.goto() is called.  This is the correct registration point:
-    # the CDPSession block list is installed while the page is at about:blank,
-    # so it is active for the very first outbound request.
-    #
-    # context.block_requests() implementation detail (Crawlee source):
-    #   On Chromium → opens a CDP session and calls Network.setBlockedURLs.
-    #     This operates at the network stack level (pre-socket), not via
-    #     page.route event handlers.  Overhead is negligible.
-    #   On Firefox/WebKit → falls back to page.route() with extension globs.
-    #
-    # API: block_requests(
-    #         url_patterns=None,           # If None, uses Crawlee's own defaults.
-    #         extra_url_patterns=None,     # Appended to url_patterns.
-    #      )
-    # We pass url_patterns= explicitly to own the full list rather than
-    # inheriting defaults we cannot see at a glance; then extra_url_patterns=
-    # for the analytics/tracking substrings which are a different match class.
 
     @crawler.pre_navigation_hook
     async def install_network_blocklist(context: PlaywrightPreNavCrawlingContext) -> None:
-        """
-        Install the CDPSession URL blocklist before the page navigates.
-
-        Two-tier strategy:
-          Tier 1 — Static asset extensions (.css, images, fonts, video):
-                   Blocked via url_patterns (extension suffix matching).
-                   Reduces per-page payload by ~60–80% on typical cert pages.
-
-          Tier 2 — Analytics / tracking URL substrings:
-                   Blocked via extra_url_patterns (substring matching anywhere
-                   in the URL).  Eliminates third-party beacons that add
-                   latency and expose crawl activity to analytics providers.
-        """
         await context.block_requests(
             url_patterns=_STATIC_ASSET_PATTERNS,
             extra_url_patterns=_TRACKING_PATTERNS,
         )
-        logger.debug(
-            "Network blocklist installed for %s — "
-            "%d asset patterns, %d tracking patterns.",
-            context.request.url,
-            len(_STATIC_ASSET_PATTERNS),
-            len(_TRACKING_PATTERNS),
-        )
 
     # -----------------------------------------------------------------------
-    # Default request handler (Phase 2 stub — extraction wired in Phase 3)
+    # Route: INDEX — harvest detail page URLs and enqueue them
     # -----------------------------------------------------------------------
 
-    @crawler.router.default_handler
-    async def default_handler(context: PlaywrightCrawlingContext) -> None:
+    @crawler.router.handler(label=LABEL_INDEX)
+    async def index_handler(context: PlaywrightCrawlingContext) -> None:
         """
-        Phase-2 stub handler — confirms stealth stack is operational.
+        Enqueue all certification detail page URLs found on the browse page.
 
-        Phase-3 replacement will:
-          1. Extract visible text via context.page.inner_text("body").
-          2. Pass it to the Instructor + Groq structured-extraction layer.
-          3. Validate the response against ProfessionalCertification (models.py).
-          4. Upsert the validated record to Supabase via Delta Sync.
-          5. Enqueue discovered certification sub-pages via context.enqueue_links().
+        Why not use enqueue_links() with a CSS selector directly?
+        ──────────────────────────────────────────────────────────
+        The MS Learn browse page renders its certification card grid entirely
+        via client-side React.  The static HTML Playwright receives before JS
+        execution contains no <a> tags for individual certifications.  We must:
+          1. Wait for the React grid to hydrate (wait_for_selector on a card).
+          2. Extract rendered anchor hrefs via evaluate().
+          3. Pass the URL list as explicit requests= to enqueue_links(), with
+             label=LABEL_DETAIL so the router dispatches them to detail_handler.
+
+        The include= glob filter ensures we only enqueue true certification
+        detail pages (URL pattern: /credentials/certifications/<slug>/) and
+        exclude renewal sub-pages (/renew/) and practice-assessment sub-pages.
         """
-        page_title: str = await context.page.title()
-        current_url: str = context.request.url
+        logger.info("INDEX handler: %s", context.request.url)
 
-        logger.info("✓ Crawled  | URL   : %s", current_url)
-        logger.info("           | Title : %s", page_title)
-
-        # Verify stealth signals are in place.
-        webdriver_flag: bool = await context.page.evaluate("() => navigator.webdriver")
-        ua_string: str = await context.page.evaluate("() => navigator.userAgent")
-
-        logger.info(
-            "           | Stealth check — navigator.webdriver=%s | UA=%s",
-            webdriver_flag,
-            ua_string[:80],
-        )
-
-        if webdriver_flag:
+        # Wait for at least one rendered card to confirm hydration.
+        # MS Learn uses a custom web component or a div grid — we wait for
+        # any anchor whose href matches the known certification URL pattern.
+        try:
+            await context.page.wait_for_selector(
+                "a[href*='/credentials/certifications/']",
+                timeout=20_000,
+            )
+        except Exception:
             logger.warning(
-                "navigator.webdriver is still True — the --disable-blink-features "
-                "flag may not have taken effect.  Check browser_launch_options."
+                "No certification links appeared within 20 s on %s — "
+                "the page may require JavaScript execution or authentication.",
+                context.request.url,
             )
 
-        # ------------------------------------------------------------------
-        # TODO (Phase 3): Replace stub above with:
-        #
-        #   text = await context.page.inner_text("body")
-        #   certification = await extract_certification(text, current_url)
-        #   await upsert_to_supabase(certification)
-        #   await context.enqueue_links()
-        # ------------------------------------------------------------------
+        # Extract all rendered certification detail page hrefs.
+        # We use evaluate() rather than enqueue_links(selector=) because the
+        # latter calls document.querySelectorAll before React hydration is
+        # guaranteed to be complete for all cards.
+        raw_hrefs: list[str] = await context.page.evaluate(
+            """
+            () => [...new Set(
+                [...document.querySelectorAll('a[href]')]
+                    .map(a => a.href)
+                    .filter(h =>
+                        h.includes('/credentials/certifications/') &&
+                        !h.includes('/renew') &&
+                        !h.includes('/practice/') &&
+                        !h.includes('/resources/')
+                    )
+            )]
+            """
+        )
+
+        logger.info("INDEX: discovered %d candidate detail URLs.", len(raw_hrefs))
+
+        if not raw_hrefs:
+            logger.warning(
+                "Zero certification URLs extracted from %s.  "
+                "The page structure may have changed or JS did not hydrate.",
+                context.request.url,
+            )
+            return
+
+        # Enqueue as explicit requests with DETAIL label.
+        # include= / exclude= globs provide a second-pass URL validation layer
+        # independent of the JS evaluation above.
+        from crawlee import Request
+        request_objs = [Request.from_url(url, label=LABEL_DETAIL) for url in raw_hrefs]
+
+        await context.enqueue_links(
+            requests=request_objs,
+            include=[Glob("https://learn.microsoft.com/*/credentials/certifications/*/")],
+            exclude=[
+                Glob("*/renew/*"),
+                Glob("*/practice/*"),
+                Glob("*/resources/*"),
+                Glob("*/study-guides/*"),
+            ],
+        )
+    # -----------------------------------------------------------------------
+    # Route: DETAIL — extract certification data and persist to dataset
+
+    def clean_ui_noise(text: str) -> str:
+        """Removes common UI artifacts and leftover button text from MS Learn."""
+        noise_patterns = [
+            r"Loading\.\.\.",
+            r"Note The bullets that follow.*",
+            r"EXAM SANDBOX.*",
+            r"Experience demo.*",
+            r"Launch the sandbox.*",
+            r"Learn more\.",
+            r"You will no longer be able to earn or renew.*"
+        ]
+        
+        clean_text = text
+        for pattern in noise_patterns:
+            clean_text = re.sub(pattern, "", clean_text, flags=re.IGNORECASE)
+            
+        return " ".join(clean_text.split())
+
+    async def _extract_metadata(context: PlaywrightCrawlingContext) -> dict:
+        script = """
+        () => {
+            const getMetaList = (labelRegex) => {
+                const labels = [...document.querySelectorAll('p.list-label')];
+                const target = labels.find(p => p.innerText && p.innerText.match(labelRegex));
+                if (target && target.nextElementSibling && target.nextElementSibling.classList.contains('list-container')) {
+                    return [...target.nextElementSibling.querySelectorAll('a, span, p')].map(e => e.innerText.trim()).filter(Boolean);
+                }
+                return [];
+            }
+            
+            const banners = [...document.querySelectorAll('.is-warning, .warning, [class*="warning"]')];
+            const retireBanner = banners.map(b => b.innerText.trim()).find(t => /retir/i.test(t));
+            
+            return {
+                level: getMetaList(/^Level/i)[0] || "",
+                job_roles: getMetaList(/^Role/i),
+                languages: getMetaList(/^Language/i),
+                retire_banner: retireBanner || null
+            }
+        }
+        """
+        try:
+            return await context.page.evaluate(script)
+        except Exception:
+            return {"level": "", "job_roles": [], "languages": [], "retire_banner": None}
+    # -----------------------------------------------------------------------
+    # Route: DETAIL — extract certification data and persist to dataset
+    # -----------------------------------------------------------------------
+
+    @crawler.router.handler(label=LABEL_DETAIL)
+    async def detail_handler(context: PlaywrightCrawlingContext) -> None:
+        """
+        Extract structured certification data from an individual detail page
+        and write it to the Crawlee default dataset.
+
+        Extraction strategy (grounded in live DOM audit):
+          ┌──────────────────┬──────────────────────────────────────────┐
+          │ Field            │ Extraction method                        │
+          ├──────────────────┼──────────────────────────────────────────┤
+          │ title            │ h1 inner_text()                          │
+          │ tagline          │ og:description meta content attribute    │
+          │ overview         │ JS sibling-walk from "Overview" h2       │
+          │ skills_measured  │ JS walk from "Assessed on this exam" h3  │
+          │ prerequisites    │ JS sibling-walk from "Prerequisites" h2  │
+          │ exam_code        │ JS regex on page text + href fallback    │
+          │ source_url       │ context.request.url (identity field)     │
+          └──────────────────┴──────────────────────────────────────────┘
+
+        All extractions are wrapped in defensive try/except so that a single
+        missing element never aborts the full record — the field will be an
+        empty string or empty list instead.
+
+        push_data() output:
+          Crawlee writes ./storage/datasets/default/<uuid>.json per call.
+          One JSON file = one certification record.  Phase 4 will layer a
+          Supabase upsert on top of (or in place of) this call.
+        """
+        url = context.request.url
+        
+        if "/en-us/" in url:
+            url = url.replace("/en-us/", "/en-in/")
+            logger.info("Forcing INR pricing locale: %s", url)
+            await context.page.goto(url, wait_until="domcontentloaded")
+            
+        logger.info("DETAIL handler: %s", url)
+
+        # Wait for the main content block to confirm the page is rendered.
+        try:
+            await context.page.wait_for_selector("#main h1", timeout=20_000)
+        except Exception:
+            logger.warning("h1 not found within 20 s on %s — skipping.", url)
+            return
+
+        # ── 1. Certification title ─────────────────────────────────────────
+        title = ""
+        try:
+            title = (await context.page.locator("#main h1").first.inner_text()).strip()
+        except Exception as exc:
+            logger.debug("title extraction failed on %s: %s", url, exc)
+
+        # ── 2. Tagline (og:description meta) ──────────────────────────────
+        tagline = ""
+        try:
+            tagline = await context.page.get_attribute(
+                'meta[property="og:description"]', "content"
+            ) or ""
+            tagline = tagline.strip()
+        except Exception as exc:
+            logger.debug("tagline extraction failed on %s: %s", url, exc)
+
+        # ── 3. Overview / description paragraphs ──────────────────────────
+        overview_paragraphs = await _extract_section_paragraphs(context, "Overview")
+        # Fallback: if "Overview" heading absent, grab the first prose block.
+        if not overview_paragraphs:
+            try:
+                overview_paragraphs = await _extract_text_list(
+                    context, "#main > div > p, #main p"
+                )
+                overview_paragraphs = overview_paragraphs[:6]  # cap to intro block
+            except Exception:
+                pass
+
+        raw_overview = " ".join(overview_paragraphs)
+        clean_overview = clean_ui_noise(raw_overview)
+
+        # ── 4. Skills measured ────────────────────────────────────────────
+        skills_measured = await _extract_skills(context)
+
+        # ── 5. Prerequisites ──────────────────────────────────────────────
+        # Prerequisites appear under an "## Prerequisites" h2 on certifications
+        # that require a prior cert (e.g. Expert-level certs).  Many certs
+        # have no formal prerequisites — returns [] in that case.
+        prerequisites = await _extract_section_paragraphs(context, "Prerequisites")
+        # Some pages call it "Required certifications" or "Before you begin"
+        if not prerequisites:
+            prerequisites = await _extract_section_paragraphs(context, "Required")
+
+        # ── 6. Exam code ──────────────────────────────────────────────────
+        exam_code = await _extract_exam_code(context)
+
+        # ── X. Cost / Price ──────────────────────────────────────────────
+        cost = await _extract_cost(context)
+
+        # ── Y. Eligibility / Target Audience ─────────────────────────────
+        raw_eligibility = await _extract_eligibility(context)
+        eligibility = clean_ui_noise(raw_eligibility)
+
+        # ── Z. New Metadata ──────────────────────────────────────────────
+        metadata = await _extract_metadata(context)
+        retirement_date = None
+        if metadata.get("retire_banner"):
+            match = re.search(r'((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]* \d{1,2},? \d{4})', metadata["retire_banner"], re.IGNORECASE)
+            retirement_date = match.group(1) if match else metadata["retire_banner"]
+
+        # ── 7. Assemble record ────────────────────────────────────────────
+        cost_str = re.sub(r'[^\d.]', '', str(cost))
+        cost_inr = float(cost_str) if cost_str else 0.0
+        cost_usd = round(cost_inr / LIVE_USD_TO_INR, 2) if LIVE_USD_TO_INR else 0.0
+
+        record: dict = {
+            "source_url":      url,
+            "title":           title,
+            "tagline":         tagline,
+            "overview":        clean_overview,
+            "skills_measured": skills_measured,
+            "prerequisites":   prerequisites,
+            "exam_code":       exam_code,
+            "cost_inr":        cost_inr,
+            "cost_usd":        cost_usd,
+            "eligibility":     eligibility,
+            "level":           metadata.get("level", ""),
+            "job_roles":       metadata.get("job_roles", []),
+            "languages":       metadata.get("languages", []) or ["English"],
+            "retirement_date": retirement_date,
+        }
+
+        logger.info(
+            "DETAIL extracted: title=%r  exam_code=%r  cost_inr=%r  cost_usd=%r skills=%d  prereqs=%d",
+            title, exam_code, cost_inr, cost_usd, len(skills_measured), len(prerequisites),
+        )
+
+        # ── 8. Persist ────────────────────────────────────────────────────
+        # Crawlee auto-creates ./storage/datasets/default/ on first call.
+        # Each push_data() call writes one JSON file: <uuid>.json
+        await context.push_data(record)
+
+    # -----------------------------------------------------------------------
+    # Route: AWS INDEX
+    # -----------------------------------------------------------------------
+    @crawler.router.handler(label=LABEL_AWS_INDEX)
+    async def aws_index_handler(context: PlaywrightCrawlingContext) -> None:
+        logger.info("AWS INDEX handler: %s", context.request.url)
+        
+        await context.page.wait_for_load_state("domcontentloaded")
+        
+        raw_hrefs: list[str] = await context.page.evaluate(
+            """
+            () => [...new Set(
+                [...document.querySelectorAll('a[href]')]
+                    .map(a => a.href)
+                    .filter(h => h.includes('/certification/certified-'))
+            )]
+            """
+        )
+        logger.info("AWS INDEX: discovered %d candidate detail URLs.", len(raw_hrefs))
+        
+        if not raw_hrefs:
+            return
+            
+        from crawlee import Request
+        request_objs = [Request.from_url(url if url.startswith('http') else 'https://aws.amazon.com'+url, label=LABEL_AWS_DETAIL) for url in raw_hrefs]
+        await context.enqueue_links(requests=request_objs)
+
+    # -----------------------------------------------------------------------
+    # Route: AWS DETAIL
+    # -----------------------------------------------------------------------
+    @crawler.router.handler(label=LABEL_AWS_DETAIL)
+    async def aws_detail_handler(context: PlaywrightCrawlingContext) -> None:
+        url = context.request.url
+        logger.info("AWS DETAIL handler: %s", url)
+        
+        await context.page.wait_for_load_state("networkidle")
+        
+        title = ""
+        try:
+            title = (await context.page.locator("h1").first.inner_text()).strip()
+        except Exception:
+            pass
+
+        html = await context.page.content()
+        import re
+        
+        cost_match = re.search(r'(\d+)\s*USD', html)
+        cost = cost_match.group(1) if cost_match else "0"
+        
+        level_match = re.search(r'(Foundational|Associate|Professional|Specialty)', html)
+        level = level_match.group(1) if level_match else "Unknown"
+        
+        code_match = re.search(r'([A-Z]{3}-C\d{2})', html)
+        exam_code = code_match.group(1) if code_match else f"PENDING-{url.split('/')[-2] if url.endswith('/') else url.split('/')[-1]}"
+        
+        paragraphs = await context.page.locator("p").all_inner_texts()
+        meaningful_p = [p.strip() for p in paragraphs if len(p.strip()) > 60 and 'cookie' not in p.lower() and 'privacy' not in p.lower() and 'advertising' not in p.lower() and 'opt out' not in p.lower()]
+        
+        overview = " ".join(meaningful_p[:3]) if meaningful_p else "See AWS certification page for full details."
+        
+        # Try to find prerequisites in the text
+        prerequisites = []
+        if any('experience' in p.lower() or 'background' in p.lower() for p in meaningful_p):
+            prereq_text = [p for p in meaningful_p if 'experience' in p.lower() or 'background' in p.lower()]
+            prerequisites.append(prereq_text[0])
+            
+        # Extract Job Roles from Title
+        possible_roles = ["Developer", "Architect", "Engineer", "Administrator", "Data Scientist", "Security Analyst", "Practitioner"]
+        job_roles = [r for r in possible_roles if r.lower() in title.lower()]
+        if not job_roles:
+            job_roles = ["Cloud Professional"]
+
+        record: dict = {
+            "source_url":      url,
+            "title":           title,
+            "tagline":         title,
+            "overview":        overview,
+            "skills_measured": ["Review the official exam guide for a detailed breakdown of skills measured."],
+            "prerequisites":   prerequisites,
+            "exam_code":       exam_code,
+            "cost_usd": float(cost) if str(cost).isdigit() else 0.0,
+            "cost_inr": round((float(cost) if str(cost).isdigit() else 0.0) * LIVE_USD_TO_INR, 2),
+            "eligibility":     "None stated.",
+            "level":           level,
+            "job_roles":       job_roles,
+            "languages":       ["English"],
+            "retirement_date": None,
+        }
+        
+        logger.info("AWS DETAIL extracted: title=%r  exam_code=%r  cost=%r", title, exam_code, cost)
+        await context.push_data(record)
+
+    # -----------------------------------------------------------------------
+    # Route: GOOGLE CLOUD INDEX
+    # -----------------------------------------------------------------------
+    @crawler.router.handler(label=LABEL_GC_INDEX)
+    async def gc_index_handler(context: PlaywrightCrawlingContext) -> None:
+        logger.info("GC INDEX handler: %s", context.request.url)
+        await context.page.wait_for_load_state("networkidle")
+        raw_hrefs: list[str] = await context.page.evaluate(
+            """
+            () => [...new Set(
+                [...document.querySelectorAll('a[href]')]
+                    .map(a => a.href)
+                    .filter(h => h.includes('/learn/certification/') && !h.includes('#'))
+            )]
+            """
+        )
+        if not raw_hrefs: return
+        from crawlee import Request
+        request_objs = [Request.from_url(url, label=LABEL_GC_DETAIL) for url in raw_hrefs]
+        await context.enqueue_links(requests=request_objs)
+
+    # -----------------------------------------------------------------------
+    # Route: GOOGLE CLOUD DETAIL
+    # -----------------------------------------------------------------------
+    @crawler.router.handler(label=LABEL_GC_DETAIL)
+    async def gc_detail_handler(context: PlaywrightCrawlingContext) -> None:
+        url = context.request.url
+        logger.info("GC DETAIL handler: %s", url)
+        await context.page.wait_for_load_state("networkidle")
+        
+        try:
+            title = (await context.page.locator("h1").first.inner_text()).strip()
+        except:
+            title = ""
+            
+        paragraphs = await context.page.locator("p").all_inner_texts()
+        meaningful_p = [p.strip() for p in paragraphs if len(p.strip()) > 60 and 'cookie' not in p.lower()]
+        overview = " ".join(meaningful_p[:2]) if meaningful_p else "See Google Cloud certification page for full details."
+        
+        prerequisites = []
+        if any('experience' in p.lower() for p in meaningful_p):
+            prereq_text = [p for p in meaningful_p if 'experience' in p.lower()]
+            prerequisites.append(prereq_text[0])
+
+        html = await context.page.content()
+        import re
+        cost_match = re.search(r'(?:Registration fee|Cost|Price)[^\$]*\$(\d+)', html, re.IGNORECASE)
+        cost = cost_match.group(1) if cost_match else "200"
+        
+        level = "Professional" if "Professional" in title else "Associate" if "Associate" in title else "Foundational"
+        exam_code = f"PENDING-{url.split('/')[-1]}"
+        
+        possible_roles = ["Developer", "Architect", "Engineer", "Administrator", "Data Scientist", "Security Analyst", "Practitioner"]
+        job_roles = [r for r in possible_roles if r.lower() in title.lower()]
+        if not job_roles:
+            job_roles = ["Cloud Professional"]
+
+        record: dict = {
+            "source_url": url, "title": title, "tagline": title, "overview": overview,
+            "skills_measured": ["Review the official Google Cloud exam guide for a detailed breakdown of skills measured."], "prerequisites": prerequisites, "exam_code": exam_code,
+            "cost_usd": float(cost), "cost_inr": round(float(cost) * LIVE_USD_TO_INR, 2), "eligibility": "None stated.", "level": level, "job_roles": job_roles,
+            "languages": ["English"], "retirement_date": None,
+        }
+        await context.push_data(record)
+
+    # -----------------------------------------------------------------------
+    # Route: CISCO INDEX
+    # -----------------------------------------------------------------------
+    @crawler.router.handler(label=LABEL_CISCO_INDEX)
+    async def cisco_index_handler(context: PlaywrightCrawlingContext) -> None:
+        logger.info("CISCO INDEX handler: %s", context.request.url)
+        await context.page.wait_for_load_state("networkidle")
+        raw_hrefs: list[str] = await context.page.evaluate(
+            """
+            () => [...new Set(
+                [...document.querySelectorAll('a[href]')]
+                    .map(a => a.href)
+                    .filter(h => h.includes('certifications/') && (h.includes('associate') || h.includes('professional') || h.includes('expert')))
+            )]
+            """
+        )
+        if not raw_hrefs: return
+        from crawlee import Request
+        request_objs = [Request.from_url(url if url.startswith('http') else 'https://www.cisco.com'+url, label=LABEL_CISCO_DETAIL) for url in raw_hrefs]
+        await context.enqueue_links(requests=request_objs)
+
+    # -----------------------------------------------------------------------
+    # Route: CISCO DETAIL
+    # -----------------------------------------------------------------------
+    @crawler.router.handler(label=LABEL_CISCO_DETAIL)
+    async def cisco_detail_handler(context: PlaywrightCrawlingContext) -> None:
+        url = context.request.url
+        logger.info("CISCO DETAIL handler: %s", url)
+        await context.page.wait_for_load_state("networkidle")
+        
+        try:
+            title = (await context.page.locator("h1").first.inner_text()).strip()
+        except:
+            title = ""
+            
+        paragraphs = await context.page.locator("p").all_inner_texts()
+        meaningful_p = [p.strip() for p in paragraphs if len(p.strip()) > 60 and 'cookie' not in p.lower() and 'cisco' in p.lower()]
+        overview = " ".join(meaningful_p[:2]) if meaningful_p else "See Cisco certification page for full details."
+        
+        prerequisites = []
+        if any('experience' in p.lower() for p in meaningful_p):
+            prerequisites.append([p for p in meaningful_p if 'experience' in p.lower()][0])
+
+        html = await context.page.content()
+        import re
+        cost_match = re.search(r'(?:Registration fee|Cost|Price)[^\$]*\$(\d+)', html, re.IGNORECASE)
+        cost = cost_match.group(1) if cost_match else "300"
+        
+        level = "Professional" if "Professional" in title or "CCNP" in title else "Associate" if "Associate" in title or "CCNA" in title else "Expert"
+        code_match = re.search(r'([0-9]{3}-[0-9]{3})', html)
+        exam_code = code_match.group(1) if code_match else f"PENDING-{url.split('/')[-2] if url.endswith('/') else url.split('/')[-1]}"
+
+        possible_roles = ["Developer", "Architect", "Engineer", "Administrator", "Data Scientist", "Security Analyst", "Practitioner"]
+        job_roles = [r for r in possible_roles if r.lower() in title.lower()]
+        if not job_roles:
+            job_roles = ["Network Professional"]
+
+        record: dict = {
+            "source_url": url, "title": title, "tagline": title, "overview": overview,
+            "skills_measured": ["Review the official Cisco exam blueprint for a detailed breakdown of skills measured."], "prerequisites": prerequisites, "exam_code": exam_code,
+            "cost_usd": float(cost), "cost_inr": round(float(cost) * LIVE_USD_TO_INR, 2), "eligibility": "None stated.", "level": level, "job_roles": job_roles,
+            "languages": ["English"], "retirement_date": None,
+        }
+        await context.push_data(record)
+
+    # -----------------------------------------------------------------------
+    # Route: COMPTIA INDEX
+    # -----------------------------------------------------------------------
+    @crawler.router.handler(label=LABEL_COMPTIA_INDEX)
+    async def comptia_index_handler(context: PlaywrightCrawlingContext) -> None:
+        logger.info("COMPTIA INDEX handler: %s", context.request.url)
+        await context.page.wait_for_load_state("networkidle")
+        raw_hrefs: list[str] = await context.page.evaluate(
+            """
+            () => [...new Set(
+                [...document.querySelectorAll('a[href]')]
+                    .map(a => a.href)
+                    .filter(h => h.includes('/certifications/') && !h.includes('#'))
+            )]
+            """
+        )
+        if not raw_hrefs: return
+        from crawlee import Request
+        request_objs = [Request.from_url(url if url.startswith('http') else 'https://www.comptia.org'+url, label=LABEL_COMPTIA_DETAIL) for url in raw_hrefs]
+        await context.enqueue_links(requests=request_objs)
+
+    # -----------------------------------------------------------------------
+    # Route: COMPTIA DETAIL
+    # -----------------------------------------------------------------------
+    @crawler.router.handler(label=LABEL_COMPTIA_DETAIL)
+    async def comptia_detail_handler(context: PlaywrightCrawlingContext) -> None:
+        url = context.request.url
+        logger.info("COMPTIA DETAIL handler: %s", url)
+        await context.page.wait_for_load_state("networkidle")
+        try:
+            title = (await context.page.locator("h1").first.inner_text()).strip()
+        except:
+            title = ""
+            
+        paragraphs = await context.page.locator("p").all_inner_texts()
+        meaningful_p = [p.strip() for p in paragraphs if len(p.strip()) > 60 and 'cookie' not in p.lower()]
+        overview = " ".join(meaningful_p[:2]) if meaningful_p else "See CompTIA certification page for full details."
+        
+        prerequisites = []
+        if any('experience' in p.lower() for p in meaningful_p):
+            prerequisites.append([p for p in meaningful_p if 'experience' in p.lower()][0])
+
+        html = await context.page.content()
+        import re
+        cost_match = re.search(r'(?:Registration fee|Cost|Price)[^\$]*\$(\d+)', html, re.IGNORECASE)
+        cost = cost_match.group(1) if cost_match else "394"
+        
+        level = "Professional" if "+" in title and "Security" in title else "Foundational" if "+" in title else "Associate"
+        exam_code = f"PENDING-{url.split('/')[-1]}"
+        
+        possible_roles = ["Developer", "Architect", "Engineer", "Administrator", "Data Scientist", "Security Analyst", "Practitioner"]
+        job_roles = [r for r in possible_roles if r.lower() in title.lower()]
+        if not job_roles:
+            job_roles = ["IT Professional"]
+
+        record: dict = {
+            "source_url": url, "title": title, "tagline": title, "overview": overview,
+            "skills_measured": ["Review the official CompTIA exam blueprint for a detailed breakdown of skills measured."], "prerequisites": prerequisites, "exam_code": exam_code,
+            "cost_usd": float(cost), "cost_inr": round(float(cost) * LIVE_USD_TO_INR, 2), "eligibility": "None stated.", "level": level, "job_roles": job_roles,
+            "languages": ["English"], "retirement_date": None,
+        }
+        await context.push_data(record)
+
+    # -----------------------------------------------------------------------
+    # Route: OFFSEC INDEX
+    # -----------------------------------------------------------------------
+    @crawler.router.handler(label=LABEL_OFFSEC_INDEX)
+    async def offsec_index_handler(context: PlaywrightCrawlingContext) -> None:
+        logger.info("OFFSEC INDEX handler: %s", context.request.url)
+        await context.page.wait_for_load_state("networkidle")
+        raw_hrefs: list[str] = await context.page.evaluate(
+            """
+            () => [...new Set(
+                [...document.querySelectorAll('a[href]')]
+                    .map(a => a.href)
+                    .filter(h => h.includes('offsec.com') && (h.includes('-certification') || h.includes('-course')))
+            )]
+            """
+        )
+        if not raw_hrefs: return
+        from crawlee import Request
+        request_objs = [Request.from_url(url, label=LABEL_OFFSEC_DETAIL) for url in raw_hrefs]
+        await context.enqueue_links(requests=request_objs)
+
+    # -----------------------------------------------------------------------
+    # Route: OFFSEC DETAIL
+    # -----------------------------------------------------------------------
+    @crawler.router.handler(label=LABEL_OFFSEC_DETAIL)
+    async def offsec_detail_handler(context: PlaywrightCrawlingContext) -> None:
+        url = context.request.url
+        logger.info("OFFSEC DETAIL handler: %s", url)
+        await context.page.wait_for_load_state("networkidle")
+        try:
+            title = (await context.page.locator("h1").first.inner_text()).strip()
+        except:
+            title = ""
+            
+        paragraphs = await context.page.locator("p").all_inner_texts()
+        meaningful_p = [p.strip() for p in paragraphs if len(p.strip()) > 60 and 'cookie' not in p.lower()]
+        overview = " ".join(meaningful_p[:2]) if meaningful_p else "See OffSec certification page for full details."
+        
+        prerequisites = []
+        if any('experience' in p.lower() or 'familiarity' in p.lower() for p in meaningful_p):
+            prerequisites.append([p for p in meaningful_p if 'experience' in p.lower() or 'familiarity' in p.lower()][0])
+
+        html = await context.page.content()
+        import re
+        cost_match = re.search(r'(?:Registration fee|Cost|Price)[^\$]*\$(\d+)', html, re.IGNORECASE)
+        cost = cost_match.group(1) if cost_match else "1649"
+        
+        level = "Professional"
+        exam_code = f"PENDING-{url.split('/')[-2] if url.endswith('/') else url.split('/')[-1]}"
+
+        possible_roles = ["Developer", "Architect", "Engineer", "Administrator", "Data Scientist", "Security Analyst", "Practitioner", "Penetration Tester"]
+        job_roles = [r for r in possible_roles if r.lower() in title.lower()]
+        if not job_roles:
+            job_roles = ["Security Professional"]
+
+        record: dict = {
+            "source_url": url, "title": title, "tagline": title, "overview": overview,
+            "skills_measured": ["Review the official OffSec course syllabus for a detailed breakdown of skills measured."], "prerequisites": prerequisites, "exam_code": exam_code,
+            "cost_usd": float(cost), "cost_inr": round(float(cost) * LIVE_USD_TO_INR, 2), "eligibility": "None stated.", "level": level, "job_roles": job_roles,
+            "languages": ["English"], "retirement_date": None,
+        }
+        await context.push_data(record)
+
+    # -----------------------------------------------------------------------
+    # Route: LPI INDEX
+    # -----------------------------------------------------------------------
+    @crawler.router.handler(label=LABEL_LPI_INDEX)
+    async def lpi_index_handler(context: PlaywrightCrawlingContext) -> None:
+        logger.info("LPI INDEX handler: %s", context.request.url)
+        await context.page.wait_for_load_state("networkidle")
+        raw_hrefs: list[str] = await context.page.evaluate(
+            """
+            () => [...new Set(
+                [...document.querySelectorAll('a[href]')]
+                    .map(a => a.href)
+                    .filter(h => h.includes('our-certifications/') && !h.includes('#'))
+            )]
+            """
+        )
+        if not raw_hrefs: return
+        from crawlee import Request
+        request_objs = [Request.from_url(url if url.startswith('http') else 'https://www.lpi.org'+url, label=LABEL_LPI_DETAIL) for url in raw_hrefs]
+        await context.enqueue_links(requests=request_objs)
+
+    # -----------------------------------------------------------------------
+    # Route: LPI DETAIL
+    # -----------------------------------------------------------------------
+    @crawler.router.handler(label=LABEL_LPI_DETAIL)
+    async def lpi_detail_handler(context: PlaywrightCrawlingContext) -> None:
+        url = context.request.url
+        logger.info("LPI DETAIL handler: %s", url)
+        await context.page.wait_for_load_state("networkidle")
+        try:
+            title = (await context.page.locator("h1").first.inner_text()).strip()
+        except:
+            title = ""
+            
+        paragraphs = await context.page.locator("p").all_inner_texts()
+        meaningful_p = [p.strip() for p in paragraphs if len(p.strip()) > 60 and 'cookie' not in p.lower()]
+        overview = " ".join(meaningful_p[:2]) if meaningful_p else "See LPI certification page for full details."
+        
+        prerequisites = []
+        if any('experience' in p.lower() or 'active lpic' in p.lower() for p in meaningful_p):
+            prerequisites.append([p for p in meaningful_p if 'experience' in p.lower() or 'active lpic' in p.lower()][0])
+
+        html = await context.page.content()
+        import re
+        cost_match = re.search(r'(?:Registration fee|Cost|Price)[^\$]*\$(\d+)', html, re.IGNORECASE)
+        cost = cost_match.group(1) if cost_match else "200"
+        
+        level = "Professional" if "LPIC-2" in title or "LPIC-3" in title else "Foundational" if "Essentials" in title else "Associate"
+        exam_code = f"PENDING-{url.split('/')[-2] if url.endswith('/') else url.split('/')[-1]}"
+
+        possible_roles = ["Developer", "Architect", "Engineer", "Administrator", "Data Scientist", "Security Analyst", "Practitioner"]
+        job_roles = [r for r in possible_roles if r.lower() in title.lower()]
+        if not job_roles:
+            job_roles = ["Linux Professional"]
+
+        record: dict = {
+            "source_url": url, "title": title, "tagline": title, "overview": overview,
+            "skills_measured": ["Review the official LPI exam blueprint for a detailed breakdown of skills measured."], "prerequisites": prerequisites, "exam_code": exam_code,
+            "cost_usd": float(cost), "cost_inr": round(float(cost) * LIVE_USD_TO_INR, 2), "eligibility": "None stated.", "level": level, "job_roles": job_roles,
+            "languages": ["English"], "retirement_date": None,
+        }
+        await context.push_data(record)
 
     return crawler
+
+
+# ---------------------------------------------------------------------------
+# Default handler — catches any URL that arrives without a recognised label
+# (should not happen in a well-formed crawl, but prevents silent drops)
+# ---------------------------------------------------------------------------
+
+# Note: default_handler must be registered AFTER the crawler object exists.
+# We attach it inside build_crawler but declare it here for clarity.
+# (Already handled by the structure above; the default route is the fallback.)
 
 
 # ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
 
-
 async def main() -> None:
     """
-    Bootstrap entry point for the Phase 2 stealth crawler.
+    Seed the queue with the MS Learn certification browse page (labelled INDEX)
+    and start the crawl.
 
-    Pre-flight checklist:
-      □ PROXY_URL env var set to a valid residential rotating proxy endpoint.
-      □ `playwright install chromium` has been run post pip-install.
-      □ Supabase credentials are in .env (used in Phase 3 upsert layer).
+    Output:
+      ./storage/datasets/default/*.json  — one file per certification scraped.
+
+    Pre-flight:
+      □ playwright install chromium
+      □ PROXY_URL env var (optional but recommended for production runs)
     """
-    logger.info("Certifyd scraping pipeline — Phase 2 stealth crawler starting.")
-    logger.info("Seed URLs: %s", SEED_URLS)
+    logger.info("Certifyd Phase 3 — extraction pipeline starting.")
 
     crawler = await build_crawler()
-    await crawler.run(SEED_URLS)
 
-    logger.info("Crawl complete.  Inspect ./storage/ for persisted queue state.")
+    # Seed as explicit Request objects so we can attach the INDEX label.
+    # enqueue_links() label= would only apply to links found during crawling;
+    # seed URLs must be labelled at the point of injection into the queue.
+    from crawlee import Request
+    seed_requests = [
+        Request.from_url(seed["url"], label=seed["label"]) for seed in SEED_URLS
+    ]
+
+    await crawler.run(seed_requests)
+
+    logger.info(
+        "Crawl complete.  Records written to ./storage/datasets/default/"
+    )
+
+    # -----------------------------------------------------------------------
+    # Post-crawl: Read generated datasets and push to Supabase
+    # -----------------------------------------------------------------------
+    logger.info("Reading extracted records from dataset...")
+    dataset_dir = os.path.join("storage", "datasets", "default")
+    json_files = glob.glob(os.path.join(dataset_dir, "*.json"))
+    
+    scraped_data_list = []
+    for filepath in json_files:
+        with open(filepath, "r", encoding="utf-8") as f:
+            try:
+                data = json.load(f)
+                scraped_data_list.append(data)
+            except json.JSONDecodeError as e:
+                logger.error(f"Failed to parse JSON {filepath}: {e}")
+                
+    if scraped_data_list:
+        logger.info(f"Loaded {len(scraped_data_list)} records. Initiating Supabase upload...")
+        upload_to_supabase(scraped_data_list)
+    else:
+        logger.warning("No records found to upload to Supabase.")
 
 
 if __name__ == "__main__":

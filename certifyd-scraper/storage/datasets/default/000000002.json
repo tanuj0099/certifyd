@@ -1,0 +1,28 @@
+{
+    "source_url": "https://learn.microsoft.com/en-in/credentials/certifications/github-administration/",
+    "title": "GitHub Administration",
+    "tagline": "This exam is designed for system administrators, software developers, application administrators, and IT professionals with intermediate-level experience in GitHub Enterprise Administration.",
+    "overview": "Candidates for this exam should have experience administering GitHub Enterprise environments, including user identity and access management, GitHub Actions, enterprise-level governance, and the administration of features that support secure software development (such as GitHub Advanced Security). Administrators in this role support both GitHub Enterprise Cloud and Server deployments and collaborate with development, security, and operations teams to ensure effective use of GitHub tools and services. Experience the look and feel of the exam before taking it. You'll be able to interact with different question types in the same user interface you'll use during the exam.",
+    "skills_measured": [
+        "Domain 1: Manage GitHub Identities and Access (15\u201320%)",
+        "Domain 2: Administer GitHub Enterprise Environment (10\u201315%)",
+        "Domain 3: Implement Secure Software Development and Compliance (25\u201330%)",
+        "Domain 4: Manage GitHub Actions (20\u201325%)",
+        "Domain 5: Monitor and Optimize GitHub Usage (10\u201315%)"
+    ],
+    "prerequisites": [],
+    "exam_code": "GH-100",
+    "cost_inr": 308198.5,
+    "cost_usd": 3691.0,
+    "eligibility": "Candidates for this exam should have experience administering GitHub Enterprise environments, including user identity and access management, GitHub Actions, enterprise-level governance, and the administration of features that support secure software development (such as GitHub Advanced Security). Administrators in this role support both GitHub Enterprise Cloud and Server deployments and collaborate with development, security, and operations teams to ensure effective use of GitHub tools and services. Experience the look and feel of the exam before taking it. You'll be able to interact with different question types in the same user interface you'll use during the exam.",
+    "level": "Intermediate",
+    "job_roles": [
+        "Administrator",
+        "DevOps Engineer",
+        "Technology Manager"
+    ],
+    "languages": [
+        "English"
+    ],
+    "retirement_date": null
+}

@@ -1,0 +1,26 @@
+{
+  "source_url": "https://learn.microsoft.com/en-in/credentials/certifications/azure-ai-engineer/",
+  "title": "Microsoft Certified: Azure AI Engineer Associate",
+  "tagline": "Design and implement an Azure AI solution using Azure AI services, Azure AI Search, and Azure Open AI.",
+  "overview": "Warning This certification, related exam, and renewal assessments will retire on June 30, 2026.",
+  "skills_measured": [
+    "Plan and manage an Azure AI solution",
+    "Implement generative AI solutions",
+    "Implement an agentic solution",
+    "Implement computer vision solutions",
+    "Implement natural language processing solutions",
+    "Implement knowledge mining and information extraction solutions"
+  ],
+  "prerequisites": [],
+  "exam_code": "AI-102",
+  "cost": "₹4865 INR*",
+  "eligibility": "",
+  "level": "Intermediate",
+  "job_roles": [
+    "AI Engineer"
+  ],
+  "languages": [
+    "English"
+  ],
+  "retirement_date": "June 30, 2026"
+}

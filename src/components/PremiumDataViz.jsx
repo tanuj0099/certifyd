@@ -206,10 +206,7 @@ export function DataSyncBadge({ updatedAt }) {
   return (
     <div style={{
       display: 'inline-flex', alignItems: 'center', gap: 6,
-      padding: '3px 10px', borderRadius: 4,
-      border: '1px solid var(--border-subtle)',
-      background: 'var(--border-subtle)',
-      fontFamily: FM, fontSize: 9, letterSpacing: '0.08em', color: 'transparent',
+      fontFamily: FM, fontSize: 9, letterSpacing: '0.08em', color: 'var(--text-4)',
     }}>
       <span style={{
         width: 5, height: 5, borderRadius: '50%',

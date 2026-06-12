@@ -212,11 +212,11 @@ function drawCardA(canvas, opts) {
   var cLines = wrapLines(c, certName, 900)
   var lH     = cSize * 1.18
 
-  // Gradient text effect - white  light steel
+  // Gradient text effect - solid whites and grays, NO transparent stops
   var tGrad = c.createLinearGradient(W / 2 - 400, 0, W / 2 + 400, 0)
-  tGrad.addColorStop(0,   'transparent')
+  tGrad.addColorStop(0,   '#E2E8F0')
   tGrad.addColorStop(0.5, '#FFFFFF')
-  tGrad.addColorStop(1,   'transparent')
+  tGrad.addColorStop(1,   '#E2E8F0')
 
   // Glow under text
   c.shadowColor = accent1 + '55'
@@ -429,8 +429,8 @@ function drawCardB(canvas, opts) {
   c.shadowColor = accent1 + '40'; c.shadowBlur = 28
   var tGrad = c.createLinearGradient(rx, 0, rx + rw, 0)
   tGrad.addColorStop(0,   '#FFFFFF')
-  tGrad.addColorStop(0.6, '#E2E8F0')
-  tGrad.addColorStop(1,   '#C7D2FE')
+  tGrad.addColorStop(0.6, '#F8FAFC')
+  tGrad.addColorStop(1,   '#E2E8F0')
   c.fillStyle = tGrad
   cLines.forEach(function(line, i) {
     c.fillText(line, rx, ry + i * lH)
@@ -559,11 +559,10 @@ function ShareROICard({ certName, domain, demand, name }) {
         onClick={toggle}
         whileHover={{ scale: 1.01, y: -1 }}
         whileTap={{ scale: 0.98 }}
+        className={open ? "" : "glass"}
         style={{
           width: '100%', padding: '12px 16px', borderRadius: '11px',
-          background: open
-            ? 'transparent'
-            : 'transparent',
+          background: open ? 'transparent' : undefined,
           border: '1px solid ' + (open ? 'transparent' : 'var(--border)'),
           color: open ? 'var(--accent)' : 'var(--text-3)',
           fontSize: '13px', cursor: 'pointer', fontFamily: FH, fontWeight: '700',
@@ -596,7 +595,7 @@ function ShareROICard({ certName, domain, demand, name }) {
             transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
             style={{ overflow: 'hidden' }}
           >
-            <div style={{ paddingTop: '12px' }}>
+            <div className="glass" style={{ padding: '16px', borderRadius: '12px', marginTop: '4px', border: '1px solid var(--border)' }}>
 
               {/*  Variant switcher  */}
               <div style={{ display: 'flex', gap: '6px', marginBottom: '12px' }}>

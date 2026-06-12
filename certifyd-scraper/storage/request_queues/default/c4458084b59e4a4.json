@@ -1,0 +1,19 @@
+{
+  "unique_key": "https://www.lpi.org/our-certifications/summary-of-lpi-certifications",
+  "url": "https://www.lpi.org/our-certifications/summary-of-lpi-certifications/",
+  "method": "GET",
+  "payload": null,
+  "headers": {},
+  "user_data": {
+    "__crawlee": {
+      "enqueueStrategy": "same-hostname",
+      "state": 4,
+      "crawlDepth": 1
+    },
+    "label": "LPI_DETAIL"
+  },
+  "retry_count": 0,
+  "no_retry": false,
+  "loaded_url": null,
+  "handled_at": "2026-06-11 17:38:32.552863+00:00"
+}

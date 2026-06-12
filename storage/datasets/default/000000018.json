@@ -1,0 +1,24 @@
+{
+  "source_url": "https://learn.microsoft.com/en-in/credentials/certifications/azure-ai-cloud-developer-associate/",
+  "title": "Microsoft Certified: Azure AI Cloud Developer Associate (beta)",
+  "tagline": "This certification validates your ability to design, build, and implement AI solutions on Azure, with a focus on back‑end services, scalable architectures, and the full development lifecycle.",
+  "overview": "As a candidate for this Microsoft Certification, you’re responsible for contributing to all phases of implementing AI solutions on Azure, with an emphasis on back-end services and components. You’re also responsible for supporting all phases of the development lifecycle, including requirements gathering, design, development, deployment, security, and monitoring. You should be proficient in: Azure SDKs and third-party SDKs used in Azure. Azure data management services. Azure monitoring and troubleshooting. Azure messaging and eventing. Vector databases. Python programming. Implementing containerized applications on Azure. Important Learn more about the beta exam AI-200. Passing score: 700. Learn more about exam scores. Beta exams are not scored immediately because we’re gathering data on the quality of the questions and the exam. Learn more about beta certification exams. Tip Review the AI-200 study guide to help you prepare for the exam. Demo the exam experience by visiting our",
+  "skills_measured": [
+    "Develop containerized solutions on Azure",
+    "Develop AI solutions by using Azure data management services",
+    "Connect to and consume Azure services",
+    "Secure, monitor, troubleshoot Azure solutions"
+  ],
+  "prerequisites": [],
+  "exam_code": "AI-200",
+  "cost": "₹4865 INR*",
+  "eligibility": "As a candidate for this Microsoft Certification, you’re responsible for contributing to all phases of implementing AI solutions on Azure, with an emphasis on back-end services and components. You’re also responsible for supporting all phases of the development lifecycle, including requirements gathering, design, development, deployment, security, and monitoring. You should be proficient in: Azure SDKs and third-party SDKs used in Azure. Azure data management services. Azure monitoring and troubleshooting. Azure messaging and eventing. Vector databases. Python programming. Implementing containerized applications on Azure. Important Learn more about the beta exam AI-200. Passing score: 700. Learn more about exam scores. Beta exams are not scored immediately because we’re gathering data on the quality of the questions and the exam. Learn more about beta certification exams. Tip Review the AI-200 study guide to help you prepare for the exam. Demo the exam experience by visiting our",
+  "level": "Intermediate",
+  "job_roles": [
+    "Developer"
+  ],
+  "languages": [
+    "English"
+  ],
+  "retirement_date": null
+}

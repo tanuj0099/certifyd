@@ -1,0 +1,24 @@
+{
+  "source_url": "https://learn.microsoft.com/en-in/credentials/certifications/m365-teams-administrator-associate/",
+  "title": "Microsoft 365 Certified: Teams Administrator Associate",
+  "tagline": "Demonstrate skills to plan, deploy, configure, and manage Microsoft Teams to focus on efficient and effective collaboration and communication in a Microsoft 365 environment.",
+  "overview": "As a Microsoft Teams administrator, you plan, implement, manage, and maintain internal and external collaboration and communication solutions using Teams. You’re responsible for configuring and managing teams, channels, chat, apps, events, and calling. You collaborate with owners of other areas, including: Identity Licensing Information management User adoption Security Compliance Devices Networking As a candidate for this certification, you should have a working knowledge of how Teams integrates into Microsoft 365 services.",
+  "skills_measured": [
+    "Configure and manage a Teams environment",
+    "Manage teams, channels, chats, and apps",
+    "Manage meetings and calling",
+    "Monitor, report on, and troubleshoot Teams"
+  ],
+  "prerequisites": [],
+  "exam_code": "MS-700",
+  "cost": "₹4865 INR*",
+  "eligibility": "As a candidate for this certification, you should have a working knowledge of how Teams integrates into Microsoft 365 services.",
+  "level": "Intermediate",
+  "job_roles": [
+    "Administrator"
+  ],
+  "languages": [
+    "English"
+  ],
+  "retirement_date": null
+}

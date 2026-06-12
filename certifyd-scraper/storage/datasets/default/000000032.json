@@ -1,0 +1,24 @@
+{
+    "source_url": "https://aws.amazon.com/certification/certified-cloudops-engineer-associate/",
+    "title": "AWS Certified CloudOps Engineer - Associate",
+    "tagline": "AWS Certified CloudOps Engineer - Associate",
+    "overview": "Validate technical ability to deploy, manage, and operate workloads on AWS AWS Certified CloudOps Engineer - Associate (formerly known as AWS Certified SysOps Administrator - Associate) validates skills and knowledge in monitoring and maintaining AWS workloads, implementing security controls and networking concepts, performing business continuity procedures, and implementing cost and performance optimizations. 150 USD.\u00a0Visit\u00a0Exam pricing\u00a0for additional cost information, including foreign exchange rates",
+    "skills_measured": [
+        "Review the official exam guide for a detailed breakdown of skills measured."
+    ],
+    "prerequisites": [
+        "Individuals with ~1 year of experience deploying, managing, and operating workloads on AWS"
+    ],
+    "exam_code": "SOA-C03",
+    "cost_usd": 150.0,
+    "cost_inr": 12525.0,
+    "eligibility": "None stated.",
+    "level": "Associate",
+    "job_roles": [
+        "Engineer"
+    ],
+    "languages": [
+        "English"
+    ],
+    "retirement_date": null
+}

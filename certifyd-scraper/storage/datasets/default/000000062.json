@@ -1,0 +1,24 @@
+{
+  "source_url": "https://www.lpi.org/our-certifications/lpic-3-306-overview/",
+  "title": "Linux Professional Institute LPIC-3 High Availability and Storage Clusters",
+  "tagline": "Linux Professional Institute LPIC-3 High Availability and Storage Clusters",
+  "overview": "The LPIC-3 certification is the culmination of the multi-level professional certification program of the Linux Professional Institute (LPI). LPIC-3 is designed for the enterprise-level Linux professional and represents the highest level of professional, distribution-neutral Linux certification within the industry. Four separate LPIC-3 specialty certifications are available. Passing any one of the four exams will grant the LPIC-3 certification for that specialty. The LPIC-3 High Availability and Storage Clusters certification covers the administration of Linux systems enterprise-wide with an emphasis on high availability systems and storage.",
+  "skills_measured": [
+    "Review the official LPI exam blueprint for a detailed breakdown of skills measured."
+  ],
+  "prerequisites": [
+    "Prerequisites: The candidate must have an active LPIC-2 certification to receive the LPIC-3 certification."
+  ],
+  "exam_code": "PENDING-lpic-3-306-overview",
+  "cost_usd": 200.0,
+  "cost_inr": 19074.0,
+  "eligibility": "None stated.",
+  "level": "Professional",
+  "job_roles": [
+    "Linux Professional"
+  ],
+  "languages": [
+    "English"
+  ],
+  "retirement_date": null
+}

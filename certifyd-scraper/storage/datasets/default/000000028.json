@@ -1,0 +1,25 @@
+{
+    "source_url": "https://learn.microsoft.com/en-in/credentials/certifications/azure-security-engineer/",
+    "title": "Microsoft Certified: Azure Security Engineer Associate",
+    "tagline": "Demonstrate the skills needed to implement security controls, maintain an organization\u2019s security posture, and identify and remediate security vulnerabilities.",
+    "overview": "Warning This certification, related exam, and renewal assessments will retire on August 31, 2026.",
+    "skills_measured": [
+        "Secure identity and access",
+        "Secure networking",
+        "Secure compute, storage, and databases",
+        "Secure Azure using Microsoft Defender for Cloud and Microsoft Sentinel"
+    ],
+    "prerequisites": [],
+    "exam_code": "AZ-500",
+    "cost_inr": 406227.5,
+    "cost_usd": 4865.0,
+    "eligibility": "",
+    "level": "Intermediate",
+    "job_roles": [
+        "Security Engineer"
+    ],
+    "languages": [
+        "English"
+    ],
+    "retirement_date": "August 31, 2026"
+}

@@ -1,0 +1,19 @@
+{
+  "unique_key": "https://www.cisco.com/site/us/en/learn/training-certifications/certifications/appdynamics/professional-implementer/index.html",
+  "url": "https://www.cisco.com/site/us/en/learn/training-certifications/certifications/appdynamics/professional-implementer/index.html",
+  "method": "GET",
+  "payload": null,
+  "headers": {},
+  "user_data": {
+    "__crawlee": {
+      "enqueueStrategy": "same-hostname",
+      "state": 4,
+      "crawlDepth": 1
+    },
+    "label": "CISCO_DETAIL"
+  },
+  "retry_count": 0,
+  "no_retry": false,
+  "loaded_url": null,
+  "handled_at": "2026-06-11 17:38:22.533637+00:00"
+}

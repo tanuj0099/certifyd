@@ -1,0 +1,17 @@
+{
+  "source_url": "https://learn.microsoft.com/en-in/credentials/certifications/azure-solutions-architect/",
+  "title": "Microsoft Certified: Azure Solutions Architect Expert",
+  "tagline": "As a Microsoft Azure solutions architect, you advise stakeholders and translate business requirements into designs for Azure solutions that align with the Azure Well-Architected Framework and Cloud Adoption Framework for Azure.",
+  "overview": "Certifications As a Microsoft Azure solutions architect, you have subject matter expertise in designing cloud and hybrid solutions that run on Azure, including: Your responsibilities for this role include advising stakeholders and translating business requirements into designs for Azure solutions that align with the Azure Well-Architected Framework and Cloud Adoption Framework for Azure. In this role, you implement solutions on Azure by partnering with various other job roles, including: As a candidate for this certification, you should have advanced experience and knowledge of IT operations, including networking, virtualization, identity, security, business continuity, disaster recovery, data platforms, and governance. You should manage how decisions in each area affect an overall solution. In addition, you should have experience with: Important The English language version of this certification was updated on April 17, 2026. Review the study guide linked on the Exam AZ-305 page for details about recent changes.",
+  "skills_measured": [],
+  "prerequisites": [],
+  "exam_code": "AZ-305",
+  "cost": "₹4865 INR*",
+  "eligibility": "As a candidate for this certification, you should have advanced experience and knowledge of IT operations, including networking, virtualization, identity, security, business continuity, disaster recovery, data platforms, and governance. You should manage how decisions in each area affect an overall solution. In addition, you should have experience with: Azure administration Azure development DevOps processes Important",
+  "level": "",
+  "job_roles": [],
+  "languages": [
+    "English"
+  ],
+  "retirement_date": null
+}

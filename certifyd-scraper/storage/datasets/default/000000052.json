@@ -1,0 +1,22 @@
+{
+  "source_url": "https://www.lpi.org/our-certifications/getting-started/",
+  "title": "Getting started",
+  "tagline": "Getting started",
+  "overview": "Linux Professional Institute (LPI) offers a comprehensive suite of certificate and certification programs designed to confirm technical competence, and to help people get jobs or explore business opportunities. LPI is committed to providing the IT community with exams of the highest quality, relevance, and accuracy. This commitment requires that our exam development process is highly detailed, participatory, consultative and employs many of the proven techniques used by most other IT certification programs.",
+  "skills_measured": [
+    "Review the official LPI exam blueprint for a detailed breakdown of skills measured."
+  ],
+  "prerequisites": [],
+  "exam_code": "PENDING-getting-started",
+  "cost_usd": 200.0,
+  "cost_inr": 19074.0,
+  "eligibility": "None stated.",
+  "level": "Associate",
+  "job_roles": [
+    "Linux Professional"
+  ],
+  "languages": [
+    "English"
+  ],
+  "retirement_date": null
+}

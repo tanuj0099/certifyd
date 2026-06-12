@@ -1,0 +1,24 @@
+{
+  "source_url": "https://www.lpi.org/our-certifications/lpic-2-overview/",
+  "title": "Linux Professional Institute LPIC-2",
+  "tagline": "Linux Professional Institute LPIC-2",
+  "overview": "LPIC-2 is the second certification in the multi-level professional certification program of the Linux Professional Institute (LPI). The LPIC-2 will validate the candidate’s ability to administer small to medium–sized mixed networks. Prerequisites: The candidate must have an active LPIC-1 certification to receive the LPIC-2 certification.",
+  "skills_measured": [
+    "Review the official LPI exam blueprint for a detailed breakdown of skills measured."
+  ],
+  "prerequisites": [
+    "Prerequisites: The candidate must have an active LPIC-1 certification to receive the LPIC-2 certification."
+  ],
+  "exam_code": "PENDING-lpic-2-overview",
+  "cost_usd": 70.0,
+  "cost_inr": 6675.9,
+  "eligibility": "None stated.",
+  "level": "Professional",
+  "job_roles": [
+    "Linux Professional"
+  ],
+  "languages": [
+    "English"
+  ],
+  "retirement_date": null
+}

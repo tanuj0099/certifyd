@@ -1,0 +1,22 @@
+{
+    "source_url": "https://aws.amazon.com/certification/certified-ai-practitioner/",
+    "title": "AWS Certified AI Practitioner",
+    "tagline": "AWS Certified AI Practitioner",
+    "overview": "AWS Certified AI Practitioner\u00a0validates in-demand knowledge of artificial intelligence (AI), machine learning (ML), and generative AI concepts and use cases. Sharpen your competitive edge and position yourself for career growth and higher earnings. 100 USD.\u00a0Visit\u00a0Exam pricing\u00a0for additional cost information, including foreign exchange rates Individuals who are familiar with, but do not necessarily build, solutions using AI/ML technologies on AWS",
+    "skills_measured": [
+        "Review the official exam guide for a detailed breakdown of skills measured."
+    ],
+    "prerequisites": [],
+    "exam_code": "PENDING-certified-ai-practitioner",
+    "cost_usd": 100.0,
+    "cost_inr": 8350.0,
+    "eligibility": "None stated.",
+    "level": "Professional",
+    "job_roles": [
+        "Practitioner"
+    ],
+    "languages": [
+        "English"
+    ],
+    "retirement_date": null
+}

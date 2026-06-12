@@ -1,0 +1,22 @@
+{
+  "source_url": "https://www.lpi.org/our-certifications/devops-overview/",
+  "title": "Linux Professional Institute DevOps Tools Engineer",
+  "tagline": "Linux Professional Institute DevOps Tools Engineer",
+  "overview": "Businesses across the globe are increasingly implementing DevOps practices to optimize daily systems administration and software development tasks. As a result, businesses across industries are hiring IT professionals that can effectively apply DevOps to reduce delivery time and improve quality in the development of new software products. To meet this growing need for qualified professionals, Linux Professional Institute (LPI) developed the Linux Professional Institute DevOps Tools Engineer certification which verifies the skills needed to use the tools that enhance collaboration in workflows throughout system administration and software development.",
+  "skills_measured": [
+    "Review the official LPI exam blueprint for a detailed breakdown of skills measured."
+  ],
+  "prerequisites": [],
+  "exam_code": "PENDING-devops-overview",
+  "cost_usd": 200.0,
+  "cost_inr": 19074.0,
+  "eligibility": "None stated.",
+  "level": "Associate",
+  "job_roles": [
+    "Engineer"
+  ],
+  "languages": [
+    "English"
+  ],
+  "retirement_date": null
+}

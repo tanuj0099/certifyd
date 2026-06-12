@@ -1,0 +1,31 @@
+{
+    "source_url": "https://learn.microsoft.com/en-in/credentials/certifications/github-advanced-security/",
+    "title": "GitHub Advanced Security",
+    "tagline": "This exam is designed for experienced professionals in the field of software development and security. This certification is designed for individuals who have a deep understanding of GitHub and its security features, as well as hands-on experience in securing software development workflows.",
+    "overview": "Candidates for this exam have experience using GitHub Advanced Security (GHAS) to secure code, secrets, and dependencies across the software development lifecycle. They can configure security features, triage and remediate alerts, and apply prevention-first practices using policies, workflows, and automation. Candidates are familiar with GitHub fundamentals, CI/CD, and secure development concepts. Experience the look and feel of the exam before taking it. You'll be able to interact with different question types in the same user interface you'll use during the exam.",
+    "skills_measured": [
+        "Domain 1: Describe GitHub Security Suites, Features, and Ecosystem (15\u201320%)",
+        "Domain 2: Configure and Use Secret Protection (formerly secret scanning) (15\u201320%)",
+        "Domain 3: Configure and Use Supply Chain Security (formerly Dependabot/Dependency Review) (15\u201320%)",
+        "Domain 4: Configure and Use Code Security (formerly Code Scanning with CodeQL) (10\u201315%)",
+        "Domain 5: Security Operations: Best Practices, Prioritization, and Remediation (15\u201320%)",
+        "Domain 6: GitHub Security Suites Administration (10\u201315%)"
+    ],
+    "prerequisites": [],
+    "exam_code": "GH-500",
+    "cost_inr": 308198.5,
+    "cost_usd": 3691.0,
+    "eligibility": "Candidates for this exam have experience using GitHub Advanced Security (GHAS) to secure code, secrets, and dependencies across the software development lifecycle. They can configure security features, triage and remediate alerts, and apply prevention-first practices using policies, workflows, and automation. Candidates are familiar with GitHub fundamentals, CI/CD, and secure development concepts. Experience the look and feel of the exam before taking it. You'll be able to interact with different question types in the same user interface you'll use during the exam.",
+    "level": "Intermediate",
+    "job_roles": [
+        "Administrator",
+        "Developer",
+        "DevOps Engineer",
+        "Solution Architect",
+        "Student"
+    ],
+    "languages": [
+        "English"
+    ],
+    "retirement_date": null
+}

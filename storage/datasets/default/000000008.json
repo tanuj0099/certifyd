@@ -1,0 +1,17 @@
+{
+  "source_url": "https://learn.microsoft.com/en-in/credentials/certifications/m365-administrator-expert/",
+  "title": "Microsoft 365 Certified: Administrator Expert",
+  "tagline": "If you’re an administrator who deploys and manages Microsoft 365 and performs Microsoft 365 tenant-level implementation and administration of cloud and hybrid environments, this certification is designed for you.",
+  "overview": "Certifications If you’re an administrator who deploys and manages Microsoft 365 and performs Microsoft 365 tenant-level implementation and administration of cloud and hybrid environments, this certification is designed for you. As a Microsoft 365 administrator, you: As a candidate for this certification, you have functional experience with all Microsoft 365 workloads and Microsoft Entra ID and have administered at least one of these. You should also have a working knowledge of the following: To become a Microsoft 365 Certified: Administrator Expert, you must earn at least one of the following: Microsoft 365 Certified: Endpoint Administrator Associate, Microsoft 365 Certified: Teams Administrator Associate, Microsoft Certified: Identity and Access Administrator Associate, and Microsoft Certified: Information Security Administrator Associate certification. Important",
+  "skills_measured": [],
+  "prerequisites": [],
+  "exam_code": "MS-102",
+  "cost": "₹4865 INR*",
+  "eligibility": "As a candidate for this certification, you have functional experience with all Microsoft 365 workloads and Microsoft Entra ID and have administered at least one of these. You should also have a working knowledge of the following: Networking Active Directory Domain Services DNS PowerShell",
+  "level": "",
+  "job_roles": [],
+  "languages": [
+    "English"
+  ],
+  "retirement_date": null
+}

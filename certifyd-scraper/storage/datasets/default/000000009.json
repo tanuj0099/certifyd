@@ -1,0 +1,25 @@
+{
+    "source_url": "https://learn.microsoft.com/en-in/credentials/certifications/modern-desktop/",
+    "title": "Microsoft 365 Certified: Endpoint Administrator Associate",
+    "tagline": "Plan and execute an endpoint deployment strategy, using essential elements of modern management, co-management approaches, and Microsoft Intune integration.",
+    "overview": "As a candidate for this certification, you have subject matter expertise managing devices and client applications in a Microsoft 365 tenant by using Microsoft Intune. You\u2019re responsible for: Implementing solutions for efficient deployment and management of endpoints on various operating systems, platforms, and device types. Implementing and managing endpoints at scale by using Microsoft Intune, Microsoft Intune Suite, Windows Autopilot, Microsoft Security Copilot, Microsoft Defender for Endpoint, Microsoft Entra ID, Azure Virtual Desktop, and Windows 365. Implementing identity, security, access, policies, updates, and apps for endpoints. As an endpoint administrator, you collaborate with architects, Microsoft 365 administrators, security administrators, and other workload administrators to plan and implement a modern workplace strategy that meets the business needs of an organization. You must have experience with Microsoft Entra ID and Microsoft 365 technologies, including Intune, as well as strong skills and experience in deploying, configuring, and maintaining Windows client and non-Windows devices.",
+    "skills_measured": [
+        "Prepare infrastructure for devices",
+        "Manage and maintain devices",
+        "Manage applications",
+        "Protect devices"
+    ],
+    "prerequisites": [],
+    "exam_code": "MD-102",
+    "cost_inr": 406227.5,
+    "cost_usd": 4865.0,
+    "eligibility": "As a candidate for this certification, you have subject matter expertise managing devices and client applications in a Microsoft 365 tenant by using Microsoft Intune. You\u2019re responsible for: Implementing solutions for efficient deployment and management of endpoints on various operating systems, platforms, and device types. Implementing and managing endpoints at scale by using Microsoft Intune, Microsoft Intune Suite, Windows Autopilot, Microsoft Security Copilot, Microsoft Defender for Endpoint, Microsoft Entra ID, Azure Virtual Desktop, and Windows 365. Implementing identity, security, access, policies, updates, and apps for endpoints. As an endpoint administrator, you collaborate with architects, Microsoft 365 administrators, security administrators, and other workload administrators to plan and implement a modern workplace strategy that meets the business needs of an organization. You must have experience with Microsoft Entra ID and Microsoft 365 technologies, including Intune, as well as strong skills and experience in deploying, configuring, and maintaining Windows client and non-Windows devices.",
+    "level": "Intermediate",
+    "job_roles": [
+        "Administrator"
+    ],
+    "languages": [
+        "English"
+    ],
+    "retirement_date": null
+}

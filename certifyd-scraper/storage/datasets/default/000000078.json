@@ -1,0 +1,24 @@
+{
+  "source_url": "https://www.lpi.org/our-certifications/exam-702-objectives",
+  "title": "",
+  "tagline": "",
+  "overview": "About Objective Weights: Each objective is assigned a weighting value. The weights indicate the relative importance of each objective on the exam. Objectives with higher weights will be covered in the exam with more questions. This is a required exam for the Linux Professional Institute BSD Specialist certification. It covers basic skills in installing and administering a BSD system.",
+  "skills_measured": [
+    "Review the official LPI exam blueprint for a detailed breakdown of skills measured."
+  ],
+  "prerequisites": [
+    "The certification holder is a BSD system administrator. The certification holder has a solid understanding of the architecture of the BSD operating systems. This includes the ability to manage various aspects of a BSD installation, including user accounts and groups, processes, file systems, installed software and client networking configuration. Furthermore, the candidate is experienced in using standard BSD and Unix tools on the command line. The certification holder is able to apply these skills on FreeBSD, OpenBSD and NetBSD."
+  ],
+  "exam_code": "PENDING-exam-702-objectives",
+  "cost_usd": 200.0,
+  "cost_inr": 19074.0,
+  "eligibility": "None stated.",
+  "level": "Associate",
+  "job_roles": [
+    "Linux Professional"
+  ],
+  "languages": [
+    "English"
+  ],
+  "retirement_date": null
+}

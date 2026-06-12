@@ -1,0 +1,24 @@
+{
+  "source_url": "https://www.lpi.org/our-certifications/bsd-overview/",
+  "title": "Linux Professional Institute BSD Specialist",
+  "tagline": "Linux Professional Institute BSD Specialist",
+  "overview": "The BSD Specialist certification is part of the Linux Professional Institute (LPI) Open Technology certification program. The exam focuses on the practical skills required to work successfully in a FreeBSD, NetBSD or OpenBSD environment and tests the knowledge and skills needed to administer BSD operating systems.",
+  "skills_measured": [
+    "Review the official LPI exam blueprint for a detailed breakdown of skills measured."
+  ],
+  "prerequisites": [
+    "The typical BSD Specialist certification holder is a system administrator of BSD operating systems. The certification holder has an understanding of the architecture of the BSD operating systems. This includes the ability to manage various aspects of a BSD installation, including the management of user accounts and groups, processes, file systems, installed software, and client networking configuration. The candidate is experienced in using standard BSD and Unix tools on the command line."
+  ],
+  "exam_code": "PENDING-bsd-overview",
+  "cost_usd": 200.0,
+  "cost_inr": 19074.0,
+  "eligibility": "None stated.",
+  "level": "Associate",
+  "job_roles": [
+    "Linux Professional"
+  ],
+  "languages": [
+    "English"
+  ],
+  "retirement_date": null
+}

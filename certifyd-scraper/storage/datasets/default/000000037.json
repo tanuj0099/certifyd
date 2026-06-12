@@ -1,0 +1,24 @@
+{
+    "source_url": "https://cloud.google.com/learn/certification/security-operations-engineer",
+    "title": "Professional Security Operations Engineer",
+    "tagline": "Professional Security Operations Engineer",
+    "overview": "A Google Cloud Certified Professional Security Operations Engineer detects, monitors, analyzes, investigates, and responds to security threats against workloads, endpoints, and infrastructure. This individual uses Google Cloud resources to protect an enterprise environment and is proficient in writing detection rules, log prioritization and ingestion, orchestration, and response automation. Further, this individual has experience leveraging posture and threat intelligence for detection and response. The Professional Security Operations Engineer exam assesses your ability to conduct:",
+    "skills_measured": [
+        "Review the official Google Cloud exam guide for a detailed breakdown of skills measured."
+    ],
+    "prerequisites": [
+        "A Google Cloud Certified Professional Security Operations Engineer detects, monitors, analyzes, investigates, and responds to security threats against workloads, endpoints, and infrastructure. This individual uses Google Cloud resources to protect an enterprise environment and is proficient in writing detection rules, log prioritization and ingestion, orchestration, and response automation. Further, this individual has experience leveraging posture and threat intelligence for detection and response."
+    ],
+    "exam_code": "PENDING-security-operations-engineer",
+    "cost_usd": 200.0,
+    "cost_inr": 16700.0,
+    "eligibility": "None stated.",
+    "level": "Professional",
+    "job_roles": [
+        "Engineer"
+    ],
+    "languages": [
+        "English"
+    ],
+    "retirement_date": null
+}

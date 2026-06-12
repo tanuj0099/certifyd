@@ -1,0 +1,32 @@
+{
+    "source_url": "https://learn.microsoft.com/en-in/credentials/certifications/agentic-ai-developer/",
+    "title": "GitHub Certified: Agentic AI Developer (beta)",
+    "tagline": "Demonstrate deep expertise in deploying, operating, integrating, and governing AI agents in production SDLC workflows, ensuring reliability, safety, and speed with GitHub as the control plane.",
+    "overview": "You should have subject matter expertise in operating, integrating, supervising, and governing AI agents inside production-grade SDLC workflows and development environments, ensuring reliability, safety, and velocity using GitHub as the system of record and control plane. Your responsibilities for this role include: Operating agent workflows inside the SDLC Supervising autonomous behavior with GitHub controls Evaluating and tuning agent outputs using scans and artifacts Configuring custom agents Coordinating multi-agent execution safely You work closely with architects, platform engineers, DevOps engineers, application developers, product managers, and security engineers to develop, deploy, operate, and manage agents that operate within the GitHub platform. You should have experience with the software development lifecycle (SDLC), workflows in GitHub and controls, and code quality, security, and review practices. You should also have experience with coding agents including GitHub Copilot, MCP servers and agent customization such as custom instructions, custom agents, tools, and Copilot setup steps. Experience the look and feel of the exam before taking it. You'll be able to interact with different question types in the same user interface you'll use during the exam.",
+    "skills_measured": [
+        "Domain 1: Prepare agent architecture and SDLC processes (15\u201320%)",
+        "Domain 2: Implement Tool Use and Environment Interaction (20\u201325%)",
+        "Domain 3: Manage Memory, State, and Execution (10\u201315%)",
+        "Domain 4: Perform Evaluation, Error Analysis, and Tuning (15\u201320%)",
+        "Domain 5: Orchestrate Multi-Agent Coordination (15\u201320%)",
+        "Domain 6: Implement Guardrails and Accountability (10\u201315%)"
+    ],
+    "prerequisites": [],
+    "exam_code": "GH-600",
+    "cost_inr": 406227.5,
+    "cost_usd": 4865.0,
+    "eligibility": "",
+    "level": "Intermediate",
+    "job_roles": [
+        "AI Engineer",
+        "App Maker",
+        "Data Engineer",
+        "Developer",
+        "DevOps Engineer",
+        "Solution Architect"
+    ],
+    "languages": [
+        "English"
+    ],
+    "retirement_date": null
+}

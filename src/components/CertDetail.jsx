@@ -33,11 +33,12 @@ const INDUSTRY_AVG_DURATION = 100;  // minutes
 // 
 // Helpers
 // 
-function formatCost(cost) {
-  if (cost === null || cost === undefined) return '-';
-  const n = Number(cost);
-  if (n === 0) return 'Free';
-  return `$${n.toLocaleString()}`;
+function formatDualCost(cost_inr, cost_usd) {
+  if (!cost_inr && !cost_usd) return 'Free';
+  const inrStr = cost_inr ? `₹${Number(cost_inr).toLocaleString('en-IN')}` : '';
+  const usdStr = cost_usd ? `$${Number(cost_usd).toLocaleString()}` : '';
+  if (inrStr && usdStr) return `${inrStr} / ${usdStr}`;
+  return inrStr || usdStr;
 }
 
 function formatValidity(months) {
@@ -94,7 +95,7 @@ function StatCard({ icon: Icon, label, value, valueClass = 'text-[var(--text)]',
       min-h-[80px] ensures the card is tall enough to be a comfortable
       touch target even on the smallest phones.
     */
-    <div className="flex flex-col gap-2 md:gap-3 p-3.5 md:p-5 rounded-2xl backdrop-blur-xl bg-white/60 dark:bg-white/5 border border-white/40 dark:border-white/10 shadow-2xl shadow-black/10 min-h-[80px] md:min-h-0">
+    <div className="flex flex-col gap-2 md:gap-3 p-3.5 md:p-5 glass min-h-[80px] md:min-h-0">
       <div className="flex items-center gap-1.5 md:gap-2">
         <div
           className="w-6 h-6 md:w-7 md:h-7 rounded-lg flex items-center justify-center flex-shrink-0"
@@ -110,7 +111,7 @@ function StatCard({ icon: Icon, label, value, valueClass = 'text-[var(--text)]',
         Value text: scale down on mobile to prevent overflow in the 22 grid.
         text-lg on mobile (18px)  text-2xl on desktop.
       */}
-      <p className={`text-lg md:text-2xl font-bold leading-none tabular-nums ${valueClass}`}>
+      <p className={`text-[15px] md:text-2xl font-bold leading-tight tabular-nums break-words ${valueClass}`}>
         {value}
       </p>
     </div>
@@ -153,7 +154,7 @@ function ComparisonChart({ title, thisValue, avgValue, unit, thisLabel, color })
     : 'Matches industry average';
 
   return (
-    <div className="p-4 md:p-5 rounded-2xl backdrop-blur-xl bg-white/60 dark:bg-white/5 border border-white/40 dark:border-white/10 shadow-2xl shadow-black/10">
+    <div className="p-4 md:p-5 glass">
       <h4 className="text-sm font-bold uppercase tracking-widest text-[var(--text-3)] mb-3 md:mb-4">
         {title}
       </h4>
@@ -231,16 +232,16 @@ function LoadingSkeleton() {
         {/* Stat cards - 22 on mobile, 4 across on desktop */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-20 md:h-28 backdrop-blur-xl bg-white/60 dark:bg-white/5 border border-white/40 dark:border-white/10 shadow-2xl shadow-black/10 rounded-2xl" />
+            <div key={i} className="h-20 md:h-28 glass" />
           ))}
         </div>
         {/* Body */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-4">
-            <div className="h-40 md:h-48 backdrop-blur-xl bg-white/60 dark:bg-white/5 border border-white/40 dark:border-white/10 shadow-2xl shadow-black/10 rounded-2xl" />
-            <div className="h-28 md:h-32 backdrop-blur-xl bg-white/60 dark:bg-white/5 border border-white/40 dark:border-white/10 shadow-2xl shadow-black/10 rounded-2xl" />
+            <div className="h-40 md:h-48 glass" />
+            <div className="h-28 md:h-32 glass" />
           </div>
-          <div className="h-56 md:h-64 backdrop-blur-xl bg-white/60 dark:bg-white/5 border border-white/40 dark:border-white/10 shadow-2xl shadow-black/10 rounded-2xl" />
+          <div className="h-56 md:h-64 glass" />
         </div>
       </div>
     </div>
@@ -306,7 +307,7 @@ const CertDetail = () => {
 
   const diffStyle     = getDifficultyStyle(cert.difficulty_level);
   const vendor        = cert.vendor || vendorFromSlug(cert.slug);
-  const costValue     = Number(cert.base_cost_usd)       || 0;
+  const costValue     = Number(cert.cost_usd)       || 0;
   const durationValue = Number(cert.exam_duration_minutes) || 0;
 
   return (
@@ -343,7 +344,7 @@ const CertDetail = () => {
           {/* Badges row - wraps naturally on mobile */}
           <div className="flex flex-wrap items-center gap-2 mb-4 md:mb-5">
             {vendor && (
-              <span className="px-3 py-1.5 text-sm font-medium text-[var(--text-3)] uppercase tracking-widest backdrop-blur-xl bg-white/60 dark:bg-white/5 border border-white/40 dark:border-white/10 shadow-2xl shadow-black/10 rounded-full">
+              <span className="px-3 py-1.5 text-sm font-medium text-[var(--text-3)] uppercase tracking-widest glass rounded-full">
                 {vendor}
               </span>
             )}
@@ -353,7 +354,7 @@ const CertDetail = () => {
               </span>
             )}
             {cert.functional_track && (
-              <span className="px-3 py-1.5 text-sm font-medium text-[var(--text-3)] uppercase tracking-widest backdrop-blur-xl bg-white/60 dark:bg-white/5 border border-white/40 dark:border-white/10 shadow-2xl shadow-black/10 rounded-full">
+              <span className="px-3 py-1.5 text-sm font-medium text-[var(--text-3)] uppercase tracking-widest glass">
                 {cert.functional_track}
               </span>
             )}
@@ -378,8 +379,8 @@ const CertDetail = () => {
           <StatCard
             icon={DollarSign}
             label="Exam Cost"
-            value={formatCost(cert.base_cost_usd)}
-            valueClass={costValue === 0 ? 'text-emerald-400' : 'text-emerald-300'}
+            value={formatDualCost(cert.cost_inr, cert.cost_usd)}
+            valueClass={costValue === 0 ? 'text-emerald-400' : 'text-[var(--text)]'}
             accent="#10b981"
           />
           <StatCard
@@ -421,7 +422,7 @@ const CertDetail = () => {
               lg:sticky:      sticks while scrolling on desktop
            */}
           <aside className="w-full order-first lg:order-last lg:sticky lg:top-6">
-            <div className="p-4 md:p-6 rounded-2xl backdrop-blur-xl bg-white/60 dark:bg-white/5 border border-white/40 dark:border-white/10 shadow-2xl shadow-black/10 space-y-4 md:space-y-5">
+            <div className="p-4 md:p-6 rounded-2xl glass space-y-4 md:space-y-5">
               <h3 className="text-sm font-bold uppercase tracking-widest text-[var(--text-3)]">
                 Exam Logistics
               </h3>
@@ -494,7 +495,7 @@ const CertDetail = () => {
                 {[
                   { label: 'Total Questions', value: formatQuestions(cert.total_questions) },
                   { label: 'Exam Duration',   value: formatDuration(cert.exam_duration_minutes) },
-                  { label: 'Exam Cost',        value: formatCost(cert.base_cost_usd) },
+                  { label: 'Exam Cost',        value: formatDualCost(cert.cost_inr, cert.cost_usd) },
                 ].map(({ label, value }) => (
                   <div key={label} className="flex items-center justify-between">
                     <span className="text-sm font-medium text-[var(--text-3)]">{label}</span>
@@ -505,7 +506,7 @@ const CertDetail = () => {
 
               {/* CTA - min-h-[44px] for fat-finger safety */}
               <Link
-                href="/tools/roi"
+                href={`/tools/roi?cert=${cert.slug}`}
                 className="
                   mt-1 w-full flex items-center justify-center gap-2
                   min-h-[44px] py-3 px-4
@@ -520,10 +521,6 @@ const CertDetail = () => {
                 </svg>
               </Link>
 
-              {/* Affiliate Disclosure */}
-              <p className="text-sm font-medium text-[var(--text-3)] text-center pt-2 leading-relaxed">
-                If you purchase training through links on this page, we may earn a commission. This does not affect our ROI calculations.
-              </p>
             </div>
           </aside>
 
@@ -534,8 +531,8 @@ const CertDetail = () => {
           <div className="w-full order-last lg:order-first lg:col-span-2 space-y-5 md:space-y-6">
 
             {/* What is it? */}
-            {cert.about_description && (
-              <section className="p-4 md:p-6 rounded-2xl backdrop-blur-xl bg-white/60 dark:bg-white/5 border border-white/40 dark:border-white/10 shadow-2xl shadow-black/10">
+            {cert.overview && (
+              <section className="p-4 md:p-6 rounded-2xl glass">
                 <div className="flex items-center gap-2 mb-3 md:mb-4">
                   <BookOpen className="w-4 h-4 text-blue-400 flex-shrink-0" />
                   <h2 className="text-sm font-semibold uppercase tracking-widest text-[var(--text-3)]">
@@ -543,7 +540,7 @@ const CertDetail = () => {
                   </h2>
                 </div>
                 <p className="text-[var(--text)] text-sm md:text-[15px] leading-[1.8] font-normal">
-                  {cert.about_description}
+                  {cert.overview}
                 </p>
               </section>
             )}
@@ -589,10 +586,10 @@ const CertDetail = () => {
                   color="#10b981"
                 />
                 <ComparisonChart
-                  title="Exam Duration vs. Industry Avg"
-                  thisValue={durationValue || 0}
-                  avgValue={INDUSTRY_AVG_DURATION}
-                  unit=" min"
+                  title="Expected Salary Hike vs. Industry Avg"
+                  thisValue={cert.median_roi_percent || 20}
+                  avgValue={15}
+                  unit="%"
                   thisLabel={vendor || 'This Cert'}
                   color="#8b5cf6"
                 />

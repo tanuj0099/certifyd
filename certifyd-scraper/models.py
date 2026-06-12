@@ -17,7 +17,7 @@ Design principles:
 
 from __future__ import annotations
 
-from typing import List, Optional
+from typing import List
 
 from pydantic import BaseModel, Field
 
@@ -268,3 +268,25 @@ class ProfessionalCertification(BaseModel):
             }
         }
     }
+
+import re
+from pydantic import field_validator
+
+class Certification(BaseModel):
+    """
+    Validation schema for the output of the scraping pipeline.
+    """
+    source_url: str
+    title: str
+    tagline: str
+    overview: str
+    skills_measured: list[str]
+    prerequisites: list[str]
+    exam_code: str
+    cost_inr: float
+    cost_usd: float
+    eligibility: str
+    level: str
+    job_roles: list[str]
+    languages: list[str]
+    retirement_date: str | None = None

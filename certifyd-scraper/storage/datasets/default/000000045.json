@@ -1,0 +1,24 @@
+{
+    "source_url": "https://www.comptia.org/en-us/certifications/linux/",
+    "title": "Linux+",
+    "tagline": "Linux+",
+    "overview": "CompTIA Linux+ (V8) validates your ability to manage, secure, automate, and troubleshoot Linux systems in cloud and hybrid environments. You will gain hands-on experience with automation, orchestration, security, and containers to prepare for roles like Linux systems administrator, systems engineer, and network engineer. Linux+ demonstrates your ability to support and protect the critical Linux platforms that businesses rely on. Configure and manage Linux systems, storage, networks, and services in cloud and hybrid environments.",
+    "skills_measured": [
+        "Review the official CompTIA exam blueprint for a detailed breakdown of skills measured."
+    ],
+    "prerequisites": [
+        "CompTIA Linux+ (V8) validates your ability to manage, secure, automate, and troubleshoot Linux systems in cloud and hybrid environments. You will gain hands-on experience with automation, orchestration, security, and containers to prepare for roles like Linux systems administrator, systems engineer, and network engineer. Linux+ demonstrates your ability to support and protect the critical Linux platforms that businesses rely on."
+    ],
+    "exam_code": "PENDING-",
+    "cost_usd": 200.0,
+    "cost_inr": 16700.0,
+    "eligibility": "None stated.",
+    "level": "Foundational",
+    "job_roles": [
+        "IT Professional"
+    ],
+    "languages": [
+        "English"
+    ],
+    "retirement_date": null
+}

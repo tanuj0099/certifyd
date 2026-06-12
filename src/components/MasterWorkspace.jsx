@@ -1,5 +1,6 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useJourneyStore } from '../store/useJourneyStore.js';
 import ModeSelector, { ModePill } from './ModeSelector.jsx';
@@ -92,11 +93,19 @@ const AppPage = function ({ onCertSelected }) {
   const currentStepNum = STEP_TABS.findIndex((t) => t.id === activeTab);
   const isMobile = useIsMobile();
 
+  const setResumeContext = useJourneyStore((s) => s.setResumeContext);
+
+  // Wrap in a separate component or just use it if the parent provides Suspense
+  // Next.js requires useSearchParams to be wrapped in Suspense
+  const searchParams = useSearchParams();
+  const certQuery = searchParams?.get('cert');
+
   useEffect(() => {
-    if (currentStepNum === -1) {
-      onTabChange("resume");
+    if (certQuery && certQuery !== prefilledCert) {
+      setResumeContext({ certName: certQuery });
+      onTabChange("calculator");
     }
-  }, [activeTab, currentStepNum, onTabChange]);
+  }, [certQuery, prefilledCert, setResumeContext, onTabChange]);
 
   return (
     <div

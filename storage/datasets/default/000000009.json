@@ -1,0 +1,23 @@
+{
+  "source_url": "https://learn.microsoft.com/en-in/credentials/certifications/copilot-and-agent-administration-fundamentals/",
+  "title": "Microsoft 365 Certified: Copilot and Agent Administration Fundamentals",
+  "tagline": "Demonstrate how to support, secure, and protect an AI-enabled Microsoft 365 environment.",
+  "overview": "As a candidate for this Microsoft Certification, you should be familiar with Microsoft 365, including core services, security, identity and access, data protection, and governance, along with Microsoft 365 Copilot and agents. Additionally, you should be familiar with the admin centers used to access Microsoft 365 workloads, such as Exchange Online, SharePoint in Microsoft 365, Microsoft Teams, Microsoft Entra, and Microsoft Purview. You need to have experience with AI-driven productivity tools and modern IT management practices. You must be able to identify the roles of the core features and objects available in Microsoft 365, such as users, groups, teams, sites, and libraries. Plus, you should understand the core security features of Microsoft 365, such as authentication methods, conditional access policies, and single sign-on (SSO). Tip Review the AB-900 study guide to help you prepare for the exam. Demo the exam experience by visiting our",
+  "skills_measured": [
+    "Identify the core features and objects of Microsoft 365 services",
+    "Understand data protection and governance tasks for Microsoft 365 and Copilot",
+    "Perform basic administrative tasks for Copilot and agents"
+  ],
+  "prerequisites": [],
+  "exam_code": "AB-900",
+  "cost": "₹3691 INR*",
+  "eligibility": "As a candidate for this Microsoft Certification, you should be familiar with Microsoft 365, including core services, security, identity and access, data protection, and governance, along with Microsoft 365 Copilot and agents. Additionally, you should be familiar with the admin centers used to access Microsoft 365 workloads, such as Exchange Online, SharePoint in Microsoft 365, Microsoft Teams, Microsoft Entra, and Microsoft Purview. You need to have experience with AI-driven productivity tools and modern IT management practices. You must be able to identify the roles of the core features and objects available in Microsoft 365, such as users, groups, teams, sites, and libraries. Plus, you should understand the core security features of Microsoft 365, such as authentication methods, conditional access policies, and single sign-on (SSO). Tip Review the AB-900 study guide to help you prepare for the exam. Demo the exam experience by visiting our",
+  "level": "Beginner",
+  "job_roles": [
+    "Administrator"
+  ],
+  "languages": [
+    "English"
+  ],
+  "retirement_date": null
+}

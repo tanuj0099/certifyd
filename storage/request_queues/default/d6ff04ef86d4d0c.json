@@ -1,0 +1,19 @@
+{
+  "unique_key": "https://learn.microsoft.com/en-us/credentials/certifications/microsoft-certified-educator",
+  "url": "https://learn.microsoft.com/en-us/credentials/certifications/microsoft-certified-educator/",
+  "method": "GET",
+  "payload": null,
+  "headers": {},
+  "user_data": {
+    "__crawlee": {
+      "enqueueStrategy": "same-hostname",
+      "state": 4,
+      "crawlDepth": 1
+    },
+    "label": "DETAIL"
+  },
+  "retry_count": 0,
+  "no_retry": false,
+  "loaded_url": null,
+  "handled_at": "2026-06-11 16:27:30.131920+00:00"
+}

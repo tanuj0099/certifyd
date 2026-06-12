@@ -1,0 +1,17 @@
+{
+  "unique_key": "https://aws.amazon.com/certification",
+  "url": "https://aws.amazon.com/certification/",
+  "method": "GET",
+  "payload": null,
+  "headers": {},
+  "user_data": {
+    "__crawlee": {
+      "state": 4
+    },
+    "label": "AWS_INDEX"
+  },
+  "retry_count": 0,
+  "no_retry": false,
+  "loaded_url": null,
+  "handled_at": "2026-06-11 17:37:49.129153+00:00"
+}

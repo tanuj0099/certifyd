@@ -1,0 +1,24 @@
+{
+    "source_url": "https://learn.microsoft.com/en-in/credentials/certifications/azure-fundamentals/",
+    "title": "Microsoft Certified: Azure Fundamentals",
+    "tagline": "Demonstrate foundational knowledge of cloud concepts, core Azure services, plus Azure management and governance features and tools.",
+    "overview": "As a candidate for this certification, you\u2019re a technology professional who wants to demonstrate foundational knowledge of cloud concepts in general and Microsoft Azure in particular. This certification is a common starting point in a journey towards a career in Azure. You can describe Azure architectural components and Azure services, such as: Compute Networking Storage You can also describe features and tools to secure, govern, and administer Azure. You should have skills and experience working with an area of IT, such as: Infrastructure management Database management Software development You may be eligible for ACE college credit if you pass this certification exam. See ACE college credit for certification exams for details.",
+    "skills_measured": [
+        "Describe cloud concepts",
+        "Describe Azure architecture and services",
+        "Describe Azure management and governance"
+    ],
+    "prerequisites": [],
+    "exam_code": "AZ-900",
+    "cost_inr": 308198.5,
+    "cost_usd": 3691.0,
+    "eligibility": "As a candidate for this certification, you\u2019re a technology professional who wants to demonstrate foundational knowledge of cloud concepts in general and Microsoft Azure in particular. This certification is a common starting point in a journey towards a career in Azure. You can describe Azure architectural components and Azure services, such as: Compute Networking Storage You can also describe features and tools to secure, govern, and administer Azure. You should have skills and experience working with an area of IT, such as: Infrastructure management Database management Software development You may be eligible for ACE college credit if you pass this certification exam. See ACE college credit for certification exams for details.",
+    "level": "Beginner",
+    "job_roles": [
+        "Administrator"
+    ],
+    "languages": [
+        "English"
+    ],
+    "retirement_date": null
+}

@@ -33,14 +33,17 @@ export const useJourneyStore = create(
 
       setSelectedCert: (cert) => {
         if (!cert) return
+        const nativeCostInr = cert.cost_inr || cert.avg_cost || cert.avgCost;
+        const nativeHike = cert.median_roi_percent || cert.avg_hike || cert.avgHike;
+        
         // Auto-sync certCost + hikePercent from cert data
         set({
           selectedCert: cert,
-          certName:     cert.name,
-          certCost:     cert.examCostL ?? (cert.avgCost ? cert.avgCost / 100000 : get().certCost),
-          hikePercent:  cert.avgHike   ?? get().hikePercent,
+          certName:     cert.name || cert.cert_name,
+          certCost:     nativeCostInr ? nativeCostInr / 100000 : get().certCost,
+          hikePercent:  nativeHike ?? get().hikePercent,
         })
-        try { trackCertSelected({ certId: cert.id, certName: cert.name }) } catch (_) {}
+        try { trackCertSelected({ certId: cert.id, certName: cert.name || cert.cert_name }) } catch (_) {}
       },
 
       clearCert: () => set({ selectedCert: null, certName: '' }),

@@ -1,0 +1,19 @@
+{
+  "unique_key": "https://learn.microsoft.com/en-us/credentials/certifications/m365-administrator-expert",
+  "url": "https://learn.microsoft.com/en-us/credentials/certifications/m365-administrator-expert/",
+  "method": "GET",
+  "payload": null,
+  "headers": {},
+  "user_data": {
+    "__crawlee": {
+      "enqueueStrategy": "same-hostname",
+      "state": 4,
+      "crawlDepth": 1
+    },
+    "label": "DETAIL"
+  },
+  "retry_count": 0,
+  "no_retry": false,
+  "loaded_url": null,
+  "handled_at": "2026-06-11 16:27:23.812367+00:00"
+}

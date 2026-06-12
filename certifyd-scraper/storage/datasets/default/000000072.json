@@ -1,0 +1,22 @@
+{
+  "source_url": "https://www.lpi.org/our-certifications/exam-300-objectives",
+  "title": "",
+  "tagline": "",
+  "overview": "About Objective Weights: Each objective is assigned a weighting value. The weights indicate the relative importance of each objective on the exam. Objectives with higher weights will be covered in the exam with more questions. A complete description of the LPIC-3 certification program can be found here.",
+  "skills_measured": [
+    "Review the official LPI exam blueprint for a detailed breakdown of skills measured."
+  ],
+  "prerequisites": [],
+  "exam_code": "PENDING-exam-300-objectives",
+  "cost_usd": 200.0,
+  "cost_inr": 19074.0,
+  "eligibility": "None stated.",
+  "level": "Associate",
+  "job_roles": [
+    "Linux Professional"
+  ],
+  "languages": [
+    "English"
+  ],
+  "retirement_date": null
+}

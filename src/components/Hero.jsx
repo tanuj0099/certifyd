@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import {
   Zap, AlertTriangle, CheckCircle, RefreshCw,
   TrendingUp, MapPin, User, Star, ArrowRight,
-  Info, ShieldCheck, Clock, Wifi, Building2
+  Info, ShieldCheck, Clock, Wifi, Building2, Share2
 } from 'lucide-react'
 import {
   LineChart, Line, XAxis, YAxis, Tooltip,
@@ -21,6 +21,7 @@ import AILoadingState from './AILoadingState.jsx'
 import HikeVerifier from './HikeVerifier.jsx'
 import PitchBoss from './PitchBoss.jsx'
 import ShareROICard from './ShareROICard.jsx'
+
 import { useJourneyStore } from '../store/useJourneyStore.js'
 import MarketPulseTicker from './MarketPulseTicker.jsx'
 import { HeroSkeleton, AIResultSkeleton, ConsensusGauge, RollNumber, resolveVerdictStatus, DataSyncBadge } from './PremiumDataViz.jsx'
@@ -101,7 +102,7 @@ function getNotIdealNote(cert) {
   return notes.length > 0 ? notes[0] : null
 }
 
-//  Share ROI URL 
+//  Share ROI URL (Redesigned Premium Glass Button)
 function ShareURLButton({ certName, salary, certCost, hikePercent, mode }) {
   const [copied, setCopied] = useState(false)
   if (!certName) return null
@@ -121,7 +122,6 @@ function ShareURLButton({ certName, salary, certCost, hikePercent, mode }) {
       setCopied(true)
       setTimeout(() => setCopied(false), 2500)
     }).catch(() => {
-      // Fallback: select text
       const el = document.createElement('textarea')
       el.value = url
       document.body.appendChild(el)
@@ -138,23 +138,22 @@ function ShareURLButton({ certName, salary, certCost, hikePercent, mode }) {
       onClick={handleCopy}
       whileHover={{ scale: 1.02, y: -1 }}
       whileTap={{ scale: 0.97 }}
+      className={copied ? "" : "glass"}
       style={{
-        padding: '8px 14px', borderRadius: '9px', cursor: 'pointer',
-        background: copied ? 'transparent' : 'transparent',
-        border: '1px solid ' + (copied ? 'transparent' : 'var(--border)'),
-        color: copied ? EMERALD : 'var(--text-3)',
-        fontSize: '12px', fontFamily: FB, fontWeight: '600',
-        display: 'flex', alignItems: 'center', gap: '5px',
-        transition: 'all 0.2s',
+        padding: '8px 16px', borderRadius: '10px', cursor: 'pointer',
+        background: copied ? 'var(--emerald-light)' : undefined,
+        border: '1px solid ' + (copied ? EMERALD : 'var(--border)'),
+        color: copied ? '#115E59' : 'var(--text-2)',
+        fontSize: '12px', fontFamily: FH, fontWeight: '700',
+        display: 'flex', alignItems: 'center', gap: '6px',
+        transition: 'all 0.2s', letterSpacing: '-0.01em'
       }}
     >
-      {copied ? <CheckCircle size={12} /> : <ArrowRight size={12} />}
-      {copied ? 'Link copied!' : 'Share My ROI'}
+      {copied ? <CheckCircle size={14} color="#115E59" /> : <Share2 size={14} color="var(--text-3)" />}
+      {copied ? 'Link Copied!' : 'Share ROI Link'}
     </motion.button>
   )
-}
-
-//  Student stepping-stone path 
+}//  Student stepping-stone path 
 function getStudentPathSteps(domain, certName, targetOfferLakhs) {
   const domainSteps = {
     finance: [
@@ -187,7 +186,7 @@ function getStudentPathSteps(domain, certName, targetOfferLakhs) {
     { num: '01', label: 'Get Certified', detail: certName.split(' ').slice(0, 3).join(' '), time: '2-4 mo', color: INDIGO },
     { num: '02', ...middle[0] },
     { num: '03', ...middle[1] },
-    { num: '04', label: 'First Offer', detail: '₹' + targetOfferLakhs + 'L target package', time: '', color: EMERALD },
+    { num: '04', label: 'First Offer', detail: 'Target entry-level package', time: '', color: EMERALD },
   ]
 }
 
@@ -204,7 +203,7 @@ function StudentPath({ certName, certCost, domain, targetOfferLakhs }) {
       style={{ marginBottom: '16px', padding: '18px', borderRadius: '13px' }}
     >
       <div className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4">
-        YOUR PATH TO ₹{targetOfferLakhs}L+
+        YOUR PATH TO YOUR FIRST OFFER
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
@@ -498,9 +497,10 @@ function PickMessage({ certName, prefilledCert, firstName }) {
   if (!certName) return null
   const prefersReduced = useReducedMotion()
 
+  const slugSpace = prefilledCert ? prefilledCert.replace(/-/g, ' ').toLowerCase() : ''
+  const certLower = certName.toLowerCase()
   const isPrimary = prefilledCert &&
-    (certName.toLowerCase().includes(prefilledCert.toLowerCase()) ||
-      prefilledCert.toLowerCase().includes(certName.toLowerCase()))
+    (certLower.includes(slugSpace) || slugSpace.includes(certLower))
 
   const springTransition = prefersReduced
     ? { duration: 0 }
@@ -512,9 +512,9 @@ function PickMessage({ certName, prefilledCert, firstName }) {
         key="great"
         initial={{ opacity: 0, y: -8, scale: 0.97 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: -6 }}
         transition={springTransition}
-        style={{ marginBottom: '16px', padding: '13px 16px', borderRadius: '12px', background: 'transparent', border: '1px solid transparent', display: 'flex', alignItems: 'flex-start', gap: '10px' }}
+        className="glass"
+        style={{ marginBottom: '16px', padding: '16px 20px', display: 'flex', alignItems: 'flex-start', gap: '12px' }}
       >
         <motion.div
           animate={prefersReduced ? {} : { rotate: [0, -10, 10, -6, 6, 0] }}
@@ -540,9 +540,9 @@ function PickMessage({ certName, prefilledCert, firstName }) {
       key="interesting"
       initial={{ opacity: 0, y: -8, scale: 0.97 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -6 }}
       transition={springTransition}
-      style={{ marginBottom: '16px', padding: '13px 16px', borderRadius: '12px', background: 'transparent', border: '1px solid transparent', display: 'flex', alignItems: 'flex-start', gap: '10px' }}
+      className="glass"
+      style={{ marginBottom: '16px', padding: '16px 20px', display: 'flex', alignItems: 'flex-start', gap: '12px' }}
     >
       <Info size={16} color={PICTON} style={{ flexShrink: 0, marginTop: '2px' }} />
       <div>
@@ -743,19 +743,13 @@ function AIResult({ result, certName, onReset, paybackMonths, fiveYearNetGain, c
       )}
 
       {result.bottomLine && (
-        <div style={{ margin: '0 16px 12px', padding: '10px 13px', borderRadius: '9px', background: vc + '0d', border: '1px solid ' + vc + '22' }}>
-          <div style={{ fontFamily: FM, fontSize: '9px', color: vc, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>BOTTOM LINE</div>
-          <div className="text-base font-bold text-slate-900 mt-2">Invest ₹{(certCost/1000).toFixed(0)}K to unlock a potential ₹{(fiveYearNetGain/100000).toFixed(1)}L net gain over 5 years.</div>
+        <div style={{ margin: '0 16px 12px', padding: '12px 16px', borderRadius: '12px', background: vc + '12', border: '1px solid ' + vc + '30' }}>
+          <div style={{ fontFamily: FM, fontSize: '9px', color: vc, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '6px' }}>BOTTOM LINE</div>
+          <div className="text-base font-bold text-slate-900 mt-2">Invest ₹{(certCostINR/1000).toFixed(0)}K to unlock a potential ₹{(fiveYearNetGain/100000).toFixed(1)}L net gain over 5 years.</div>
         </div>
       )}
 
-      <div style={{ margin: '0 16px 16px', padding: '9px 12px', borderRadius: '8px', background: 'transparent', border: '1px solid transparent', display: 'flex', flexDirection: 'column', gap: 8 }}>
-        <div style={{ display: 'flex', gap: 7, alignItems: 'flex-start' }}>
-          <Info size={11} color="var(--text-4)" style={{ flexShrink: 0, marginTop: '1px' }} />
-          <div style={{ fontFamily: FM, fontSize: '10px', color: 'var(--text-4)', lineHeight: '1.6', letterSpacing: '0.02em' }}>
-            Estimates based on market medians - not guarantees. Results vary with company tier, negotiation, and conditions. Source: LinkedIn India  Naukri  NASSCOM  Q2 2026.
-          </div>
-        </div>
+      <div style={{ margin: '0 16px 16px', display: 'flex', justifyContent: 'center' }}>
         <DataSyncBadge updatedAt={result.updatedAt} />
       </div>
     </motion.div>
@@ -977,7 +971,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
       </div>
 
       {/*  Personalisation banner  */}
-      {(firstName || displayCity || prefilledCert) ? (
+      {resumeName || resumeCity ? (
         <motion.div
           initial={prefersReduced ? false : { opacity: 0, y: -6 }}
           animate={{ opacity: 1, y: 0 }}
@@ -995,11 +989,6 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
               <MapPin size={11} color={PICTON} />
               <span style={{ fontSize: '12px', color: PICTON, fontFamily: FM }}>{displayCity}</span>
             </div>
-          ) : null}
-          {prefilledCert ? (
-            <span style={{ marginLeft: 'auto', fontSize: '10px', color: VIOLET, fontFamily: FM, padding: '2px 7px', borderRadius: '4px', background: 'transparent', border: '1px solid transparent' }}>
-              Auto-mapped from resume
-            </span>
           ) : null}
         </motion.div>
       ) : null}
@@ -1038,9 +1027,9 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
             <motion.div
               initial={prefersReduced ? false : { opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
               transition={T}
-              style={{ marginBottom: '18px', borderRadius: '22px', background: 'transparent', boxShadow: 'none', overflow: 'hidden' }}
+              className="glass"
+              style={{ marginBottom: '20px', overflow: 'hidden' }}
             >
               <div style={{ padding: '18px 20px', display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center', borderBottom: notIdealNote ? '1px solid var(--border-subtle)' : 'none' }}>
                 <span style={{ fontFamily: FH, fontWeight: '700', fontSize: '12px', color: VIOLET }}>{selectedCert.name}</span>
@@ -1104,7 +1093,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
             color={INDIGO}
           />
           {(() => {
-            const currentBase = isStudent ? 4.8 : salary;
+            const currentBase = isStudent ? expectedFirstSalary : salary;
             if (currentBase <= 0 || certCost <= 0) return null;
             const costPercentage = ((certCost / currentBase) * 100).toFixed(1);
             const bandLabel = costPercentage > 10 ? 'Risky' : 'Good value';
@@ -1147,95 +1136,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
         ) : null}
       </div>
 
-      {/*  Stat cards  */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={salary + '-' + certCost + '-' + hikePercent + '-' + mode}
-          initial={prefersReduced ? false : { opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: prefersReduced ? 0 : 0.18 }}
-        >
-          {isStudent ? (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '8px', marginBottom: '12px' }}>
-              <StatCard label="Target Offer" value={`₹${(4.8 * (1 + (hikePercent / 100))).toFixed(1)}L+`} color={VIOLET} delay={0} />
-              <StatCard label="Investment" value={'₹' + certCost + 'L'} color={AMBER} delay={0.05} /> {/* Changed color to AMBER */}
-            </div>
-          ) : (
-            <>
-              {/*  Financial Hero Metrics  */}
-              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2,1fr)', gap: '8px', marginBottom: '12px' }}>
-                <div style={{ padding: '24px 16px', textAlign: 'center', borderColor: 'var(--border-accent)', background: 'transparent', minHeight: 110, border: 'none' }}>
-                  <div className="micro-label" style={{ color: 'var(--text-4)', marginBottom: '8px' }}>PROJECTED 5-YR VALUE ADD</div>
-                  <div style={{ fontFamily: 'var(--font-head)', fontSize: 'clamp(1.5rem,4vw,2.2rem)', fontWeight: '800', color: EMERALD }}>
-                    ₹{(fiveYearNetGain / 100000).toFixed(1)}L
-                  </div>
-                  <div className="text-sm text-slate-600 mt-2 font-medium">Inflation-adjusted estimate based on {expectedHike}% market movement</div>
-                </div>
-                <div style={{ padding: '24px 16px', textAlign: 'center', borderColor: 'var(--border)', background: 'transparent', minHeight: 110, border: 'none' }}>
-                  <div className="micro-label" style={{ color: 'var(--text-4)', marginBottom: '8px' }}>ANNUALIZED RETURN (CAGR)</div>
-                  <div style={{ fontFamily: 'var(--font-head)', fontSize: 'clamp(1.5rem,4vw,2.2rem)', fontWeight: '800', color: VIOLET }}>
-                    {isImmediate ? 'Immediate' : `${cagr.toFixed(1)}%`}
-                  </div>
-                  <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border bg-white shadow-sm" style={{ borderColor: confidenceColor + '40' }}>
-                    <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: confidenceColor }} />
-                    <span className="text-sm font-bold" style={{ color: confidenceColor }}>{confidenceLabel} ({confidenceScore}%)</span>
-                  </div>
-                </div>
-              </div>
-
-              {/*  Secondary Dash Stats  */}
-              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px', marginBottom: '12px' }}>
-                <StatCard label="New Salary" value={`₹${targetOfferLakhs}L/yr`} color={PICTON} delay={0} />
-                <StatCard label="ADDITIONAL MONTHLY PAY" value={<span className="text-emerald-600 font-bold">+₹{Math.round(monthlyHikeAmount / 1000)}K</span>} color={VIOLET} delay={0.05} />
-                <StatCard
-                  label="Payback Window"
-                  value={`${paybackMonths} mo`}
-                  color={AMBER}
-                  delay={0.1}
-                />
-              </div>
-            </>
-          )}
-
-          {!isStudent && (
-            <DataNote>
-              All figures are estimates based on market medians. Break-even assumes you negotiate the full hike on your next job switch. 5-year gain = cumulative salary uplift minus cert cost.
-            </DataNote>
-          )}
-        </motion.div>
-      </AnimatePresence>
-
-      {/*  Student path graphic  */}
-      <AnimatePresence>
-        {isStudent && certName ? (
-          <StudentPath 
-            key={certName} 
-            certName={certName} 
-            certCost={certCost} 
-            targetOfferLakhs={targetOfferLakhs} 
-          />
-        ) : null}
-      </AnimatePresence>
-
-      {/*  Chart  */}
-      {!isStudent && roi.chartData && roi.chartData.length > 0 ? ( /* Removed glass class */
-        <div className="glass" style={{ marginBottom: '20px', marginTop: '16px', padding: '16px', borderRadius: '13px' }}>
-          <div style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '10px' }}>CUMULATIVE GAIN - 24 MONTHS</div>
-          <ResponsiveContainer width="100%" height={150}>
-            <LineChart data={roi.chartData} margin={{ top: 4, right: 8, bottom: 0, left: -16 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="transparent" />
-              <XAxis dataKey="label" tick={{ fontSize: 9, fill: 'var(--text-4)', fontFamily: FM }} axisLine={false} tickLine={false} interval={4} />
-              <YAxis tick={{ fontSize: 9, fill: 'var(--text-4)', fontFamily: FM }} axisLine={false} tickLine={false} tickFormatter={function (v) { return '₹' + v + 'K' }} />
-              <Tooltip formatter={(value) => [`₹${value.toLocaleString()}K`, '']} />
-              <Legend verticalAlign="top" align="right" iconType="circle" wrapperStyle={{ fontSize: '14px', fontWeight: '500', color: '#475569', paddingBottom: '20px' }} />
-              <ReferenceLine y={0} stroke="transparent" strokeDasharray="4 4" />
-              <Line type="monotone" dataKey="action" name="With Certification" stroke="#10b981" strokeWidth={3} dot={false} activeDot={{ r: 4, fill: "#10b981" }} />
-              <Line type="monotone" dataKey="inaction" name="Inaction" stroke="#94a3b8" strokeWidth={2} strokeDasharray="5 5" dot={false} />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      ) : null}
+      {/*  Data Visualizations moved below AI Button  */}
 
       {/*  AI analyse button  */}
       <div style={{ marginBottom: '16px' }}>
@@ -1317,6 +1218,84 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
                 fiveYearNetGain={fiveYearNetGain}
                 certCostINR={certCostINR}
               />
+
+              {/*  Data Visualizations  */}
+              <div style={{ marginTop: '24px' }}>
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={salary + '-' + certCost + '-' + hikePercent + '-' + mode}
+                    initial={prefersReduced ? false : { opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: prefersReduced ? 0 : 0.18 }}
+                  >
+                    {isStudent ? (
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '8px', marginBottom: '12px' }}>
+                        <StatCard label="Target Role" value="Entry Level" color={VIOLET} delay={0} />
+                        <StatCard label="Investment" value={'₹' + certCost + 'L'} color={AMBER} delay={0.05} />
+                      </div>
+                    ) : (
+                      <>
+                        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2,1fr)', gap: '8px', marginBottom: '12px' }}>
+                          <div style={{ padding: '24px 16px', textAlign: 'center', borderColor: 'var(--border-accent)', background: 'transparent', minHeight: 110, border: 'none' }}>
+                            <div className="micro-label" style={{ color: 'var(--text-4)', marginBottom: '8px' }}>PROJECTED 5-YR VALUE ADD</div>
+                            <div style={{ fontFamily: 'var(--font-head)', fontSize: 'clamp(1.5rem,4vw,2.2rem)', fontWeight: '800', color: EMERALD }}>
+                              ₹{(fiveYearNetGain / 100000).toFixed(1)}L
+                            </div>
+                            <div className="text-sm text-slate-600 mt-2 font-medium">Inflation-adjusted estimate based on {expectedHike}% market movement</div>
+                          </div>
+                          <div style={{ padding: '24px 16px', textAlign: 'center', borderColor: 'var(--border)', background: 'transparent', minHeight: 110, border: 'none' }}>
+                            <div className="micro-label" style={{ color: 'var(--text-4)', marginBottom: '8px' }}>ANNUALIZED RETURN (CAGR)</div>
+                            <div style={{ fontFamily: 'var(--font-head)', fontSize: 'clamp(1.5rem,4vw,2.2rem)', fontWeight: '800', color: VIOLET }}>
+                              {isImmediate ? 'Immediate' : `${cagr.toFixed(1)}%`}
+                            </div>
+                            <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border bg-white shadow-sm" style={{ borderColor: confidenceColor + '40' }}>
+                              <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: confidenceColor }} />
+                              <span className="text-sm font-bold" style={{ color: confidenceColor }}>{confidenceLabel} ({confidenceScore}%)</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px', marginBottom: '12px' }}>
+                          <StatCard label="New Salary" value={`₹${targetOfferLakhs}L/yr`} color={PICTON} delay={0} />
+                          <StatCard label="ADDITIONAL MONTHLY PAY" value={<span className="text-emerald-600 font-bold">+₹{Math.round(monthlyHikeAmount / 1000)}K</span>} color={VIOLET} delay={0.05} />
+                          <StatCard label="Payback Window" value={`${paybackMonths} mo`} color={AMBER} delay={0.1} />
+                        </div>
+                      </>
+                    )}
+
+                    {!isStudent && (
+                      <DataNote>
+                        All figures are estimates based on market medians. Break-even assumes you negotiate the full hike on your next job switch. 5-year gain = cumulative salary uplift minus cert cost.
+                      </DataNote>
+                    )}
+                  </motion.div>
+                </AnimatePresence>
+
+                <AnimatePresence>
+                  {isStudent && certName ? (
+                    <StudentPath key={certName} certName={certName} certCost={certCost} targetOfferLakhs={targetOfferLakhs} domain={selectedCert ? selectedCert.domain : ''} />
+                  ) : null}
+                </AnimatePresence>
+
+                {!isStudent && roi.chartData && roi.chartData.length > 0 ? (
+                  <div className="glass" style={{ marginBottom: '20px', marginTop: '16px', padding: '16px', borderRadius: '13px' }}>
+                    <div style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '10px' }}>CUMULATIVE GAIN - 24 MONTHS</div>
+                    <ResponsiveContainer width="100%" height={150}>
+                      <LineChart data={roi.chartData} margin={{ top: 4, right: 8, bottom: 0, left: -16 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="transparent" />
+                        <XAxis dataKey="label" tick={{ fontSize: 9, fill: 'var(--text-4)', fontFamily: FM }} axisLine={false} tickLine={false} interval={4} />
+                        <YAxis tick={{ fontSize: 9, fill: 'var(--text-4)', fontFamily: FM }} axisLine={false} tickLine={false} tickFormatter={function (v) { return '₹' + v + 'K' }} />
+                        <Tooltip formatter={(value) => [`₹${value.toLocaleString()}K`, '']} />
+                        <Legend verticalAlign="top" align="right" iconType="circle" wrapperStyle={{ fontSize: '14px', fontWeight: '500', color: '#475569', paddingBottom: '20px' }} />
+                        <ReferenceLine y={0} stroke="transparent" strokeDasharray="4 4" />
+                        <Line type="monotone" dataKey="action" name="With Certification" stroke="#10b981" strokeWidth={3} dot={false} activeDot={{ r: 4, fill: "#10b981" }} />
+                        <Line type="monotone" dataKey="inaction" name="Inaction" stroke="#94a3b8" strokeWidth={2} strokeDasharray="5 5" dot={false} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                ) : null}
+              </div>
             </motion.div>
           ) : null}
         </AnimatePresence>

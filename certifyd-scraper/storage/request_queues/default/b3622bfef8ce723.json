@@ -1,0 +1,19 @@
+{
+  "unique_key": "https://aws.amazon.com/certification/certified-cloudops-engineer-associate",
+  "url": "https://aws.amazon.com/certification/certified-cloudops-engineer-associate/",
+  "method": "GET",
+  "payload": null,
+  "headers": {},
+  "user_data": {
+    "__crawlee": {
+      "enqueueStrategy": "same-hostname",
+      "state": 4,
+      "crawlDepth": 1
+    },
+    "label": "AWS_DETAIL"
+  },
+  "retry_count": 0,
+  "no_retry": false,
+  "loaded_url": null,
+  "handled_at": "2026-06-11 17:38:17.445662+00:00"
+}

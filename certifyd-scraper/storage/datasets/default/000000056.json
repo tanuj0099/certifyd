@@ -1,0 +1,22 @@
+{
+  "source_url": "https://www.lpi.org/our-certifications/open-source-essentials/",
+  "title": "Linux Professional Institute Open Source Essentials",
+  "tagline": "Linux Professional Institute Open Source Essentials",
+  "overview": "Open Source Essentials is part of LPI’s Essentials certificate track. It covers the fundamental aspects of free and open source software, open content and open technology. Its objectives include legal, technical and business aspects. The program is not limited to a specific profession. Instead, it covers the common knowledge that anyone who is professionally involved with open source should have.",
+  "skills_measured": [
+    "Review the official LPI exam blueprint for a detailed breakdown of skills measured."
+  ],
+  "prerequisites": [],
+  "exam_code": "PENDING-open-source-essentials",
+  "cost_usd": 200.0,
+  "cost_inr": 19074.0,
+  "eligibility": "None stated.",
+  "level": "Foundational",
+  "job_roles": [
+    "Linux Professional"
+  ],
+  "languages": [
+    "English"
+  ],
+  "retirement_date": null
+}

@@ -1,0 +1,22 @@
+{
+  "source_url": "https://www.lpi.org/our-certifications/summary-of-lpi-certifications/",
+  "title": "Summary of LPI Certifications",
+  "tagline": "Summary of LPI Certifications",
+  "overview": "Linux Professional Institute (LPI) is committed to the development of a global standard in Linux and Open Source certification. We believe that such a certification program must meet the requirements of both IT professionals and the organizations that would employ them. To achieve this goal we have adopted an open, rigorous, and consultative development process, which uses both volunteer and hired resources. Our development process is widely recognized and endorsed and has met the strict requirements of independent certification authorities. The Essentials certificates were created for candidates who are starting a career in open source or who wish to demonstrate their abilities.",
+  "skills_measured": [
+    "Review the official LPI exam blueprint for a detailed breakdown of skills measured."
+  ],
+  "prerequisites": [],
+  "exam_code": "PENDING-summary-of-lpi-certifications",
+  "cost_usd": 200.0,
+  "cost_inr": 19074.0,
+  "eligibility": "None stated.",
+  "level": "Associate",
+  "job_roles": [
+    "Linux Professional"
+  ],
+  "languages": [
+    "English"
+  ],
+  "retirement_date": null
+}

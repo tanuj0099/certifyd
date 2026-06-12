@@ -1,0 +1,24 @@
+{
+    "source_url": "https://www.comptia.org/en-us/certifications/security/",
+    "title": "Security+",
+    "tagline": "Security+",
+    "overview": "CompTIA Security+ is the premier global certification that establishes the essential skills required for core security functions and a career in IT security. It showcases professionals' capabilities in securing networks, applications, and devices, ensuring data integrity, confidentiality, and availability. CompTIA Security+ focuses on practical, hands-on skills to tackle real-world challenges. As the most widely recognized credential, it is invaluable for advancing in the dynamic field of cybersecurity. Identify various types of threats, attacks, and vulnerabilities, including malware, social engineering, and application attacks.",
+    "skills_measured": [
+        "Review the official CompTIA exam blueprint for a detailed breakdown of skills measured."
+    ],
+    "prerequisites": [
+        "Recommended experience: CompTIA Network+ and two years of experience working in a security/ systems administrator job role"
+    ],
+    "exam_code": "PENDING-",
+    "cost_usd": 200.0,
+    "cost_inr": 16700.0,
+    "eligibility": "None stated.",
+    "level": "Professional",
+    "job_roles": [
+        "IT Professional"
+    ],
+    "languages": [
+        "English"
+    ],
+    "retirement_date": null
+}

@@ -19,9 +19,12 @@ function getDifficultyStyle(level) {
   return DIFFICULTY_STYLES[level.toLowerCase()] || DIFFICULTY_STYLES.associate;
 }
 
-function formatCost(cost) {
-  if (!cost || cost === 0) return 'Free';
-  return `$${Number(cost).toLocaleString()}`;
+function formatDualCost(cost_inr, cost_usd) {
+  if (!cost_inr && !cost_usd) return 'Free';
+  const inrStr = cost_inr ? `₹${Number(cost_inr).toLocaleString('en-IN')}` : '';
+  const usdStr = cost_usd ? `$${Number(cost_usd).toLocaleString()}` : '';
+  if (inrStr && usdStr) return `${inrStr}/${usdStr}`;
+  return inrStr || usdStr;
 }
 
 function formatValidity(months) {
@@ -50,8 +53,7 @@ const CertificationCard = ({ data }) => {
 
   const diffStyle = getDifficultyStyle(data.difficulty_level);
   const vendor = data.vendor || vendorFromSlug(data.slug);
-  const description = data.about_description || data.description || '';
-  // Slightly longer truncation on mobile since we have full width
+  const description = data.overview || data.about_description || '';
   const truncated = description.length > 120 ? description.slice(0, 120).trimEnd() + '...' : description;
 
   return (
@@ -59,16 +61,12 @@ const CertificationCard = ({ data }) => {
       className="
         group relative flex flex-col
         p-4 md:p-5
-        rounded-2xl
-        backdrop-blur-xl bg-white/60 dark:bg-white/5 border border-white/40 dark:border-white/10 shadow-2xl shadow-black/10
+        glass
         md:hover:scale-[1.015] md:hover:shadow-black/20
         transition-all duration-200
         cursor-pointer outline-none
         focus-visible:ring-2 focus-visible:ring-white/20
       "
-      style={{
-        /* Using Tailwind for glassmorphism */
-      }}
       onMouseOver={(e) => {
         e.currentTarget.style.transform = 'scale(1.015)';
       }}
@@ -77,19 +75,19 @@ const CertificationCard = ({ data }) => {
       }}
     >
       {/*  Header: vendor + difficulty + track  */}
-      <div className="flex flex-wrap items-center gap-1.5 md:gap-2 mb-3">
+      <div className="flex flex-wrap items-center gap-1.5 md:gap-2 mb-3 pr-10">
         {vendor && (
-          <span className="px-2 py-1 text-sm font-semibold uppercase tracking-widest rounded-md transition-colors bg-slate-200/50 dark:bg-slate-800/50 backdrop-blur-md border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300">
+          <span className="px-2 py-1 text-[10px] md:text-xs font-semibold uppercase tracking-widest rounded-md transition-colors glass text-[var(--text-2)]">
             {vendor}
           </span>
         )}
         {data.difficulty_level && (
-          <span className={`px-2 py-1 text-sm font-semibold uppercase tracking-widest rounded-md backdrop-blur-md border ${diffStyle.bg} ${diffStyle.border} ${diffStyle.text}`}>
+          <span className={`px-2 py-1 text-[10px] md:text-xs font-semibold uppercase tracking-widest rounded-md backdrop-blur-md border ${diffStyle.bg} ${diffStyle.border} ${diffStyle.text}`}>
             {data.difficulty_level}
           </span>
         )}
         {data.functional_track && (
-          <span className="ml-auto px-2 py-1 text-sm font-semibold uppercase tracking-widest rounded-md truncate max-w-[100px] md:max-w-[130px] bg-slate-200/50 dark:bg-slate-800/50 backdrop-blur-md border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300">
+          <span className="px-2 py-1 text-[10px] md:text-xs font-semibold uppercase tracking-widest rounded-md truncate max-w-[100px] md:max-w-[130px] glass text-[var(--text-2)]">
             {data.functional_track}
           </span>
         )}
@@ -97,11 +95,11 @@ const CertificationCard = ({ data }) => {
 
       {/*  Title + description  */}
       <div className="flex-grow mb-4">
-        <h3 className="text-sm md:text-base font-semibold mb-2 line-clamp-2 leading-snug group-hover:text-blue-500 transition-colors text-[var(--text)]">
+        <h3 className="text-sm md:text-base font-semibold mb-2 line-clamp-2 leading-snug group-hover:text-[var(--accent)] transition-colors text-[var(--text)]">
           {data.name}
         </h3>
         {truncated && (
-          <p className="text-sm leading-relaxed line-clamp-3 text-[var(--text-2)]">
+          <p className="text-xs md:text-sm leading-relaxed line-clamp-3 text-[var(--text-2)]">
             {truncated}
           </p>
         )}
@@ -112,20 +110,25 @@ const CertificationCard = ({ data }) => {
 
       {/*  Footer metrics  */}
       <div className="grid grid-cols-2 gap-3">
-        <div className="flex items-center gap-1.5">
-          <DollarSign className="w-3.5 h-3.5 flex-shrink-0" style={{ color: 'var(--gold)' }} />
+        <div className="flex items-center gap-2 p-2 rounded-xl transition-colors duration-300">
+          <div className="w-8 h-8 rounded-full bg-green-500/10 flex items-center justify-center border border-green-500/20 shadow-inner">
+            <DollarSign className="w-4 h-4 text-green-600 dark:text-green-400" />
+          </div>
           <div>
-            <p className="text-sm font-medium text-slate-600 uppercase tracking-wider font-semibold leading-none mb-0.5 text-[var(--text-3)]">Cost</p>
-            <p className="text-sm font-semibold text-[var(--text)]">
-              {formatCost(data.base_cost_usd)}
+            <p className="text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-widest leading-none mb-1">Cost</p>
+            <p className="text-[11px] md:text-sm font-bold text-[var(--text)] tracking-tight">
+              {formatDualCost(data.cost_inr, data.cost_usd)}
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-1.5">
-          <Clock className="w-3.5 h-3.5 flex-shrink-0 text-blue-500" />
+        
+        <div className="flex items-center gap-2 p-2">
+          <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
+            <Clock className="w-4 h-4 text-blue-500" />
+          </div>
           <div>
-            <p className="text-sm font-medium text-slate-600 uppercase tracking-wider font-semibold leading-none mb-0.5 text-[var(--text-3)]">Validity</p>
-            <p className="text-sm font-semibold text-[var(--text)]">
+            <p className="text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-widest leading-none mb-1">Validity</p>
+            <p className="text-[11px] md:text-sm font-bold text-[var(--text)] tracking-tight">
               {formatValidity(data.validity_period_months)}
             </p>
           </div>
@@ -133,8 +136,8 @@ const CertificationCard = ({ data }) => {
       </div>
 
       {/*  Hover arrow - desktop only  */}
-      <div className="hidden md:block absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-        <svg className="w-4 h-4 text-[var(--text-3)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <div className="hidden md:flex absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-center justify-center w-8 h-8 rounded-full bg-blue-500 text-white shadow-lg shadow-blue-500/30">
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
         </svg>
       </div>

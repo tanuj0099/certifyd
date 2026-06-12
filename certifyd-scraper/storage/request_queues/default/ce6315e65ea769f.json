@@ -1,0 +1,19 @@
+{
+  "unique_key": "https://cloud.google.com/learn/certification/security-operations-engineer",
+  "url": "https://cloud.google.com/learn/certification/security-operations-engineer",
+  "method": "GET",
+  "payload": null,
+  "headers": {},
+  "user_data": {
+    "__crawlee": {
+      "enqueueStrategy": "same-hostname",
+      "state": 4,
+      "crawlDepth": 1
+    },
+    "label": "GC_DETAIL"
+  },
+  "retry_count": 0,
+  "no_retry": false,
+  "loaded_url": null,
+  "handled_at": "2026-06-11 17:38:21.200860+00:00"
+}

@@ -1,0 +1,22 @@
+{
+    "source_url": "https://aws.amazon.com/certification/certified-security-specialty/",
+    "title": "AWS Certified Security - Specialty",
+    "tagline": "AWS Certified Security - Specialty",
+    "overview": "Validate your knowledge and advanced technical skills in securing workloads and architectures on AWS AWS Certified Security - Specialty\u00a0validates your expertise in creating and implementing security solutions in the AWS Cloud. This certification also validates your understanding of specialized data classifications and AWS data protection mechanisms; data-encryption methods and AWS mechanisms to implement them; and secure internet protocols and AWS mechanisms to implement them. 300 USD.\u00a0Visit\u00a0Exam pricing\u00a0for additional cost information, including foreign exchange rates",
+    "skills_measured": [
+        "Review the official exam guide for a detailed breakdown of skills measured."
+    ],
+    "prerequisites": [],
+    "exam_code": "PENDING-certified-security-specialty",
+    "cost_usd": 300.0,
+    "cost_inr": 25050.0,
+    "eligibility": "None stated.",
+    "level": "Specialty",
+    "job_roles": [
+        "Cloud Professional"
+    ],
+    "languages": [
+        "English"
+    ],
+    "retirement_date": null
+}

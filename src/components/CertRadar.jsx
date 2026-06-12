@@ -4,20 +4,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../lib/supabase.js';
 import CertificationCard from './CertificationCard.jsx';
 import SkeletonGrid from './SkeletonGrid.jsx';
-import { AlertCircle, ArrowRight, X, TrendingUp, Compass } from 'lucide-react';
+import { AlertCircle, ArrowRight, X, TrendingUp, Compass, Filter } from 'lucide-react';
 import { useJourneyStore } from '../store/useJourneyStore.js';
+import FilterSidebar, { FILTER_SECTIONS } from './FilterSidebar.jsx';
 
 const PAGE_SIZE = 20;
-
-// Filter pills - map to functional_track values in the DB
-const TRACK_FILTERS = [
-  { label: 'All',            value: null },
-  { label: 'Cloud & DevOps', value: 'Cloud' },
-  { label: 'Security',       value: 'Security' },
-  { label: 'Data & AI',      value: 'Data' },
-  { label: 'Networking',     value: 'Networking' },
-  { label: 'Management',     value: 'Management' },
-];
 
 // ── Active Journey Capsule ─────────────────────────────────────────────────
 function ActiveJourneyCapsule({ currentRole, targetDomain, intent, onDismiss }) {
@@ -49,7 +40,6 @@ function ActiveJourneyCapsule({ currentRole, targetDomain, intent, onDismiss }) 
           flexWrap: 'wrap',
         }}
       >
-        {/* Intent badge */}
         <div style={{
           display: 'flex',
           alignItems: 'center',
@@ -65,7 +55,6 @@ function ActiveJourneyCapsule({ currentRole, targetDomain, intent, onDismiss }) 
           </span>
         </div>
 
-        {/* Breadcrumb trail */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
           {currentRole && (
             <>
@@ -86,7 +75,6 @@ function ActiveJourneyCapsule({ currentRole, targetDomain, intent, onDismiss }) 
           </span>
         </div>
 
-        {/* Dismiss */}
         <button
           onClick={onDismiss}
           style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '2px', color: 'var(--text-4)', display: 'flex', alignItems: 'center', marginLeft: '4px', flexShrink: 0 }}
@@ -106,14 +94,11 @@ const CertRadar = () => {
   const resumeDomain = useJourneyStore(s => s.resumeDomain);
   const setTargetDomain = useJourneyStore(s => s.setTargetDomain);
 
-  // Read intent + target from URL (set by LandingPage routing)
   const urlIntent = searchParams?.get('intent') || '';
   const urlTarget = searchParams?.get('target') || '';
 
-  // Resolve the active target: URL param > store > empty
   const activeTarget = urlTarget || targetDomain || '';
   const activeIntent = urlIntent || 'Domain_Pivot';
-  // Current role comes from the resume context in the store
   const currentRole = resumeDomain || '';
 
   const [certifications, setCertifications] = useState([]);
@@ -124,7 +109,10 @@ const CertRadar = () => {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
-  const [activeTrack, setActiveTrack] = useState(null);
+  
+  // Filter States
+  const [filters, setFilters] = useState({ vendors: [], difficulties: [], tracks: [] });
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
@@ -140,7 +128,7 @@ const CertRadar = () => {
     setPage(0);
     setCertifications([]);
     setHasMore(true);
-  }, [debouncedQuery, activeTrack]);
+  }, [debouncedQuery, filters]);
 
   // Fetch data
   useEffect(() => {
@@ -160,12 +148,36 @@ const CertRadar = () => {
 
         let query = supabase
           .from('certifications')
-          .select('id, slug, name, difficulty_level, functional_track, base_cost_usd, validity_period_months, about_description')
+          .select('id, slug, name, difficulty_level, functional_track, cost_inr, cost_usd, validity_period_months, overview')
           .range(start, end)
           .order('name', { ascending: true });
 
         if (debouncedQuery) query = query.ilike('name', `%${debouncedQuery}%`);
-        if (activeTrack)    query = query.ilike('functional_track', `%${activeTrack}%`);
+        
+        // Strict domain pivot filter: only show certs for the target domain
+        if (activeIntent === 'Domain_Pivot' && activeTarget) {
+          query = query.ilike('functional_track', `%${activeTarget}%`);
+        }
+
+        if (filters.tracks?.length > 0) {
+          query = query.in('functional_track', filters.tracks);
+        }
+        
+        if (filters.difficulties?.length > 0) {
+          query = query.in('difficulty_level', filters.difficulties);
+        }
+        
+        if (filters.vendors?.length > 0) {
+          const vendorSection = FILTER_SECTIONS.find(s => s.id === 'vendors');
+          let slugPatterns = [];
+          filters.vendors.forEach(vId => {
+            const opt = vendorSection.options.find(o => o.id === vId);
+            if (opt) slugPatterns.push(...opt.slugs.map(slug => `slug.ilike.%${slug}%`));
+          });
+          if (slugPatterns.length > 0) {
+            query = query.or(slugPatterns.join(','));
+          }
+        }
 
         const { data, error: fetchError } = await query;
         if (fetchError) throw fetchError;
@@ -196,7 +208,7 @@ const CertRadar = () => {
 
     fetchCerts();
     return () => { isMounted = false; };
-  }, [debouncedQuery, page, activeTrack]);
+  }, [debouncedQuery, page, filters]);
 
   const handleLoadMore = () => {
     if (!isLoadingMore && hasMore) setPage((prev) => prev + 1);
@@ -207,152 +219,143 @@ const CertRadar = () => {
     setTargetDomain('');
   };
 
+  const activeFilterCount = (filters.vendors?.length || 0) + 
+                            (filters.difficulties?.length || 0) + 
+                            (filters.tracks?.length || 0);
+
   return (
-    <div className="w-full pb-20" style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)' }}>
-      <div className="max-w-[1400px] mx-auto p-4 md:p-6 lg:p-12">
-
-        {/* ── Active Journey Capsule ── */}
-        {showCapsule && activeTarget && (
-          <ActiveJourneyCapsule
-            currentRole={currentRole}
-            targetDomain={activeTarget}
-            intent={activeIntent}
-            onDismiss={handleDismissCapsule}
+    <div className="w-full pb-32 md:pb-20 relative" style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)' }}>
+      <div className="max-w-[1400px] mx-auto p-4 md:p-6 lg:p-8">
+        
+        {/* Main Grid Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          
+          {/* Sidebar Column */}
+          <FilterSidebar 
+            filters={filters} 
+            setFilters={setFilters} 
+            isMobileOpen={isMobileSidebarOpen} 
+            setIsMobileOpen={setIsMobileSidebarOpen} 
           />
-        )}
 
-        {/* Search & Filter */}
-        <div className="mb-8 md:mb-10 space-y-4 md:space-y-6">
-
-          {/* Search bar - underline style */}
-          <div className="flex items-center gap-3 border-b pb-3 transition-colors" style={{ borderColor: 'var(--border)' }}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-5 h-5 flex-shrink-0"
-              style={{ color: 'var(--text-3)' }}
-              viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-            <input
-              type="text"
-              placeholder={activeTarget ? `Searching for ${activeTarget} certs...` : "Search certifications..."}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full min-h-[44px] bg-transparent border-none text-base md:text-lg focus:outline-none focus:ring-0 px-0"
-              style={{ color: 'var(--text)' }}
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                aria-label="Clear search"
-                className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full transition-colors"
-                style={{ background: 'var(--border)', color: 'var(--text-2)' }}
-              >
-                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
+          {/* Main Content Column */}
+          <div className="lg:col-span-3">
+            
+            {showCapsule && activeTarget && (
+              <ActiveJourneyCapsule
+                currentRole={currentRole}
+                targetDomain={activeTarget}
+                intent={activeIntent}
+                onDismiss={handleDismissCapsule}
+              />
             )}
-          </div>
 
-          {/* Filter pills */}
-          <div
-            className="flex items-center gap-2 overflow-x-auto pb-1"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          >
-            {TRACK_FILTERS.map((filter) => {
-              const isActive = activeTrack === filter.value;
-              return (
+            {/* Search Bar */}
+            <div className="mb-8 border-b pb-3 transition-colors flex items-center gap-3" style={{ borderColor: 'var(--border)' }}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-5 h-5 flex-shrink-0"
+                style={{ color: 'var(--text-3)' }}
+                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <input
+                type="text"
+                placeholder={activeTarget ? `Searching for ${activeTarget} certs...` : "Search certifications..."}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full min-h-[44px] bg-transparent border-none text-base md:text-lg focus:outline-none focus:ring-0 px-0"
+                style={{ color: 'var(--text)' }}
+              />
+              {searchQuery && (
                 <button
-                  key={filter.label}
-                  onClick={() => setActiveTrack(filter.value)}
-                  className="flex-shrink-0 min-h-[44px] px-4 py-2 rounded-full text-sm font-medium transition-colors whitespace-nowrap"
-                  style={{
-                    background: isActive ? 'var(--text)' : 'transparent',
-                    color: isActive ? 'var(--bg)' : 'var(--text-2)',
-                    border: `1px solid ${isActive ? 'transparent' : 'var(--border)'}`
-                  }}
+                  onClick={() => setSearchQuery('')}
+                  className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full"
+                  style={{ background: 'var(--border)', color: 'var(--text-2)' }}
                 >
-                  {filter.label}
+                  <X size={12} strokeWidth={3} />
                 </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Error state */}
-        {error && (
-          <div className="mb-6 p-4 border rounded-xl flex items-start gap-3" style={{ background: 'rgba(239, 68, 68, 0.1)', borderColor: 'rgba(239, 68, 68, 0.2)', color: '#ef4444' }}>
-            <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
-            <div>
-              <h3 className="font-semibold text-sm">Database Error</h3>
-              <p className="text-sm opacity-90 mt-0.5">{error}</p>
-            </div>
-          </div>
-        )}
-
-        {/* Grid / Loading */}
-        {isLoading ? (
-          <SkeletonGrid />
-        ) : (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-              {certifications.length > 0 ? (
-                certifications.map((cert) => (
-                  <CertificationCard key={cert.slug || cert.id} data={cert} />
-                ))
-              ) : (
-                !error && (
-                  <div className="col-span-full py-20 md:py-28 flex flex-col items-center justify-center text-center rounded-2xl border border-dashed" style={{ borderColor: 'var(--border)', color: 'var(--text-3)' }}>
-                    <div className="w-16 h-16 rounded-full flex items-center justify-center mb-6" style={{ background: 'var(--border)' }}>
-                      <svg className="w-8 h-8" style={{ color: 'var(--text-2)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                      </svg>
-                    </div>
-                    <h3 className="text-lg font-medium mb-2" style={{ color: 'var(--text)' }}>No certifications found</h3>
-                    <p className="text-sm max-w-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>
-                      We couldn&apos;t find any certifications matching &quot;{searchQuery}&quot; in the {activeTrack || 'All'} track. Try adjusting your filters.
-                    </p>
-                    {searchQuery && (
-                      <button
-                        onClick={() => { setSearchQuery(''); setActiveTrack(null); }}
-                        className="mt-6 px-4 py-2 text-sm font-medium rounded-full transition-colors"
-                        style={{ background: 'var(--border)', color: 'var(--text)' }}
-                      >
-                        Clear all filters
-                      </button>
-                    )}
-                  </div>
-                )
               )}
             </div>
 
-            {/* Load More */}
-            {hasMore && certifications.length > 0 && (
-              <div className="mt-10 md:mt-12 flex justify-center">
-                <button
-                  onClick={handleLoadMore}
-                  disabled={isLoadingMore}
-                  className="min-h-[44px] px-6 md:px-8 py-3 rounded-full text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 border"
-                  style={{ background: 'var(--bg-alt)', borderColor: 'var(--border)', color: 'var(--text)' }}
-                >
-                  {isLoadingMore ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: 'var(--text-3)', borderTopColor: 'var(--text)' }} />
-                      Loading...
-                    </>
-                  ) : (
-                    'Load More'
-                  )}
-                </button>
+            {/* Error state */}
+            {error && (
+              <div className="mb-6 p-4 border rounded-xl flex items-start gap-3" style={{ background: 'rgba(239, 68, 68, 0.1)', borderColor: 'rgba(239, 68, 68, 0.2)', color: '#ef4444' }}>
+                <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                <div>
+                  <h3 className="font-semibold text-sm">Database Error</h3>
+                  <p className="text-sm opacity-90 mt-0.5">{error}</p>
+                </div>
               </div>
             )}
-          </>
-        )}
+
+            {/* Grid / Loading */}
+            {isLoading ? (
+              <SkeletonGrid />
+            ) : (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
+                  {certifications.length > 0 ? (
+                    certifications.map((cert) => (
+                      <CertificationCard key={cert.slug || cert.id} data={cert} />
+                    ))
+                  ) : (
+                    !error && (
+                      <div className="col-span-full py-20 flex flex-col items-center justify-center text-center rounded-2xl border border-dashed" style={{ borderColor: 'var(--border)', color: 'var(--text-3)' }}>
+                        <div className="w-16 h-16 rounded-full flex items-center justify-center mb-6" style={{ background: 'var(--border)' }}>
+                          <X className="w-8 h-8" style={{ color: 'var(--text-2)' }} />
+                        </div>
+                        <h3 className="text-lg font-medium mb-2" style={{ color: 'var(--text)' }}>No certifications found</h3>
+                        <p className="text-sm max-w-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>
+                          We couldn't find any certifications matching your criteria. Try loosening your filters.
+                        </p>
+                        {(searchQuery || activeFilterCount > 0) && (
+                          <button
+                            onClick={() => { setSearchQuery(''); setFilters({ vendors: [], difficulties: [], tracks: [] }); }}
+                            className="mt-6 px-4 py-2 text-sm font-medium rounded-full transition-colors"
+                            style={{ background: 'var(--border)', color: 'var(--text)' }}
+                          >
+                            Clear all filters
+                          </button>
+                        )}
+                      </div>
+                    )
+                  )}
+                </div>
+
+                {hasMore && certifications.length > 0 && (
+                  <div className="mt-10 flex justify-center">
+                    <button
+                      onClick={handleLoadMore}
+                      disabled={isLoadingMore}
+                      className="min-h-[44px] px-8 py-3 rounded-full text-sm font-medium border"
+                      style={{ background: 'var(--bg-alt)', borderColor: 'var(--border)', color: 'var(--text)' }}
+                    >
+                      {isLoadingMore ? 'Loading...' : 'Load More'}
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
       </div>
+
+      {/* Mobile Sticky Filter FAB */}
+      <div className="fixed bottom-6 right-6 lg:hidden z-30">
+        <button
+          onClick={() => setIsMobileSidebarOpen(true)}
+          className="flex items-center gap-2 px-5 py-3 rounded-full shadow-2xl font-semibold text-white transition-transform hover:scale-105 active:scale-95"
+          style={{ background: 'var(--accent, #2563eb)' }}
+        >
+          <Filter size={18} />
+          Filters {activeFilterCount > 0 && <span className="ml-1 bg-white text-blue-600 rounded-full px-2 py-0.5 text-xs">{activeFilterCount}</span>}
+        </button>
+      </div>
+
     </div>
   );
 };
