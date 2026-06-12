@@ -308,7 +308,7 @@ function CertCompare({ salary, prefilledCert }) {
       try {
         const [certsResponse, domainsResponse] = await Promise.all([
           supabase.from('certifications').select('*'),
-          supabase.from('domains').select('*')
+          supabase.from('vendors').select('*')
         ]);
 
         if (certsResponse.data) {
@@ -436,6 +436,7 @@ function CertCompare({ salary, prefilledCert }) {
             }}
           >
             {/* Icon */}
+            <div style={{
               width: '56px', height: '56px', borderRadius: '16px',
               background: 'color-mix(in srgb, var(--text) 4%, transparent)',
               border: '1px solid color-mix(in srgb, var(--text) 10%, transparent)',
