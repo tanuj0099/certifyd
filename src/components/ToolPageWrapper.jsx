@@ -57,7 +57,7 @@ export default function ToolPageWrapper({
       />
 
       {/*  Page heading - zero elevation, no card  */}
-      <div className="page-top-pad" style={{ maxWidth: '100%', margin: '0', padding: '120px clamp(16px, 4vw, 24px) 0' }}>
+      <div className="page-top-pad" style={{ maxWidth: '100%', margin: '0', padding: '0 clamp(16px, 4vw, 24px)' }}>
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}

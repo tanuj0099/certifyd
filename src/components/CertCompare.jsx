@@ -432,7 +432,6 @@ function CertCompare({ salary, prefilledCert }) {
               padding: '40px 32px',
               textAlign: 'center',
               gap: '16px',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.22)',
             }}
           >
             {/* Icon */}
