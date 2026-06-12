@@ -54,8 +54,8 @@ function normalizeCert(row) {
     avgCostUSD: Number(row.cost_usd) || 0,
     timeMonths: Number(row.time_commitment_months ?? row.time_months ?? row.timeMonths ?? row.prep_time_months) || 1,
     demand:     row.difficulty || row.demand || row.difficulty_level || 'Medium',
-    domain:     row.domain_id   || row.domain      || row.domain_name || '',
-    forWho:     row.description || row.for_who     || row.forWho       || '',
+    domain:     row.vendor_id || row.domain_id || row.domain || row.domain_name || '',
+    forWho:     row.description || row.for_who || row.forWho || '',
     tags:       Array.isArray(row.tags) ? row.tags : [],
     link:       row.link        || row.url          || '',
   }
@@ -149,7 +149,7 @@ function CertSelector({ value, onChange, label, color, certifications, domains }
             <div style={{ display: 'flex', gap: '4px', padding: '8px', flexWrap: 'wrap', borderBottom: '1px solid var(--border)' }}>
               {[{ id: 'all', label: 'All' }, ...domains.slice(0, 6)].map(function (d) {
                 return (
-                  <button key={d.id} onClick={function () { setDomain(d.id) }}
+                  <button key={d.id} onClick={function (e) { e.preventDefault(); e.stopPropagation(); setDomain(d.id); }}
                     style={{
                       padding: '3px 9px', borderRadius: '20px', fontSize: '11px',
                       cursor: 'pointer', fontFamily: F_BODY, fontWeight: '600',
