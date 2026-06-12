@@ -21,8 +21,8 @@ var F_MONO = 'var(--font-mono)'
 var F_BODY = 'var(--font-body)'
 
 var COLORS = ['var(--linear-blue)', 'var(--linear-blue)', 'var(--cool-grey)', '#E11D48']
-var COL_A = '#F4F5F8'       // Cert A — crisp white
-var COL_B = '#60A5FA'       // Cert B — sky blue (distinct, accessible)
+var COL_A = '#8B5CF6'       // Cert A — vibrant violet (visible in both modes)
+var COL_B = '#3B82F6'       // Cert B — sky blue (distinct, accessible)
 
 function demandColor(d) {
   return d === 'Very High' ? 'var(--linear-blue)' : d === 'High' ? 'var(--linear-blue)' : d === 'Medium' ? 'var(--cool-grey)' : '#94A3B8'
@@ -210,7 +210,7 @@ function CertSelector({ value, onChange, label, color, certifications, domains }
                       display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                       gap: '8px', transition: 'background 0.12s',
                     }}
-                    onMouseEnter={function (e) { e.currentTarget.style.background = 'rgba(255,255,255,0.05)' }}
+                    onMouseEnter={function (e) { e.currentTarget.style.background = 'color-mix(in srgb, var(--text) 5%, transparent)' }}
                     onMouseLeave={function (e) { if (value !== cert.name) e.currentTarget.style.background = 'transparent' }}
                   >
                     <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -269,25 +269,25 @@ function HeadToHeadChart({ certA, certB, roiA, roiB }) {
               <stop offset="95%" stopColor={COL_B} stopOpacity={0.7}/>
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
+          <CartesianGrid strokeDasharray="3 3" stroke="color-mix(in srgb, var(--text) 10%, transparent)" vertical={false} />
           <XAxis 
             dataKey="metric" 
-            tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11, fontFamily: F_MONO }} 
+            tick={{ fill: 'var(--text-3)', fontSize: 11, fontFamily: F_MONO }} 
             axisLine={false} 
             tickLine={false} 
             dy={10}
           />
           <YAxis 
-            tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11, fontFamily: F_MONO }} 
+            tick={{ fill: 'var(--text-3)', fontSize: 11, fontFamily: F_MONO }} 
             axisLine={false} 
             tickLine={false} 
             dx={-10}
           />
           <Tooltip 
-            cursor={{ fill: 'rgba(255,255,255,0.03)' }} 
-            contentStyle={{ backgroundColor: 'rgba(15,23,42,0.95)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', boxShadow: '0 8px 32px rgba(0,0,0,0.4)' }} 
-            itemStyle={{ fontFamily: F_MONO, fontSize: '13px', fontWeight: 'bold' }}
-            labelStyle={{ color: 'rgba(255,255,255,0.6)', fontSize: '12px', marginBottom: '8px' }}
+            cursor={{ fill: 'color-mix(in srgb, var(--text) 4%, transparent)' }} 
+            contentStyle={{ backgroundColor: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: '12px', boxShadow: '0 8px 32px rgba(0,0,0,0.1)' }} 
+            itemStyle={{ fontFamily: F_MONO, fontSize: '13px', fontWeight: 'bold', color: 'var(--text)' }}
+            labelStyle={{ color: 'var(--text-3)', fontSize: '12px', marginBottom: '8px' }}
           />
           <Legend 
             wrapperStyle={{ fontFamily: F_MONO, fontSize: '11px', paddingTop: '15px' }} 
