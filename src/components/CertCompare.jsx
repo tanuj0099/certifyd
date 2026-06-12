@@ -576,11 +576,11 @@ function CertCompare({ salary, prefilledCert }) {
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2 }}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 120px 120px', gap: '8px', marginBottom: '8px' }}>
                 <div />
-                <div style={{ fontFamily: F_MONO, fontSize: '10px', color: COL_A, textAlign: 'center', padding: '6px', borderRadius: '8px', background: 'transparent', border: '1px solid transparent', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {dataA.name.split(' ').slice(0, 2).join(' ')}
+                <div style={{ fontFamily: F_MONO, fontSize: '10px', color: COL_A, textAlign: 'center', padding: '6px', borderRadius: '8px', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', lineHeight: 1.3 }}>
+                  {dataA.name}
                 </div>
-                <div style={{ fontFamily: F_MONO, fontSize: '10px', color: COL_B, textAlign: 'center', padding: '6px', borderRadius: '8px', background: 'transparent', border: '1px solid transparent', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {dataB.name.split(' ').slice(0, 2).join(' ')}
+                <div style={{ fontFamily: F_MONO, fontSize: '10px', color: COL_B, textAlign: 'center', padding: '6px', borderRadius: '8px', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', lineHeight: 1.3 }}>
+                  {dataB.name}
                 </div>
               </div>
 
@@ -594,10 +594,10 @@ function CertCompare({ salary, prefilledCert }) {
                     <div style={{ display: 'flex', alignItems: 'center', fontSize: '12px', color: 'var(--text-3)', fontFamily: F_BODY }}>
                       {row.label}
                     </div>
-                    <div style={{ padding: '8px', borderRadius: '8px', textAlign: 'center', background: row.win === 'A' ? 'transparent' : 'transparent', border: '1px solid ' + (row.win === 'A' ? 'transparent' : 'var(--border)'), fontFamily: F_MONO, fontSize: '12px', color: row.win === 'A' ? COL_A : 'var(--text-3)', fontWeight: row.win === 'A' ? '700' : '500', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+                    <div style={{ padding: '8px', borderRadius: '8px', textAlign: 'center', background: row.win === 'A' ? COL_A + '08' : 'transparent', border: '1px solid ' + (row.win === 'A' ? COL_A + '40' : 'var(--border)'), fontFamily: F_MONO, fontSize: '12px', color: row.win === 'A' ? COL_A : 'var(--text-3)', fontWeight: row.win === 'A' ? '700' : '500', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
                       {row.vA}{row.win === 'A' ? <span style={{ color: COL_A, display: 'inline-flex' }}>{row.winIcon}</span> : null}
                     </div>
-                    <div style={{ padding: '8px', borderRadius: '8px', textAlign: 'center', background: row.win === 'B' ? 'transparent' : 'transparent', border: '1px solid ' + (row.win === 'B' ? 'transparent' : 'var(--border)'), fontFamily: F_MONO, fontSize: '12px', color: row.win === 'B' ? COL_B : 'var(--text-3)', fontWeight: row.win === 'B' ? '700' : '500', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+                    <div style={{ padding: '8px', borderRadius: '8px', textAlign: 'center', background: row.win === 'B' ? COL_B + '08' : 'transparent', border: '1px solid ' + (row.win === 'B' ? COL_B + '40' : 'var(--border)'), fontFamily: F_MONO, fontSize: '12px', color: row.win === 'B' ? COL_B : 'var(--text-3)', fontWeight: row.win === 'B' ? '700' : '500', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
                       {row.vB}{row.win === 'B' ? <span style={{ color: COL_B, display: 'inline-flex' }}>{row.winIcon}</span> : null}
                     </div>
                   </motion.div>

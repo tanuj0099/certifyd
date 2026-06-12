@@ -39,8 +39,8 @@ const Navigation = () => {
             }}>
               <TrendingUp size={18} color="var(--bg)" />
             </div>
-            <span style={{ fontFamily: 'Bebas Neue', fontSize: '22px', letterSpacing: '0.06em', color: '#F8FAFC' }}>
-              Certify<span style={{ color: 'var(--linear-blue)' }}>ROI</span>
+            <span style={{ fontFamily: 'var(--font-head)', fontWeight: '800', fontSize: '18px', color: 'var(--text)', letterSpacing: '-0.02em' }}>
+              Certify<span style={{ color: 'var(--linear-blue)' }}>d</span>
             </span>
           </div>
 
