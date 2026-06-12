@@ -83,7 +83,21 @@ function CertSelector({ value, onChange, label, color, certifications, domains }
   var [searchQuery, setSearchQuery] = useState('')
 
   var filtered = certifications.filter(function (c) {
-    const domainMatch = domain === 'all' || c.domain === domain;
+    let domainMatch = domain === 'all' || c.domain === domain;
+    
+    // Fallback logic in case browser cached an old UUID mapping
+    if (domain !== 'all' && !domainMatch) {
+      const selectedObj = domains.find(function(d) { return d.id === domain });
+      if (selectedObj && selectedObj.label) {
+        const lbl = selectedObj.label.toLowerCase();
+        const cName = c.name.toLowerCase();
+        if ((lbl.includes('aws') || lbl.includes('amazon')) && (cName.includes('aws') || cName.includes('amazon'))) domainMatch = true;
+        else if ((lbl.includes('gcp') || lbl.includes('google')) && (cName.includes('gcp') || cName.includes('google'))) domainMatch = true;
+        else if ((lbl.includes('azure') || lbl.includes('microsoft')) && (cName.includes('azure') || cName.includes('microsoft'))) domainMatch = true;
+        else if (cName.includes(lbl)) domainMatch = true;
+      }
+    }
+    
     const searchMatch = !searchQuery || c.name.toLowerCase().includes(searchQuery.toLowerCase());
     return domainMatch && searchMatch;
   })
@@ -163,6 +177,7 @@ function CertSelector({ value, onChange, label, color, certifications, domains }
                   </button>
                 )
               })}
+              <div style={{fontSize: '10px', color: 'red'}}>DEBUG domain: {domain} | Filtered: {filtered.length}</div>
             </div>
 
             <div style={{ padding: '8px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '8px' }}>
