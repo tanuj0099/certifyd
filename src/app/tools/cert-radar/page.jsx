@@ -1,8 +1,12 @@
 'use client';
 
 import { Suspense } from 'react';
-import CertRadar from '@/components/CertRadar.jsx';
+import dynamic from 'next/dynamic';
 import ToolPageWrapper from '@/components/ToolPageWrapper.jsx';
+
+const CertRadar = dynamic(() => import('@/components/CertRadar.jsx'), {
+  ssr: false,
+});
 
 // CertRadar uses useSearchParams which requires a Suspense boundary.
 // NOTE: data-theme is intentionally NOT set here — it is managed globally by
