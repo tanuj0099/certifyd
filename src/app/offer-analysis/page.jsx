@@ -39,6 +39,12 @@ function calculatePercentile(userSalary, marketMedian) {
   return Math.min(Math.max(Math.round(p), 1), 99);
 }
 
+function getOrdinalNum(n) {
+  const s = ["th", "st", "nd", "rd"],
+        v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
+
 export default function OfferAnalysisPage() {
   const { user } = useAuth()
   const C = useThemeContext()
@@ -662,23 +668,25 @@ export default function OfferAnalysisPage() {
                         {/* ROW 2 RIGHT: Market Context (Median/Gauge) */}
                         <div className="md:col-span-1 rounded-3xl p-5 md:p-6 shadow-sm transition-all duration-300 flex flex-col justify-center"
                           style={{ backgroundColor: C.isLight ? '#ffffff' : C.surface, border: `1px solid ${C.border}` }}>
-                          <div style={{ fontFamily: FM, color: C.text3 }} className="text-sm font-medium text-slate-600 tracking-[0.06em] mb-2 uppercase tracking-widest">Market Median</div>
+                          <div style={{ fontFamily: FM, color: C.text3 }} className="text-sm font-medium tracking-[0.06em] mb-2 uppercase tracking-widest">Market Benchmark</div>
                           <div className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight tabular-nums block my-1 md:my-2" style={{ color: C.text }}>
                             ₹{Math.round(finalMedian).toLocaleString('en-IN')}
                           </div>
-                          <div style={{ fontFamily: FB, color: C.text3 }} className="text-[11px] sm:text-sm font-medium text-slate-600 mb-5 md:mb-6 leading-relaxed">
-                            For {result.Analysis_Metadata?.Target_Location || 'India'}
-                            {!tierMatched && marketMedian > 0 && <span className="text-yellow-600 block mt-1">General market median shown.</span>}
-                            {marketMedian === 0 && <span className="text-indigo-500 block mt-1">Simulated industry baseline shown.</span>}
+                          <div style={{ fontFamily: FB, color: C.text3 }} className="text-[11px] sm:text-sm font-medium mb-5 md:mb-6 leading-relaxed">
+                            Typical salary for {result.Analysis_Metadata?.Target_Job_Title || 'this role'} in {result.Analysis_Metadata?.Target_Location || 'India'}
+                            {!tierMatched && marketMedian > 0 && <span className="text-amber-500 dark:text-amber-400 block mt-1 opacity-90">Based on broader market data.</span>}
+                            {marketMedian === 0 && <span className="text-blue-500 dark:text-blue-400 block mt-1 opacity-90">AI-estimated benchmark.</span>}
                           </div>
 
-                          <div className="flex justify-between text-sm font-medium text-slate-600 sm:text-sm font-medium text-slate-600 font-medium mb-2 md:mb-3" style={{ color: C.text3 }}>
-                            <span>Low</span>
-                            <span className={`${gaugeText} font-bold font-sans tabular-nums text-center px-1`}>{percentile}th %ile</span>
-                            <span>High</span>
+                          <div className="flex justify-between text-xs sm:text-sm font-medium mb-2 md:mb-3" style={{ color: C.text3, fontFamily: FB }}>
+                            <span>Entry</span>
+                            <span className={`${gaugeText} font-bold font-sans tabular-nums text-center px-2 py-0.5 rounded-md`}>
+                              {getOrdinalNum(percentile)} Percentile
+                            </span>
+                            <span>Top</span>
                           </div>
                           <div className="w-full h-2 rounded-full relative" style={{ backgroundColor: C.isLight ? '#e2e8f0' : '#1e293b' }}>
-                            <div className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full ${gaugeColor}`} style={{ left: `${percentile}%`, transition: 'left 1s ease-out', transform: 'translate(-50%, -50%)' }} />
+                            <div className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full ${gaugeColor}`} style={{ left: `${percentile}%`, transition: 'left 1s ease-out', transform: 'translate(-50%, -50%)', boxShadow: '0 0 10px rgba(0,0,0,0.1)' }} />
                           </div>
                         </div>
 
