@@ -3,119 +3,57 @@ export const parseOfferLetter = async (offerLetterText, userProfileData) => {
     return { error: "INVALID_DOCUMENT", message: "Document too short to be a valid offer letter." };
   }
 
-  const prompt = `You are an expert Compensation Analyst and Data Extraction Engine specializing ONLY in the Indian IT sector. Your job is to analyze an uploaded Job Offer Letter alongside the candidate's self-reported Resume/Profile data.
+  const prompt = `Role: You are an elite, brutally honest salary negotiation and contract analyst specialized in the 2026 Indian job market.
+Task: Analyze the provided raw Offer Letter text alongside the User Profile context (City, Years of Experience, and Current Certifications) and generate a mathematically precise negotiation breakdown in JSON format.
 
 === INPUT DATA ===
 1. USER PROFILE DATA: ${userProfileData}
 2. OFFER LETTER TEXT: ${offerLetterText.substring(0, 8000)}
 
-=== STRICT SEMANTIC REASONING RULES ===
+Extraction & Math Rules:
 
-CRITICAL PRIVACY INSTRUCTION: Do NOT extract the candidate's actual name, email address, phone number, or physical address. For the \`full_name\` field, you MUST return the exact string "ANONYMIZED".
+The Bouncer Rule: First evaluate if the text is an actual corporate job offer or appointment letter. If it is a resume, invoice, or irrelevant document, immediately stop and return an object with {"is_valid_offer": false, "rejection_reason": "Clear explanation of what was uploaded instead"}.
 
-=== 1. THE GEO-REASONING RULE (Client vs. Residence) ===
-- Determine the candidate's ACTUAL PHYSICAL RESIDENCE or base of operations. 
-- If a candidate lives in India (e.g., Gorakhpur, Hubballi, Bangalore, NCR) but works remotely for an international client or states a past international stint, the profile IS SUPPORTED. 
-- Do not blindly reject a profile if a foreign city (e.g., "London", "USA", "Dubai") is mentioned as a client location or past role.
-- ONLY abort/reject if the candidate's primary residence/work location is currently outside of India.
-- Output for unsupported: { "Analysis_Metadata": { "Unsupported_Region": true, "Mismatch_Warning_Message": "Certifyd MVP currently only supports salary intelligence for the Indian IT market. Global support is coming soon." } }
+Financial Formatting: All monetary figures must be calculated as annual values and formatted strictly in Indian Rupees (₹) Lakhs to 1 decimal place (e.g., 14.5). Do not output raw monthly figures.
 
-=== 2. THE RELEVANT EXPERIENCE RULE (The Time Splitter) ===
-- Candidates often list total chronological experience, which includes irrelevant past careers (e.g., farming, retail, physical labor).
-- You MUST separate "Total Experience" from "Relevant Tech/Corporate Experience".
-- Calculate the \`Calculated_Experience_Level_For_Offer\` ONLY based on the months/years spent in IT, Tech, or standard Corporate roles. Ignore time spent in unrelated fields.
-- STRICT EXPERIENCE MATH: You must mathematically calculate the years of experience from the user's provided resume text. Subtract the earliest relevant start year from the current year (2026). If the resume shows work from 2022 to 2026, the experience is 4 years. Output in the format: "X years". Do NOT default to 0 unless no history is provided.
+The Trap Check: Actively scan the text for hidden corporate deductions like included Employer PF or Gratuity padding, clawbacks, and notice periods.
 
-=== 3. THE FUNCTIONAL TITLE OVERRIDE ===
-- Ignore HR payroll glitches or nominal titles if they conflict with the actual day-to-day work.
-- If a nominal title is "Marketing Executive" or "Data Plumber", but the bullet points explicitly describe writing Python, managing databases, and using AWS, you MUST classify their \`Target_Job_Title\` as the functional equivalent (e.g., "Junior Backend Engineer" or "Cloud Engineer").
-- The \`Target_Job_Title\` normally matches the exact title on the Offer Letter, unless overridden by this rule.
-- STRICT TITLE NORMALIZATION: NEVER output startup jargon, "ninja", "rockstar", or internal band codes (like "SDE-1" without context) as the final title. You MUST map the job to a clean, standard industry benchmark title (e.g., "Backend Software Engineer", "Data Analyst"). If the letter says "Code Ninja", output "Backend Engineer".
-
-=== 4. NOISE FILTERING & TYPO NORMALIZATION ===
-- Resumes contain fluff. Completely ignore hobbies, non-professional certifications (e.g., "Master Scuba Diver"), and physical labor skills.
-- Normalize spelling errors in the tech stack (e.g., map "Pythn" to "Python", "devOOps" to "DevOps", "Certifid" to "Certified"). Only extract valid, recognized IT/Corporate skills and certifications.
-
-=== 5. COMPANY TIERING ===
-- You must identify the hiring company from the offer letter and classify its tier.
-- "Tier_1_Product": Big Tech (Google, Amazon, Microsoft, etc.), global investment banks, or massive unicorns.
-- "Tier_2_MidMarket": Growth-stage startups, mid-sized product companies, and established regional tech firms.
-- "Tier_3_Services": IT Service/Consulting firms (TCS, Wipro, Infosys, Cognizant, Tech Mahindra), mass recruiters, or extremely small early-stage startups.
-- "Unknown": If the company name is not discernible.
-
-=== 6. THE HIERARCHY OF TRUTH (Conflict Resolution) ===
-- LOCATION: If the Offer Letter explicitly states an Indian job location (e.g., "Hyderabad"), this OVERRIDES the Resume's city. 
-- EXPERIENCE MISMATCH: Compare the Resume's YoE with the Offer Job Title. If the user claims 3+ years of experience but the offer is for a "Trainee" or "Fresher", set "Profile_Mismatch_Flag" to TRUE and generate a warning.
-
-=== 7. INDIAN PAYROLL MATH & BUCKETING ===
-Extract the individual CTC components. If a component is missing, set its value to 0:
-- "Total_CTC_Stated": You MUST extract the absolute highest total compensation figure presented by the company. Never calculate this yourself; extract the inflated HR number directly from the document.
-- "Basic_Salary": Core basic pay.
-- "HRA": House Rent Allowance.
-- "Special_Allowance": Special or guaranteed monthly allowances.
-- "LTA": Leave Travel Allowance.
-- "Transport_Medical_Flexi": Sum of transport, medical, internet, and other flexi/basket allowances.
-- "Employer_PF": Employer's contribution to Provident Fund.
-- "NPS_Contribution": National Pension Scheme contribution.
-- "Gratuity_Provision": Gratuity.
-- "Variable_PLVP": Annual Bonus, Performance Pay, PLI, or Relocation bonuses.
-- "ESOP_Annual_Vesting_Value": Value of vested stock options for year 1.
-- "Estimated_Monthly_In_Hand": ( (Basic_Salary + HRA + Special_Allowance + Transport_Medical_Flexi) / 12 ) MINUS (Employee PF + ESI deductions).
-All numerical outputs in the \`CTC_Breakdown\` object MUST be rounded to the nearest whole integer. Do not output any decimals.
-
-=== 8. CONTEXTUAL AWARENESS ===
-- Extract the Date/Year of the Offer Letter. If from a past year (e.g., 2017), set "Historical_Data_Flag" to TRUE.
-
-=== OUTPUT FORMAT ===
-If the region is supported (India), output a valid JSON object matching this exact schema:
+Expected JSON Output Format (respond ONLY with JSON):
 {
-  "Analysis_Metadata": {
-    "Unsupported_Region": false,
-    "Target_Location": "[Resolved Location]",
-    "Target_Job_Title": "[Resolved Functional Title or Exact title from offer]",
-    "Company_Tier": "Tier_1_Product" | "Tier_2_MidMarket" | "Tier_3_Services" | "Unknown",
-    "Offer_Year": "[YYYY]",
-    "Historical_Data_Flag": boolean,
-    "Profile_Mismatch_Flag": boolean,
-    "Mismatch_Warning_Message": "[Warning string if applicable, else null]"
+  "is_valid_offer": true,
+  "Offer_Metadata": {
+    "Company_Name": "string",
+    "Designation": "string",
+    "Work_Model": "string (Remote / Hybrid / On-site)",
+    "Notice_Period_Days": 30,
+    "Bond_or_Clawback_Detected": false
   },
-  "CTC_Breakdown": {
-    "Total_CTC_Stated": number,
-    "Basic_Salary": number,
-    "HRA": number,
-    "Special_Allowance": number,
-    "LTA": number,
-    "Transport_Medical_Flexi": number,
-    "Employer_PF": number,
-    "NPS_Contribution": number,
-    "Gratuity_Provision": number,
-    "Variable_PLVP": number,
-    "ESOP_Annual_Vesting_Value": number,
-    "Estimated_Monthly_In_Hand": number
+  "Compensation_Analysis": {
+    "Offered_CTC": 14.5,
+    "Offered_Fixed_Base": 12.0,
+    "Offered_Variable": 2.5,
+    "Breakdown": {
+      "Basic_Salary": 6.0,
+      "Allowances_and_Perks": 6.0,
+      "Joining_or_Performance_Bonus": 2.5,
+      "Stocks_or_ESOPs_Annual_Value": 0.0,
+      "Employer_PF_Included_In_CTC": true,
+      "Gratuity_Included_In_CTC": false
+    }
   },
-  "Market_Context": {
-    "Calculated_Experience_Level_For_Offer": "[e.g., 0 years / Fresher, based ONLY on relevant tech/corporate experience]",
-    "UI_Status_Message": "[Generate a precise UI message explaining the evaluation]"
+  "Market_Intelligence_2026": {
+    "Market_Median_Salary": 15.0,
+    "Market_75th_Percentile": 18.0,
+    "Percent_Difference_To_Median": -3,
+    "Market_Trend_Sentence": "string (Current hiring demand velocity for this specific stack/city)"
   },
-  "Database_Payload": {
-    "fixed_base": number,
-    "variable_pay": number,
-    "hra": number,
-    "special_allowance": number,
-    "pf": number,
-    "company_tier": "string",
-    "role": "string",
-    "experience_years": number,
-    "esop_units": number,
-    "notice_period_days": number
+  "Strategic_Negotiation_Output": {
+    "Blunt_Assessment": "string (One direct sentence stating if they are being lowballed, paid fairly, or hitting above market rate)",
+    "Red_Flags": ["string (List of toxic clauses, bad fixed-to-variable ratios, or padding tricks found)"],
+    "Strengths": ["string (Genuine positives like high fixed base or solid equity scales)"],
+    "Counter_Offer_Email_Script": "string (A copy-pasteable 2-3 sentence negotiation email script that leverages the user's certifications, experience level, and the calculated market median to request a specific, justifiable financial increase)"
   }
-}
-
-=== 9. INVALID DOCUMENT GUARDRAIL ===
-If the document completely lacks mandatory compensation data, role details, or appears to be a random document (not an offer letter), you MUST return EXACTLY:
-{"error": "INVALID_DOCUMENT"}
-
-CRITICAL: You must output ONLY raw, valid JSON. DO NOT wrap the JSON in markdown code blocks (e.g., no \`\`\`json). DO NOT include any conversational text before or after the JSON.`;
+}`;
 
   const response = await fetch('/api/groq', {
     method: 'POST',
@@ -140,9 +78,53 @@ CRITICAL: You must output ONLY raw, valid JSON. DO NOT wrap the JSON in markdown
   
   try {
     const cleaned = content.replace(/```json/gi, '').replace(/```/g, '').trim();
-    return JSON.parse(cleaned);
+    const parsed = JSON.parse(cleaned);
+
+    if (parsed.is_valid_offer === false || parsed.error === 'INVALID_DOCUMENT') {
+      throw new Error(parsed.rejection_reason || 'This document does not appear to be a valid offer letter.');
+    }
+
+    // Convert Lakhs to absolute INR to preserve UI and DB expectations
+    const toAbsolute = (val) => Math.round((parseFloat(val) || 0) * 100000);
+
+    if (parsed.Compensation_Analysis) {
+      const ctcRaw = parsed.Compensation_Analysis?.Offered_CTC || 0;
+      const ctcAbsolute = toAbsolute(ctcRaw);
+      
+      const mapped = {
+        // Fallback metadata so UI doesn't crash
+        Analysis_Metadata: {
+          Target_Location: 'India', 
+          Target_Job_Title: parsed.Offer_Metadata?.Designation || 'Unknown',
+          Company_Tier: 'Unknown',
+          Profile_Mismatch_Flag: false,
+        },
+        CTC_Breakdown: {
+          Total_CTC_Stated: ctcAbsolute,
+          Basic_Salary: toAbsolute(parsed.Compensation_Analysis?.Breakdown?.Basic_Salary),
+          Special_Allowance: toAbsolute(parsed.Compensation_Analysis?.Breakdown?.Allowances_and_Perks),
+          Variable_PLVP: toAbsolute(parsed.Compensation_Analysis?.Offered_Variable),
+          ESOP_Annual_Vesting_Value: toAbsolute(parsed.Compensation_Analysis?.Breakdown?.Stocks_or_ESOPs_Annual_Value),
+        },
+        Market_Context: {
+          Calculated_Experience_Level_For_Offer: "0 years" // fallback
+        },
+        Database_Payload: {
+          fixed_base: toAbsolute(parsed.Compensation_Analysis?.Offered_Fixed_Base),
+          variable_pay: toAbsolute(parsed.Compensation_Analysis?.Offered_Variable),
+          company_tier: "Unknown",
+          role: parsed.Offer_Metadata?.Designation || "Unknown",
+          notice_period_days: parsed.Offer_Metadata?.Notice_Period_Days || 0
+        },
+        // Preserve all the new elite data for the UI
+        ...parsed
+      };
+      return mapped;
+    }
+
+    return parsed;
   } catch (error) {
     console.error("JSON parsing error:", content);
-    throw new Error('AI returned invalid JSON format');
+    throw new Error(error.message || 'AI returned invalid JSON format');
   }
 };

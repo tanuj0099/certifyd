@@ -655,13 +655,73 @@ export default function OfferAnalysisPage() {
                           </div>
 
                           {/* Negotiation Script */}
-                          <div className="bg-slate-800/50 p-4 sm:p-5 rounded-2xl border border-slate-700">
-                            <div className="text-sm font-medium text-slate-600 text-emerald-400 mb-2 font-mono flex items-center gap-2">
-                              <Sparkles size={12} className="flex-shrink-0" /> Actionable Talking Point
-                            </div>
-                            <div className="text-sm sm:text-base text-slate-200 font-sans leading-relaxed">
-                              {result.Market_Context?.Negotiation_Strategy || `Your current offer puts you at the ${percentile}th percentile for ${result.Analysis_Metadata?.Target_Location || 'your region'}. Leverage your relevant experience and core expertise to negotiate a 15-25% bump on the basic salary, or request that the performance variable pay be converted into guaranteed fixed components to align with the market.`}
-                            </div>
+                          <div className="bg-slate-800/50 p-4 sm:p-5 rounded-2xl border border-slate-700 mt-2 flex flex-col gap-4">
+                            
+                            {result.Strategic_Negotiation_Output?.Blunt_Assessment && (
+                              <div>
+                                <div className="text-[11px] uppercase tracking-widest text-slate-400 mb-1.5 font-bold">Verdict</div>
+                                <div className="text-base sm:text-lg text-white font-sans font-semibold leading-snug">
+                                  {result.Strategic_Negotiation_Output.Blunt_Assessment}
+                                </div>
+                              </div>
+                            )}
+
+                            {(result.Strategic_Negotiation_Output?.Red_Flags?.length > 0) && (
+                              <div>
+                                <div className="text-[11px] uppercase tracking-widest text-red-400 mb-1.5 font-bold flex items-center gap-1.5">
+                                  <AlertTriangle size={12} /> Red Flags
+                                </div>
+                                <ul className="list-none m-0 p-0 flex flex-col gap-1.5">
+                                  {result.Strategic_Negotiation_Output.Red_Flags.map((rf, idx) => (
+                                    <li key={idx} className="text-sm text-slate-300 font-sans leading-relaxed flex items-start gap-2">
+                                      <span className="text-red-400 mt-0.5">•</span> {rf}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+
+                            {(result.Strategic_Negotiation_Output?.Strengths?.length > 0) && (
+                              <div>
+                                <div className="text-[11px] uppercase tracking-widest text-emerald-400 mb-1.5 font-bold flex items-center gap-1.5">
+                                  <Check size={12} strokeWidth={3} /> Strengths
+                                </div>
+                                <ul className="list-none m-0 p-0 flex flex-col gap-1.5">
+                                  {result.Strategic_Negotiation_Output.Strengths.map((str, idx) => (
+                                    <li key={idx} className="text-sm text-slate-300 font-sans leading-relaxed flex items-start gap-2">
+                                      <span className="text-emerald-400 mt-0.5">•</span> {str}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+
+                            {result.Strategic_Negotiation_Output?.Counter_Offer_Email_Script ? (
+                              <div className="mt-2 bg-slate-900/80 p-4 rounded-xl border border-slate-700 relative group">
+                                <div className="text-[11px] uppercase tracking-widest text-emerald-400 mb-2 font-bold flex items-center gap-1.5">
+                                  <Sparkles size={12} /> Email Script
+                                </div>
+                                <div className="text-sm text-slate-300 font-sans leading-relaxed whitespace-pre-wrap">
+                                  {result.Strategic_Negotiation_Output.Counter_Offer_Email_Script}
+                                </div>
+                                <button
+                                  onClick={() => navigator.clipboard.writeText(result.Strategic_Negotiation_Output.Counter_Offer_Email_Script)}
+                                  className="absolute top-3 right-3 p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white rounded-md transition-colors opacity-0 group-hover:opacity-100"
+                                  title="Copy to clipboard"
+                                >
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                </button>
+                              </div>
+                            ) : (
+                              <div>
+                                <div className="text-sm font-medium text-emerald-400 mb-2 font-mono flex items-center gap-2">
+                                  <Sparkles size={12} className="flex-shrink-0" /> Actionable Talking Point
+                                </div>
+                                <div className="text-sm sm:text-base text-slate-200 font-sans leading-relaxed">
+                                  {result.Market_Context?.Negotiation_Strategy || `Your current offer puts you at the ${percentile}th percentile for ${result.Analysis_Metadata?.Target_Location || 'your region'}. Leverage your relevant experience and core expertise to negotiate a 15-25% bump on the basic salary, or request that the performance variable pay be converted into guaranteed fixed components to align with the market.`}
+                                </div>
+                              </div>
+                            )}
                           </div>
                         </div>
 
