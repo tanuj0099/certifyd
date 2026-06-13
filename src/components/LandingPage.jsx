@@ -1024,7 +1024,7 @@ function ThreeModes() {
   const C = useTheme()
   const isMobile = useIsMobile()
   const modes = [
-    { id: 'student',      label: 'Breaking In',  sub: 'No salary yet',              desc: 'Path to a ₹4.8L+ first offer. Reframes ROI around career investment and time-to-hire, not salary hikes.' },
+    { id: 'student',      label: 'Breaking In',  sub: 'No salary yet',              desc: 'Land your first tech job offer. Reframes ROI around career investment and time-to-hire, not salary hikes.' },
     { id: 'switcher',     label: 'Domain Pivot',  sub: 'Changing fields',            desc: 'Switch domains in 5-8 months. Only fast-track options shown. Longer programs filtered out.' },
     { id: 'professional', label: 'Level Up',      sub: 'Upskilling for a promotion', desc: 'Maximum ROI on your next cert. Payback window, city benchmarks, and a reimbursement case for your manager.' },
   ]

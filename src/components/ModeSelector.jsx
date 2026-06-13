@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { GraduationCap, Repeat, Briefcase, RotateCcw, ArrowRight } from 'lucide-react'
 
 const MODES = [
-  { id: 'student',      label: 'Breaking In',  sub: 'No current salary',         color: '#4A8C6A', icon: GraduationCap, desc: 'Path to your first ₹4.8L+ offer' },
+  { id: 'student',      label: 'Breaking In',  sub: 'No current salary',         color: '#4A8C6A', icon: GraduationCap, desc: 'Land your first job offer in tech' },
   { id: 'switcher',     label: 'Domain Pivot', sub: 'Changing fields',            color: 'var(--cool-grey)', icon: Repeat,        desc: 'Switch domains in 5-8 months' },
   { id: 'professional', label: 'Level Up',     sub: 'Upskilling for a promotion', color: 'var(--linear-blue)', icon: Briefcase, desc: 'Max ROI on your next cert' },
 ]
