@@ -1106,7 +1106,7 @@ function SocialProof() {
 const FAQ_ITEMS = [
   { q: 'How accurate are the ROI calculations?', a: 'Based on median salary data from Naukri, AmbitionBox, and LinkedIn India - updated quarterly. Directional estimates, not guarantees.' },
   { q: 'Do I need to create an account?', a: 'No. The ROI calculator, comparison tool, and city demand heatmap are all free with no signup.' },
-  { q: 'What certifications are covered?', a: '103 certifications across 17 domains - cloud, data, cybersecurity, finance, project management, and more.' },
+  { q: 'What certifications are covered?', a: 'Hundreds of certifications across 17+ domains - cloud, data, cybersecurity, finance, project management, and more. We update the database regularly.' },
   { q: 'Is this only useful for India?', a: 'Salary benchmarks and demand data are India-specific. The framework applies anywhere, but numbers are calibrated for India.' },
   { q: 'How does the resume analysis work?', a: 'Upload your resume. The tool reads your domain, experience level, and existing skills to benchmark your current position and surface certifications with the highest ROI for your profile. No AI buzzwords - just filtered, ranked data.' },
 ]

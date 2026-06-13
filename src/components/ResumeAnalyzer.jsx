@@ -417,7 +417,7 @@ var PreferencesPanel = function ({ timeline, onTimeline, domainIntent, onDomain,
 }
 
 //  PersonalisedHero 
-var PersonalisedHero = function ({ name, city, domain, primaryCert, mode, certDomains }) {
+var PersonalisedHero = function ({ name, city, domain, primaryCert, mode, certDomains, certCount }) {
   var [phase, setPhase] = useState(0)
 
   useEffect(function () {
@@ -439,7 +439,8 @@ var PersonalisedHero = function ({ name, city, domain, primaryCert, mode, certDo
   var firstName = authName || (name && name.toUpperCase() !== 'ANONYMIZED' ? name.split(' ')[0] : '')
   
   var displayName = firstName ? firstName.toUpperCase() : 'CANDIDATE PROFILE'
-  var intro = `${displayName}, OUT OF 103 CERTIFICATIONS ANALYSED FOR ${city ? `A PROFESSIONAL IN ${city.toUpperCase()}` : 'YOUR PROFILE'} RIGHT NOW -`
+  var certLabel = certCount && certCount > 0 ? certCount : ''
+  var intro = `${displayName}, OUT OF ${certLabel ? certLabel + ' ' : ''}CERTIFICATIONS ANALYSED FOR ${city ? `A PROFESSIONAL IN ${city.toUpperCase()}` : 'YOUR PROFILE'} RIGHT NOW -`
 
   return (
     <div style={{ marginBottom: '22px' }}>
@@ -455,7 +456,7 @@ var PersonalisedHero = function ({ name, city, domain, primaryCert, mode, certDo
           className="micro-label uppercase tracking-widest text-sm font-medium text-slate-600"
           style={{ color: 'var(--text-4)', marginBottom: '10px', lineHeight: 1.6 }}
         >
-          <span className="text-sm font-medium text-slate-600 font-bold tracking-widest text-slate-500 uppercase">{displayName}, OUT OF 103 CERTIFICATIONS ANALYSED FOR A PROFESSIONAL IN {city ? city.toUpperCase() : 'INDIA'} RIGHT NOW -</span>
+          <span className="text-sm font-medium text-slate-600 font-bold tracking-widest text-slate-500 uppercase">{displayName}, OUT OF {certLabel ? certLabel + ' ' : ''}CERTIFICATIONS ANALYSED FOR A PROFESSIONAL IN {city ? city.toUpperCase() : 'INDIA'} RIGHT NOW -</span>
         </motion.p>
       )}
       {phase >= 1 && (
@@ -582,7 +583,7 @@ var CertLeaderboardRow = function ({ cert, rank, onSelect, mode }) {
 }
 
 //  ResultDisplay 
-var ResultDisplay = function ({ result, onCertSelected, mode, onClear, certDomains }) {
+var ResultDisplay = function ({ result, onCertSelected, mode, onClear, certDomains, certCount }) {
   var [showOtherCerts, setShowOtherCerts] = useState(false)
   var primaryCert = result.certs[0]
   var otherCerts = result.certs.slice(1)
@@ -594,7 +595,7 @@ var ResultDisplay = function ({ result, onCertSelected, mode, onClear, certDomai
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
-      <PersonalisedHero name={result.name} city={result.city} domain={result.domain} primaryCert={primaryCert} mode={mode} certDomains={certDomains} />
+      <PersonalisedHero name={result.name} city={result.city} domain={result.domain} primaryCert={primaryCert} mode={mode} certDomains={certDomains} certCount={certCount} />
 
       {primaryCert && onCertSelected && (
         <motion.button
@@ -1434,7 +1435,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
 
       <AnimatePresence>
         {result && (
-          <ResultDisplay result={result} onCertSelected={onCertSelected} mode={mode} onClear={clearAll} certDomains={CERT_DOMAINS} />
+          <ResultDisplay result={result} onCertSelected={onCertSelected} mode={mode} onClear={clearAll} certDomains={CERT_DOMAINS} certCount={CERTIFICATIONS.length} />
         )}
       </AnimatePresence>
 
