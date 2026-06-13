@@ -14,7 +14,7 @@ Extraction & Math Rules:
 
 The Bouncer Rule: First evaluate if the text is an actual corporate job offer or appointment letter. If it is a resume, invoice, or irrelevant document, immediately stop and return an object with {"is_valid_offer": false, "rejection_reason": "Clear explanation of what was uploaded instead"}.
 
-Financial Formatting: All monetary figures must be calculated as annual values and formatted strictly in Indian Rupees (₹) Lakhs to 1 decimal place (e.g., 14.5). Do not output raw monthly figures.
+Financial Formatting: All monetary figures must be calculated as annual values and formatted strictly as absolute whole numbers in Indian Rupees (e.g., 1450000). DO NOT use Lakhs or decimals. DO NOT output monthly figures.
 
 The Trap Check: Actively scan the text for hidden corporate deductions like included Employer PF or Gratuity padding, clawbacks, and notice periods.
 
@@ -29,22 +29,22 @@ Expected JSON Output Format (respond ONLY with JSON):
     "Bond_or_Clawback_Detected": false
   },
   "Compensation_Analysis": {
-    "Offered_CTC": 14.5,
-    "Offered_Fixed_Base": 12.0,
-    "Offered_Variable": 2.5,
+    "Offered_CTC": 1450000,
+    "Offered_Fixed_Base": 1200000,
+    "Offered_Variable": 250000,
     "Breakdown": {
-      "Basic_Salary": 6.0,
-      "Allowances_and_Perks": 6.0,
-      "Joining_or_Performance_Bonus": 2.5,
-      "Stocks_or_ESOPs_Annual_Value": 0.0,
+      "Basic_Salary": 600000,
+      "Allowances_and_Perks": 600000,
+      "Joining_or_Performance_Bonus": 250000,
+      "Stocks_or_ESOPs_Annual_Value": 0,
       "Employer_PF_Included_In_CTC": true,
       "Gratuity_Included_In_CTC": false,
       "Estimated_Monthly_In_Hand_Absolute_INR": 85000
     }
   },
   "Market_Intelligence_2026": {
-    "Market_Median_Salary": 15.0,
-    "Market_75th_Percentile": 18.0,
+    "Market_Median_Salary": 1500000,
+    "Market_75th_Percentile": 1800000,
     "Percent_Difference_To_Median": -3,
     "Market_Trend_Sentence": "string (Current hiring demand velocity for this specific stack/city)",
     "Calculated_Experience_Level_For_Offer": "string (e.g. '5 years' extracted from resume context or offer letter)"
@@ -86,8 +86,8 @@ Expected JSON Output Format (respond ONLY with JSON):
       throw new Error(parsed.rejection_reason || 'This document does not appear to be a valid offer letter.');
     }
 
-    // Convert Lakhs to absolute INR to preserve UI and DB expectations
-    const toAbsolute = (val) => Math.round((parseFloat(val) || 0) * 100000);
+    // Numbers are now expected to be absolute INR
+    const toAbsolute = (val) => Math.round(parseFloat(val) || 0);
 
     if (parsed.Compensation_Analysis) {
       const ctcRaw = parsed.Compensation_Analysis?.Offered_CTC || 0;
