@@ -393,12 +393,28 @@ export default function OfferAnalysisPage() {
 
   return (
     <ToolPageWrapper
-      title="Offer Letter"
-      subtitle="Analysis"
-      description="Compare your job offer against verified Indian market benchmarks. "
+      title=""
+      subtitle=""
+      description=""
+      eyebrow=""
       footer={false}
       showFeedback={false}
+      hideHeader={true}
     >
+      {/* Custom Premium Hero */}
+      <div style={{ textAlign: 'center', padding: '60px 24px 40px', maxWidth: '800px', margin: '0 auto' }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 14px', borderRadius: '999px', background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.2)', marginBottom: '24px' }}>
+          <Sparkles size={14} color="#38bdf8" />
+          <span style={{ fontSize: '11px', fontFamily: FM, fontWeight: '700', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#38bdf8' }}>AI NEGOTIATOR</span>
+        </div>
+        <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: '900', letterSpacing: '-0.03em', lineHeight: 1.05, color: 'var(--text)', marginBottom: '20px' }}>
+          Offer Letter <span style={{ color: 'var(--text-3)' }}>Analysis</span>
+        </h1>
+        <p style={{ fontSize: '16px', lineHeight: 1.6, color: 'var(--text-2)', maxWidth: '500px', margin: '0 auto', fontFamily: FB }}>
+          Upload your job offer to instantly identify lowball tactics, expose hidden deductions, and generate a data-backed negotiation script.
+        </p>
+      </div>
+
       <div className="w-full mx-auto" style={{ margin: '0 -12px', width: 'calc(100% + 24px)' }}>
 
         {/* ROI-style Flow Stepper */}

@@ -21,6 +21,7 @@ export default function ToolPageWrapper({
   eyebrow = 'TOOLS',
   footer  = true,
   showFeedback = true,
+  hideHeader = false,
 }) {
   return (
     /*
@@ -57,7 +58,8 @@ export default function ToolPageWrapper({
       />
 
       {/*  Page heading - zero elevation, no card  */}
-      <div className="page-top-pad" style={{ maxWidth: '100%', margin: '0', padding: '0 clamp(16px, 4vw, 24px)' }}>
+      {!hideHeader && (
+        <div className="page-top-pad" style={{ maxWidth: '100%', margin: '0', padding: '0 clamp(16px, 4vw, 24px)' }}>
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
@@ -110,6 +112,7 @@ export default function ToolPageWrapper({
             : null}
         </motion.div>
       </div>
+      )}
 
       {/*  Tool content - directly on background, hairline above  */}
       <div style={{ maxWidth: '100%', margin: '0', padding: '0 24px 80px' }}>

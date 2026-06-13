@@ -38,14 +38,16 @@ Expected JSON Output Format (respond ONLY with JSON):
       "Joining_or_Performance_Bonus": 2.5,
       "Stocks_or_ESOPs_Annual_Value": 0.0,
       "Employer_PF_Included_In_CTC": true,
-      "Gratuity_Included_In_CTC": false
+      "Gratuity_Included_In_CTC": false,
+      "Estimated_Monthly_In_Hand_Absolute_INR": 85000
     }
   },
   "Market_Intelligence_2026": {
     "Market_Median_Salary": 15.0,
     "Market_75th_Percentile": 18.0,
     "Percent_Difference_To_Median": -3,
-    "Market_Trend_Sentence": "string (Current hiring demand velocity for this specific stack/city)"
+    "Market_Trend_Sentence": "string (Current hiring demand velocity for this specific stack/city)",
+    "Calculated_Experience_Level_For_Offer": "string (e.g. '5 years' extracted from resume context or offer letter)"
   },
   "Strategic_Negotiation_Output": {
     "Blunt_Assessment": "string (One direct sentence stating if they are being lowballed, paid fairly, or hitting above market rate)",
@@ -105,9 +107,10 @@ Expected JSON Output Format (respond ONLY with JSON):
           Special_Allowance: toAbsolute(parsed.Compensation_Analysis?.Breakdown?.Allowances_and_Perks),
           Variable_PLVP: toAbsolute(parsed.Compensation_Analysis?.Offered_Variable),
           ESOP_Annual_Vesting_Value: toAbsolute(parsed.Compensation_Analysis?.Breakdown?.Stocks_or_ESOPs_Annual_Value),
+          Estimated_Monthly_In_Hand: parsed.Compensation_Analysis?.Breakdown?.Estimated_Monthly_In_Hand_Absolute_INR || 0,
         },
         Market_Context: {
-          Calculated_Experience_Level_For_Offer: "0 years" // fallback
+          Calculated_Experience_Level_For_Offer: parsed.Market_Intelligence_2026?.Calculated_Experience_Level_For_Offer || "0 years"
         },
         Database_Payload: {
           fixed_base: toAbsolute(parsed.Compensation_Analysis?.Offered_Fixed_Base),
