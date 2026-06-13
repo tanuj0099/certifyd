@@ -12,7 +12,10 @@ import {
   Monitor,
   BookOpen,
   ShieldCheck,
+  Scale
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useJourneyStore } from '../store/useJourneyStore.js';
 import {
   AreaChart,
   Area,
@@ -264,6 +267,8 @@ function LoadingSkeleton() {
 // 
 const CertDetail = () => {
   const { slug } = useParams();
+  const router = useRouter();
+  const setCompareMode = useJourneyStore(s => s.setCompareMode);
   const [cert, setCert]         = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError]       = useState(null);
@@ -516,21 +521,41 @@ const CertDetail = () => {
               </div>
 
               {/* CTA - min-h-[44px] for fat-finger safety */}
-              <Link
-                href={`/tools/roi?cert=${cert.slug}`}
-                className="
-                  mt-1 w-full flex items-center justify-center gap-2
-                  min-h-[44px] py-3 px-4
-                  rounded-xl bg-[var(--text)] text-[var(--bg)] text-sm font-bold
-                  hover:bg-[var(--text-2)] active:bg-[var(--text-3)]
-                  transition-colors
-                "
-              >
-                Calculate ROI
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
-              </Link>
+              <div className="mt-1 w-full flex items-center gap-2">
+                <Link
+                  href={`/tools/roi?cert=${cert.slug}`}
+                  className="
+                    flex-1 flex items-center justify-center gap-2
+                    min-h-[44px] py-3 px-4
+                    rounded-xl bg-[var(--text)] text-[var(--bg)] text-sm font-bold
+                    hover:bg-[var(--text-2)] active:bg-[var(--text-3)]
+                    transition-colors
+                  "
+                >
+                  Calculate ROI
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
+                </Link>
+
+                <button
+                  onClick={() => {
+                    setCompareMode(cert);
+                    router.push('/cert-radar');
+                  }}
+                  className="
+                    flex items-center justify-center
+                    min-h-[44px] px-4
+                    rounded-xl bg-transparent text-[var(--text)]
+                    border border-[var(--border-accent)]
+                    hover:bg-[var(--bg-surface)] active:bg-[var(--bg-alt)]
+                    transition-colors
+                  "
+                  title="Compare with another cert"
+                >
+                  <Scale size={18} className="text-[var(--accent)]" />
+                </button>
+              </div>
 
             </div>
           </aside>

@@ -27,6 +27,23 @@ export const useJourneyStore = create(
       setHikePercent: (v) => set({ hikePercent: v }),
       setExpectedFirstSalary: (v) => set({ expectedFirstSalary: v }),
 
+      // ── Bookmarks / Saved Certs (persisted) ───────────
+      savedCerts: [],
+      toggleSavedCert: (certSlug) => set((state) => {
+        const isSaved = state.savedCerts.includes(certSlug);
+        return {
+          savedCerts: isSaved 
+            ? state.savedCerts.filter(id => id !== certSlug)
+            : [...state.savedCerts, certSlug]
+        };
+      }),
+
+      // ── Compare Mode (transient) ──────────────────────
+      compareMode: false,
+      compareCertA: null,
+      setCompareMode: (certData) => set({ compareMode: true, compareCertA: certData }),
+      clearCompareMode: () => set({ compareMode: false, compareCertA: null }),
+
       // ── Selected cert ──────────────────────────────────
       selectedCert: null,
       certName:     '',
@@ -132,6 +149,7 @@ export const useJourneyStore = create(
         activeRoadmapProgress: state.activeRoadmapProgress,
         certName: state.certName,
         selectedCert: state.selectedCert,
+        savedCerts: state.savedCerts,
       }),
     }
   )

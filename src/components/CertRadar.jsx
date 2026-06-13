@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../lib/supabase.js';
 import CertificationCard from './CertificationCard.jsx';
 import SkeletonGrid from './SkeletonGrid.jsx';
-import { AlertCircle, ArrowRight, X, TrendingUp, Compass, Filter } from 'lucide-react';
+import { AlertCircle, ArrowRight, X, TrendingUp, Compass, Filter, Scale } from 'lucide-react';
 import { useJourneyStore } from '../store/useJourneyStore.js';
 import FilterSidebar, { FILTER_SECTIONS } from './FilterSidebar.jsx';
 
@@ -90,9 +90,15 @@ function ActiveJourneyCapsule({ currentRole, targetDomain, intent, onDismiss }) 
 // ── CertRadar ──────────────────────────────────────────────────────────────
 const CertRadar = () => {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const targetDomain = useJourneyStore(s => s.targetDomain);
   const resumeDomain = useJourneyStore(s => s.resumeDomain);
   const setTargetDomain = useJourneyStore(s => s.setTargetDomain);
+
+  const compareMode = useJourneyStore(s => s.compareMode);
+  const compareCertA = useJourneyStore(s => s.compareCertA);
+  const clearCompareMode = useJourneyStore(s => s.clearCompareMode);
+  const [compareCertB, setCompareCertB] = useState(null);
 
   const urlIntent = searchParams?.get('intent') || '';
   const urlTarget = searchParams?.get('target') || '';
@@ -303,7 +309,16 @@ const CertRadar = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
                   {certifications.length > 0 ? (
                     certifications.map((cert) => (
-                      <CertificationCard key={cert.slug || cert.id} data={cert} />
+                      <CertificationCard 
+                        key={cert.slug || cert.id} 
+                        data={cert} 
+                        isSelected={compareCertB?.slug === cert.slug}
+                        onClick={(clickedCert) => {
+                          if (compareMode && compareCertA?.slug !== clickedCert.slug) {
+                            setCompareCertB(clickedCert);
+                          }
+                        }}
+                      />
                     ))
                   ) : (
                     !error && (
@@ -348,16 +363,66 @@ const CertRadar = () => {
       </div>
 
       {/* Mobile Sticky Filter FAB */}
-      <div className="fixed bottom-6 right-6 lg:hidden z-30">
-        <button
-          onClick={() => setIsMobileSidebarOpen(true)}
-          className="flex items-center gap-2 px-5 py-3 rounded-full shadow-2xl font-semibold text-white transition-transform hover:scale-105 active:scale-95"
-          style={{ background: 'var(--accent, #2563eb)' }}
-        >
-          <Filter size={18} />
-          Filters {activeFilterCount > 0 && <span className="ml-1 bg-white text-blue-600 rounded-full px-2 py-0.5 text-xs">{activeFilterCount}</span>}
-        </button>
-      </div>
+      {!compareMode && (
+        <div className="fixed bottom-6 right-6 lg:hidden z-30">
+          <button
+            onClick={() => setIsMobileSidebarOpen(true)}
+            className="flex items-center gap-2 px-5 py-3 rounded-full shadow-2xl font-semibold text-white transition-transform hover:scale-105 active:scale-95"
+            style={{ background: 'var(--accent, #2563eb)' }}
+          >
+            <Filter size={18} />
+            Filters {activeFilterCount > 0 && <span className="ml-1 bg-white text-blue-600 rounded-full px-2 py-0.5 text-xs">{activeFilterCount}</span>}
+          </button>
+        </div>
+      )}
+
+      {/* Compare Mode Sticky Bar */}
+      {compareMode && compareCertA && (
+        <AnimatePresence>
+          <motion.div
+            initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 50 }}
+            className="fixed bottom-0 left-0 right-0 z-50 p-4 border-t flex flex-col md:flex-row items-center justify-between gap-4 shadow-[0_-10px_40px_rgba(0,0,0,0.1)]"
+            style={{ background: 'var(--bg-surface)', borderColor: 'var(--border)' }}
+          >
+            <div className="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto text-center md:text-left">
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-3)' }}>
+                Comparing
+              </span>
+              <span className="font-semibold text-sm md:text-base bg-[var(--bg-alt)] px-3 py-1.5 rounded-lg border border-[var(--border)] max-w-[200px] truncate">
+                {compareCertA.name}
+              </span>
+              <span className="text-[var(--text-4)] hidden md:block">vs</span>
+              <span className="font-semibold text-sm md:text-base bg-[var(--bg-alt)] px-3 py-1.5 rounded-lg border border-[var(--border)] border-dashed max-w-[200px] truncate" style={{ color: compareCertB ? 'var(--text)' : 'var(--text-4)' }}>
+                {compareCertB ? compareCertB.name : 'Select a cert...'}
+              </span>
+            </div>
+            <div className="flex items-center gap-3 w-full md:w-auto">
+              <button
+                onClick={() => { clearCompareMode(); setCompareCertB(null); }}
+                className="flex-1 md:flex-none px-4 py-2.5 rounded-xl border border-[var(--border)] text-sm font-semibold text-[var(--text-2)] hover:text-[var(--text)] transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                disabled={!compareCertB}
+                onClick={() => {
+                  if (compareCertB) {
+                    clearCompareMode();
+                    router.push(`/tools/compare?cert1=${compareCertA.slug}&cert2=${compareCertB.slug}`);
+                  }
+                }}
+                className={`flex-1 md:flex-none px-6 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all ${
+                  compareCertB 
+                    ? 'bg-[var(--accent)] text-white shadow-lg shadow-[var(--accent)]/30 cursor-pointer' 
+                    : 'bg-[var(--border)] text-[var(--text-4)] cursor-not-allowed'
+                }`}
+              >
+                <Scale size={16} /> Compare
+              </button>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      )}
 
     </div>
   );

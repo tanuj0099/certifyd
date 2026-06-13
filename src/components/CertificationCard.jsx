@@ -3,7 +3,9 @@
 import React from 'react';
 import {     } from 'react-router-dom';
 import Link from 'next/link';
-import { Clock, DollarSign } from 'lucide-react';
+import { Clock, DollarSign, Bookmark, Check } from 'lucide-react';
+import { useJourneyStore } from '../store/useJourneyStore.js';
+import { useRouter } from 'next/navigation';
 
 //  Difficulty badge colours 
 const DIFFICULTY_STYLES = {
@@ -52,17 +54,43 @@ function vendorFromSlug(slug) {
   return MAP[prefix] || prefix;
 }
 
-const CertificationCard = ({ data }) => {
+const CertificationCard = ({ data, ...props }) => {
   if (!data) return null;
 
+  const vendor = vendorFromSlug(data.slug);
   const diffStyle = getDifficultyStyle(data.difficulty_level);
-  const vendor = data.vendor || vendorFromSlug(data.slug);
   const description = data.overview || data.about_description || '';
   const truncated = description.length > 120 ? description.slice(0, 120).trimEnd() + '...' : description;
+  const savedCerts = useJourneyStore(s => s.savedCerts || []);
+  const toggleSavedCert = useJourneyStore(s => s.toggleSavedCert);
+  const compareMode = useJourneyStore(s => s.compareMode);
+  const compareCertA = useJourneyStore(s => s.compareCertA);
+
+  const isSaved = savedCerts.includes(data.slug);
+  const isCompareA = compareCertA?.slug === data.slug;
+  const isSelected = props.isSelected || false;
+
+  const handleCardClick = (e) => {
+    if (compareMode) {
+      e.preventDefault();
+      if (isCompareA) return;
+      if (props.onClick) props.onClick(data);
+    } else if (props.onClick) {
+      // Allow custom onClick to prevent navigation if needed
+      props.onClick(e);
+    }
+  };
+
+  const handleBookmarkClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleSavedCert(data.slug);
+  };
 
   return (
     <Link href={`/tools/cert-radar/${data.slug}`}
-      className="
+      onClick={handleCardClick}
+      className={`
         group relative flex flex-col
         p-4 md:p-5
         glass
@@ -70,7 +98,9 @@ const CertificationCard = ({ data }) => {
         transition-all duration-200
         cursor-pointer outline-none
         focus-visible:ring-2 focus-visible:ring-white/20
-      "
+        ${isCompareA ? 'opacity-50 grayscale pointer-events-none' : ''}
+        ${isSelected ? 'ring-2 ring-[var(--accent)] bg-[var(--bg-alt)]' : ''}
+      `}
       onMouseOver={(e) => {
         e.currentTarget.style.transform = 'scale(1.015)';
       }}
@@ -94,6 +124,22 @@ const CertificationCard = ({ data }) => {
           <span className="px-2 py-1 text-[10px] md:text-xs font-semibold uppercase tracking-widest rounded-md truncate max-w-[100px] md:max-w-[130px] glass text-[var(--text-2)]">
             {data.functional_track}
           </span>
+        )}
+      </div>
+
+      {/* Bookmark / Checkbox */}
+      <div className="absolute top-4 right-4 z-10 flex items-center justify-center">
+        {compareMode ? (
+          <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected ? 'bg-[var(--accent)] border-[var(--accent)]' : 'border-[var(--text-3)] bg-transparent'}`}>
+            {isSelected && <Check size={14} className="text-[var(--bg)]" strokeWidth={3} />}
+          </div>
+        ) : (
+          <button
+            onClick={handleBookmarkClick}
+            className="p-1.5 rounded-full hover:bg-[var(--bg-alt)] transition-colors text-[var(--text-3)] hover:text-[var(--accent)]"
+          >
+            <Bookmark size={18} fill={isSaved ? "currentColor" : "none"} className={isSaved ? "text-[var(--accent)]" : ""} />
+          </button>
         )}
       </div>
 
@@ -139,12 +185,14 @@ const CertificationCard = ({ data }) => {
         </div>
       </div>
 
-      {/*  Hover arrow - desktop only  */}
-      <div className="hidden md:flex absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-center justify-center w-8 h-8 rounded-full bg-blue-500 text-white shadow-lg shadow-blue-500/30">
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-        </svg>
-      </div>
+      {/*  Hover arrow - desktop only (hidden in compare mode)  */}
+      {!compareMode && (
+        <div className="hidden md:flex absolute top-4 right-14 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-center justify-center w-8 h-8 rounded-full bg-blue-500 text-white shadow-lg shadow-blue-500/30">
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+      )}
     </Link>
   );
 };

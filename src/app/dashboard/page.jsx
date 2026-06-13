@@ -7,6 +7,8 @@ import { useJourneyStore } from '@/store/useJourneyStore.js'
 import BurnRate from '@/components/BurnRate.jsx'
 import { MarketingFooter } from '@/components/MarketingPageShell.jsx'
 import { useIsMobile } from '@/components/SharedUI.jsx'
+import { supabase } from '@/lib/supabase.js'
+import CertificationCard from '@/components/CertificationCard.jsx'
 import {
   Award, TrendingUp, BarChart2, Zap, MapPin,
   ChevronRight, BookOpen, Compass, Target, Bookmark,
@@ -133,6 +135,32 @@ export default function DashboardPage() {
       console.warn('Failed to parse activeCert from localStorage', e)
     }
   }, [])
+
+  const savedCertsSlugs = useJourneyStore(s => s.savedCerts || []);
+  const [savedCertsData, setSavedCertsData] = useState([]);
+  const [loadingSaved, setLoadingSaved] = useState(false);
+
+  useEffect(() => {
+    async function loadSaved() {
+      if (!savedCertsSlugs.length) {
+        setSavedCertsData([]);
+        return;
+      }
+      setLoadingSaved(true);
+      try {
+        const { data } = await supabase
+          .from('certifications')
+          .select('*')
+          .in('slug', savedCertsSlugs);
+        if (data) setSavedCertsData(data);
+      } catch (err) {
+        console.error('Error fetching saved certs:', err);
+      } finally {
+        setLoadingSaved(false);
+      }
+    }
+    loadSaved();
+  }, [savedCertsSlugs]);
 
   const SECTIONS = [
     { id: 'active-paths',  label: 'Active Paths' },
@@ -316,9 +344,23 @@ export default function DashboardPage() {
                   <p style={{ fontFamily: FB, fontSize: '13px', color: 'var(--text-3)', marginBottom: '16px', lineHeight: 1.6 }}>
                     Certs you've bookmarked for later. Use Cert Radar to explore and save more.
                   </p>
-                  <div style={{ padding: '32px', border: '1px dashed var(--border)', borderRadius: '10px', textAlign: 'center', color: 'var(--text-4)', fontFamily: FB, fontSize: '13px' }}>
-                    No saved certs yet.
-                  </div>
+                  {loadingSaved ? (
+                    <div style={{ padding: '32px', textAlign: 'center', color: 'var(--text-4)', fontFamily: FB, fontSize: '13px' }}>
+                      Loading your saved explorations...
+                    </div>
+                  ) : savedCertsData.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {savedCertsData.map(cert => (
+                        <div key={cert.slug} style={{ position: 'relative' }}>
+                          <CertificationCard data={cert} />
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div style={{ padding: '32px', border: '1px dashed var(--border)', borderRadius: '10px', textAlign: 'center', color: 'var(--text-4)', fontFamily: FB, fontSize: '13px' }}>
+                      No saved certs yet.
+                    </div>
+                  )}
                   <button
                     onClick={() => router.push('/cert-radar')}
                     style={{ marginTop: '16px', padding: '10px 20px', borderRadius: '8px', background: 'transparent', color: 'var(--text)', border: '1px solid var(--border)', cursor: 'pointer', fontFamily: FH, fontSize: '13px', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
@@ -359,7 +401,7 @@ export default function DashboardPage() {
 
           <SideLabel>Saved Future Explorations</SideLabel>
           <div style={{ fontFamily: FB, fontSize: '12px', color: 'var(--text-4)', padding: '10px', borderRadius: '8px', background: 'var(--bg)', border: '1px solid var(--border)', textAlign: 'center' }}>
-            No saved certs yet
+            {savedCertsSlugs.length > 0 ? `${savedCertsSlugs.length} certs saved` : 'No saved certs yet'}
           </div>
 
           {certName && (
