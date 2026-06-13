@@ -393,28 +393,14 @@ export default function OfferAnalysisPage() {
 
   return (
     <ToolPageWrapper
-      title=""
-      subtitle=""
-      description=""
-      eyebrow=""
+      title="Offer Letter"
+      subtitle="Analysis"
+      description="Upload your job offer to instantly identify lowball tactics, expose hidden deductions, and generate a data-backed negotiation script."
+      eyebrow="AI NEGOTIATOR"
       footer={false}
       showFeedback={false}
-      hideHeader={true}
+      hideHeader={false}
     >
-      {/* Custom Premium Hero */}
-      <div style={{ textAlign: 'center', padding: '60px 24px 40px', maxWidth: '800px', margin: '0 auto' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 14px', borderRadius: '999px', background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.2)', marginBottom: '24px' }}>
-          <Sparkles size={14} color="#38bdf8" />
-          <span style={{ fontSize: '11px', fontFamily: FM, fontWeight: '700', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#38bdf8' }}>AI NEGOTIATOR</span>
-        </div>
-        <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: '900', letterSpacing: '-0.03em', lineHeight: 1.05, color: 'var(--text)', marginBottom: '20px' }}>
-          Offer Letter <span style={{ color: 'var(--text-3)' }}>Analysis</span>
-        </h1>
-        <p style={{ fontSize: '16px', lineHeight: 1.6, color: 'var(--text-2)', maxWidth: '500px', margin: '0 auto', fontFamily: FB }}>
-          Upload your job offer to instantly identify lowball tactics, expose hidden deductions, and generate a data-backed negotiation script.
-        </p>
-      </div>
-
       <div className="w-full mx-auto" style={{ margin: '0 -12px', width: 'calc(100% + 24px)' }}>
 
         {/* ROI-style Flow Stepper */}
@@ -640,53 +626,71 @@ export default function OfferAnalysisPage() {
                       { name: 'ESOP/Stocks', value: result.CTC_Breakdown?.ESOP_Annual_Vesting_Value || 0, color: '#6366f1' }
                     ].filter(d => d.value > 0);
 
+                    const glassStyle = C.isLight ? {
+                      background: 'rgba(255, 255, 255, 0.7)',
+                      backdropFilter: 'blur(20px)',
+                      WebkitBackdropFilter: 'blur(20px)',
+                      border: '1px solid rgba(255, 255, 255, 0.5)',
+                      boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
+                    } : {
+                      background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.7) 100%)',
+                      backdropFilter: 'blur(20px)',
+                      WebkitBackdropFilter: 'blur(20px)',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      boxShadow: '0 12px 40px 0 rgba(0, 0, 0, 0.3)',
+                    };
+
+                    const premiumCardClass = "w-full rounded-[2rem] p-6 md:p-8 transition-all duration-300 relative overflow-hidden group";
+
                     return (
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
 
                         {/* ROW 1: Reality Check */}
-                        <div className="md:col-span-3 flex flex-col md:flex-row gap-4 md:gap-6 w-full">
-                          <div className="w-full md:flex-1 text-center rounded-3xl p-5 md:p-6 shadow-sm transition-all duration-300"
-                            style={{ backgroundColor: C.isLight ? '#ffffff' : C.surface, border: `1px solid ${C.border}` }}>
-                            <div style={{ fontFamily: FM, color: C.text3 }} className="text-sm font-medium text-slate-600 md:text-sm font-medium text-slate-600 tracking-[0.06em] mb-2 md:mb-3">STATED CTC (INFLATED)</div>
-                            <div className="font-sans tracking-tight tabular-nums text-2xl sm:text-4xl md:text-5xl font-bold line-through decoration-red-500/70 decoration-[2px] md:decoration-[3px]"
+                        <div className="md:col-span-3 flex flex-col md:flex-row gap-6 md:gap-8 w-full">
+                          <div className={`${premiumCardClass} flex-1 text-center`}
+                            style={glassStyle}>
+                            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                            <div style={{ fontFamily: FM, color: C.text3 }} className="text-xs font-bold tracking-[0.1em] mb-4 uppercase">STATED CTC (INFLATED)</div>
+                            <div className="font-sans tracking-tight tabular-nums text-4xl sm:text-5xl md:text-6xl font-black line-through decoration-red-500/80 decoration-[3px] md:decoration-[4px]"
                               style={{ color: C.text }}>
                               ₹{Math.round(ctcValue).toLocaleString('en-IN')}
                             </div>
-                            <div style={{ fontFamily: FB, color: C.text3 }} className="text-sm font-medium text-slate-600 md:text-sm mt-1 md:mt-2">Per annum</div>
+                            <div style={{ fontFamily: FB, color: C.text3 }} className="text-sm font-medium mt-3">Per annum</div>
                           </div>
 
-                          <div className="w-full md:flex-1 text-center rounded-3xl p-5 md:p-6 shadow-sm transition-all duration-300 relative overflow-hidden"
-                            style={{ backgroundColor: C.isLight ? '#ffffff' : C.surface, border: `1px solid ${C.border}` }}>
-                            <div style={{ fontFamily: FM, color: C.text3 }} className="text-sm font-medium text-slate-600 md:text-sm font-medium text-slate-600 tracking-[0.06em] mb-2 md:mb-3 relative">IN-HAND ESTIMATE</div>
-                            <div className="font-sans tracking-tight tabular-nums text-3xl sm:text-5xl md:text-6xl font-black text-teal-600 dark:text-teal-400 relative">
+                          <div className={`${premiumCardClass} flex-1 text-center`}
+                            style={glassStyle}>
+                            <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                            <div style={{ fontFamily: FM, color: C.text3 }} className="text-xs font-bold tracking-[0.1em] mb-4 uppercase">IN-HAND ESTIMATE</div>
+                            <div className="font-sans tracking-tight tabular-nums text-5xl sm:text-6xl md:text-7xl font-black text-teal-500 dark:text-teal-400 drop-shadow-md">
                               ₹{Math.round(result.CTC_Breakdown?.Estimated_Monthly_In_Hand || 0).toLocaleString('en-IN')}
                             </div>
-                            <div style={{ fontFamily: FB, color: C.text3 }} className="text-sm font-medium text-slate-600 md:text-sm mt-1 md:mt-2 relative">Per month approx</div>
+                            <div style={{ fontFamily: FB, color: C.text3 }} className="text-sm font-medium mt-3">Per month approx</div>
                           </div>
                         </div>
 
                         {/* ROW 2 LEFT: AI Negotiation Hub */}
-                        <div className="md:col-span-2 p-5 md:p-6 w-full bg-slate-900 text-white rounded-3xl shadow-xl border border-slate-800 flex flex-col justify-center">
-                          <div style={{ fontFamily: FM }} className="text-sm font-medium text-slate-600 tracking-[0.06em] text-slate-400 mb-3 uppercase">AI Negotiator & Strategy</div>
+                        <div className={`md:col-span-2 ${premiumCardClass} flex flex-col justify-center`} style={glassStyle}>
+                          <div style={{ fontFamily: FM, color: C.text3 }} className="text-xs font-bold tracking-[0.1em] mb-6 uppercase">AI Negotiator & Strategy</div>
 
                           {/* Negotiation Target */}
-                          <div className="mb-5">
-                            <div className="text-sm font-medium text-slate-600 text-slate-300 mb-2 font-medium font-sans">Target Counter-Offer Range</div>
-                            <div className="text-emerald-400 font-bold text-2xl sm:text-3xl font-sans tracking-tight tabular-nums flex flex-col sm:flex-row sm:items-center sm:gap-2">
+                          <div className="mb-8">
+                            <div className="text-sm font-bold text-[var(--text-3)] mb-3 font-sans">TARGET COUNTER-OFFER RANGE</div>
+                            <div className="text-emerald-500 dark:text-emerald-400 font-black text-4xl sm:text-5xl font-sans tracking-tight tabular-nums flex flex-col sm:flex-row sm:items-baseline sm:gap-3 drop-shadow-sm">
                               <span>₹{Math.round(Math.max(ctcValue * 1.15, finalMedian * 0.95)).toLocaleString('en-IN')}</span>
-                              <span className="hidden sm:inline text-slate-500 font-normal">-</span>
-                              <span className="sm:hidden text-slate-500 text-sm font-medium my-0.5">to</span>
+                              <span className="hidden sm:inline text-[var(--text-4)] font-normal text-3xl">-</span>
+                              <span className="sm:hidden text-[var(--text-4)] text-sm font-medium my-1">to</span>
                               <span>₹{Math.round(Math.max(ctcValue * 1.25, finalMedian * 1.15)).toLocaleString('en-IN')}</span>
                             </div>
                           </div>
 
                           {/* Negotiation Script */}
-                          <div className="bg-slate-800/50 p-4 sm:p-5 rounded-2xl border border-slate-700 mt-2 flex flex-col gap-4">
+                          <div className="rounded-2xl border flex flex-col gap-5 p-5 md:p-6" style={{ background: C.isLight ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.2)', borderColor: C.isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)' }}>
                             
                             {result.Strategic_Negotiation_Output?.Blunt_Assessment && (
                               <div>
-                                <div className="text-[11px] uppercase tracking-widest text-slate-400 mb-1.5 font-bold">Verdict</div>
-                                <div className="text-base sm:text-lg text-white font-sans font-semibold leading-snug">
+                                <div className="text-xs uppercase tracking-[0.1em] text-[var(--text-4)] mb-2 font-bold">VERDICT</div>
+                                <div className="text-lg sm:text-xl text-[var(--text)] font-sans font-bold leading-relaxed">
                                   {result.Strategic_Negotiation_Output.Blunt_Assessment}
                                 </div>
                               </div>
@@ -694,13 +698,13 @@ export default function OfferAnalysisPage() {
 
                             {(result.Strategic_Negotiation_Output?.Red_Flags?.length > 0) && (
                               <div>
-                                <div className="text-[11px] uppercase tracking-widest text-red-400 mb-1.5 font-bold flex items-center gap-1.5">
-                                  <AlertTriangle size={12} /> Red Flags
+                                <div className="text-xs uppercase tracking-[0.1em] text-red-500 dark:text-red-400 mb-2 font-bold flex items-center gap-2">
+                                  <AlertTriangle size={14} /> RED FLAGS
                                 </div>
-                                <ul className="list-none m-0 p-0 flex flex-col gap-1.5">
+                                <ul className="list-none m-0 p-0 flex flex-col gap-2">
                                   {result.Strategic_Negotiation_Output.Red_Flags.map((rf, idx) => (
-                                    <li key={idx} className="text-sm text-slate-300 font-sans leading-relaxed flex items-start gap-2">
-                                      <span className="text-red-400 mt-0.5">•</span> {rf}
+                                    <li key={idx} className="text-sm md:text-base text-[var(--text-2)] font-sans leading-relaxed flex items-start gap-2.5">
+                                      <span className="text-red-500 dark:text-red-400 mt-0.5 font-bold">•</span> {rf}
                                     </li>
                                   ))}
                                 </ul>
@@ -709,13 +713,13 @@ export default function OfferAnalysisPage() {
 
                             {(result.Strategic_Negotiation_Output?.Strengths?.length > 0) && (
                               <div>
-                                <div className="text-[11px] uppercase tracking-widest text-emerald-400 mb-1.5 font-bold flex items-center gap-1.5">
-                                  <Check size={12} strokeWidth={3} /> Strengths
+                                <div className="text-xs uppercase tracking-[0.1em] text-emerald-500 dark:text-emerald-400 mb-2 font-bold flex items-center gap-2">
+                                  <Check size={14} strokeWidth={3} /> STRENGTHS
                                 </div>
-                                <ul className="list-none m-0 p-0 flex flex-col gap-1.5">
+                                <ul className="list-none m-0 p-0 flex flex-col gap-2">
                                   {result.Strategic_Negotiation_Output.Strengths.map((str, idx) => (
-                                    <li key={idx} className="text-sm text-slate-300 font-sans leading-relaxed flex items-start gap-2">
-                                      <span className="text-emerald-400 mt-0.5">•</span> {str}
+                                    <li key={idx} className="text-sm md:text-base text-[var(--text-2)] font-sans leading-relaxed flex items-start gap-2.5">
+                                      <span className="text-emerald-500 dark:text-emerald-400 mt-0.5 font-bold">•</span> {str}
                                     </li>
                                   ))}
                                 </ul>
@@ -723,19 +727,19 @@ export default function OfferAnalysisPage() {
                             )}
 
                             {result.Strategic_Negotiation_Output?.Counter_Offer_Email_Script ? (
-                              <div className="mt-2 bg-slate-900/80 p-4 rounded-xl border border-slate-700 relative group">
-                                <div className="text-[11px] uppercase tracking-widest text-emerald-400 mb-2 font-bold flex items-center gap-1.5">
-                                  <Sparkles size={12} /> Email Script
+                              <div className="mt-4 p-5 md:p-6 rounded-2xl relative group" style={{ background: C.isLight ? 'rgba(0,0,0,0.03)' : 'rgba(0,0,0,0.4)', border: `1px solid ${C.isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)'}` }}>
+                                <div className="text-xs uppercase tracking-[0.1em] text-emerald-500 dark:text-emerald-400 mb-3 font-bold flex items-center gap-2">
+                                  <Sparkles size={14} /> EMAIL SCRIPT
                                 </div>
-                                <div className="text-sm text-slate-300 font-sans leading-relaxed whitespace-pre-wrap">
+                                <div className="text-[15px] text-[var(--text)] font-sans leading-relaxed whitespace-pre-wrap font-medium">
                                   {result.Strategic_Negotiation_Output.Counter_Offer_Email_Script}
                                 </div>
                                 <button
                                   onClick={() => navigator.clipboard.writeText(result.Strategic_Negotiation_Output.Counter_Offer_Email_Script)}
-                                  className="absolute top-3 right-3 p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white rounded-md transition-colors opacity-0 group-hover:opacity-100"
+                                  className="absolute top-4 right-4 p-2 bg-[var(--bg)] hover:bg-[var(--bg-surface)] text-[var(--text-2)] hover:text-[var(--text)] rounded-lg transition-colors opacity-0 group-hover:opacity-100 border border-[var(--border)] shadow-sm"
                                   title="Copy to clipboard"
                                 >
-                                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                                 </button>
                               </div>
                             ) : (
@@ -752,34 +756,33 @@ export default function OfferAnalysisPage() {
                         </div>
 
                         {/* ROW 2 RIGHT: Market Context (Median/Gauge) */}
-                        <div className="md:col-span-1 rounded-3xl p-5 md:p-6 shadow-sm transition-all duration-300 flex flex-col justify-center"
-                          style={{ backgroundColor: C.isLight ? '#ffffff' : C.surface, border: `1px solid ${C.border}` }}>
-                          <div style={{ fontFamily: FM, color: C.text3 }} className="text-sm font-medium tracking-[0.06em] mb-2 uppercase tracking-widest">Market Benchmark</div>
-                          <div className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight tabular-nums block my-1 md:my-2" style={{ color: C.text }}>
+                        {/* ROW 2 RIGHT: Market Context (Median/Gauge) */}
+                        <div className={`md:col-span-1 ${premiumCardClass} flex flex-col justify-center`} style={glassStyle}>
+                          <div style={{ fontFamily: FM, color: C.text3 }} className="text-xs font-bold tracking-[0.1em] mb-4 uppercase">Market Benchmark</div>
+                          <div className="text-4xl sm:text-5xl font-black tracking-tight tabular-nums block mb-3" style={{ color: C.text }}>
                             ₹{Math.round(finalMedian).toLocaleString('en-IN')}
                           </div>
-                          <div style={{ fontFamily: FB, color: C.text3 }} className="text-[11px] sm:text-sm font-medium mb-5 md:mb-6 leading-relaxed">
+                          <div style={{ fontFamily: FB, color: C.text2 }} className="text-sm font-medium mb-8 leading-relaxed">
                             Typical salary for {result.Analysis_Metadata?.Target_Job_Title || 'this role'} in {result.Analysis_Metadata?.Target_Location || 'India'}
-                            {!tierMatched && marketMedian > 0 && <span className="text-amber-500 dark:text-amber-400 block mt-1 opacity-90">Based on broader market data.</span>}
-                            {marketMedian === 0 && <span className="text-blue-500 dark:text-blue-400 block mt-1 opacity-90">AI-estimated benchmark.</span>}
+                            {!tierMatched && marketMedian > 0 && <span className="text-amber-500 dark:text-amber-400 block mt-1.5 font-bold">Based on broader market data.</span>}
+                            {marketMedian === 0 && <span className="text-blue-500 dark:text-blue-400 block mt-1.5 font-bold">AI-estimated benchmark.</span>}
                           </div>
 
-                          <div className="flex justify-between text-xs sm:text-sm font-medium mb-2 md:mb-3" style={{ color: C.text3, fontFamily: FB }}>
+                          <div className="flex justify-between text-xs sm:text-sm font-bold mb-3 uppercase tracking-widest" style={{ color: C.text4, fontFamily: FM }}>
                             <span>Entry</span>
-                            <span className={`${gaugeText} font-bold font-sans tabular-nums text-center px-2 py-0.5 rounded-md`}>
+                            <span className={`${gaugeText} font-bold font-sans text-center px-3 py-1 rounded-full bg-slate-500/10`}>
                               {getOrdinalNum(percentile)} Percentile
                             </span>
                             <span>Top</span>
                           </div>
-                          <div className="w-full h-2 rounded-full relative" style={{ backgroundColor: C.isLight ? '#e2e8f0' : '#1e293b' }}>
-                            <div className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full ${gaugeColor}`} style={{ left: `${percentile}%`, transition: 'left 1s ease-out', transform: 'translate(-50%, -50%)', boxShadow: '0 0 10px rgba(0,0,0,0.1)' }} />
+                          <div className="w-full h-3 rounded-full relative overflow-hidden" style={{ backgroundColor: C.isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)' }}>
+                            <div className={`absolute top-0 left-0 h-full ${gaugeColor}`} style={{ width: `${percentile}%`, transition: 'width 1.5s cubic-bezier(0.22, 1, 0.36, 1)' }} />
                           </div>
                         </div>
 
                         {/* ROW 3 LEFT: Donut Chart */}
-                        <div className="md:col-span-2 rounded-3xl p-4 md:p-6 shadow-sm transition-all duration-300 flex flex-col justify-center items-center h-[280px] md:h-[360px] w-full"
-                          style={{ backgroundColor: C.isLight ? '#ffffff' : C.surface, border: `1px solid ${C.border}` }}>
-                          <div style={{ fontFamily: FM, color: C.text3 }} className="text-sm font-medium text-slate-600 tracking-[0.06em] w-full mb-2 md:mb-4 uppercase tracking-widest text-center md:text-left">Compensation Composition</div>
+                        <div className={`md:col-span-2 ${premiumCardClass} flex flex-col justify-center items-center h-[320px] md:h-[400px]`} style={glassStyle}>
+                          <div style={{ fontFamily: FM, color: C.text3 }} className="text-xs font-bold tracking-[0.1em] w-full mb-6 uppercase text-center md:text-left">Compensation Composition</div>
                           <div className="w-full h-full min-h-[200px] md:min-h-[250px]">
                             <ResponsiveContainer width="100%" height="100%">
                               <PieChart>
@@ -808,39 +811,37 @@ export default function OfferAnalysisPage() {
                         </div>
 
                         {/* ROW 3 RIGHT: Breakdowns (Numerical Item List) */}
-                        <div className="md:col-span-1 rounded-3xl p-4 md:p-6 shadow-sm transition-all duration-300 flex flex-col gap-2 md:gap-3 max-h-[300px] md:max-h-[360px] md:h-[360px] overflow-y-auto custom-scrollbar"
-                          style={{ backgroundColor: C.isLight ? '#ffffff' : C.surface, border: `1px solid ${C.border}` }}>
+                        <div className={`md:col-span-1 ${premiumCardClass} flex flex-col gap-2 md:gap-3 max-h-[320px] md:max-h-[400px] md:h-[400px] overflow-y-auto custom-scrollbar`} style={glassStyle}>
                           {pieData.map((d, i) => (
                             <BreakdownChip key={i} label={d.name} value={d.value} color={d.color} theme={C} />
                           ))}
                         </div>
 
                         {/* ROW 4: Intelligence Summary */}
-                        <div className="md:col-span-3 rounded-3xl p-5 md:p-6 shadow-sm transition-all duration-300"
-                          style={{ backgroundColor: C.isLight ? '#ffffff' : C.surface, border: `1px solid ${C.border}` }}>
+                        <div className={`md:col-span-3 ${premiumCardClass}`} style={glassStyle}>
                           {result.Market_Context?.UI_Status_Message && (
-                            <div className="flex items-start gap-3 md:gap-4 mb-4 md:mb-6">
-                              <Sparkles className="text-teal-600 dark:text-teal-400 mt-1 flex-shrink-0" size={20} />
-                              <div style={{ fontFamily: FB, color: C.text2 }} className="font-medium text-sm md:text-base leading-relaxed">
+                            <div className="flex items-start gap-3 md:gap-4 mb-5 md:mb-6">
+                              <Sparkles className="text-teal-500 dark:text-teal-400 mt-1 flex-shrink-0" size={20} />
+                              <div style={{ fontFamily: FB, color: C.text }} className="font-semibold text-[15px] md:text-base leading-relaxed">
                                 {result.Market_Context.UI_Status_Message}
                               </div>
                             </div>
                           )}
 
-                          <div className="flex gap-2 md:gap-3 flex-wrap">
-                            <div className="px-2 md:px-3 py-1.5 rounded-lg border text-sm font-medium text-slate-600 md:text-sm font-medium text-slate-600 font-mono break-words"
-                              style={{ backgroundColor: C.isLight ? '#f1f5f9' : C.bgAlt, borderColor: C.border, color: C.text2 }}>
-                              Role: <span className="font-semibold ml-1" style={{ color: C.text }}>{result.Analysis_Metadata?.Target_Job_Title || 'Unknown'}</span>
+                          <div className="flex gap-3 md:gap-4 flex-wrap">
+                            <div className="px-3 md:px-4 py-2 rounded-xl border text-sm font-bold font-mono tracking-wide break-words"
+                              style={{ background: C.isLight ? 'rgba(0,0,0,0.03)' : 'rgba(0,0,0,0.3)', borderColor: C.isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)', color: C.text2 }}>
+                              ROLE <span className="font-black ml-2" style={{ color: C.text }}>{result.Analysis_Metadata?.Target_Job_Title || 'Unknown'}</span>
                             </div>
                             {result.Analysis_Metadata?.Company_Tier && result.Analysis_Metadata.Company_Tier !== 'Unknown' && (
-                              <div className="px-2 md:px-3 py-1.5 rounded-lg border text-sm font-medium text-slate-600 md:text-sm font-medium text-slate-600 font-mono"
-                                style={{ backgroundColor: C.isLight ? '#f1f5f9' : C.bgAlt, borderColor: C.border, color: C.text2 }}>
-                                Tier: <span className="font-bold ml-1" style={{ color: C.text }}>{result.Analysis_Metadata.Company_Tier.replace(/_/g, ' ')}</span>
+                              <div className="px-3 md:px-4 py-2 rounded-xl border text-sm font-bold font-mono tracking-wide"
+                                style={{ background: C.isLight ? 'rgba(0,0,0,0.03)' : 'rgba(0,0,0,0.3)', borderColor: C.isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)', color: C.text2 }}>
+                                TIER <span className="font-black ml-2" style={{ color: C.text }}>{result.Analysis_Metadata.Company_Tier.replace(/_/g, ' ')}</span>
                               </div>
                             )}
-                            <div className="px-2 md:px-3 py-1.5 rounded-lg border text-sm font-medium text-slate-600 md:text-sm font-medium text-slate-600 font-mono"
-                              style={{ backgroundColor: C.isLight ? '#f1f5f9' : C.bgAlt, borderColor: C.border, color: C.text2 }}>
-                              Evaluated Exp: <span className="font-semibold ml-1" style={{ color: C.text }}>{result.Market_Context?.Calculated_Experience_Level_For_Offer || 'Unknown'}</span>
+                            <div className="px-3 md:px-4 py-2 rounded-xl border text-sm font-bold font-mono tracking-wide"
+                              style={{ background: C.isLight ? 'rgba(0,0,0,0.03)' : 'rgba(0,0,0,0.3)', borderColor: C.isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)', color: C.text2 }}>
+                                EXP <span className="font-black ml-2" style={{ color: C.text }}>{result.Market_Context?.Calculated_Experience_Level_For_Offer || 'Unknown'}</span>
                             </div>
                           </div>
                         </div>
