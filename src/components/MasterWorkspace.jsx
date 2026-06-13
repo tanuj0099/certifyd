@@ -9,6 +9,7 @@ import Hero from './Hero.jsx';
 import Heatmap from './Heatmap.jsx';
 import CertCompare from './CertCompare.jsx';
 import { useIsMobile } from './SharedUI.jsx';
+import { CERTIFICATIONS } from '@/data/certifications.js';
 import { FileText, TrendingUp, Map, ArrowRight, Check } from 'lucide-react';
 
 const T = { duration: 0.32, ease: [0.4, 0, 0.2, 1] };
@@ -287,8 +288,18 @@ const AppPage = function ({ onCertSelected }) {
                             if (onCertSelected) {
                               onCertSelected(certName, city, domain, name);
                             } else {
-                              useJourneyStore.getState().setResumeContext({ certName, city, domain, name });
-                              useJourneyStore.getState().setActiveTab("calculator");
+                              const store = useJourneyStore.getState();
+                              store.setResumeContext({ certName, city, domain, name });
+                              
+                              const match = CERTIFICATIONS.find(c => c.name === certName || c.cert_name === certName);
+                              if (match) {
+                                store.setSelectedCert(match);
+                              } else {
+                                store.clearCert();
+                                useJourneyStore.setState({ certName: certName });
+                              }
+                              
+                              store.setActiveTab("calculator");
                             }
                           }}
                         />
