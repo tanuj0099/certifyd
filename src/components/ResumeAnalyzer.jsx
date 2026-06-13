@@ -502,9 +502,9 @@ var PrimaryCertHero = function ({ cert }) {
           <Star size={12} color={EMERALD} fill={EMERALD} />
           <span className="micro-label" style={{ color: EMERALD }}>Primary Move</span>
         </div>
-        <div className="flex gap-3 items-center">
-          <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-sm dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800">+{cert.roi}</span>
-          <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-bold bg-blue-50 text-blue-800 border border-blue-200 shadow-sm dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800">{cert.timeline}</span>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <span style={{ fontFamily: FM, fontSize: '11px', fontWeight: '700', letterSpacing: '0.04em', padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)', color: 'var(--text-2)', background: 'var(--bg)' }}>+{cert.roi}</span>
+          <span style={{ fontFamily: FM, fontSize: '11px', fontWeight: '600', letterSpacing: '0.04em', padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)', color: 'var(--text-4)', background: 'transparent' }}>{cert.timeline}</span>
         </div>
       </div>
       <h2 style={{ fontSize: 'clamp(16px, 3.5vw, 23px)', color: 'var(--text)', marginBottom: '8px' }}>
