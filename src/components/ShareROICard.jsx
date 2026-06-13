@@ -176,9 +176,10 @@ function drawCardA(canvas, opts) {
   c.font = '11px "Courier New", monospace'
   var bt = 'INDIA  2026', btw = c.measureText(bt).width
   var bW = btw + 28, bH = 26, bX = W - bW - 44, bY = 36
-  c.fillStyle = 'transparent'
+  c.fillStyle = isDark ? 'rgba(148,163,184,0.08)' : 'rgba(148,163,184,0.04)'
   rr(c, bX, bY, bW, bH, 7); c.fill()
-  c.strokeStyle = 'transparent'; c.lineWidth = 1
+  c.strokeStyle = isDark ? 'rgba(148,163,184,0.15)' : 'rgba(148,163,184,0.1)'
+  c.lineWidth = 1
   rr(c, bX, bY, bW, bH, 7); c.stroke()
   c.fillStyle = '#4F7CF8'; c.textAlign = 'center'
   c.fillText(bt, bX + bW / 2, bY + 17)
@@ -190,7 +191,7 @@ function drawCardA(canvas, opts) {
   //  Eyebrow 
   var midY = 308
   c.font = '12px "Courier New", monospace'
-  c.fillStyle = 'transparent'
+  c.fillStyle = isDark ? '#94A3B8' : '#64748B'
   c.textAlign = 'center'
   c.fillText('MY  2026  CERTIFICATION  MOVE', W / 2, midY - 122)
 
@@ -272,7 +273,7 @@ function drawCardA(canvas, opts) {
   c.lineCap = 'butt'
   // "2026" inside arc
   c.font = 'bold 11px "Courier New", monospace'
-  c.fillStyle = 'transparent'; c.textAlign = 'center'
+  c.fillStyle = isDark ? '#E2E8F0' : '#475569'; c.textAlign = 'center'
   c.fillText('2026', arcX, arcY + 4)
 
   //  Footer divider 
@@ -281,12 +282,12 @@ function drawCardA(canvas, opts) {
   c.beginPath(); c.moveTo(44, fY); c.lineTo(W - 130, fY); c.stroke()
 
   //  Footer - tagline left 
-  c.fillStyle = 'transparent'
+  c.fillStyle = isDark ? '#94A3B8' : '#64748B'
   c.font = '13px Arial, sans-serif'; c.textAlign = 'left'
   c.fillText('Backed by data. Decided with clarity.', 44, H - 28)
 
   //  Footer - URL (not in arc zone) 
-  c.fillStyle = 'transparent'
+  c.fillStyle = isDark ? '#4F7CF8' : '#4338CA'
   c.font = 'bold 13px "Courier New", monospace'; c.textAlign = 'right'
   c.fillText('certifyd.vercel.app', W - 140, H - 28)
 
@@ -401,7 +402,7 @@ function drawCardB(canvas, opts) {
   c.fillStyle = lgGrad; rr(c, 170, H - 98, 36, 36, 9); c.fill()
   c.fillStyle = 'white'; c.font = 'bold 18px Arial'; c.textAlign = 'center'
   c.fillText('', 188, H - 73)
-  c.fillStyle = 'transparent'; c.font = '11px Arial'; c.textAlign = 'center'
+  c.fillStyle = isDark ? '#94A3B8' : '#64748B'; c.font = '11px Arial'; c.textAlign = 'center'
   c.fillText('Certify', 210, H - 50)
 
   //  RIGHT PANEL CONTENT 
@@ -410,12 +411,13 @@ function drawCardB(canvas, opts) {
 
   // Eyebrow
   c.font = '11px "Courier New", monospace'
-  c.fillStyle = 'transparent'
+  c.fillStyle = isDark ? '#94A3B8' : '#64748B'
   c.textAlign = 'left'
   c.fillText('CERT PATH    MAPPED    2026', rx, ry - 40)
 
   // Eyebrow underline
-  c.strokeStyle = 'transparent'; c.lineWidth = 1
+  c.strokeStyle = isDark ? 'rgba(148,163,184,0.1)' : 'rgba(148,163,184,0.05)'
+  c.lineWidth = 1
   c.beginPath(); c.moveTo(rx, ry - 28); c.lineTo(rx + 300, ry - 28); c.stroke()
 
   // Cert name
@@ -441,7 +443,7 @@ function drawCardB(canvas, opts) {
 
   // Subtitle line
   c.font = '16px Arial, sans-serif'
-  c.fillStyle = 'transparent'
+  c.fillStyle = isDark ? '#E2E8F0' : '#475569'
   c.textAlign = 'left'
   c.fillText('Analysed  Data-backed  India Market', rx, afterCert + 28)
 
@@ -453,7 +455,7 @@ function drawCardB(canvas, opts) {
     c.fillStyle = accent1 + 'CC'
     c.beginPath(); c.arc(dx, dotsY, 3, 0, Math.PI * 2); c.fill()
     c.font = '11px "Courier New", monospace'
-    c.fillStyle = 'transparent'
+    c.fillStyle = isDark ? '#94A3B8' : '#64748B'
     c.textAlign = 'left'
     c.fillText(dot, dx + 10, dotsY + 4)
   })
@@ -462,11 +464,12 @@ function drawCardB(canvas, opts) {
   c.font = '11px "Courier New", monospace'
   var bt = 'INDIA  2026', btw = c.measureText(bt).width
   var bW = btw + 24, bH = 24, bX = W - bW - 24, bY = H - bH - 24
-  c.fillStyle = 'transparent'
+  c.fillStyle = isDark ? 'rgba(148,163,184,0.08)' : 'rgba(148,163,184,0.04)'
   rr(c, bX, bY, bW, bH, 6); c.fill()
-  c.strokeStyle = 'transparent'; c.lineWidth = 1
+  c.strokeStyle = isDark ? 'rgba(148,163,184,0.15)' : 'rgba(148,163,184,0.1)'
+  c.lineWidth = 1
   rr(c, bX, bY, bW, bH, 6); c.stroke()
-  c.fillStyle = 'transparent'; c.textAlign = 'center'
+  c.fillStyle = isDark ? '#94A3B8' : '#64748B'; c.textAlign = 'center'
   c.fillText(bt, bX + bW / 2, bY + 16)
 }
 
@@ -494,9 +497,7 @@ function ShareROICard({ certName, domain, demand, name }) {
   var render = useCallback(async function() {
     var canvas = canvasRef.current
     if (!canvas || !certName) return
-    setDrawing(true); setDone(false)
     try { await document.fonts.ready } catch(_) {}
-    await new Promise(function(r) { return setTimeout(r, 100) })
     var drawFn = variant === 'B' ? drawCardB : drawCardA
     drawFn(canvas, {
       certName: certName,
@@ -505,8 +506,8 @@ function ShareROICard({ certName, domain, demand, name }) {
       name:     name   || '',
       theme,
     })
-    setDrawing(false); setDone(true)
-  }, [certName, domain, demand, name, variant])
+    if (!done) setDone(true)
+  }, [certName, domain, demand, name, variant, theme, done])
 
   // Re-render when variant changes
   useEffect(function() {
@@ -607,13 +608,13 @@ function ShareROICard({ certName, domain, demand, name }) {
                   return (
                     <motion.button
                       key={v.key}
-                      onClick={function() { if (variant !== v.key) { setVariant(v.key); setDone(false) } }}
+                      onClick={function() { if (variant !== v.key) { setVariant(v.key); } }}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.97 }}
                       style={{
                         flex: 1, padding: '9px 12px', borderRadius: '9px', cursor: 'pointer',
-                        background: active ? 'transparent' : 'transparent',
-                        border: '1px solid ' + (active ? 'transparent' : 'var(--border)'),
+                        background: active ? 'var(--bg-2)' : 'transparent',
+                        border: '1px solid ' + (active ? 'var(--accent)' : 'var(--border)'),
                         display: 'flex', alignItems: 'center', gap: '7px',
                         transition: 'all 0.18s',
                       }}
@@ -629,7 +630,9 @@ function ShareROICard({ certName, domain, demand, name }) {
                       </div>
                       {active && (
                         <motion.div
-                          layoutId="variantActive"
+                          initial={{ scale: 0.5, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          transition={{ duration: 0.2 }}
                           style={{ marginLeft: 'auto', width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)' }}
                         />
                       )}
@@ -638,22 +641,10 @@ function ShareROICard({ certName, domain, demand, name }) {
                 })}
               </div>
 
-              {/*  Loading state  */}
-              {drawing ? (
-                <div style={{ height: '130px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', borderRadius: '12px', background: 'transparent', border: '1px solid var(--border)' }}>
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                    style={{ width: 20, height: 20, borderRadius: '50%', border: '2px solid transparent', borderTopColor: 'var(--linear-blue)' }}
-                  />
-                  <span style={{ fontSize: '13px', color: 'var(--text-3)', fontFamily: FB }}>Building your card...</span>
-                </div>
-              ) : null}
-
               {/*  Canvas  */}
               <canvas
                 ref={canvasRef}
-                style={{ width: '100%', height: 'auto', borderRadius: '12px', border: '1px solid var(--border)', display: done ? 'block' : 'none' }}
+                style={{ width: '100%', height: 'auto', borderRadius: '12px', border: '1px solid var(--border)', display: 'block', opacity: done ? 1 : 0, transition: 'opacity 0.2s' }}
               />
 
               {/*  Dimension label  */}
