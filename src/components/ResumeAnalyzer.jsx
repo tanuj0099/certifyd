@@ -244,7 +244,14 @@ var safeParseResumeJSON = function (text) {
       education_history: (pp.Education_History || []).map(ed => ({
         degree: ed.Degree, institution: ed.Institution, year: String(ed.Graduation_Year)
       })),
-      current_salary: pp.Current_Salary || 0
+      current_salary: pp.Current_Salary || 0,
+      inferred_mobility_level: pp.Inferred_Mobility_Level || '',
+      existing_certifications: pp.Existing_Certifications || [],
+      applied_projects: pp.Applied_Projects || [],
+      external_links: pp.External_Links || [],
+      domain_bucket: ai.Domain_Bucket || '',
+      education_tier: ai.Education_Tier || '',
+      employer_category: ai.Employer_Category || ''
     };
 
     return {
@@ -1053,7 +1060,14 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
             experience_years: parsed.Database_Payload.experience_years,
             technical_skills: parsed.Database_Payload.technical_skills,
             education_history: parsed.Database_Payload.education_history,
-            current_salary: parsed.Database_Payload.current_salary
+            current_salary: parsed.Database_Payload.current_salary,
+            inferred_mobility_level: parsed.Database_Payload.inferred_mobility_level,
+            existing_certifications: parsed.Database_Payload.existing_certifications,
+            applied_projects: parsed.Database_Payload.applied_projects,
+            external_links: parsed.Database_Payload.external_links,
+            domain_bucket: parsed.Database_Payload.domain_bucket,
+            education_tier: parsed.Database_Payload.education_tier,
+            employer_category: parsed.Database_Payload.employer_category
           };
           console.log("Exact JSON being sent to Supabase 'resumes' table:", JSON.stringify(dbPayload, null, 2));
           
