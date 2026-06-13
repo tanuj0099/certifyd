@@ -55,6 +55,9 @@ function vendorFromSlug(slug) {
 }
 
 const CertificationCard = ({ data, ...props }) => {
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => { setMounted(true); }, []);
+
   if (!data) return null;
 
   const vendor = vendorFromSlug(data.slug);
@@ -66,12 +69,13 @@ const CertificationCard = ({ data, ...props }) => {
   const compareMode = useJourneyStore(s => s.compareMode);
   const compareCertA = useJourneyStore(s => s.compareCertA);
 
-  const isSaved = savedCerts.includes(data.slug);
-  const isCompareA = compareCertA?.slug === data.slug;
+  const isSaved = mounted && savedCerts.includes(data.slug);
+  const isCompareA = mounted && compareCertA?.slug === data.slug;
+  const activeCompareMode = mounted && compareMode;
   const isSelected = props.isSelected || false;
 
   const handleCardClick = (e) => {
-    if (compareMode) {
+    if (activeCompareMode) {
       e.preventDefault();
       if (isCompareA) return;
       if (props.onClick) props.onClick(data);
@@ -129,7 +133,7 @@ const CertificationCard = ({ data, ...props }) => {
 
       {/* Bookmark / Checkbox */}
       <div className="absolute top-4 right-4 z-10 flex items-center justify-center">
-        {compareMode ? (
+        {activeCompareMode ? (
           <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected ? 'bg-[var(--accent)] border-[var(--accent)]' : 'border-[var(--text-3)] bg-transparent'}`}>
             {isSelected && <Check size={14} className="text-[var(--bg)]" strokeWidth={3} />}
           </div>
@@ -188,7 +192,7 @@ const CertificationCard = ({ data, ...props }) => {
       </div>
 
       {/*  Hover arrow - desktop only (hidden in compare mode)  */}
-      {!compareMode && (
+      {!activeCompareMode && (
         <div className="hidden md:flex absolute top-4 right-14 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-center justify-center w-8 h-8 rounded-full bg-blue-500 text-white shadow-lg shadow-blue-500/30">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />

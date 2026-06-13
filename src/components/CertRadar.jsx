@@ -100,6 +100,12 @@ const CertRadar = () => {
   const clearCompareMode = useJourneyStore(s => s.clearCompareMode);
   const [compareCertB, setCompareCertB] = useState(null);
 
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+
+  const activeCompareMode = mounted && compareMode;
+  const activeCompareCertA = mounted && compareCertA;
+
   const urlIntent = searchParams?.get('intent') || '';
   const urlTarget = searchParams?.get('target') || '';
 
@@ -314,7 +320,7 @@ const CertRadar = () => {
                         data={cert} 
                         isSelected={compareCertB?.slug === cert.slug}
                         onClick={(clickedCert) => {
-                          if (compareMode && compareCertA?.slug !== clickedCert.slug) {
+                          if (activeCompareMode && activeCompareCertA?.slug !== clickedCert.slug) {
                             setCompareCertB(clickedCert);
                           }
                         }}
@@ -363,7 +369,7 @@ const CertRadar = () => {
       </div>
 
       {/* Mobile Sticky Filter FAB */}
-      {!compareMode && (
+      {!activeCompareMode && (
         <div className="fixed bottom-6 right-6 lg:hidden z-30">
           <button
             onClick={() => setIsMobileSidebarOpen(true)}
@@ -377,7 +383,7 @@ const CertRadar = () => {
       )}
 
       {/* Compare Mode Sticky Bar */}
-      {compareMode && compareCertA && (
+      {activeCompareMode && activeCompareCertA && (
         <AnimatePresence>
           <motion.div
             initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 50 }}
@@ -389,7 +395,7 @@ const CertRadar = () => {
                 Comparing
               </span>
               <span className="font-semibold text-sm md:text-base bg-[var(--bg-alt)] px-3 py-1.5 rounded-lg border border-[var(--border)] max-w-[200px] truncate">
-                {compareCertA.name}
+                {activeCompareCertA.name}
               </span>
               <span className="text-[var(--text-4)] hidden md:block">vs</span>
               <span className="font-semibold text-sm md:text-base bg-[var(--bg-alt)] px-3 py-1.5 rounded-lg border border-[var(--border)] border-dashed max-w-[200px] truncate" style={{ color: compareCertB ? 'var(--text)' : 'var(--text-4)' }}>
@@ -408,7 +414,7 @@ const CertRadar = () => {
                 onClick={() => {
                   if (compareCertB) {
                     clearCompareMode();
-                    router.push(`/tools/compare?cert1=${compareCertA.slug}&cert2=${compareCertB.slug}`);
+                    router.push(`/tools/compare?cert1=${activeCompareCertA.slug}&cert2=${compareCertB.slug}`);
                   }
                 }}
                 className={`flex-1 md:flex-none px-6 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all ${
