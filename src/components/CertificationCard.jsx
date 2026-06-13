@@ -134,12 +134,14 @@ const CertificationCard = ({ data, ...props }) => {
             {isSelected && <Check size={14} className="text-[var(--bg)]" strokeWidth={3} />}
           </div>
         ) : (
-          <button
+          <div
+            role="button"
+            tabIndex={0}
             onClick={handleBookmarkClick}
-            className="p-1.5 rounded-full hover:bg-[var(--bg-alt)] transition-colors text-[var(--text-3)] hover:text-[var(--accent)]"
+            className="p-1.5 rounded-full hover:bg-[var(--bg-alt)] transition-colors text-[var(--text-3)] hover:text-[var(--accent)] cursor-pointer"
           >
             <Bookmark size={18} fill={isSaved ? "currentColor" : "none"} className={isSaved ? "text-[var(--accent)]" : ""} />
-          </button>
+          </div>
         )}
       </div>
 
