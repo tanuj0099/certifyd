@@ -114,7 +114,14 @@ Expected JSON Output Format (respond ONLY with JSON):
           variable_pay: toAbsolute(parsed.Compensation_Analysis?.Offered_Variable),
           company_tier: "Unknown",
           role: parsed.Offer_Metadata?.Designation || "Unknown",
-          notice_period_days: parsed.Offer_Metadata?.Notice_Period_Days || 0
+          notice_period_days: parsed.Offer_Metadata?.Notice_Period_Days || 0,
+          company_name: parsed.Offer_Metadata?.Company_Name || null,
+          work_model: parsed.Offer_Metadata?.Work_Model || null,
+          bond_or_clawback_detected: parsed.Offer_Metadata?.Bond_or_Clawback_Detected || false,
+          employer_pf_included: parsed.Compensation_Analysis?.Breakdown?.Employer_PF_Included_In_CTC || false,
+          gratuity_included: parsed.Compensation_Analysis?.Breakdown?.Gratuity_Included_In_CTC || false,
+          joining_bonus: toAbsolute(parsed.Compensation_Analysis?.Breakdown?.Joining_or_Performance_Bonus),
+          allowances_and_perks: toAbsolute(parsed.Compensation_Analysis?.Breakdown?.Allowances_and_Perks)
         },
         // Preserve all the new elite data for the UI
         ...parsed

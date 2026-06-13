@@ -249,7 +249,10 @@ export default function OfferAnalysisPage() {
           target_job_title: title,
           offered_ctc: ctcStated,
           market_median: medianResult.median,
-          raw_json: analysis
+          raw_json: analysis,
+          blunt_assessment: analysis.Strategic_Negotiation_Output?.Blunt_Assessment || null,
+          red_flags: analysis.Strategic_Negotiation_Output?.Red_Flags || null,
+          strengths: analysis.Strategic_Negotiation_Output?.Strengths || null
         }).then(({ error: insertErr }) => {
           if (insertErr) console.warn('Failed to save analysis:', insertErr.message)
         })
@@ -264,7 +267,14 @@ export default function OfferAnalysisPage() {
             pf: analysis.Database_Payload.pf,
             company_tier: analysis.Database_Payload.company_tier,
             role: analysis.Database_Payload.role,
-            experience_years: analysis.Database_Payload.experience_years
+            experience_years: analysis.Database_Payload.experience_years,
+            company_name: analysis.Database_Payload.company_name,
+            work_model: analysis.Database_Payload.work_model,
+            bond_or_clawback_detected: analysis.Database_Payload.bond_or_clawback_detected,
+            employer_pf_included: analysis.Database_Payload.employer_pf_included,
+            gratuity_included: analysis.Database_Payload.gratuity_included,
+            joining_bonus: analysis.Database_Payload.joining_bonus,
+            allowances_and_perks: analysis.Database_Payload.allowances_and_perks
           }).then(({ error: insertErr }) => {
             if (insertErr) console.warn('Failed to save structured offer letter to DB:', insertErr.message)
           })
