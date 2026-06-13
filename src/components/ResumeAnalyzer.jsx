@@ -147,36 +147,56 @@ var buildPrompt = function (resumeText, mode, timeline, domainIntent, switchTarg
       : 'Auto-detect best domain from resume.'
 
   return 'CRITICAL GUARDRAIL: First, determine if the provided text is actually a Resume/CV. If the document is an Offer Letter, an Appointment Letter, or completely lacks standard resume sections (like Education or Work History), you MUST immediately return a JSON error: { "error": "INVALID_DOCUMENT", "message": "This appears to be an offer letter. Please upload a resume to establish your baseline." } and halt all other extraction.\n\n' +
-    'You are Certify, a career advisor for Indian professionals (2026).\n' +
+    'Role: You are an elite Career Data Analyst and Resume Data Extraction AI. You are a career advisor for Indian professionals (2026).\n' +
     'Mode: ' + mode + '\nTimeline: ' + timelineNote + '\nDomain: ' + domainNote + '\n\n' +
+    'Task: Analyze the provided raw resume text and extract the data strictly into the following JSON format. You must infer strategic insights based on industry standards in India.\n\n' +
     'Resume:\n' + resumeText.slice(0, 2200) + '\n\n' +
+    'Extraction Rules:\n' +
+    '- If a data point is entirely missing, return null. Do not hallucinate.\n' +
+    '- Calculate the candidate\'s "Mobility & Career Stage" based on their total years of experience. If experience > 8 years, they are "Established/Low Mobility" (do not recommend relocation). If experience is < 3 years, they are "Early/High Mobility" (relocation is highly recommended for growth).\n' +
+    '- Classify the Education_Tier as Tier 1 (IITs, NITs, IIMs, BITS, top global univs), Tier 2 (Top state universities/private colleges), or Tier 3 (Local/unranked colleges).\n' +
     'GEOGRAPHIC RULE: If the extracted location from the resume is NOT within India (e.g., US, UK, Canada, UAE, etc.), you MUST abort the ROI calculation and return EXACTLY this JSON error flag:\n' +
-    '{"Unsupported_Region": true, "Message": "Certifyd MVP currently only supports salary intelligence for the Indian IT market."}\n' +
-    'Do not attempt to calculate INR for foreign resumes.\n\n' +
-    'If the location is in India or ambiguous/missing, respond with ONLY a valid JSON object - no markdown, no prose, no code fences.\n\n' +
+    '{"Unsupported_Region": true, "Message": "Certifyd MVP currently only supports salary intelligence for the Indian IT market."}\n\n' +
+    'Expected JSON Output Format (respond ONLY with JSON, no markdown):\n' +
     '{\n' +
-    '  "name": "full name or empty string",\n' +
-    '  "summary": "2-3 sentences on background and biggest career opportunity",\n' +
-    '  "city": "city from resume or empty string",\n' +
-    '  "domain": "one of: tech|data|cybersecurity|finance|management|marketing|hr|government|medical|business",\n' +
-    '  "gaps": ["gap one", "gap two", "gap three"],\n' +
-    '  "certs": [\n' +
-    '    { "name": "exact cert name", "why": "specific reason tied to resume", "roi": "hike % range", "timeline": "X months", "fastTrack": "one concrete first step" },\n' +
-    '    { "name": "exact cert name", "why": "specific reason", "roi": "hike % range", "timeline": "X months", "fastTrack": "one concrete first step" },\n' +
-    '    { "name": "exact cert name", "why": "specific reason", "roi": "hike % range", "timeline": "X months", "fastTrack": "one concrete first step" }\n' +
-    '  ],\n' +
-    '  "immediateAction": "one thing to do this week with platform name",\n' +
-    '  "marketInsight": "one sentence on India demand for top cert in their city",\n' +
-    '  "Database_Payload": {\n' +
-    '    "full_name": "string",\n' +
-    '    "current_role": "string",\n' +
-    '    "experience_years": 0,\n' +
-    '    "technical_skills": ["skill1", "skill2"],\n' +
-    '    "education_history": [{"degree": "string", "institution": "string", "year": "string"}],\n' +
-    '    "current_salary": 0\n' +
-    '  }\n' +
-    '}\n\n' +
-    'Rules: India-specific. Under 380 words total. Be specific to their actual resume. EDUCATION FIX: If the resume lacks an explicit education section, you MUST output [{"degree": "Not provided", "institution": "Not provided"}] for education_history to prevent UI breakage. GUARDRAIL: If the text lacks mandatory sections completely, output EXACTLY {"error": "INVALID_DOCUMENT"}. For the `name` field extract the candidate\'s first and last name exactly as it appears in the resume. For `full_name` in Database_Payload do the same.'
+    '  "Personal_Profile": {\n' +
+    '    "Full_Name": "string",\n' +
+    '    "City": "string",\n' +
+    '    "Current_Role": "string",\n' +
+    '    "Experience_Years": 0,\n' +
+    '    "Inferred_Mobility_Level": "string (High / Medium / Low) based on experience years",\n' +
+    '    "Technical_Skills": ["string"],\n' +
+    '    "Existing_Certifications": ["string (Extract explicitly named certificates)"],\n' +
+    '    "Education_History": [\n' +
+    '      {\n' +
+    '        "Degree": "string",\n' +
+    '        "Institution": "string",\n' +
+    '        "Graduation_Year": 0\n' +
+    '      }\n' +
+    '    ],\n' +
+    '    "Applied_Projects": ["string (Brief name and tech stack of projects built)"],\n' +
+    '    "External_Links": ["string (GitHub, LinkedIn, Portfolio URLs)"],\n' +
+    '    "Current_Salary": 0\n' +
+    '  },\n' +
+    '  "Analysis_and_Insights": {\n' +
+    '    "Domain_Bucket": "string (e.g., tech|data|cybersecurity|finance|management|marketing|hr|government|medical|business)",\n' +
+    '    "Education_Tier": "string (Tier 1 / Tier 2 / Tier 3)",\n' +
+    '    "Employer_Category": "string (MNC / Service-Based / Startup / None)",\n' +
+    '    "Summary": "string (2-3 sentences summarizing background and biggest immediate career opportunity)",\n' +
+    '    "Skill_Gaps": ["string (3 specific gaps based on their target domain)"],\n' +
+    '    "Immediate_Action": "string (1 concrete thing to do this week)",\n' +
+    '    "Market_Insight": "string (1 localized sentence regarding hiring demand for their profile in their specific city, factoring in their Mobility Level)"\n' +
+    '  },\n' +
+    '  "Certification_Recommendations": [\n' +
+    '    {\n' +
+    '      "Cert_Name": "string (Official certification name)",\n' +
+    '      "Why": "string (Highly specific reason tied to a resume gap AND their current career stage/mobility)",\n' +
+    '      "Expected_ROI_Percentage": "number (just the number without % sign)",\n' +
+    '      "Estimated_Months_To_Complete": "number (just the number without months text)",\n' +
+    '      "Fast_Track_Step": "string (First step to start learning today)"\n' +
+    '    }\n' +
+    '  ]\n' +
+    '}\n'
 }
 
 //  Safe JSON parser - never throws 
@@ -192,41 +212,51 @@ var safeParseResumeJSON = function (text) {
     }
 
     if (obj.Unsupported_Region) {
-      return { Unsupported_Region: true, Message: obj.Message, parseError: false }
+      return { Unsupported_Region: true, Message: obj.Message || "Certifyd MVP currently only supports salary intelligence for the Indian IT market.", parseError: false }
     }
 
-    // Let the AI extract the raw city/town naturally (supports Tier 2/3 and edge cases)
-    var city = String(obj.city || '').trim();
+    var pp = obj.Personal_Profile || {};
+    var ai = obj.Analysis_and_Insights || {};
+    var recs = obj.Certification_Recommendations || [];
 
-    // Preserve the raw domain natively identified by the AI
-    var domain = String(obj.domain || '').trim() || 'business';
+    var city = String(pp.City || '').trim();
+    var domain = String(ai.Domain_Bucket || '').trim() || 'business';
 
-    // Ensure certs is an array with primary flag
-    var certs = (Array.isArray(obj.certs) ? obj.certs : []).slice(0, 3).map(function (c, i) {
+    var certs = (Array.isArray(recs) ? recs : []).slice(0, 3).map(function (c, i) {
       return {
-        name: String(c.name || ''),
-        why: String(c.why || ''),
-        roi: String(c.roi || ''),
-        timeline: String(c.timeline || ''),
-        fastTrack: String(c.fastTrack || ''),
+        name: String(c.Cert_Name || ''),
+        why: String(c.Why || ''),
+        roi: String(c.Expected_ROI_Percentage || ''),
+        timeline: String(c.Estimated_Months_To_Complete || '') + ' months',
+        fastTrack: String(c.Fast_Track_Step || ''),
         primary: i === 0,
       }
     }).filter(function (c) { return c.name })
 
-    // Trim name to first 2 words
-    var nameRaw = String(obj.name || '')
+    var nameRaw = String(pp.Full_Name || '')
     var name = (nameRaw && nameRaw !== 'Not found' && nameRaw.toUpperCase() !== 'ANONYMIZED') ? nameRaw.split(' ').slice(0, 2).join(' ') : ''
+
+    var Database_Payload = {
+      full_name: pp.Full_Name,
+      current_role: pp.Current_Role,
+      experience_years: pp.Experience_Years || 0,
+      technical_skills: pp.Technical_Skills || [],
+      education_history: (pp.Education_History || []).map(ed => ({
+        degree: ed.Degree, institution: ed.Institution, year: String(ed.Graduation_Year)
+      })),
+      current_salary: pp.Current_Salary || 0
+    };
 
     return {
       name: name,
-      summary: String(obj.summary || ''),
+      summary: String(ai.Summary || ''),
       city: city,
       domain: domain,
-      gaps: Array.isArray(obj.gaps) ? obj.gaps.map(String) : [],
+      gaps: Array.isArray(ai.Skill_Gaps) ? ai.Skill_Gaps.map(String) : [],
       certs: certs,
-      immediateAction: String(obj.immediateAction || ''),
-      marketInsight: String(obj.marketInsight || ''),
-      Database_Payload: obj.Database_Payload || null,
+      immediateAction: String(ai.Immediate_Action || ''),
+      marketInsight: String(ai.Market_Insight || ''),
+      Database_Payload: Database_Payload,
       raw: text,
       parseError: false,
     }
