@@ -1428,8 +1428,31 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
       )}
 
       {error && (
-        <div style={{ padding: '11px 13px', borderRadius: '10px', background: 'transparent', border: '1px solid var(--border)', fontSize: '13px', color: 'var(--err)', display: 'flex', gap: '8px', fontFamily: FB }}>
-          <AlertTriangle size={14} style={{ flexShrink: 0, marginTop: '1px' }} /><span>{error}</span>
+        <div style={{ padding: '11px 13px', borderRadius: '10px', background: 'transparent', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', fontFamily: FB }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', color: 'var(--err)', fontSize: '13px' }}>
+            <AlertTriangle size={14} style={{ flexShrink: 0, marginTop: '2px' }} />
+            <span>{error}</span>
+          </div>
+          <button
+            onClick={clearAll}
+            style={{
+              padding: '6px 12px',
+              borderRadius: '6px',
+              background: 'var(--bg-surface)',
+              border: '1px solid var(--border)',
+              color: 'var(--text-3)',
+              fontSize: '11px',
+              fontFamily: FH,
+              fontWeight: '600',
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+              transition: 'all 0.2s'
+            }}
+            onMouseEnter={e => { e.currentTarget.style.color = 'var(--text)'; e.currentTarget.style.borderColor = 'var(--text-4)' }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-3)'; e.currentTarget.style.borderColor = 'var(--border)' }}
+          >
+            Upload Another
+          </button>
         </div>
       )}
 
