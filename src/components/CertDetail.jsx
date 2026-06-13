@@ -540,8 +540,7 @@ const CertDetail = () => {
 
                 <button
                   onClick={() => {
-                    setCompareMode(cert);
-                    router.push('/tools/cert-radar');
+                    router.push(`/tools/compare?cert1=${cert.slug}`);
                   }}
                   className="
                     flex items-center justify-center
