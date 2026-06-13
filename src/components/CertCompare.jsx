@@ -304,7 +304,7 @@ function HeadToHeadChart({ certA, certB, roiA, roiB }) {
 // MAIN COMPONENT
 // 
 
-function CertCompare({ salary, prefilledCert }) {
+function CertCompare({ salary, prefilledCertA, prefilledCertB }) {
   //  Database State 
   const [certificationsData, setCertificationsData] = useState([]);
   const [domainsData, setDomainsData] = useState([]);
@@ -351,10 +351,22 @@ function CertCompare({ salary, prefilledCert }) {
   //  Loading Fallback 
 
   const actualSalary = salary > 0 ? salary : null
-  prefilledCert = prefilledCert || ''
 
-  var [certA, setCertA] = useState(prefilledCert || '')
+  var [certA, setCertA] = useState('')
   var [certB, setCertB] = useState('')
+
+  useEffect(() => {
+    if (CERTIFICATIONS.length > 0) {
+      if (prefilledCertA && !certA) {
+        const foundA = CERTIFICATIONS.find(c => c.slug === prefilledCertA || c.name === prefilledCertA);
+        if (foundA) setCertA(foundA.name);
+      }
+      if (prefilledCertB && !certB) {
+        const foundB = CERTIFICATIONS.find(c => c.slug === prefilledCertB || c.name === prefilledCertB);
+        if (foundB) setCertB(foundB.name);
+      }
+    }
+  }, [CERTIFICATIONS, prefilledCertA, prefilledCertB, certA, certB]);
 
   var dataA = CERTIFICATIONS.find(function (c) { return c.name === certA })
   var dataB = CERTIFICATIONS.find(function (c) { return c.name === certB })

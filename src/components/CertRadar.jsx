@@ -98,7 +98,9 @@ const CertRadar = () => {
   const compareMode = useJourneyStore(s => s.compareMode);
   const compareCertA = useJourneyStore(s => s.compareCertA);
   const clearCompareMode = useJourneyStore(s => s.clearCompareMode);
+  const setCompareMode = useJourneyStore(s => s.setCompareMode);
   const [compareCertB, setCompareCertB] = useState(null);
+  const [activeSlot, setActiveSlot] = useState('B'); // 'A' or 'B'
 
   const [mounted, setMounted] = useState(false);
   useEffect(() => { setMounted(true); }, []);
@@ -318,10 +320,17 @@ const CertRadar = () => {
                       <CertificationCard 
                         key={cert.slug || cert.id} 
                         data={cert} 
-                        isSelected={compareCertB?.slug === cert.slug}
+                        isSelected={(activeSlot === 'B' && compareCertB?.slug === cert.slug) || (activeSlot === 'A' && activeCompareCertA?.slug === cert.slug)}
                         onClick={(clickedCert) => {
-                          if (activeCompareMode && activeCompareCertA?.slug !== clickedCert.slug) {
-                            setCompareCertB(clickedCert);
+                          if (activeCompareMode) {
+                            if (activeSlot === 'A') {
+                              setCompareMode(clickedCert);
+                              setActiveSlot('B'); // auto advance to B
+                            } else {
+                              if (activeCompareCertA?.slug !== clickedCert.slug) {
+                                setCompareCertB(clickedCert);
+                              }
+                            }
                           }
                         }}
                       />
@@ -394,13 +403,22 @@ const CertRadar = () => {
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-3)' }}>
                 Comparing
               </span>
-              <span className="font-semibold text-sm md:text-base bg-[var(--bg-alt)] px-3 py-1.5 rounded-lg border border-[var(--border)] max-w-[200px] truncate">
+              <button 
+                onClick={() => setActiveSlot('A')}
+                className={`font-semibold text-sm md:text-base px-3 py-1.5 rounded-lg border max-w-[200px] truncate transition-all cursor-pointer ${activeSlot === 'A' ? 'bg-[var(--accent)] border-[var(--accent)] text-white shadow-lg' : 'bg-[var(--bg-alt)] border-[var(--border)] hover:border-[var(--text-4)]'}`}
+                title="Click to change Cert 1"
+              >
                 {activeCompareCertA.name}
-              </span>
+              </button>
               <span className="text-[var(--text-4)] hidden md:block">vs</span>
-              <span className="font-semibold text-sm md:text-base bg-[var(--bg-alt)] px-3 py-1.5 rounded-lg border border-[var(--border)] border-dashed max-w-[200px] truncate" style={{ color: compareCertB ? 'var(--text)' : 'var(--text-4)' }}>
+              <button 
+                onClick={() => setActiveSlot('B')}
+                className={`font-semibold text-sm md:text-base px-3 py-1.5 rounded-lg border max-w-[200px] truncate transition-all cursor-pointer ${activeSlot === 'B' ? 'bg-[var(--accent)] border-[var(--accent)] text-white shadow-lg' : 'bg-[var(--bg-alt)] border-[var(--border)] border-dashed hover:border-[var(--text-4)]'} ${compareCertB && activeSlot !== 'B' ? 'border-solid' : ''}`}
+                style={{ color: (activeSlot === 'B' || compareCertB) ? (activeSlot === 'B' ? 'white' : 'var(--text)') : 'var(--text-4)' }}
+                title="Click to change Cert 2"
+              >
                 {compareCertB ? compareCertB.name : 'Select a cert...'}
-              </span>
+              </button>
             </div>
             <div className="flex items-center gap-3 w-full md:w-auto">
               <button
