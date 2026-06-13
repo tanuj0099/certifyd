@@ -59,6 +59,16 @@ function getAffordabilityBand(certCostL, salaryL, isStudent) {
   return { label: 'Premium stretch', color: INDIGO, tip: 'Over 25% of salary - significant commitment' }
 }
 
+// Format certCost (in Lakhs) cleanly: <1L → ₹X,XXX  |  >=1L → ₹X.XL
+function formatCostL(costL) {
+  if (!costL || costL <= 0) return '—'
+  if (costL < 1) {
+    const inr = Math.round(costL * 100000)
+    return '₹' + inr.toLocaleString('en-IN')
+  }
+  return '₹' + costL.toFixed(1) + 'L'
+}
+
 //  Feature 3: Payback confidence 
 function getPaybackConfidence(demand, hikePercent) {
   if ((demand === 'Very High' || demand === 'High') && hikePercent >= 25)
@@ -234,7 +244,7 @@ function StudentPath({ certName, certCost, domain, targetOfferLakhs }) {
       </div>
 
       <div className="text-sm font-medium text-slate-600 mt-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
-        Total investment: ₹{(certCost).toFixed(2)}L / Timeline: 4-7 months / Target: verified roles in your domain
+        Total investment: {formatCostL(certCost)} / Timeline: 4-7 months / Target: verified roles in your domain
       </div>
     </motion.div>
   )
@@ -1232,7 +1242,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
                     {isStudent ? (
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '8px', marginBottom: '12px' }}>
                         <StatCard label="Target Role" value="Entry Level" color={VIOLET} delay={0} />
-                        <StatCard label="Investment" value={'₹' + certCost + 'L'} color={AMBER} delay={0.05} />
+                        <StatCard label="Investment" value={formatCostL(certCost)} color={AMBER} delay={0.05} />
                       </div>
                     ) : (
                       <>
