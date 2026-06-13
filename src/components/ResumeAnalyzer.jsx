@@ -176,7 +176,7 @@ var buildPrompt = function (resumeText, mode, timeline, domainIntent, switchTarg
     '    "current_salary": 0\n' +
     '  }\n' +
     '}\n\n' +
-    'Rules: India-specific. Under 380 words total. Be specific to their actual resume. EDUCATION FIX: If the resume lacks an explicit education section, you MUST output [{"degree": "Not provided", "institution": "Not provided"}] for education_history to prevent UI breakage. GUARDRAIL: If the text lacks mandatory sections completely, output EXACTLY {"error": "INVALID_DOCUMENT"}. CRITICAL PRIVACY INSTRUCTION: Do NOT extract the candidate\'s actual name, email address, phone number, or physical address. For the `name` and `full_name` fields, you MUST return the exact string "ANONYMIZED".'
+    'Rules: India-specific. Under 380 words total. Be specific to their actual resume. EDUCATION FIX: If the resume lacks an explicit education section, you MUST output [{"degree": "Not provided", "institution": "Not provided"}] for education_history to prevent UI breakage. GUARDRAIL: If the text lacks mandatory sections completely, output EXACTLY {"error": "INVALID_DOCUMENT"}. For the `name` field extract the candidate\'s first and last name exactly as it appears in the resume. For `full_name` in Database_Payload do the same.'
 }
 
 //  Safe JSON parser - never throws 
@@ -215,7 +215,7 @@ var safeParseResumeJSON = function (text) {
 
     // Trim name to first 2 words
     var nameRaw = String(obj.name || '')
-    var name = (nameRaw && nameRaw !== 'Not found') ? nameRaw.split(' ').slice(0, 2).join(' ') : ''
+    var name = (nameRaw && nameRaw !== 'Not found' && nameRaw.toUpperCase() !== 'ANONYMIZED') ? nameRaw.split(' ').slice(0, 2).join(' ') : ''
 
     return {
       name: name,
@@ -432,11 +432,11 @@ var PersonalisedHero = function ({ name, city, domain, primaryCert, mode, certDo
   }
   var domainLabel = certDomains && certDomains.length > 0 ? certDomains.find(function (d) { return d.id === domain })?.label || domain : domain
   
-  // Extract auth name but ignore if it's anonymized
+  // Prefer auth name, fall back to resume-extracted name
   var rawAuthName = userProfileData.userName ? userProfileData.userName.split(' ')[0] : ''
-  var authName = (rawAuthName && rawAuthName.toUpperCase() !== 'ANONYMIZED') ? rawAuthName : ''
+  var authName = rawAuthName || ''
   
-  var firstName = authName || (name && name.toUpperCase() !== 'ANONYMIZED' ? name.split(' ')[0] : '')
+  var firstName = authName || (name ? name.split(' ')[0] : '')
   
   var displayName = firstName ? firstName.toUpperCase() : 'CANDIDATE PROFILE'
   var certLabel = certCount && certCount > 0 ? certCount : ''
