@@ -282,7 +282,7 @@ export default function DashboardPage() {
                     </div>
                   </div>
                 ) : (
-                  <EmptyPaths onBrowse={() => router.push('/cert-radar')} onROI={() => router.push('/')} />
+                  <EmptyPaths onBrowse={() => router.push('/tools/cert-radar')} onROI={() => router.push('/')} />
                 )
               )}
 
@@ -293,7 +293,7 @@ export default function DashboardPage() {
                     <BurnRate certName={certName} breakEvenMonths={breakEvenMonths} activeCert={activeCert} />
                   </div>
                 ) : (
-                  <EmptyPaths onBrowse={() => router.push('/cert-radar')} onROI={() => router.push('/')} />
+                  <EmptyPaths onBrowse={() => router.push('/tools/cert-radar')} onROI={() => router.push('/')} />
                 )
               )}
 
@@ -333,7 +333,7 @@ export default function DashboardPage() {
                       ))}
                     </div>
                   ) : (
-                    <EmptyPaths onBrowse={() => router.push('/cert-radar')} onROI={() => router.push('/')} />
+                    <EmptyPaths onBrowse={() => router.push('/tools/cert-radar')} onROI={() => router.push('/')} />
                   )}
                 </div>
               )}
@@ -362,7 +362,7 @@ export default function DashboardPage() {
                     </div>
                   )}
                   <button
-                    onClick={() => router.push('/cert-radar')}
+                    onClick={() => router.push('/tools/cert-radar')}
                     style={{ marginTop: '16px', padding: '10px 20px', borderRadius: '8px', background: 'transparent', color: 'var(--text)', border: '1px solid var(--border)', cursor: 'pointer', fontFamily: FH, fontSize: '13px', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
                   >
                     <Compass size={14} /> Browse Cert Radar
@@ -394,7 +394,7 @@ export default function DashboardPage() {
           <SideLabel>Quick Actions</SideLabel>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <ActionBtn label="Run ROI Calculator" onClick={() => router.push('/')} />
-            <ActionBtn label="Cert Radar" onClick={() => router.push('/cert-radar')} />
+            <ActionBtn label="Cert Radar" onClick={() => router.push('/tools/cert-radar')} />
             <ActionBtn label="Market Pulse" onClick={() => router.push('/market-pulse')} />
             <ActionBtn label="Analyze Offer Letter" onClick={() => router.push('/offer-analysis')} />
           </div>
