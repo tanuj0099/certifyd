@@ -405,16 +405,15 @@ const CertRadar = () => {
               </span>
               <button 
                 onClick={() => setActiveSlot('A')}
-                className={`font-semibold text-sm md:text-base px-3 py-1.5 rounded-lg border max-w-[200px] truncate transition-all cursor-pointer ${activeSlot === 'A' ? 'bg-[var(--accent)] border-[var(--accent)] text-white shadow-lg' : 'bg-[var(--bg-alt)] border-[var(--border)] hover:border-[var(--text-4)]'}`}
+                className={`font-semibold text-sm md:text-base px-3 py-1.5 rounded-lg border max-w-[200px] truncate transition-all cursor-pointer ${activeSlot === 'A' ? 'bg-blue-600 border-blue-600 text-white shadow-lg' : 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-500 text-slate-900 dark:text-slate-100'}`}
                 title="Click to change Cert 1"
               >
                 {activeCompareCertA.name}
               </button>
-              <span className="text-[var(--text-4)] hidden md:block">vs</span>
+              <span className="text-slate-400 hidden md:block">vs</span>
               <button 
                 onClick={() => setActiveSlot('B')}
-                className={`font-semibold text-sm md:text-base px-3 py-1.5 rounded-lg border max-w-[200px] truncate transition-all cursor-pointer ${activeSlot === 'B' ? 'bg-[var(--accent)] border-[var(--accent)] text-white shadow-lg' : 'bg-[var(--bg-alt)] border-[var(--border)] border-dashed hover:border-[var(--text-4)]'} ${compareCertB && activeSlot !== 'B' ? 'border-solid' : ''}`}
-                style={{ color: (activeSlot === 'B' || compareCertB) ? (activeSlot === 'B' ? 'white' : 'var(--text)') : 'var(--text-4)' }}
+                className={`font-semibold text-sm md:text-base px-3 py-1.5 rounded-lg border max-w-[200px] truncate transition-all cursor-pointer ${activeSlot === 'B' ? 'bg-blue-600 border-blue-600 text-white shadow-lg' : 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-500'} ${compareCertB && activeSlot !== 'B' ? 'border-solid text-slate-900 dark:text-slate-100' : (!compareCertB && activeSlot !== 'B' ? 'border-dashed text-slate-500 dark:text-slate-400' : '')}`}
                 title="Click to change Cert 2"
               >
                 {compareCertB ? compareCertB.name : 'Select a cert...'}

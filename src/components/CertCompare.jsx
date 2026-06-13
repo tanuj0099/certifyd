@@ -58,6 +58,7 @@ function normalizeCert(row) {
     forWho:     row.description || row.for_who || row.forWho || '',
     tags:       Array.isArray(row.tags) ? row.tags : [],
     link:       row.link        || row.url          || '',
+    slug:       row.slug || '',
   }
 }
 
