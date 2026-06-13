@@ -490,10 +490,10 @@ var PersonalisedHero = function ({ name, city, domain, primaryCert, mode, certDo
       {phase >= 0 && (
         <motion.p
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
-          className="micro-label uppercase tracking-widest text-sm font-medium text-slate-600"
+          className="micro-label uppercase tracking-widest text-sm font-bold text-[var(--text-4)]"
           style={{ color: 'var(--text-4)', marginBottom: '10px', lineHeight: 1.6 }}
         >
-          <span className="text-sm font-medium text-slate-600 font-bold tracking-widest text-slate-500 uppercase">{displayName}, OUT OF {certLabel ? certLabel + ' ' : ''}CERTIFICATIONS ANALYSED FOR A PROFESSIONAL IN {city ? city.toUpperCase() : 'INDIA'} RIGHT NOW -</span>
+          <span>{displayName}, OUT OF {certLabel ? certLabel + ' ' : ''}CERTIFICATIONS ANALYSED FOR A PROFESSIONAL IN {city ? city.toUpperCase() : 'INDIA'} RIGHT NOW -</span>
         </motion.p>
       )}
       {phase >= 1 && (
@@ -501,7 +501,7 @@ var PersonalisedHero = function ({ name, city, domain, primaryCert, mode, certDo
           initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
           style={{ marginBottom: '14px' }}
         >
-          <h2 className="text-4xl font-black text-slate-900 tracking-tight block w-full mt-2">
+          <h2 className="text-4xl font-black text-[var(--text)] tracking-tight block w-full mt-2">
             Your Recommended Path
           </h2>
         </motion.div>
