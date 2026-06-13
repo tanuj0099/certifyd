@@ -840,6 +840,13 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
   const certName = storeCertName || prefilledCert;
   const selectedCert = storeSelectedCert || null;
 
+  useEffect(() => {
+    if (certName && !selectedCert && certificationsData.length > 0) {
+      const match = certificationsData.find(c => c.name === certName || c.cert_name === certName);
+      if (match) storeSetSelected(match);
+    }
+  }, [certName, selectedCert, certificationsData, storeSetSelected]);
+
   const { user } = useAuth();
   const isMobile = useIsMobile();
   const guest = useGuestCounter(GUEST_FREE_LIMIT);
