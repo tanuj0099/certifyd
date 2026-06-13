@@ -45,7 +45,7 @@ export default function ContactPage() {
     setSubmitting(true)
     try {
       if (supabase) {
-        const { error } = await supabase.from('contact_submissions').insert({
+        const { error } = await supabase.from('feedback_messages').insert({
           name,
           email,
           subject,
@@ -55,7 +55,6 @@ export default function ContactPage() {
         })
         if (error) throw error
       }
-      setSubmitNote('Saved to Supabase.')
       setSubmitted(true)
       window.setTimeout(() => {
         setSubmitted(false)
@@ -100,11 +99,16 @@ export default function ContactPage() {
                   Message received
                 </div>
                 <p style={{ fontFamily: FB, fontSize: '14px', color: 'var(--text-3)', lineHeight: '1.8', margin: 0 }}>
-                  Thanks. We will get back to you at the email you provided. {submitNote}
+                  Thanks. We will get back to you at the email you provided.
                 </p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '16px' }}>
+                {submitNote && (
+                  <div style={{ color: 'var(--err)', fontSize: '13px', fontFamily: FB, padding: '10px 14px', background: 'color-mix(in srgb, var(--err) 10%, transparent)', borderRadius: '8px', border: '1px solid color-mix(in srgb, var(--err) 20%, transparent)' }}>
+                    {submitNote}
+                  </div>
+                )}
                 <div>
                   <label htmlFor="name-input" style={{ display: 'block', fontFamily: FM, fontSize: '10px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '8px' }}>
                     Name
