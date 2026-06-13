@@ -563,15 +563,15 @@ var CertLeaderboardRow = function ({ cert, rank, onSelect, mode }) {
         <div style={{ fontFamily: FH, fontWeight: '700', fontSize: '13px', color: 'var(--text)', marginBottom: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{cert.name}</div>
         <div style={{ fontFamily: FB, fontSize: '12px', color: 'var(--text-4)', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical' }}>{cert.why}</div>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '3px', flexShrink: 0 }}>
+      <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
         {exceedsSwitcherLimit ? (
           <span className="micro-label" style={{ padding: '2px 7px', borderRadius: '5px', background: 'transparent', border: '1px solid transparent', color: AMBER, whiteSpace: 'nowrap' }}>
             Exceeds 8-mo window
           </span>
         ) : (
-          <span className="tabular-nums" style={{ fontFamily: FM, fontSize: '11px', fontWeight: '700', color: EMERALD }}>+{cert.roi}</span>
+          <span style={{ fontFamily: FM, fontSize: '11px', fontWeight: '700', letterSpacing: '0.04em', padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)', color: 'var(--text-2)', background: 'var(--bg)' }}>+{cert.roi}</span>
         )}
-        <span className="tabular-nums" style={{ fontFamily: FM, fontSize: '10px', color: 'var(--text-4)' }}>{cert.timeline}</span>
+        <span style={{ fontFamily: FM, fontSize: '11px', fontWeight: '600', letterSpacing: '0.04em', padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)', color: 'var(--text-4)', background: 'transparent' }}>{cert.timeline}</span>
       </div>
       {!exceedsSwitcherLimit && (
         <motion.div animate={{ x: hovered ? 3 : 0 }} transition={{ duration: 0.13 }}>
