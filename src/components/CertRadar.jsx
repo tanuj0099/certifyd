@@ -109,9 +109,9 @@ const CertRadar = () => {
   const urlIntent = searchParams?.get('intent') || '';
   const urlTarget = searchParams?.get('target') || '';
 
-  const activeTarget = urlTarget || targetDomain || '';
+  const activeTarget = urlTarget || (mounted ? targetDomain : '') || '';
   const activeIntent = urlIntent || 'Domain_Pivot';
-  const currentRole = resumeDomain || '';
+  const currentRole = mounted ? (resumeDomain || '') : '';
 
   const [certifications, setCertifications] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -250,7 +250,7 @@ const CertRadar = () => {
             setIsMobileOpen={setIsMobileSidebarOpen} 
             activeIntent={activeIntent}
             activeTarget={activeTarget}
-            resumeDomain={resumeDomain}
+            resumeDomain={currentRole}
           />
 
           {/* Main Content Column */}
