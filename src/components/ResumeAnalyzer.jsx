@@ -153,6 +153,7 @@ var buildPrompt = function (resumeText, mode, timeline, domainIntent, switchTarg
     'Resume:\n' + resumeText.slice(0, 2200) + '\n\n' +
     'Extraction Rules:\n' +
     '- If a data point is entirely missing, return null. Do not hallucinate.\n' +
+    '- PII ANONYMIZATION: Do NOT extract or output the candidate\'s real name, email, or phone number anywhere. Always set Full_Name to "ANONYMIZED".\n' +
     '- Calculate the candidate\'s "Mobility & Career Stage" based on their total years of experience. If experience > 8 years, they are "Established/Low Mobility" (do not recommend relocation). If experience is < 3 years, they are "Early/High Mobility" (relocation is highly recommended for growth).\n' +
     '- Classify the Education_Tier as Tier 1 (IITs, NITs, IIMs, BITS, top global univs), Tier 2 (Top state universities/private colleges), or Tier 3 (Local/unranked colleges).\n' +
     'GEOGRAPHIC RULE: If the extracted location from the resume is NOT within India (e.g., US, UK, Canada, UAE, etc.), you MUST abort the ROI calculation and return EXACTLY this JSON error flag:\n' +
@@ -1419,10 +1420,20 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
               }}
               style={{ cursor: 'pointer', width: '16px', height: '16px', flexShrink: 0 }}
             />
-            <label htmlFor="dpdpConsent" className="text-[15px] text-slate-500 dark:text-slate-400 cursor-pointer relative" style={{ fontFamily: FB, display: 'inline-block' }}>
-              I agree to the <a href="/terms" className="text-emerald-600 hover:underline">Terms and Conditions</a> and <a href="/privacy" className="text-emerald-600 hover:underline">Privacy Policy</a>.
-              <span className="text-red-500 absolute -right-3 -top-1 font-bold text-lg leading-none">*</span>
-            </label>
+            <div className="flex-1">
+              <label htmlFor="dpdpConsent" className="text-[14px] text-slate-300 cursor-pointer relative" style={{ fontFamily: FB, display: 'block', lineHeight: 1.5 }}>
+                <span className="font-semibold text-white mb-2 block">Data Processing Notice</span>
+                <ul className="list-disc pl-4 space-y-1 mb-3 text-[13px] text-slate-400">
+                  <li><strong className="text-slate-200">What we process:</strong> The text of your document, including role, experience, and salary figures.</li>
+                  <li><strong className="text-slate-200">How we process it:</strong> Processed in real time for extraction. The raw document is never stored. Only anonymised data fields are retained.</li>
+                  <li><strong className="text-slate-200">What you get:</strong> A personalised counter-offer or career recommendation based on verified market medians.</li>
+                </ul>
+                <div className="flex items-start gap-2">
+                  <span className="text-emerald-400">I understand and consent to Certifyd processing my document as described above.</span>
+                  <span className="text-red-500 font-bold text-lg leading-none">*</span>
+                </div>
+              </label>
+            </div>
           </div>
           <motion.button
             onClick={handleAnalyse}

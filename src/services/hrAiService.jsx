@@ -14,6 +14,8 @@ Extraction & Math Rules:
 
 The Bouncer Rule: First evaluate if the text is an actual corporate job offer or appointment letter. If it is a resume, invoice, or irrelevant document, immediately stop and return an object with {"is_valid_offer": false, "rejection_reason": "Clear explanation of what was uploaded instead"}.
 
+PII ANONYMIZATION: Do not extract, leak, or mention the candidate's real name, email, or phone number anywhere in your response (including the email script). Use placeholders like [Candidate Name] if needed.
+
 Financial Formatting: All monetary figures must be calculated as annual values and formatted strictly as absolute whole numbers in Indian Rupees (e.g., 1450000). DO NOT use Lakhs or decimals. DO NOT output monthly figures.
 
 The Trap Check: Actively scan the text for hidden corporate deductions like included Employer PF or Gratuity padding, clawbacks, and notice periods.

@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { X, FileText } from 'lucide-react';
 
 const USD_TO_INR = 95.70;
 // Constants for implicit logic not strictly defined by the user
@@ -11,6 +12,23 @@ const ROIEngine = ({ currentSalary = DEFAULT_CURRENT_SALARY }) => {
   const [costUSD, setCostUSD] = useState(300);
   const [studyHoursPerWeek, setStudyHoursPerWeek] = useState(10);
   const [salaryBumpPercent, setSalaryBumpPercent] = useState(20);
+
+  // DPDP Consent State
+  const [showConsentBanner, setShowConsentBanner] = useState(false);
+  const [consentChecked, setConsentChecked] = useState(false);
+
+  useEffect(() => {
+    const hasSeenConsent = localStorage.getItem('roi_consent_seen');
+    if (!hasSeenConsent) {
+      setShowConsentBanner(true);
+    }
+  }, []);
+
+  const dismissConsent = () => {
+    if (!consentChecked) return;
+    localStorage.setItem('roi_consent_seen', 'true');
+    setShowConsentBanner(false);
+  };
 
   // Formatting utility
   const formatINR = (value) => 
@@ -44,7 +62,53 @@ const ROIEngine = ({ currentSalary = DEFAULT_CURRENT_SALARY }) => {
   }, [costUSD, studyHoursPerWeek, salaryBumpPercent, currentSalary]);
 
   return (
-    <div className="bg-black w-full text-white p-6 md:p-12 rounded-3xl">
+    <div className="bg-black w-full text-white p-6 md:p-12 rounded-3xl relative">
+      {/* DPDP First-Use Consent Modal */}
+      {showConsentBanner && (
+        <div className="absolute inset-0 z-50 flex flex-col items-center justify-center p-4 bg-black/80 backdrop-blur-md rounded-3xl overflow-hidden">
+          <div className="bg-[#0a0a0b] border border-white/10 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 md:p-8">
+            <div className="flex items-center gap-3 mb-6">
+              <FileText className="text-white" size={24} />
+              <h3 className="text-xl font-bold text-white m-0">Data Processing Notice</h3>
+            </div>
+            
+            <div className="space-y-4 text-sm text-zinc-400 leading-relaxed mb-8">
+              <p><strong className="text-zinc-200">What we collect:</strong> Your current role, experience level, city, current CTC, and target certification.</p>
+              <p><strong className="text-zinc-200">Why we collect it:</strong> To calculate your personalised certification ROI score, salary benchmarks, and market demand in your city.</p>
+              <p><strong className="text-zinc-200">How we use it:</strong> Your data is anonymised and added to our aggregate certification outcomes dataset. We do not share your individual data with any third party.</p>
+              <p><strong className="text-zinc-200">How long we keep it:</strong> Your personal data is retained for the duration of your account. Anonymised contributions to our dataset are retained indefinitely as statistical records.</p>
+              <p><strong className="text-zinc-200">Your rights:</strong> You can request access, correction, or deletion of your personal data at any time at privacy@certifyd.in.</p>
+            </div>
+
+            <div className="pt-6 border-t border-white/10">
+              <label className="flex items-start gap-3 cursor-pointer mb-6 group">
+                <input 
+                  type="checkbox" 
+                  checked={consentChecked}
+                  onChange={(e) => setConsentChecked(e.target.checked)}
+                  className="mt-1 w-5 h-5 accent-emerald-500 cursor-pointer"
+                />
+                <span className="text-sm text-zinc-300 group-hover:text-white transition-colors">
+                  I have read the above and consent to Certifyd processing my data for the stated purpose.
+                </span>
+              </label>
+
+              <button 
+                onClick={dismissConsent}
+                disabled={!consentChecked}
+                className={`w-full py-3.5 rounded-xl font-bold text-sm transition-all ${
+                  consentChecked 
+                    ? 'bg-emerald-500 text-black hover:bg-emerald-400' 
+                    : 'bg-white/5 text-zinc-500 cursor-not-allowed'
+                }`}
+              >
+                Accept & Calculate ROI
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24">
         
         {/* Left Column: Interactive Sliders */}

@@ -275,6 +275,7 @@ Return ONLY this JSON:
 }
 
 Rules:
+- PII ANONYMIZATION: Do NOT extract, leak, or mention the candidate's real name, email, or phone number anywhere in your response (including the counter-offer script). Use placeholders like [Candidate Name] if needed.
 - Be mathematically precise. Round all Lakh numbers to 1 decimal place.
 - Market median must be realistic for India 2026 (look at YOE, city, cert stack).
 - If text doesn't contain salary/CTC, set offered_ctc to 0 and note "CTC not found in offer text" in the assessment.

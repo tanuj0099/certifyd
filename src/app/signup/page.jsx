@@ -4,7 +4,8 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation';
 
 import Link from 'next/link';
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
+import { X, FileText } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth.jsx'
 
 const FS = "var(--font-sans)";
@@ -38,7 +39,34 @@ export default function SignupPage() {
   const [password, setPassword] = useState('')
   const [otpMode, setOtpMode] = useState(false)
 
-  async function handleGoogle() {
+  // Consent Modal State
+  const [showConsent, setShowConsent] = useState(false)
+  const [pendingAction, setPendingAction] = useState(null)
+  const [hasScrolledToBottom, setHasScrolledToBottom] = useState(false)
+  const [consentChecked, setConsentChecked] = useState(false)
+  const [marketingChecked, setMarketingChecked] = useState(false)
+
+  const handleScroll = (e) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.target;
+    // Allow a small buffer (e.g., 5px) for browser rounding errors
+    if (scrollHeight - scrollTop - clientHeight < 5) {
+      setHasScrolledToBottom(true);
+    }
+  };
+
+  const triggerConsent = (actionFunc) => {
+    setPendingAction(() => actionFunc);
+    setShowConsent(true);
+  };
+
+  const executePendingAction = () => {
+    setShowConsent(false);
+    if (pendingAction) {
+      pendingAction();
+    }
+  };
+
+  async function doGoogle() {
     setBusy(true)
     setError(null)
     try {
@@ -51,7 +79,7 @@ export default function SignupPage() {
     }
   }
 
-  async function handleGithub() {
+  async function doGithub() {
     setBusy(true)
     setError(null)
     try {
@@ -64,7 +92,10 @@ export default function SignupPage() {
     }
   }
 
-  async function handleCredentialSubmit(e) {
+  function handleGoogle() { triggerConsent(doGoogle) }
+  function handleGithub() { triggerConsent(doGithub) }
+
+  async function doCredentialSubmit() {
     e.preventDefault()
     setBusy(true)
     setError(null)
@@ -90,6 +121,11 @@ export default function SignupPage() {
     } finally {
       setBusy(false)
     }
+  }
+
+  function handleCredentialWrapper(e) {
+    e.preventDefault()
+    triggerConsent(doCredentialSubmit)
   }
 
   const isDisabled = busy || loading
@@ -223,7 +259,7 @@ export default function SignupPage() {
           </div>
 
           {/* Credentials Form */}
-          <form onSubmit={handleCredentialSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <form onSubmit={handleCredentialWrapper} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <input
               type="text"
               placeholder="Email or Phone number"
@@ -351,6 +387,127 @@ export default function SignupPage() {
           <span>Credentials never stored on Certifyd servers</span>
         </div>
       </motion.div>
+
+      {/* Consent Modal */}
+      <AnimatePresence>
+        {showConsent && (
+          <div style={{
+            position: 'fixed', inset: 0, zIndex: 9999,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: '20px', fontFamily: FS,
+          }}>
+            <motion.div
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(4px)' }}
+              onClick={() => setShowConsent(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              style={{
+                position: 'relative', width: '100%', maxWidth: '500px',
+                background: '#0a0a0b', border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: '16px', overflow: 'hidden', display: 'flex', flexDirection: 'column',
+                boxShadow: '0 24px 48px rgba(0,0,0,0.4)',
+              }}
+            >
+              {/* Header */}
+              <div style={{ padding: '20px 24px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <FileText size={18} color="#f7f8f8" />
+                  <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#f7f8f8', margin: 0 }}>Data Protection & Consent</h2>
+                </div>
+                <button onClick={() => setShowConsent(false)} style={{ background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', padding: '4px' }}>
+                  <X size={18} />
+                </button>
+              </div>
+
+              {/* Scrollable Content */}
+              <div
+                onScroll={handleScroll}
+                style={{
+                  padding: '24px', maxHeight: '40vh', overflowY: 'auto',
+                  fontSize: '13px', lineHeight: 1.6, color: 'rgba(255,255,255,0.6)',
+                  background: 'rgba(0,0,0,0.2)'
+                }}
+              >
+                <h3 style={{ color: '#f7f8f8', fontSize: '14px', marginBottom: '8px', marginTop: 0 }}>Why we need your consent</h3>
+                <p style={{ marginBottom: '16px' }}>
+                  Under the Digital Personal Data Protection (DPDP) Act, we must be absolutely transparent about what data we collect, why we collect it, and how you can delete it. By creating an account, you are acknowledging our practices below.
+                </p>
+
+                <h3 style={{ color: '#f7f8f8', fontSize: '14px', marginBottom: '8px' }}>1. What we collect & why</h3>
+                <p style={{ marginBottom: '16px' }}>
+                  We collect your profile details, career background, and compensation data purely for the purpose of <strong>generating personalized ROI calculations and career recommendations.</strong> We do not use this data for building recruiter intelligence tools or external marketing without additional, separate consent.
+                </p>
+
+                <h3 style={{ color: '#f7f8f8', fontSize: '14px', marginBottom: '8px' }}>2. Document storage</h3>
+                <p style={{ marginBottom: '16px' }}>
+                  When you upload resumes or offer letters, <strong>we process them entirely in-memory</strong>. We strictly extract the data required for analysis, anonymize Personally Identifiable Information (PII), and discard the raw file. We do not store raw PDFs or offer letters on our servers.
+                </p>
+
+                <h3 style={{ color: '#f7f8f8', fontSize: '14px', marginBottom: '8px' }}>3. Institutional data sharing</h3>
+                <p style={{ marginBottom: '16px' }}>
+                  We do not share your individual-level tracking data with colleges, institutions, or employers. Any institutional reports generated are strictly based on cohort-level, aggregated data.
+                </p>
+
+                <h3 style={{ color: '#f7f8f8', fontSize: '14px', marginBottom: '8px' }}>4. Right to Erasure</h3>
+                <p style={{ marginBottom: '0' }}>
+                  You have the right to request the deletion of your account and data at any time. We provide a self-serve <strong>Delete Account</strong> mechanism in your profile settings, which permanently anonymizes your data in our systems within the statutory 90-day period.
+                </p>
+              </div>
+
+              {/* Footer / Actions */}
+              <div style={{ padding: '20px 24px', borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.015)' }}>
+                {!hasScrolledToBottom ? (
+                  <div style={{ fontSize: '12px', color: 'var(--accent)', fontFamily: FM, textAlign: 'center', padding: '10px 0' }}>
+                    ↓ Please read to the bottom to continue
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '16px' }}>
+                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', cursor: 'pointer' }}>
+                      <input
+                        type="checkbox"
+                        checked={consentChecked}
+                        onChange={(e) => setConsentChecked(e.target.checked)}
+                        style={{ marginTop: '2px', width: '16px', height: '16px', accentColor: 'var(--accent)', cursor: 'pointer', flexShrink: 0 }}
+                      />
+                      <span style={{ fontSize: '13px', color: '#f7f8f8', lineHeight: 1.4 }}>
+                        I confirm I am 18 years or older, and I consent to the collection and processing of my data specifically for ROI analysis as stated above.
+                      </span>
+                    </label>
+
+                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', cursor: 'pointer' }}>
+                      <input
+                        type="checkbox"
+                        checked={marketingChecked}
+                        onChange={(e) => setMarketingChecked(e.target.checked)}
+                        style={{ marginTop: '2px', width: '16px', height: '16px', accentColor: 'var(--accent)', cursor: 'pointer', flexShrink: 0 }}
+                      />
+                      <span style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', lineHeight: 1.4 }}>
+                        Send me certification market updates and salary insights (Optional)
+                      </span>
+                    </label>
+                  </div>
+                )}
+
+                <button
+                  onClick={executePendingAction}
+                  disabled={!hasScrolledToBottom || !consentChecked}
+                  style={{
+                    width: '100%', padding: '12px', borderRadius: '8px', border: 'none',
+                    background: (!hasScrolledToBottom || !consentChecked) ? 'rgba(255,255,255,0.1)' : 'var(--accent)',
+                    color: (!hasScrolledToBottom || !consentChecked) ? 'rgba(255,255,255,0.4)' : 'var(--bg)',
+                    fontSize: '14px', fontWeight: 700, fontFamily: FS, cursor: (!hasScrolledToBottom || !consentChecked) ? 'not-allowed' : 'pointer',
+                    transition: 'all 0.2s'
+                  }}
+                >
+                  Accept & Continue
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

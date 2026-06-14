@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ChevronDown, LogOut, Settings, ShieldCheck, Trash2 } from 'lucide-react'
+import { ChevronDown, LogOut, Settings, ShieldCheck, Trash2, Download, Ban } from 'lucide-react'
 import { supabase } from '../lib/supabase.js'
 import { useRouter } from 'next/navigation'
 
@@ -37,6 +37,58 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
     setOpen(false)
     router.push(`/${pageId}`)
     onNavigate?.(pageId)
+  }
+
+  async function executeDelete() {
+    setDeleting(true)
+    setDeleteError('')
+    try {
+      const { error } = await supabase.rpc('soft_delete_user')
+      if (error) throw error
+      // Log them out locally
+      onSignOut?.()
+      setOpen(false)
+    } catch (err) {
+      console.error('Account erasure failed:', err)
+      setDeleteError(err.message || 'Failed to delete account.')
+      setDeleting(false)
+    }
+  }
+
+  async function downloadData() {
+    try {
+      const { data, error } = await supabase.from('user_profiles').select('*').eq('user_id', user?.id || user?.uid).single();
+      if (error) throw error;
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `certifyd_data.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Failed to download data', err);
+    }
+  }
+
+  async function withdrawConsent() {
+    try {
+      // Blank out the user's sensitive career data without deleting the auth shell
+      const { error } = await supabase.from('user_profiles').update({
+        current_salary: null,
+        job_role: 'Consent Withdrawn',
+        technical_skills: [],
+        applied_projects: []
+      }).eq('user_id', user?.id || user?.uid);
+      if (error) throw error;
+      alert("Consent withdrawn. Your ROI and career data has been wiped from active tables.");
+      setOpen(false);
+    } catch (err) {
+      console.error('Withdraw consent failed:', err);
+      alert("Failed to withdraw consent. Please try again.");
+    }
   }
 
   return (
@@ -156,6 +208,29 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
                 )
               })}
 
+              <div style={{ height: '1px', background: 'rgba(255,255,255,0.08)', margin: '4px 0' }} />
+
+              {/* Data Export & Withdrawal */}
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); downloadData(); }}
+                className="w-full flex items-center gap-2.5 px-3 py-2 border-none rounded-lg bg-transparent text-zinc-700 dark:text-zinc-200 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-white/[0.05] transition-all text-left font-sans text-[13px] font-semibold cursor-pointer"
+              >
+                <Download size={15} className="text-zinc-500 dark:text-zinc-400" />
+                Download my data
+              </button>
+              
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); withdrawConsent(); }}
+                className="w-full flex items-center gap-2.5 px-3 py-2 border-none rounded-lg bg-transparent text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-500/[0.08] transition-all text-left font-sans text-[13px] font-semibold cursor-pointer"
+              >
+                <Ban size={15} />
+                Withdraw consent
+              </button>
+
+              <div style={{ height: '1px', background: 'rgba(255,255,255,0.08)', margin: '4px 0' }} />
+
               {/*  Sign out  */}
               <button
                 type="button"
@@ -164,11 +239,50 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
                   setOpen(false)
                   onSignOut?.()
                 }}
-                className="w-full flex items-center gap-2.5 px-3 py-2 mt-1 border-none rounded-lg bg-transparent text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-500/[0.08] transition-all text-left font-sans text-[13px] font-semibold cursor-pointer"
+                className="w-full flex items-center gap-2.5 px-3 py-2 mt-1 border-none rounded-lg bg-transparent text-zinc-700 dark:text-zinc-200 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-white/[0.05] transition-all text-left font-sans text-[13px] font-semibold cursor-pointer"
               >
                 <LogOut size={15} />
                 Sign out
               </button>
+
+              <div style={{ height: '1px', background: 'rgba(255,255,255,0.08)', margin: '8px 0' }} />
+
+              {/* Delete Account Section */}
+              {!confirmDelete ? (
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); setConfirmDelete(true); setDeleteError(''); }}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 border-none rounded-lg bg-transparent text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-500/[0.08] transition-all text-left font-sans text-[13px] font-semibold cursor-pointer"
+                >
+                  <Trash2 size={15} />
+                  Delete account
+                </button>
+              ) : (
+                <div className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
+                  <div className="text-[12px] text-zinc-500 dark:text-zinc-400 mb-2 leading-tight">
+                    Your account will be queued for permanent deletion within 90 days. Anonymised aggregate contributions are retained. Type <strong>DELETE</strong> below to confirm.
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="DELETE"
+                    disabled={deleting}
+                    onChange={(e) => {
+                      if (e.target.value === 'DELETE') {
+                        executeDelete();
+                      }
+                    }}
+                    className="w-full bg-zinc-100 dark:bg-white/[0.05] border border-zinc-200 dark:border-white/[0.1] rounded-md px-2 py-1.5 text-[12px] text-zinc-900 dark:text-white outline-none focus:border-red-500/50 transition-colors"
+                  />
+                  {deleting && <div className="text-[11px] text-red-400 mt-1">Processing erasure...</div>}
+                  {deleteError && <div className="text-[11px] text-red-500 mt-1">{deleteError}</div>}
+                  <button
+                    onClick={() => { setConfirmDelete(false); setDeleteError(''); }}
+                    className="w-full mt-2 text-[11px] text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 bg-transparent border-none cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              )}
 
             </motion.div>
           </>
