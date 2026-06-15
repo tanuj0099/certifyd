@@ -70,7 +70,8 @@ export default function OfferAnalysisPage() {
   const [marketMedian, setMarketMedian] = useState(0)
   const [tierMatched, setTierMatched] = useState(true)
   const [error, setError] = useState('')
-  const [consentGiven, setConsentGiven] = useState(false)
+  const [resumeConsentGiven, setResumeConsentGiven] = useState(false)
+  const [offerConsentGiven, setOfferConsentGiven] = useState(false)
 
   const hasResult = !!result
 
@@ -207,8 +208,8 @@ export default function OfferAnalysisPage() {
   }
 
   const handleAnalyze = async () => {
-    if (!consentGiven) {
-      setError('Please agree to the Terms and Conditions and Privacy Policy.')
+    if (!offerConsentGiven || !resumeConsentGiven) {
+      setError('Please agree to the Terms and Privacy Policy for both files.')
       return
     }
     if (!offerText || offerText.trim().length < 50) {
@@ -480,14 +481,30 @@ export default function OfferAnalysisPage() {
                 resumeText, setResumeText, true
               )}
 
+              <div style={{ marginTop: '24px', marginBottom: '8px', display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                <input 
+                  type="checkbox" 
+                  id="resumeDpdpConsent"
+                  checked={resumeConsentGiven}
+                  onChange={(e) => {
+                    setResumeConsentGiven(e.target.checked);
+                    if (e.target.checked) setError('');
+                  }}
+                  style={{ marginTop: '3px', cursor: 'pointer' }}
+                />
+                <label htmlFor="resumeDpdpConsent" className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed cursor-pointer">
+                  I agree to the processing of my resume data in accordance with the <a href="/terms" className="text-[var(--accent)] hover:underline">Terms of Service</a> and <a href="/privacy" className="text-[var(--accent)] hover:underline">Privacy Policy</a>.
+                </label>
+              </div>
+
               <button
-                onClick={() => { if (resumeText.trim() || resumeFileName) { setStep(2); setError('') } else { setError('Please provide your resume text or PDF to continue.') } }}
+                onClick={() => { if ((resumeText.trim() || resumeFileName) && resumeConsentGiven) { setStep(2); setError('') } else if (!resumeConsentGiven) { setError('Please accept the Terms to continue.') } else { setError('Please provide your resume text or PDF to continue.') } }}
                 style={{
-                  marginTop: '20px', width: '100%', padding: '14px', borderRadius: '10px',
-                  background: (resumeText.trim() || resumeFileName) ? 'var(--text)' : 'var(--bg-surface)',
-                  color: (resumeText.trim() || resumeFileName) ? 'var(--bg)' : 'var(--text-4)',
+                  marginTop: '16px', width: '100%', padding: '14px', borderRadius: '10px',
+                  background: ((resumeText.trim() || resumeFileName) && resumeConsentGiven) ? 'var(--text)' : 'var(--bg-surface)',
+                  color: ((resumeText.trim() || resumeFileName) && resumeConsentGiven) ? 'var(--bg)' : 'var(--text-4)',
                   fontSize: '14px', fontFamily: FH, fontWeight: '700', border: 'none',
-                  cursor: (resumeText.trim() || resumeFileName) ? 'pointer' : 'not-allowed',
+                  cursor: ((resumeText.trim() || resumeFileName) && resumeConsentGiven) ? 'pointer' : 'not-allowed',
                   transition: 'all 0.2s', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px'
                 }}
               >
@@ -516,31 +533,31 @@ export default function OfferAnalysisPage() {
               <div style={{ marginTop: '24px', marginBottom: '8px', display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
                 <input 
                   type="checkbox" 
-                  id="finalDpdpConsent"
-                  checked={consentGiven}
+                  id="offerDpdpConsent"
+                  checked={offerConsentGiven}
                   onChange={(e) => {
-                    setConsentGiven(e.target.checked);
+                    setOfferConsentGiven(e.target.checked);
                     if (e.target.checked) setError('');
                   }}
                   style={{ marginTop: '3px', cursor: 'pointer' }}
                 />
-                <label htmlFor="finalDpdpConsent" className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed cursor-pointer">
-                  I agree to the <a href="/terms" className="text-emerald-600 hover:underline">Terms and Conditions</a> and <a href="/privacy" className="text-emerald-600 hover:underline">Privacy Policy</a>.
+                <label htmlFor="offerDpdpConsent" className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed cursor-pointer">
+                  I agree to the processing of my offer letter data in accordance with the <a href="/terms" className="text-[var(--accent)] hover:underline">Terms of Service</a> and <a href="/privacy" className="text-[var(--accent)] hover:underline">Privacy Policy</a>.
                 </label>
               </div>
 
               <motion.button
                 onClick={handleAnalyze}
-                disabled={loading || (!offerText.trim() && !offerFileName) || !consentGiven}
-                whileHover={(offerText.trim() || offerFileName) && consentGiven ? { scale: 1.01, y: -1 } : {}}
-                whileTap={(offerText.trim() || offerFileName) && consentGiven ? { scale: 0.98 } : {}}
+                disabled={loading || (!offerText.trim() && !offerFileName) || !offerConsentGiven}
+                whileHover={(offerText.trim() || offerFileName) && offerConsentGiven ? { scale: 1.01, y: -1 } : {}}
+                whileTap={(offerText.trim() || offerFileName) && offerConsentGiven ? { scale: 0.98 } : {}}
                 style={{
                   marginTop: '16px', width: '100%', padding: '16px', borderRadius: '12px',
-                  background: loading ? 'var(--bg-surface)' : ((offerText.trim() || offerFileName) && consentGiven) ? 'var(--accent)' : 'var(--bg-surface)',
-                  border: loading ? '1px solid var(--border)' : ((offerText.trim() || offerFileName) && consentGiven) ? 'none' : '1px solid var(--border)',
-                  color: loading ? 'var(--text-4)' : ((offerText.trim() || offerFileName) && consentGiven) ? 'var(--bg)' : 'var(--text-4)',
+                  background: loading ? 'var(--bg-surface)' : ((offerText.trim() || offerFileName) && offerConsentGiven) ? 'var(--accent)' : 'var(--bg-surface)',
+                  border: loading ? '1px solid var(--border)' : ((offerText.trim() || offerFileName) && offerConsentGiven) ? 'none' : '1px solid var(--border)',
+                  color: loading ? 'var(--text-4)' : ((offerText.trim() || offerFileName) && offerConsentGiven) ? 'var(--bg)' : 'var(--text-4)',
                   fontSize: '15px', fontFamily: FH, fontWeight: '800',
-                  cursor: (loading || !consentGiven) ? 'not-allowed' : (offerText.trim() || offerFileName) ? 'pointer' : 'not-allowed',
+                  cursor: (loading || !offerConsentGiven) ? 'not-allowed' : (offerText.trim() || offerFileName) ? 'pointer' : 'not-allowed',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   gap: '9px', letterSpacing: '-0.015em', transition: 'all 0.2s',
                   boxShadow: (offerText.trim() || offerFileName) ? '0 4px 16px rgba(0,0,0,0.2)' : 'none',

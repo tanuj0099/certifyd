@@ -65,46 +65,31 @@ const ROIEngine = ({ currentSalary = DEFAULT_CURRENT_SALARY }) => {
     <div className="bg-black w-full text-white p-6 md:p-12 rounded-3xl relative">
       {/* DPDP First-Use Consent Modal */}
       {showConsentBanner && (
-        <div className="absolute inset-0 z-50 flex flex-col items-center justify-center p-4 bg-black/80 backdrop-blur-md rounded-3xl overflow-hidden">
-          <div className="bg-[#0a0a0b] border border-white/10 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 md:p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <FileText className="text-white" size={24} />
-              <h3 className="text-xl font-bold text-white m-0">Data Processing Notice</h3>
-            </div>
-            
-            <div className="space-y-4 text-sm text-zinc-400 leading-relaxed mb-8">
-              <p><strong className="text-zinc-200">What we collect:</strong> Your current role, experience level, city, current CTC, and target certification.</p>
-              <p><strong className="text-zinc-200">Why we collect it:</strong> To calculate your personalised certification ROI score, salary benchmarks, and market demand in your city.</p>
-              <p><strong className="text-zinc-200">How we use it:</strong> Your data is anonymised and added to our aggregate certification outcomes dataset. We do not share your individual data with any third party.</p>
-              <p><strong className="text-zinc-200">How long we keep it:</strong> Your personal data is retained for the duration of your account. Anonymised contributions to our dataset are retained indefinitely as statistical records.</p>
-              <p><strong className="text-zinc-200">Your rights:</strong> You can request access, correction, or deletion of your personal data at any time at privacy@certifyd.in.</p>
-            </div>
-
-            <div className="pt-6 border-t border-white/10">
-              <label className="flex items-start gap-3 cursor-pointer mb-6 group">
-                <input 
-                  type="checkbox" 
-                  checked={consentChecked}
-                  onChange={(e) => setConsentChecked(e.target.checked)}
-                  className="mt-1 w-5 h-5 accent-emerald-500 cursor-pointer"
-                />
-                <span className="text-sm text-zinc-300 group-hover:text-white transition-colors">
-                  I have read the above and consent to Certifyd processing my data for the stated purpose.
-                </span>
-              </label>
-
-              <button 
-                onClick={dismissConsent}
-                disabled={!consentChecked}
-                className={`w-full py-3.5 rounded-xl font-bold text-sm transition-all ${
-                  consentChecked 
-                    ? 'bg-emerald-500 text-black hover:bg-emerald-400' 
-                    : 'bg-white/5 text-zinc-500 cursor-not-allowed'
-                }`}
-              >
-                Accept & Calculate ROI
-              </button>
-            </div>
+        <div className="absolute inset-0 z-50 flex flex-col items-center justify-center p-4 bg-black/80 backdrop-blur-sm rounded-3xl overflow-hidden">
+          <div className="bg-[#0a0a0b] border border-white/10 rounded-2xl p-6 md:p-8 max-w-md w-full shadow-2xl flex flex-col gap-6">
+            <h3 className="text-lg font-bold text-white text-center">Before you calculate...</h3>
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input 
+                type="checkbox" 
+                checked={consentChecked}
+                onChange={(e) => setConsentChecked(e.target.checked)}
+                className="mt-1 w-5 h-5 accent-emerald-500 cursor-pointer flex-shrink-0"
+              />
+              <span className="text-sm text-zinc-300">
+                I agree to the processing of my data in accordance with the <a href="/terms" className="text-emerald-500 hover:underline">Terms of Service</a> and <a href="/privacy" className="text-emerald-500 hover:underline">Privacy Policy</a>.
+              </span>
+            </label>
+            <button 
+              onClick={dismissConsent}
+              disabled={!consentChecked}
+              className={`w-full py-3 rounded-xl font-bold text-sm transition-all ${
+                consentChecked 
+                  ? 'bg-emerald-500 text-black hover:bg-emerald-400' 
+                  : 'bg-white/5 text-zinc-500 cursor-not-allowed'
+              }`}
+            >
+              Continue to Calculator
+            </button>
           </div>
         </div>
       )}
