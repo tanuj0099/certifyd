@@ -124,8 +124,14 @@ const CertRadar = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   
+  const urlVendor = searchParams?.get('vendor');
+
   // Filter States
-  const [filters, setFilters] = useState({ vendors: [], difficulties: [], tracks: [] });
+  const [filters, setFilters] = useState({ 
+    vendors: urlVendor ? [urlVendor] : [], 
+    difficulties: [], 
+    tracks: [] 
+  });
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   const [page, setPage] = useState(0);
@@ -143,6 +149,16 @@ const CertRadar = () => {
     setCertifications([]);
     setHasMore(true);
   }, [debouncedQuery, filters]);
+
+  // If URL vendor changes, update state
+  useEffect(() => {
+    if (urlVendor) {
+      setFilters(prev => ({
+        ...prev,
+        vendors: prev.vendors.includes(urlVendor) ? prev.vendors : [...prev.vendors, urlVendor]
+      }));
+    }
+  }, [urlVendor]);
 
   // Fetch data
   useEffect(() => {

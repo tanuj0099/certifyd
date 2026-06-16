@@ -41,6 +41,7 @@ export default function ProfilePage() {
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState('')
+  const [deleteInput, setDeleteInput] = useState('')
 
   useEffect(() => {
     let cancelled = false
@@ -364,19 +365,38 @@ export default function ProfilePage() {
                     {deleteError && (
                       <div style={{ fontSize: 12, color: 'var(--err)', lineHeight: 1.4 }}>{deleteError}</div>
                     )}
+                    <div style={{ fontSize: 12, color: 'var(--text-2)', lineHeight: 1.5 }}>
+                      Type <strong>DELETE</strong> below to confirm.
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="DELETE"
+                      disabled={deleting}
+                      value={deleteInput}
+                      onChange={(e) => setDeleteInput(e.target.value)}
+                      style={{
+                        padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border)',
+                        background: 'var(--bg)', color: 'var(--text)', fontSize: 12, outline: 'none'
+                      }}
+                    />
                     <div style={{ display: 'flex', gap: 10 }}>
                       <button
                         type="button"
-                        disabled={deleting}
+                        disabled={deleting || deleteInput !== 'DELETE'}
                         onClick={async () => {
+                          if (deleteInput !== 'DELETE') return;
                           setDeleting(true)
                           setDeleteError('')
                           try {
                             const userId = user?.uid || user?.id
-                            if (supabase && userId) {
-                              // Call the secure soft-delete RPC
-                              const { error: rpcError } = await supabase.rpc('soft_delete_user')
-                              if (rpcError) throw rpcError
+                            if (userId) {
+                              const res = await fetch('/api/delete-account', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ userId })
+                              })
+                              const data = await res.json()
+                              if (!res.ok) throw new Error(data.error || 'Failed to delete account')
                             }
                             if (supabase) {
                               await supabase.auth.signOut()
@@ -391,15 +411,15 @@ export default function ProfilePage() {
                         style={{
                           padding: '8px 16px', borderRadius: 8, border: '1px solid rgba(217,72,72,0.5)',
                           background: 'rgba(217,72,72,0.1)', color: 'var(--err)',
-                          fontSize: 12, fontWeight: 700, cursor: deleting ? 'not-allowed' : 'pointer',
-                          opacity: deleting ? 0.6 : 1,
+                          fontSize: 12, fontWeight: 700, cursor: (deleting || deleteInput !== 'DELETE') ? 'not-allowed' : 'pointer',
+                          opacity: (deleting || deleteInput !== 'DELETE') ? 0.6 : 1,
                         }}
                       >
                         {deleting ? 'Deleting...' : 'Yes, securely delete my account'}
                       </button>
                       <button
                         type="button"
-                        onClick={() => { setConfirmDelete(false); setDeleteError('') }}
+                        onClick={() => { setConfirmDelete(false); setDeleteError(''); setDeleteInput(''); }}
                         style={{
                           padding: '8px 16px', borderRadius: 8, border: '1px solid var(--border)',
                           background: 'transparent', color: 'var(--text-3)',

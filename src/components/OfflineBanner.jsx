@@ -93,22 +93,20 @@ export default function OfflineBanner() {
         transparent background, single hairline border, no shadow.
       */}
       <motion.div
-        initial={{ y: 24, opacity: 0, scale: 0.96 }}
-        animate={{ y: 0,  opacity: 1, scale: 1    }}
-        exit={{    y: 16, opacity: 0, scale: 0.97  }}
-        transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1    }}
+        exit={{ opacity: 0, scale: 0.95  }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         style={{
           width: '100%',
-          maxWidth: '440px',
-          padding: 'clamp(28px, 6vw, 48px)',
-          borderRadius: '20px',
-          border: '1px solid var(--border)',
-          background: 'var(--bg-alt)',
+          height: '100%',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
+          justifyContent: 'center',
           textAlign: 'center',
           gap: '0',
+          padding: '24px'
         }}
       >
         {/* Icon */}
@@ -147,12 +145,12 @@ export default function OfflineBanner() {
         {/* Headline */}
         <h2
           style={{
-            margin: '0 0 14px',
+            margin: '0 0 24px',
             fontFamily: FS,
-            fontSize: 'clamp(1.3rem, 4vw, 1.7rem)',
-            fontWeight: '800',
-            letterSpacing: '-0.025em',
-            lineHeight: 1.1,
+            fontSize: 'clamp(3rem, 8vw, 5rem)',
+            fontWeight: '900',
+            letterSpacing: '-0.04em',
+            lineHeight: 1,
             color: 'var(--text)',
           }}
         >
@@ -162,17 +160,17 @@ export default function OfflineBanner() {
         {/* Body copy */}
         <p
           style={{
-            margin: '0 0 28px',
+            margin: '0 0 40px',
             fontFamily: FS,
-            fontSize: '14px',
+            fontSize: 'clamp(1rem, 2vw, 1.25rem)',
             color: 'var(--text-3)',
-            lineHeight: '1.75',
-            maxWidth: '34ch',
+            lineHeight: '1.6',
+            maxWidth: '600px',
           }}
         >
           Certify needs an internet connection to fetch the latest
           certification data and salary benchmarks.{' '}
-          <span style={{ color: 'var(--text-2)', fontWeight: '600' }}>
+          <span style={{ color: 'var(--text-2)', fontWeight: '600', display: 'block', marginTop: '12px' }}>
             Please reconnect to continue your journey.
           </span>
         </p>

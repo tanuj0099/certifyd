@@ -1330,22 +1330,7 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
             maxWidth: '820px',
             width: '100%',
           }}>
-            {/* Mono label - centered with gold lines on both sides */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              style={{
-                fontFamily: F_MONO, fontSize: '11px', color: C.text3,
-                letterSpacing: '0.18em', textTransform: 'uppercase',
-                marginBottom: '32px',
-                display: 'flex', alignItems: 'center', gap: '12px',
-              }}
-            >
-              <div style={{ width: '28px', height: '1px', background: C.gold }} />
-              ROI Analysis for Indian Professionals
-              <div style={{ width: '28px', height: '1px', background: C.gold }} />
-            </motion.div>
+
 
             {/* Headline - tightly spaced, on the mountain */}
             <motion.h1

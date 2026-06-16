@@ -108,9 +108,15 @@ export function MarketingFooter() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '24px', marginBottom: '28px' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-              <img src="/logo.svg" alt="Certifyd Logo" style={{ height: '28px', width: 'auto' }} />
-              <span style={{ fontFamily: '"Playfair Display", serif', fontWeight: '900', fontSize: '20px', color: 'var(--text)', letterSpacing: '-0.03em' }}>
-                Certifyd.in
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="2" y="10" width="5" height="12" rx="2.5" fill="var(--text)" />
+                  <rect x="9" y="4" width="5" height="18" rx="2.5" fill="var(--text)" />
+                  <rect x="16" y="8" width="5" height="14" rx="2.5" fill="#00E5A8" />
+                </svg>
+              </div>
+              <span style={{ fontFamily: '"Geist", "Satoshi", "Inter", sans-serif', fontSize: '1.15rem', fontWeight: '800', letterSpacing: '-0.02em', color: 'var(--text)' }}>
+                Certifyd
               </span>
             </div>
             <p style={{ fontFamily: FB, fontSize: '13px', lineHeight: '1.7', color: 'var(--text-4)', maxWidth: '260px', margin: 0 }}>
@@ -172,14 +178,14 @@ export function MarketingFooter() {
 export default function MarketingPageShell({ eyebrow, title, accent, subtitle, children, footer = true, maxWidth = '1240px', schema }) {
   return (
     <div style={{ minHeight: '100vh', position: 'relative', background: 'var(--color-bg-marketing)', color: 'var(--text)' }}>
-      <SEOHead 
-        title={`${title} ${accent || ''} | Certifyd`} 
-        description={subtitle || 'Certification ROI Calculator'} 
+      <SEOHead
+        title={`${title} ${accent || ''} | Certifyd`}
+        description={subtitle || 'Certification ROI Calculator'}
         schema={schema}
       />
       <WaveBg variant="landing" />
       <div style={{ position: 'relative', zIndex: 1, paddingTop: '112px' }}>
-        <AppSection id={eyebrow ? eyebrow.substring(0,2).toUpperCase() : 'PG'} title={eyebrow || 'PAGE'} noBorderTop bg="transparent">
+        <AppSection id={eyebrow ? eyebrow.substring(0, 2).toUpperCase() : 'PG'} title={eyebrow || 'PAGE'} noBorderTop bg="transparent">
           <div style={{ maxWidth: '880px', margin: '0 auto', width: '100%' }}>
             <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={T}>
               <h1 style={{ fontFamily: FH, fontSize: 'clamp(2.7rem, 6vw, 4.5rem)', fontWeight: '400', letterSpacing: '-0.03em', lineHeight: 0.95, margin: '0 0 18px', maxWidth: '14ch' }}>

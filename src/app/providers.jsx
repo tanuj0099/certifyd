@@ -12,6 +12,8 @@ import * as Sentry from '@sentry/react';
 import { isClientTestMode } from '@/lib/testMode.js';
 import { AnimatePresence } from 'framer-motion';
 import { useNetworkStatus } from '@/hooks/useNetworkStatus.js';
+import { DynamicBreadcrumb } from '@/components/DynamicBreadcrumb.jsx';
+import { GlobalSearchCapsule } from '@/components/GlobalSearchCapsule.jsx';
 
 function GlobalUI({ children }) {
   const [mounted, setMounted] = useState(false);
@@ -82,8 +84,11 @@ function GlobalUI({ children }) {
       )}
 
       <main style={{ flex: 1 }}>
+        <DynamicBreadcrumb />
         {children}
       </main>
+
+      <GlobalSearchCapsule />
 
       {shouldRenderGlobalFooter && <MarketingFooter />}
       {mounted && <CookieBanner />}

@@ -1,116 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import {
-  Search, BarChart2, TrendingUp, FileText, Map,
-  Cpu, GraduationCap, CheckCircle, ArrowRight, Compass,
-} from 'lucide-react'
-import { MarketingFooter } from '@/components/MarketingPageShell.jsx'
+import { TOOLS } from '@/data/toolsData';
+import { ArrowRight } from 'lucide-react';
+import { MarketingFooter } from '@/components/MarketingPageShell.jsx';
 
 const FM = "var(--font-mono)";
 const FS = "var(--font-sans)";
 
-const TOOLS = [
-  {
-    id: 'roi',
-    path: '/#workspace',
-    icon: BarChart2,
-    label: 'ROI Calculator',
-    tag: 'CORE',
-    desc: 'Enter your salary + city. Get exact payback period and 5-year net gain.',
-    badge: 'Most used',
-    badgeColor: 'var(--gold)',
-  },
-  {
-    id: 'cert-radar',
-    path: '/tools/cert-radar',
-    icon: Search,
-    label: 'Cert Radar',
-    tag: 'DISCOVER',
-    desc: 'Browse and filter 500+ tracked certifications across every domain, cost, and difficulty level.',
-  },
-  {
-    id: 'market',
-    path: '/tools/market',
-    icon: TrendingUp,
-    label: 'Live Market Pulse',
-    tag: 'INTEL',
-    desc: 'Real-time salary movers, trending roles, and certification demand signals from Naukri + LinkedIn.',
-    badge: 'Live',
-    badgeColor: '#2db87a',
-  },
-  {
-    id: 'offer-analysis',
-    path: '/offer-analysis',
-    icon: CheckCircle,
-    label: 'Offer Letter Analysis',
-    tag: 'NEGOTIATE',
-    desc: 'Paste a job offer and get a precision breakdown - is this number fair for your city and cert stack?',
-  },
-  {
-    id: 'compare',
-    path: '/tools/compare',
-    icon: Cpu,
-    label: 'Cert Compare',
-    tag: 'COMPARE',
-    desc: 'Compare two certifications head-to-head on ROI, difficulty, prep time, and market demand.',
-  },
-  {
-    id: 'heatmap',
-    path: '/tools/heatmap',
-    icon: Map,
-    label: 'India Cert Heatmap',
-    tag: 'GEO',
-    desc: 'See which certifications dominate each Indian city - Bengaluru, Pune, Hyderabad, and more.',
-  },
-  {
-    id: 'jobmap',
-    path: '/tools/jobmap',
-    icon: Map,
-    label: 'Job-Cert Map',
-    tag: 'NAVIGATE',
-    desc: 'Map job roles to the certifications that will actually get you the role - not just any cert.',
-  },
-  {
-    id: 'simulator',
-    path: '/tools/simulator',
-    icon: TrendingUp,
-    label: 'Career Simulator',
-    tag: 'SIMULATE',
-    desc: 'Run a 5-year career projection with and without certifications. See the compounding delta.',
-  },
-  {
-    id: 'hike',
-    path: '/tools/hike',
-    icon: BarChart2,
-    label: 'Hike Verifier',
-    tag: 'VERIFY',
-    desc: 'Got a raise? Verify if it is actually above or below market after accounting for your cert stack.',
-  },
-  {
-    id: 'college',
-    path: '/tools/college',
-    icon: GraduationCap,
-    label: 'College vs Corporate',
-    tag: 'DECIDE',
-    desc: 'MBA vs certifications? Run the financial model - net cost, opportunity cost, and 5-year ROI.',
-  },
-  {
-    id: 'roadmaps',
-    path: '/roadmaps',
-    icon: Compass,
-    label: 'Career Roadmaps',
-    tag: 'GUIDE',
-    desc: 'Step-by-step certification roadmaps to transition into high-paying tech and management roles.',
-  },
-]
-
 function ToolCard({ tool }) {
-  const Icon = tool.icon
+  const Icon = tool.icon;
   return (
-    <Link href={tool.path}
-      style={{ textDecoration: 'none', color: 'inherit' }}
-    >
+    <Link href={tool.path} style={{ textDecoration: 'none', color: 'inherit' }}>
       <div
         style={{
           padding: '24px',
@@ -119,68 +20,52 @@ function ToolCard({ tool }) {
           background: 'transparent',
           display: 'flex',
           flexDirection: 'column',
-          gap: '14px',
           height: '100%',
+          transition: 'all 0.2s',
           cursor: 'pointer',
-          transition: 'border-color 180ms ease, background 180ms ease',
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.borderColor = 'var(--border-mid)'
-          e.currentTarget.style.background = 'var(--bg-alt)'
+          e.currentTarget.style.borderColor = 'var(--text-3)';
+          e.currentTarget.style.transform = 'translateY(-2px)';
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.borderColor = 'var(--border)'
-          e.currentTarget.style.background = 'transparent'
+          e.currentTarget.style.borderColor = 'var(--border)';
+          e.currentTarget.style.transform = 'translateY(0)';
         }}
       >
-        {/* Top row: tag + badge */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <span style={{
-            fontFamily: FM, fontSize: '9px', letterSpacing: '0.15em',
-            textTransform: 'uppercase', color: 'var(--text-4)',
-          }}>
-            {tool.tag}
-          </span>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ width: '40px', height: '40px', borderRadius: '8px', background: 'var(--bg-alt)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-2)' }}>
+              {Icon ? <Icon size={20} /> : <div />}
+            </div>
+            <div style={{ fontFamily: FM, fontSize: '10px', color: 'var(--text-4)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+              // {tool.tag}
+            </div>
+          </div>
           {tool.badge && (
-            <span style={{
-              fontFamily: FM, fontSize: '9px', letterSpacing: '0.1em',
-              textTransform: 'uppercase', color: tool.badgeColor,
-              border: `1px solid ${tool.badgeColor}`,
-              padding: '2px 8px', borderRadius: '999px',
-            }}>
+            <div style={{ padding: '4px 8px', borderRadius: '4px', background: tool.badgeColor + '15', color: tool.badgeColor, fontFamily: FM, fontSize: '9px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               {tool.badge}
-            </span>
+            </div>
           )}
         </div>
+        
+        <h3 style={{
+          margin: 0, fontFamily: FS, fontSize: '18px',
+          fontWeight: 700, letterSpacing: '-0.01em',
+          color: 'var(--text)', lineHeight: 1.2,
+          marginBottom: '8px'
+        }}>
+          {tool.label}
+        </h3>
 
-        {/* Icon + title */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-          <div style={{
-            width: '36px', height: '36px', borderRadius: '10px',
-            border: '1px solid var(--border)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            flexShrink: 0,
-          }}>
-            <Icon size={16} color="var(--text-3)" strokeWidth={1.5} />
-          </div>
-          <h3 style={{
-            margin: 0, fontFamily: FS, fontSize: '16px',
-            fontWeight: 750, letterSpacing: '-0.01em',
-            color: 'var(--text)', lineHeight: 1.2,
-          }}>
-            {tool.label}
-          </h3>
-        </div>
-
-        {/* Description */}
         <p style={{
-          margin: 0, fontFamily: FS, fontSize: '13px',
-          color: 'var(--text-3)', lineHeight: 1.65, flex: 1,
+          margin: 0, fontFamily: FS, fontSize: '14px',
+          color: 'var(--text-3)', lineHeight: 1.6, flex: 1,
+          marginBottom: '16px'
         }}>
           {tool.desc}
         </p>
 
-        {/* CTA arrow */}
         <div style={{
           display: 'flex', alignItems: 'center', gap: '6px',
           fontFamily: FM, fontSize: '11px', letterSpacing: '0.08em',
@@ -196,17 +81,8 @@ function ToolCard({ tool }) {
 export default function ToolsIndex() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)' }}>
-      {/*
-        BEFORE: paddingTop: '128px' - hardcoded, breaks if nav height changes
-        AFTER:  page-top-pad utility class from index.css (104px mobile / 112px desktop)
-      */}
       <div className="page-top-pad" style={{ maxWidth: '1100px', margin: '0 auto', padding: '32px 24px 80px' }}>
-
-        {/* Header */}
         <div style={{ marginBottom: '48px', borderBottom: '1px solid var(--border)', paddingBottom: '32px' }}>
-          <p style={{ fontFamily: FM, fontSize: '10px', color: 'var(--text-4)', letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: '12px' }}>
-            Platform / Tools
-          </p>
           <h1 style={{ fontFamily: FS, fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1.05, color: 'var(--text)', margin: '0 0 16px' }}>
             Career Navigation Tools
           </h1>
@@ -215,7 +91,6 @@ export default function ToolsIndex() {
           </p>
         </div>
 
-        {/* Tool grid */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',

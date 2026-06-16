@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+
+import { FeedbackAction } from './watermelon-ui/feedback-action-base.jsx'
 import {
   Upload, FileText, X, Sparkles, AlertTriangle,
   ArrowRight, RefreshCw, User, TrendingUp,
@@ -322,53 +324,7 @@ var NotAResumeError = function ({ rejectedBy, onDismiss }) {
   )
 }
 
-//  Clean loader 
-// LOADER_STEPS moved above to module scope - stable reference, no useEffect re-fires.
-var CleanLoader = function () {
-  var [step, setStep] = useState(0)
 
-  useEffect(function () {
-    var timers = LOADER_STEPS.map(function (_, i) {
-      return setTimeout(function () { setStep(i) }, i * 1000)
-    })
-    return function () { timers.forEach(clearTimeout) }
-  }, []) // stable - LOADER_STEPS is module-level constant
-
-  return (
-    <div style={{ padding: '22px', borderRadius: '13px', background: 'transparent', border: 'none' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '18px' }}>
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1.3, repeat: Infinity, ease: 'linear' }}
-          style={{ width: '16px', height: '16px', borderRadius: '50%', border: '2px solid transparent', borderTopColor: PICTON, flexShrink: 0 }}
-        />
-        <span className="micro-label" style={{ color: 'var(--text-4)' }}>Analysing</span>
-        <span style={{ marginLeft: 'auto', fontFamily: FM, fontSize: '11px', color: PICTON, fontWeight: '700' }}>
-          {Math.round(((step + 1) / LOADER_STEPS.length) * 100)}%
-        </span>
-      </div>
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={step}
-          initial={{ opacity: 0, y: 7 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -7 }}
-          transition={{ duration: 0.28 }}
-          style={{ fontFamily: FH, fontSize: '15px', fontWeight: '700', color: 'var(--text)', marginBottom: '18px', letterSpacing: '-0.02em' }}
-        >
-          {LOADER_STEPS[step]}
-        </motion.div>
-      </AnimatePresence>
-      <div style={{ height: '3px', borderRadius: '2px', background: 'var(--border)', overflow: 'hidden' }}>
-        <motion.div
-          animate={{ width: Math.round(((step + 1) / LOADER_STEPS.length) * 100) + '%' }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
-          style={{ height: '100%', background: 'transparent', borderRadius: '2px' }}
-        />
-      </div>
-    </div>
-  )
-}
 
 //  Preferences panel 
 var PreferencesPanel = function ({ timeline, onTimeline, domainIntent, onDomain, mode, switchTarget }) {
@@ -1474,7 +1430,11 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
         </div>
       )}
 
-      {loading && <CleanLoader />}
+      {loading && (
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '24px' }}>
+          <FeedbackAction status="loading" loadingMessage="Analyzing Resume..." />
+        </div>
+      )}
 
       {!hasResult && !loading && (
         <div style={{ marginTop: '16px', textAlign: 'center', fontSize: '11px', color: 'var(--text-4)', fontFamily: FB }}>

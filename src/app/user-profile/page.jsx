@@ -53,8 +53,17 @@ export default function UserProfile() {
     setDeleting(true)
     setDeleteError('')
     try {
-      const { error } = await supabase.rpc('soft_delete_user')
-      if (error) throw error
+      const userId = user?.id || user?.uid;
+      if (!userId) throw new Error('User not found');
+      
+      const res = await fetch('/api/delete-account', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to delete account');
+      
       signOut()
     } catch (err) {
       console.error('Account erasure failed:', err)
@@ -217,15 +226,31 @@ export default function UserProfile() {
                     type="text"
                     placeholder="DELETE"
                     disabled={deleting}
+                    id="delete-confirm-input"
                     onChange={(e) => {
                       if (e.target.value === 'DELETE') {
-                        executeDelete();
+                        // We do not auto-delete here anymore.
+                        // The user must click the button below.
                       }
                     }}
                     style={{ width: '100%', padding: '10px 12px', background: 'var(--bg)', border: '1px solid var(--err)', borderRadius: '6px', color: 'var(--text)', outline: 'none', marginBottom: '8px' }}
                   />
                   {deleting && <div style={{ fontSize: '12px', color: 'var(--err)', marginTop: '4px' }}>Processing erasure...</div>}
                   {deleteError && <div style={{ fontSize: '12px', color: 'var(--err)', marginTop: '4px' }}>{deleteError}</div>}
+                  <button
+                    onClick={() => {
+                      const inputEl = document.getElementById('delete-confirm-input');
+                      if (inputEl && inputEl.value === 'DELETE') {
+                        executeDelete();
+                      } else {
+                        setDeleteError('Please type DELETE to confirm.');
+                      }
+                    }}
+                    disabled={deleting}
+                    style={{ width: '100%', padding: '10px 12px', background: 'var(--err)', border: 'none', borderRadius: '6px', color: '#fff', fontSize: '14px', fontWeight: 'bold', cursor: deleting ? 'not-allowed' : 'pointer', marginBottom: '8px' }}
+                  >
+                    {deleting ? 'Deleting...' : 'Yes, securely delete my account'}
+                  </button>
                   <button
                     onClick={() => { setConfirmDelete(false); setDeleteError(''); }}
                     style={{ width: '100%', background: 'transparent', border: 'none', color: 'var(--text-3)', fontSize: '12px', cursor: 'pointer', padding: '8px 0' }}

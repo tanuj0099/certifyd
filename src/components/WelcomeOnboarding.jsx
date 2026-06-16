@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { UploadCloud, CheckCircle2, LayoutDashboard, Calculator, FileText, Loader2 } from 'lucide-react';
+import { UploadCloud, CheckCircle2, LayoutDashboard, Calculator, FileText } from 'lucide-react';
 import { useJourneyStore } from '@/store/useJourneyStore.js';
+import { FeedbackAction } from './watermelon-ui/feedback-action-base.jsx';
+import { supabase } from '../lib/supabase.js';
 import { useRouter } from 'next/navigation';
 import { callGroqForResume } from '@/services/aiService.jsx';
 
@@ -29,7 +31,10 @@ export default function WelcomeOnboarding({ onComplete }) {
         method: 'POST',
         body: formData
       });
-      if (!parseRes.ok) throw new Error('File parse failed');
+      if (!parseRes.ok) {
+        const errData = await parseRes.json().catch(() => ({}));
+        throw new Error(errData.error || 'File parse failed');
+      }
       
       const parseData = await parseRes.json();
       if (!parseData.text) throw new Error('No text extracted');
@@ -96,11 +101,22 @@ ${parseData.text.substring(0, 4000)}
               <div style={{ color: 'var(--err)', fontSize: '13px', marginBottom: '16px' }}>{errorMsg}</div>
             )}
 
-            <label style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 28px', background: 'var(--text)', color: 'var(--bg)', borderRadius: '999px', fontFamily: 'var(--font-sans)', fontSize: '14px', fontWeight: '600', cursor: 'pointer', transition: 'transform 0.2s' }}>
-              <UploadCloud size={18} />
-              Upload Resume
-              <input type="file" style={{ display: 'none' }} accept=".pdf,.doc,.docx" onChange={handleFileUpload} />
-            </label>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center' }}>
+              <label style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 28px', background: 'var(--text)', color: 'var(--bg)', borderRadius: '999px', fontFamily: 'var(--font-sans)', fontSize: '14px', fontWeight: '600', cursor: 'pointer', transition: 'transform 0.2s' }}>
+                <UploadCloud size={18} />
+                Upload Resume
+                <input type="file" style={{ display: 'none' }} accept=".pdf,.doc,.docx" onChange={handleFileUpload} />
+              </label>
+
+              <button 
+                onClick={() => { if(onComplete) onComplete(); else router.push('/dashboard'); }} 
+                style={{ background: 'transparent', border: 'none', color: 'var(--text-3)', fontFamily: 'var(--font-sans)', fontSize: '13px', fontWeight: '500', cursor: 'pointer', textDecoration: 'underline', textUnderlineOffset: '4px' }}
+                onMouseEnter={e => e.currentTarget.style.color = 'var(--text)'}
+                onMouseLeave={e => e.currentTarget.style.color = 'var(--text-3)'}
+              >
+                Skip for now
+              </button>
+            </div>
           </motion.div>
         ) : status === 'uploading' || status === 'extracting' ? (
           <motion.div
@@ -108,21 +124,9 @@ ${parseData.text.substring(0, 4000)}
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.05 }}
-            style={{ textAlign: 'center', padding: '80px 24px', background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: '24px' }}
+            style={{ textAlign: 'center', padding: '80px 24px', background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}
           >
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 1.5, ease: 'linear' }}
-              style={{ display: 'inline-block', marginBottom: '24px' }}
-            >
-              <Loader2 size={36} color="var(--text-3)" />
-            </motion.div>
-            <h2 style={{ fontFamily: 'var(--font-head)', fontSize: '20px', fontWeight: '600', color: 'var(--text)', marginBottom: '8px' }}>
-              {status === 'uploading' ? 'Uploading securely...' : 'Extracting career vector...'}
-            </h2>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: '14px', color: 'var(--text-3)' }}>
-              Our AI is configuring your strategic parameters.
-            </p>
+            <FeedbackAction status="loading" loadingMessage={status === 'uploading' ? 'Uploading securely...' : 'Extracting career vector...'} />
           </motion.div>
         ) : (
           <motion.div

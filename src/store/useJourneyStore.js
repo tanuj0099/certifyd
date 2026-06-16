@@ -44,6 +44,10 @@ export const useJourneyStore = create(
       setCompareMode: (certData) => set({ compareMode: true, compareCertA: certData }),
       clearCompareMode: () => set({ compareMode: false, compareCertA: null }),
 
+      // ── Global Search (transient) ─────────────────────
+      isSearchOpen: false,
+      setSearchOpen: (val) => set({ isSearchOpen: val }),
+
       // ── Selected cert ──────────────────────────────────
       selectedCert: null,
       certName:     '',
