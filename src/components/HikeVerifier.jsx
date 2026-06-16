@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   TrendingUp, TrendingDown,
-  X, Target, Zap, Clock
+  X, Target, Zap, Clock, Loader2
 } from 'lucide-react'
 
 //  Design tokens - read from CSS custom properties 
@@ -117,14 +117,23 @@ function HikeVerifier({ certName, projectedHike, onClose }) {
   var [afterSalary,  setAfterSalary]  = useState('')
   var [timeTaken,    setTimeTaken]    = useState('')
 
-  var canSubmit = parseFloat(beforeSalary) > 0 && parseFloat(afterSalary) > parseFloat(beforeSalary) && parseFloat(timeTaken) > 0
+  var [isSimulating, setIsSimulating] = useState(false)
+
+  var canSubmit = parseFloat(beforeSalary) > 0 && parseFloat(afterSalary) > parseFloat(beforeSalary) && parseFloat(timeTaken) > 0 && !isSimulating
 
   var liveActualHike = beforeSalary > 0 && afterSalary > 0
     ? (((parseFloat(afterSalary) - parseFloat(beforeSalary)) / parseFloat(beforeSalary)) * 100)
     : null
 
-  function handleSubmit() { if (!canSubmit) return; setStep('result') }
-  function handleReset()  { setStep('form'); setBeforeSalary(''); setAfterSalary(''); setTimeTaken('') }
+  function handleSubmit() { 
+    if (!canSubmit) return; 
+    setIsSimulating(true);
+    setTimeout(() => {
+      setIsSimulating(false);
+      setStep('result');
+    }, 1200);
+  }
+  function handleReset()  { setStep('form'); setBeforeSalary(''); setAfterSalary(''); setTimeTaken(''); setIsSimulating(false); }
 
   var before     = parseFloat(beforeSalary) || 0
   var after      = parseFloat(afterSalary)  || 0
@@ -195,10 +204,21 @@ function HikeVerifier({ certName, projectedHike, onClose }) {
                 </motion.div>
               ) : null}
 
-              <motion.button onClick={handleSubmit} disabled={!canSubmit}
-                whileHover={canSubmit ? { y: -2 } : {}} whileTap={canSubmit ? { scale: 0.97 } : {}}
-                style={{ width: '100%', padding: '13px 20px', borderRadius: '10px', background: canSubmit ? 'transparent' : 'transparent', border: canSubmit ? 'none' : '1px solid var(--border)', color: canSubmit ? 'white' : 'var(--text-4)', fontSize: '14px', fontWeight: '700', cursor: canSubmit ? 'pointer' : 'not-allowed', fontFamily: F_HEAD, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', opacity: canSubmit ? 1 : 0.5, letterSpacing: '-0.01em', transition: 'all 0.2s' }}>
-                <Zap size={14} /> See How You Did
+              <motion.button onClick={handleSubmit} disabled={!canSubmit || isSimulating}
+                whileHover={canSubmit && !isSimulating ? { y: -2 } : {}} whileTap={canSubmit && !isSimulating ? { scale: 0.97 } : {}}
+                style={{ width: '100%', padding: '13px 20px', borderRadius: '10px', background: canSubmit && !isSimulating ? 'transparent' : 'transparent', border: canSubmit && !isSimulating ? 'none' : '1px solid var(--border)', color: canSubmit && !isSimulating ? 'white' : 'var(--text-4)', fontSize: '14px', fontWeight: '700', cursor: canSubmit && !isSimulating ? 'pointer' : 'not-allowed', fontFamily: F_HEAD, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', opacity: canSubmit && !isSimulating ? 1 : 0.5, letterSpacing: '-0.01em', transition: 'all 0.2s' }}>
+                {isSimulating ? (
+                  <>
+                    <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}>
+                      <Loader2 size={14} />
+                    </motion.div>
+                    Analyzing Result...
+                  </>
+                ) : (
+                  <>
+                    <Zap size={14} /> See How You Did
+                  </>
+                )}
               </motion.button>
             </motion.div>
           ) : null}

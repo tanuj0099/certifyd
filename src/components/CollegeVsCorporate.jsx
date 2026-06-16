@@ -1,7 +1,8 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-import { GraduationCap, Award, TrendingUp, Clock, DollarSign, CheckCircle, X } from 'lucide-react'
+import { GraduationCap, Award, TrendingUp, Clock, DollarSign, CheckCircle, X, Loader2 } from 'lucide-react'
+import { useJourneyStore } from '../store/useJourneyStore.js'
 
 const PICTON = 'var(--linear-blue)'
 const EMERALD = 'var(--linear-blue)'
@@ -19,9 +20,9 @@ const SliderRow = ({ label, value, min, max, step, onChange, format, color }) =>
       </div>
       <div style={{ position: 'relative', height: '20px', display: 'flex', alignItems: 'center' }}>
         <div style={{ position: 'absolute', left: 0, right: 0, height: '4px', borderRadius: '2px', background: 'var(--border)' }} />
-        <div style={{ position: 'absolute', left: 0, width: `${pct}%`, height: '4px', borderRadius: '2px', background: `transparent`, pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', left: 0, width: `${pct}%`, height: '4px', borderRadius: '2px', background: color, pointerEvents: 'none' }} />
         <input type="range" min={min} max={max} step={step} value={value} onChange={e => onChange(Number(e.target.value))} style={{ position: 'absolute', width: '100%', height: '4px', opacity: 0, cursor: 'pointer', zIndex: 2 }} />
-        <div style={{ position: 'absolute', left: `calc(${pct}% - 10px)`, width: 20, height: 20, borderRadius: '50%', background: `transparent`, boxShadow: `0 0 0 4px ${color}20`, pointerEvents: 'none', transition: 'left 0.06s' }} />
+        <div style={{ position: 'absolute', left: `calc(${pct}% - 10px)`, width: 20, height: 20, borderRadius: '50%', background: 'var(--bg)', border: `2px solid ${color}`, boxShadow: `0 0 0 4px ${color}20`, pointerEvents: 'none', transition: 'left 0.06s' }} />
       </div>
     </div>
   )
@@ -50,12 +51,22 @@ const ChartTooltip = ({ active, payload, label }) => {
 }
 
 const CollegeVsCorporate = () => {
+  const { timeCommitment, careerGoal, setTimeCommitment, setCareerGoal } = useJourneyStore()
   const [currentSalary, setCurrentSalary] = useState(8)
   const [mbaFee, setMbaFee] = useState(18)
   const [certCost, setCertCost] = useState(1.5)
+  
   const [mbaSalaryJump, setMbaSalaryJump] = useState(60)
   const [certSalaryJump, setCertSalaryJump] = useState(30)
   const [showDetails, setShowDetails] = useState(false)
+  const [showSimulation, setShowSimulation] = useState(false)
+  const [isSimulating, setIsSimulating] = useState(false)
+
+  // Dynamically adjust defaults based on Context Parameters
+  useEffect(() => {
+    setMbaSalaryJump(careerGoal === 'Pivot Domain' ? 80 : (careerGoal === 'Break into Tech' ? 70 : 60))
+    setCertSalaryJump(timeCommitment.includes('Low') ? 20 : (timeCommitment.includes('High') ? 40 : 30))
+  }, [careerGoal, timeCommitment])
 
   const calc = useMemo(() => {
     // MBA path
@@ -132,11 +143,60 @@ const CollegeVsCorporate = () => {
           <SliderRow label="4 Certs Total Cost (₹L)" value={certCost} min={0.2} max={8} step={0.1} onChange={setCertCost} format={v => `₹${v.toFixed(1)}L`} color={PICTON} />
           <SliderRow label="MBA Expected Salary Hike %" value={mbaSalaryJump} min={20} max={150} step={5} onChange={setMbaSalaryJump} format={v => `+${v}%`} color={INDIGO} />
           <SliderRow label="Certs Expected Salary Hike %" value={certSalaryJump} min={10} max={80} step={5} onChange={setCertSalaryJump} format={v => `+${v}%`} color={EMERALD} />
+          
+          {/* Context Parameters UI */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '16px' }}>
+            <div>
+              <div style={{ fontSize: '11px', color: 'var(--text-3)', fontFamily: 'JetBrains Mono, monospace', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>Time Commitment</div>
+              <select value={timeCommitment} onChange={e => setTimeCommitment(e.target.value)} style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-2)', fontFamily: 'var(--font-sans)', fontSize: '13px', cursor: 'pointer' }}>
+                <option value="Low (1-4 hrs/wk)">Low (1-4 hrs/wk)</option>
+                <option value="Medium (5-10 hrs/wk)">Medium (5-10 hrs/wk)</option>
+                <option value="High (15+ hrs/wk)">High (15+ hrs/wk)</option>
+              </select>
+            </div>
+            <div>
+              <div style={{ fontSize: '11px', color: 'var(--text-3)', fontFamily: 'JetBrains Mono, monospace', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>Career Goal</div>
+              <select value={careerGoal} onChange={e => setCareerGoal(e.target.value)} style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-2)', fontFamily: 'var(--font-sans)', fontSize: '13px', cursor: 'pointer' }}>
+                <option value="Salary Bump">Salary Bump</option>
+                <option value="Pivot Domain">Pivot to New Domain</option>
+                <option value="Break into Tech">Break into Tech</option>
+              </select>
+            </div>
+          </div>
         </div>
 
-        {/* Results */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {/* Verdict */}
+        {/* Action Button OR Results */}
+        {!showSimulation ? (
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
+            <button
+              disabled={isSimulating}
+              onClick={() => {
+                setIsSimulating(true)
+                setTimeout(() => {
+                  setIsSimulating(false)
+                  setShowSimulation(true)
+                }, 1200)
+              }}
+              style={{ padding: '16px 32px', background: 'var(--text)', color: 'var(--bg)', borderRadius: '999px', fontSize: '15px', fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: '700', border: 'none', cursor: isSimulating ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '8px', opacity: isSimulating ? 0.8 : 1 }}
+            >
+              {isSimulating ? (
+                <>
+                  <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}>
+                    <Loader2 size={18} />
+                  </motion.div>
+                  Simulating...
+                </>
+              ) : (
+                <>
+                  <TrendingUp size={18} />
+                  Run Simulation
+                </>
+              )}
+            </button>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {/* Verdict */}
           <motion.div
             key={calc.winner}
             initial={{ scale: 0.97, opacity: 0 }}
@@ -197,14 +257,17 @@ const CollegeVsCorporate = () => {
                 ))}
               </div>
             </div>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
-      {/* Chart */}
-      <div style={{ background: 'transparent', border: 'none', borderRadius: '14px', padding: '22px', marginBottom: '16px', boxShadow: 'none' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
-          <div>
+      {showSimulation && (
+        <>
+          {/* Chart */}
+          <div style={{ background: 'transparent', border: 'none', borderRadius: '14px', padding: '22px', marginBottom: '16px', boxShadow: 'none' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
+              <div>
             <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: '800', fontSize: '13px', color: 'var(--text)', letterSpacing: '-0.01em' }}>7-YEAR NET EARNINGS</div>
             <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: 'var(--text-4)', marginTop: '2px' }}>Cumulative after all costs (₹L)</div>
           </div>
@@ -275,6 +338,9 @@ const CollegeVsCorporate = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+        </>
+      )}
     </div>
   )
 }

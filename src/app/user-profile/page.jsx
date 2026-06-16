@@ -2,10 +2,11 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { User, Mail, Shield, LogOut, Check } from 'lucide-react';
+import { User, Mail, Shield, LogOut, Check, Download, Ban, Trash2 } from 'lucide-react';
 import ToolPageWrapper from '@/components/ToolPageWrapper.jsx';
 import { useAuth } from '@/hooks/useAuth.jsx';
 import { useProfile } from '@/hooks/useProfile.jsx';
+import { supabase } from '@/lib/supabase.js';
 
 export default function UserProfile() {
   const { user, signOut } = useAuth();
@@ -14,6 +15,10 @@ export default function UserProfile() {
   const [displayName, setDisplayName] = useState(profile?.display_name || user?.displayName || '');
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
 
   React.useEffect(() => {
     if (profile?.display_name) {
@@ -43,6 +48,54 @@ export default function UserProfile() {
       setTimeout(() => setSaved(false), 3000);
     }
   };
+
+  async function executeDelete() {
+    setDeleting(true)
+    setDeleteError('')
+    try {
+      const { error } = await supabase.rpc('soft_delete_user')
+      if (error) throw error
+      signOut()
+    } catch (err) {
+      console.error('Account erasure failed:', err)
+      setDeleteError(err.message || 'Failed to delete account.')
+      setDeleting(false)
+    }
+  }
+
+  async function downloadData() {
+    try {
+      const { data, error } = await supabase.from('user_profiles').select('*').eq('user_id', user?.id || user?.uid).single();
+      if (error) throw error;
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `certifyd_data.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Failed to download data', err);
+    }
+  }
+
+  async function withdrawConsent() {
+    try {
+      const { error } = await supabase.from('user_profiles').update({
+        current_salary: null,
+        job_role: 'Consent Withdrawn',
+        technical_skills: [],
+        applied_projects: []
+      }).eq('user_id', user?.id || user?.uid);
+      if (error) throw error;
+      alert("Consent withdrawn. Your ROI and career data has been wiped from active tables.");
+    } catch (err) {
+      console.error('Withdraw consent failed:', err);
+      alert("Failed to withdraw consent. Please try again.");
+    }
+  }
 
   return (
     <ToolPageWrapper
@@ -124,6 +177,64 @@ export default function UserProfile() {
             >
               <LogOut size={14} /> Sign Out
             </button>
+          </div>
+
+          <div style={{ background: 'var(--bg)', padding: '32px', borderRadius: '12px', border: '1px solid var(--border)' }}>
+            <h2 style={{ fontFamily: 'var(--font-head)', fontSize: '18px', fontWeight: '600', color: 'var(--text)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Shield size={18} /> Data & Privacy
+            </h2>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: '14px', color: 'var(--text-2)', marginBottom: '24px' }}>
+              Manage your personal data, withdraw consent for AI analysis, or permanently delete your account.
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <button
+                onClick={downloadData}
+                style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 16px', background: 'transparent', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)', fontFamily: 'var(--font-body)', fontSize: '14px', cursor: 'pointer' }}
+              >
+                <Download size={16} /> Download My Data
+              </button>
+              
+              <button
+                onClick={withdrawConsent}
+                style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 16px', background: 'transparent', border: '1px solid var(--amber-500, #f59e0b)', borderRadius: '8px', color: 'var(--amber-500, #f59e0b)', fontFamily: 'var(--font-body)', fontSize: '14px', cursor: 'pointer' }}
+              >
+                <Ban size={16} /> Withdraw Consent
+              </button>
+
+              {!confirmDelete ? (
+                <button
+                  onClick={() => { setConfirmDelete(true); setDeleteError(''); }}
+                  style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 16px', background: 'transparent', border: '1px solid var(--err)', borderRadius: '8px', color: 'var(--err)', fontFamily: 'var(--font-body)', fontSize: '14px', cursor: 'pointer' }}
+                >
+                  <Trash2 size={16} /> Delete Account
+                </button>
+              ) : (
+                <div style={{ padding: '16px', border: '1px solid var(--err)', borderRadius: '8px', background: 'rgba(239, 68, 68, 0.05)' }}>
+                  <div style={{ fontSize: '13px', color: 'var(--text-2)', marginBottom: '12px', fontFamily: 'var(--font-body)' }}>
+                    Your account will be queued for permanent deletion. Type <strong>DELETE</strong> below to confirm.
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="DELETE"
+                    disabled={deleting}
+                    onChange={(e) => {
+                      if (e.target.value === 'DELETE') {
+                        executeDelete();
+                      }
+                    }}
+                    style={{ width: '100%', padding: '10px 12px', background: 'var(--bg)', border: '1px solid var(--err)', borderRadius: '6px', color: 'var(--text)', outline: 'none', marginBottom: '8px' }}
+                  />
+                  {deleting && <div style={{ fontSize: '12px', color: 'var(--err)', marginTop: '4px' }}>Processing erasure...</div>}
+                  {deleteError && <div style={{ fontSize: '12px', color: 'var(--err)', marginTop: '4px' }}>{deleteError}</div>}
+                  <button
+                    onClick={() => { setConfirmDelete(false); setDeleteError(''); }}
+                    style={{ width: '100%', background: 'transparent', border: 'none', color: 'var(--text-3)', fontSize: '12px', cursor: 'pointer', padding: '8px 0' }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
 
         </div>

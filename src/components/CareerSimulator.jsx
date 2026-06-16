@@ -1,8 +1,9 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, TrendingUp, ChevronDown, Route } from 'lucide-react'
+import { X, TrendingUp, ChevronDown, Route, Loader2, Search } from 'lucide-react'
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceLine } from 'recharts'
 import { CERTIFICATIONS, CERT_DOMAINS } from '../tokens.js'
+import { useJourneyStore } from '../store/useJourneyStore.js'
 
 const FH = "var(--font-head)";
 const FM = "var(--font-mono)";
@@ -12,9 +13,12 @@ const COLORS = ['var(--linear-blue)', 'var(--linear-blue)', 'var(--cool-grey)', 
 function CertPicker({ value, onChange, exclude, index }) {
   const [open, setOpen] = useState(false)
   const [domain, setDomain] = useState('all')
+  const [search, setSearch] = useState('')
   const selected = CERTIFICATIONS.find(function (c) { return c.name === value })
   const filtered = CERTIFICATIONS.filter(function (c) {
-    return (domain === 'all' || c.domain === domain) && !exclude.includes(c.name)
+    const matchDomain = domain === 'all' || c.domain === domain;
+    const matchSearch = search === '' || c.name.toLowerCase().includes(search.toLowerCase());
+    return matchDomain && matchSearch && !exclude.includes(c.name)
   })
   const color = COLORS[index] || 'var(--linear-blue)'
   return (
@@ -31,23 +35,38 @@ function CertPicker({ value, onChange, exclude, index }) {
       <AnimatePresence>
         {open ? (
           <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
-            style={{ position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 60, marginTop: '6px', borderRadius: '12px', background: 'transparent', border: '1px solid ' + color + '33', overflow: 'hidden', boxShadow: 'none' }}>
+            style={{ position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 60, marginTop: '6px', borderRadius: '12px', background: 'var(--bg)', border: '1px solid ' + color + '33', overflow: 'hidden', boxShadow: '0 8px 32px rgba(0,0,0,0.3)' }}>
             <div style={{ display: 'flex', gap: '4px', padding: '8px', borderBottom: '1px solid var(--border)', flexWrap: 'wrap' }}>
               {CERT_DOMAINS.slice(0, 6).map(function (d) {
                 return (
-                  <button key={d.id} onClick={function () { setDomain(d.id) }}
+                  <button key={d.id} onClick={function (e) { e.preventDefault(); e.stopPropagation(); setDomain(d.id) }}
                     style={{ padding: '6px 9px', borderRadius: '20px', fontSize: '11px', cursor: 'pointer', background: domain === d.id ? 'var(--indigo-dim)' : 'transparent', border: '1px solid ' + (domain === d.id ? 'var(--border-accent)' : 'var(--border)'), color: domain === d.id ? 'var(--indigo-light)' : 'var(--text-4)', fontFamily: FB, transition: 'all 0.15s', minHeight: '36px' }}>
                     {d.label}
                   </button>
                 )
               })}
             </div>
+            <div style={{ padding: '8px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Search size={14} color="var(--text-4)" />
+              <input 
+                type="text" 
+                autoFocus
+                placeholder="Search certifications..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onClick={(e) => e.stopPropagation()}
+                style={{ 
+                  flex: 1, background: 'transparent', border: 'none', 
+                  color: 'var(--text)', fontSize: '12px', fontFamily: FB, outline: 'none' 
+                }}
+              />
+            </div>
             <div style={{ maxHeight: '220px', overflowY: 'auto' }}>
               {filtered.map(function (cert) {
                 return (
                   <button key={cert.id} onClick={function () { onChange(cert.name); setOpen(false) }}
                     style={{ width: '100%', padding: '10px 14px', background: 'transparent', border: 'none', color: 'var(--text-2)', fontSize: '13px', cursor: 'pointer', fontFamily: FB, textAlign: 'left', display: 'flex', justifyContent: 'space-between', transition: 'background 0.12s' }}
-                    onMouseEnter={function (e) { e.currentTarget.style.background = 'transparent' }}
+                    onMouseEnter={function (e) { e.currentTarget.style.background = 'color-mix(in srgb, var(--text) 5%, transparent)' }}
                     onMouseLeave={function (e) { e.currentTarget.style.background = 'transparent' }}>
                     <span>{cert.name}</span>
                     <span style={{ fontFamily: FM, fontSize: '11px', color: color, flexShrink: 0 }}>+{cert.avgHike}%</span>
@@ -80,23 +99,39 @@ function ChartTip({ active, payload, label }) {
 }
 
 function CareerSimulator({ initialSalary }) {
+  const { timeCommitment, careerGoal, setTimeCommitment, setCareerGoal } = useJourneyStore()
   initialSalary = initialSalary || 8
   const [salary, setSalary] = useState(initialSalary)
   const [certs, setCerts] = useState(['', '', ''])
+  const [showSimulation, setShowSimulation] = useState(false)
+  const [isSimulating, setIsSimulating] = useState(false)
 
   const selectedCerts = certs.map(function (n) {
     return CERTIFICATIONS.find(function (c) { return c.name === n })
   }).filter(Boolean)
+
+  useEffect(() => {
+    setShowSimulation(false)
+  }, [salary, certs, timeCommitment, careerGoal])
 
   const buildTrajectory = useCallback(function () {
     if (selectedCerts.length === 0) return []
     var points = []
     var currentSalary = salary
     var month = 0
+    
+    var durationMultiplier = 1;
+    if (timeCommitment.includes('Low')) durationMultiplier = 1.5;
+    if (timeCommitment.includes('High')) durationMultiplier = 0.7;
+    
+    var hikeMultiplier = 1;
+    if (careerGoal === 'Pivot Domain') hikeMultiplier = 1.15; 
+    if (careerGoal === 'Break into Tech') hikeMultiplier = 1.25;
+
     points.push({ month: 0, label: 'Now', salary: currentSalary })
     selectedCerts.forEach(function (cert, i) {
-      var duration = cert.timeMonths
-      var hikeAmt = currentSalary * (cert.avgHike / 100)
+      var duration = Math.max(1, Math.round(cert.timeMonths * durationMultiplier))
+      var hikeAmt = currentSalary * ((cert.avgHike * hikeMultiplier) / 100)
       month += duration
       currentSalary = currentSalary + hikeAmt
       points.push({
@@ -109,12 +144,16 @@ function CareerSimulator({ initialSalary }) {
     })
     points.push({ month: month + 6, label: 'M' + (month + 6), salary: parseFloat(currentSalary.toFixed(1)) })
     return points
-  }, [salary, selectedCerts])
+  }, [salary, selectedCerts, timeCommitment, careerGoal])
 
   var trajectory = buildTrajectory()
   var finalSalary = trajectory.length > 0 ? trajectory[trajectory.length - 1].salary : salary
   var totalGain = parseFloat((finalSalary - salary).toFixed(1))
-  var totalMonths = selectedCerts.reduce(function (s, c) { return s + c.timeMonths }, 0)
+  
+  var durationMultiplier = 1;
+  if (timeCommitment.includes('Low')) durationMultiplier = 1.5;
+  if (timeCommitment.includes('High')) durationMultiplier = 0.7;
+  var totalMonths = selectedCerts.reduce(function (s, c) { return s + Math.max(1, Math.round(c.timeMonths * durationMultiplier)) }, 0)
   var totalCost = selectedCerts.reduce(function (s, c) { return s + c.avgCost / 100000 }, 0).toFixed(1)
   var milestones = trajectory.filter(function (p) { return p.event })
 
@@ -131,7 +170,27 @@ function CareerSimulator({ initialSalary }) {
         </div>
         <input type="range" min={2} max={40} step={0.5} value={salary}
           onChange={function (e) { setSalary(parseFloat(e.target.value)) }}
-          className="slider" style={{ accentColor: 'var(--linear-blue)' }} />
+          className="slider" style={{ accentColor: 'var(--linear-blue)', marginBottom: '20px' }} />
+
+        {/* Context Parameters UI */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '16px' }}>
+          <div>
+            <div style={{ fontSize: '11px', color: 'var(--text-3)', fontFamily: FM, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>Time Commitment</div>
+            <select value={timeCommitment} onChange={e => setTimeCommitment(e.target.value)} style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-2)', fontFamily: FB, fontSize: '13px', cursor: 'pointer' }}>
+              <option value="Low (1-4 hrs/wk)">Low (1-4 hrs/wk)</option>
+              <option value="Medium (5-10 hrs/wk)">Medium (5-10 hrs/wk)</option>
+              <option value="High (15+ hrs/wk)">High (15+ hrs/wk)</option>
+            </select>
+          </div>
+          <div>
+            <div style={{ fontSize: '11px', color: 'var(--text-3)', fontFamily: FM, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>Career Goal</div>
+            <select value={careerGoal} onChange={e => setCareerGoal(e.target.value)} style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-2)', fontFamily: FB, fontSize: '13px', cursor: 'pointer' }}>
+              <option value="Salary Bump">Salary Bump</option>
+              <option value="Pivot Domain">Pivot to New Domain</option>
+              <option value="Break into Tech">Break into Tech</option>
+            </select>
+          </div>
+        </div>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '20px' }}>
@@ -159,7 +218,35 @@ function CareerSimulator({ initialSalary }) {
         })}
       </div>
 
-      {selectedCerts.length > 0 && trajectory.length > 0 ? (
+      {!showSimulation ? (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+          <button
+            disabled={isSimulating || selectedCerts.length === 0}
+            onClick={() => {
+              setIsSimulating(true)
+              setTimeout(() => {
+                setIsSimulating(false)
+                setShowSimulation(true)
+              }, 1200)
+            }}
+            style={{ padding: '14px 28px', background: 'var(--text)', color: 'var(--bg)', borderRadius: '999px', fontSize: '14px', fontFamily: FH, fontWeight: '700', border: 'none', cursor: (isSimulating || selectedCerts.length === 0) ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '8px', opacity: (isSimulating || selectedCerts.length === 0) ? 0.5 : 1 }}
+          >
+            {isSimulating ? (
+              <>
+                <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}>
+                  <Loader2 size={16} />
+                </motion.div>
+                Simulating...
+              </>
+            ) : (
+              <>
+                <TrendingUp size={16} />
+                Run Simulation
+              </>
+            )}
+          </button>
+        </div>
+      ) : selectedCerts.length > 0 && trajectory.length > 0 ? (
         <AnimatePresence>
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(110px,1fr))', gap: '8px', marginBottom: '16px' }}>

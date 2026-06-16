@@ -19,12 +19,6 @@ const FEATURES = [
     color: 'var(--accent)',
   },
   {
-    icon: FileText,
-    title: 'AI Resume Analysis',
-    desc: 'Upload your resume and get personalized certification recommendations. Our Groq-powered AI analyzes your experience and suggests the highest-ROI certs for your profile.',
-    color: 'var(--accent-light)',
-  },
-  {
     icon: MapPin,
     title: 'City-Specific Data',
     desc: "Salary data tailored to Bangalore, Hyderabad, Pune, Mumbai, Delhi NCR, Chennai, Kolkata, and Ahmedabad. Not national averages, your actual market.",

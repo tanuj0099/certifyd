@@ -90,6 +90,15 @@ export const useJourneyStore = create(
       journeyIntent: '',
       setJourneyIntent: (v) => set({ journeyIntent: v || '' }),
 
+      // ── Context Parameters (persisted) ────────────────
+      currentTechStack: '',
+      timeCommitment: 'Medium (5-10 hrs/wk)',
+      careerGoal: 'Salary Bump',
+
+      setCurrentTechStack: (v) => set({ currentTechStack: v || '' }),
+      setTimeCommitment: (v) => set({ timeCommitment: v || 'Medium (5-10 hrs/wk)' }),
+      setCareerGoal: (v) => set({ careerGoal: v || 'Salary Bump' }),
+
       // ── Pipeline & Roadmap State (persisted) ───────────
       
       // What the user wants to become (e.g., "Senior Backend Engineer")
@@ -146,6 +155,9 @@ export const useJourneyStore = create(
         mode:        state.mode,
         targetDomain: state.targetDomain,
         targetRole: state.targetRole,
+        currentTechStack: state.currentTechStack,
+        timeCommitment: state.timeCommitment,
+        careerGoal: state.careerGoal,
         activeRoadmapProgress: state.activeRoadmapProgress,
         certName: state.certName,
         selectedCert: state.selectedCert,

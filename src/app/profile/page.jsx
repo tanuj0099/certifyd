@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react'
-import { Save, Send, Sparkles, Trash2 } from 'lucide-react'
+import { Save, Send, Sparkles, Trash2, Ban } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth.jsx'
 import { useTheme } from '@/hooks/useTheme.jsx'
 import { supabase } from '@/lib/supabase.js'
@@ -291,19 +291,52 @@ export default function ProfilePage() {
                 <p style={{ fontSize: 12, color: 'var(--text-3)', lineHeight: 1.5, marginBottom: 12 }}>
                   You have the right to request a copy of your data. Download a JSON file containing your profile information and preferences.
                 </p>
-                <button
-                  type="button"
-                  onClick={handleExportData}
-                  style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 8,
-                    padding: '8px 14px', borderRadius: 8, border: '1px solid var(--border)',
-                    background: 'var(--bg)', color: 'var(--text)',
-                    fontSize: 12, fontWeight: 600, fontFamily: 'inherit', cursor: 'pointer',
-                  }}
-                >
-                  <Save size={14} />
-                  Download My Data
-                </button>
+                <div style={{ display: 'flex', gap: 10 }}>
+                  <button
+                    type="button"
+                    onClick={handleExportData}
+                    style={{
+                      display: 'inline-flex', alignItems: 'center', gap: 8,
+                      padding: '8px 14px', borderRadius: 8, border: '1px solid var(--border)',
+                      background: 'var(--bg)', color: 'var(--text)',
+                      fontSize: 12, fontWeight: 600, fontFamily: 'inherit', cursor: 'pointer',
+                    }}
+                  >
+                    <Save size={14} />
+                    Download My Data
+                  </button>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      if (!user) return;
+                      setSyncState('saving')
+                      setMessage('')
+                      try {
+                        const { error } = await supabase.from('user_profiles').update({
+                          current_salary: null,
+                          job_role: 'Consent Withdrawn',
+                          technical_skills: [],
+                          applied_projects: []
+                        }).eq('user_id', user.uid || user.id);
+                        if (error) throw error;
+                        setSyncState('ready')
+                        setMessage('Consent withdrawn. ROI and career data wiped.');
+                      } catch (err) {
+                        setSyncState('error')
+                        setMessage('Failed to withdraw consent. Try again.');
+                      }
+                    }}
+                    style={{
+                      display: 'inline-flex', alignItems: 'center', gap: 8,
+                      padding: '8px 14px', borderRadius: 8, border: '1px solid var(--amber-500, #f59e0b)',
+                      background: 'transparent', color: 'var(--amber-500, #f59e0b)',
+                      fontSize: 12, fontWeight: 600, fontFamily: 'inherit', cursor: 'pointer',
+                    }}
+                  >
+                    <Ban size={14} /> 
+                    Withdraw Consent
+                  </button>
+                </div>
               </div>
 
               {/*  Secure Delete Account Cascade  */}

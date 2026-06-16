@@ -9,6 +9,7 @@ import { MarketingFooter } from '@/components/MarketingPageShell.jsx'
 import { useIsMobile } from '@/components/SharedUI.jsx'
 import { supabase } from '@/lib/supabase.js'
 import CertificationCard from '@/components/CertificationCard.jsx'
+import WelcomeOnboarding from '@/components/WelcomeOnboarding.jsx'
 import {
   Award, TrendingUp, BarChart2, Zap, MapPin,
   ChevronRight, BookOpen, Compass, Target, Bookmark,
@@ -121,6 +122,7 @@ export default function DashboardPage() {
   const resumeCity  = useJourneyStore(s => s.resumeCity)
   const breakEvenMonths = 6
   const isMobile = useIsMobile()
+  const [showOnboarding, setShowOnboarding] = useState(!resumeName)
 
   const [activeSection, setActiveSection] = useState('active-paths')
   const [activeCert, setActiveCert] = useState(null)
@@ -186,7 +188,12 @@ export default function DashboardPage() {
         )}
       </div>
 
-      {/* ── 3-column layout ── */}
+      {/* Optional AI Onboarding Banner */}
+      {showOnboarding ? (
+        <WelcomeOnboarding onComplete={() => setShowOnboarding(false)} />
+      ) : (
+        <>
+          {/* ── 3-column layout ── */}
       <div style={{ 
         maxWidth: '1400px', margin: '0 auto', 
         padding: isMobile ? '20px 16px 80px' : '24px 24px 80px', 
@@ -418,6 +425,8 @@ export default function DashboardPage() {
       </div>
 
       <MarketingFooter />
+        </>
+      )}
     </div>
   )
 }

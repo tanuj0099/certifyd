@@ -172,7 +172,7 @@ function Slider({
             width: pct + '%',
             height: '100%',
             borderRadius: '4px',
-            background: 'transparent',
+            background: color,
             boxShadow: drag ? ('0 0 12px ' + color + '60') : ('0 0 6px ' + color + '30'),
             transition: drag ? 'none' : 'width 0.05s linear, box-shadow 0.2s',
             pointerEvents: 'none',
@@ -202,9 +202,7 @@ function Slider({
           width: '26px',
           height: '26px',
           borderRadius: '50%',
-          background: drag
-            ? ('transparent')
-            : ('transparent'),
+          background: 'var(--bg)',
           boxShadow: drag
             ? ('0 0 0 8px ' + color + '20, 0 0 0 14px ' + color + '08, 0 4px 20px transparent')
             : ('0 0 0 5px ' + color + '18, 0 2px 10px transparent'),
@@ -217,7 +215,7 @@ function Slider({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          border: '2px solid ' + color + 'cc',
+          border: '2px solid ' + color,
         }}>
           {/* 22 grip dots */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
@@ -230,7 +228,7 @@ function Slider({
                         width: '2.5px',
                         height: '2.5px',
                         borderRadius: '50%',
-                        background: 'transparent',
+                        background: color,
                       }} />
                     )
                   })}

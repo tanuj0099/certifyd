@@ -80,14 +80,6 @@ const TOOLS = [
     desc: 'Run a 5-year career projection with and without certifications. See the compounding delta.',
   },
   {
-    id: 'resume',
-    path: '/tools/resume',
-    icon: FileText,
-    label: 'Resume Analyzer',
-    tag: 'OPTIMIZE',
-    desc: 'Upload your resume. Get a cert-gap analysis - what\'s missing vs the market you are targeting.',
-  },
-  {
     id: 'hike',
     path: '/tools/hike',
     icon: BarChart2,

@@ -104,10 +104,5 @@ export default function OnboardingGate({ children }) {
     return <SkeletonLoader type="dashboard" />
   }
 
-  // New user needs onboarding - but never redirect to /onboarding from /onboarding itself
-  if (needsOnboarding && location.pathname !== '/onboarding') {
-    return <Navigate to="/onboarding" replace />
-  }
-
   return children
 }

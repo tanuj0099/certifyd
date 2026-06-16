@@ -43,14 +43,14 @@ const REMOTE_FLAG_CONFIG = {
 }
 
 const DEMAND = {
-  tech:       { bangalore: 5, hyderabad: 5, pune: 5, mumbai: 4, delhi: 4, chennai: 4, kolkata: 3, ahmedabad: 3, insight: 'AWS/Cloud certs drive 35% higher salaries. 2,400+ open roles on Naukri.', yoy: '+34%', avgHike: '35%', topHirers: ['Infosys', 'TCS', 'Wipro', 'Amazon India'] },
-  data:       { bangalore: 5, hyderabad: 5, pune: 4, mumbai: 5, delhi: 4, chennai: 4, kolkata: 3, ahmedabad: 3, insight: 'Data Science roles growing fastest in Bangalore and Mumbai. ML engineers command ₹20L+.', yoy: '+42%', avgHike: '38%', topHirers: ['Flipkart', 'Swiggy', 'Zomato', 'Microsoft'] },
-  management: { bangalore: 4, hyderabad: 4, pune: 4, mumbai: 5, delhi: 5, chennai: 3, kolkata: 3, ahmedabad: 4, insight: 'PMP certified PMs earn 30% more. Delhi NCR and Mumbai have highest PM demand.', yoy: '+18%', avgHike: '30%', topHirers: ['Accenture', 'Deloitte', 'KPMG', 'IBM'] },
-  business:   { bangalore: 3, hyderabad: 3, pune: 4, mumbai: 4, delhi: 4, chennai: 3, kolkata: 3, ahmedabad: 5, insight: 'Six Sigma and supply chain certs in high demand in manufacturing hubs like Pune and Ahmedabad.', yoy: '+15%', avgHike: '25%', topHirers: ['Mahindra', 'Tata Motors', 'L&T', 'Asian Paints'] },
-  finance:    { bangalore: 3, hyderabad: 3, pune: 3, mumbai: 5, delhi: 4, chennai: 3, kolkata: 4, ahmedabad: 4, insight: "CFA Level 1 opens doors in Mumbai's financial district. 1,200+ openings this quarter.", yoy: '+22%', avgHike: '35%', topHirers: ['HDFC', 'ICICI', 'Goldman Sachs', 'JP Morgan'] },
-  marketing:  { bangalore: 4, hyderabad: 3, pune: 4, mumbai: 5, delhi: 5, chennai: 3, kolkata: 3, ahmedabad: 3, insight: 'Digital Marketing certs most valued in Delhi NCR and Mumbai. D2C boom driving demand.', yoy: '+28%', avgHike: '22%', topHirers: ['Nykaa', 'Meesho', 'Dentsu', 'WPP India'] },
-  product:    { bangalore: 5, hyderabad: 4, pune: 4, mumbai: 4, delhi: 3, chennai: 3, kolkata: 2, ahmedabad: 2, insight: 'Product Management certs most valued in Bangalore startup ecosystem. ₹25-40L roles.', yoy: '+35%', avgHike: '35%', topHirers: ['PhonePe', 'Razorpay', 'CRED', 'Freshworks'] },
-  hr:         { bangalore: 3, hyderabad: 3, pune: 3, mumbai: 4, delhi: 4, chennai: 3, kolkata: 3, ahmedabad: 3, insight: 'SHRM-CP adds 25% to HR salaries. Demand highest in large corporates in Mumbai and Delhi.', yoy: '+12%', avgHike: '25%', topHirers: ['HCL', 'Tech Mahindra', 'Infosys HR', 'Capgemini'] },
+  tech:       { bangalore: 5, hyderabad: 5, pune: 5, mumbai: 4, delhi: 4, chennai: 4, kolkata: 3, ahmedabad: 3, openRoles: '2,400', yoy: '+34%', avgHike: '35%', topHirers: ['Infosys', 'TCS', 'Wipro', 'Amazon India'] },
+  data:       { bangalore: 5, hyderabad: 5, pune: 4, mumbai: 5, delhi: 4, chennai: 4, kolkata: 3, ahmedabad: 3, openRoles: '1,800', yoy: '+42%', avgHike: '38%', topHirers: ['Flipkart', 'Swiggy', 'Zomato', 'Microsoft'] },
+  management: { bangalore: 4, hyderabad: 4, pune: 4, mumbai: 5, delhi: 5, chennai: 3, kolkata: 3, ahmedabad: 4, openRoles: '1,500', yoy: '+18%', avgHike: '30%', topHirers: ['Accenture', 'Deloitte', 'KPMG', 'IBM'] },
+  business:   { bangalore: 3, hyderabad: 3, pune: 4, mumbai: 4, delhi: 4, chennai: 3, kolkata: 3, ahmedabad: 5, openRoles: '1,200', yoy: '+15%', avgHike: '25%', topHirers: ['Mahindra', 'Tata Motors', 'L&T', 'Asian Paints'] },
+  finance:    { bangalore: 3, hyderabad: 3, pune: 3, mumbai: 5, delhi: 4, chennai: 3, kolkata: 4, ahmedabad: 4, openRoles: '1,200', yoy: '+22%', avgHike: '35%', topHirers: ['HDFC', 'ICICI', 'Goldman Sachs', 'JP Morgan'] },
+  marketing:  { bangalore: 4, hyderabad: 3, pune: 4, mumbai: 5, delhi: 5, chennai: 3, kolkata: 3, ahmedabad: 3, openRoles: '2,100', yoy: '+28%', avgHike: '22%', topHirers: ['Nykaa', 'Meesho', 'Dentsu', 'WPP India'] },
+  product:    { bangalore: 5, hyderabad: 4, pune: 4, mumbai: 4, delhi: 3, chennai: 3, kolkata: 2, ahmedabad: 2, openRoles: '1,100', yoy: '+35%', avgHike: '35%', topHirers: ['PhonePe', 'Razorpay', 'CRED', 'Freshworks'] },
+  hr:         { bangalore: 3, hyderabad: 3, pune: 3, mumbai: 4, delhi: 4, chennai: 3, kolkata: 3, ahmedabad: 3, openRoles: '900', yoy: '+12%', avgHike: '25%', topHirers: ['HCL', 'Tech Mahindra', 'Infosys HR', 'Capgemini'] },
 }
 
 const LEVEL_CONFIG = {
@@ -254,7 +254,7 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
                   })()}
                 </div>
                 <div style={{ fontSize: '14px', color: 'var(--text-2)', fontFamily: F_BODY, lineHeight: '1.7', marginBottom: '10px' }}>
-                  {domainData.insight}
+                  {categoryInfo.label} certifications drive {domainData.avgHike} higher salaries{cityInfo ? ` in ${cityInfo.label}` : ' across key tech hubs'}. Currently tracking {domainData.openRoles}+ open roles.
                 </div>
                 <div style={{ fontFamily: F_MONO, fontSize: '11px', color: 'var(--text-3)', letterSpacing: '0.02em' }}>
                   {'Key certs: ' + categoryInfo.certs.join('  ')}
