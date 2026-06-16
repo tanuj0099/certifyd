@@ -5,6 +5,8 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { ChevronRight, Home, Folder, FileText, Wrench, Award, Map, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useJourneyStore } from '@/store/useJourneyStore';
+import { MODES } from '@/components/ModeSelector';
 
 const ICONS = {
   home: Home,
@@ -17,6 +19,8 @@ const ICONS = {
 
 export function DynamicBreadcrumb() {
   const pathname = usePathname();
+  const mode = useJourneyStore((s) => s.mode);
+  const modeLocked = useJourneyStore((s) => s.modeLocked);
 
   // Don't show breadcrumb on home page or auth pages
   if (!pathname || pathname === '/' || pathname === '/login' || pathname === '/signup') {
@@ -37,8 +41,7 @@ export function DynamicBreadcrumb() {
     const isLast = index === paths.length - 1;
     
     // Format the label (capitalize, remove dashes)
-    let label = path.replace(/-/g, ' ');
-    label = label.charAt(0).toUpperCase() + label.slice(1);
+    let label = path.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     
     // Choose an icon based on the path
     let Icon = ICONS.default;
@@ -53,6 +56,19 @@ export function DynamicBreadcrumb() {
       icon: Icon,
       current: isLast
     });
+
+    // If this is the 'tools' segment and a path is chosen, inject the chosen path
+    if (path.toLowerCase() === 'tools' && modeLocked && mode) {
+      const activeMode = MODES.find(m => m.id === mode);
+      if (activeMode) {
+        segments.push({
+          label: activeMode.label,
+          href: '/choose-path', // Clicking it goes back to choose path
+          icon: activeMode.icon || ICONS.default,
+          current: false
+        });
+      }
+    }
   });
 
   return (

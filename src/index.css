@@ -1247,3 +1247,5 @@ body,
   outline: 2px solid var(--accent, #F4F5F8);
   outline-offset: 2px;
 }
+.theme-logo { mix-blend-mode: multiply; }
+[data-theme='dark'] .theme-logo, [data-theme='nordic'] .theme-logo, .dark-mode-logo { filter: invert(1) hue-rotate(180deg); mix-blend-mode: screen; }

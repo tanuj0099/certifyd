@@ -458,7 +458,7 @@ function MobileBottomBar({ currentPage, user, onSignIn, onNavigate, pathname }) 
 const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, onSignUp, onSignOut }) => {
   const [activeHref, setActiveHref] = useState(currentPage || 'home')
   const [menuOpen, setMenuOpen] = useState(false)
-  const { mode: themeMode, setThemeMode: cycleTheme } = useTheme()
+  const { mode: themeMode, isDark, setThemeMode: cycleTheme } = useTheme()
   const router = useRouter()
   const pathname = usePathname() || '/'
 
@@ -496,12 +496,18 @@ const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, 
                 display: 'flex', alignItems: 'center', gap: '8px',
                 color: 'var(--text)', transition: 'color 0.2s ease'
               }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="2" y="10" width="5" height="12" rx="2.5" fill="var(--text)" />
-                  <rect x="9" y="4" width="5" height="18" rx="2.5" fill="var(--text)" />
-                  <rect x="16" y="8" width="5" height="14" rx="2.5" fill="#00E5A8" />
-                </svg>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '36px', height: '36px', overflow: 'hidden', borderRadius: '8px' }}>
+                <img
+                  src="/logo.png"
+                  alt="Certifyd Logo"
+                  style={{
+                    height: '48px',
+                    width: '48px',
+                    objectFit: 'cover',
+                    maxWidth: 'none',
+                    transform: 'scale(1.45)'
+                  }}
+                />
               </div>
               <span style={{ fontFamily: '"Geist", "Satoshi", "Inter", sans-serif', fontSize: '1.25rem', fontWeight: '800', letterSpacing: '-0.02em' }}>Certifyd.in</span>
             </button>
@@ -518,8 +524,8 @@ const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, 
 
           {/* Far Right: Theme toggle + Sign In only */}
           <div className="flex items-center gap-2 flex-shrink-0">
-            <button 
-              type="button" 
+            <button
+              type="button"
               onClick={() => useJourneyStore.getState().setSearchOpen(true)}
               style={{
                 display: 'inline-flex', alignItems: 'center', justifyContent: 'center',

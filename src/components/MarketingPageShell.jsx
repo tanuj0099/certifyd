@@ -109,11 +109,20 @@ export function MarketingFooter() {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="2" y="10" width="5" height="12" rx="2.5" fill="var(--text)" />
-                  <rect x="9" y="4" width="5" height="18" rx="2.5" fill="var(--text)" />
-                  <rect x="16" y="8" width="5" height="14" rx="2.5" fill="#00E5A8" />
-                </svg>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '28px', height: '28px', overflow: 'hidden', borderRadius: '6px' }}>
+                  <img
+                    src="/logo.png"
+                    alt="Certifyd Logo"
+                    className="theme-logo"
+                    style={{
+                      height: '38px',
+                      width: '38px',
+                      objectFit: 'cover',
+                      maxWidth: 'none',
+                      transform: 'scale(1.45)'
+                    }}
+                  />
+                </div>
               </div>
               <span style={{ fontFamily: '"Geist", "Satoshi", "Inter", sans-serif', fontSize: '1.15rem', fontWeight: '800', letterSpacing: '-0.02em', color: 'var(--text)' }}>
                 Certifyd

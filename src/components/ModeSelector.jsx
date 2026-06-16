@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { GraduationCap, Repeat, Briefcase, RotateCcw, ArrowRight } from 'lucide-react'
 
-const MODES = [
+export const MODES = [
   { id: 'student',      label: 'Breaking In',  sub: 'No current salary',         color: '#4A8C6A', icon: GraduationCap, desc: 'Land your first job offer in tech' },
   { id: 'switcher',     label: 'Domain Pivot', sub: 'Changing fields',            color: 'var(--cool-grey)', icon: Repeat,        desc: 'Switch domains in 5-8 months' },
   { id: 'professional', label: 'Level Up',     sub: 'Upskilling for a promotion', color: 'var(--linear-blue)', icon: Briefcase, desc: 'Max ROI on your next cert' },
@@ -379,21 +379,16 @@ function ModeSelector({ onSelect }) {
       animate={{ opacity: step === 'exiting' ? 0 : 1 }}
       transition={{ duration: step === 'exiting' ? 0.4 : 0.3 }}
       style={{
-        position: 'fixed',
-        // On mobile: cover from top (no dynamic island) with bottom bar offset
-        // On desktop: offset below the nav island
-        top: isMobile ? 0 : 'calc(var(--nav-h, 64px) + 72px)',
-        left: 0, right: 0, bottom: 0,
-        zIndex: 99,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
         background: 'var(--bg)',
-        overflowY: 'auto',
+        minHeight: '100vh',
+        width: '100%',
         // Bottom padding on mobile to avoid bottom tab bar
-        paddingBottom: isMobile ? '80px' : '0',
-        paddingTop: isMobile ? '24px' : '0',
+        paddingBottom: isMobile ? '80px' : '64px',
+        paddingTop: isMobile ? '24px' : '48px',
       }}
     >
       <div style={{ position: 'relative', zIndex: 2, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>

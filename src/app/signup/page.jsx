@@ -155,19 +155,25 @@ export default function SignupPage() {
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: 44,
-              height: 44,
+              width: 52,
+              height: 52,
               borderRadius: 12,
-              background: 'rgba(255,255,255,0.06)',
-              border: '1px solid rgba(255,255,255,0.08)',
+              overflow: 'hidden',
               marginBottom: 16,
             }}
           >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-              <path d="M12 2L2 7l10 5 10-5-10-5Z" stroke="#f7f8f8" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M2 17l10 5 10-5" stroke="#f7f8f8" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M2 12l10 5 10-5" stroke="#f7f8f8" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            <img 
+              src="/logo.png" 
+              alt="Certifyd Logo" 
+              className="dark-mode-logo"
+              style={{ 
+                height: '72px', 
+                width: '72px', 
+                objectFit: 'cover', 
+                maxWidth: 'none',
+                transform: 'scale(1.45)'
+              }} 
+            />
           </div>
           <div style={{ fontSize: '22px', fontWeight: 800, color: '#f7f8f8', letterSpacing: '-0.02em' }}>
             Certifyd

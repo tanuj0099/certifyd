@@ -6,7 +6,7 @@
 
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
-import {     } from 'react-router-dom';
+import { } from 'react-router-dom';
 import Link from 'next/link';
 import { Menu, X, Home, Info, HelpCircle, Zap, FileText, Phone, Mail } from 'lucide-react'
 
@@ -15,13 +15,13 @@ const F_BODY = "var(--font-body)";
 const F_MONO = "var(--font-mono)";
 
 const NAV_ITEMS = [
-  { label: 'Home',    href: '/',         icon: Home },
-  { label: 'About',   href: '/about',    icon: Info },
+  { label: 'Home', href: '/', icon: Home },
+  { label: 'About', href: '/about', icon: Info },
   { label: 'Features', href: '/features', icon: Zap },
   { label: 'How It Works', href: '/how-it-works', icon: FileText },
-  { label: 'Pricing', href: '/pricing',  icon: Mail },
-  { label: 'FAQ',     href: '/faq',      icon: HelpCircle },
-  { label: 'Contact', href: '/contact',  icon: Phone },
+  { label: 'Pricing', href: '/pricing', icon: Mail },
+  { label: 'FAQ', href: '/faq', icon: HelpCircle },
+  { label: 'Contact', href: '/contact', icon: Phone },
 ]
 
 // 
@@ -64,10 +64,21 @@ export function Header({ currentPage }) {
             >
               <div style={{
                 width: '32px', height: '32px', borderRadius: '8px',
-                background: 'var(--text)', display: 'flex',
+                overflow: 'hidden', display: 'flex',
                 alignItems: 'center', justifyContent: 'center',
               }}>
-                <span style={{ color: 'var(--bg)', fontFamily: F_HEAD, fontWeight: '800', fontSize: '14px' }}>CR</span>
+                <img
+                  src="/logo.png"
+                  alt="Certifyd Logo"
+                  className="theme-logo"
+                  style={{
+                    height: '44px',
+                    width: '44px',
+                    objectFit: 'cover',
+                    maxWidth: 'none',
+                    transform: 'scale(1.45)'
+                  }}
+                />
               </div>
               <span style={{
                 fontFamily: F_HEAD, fontWeight: '700', fontSize: '16px',
@@ -178,10 +189,21 @@ export function Footer() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
             <div style={{
               width: '28px', height: '28px', borderRadius: '6px',
-              background: 'var(--text)', display: 'flex',
+              overflow: 'hidden', display: 'flex',
               alignItems: 'center', justifyContent: 'center',
             }}>
-              <span style={{ color: 'var(--bg)', fontFamily: F_HEAD, fontWeight: '800', fontSize: '12px' }}>CR</span>
+              <img
+                src="/logo.png"
+                alt="Certifyd Logo"
+                className="theme-logo"
+                style={{
+                  height: '38px',
+                  width: '38px',
+                  objectFit: 'cover',
+                  maxWidth: 'none',
+                  transform: 'scale(1.45)'
+                }}
+              />
             </div>
             <span style={{ fontFamily: F_HEAD, fontWeight: '700', fontSize: '14px', color: 'var(--text)' }}>Certify</span>
           </div>
@@ -244,7 +266,7 @@ export function Footer() {
         flexWrap: 'wrap', gap: '16px',
       }}>
         <p style={{ fontFamily: F_MONO, fontSize: '11px', color: 'var(--text-4)', margin: 0 }}>
-           2026 Certify. All rights reserved.
+          2026 Certify. All rights reserved.
         </p>
         <div className="mono-tag" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '10px', color: 'var(--accent)', letterSpacing: '0.05em', opacity: 0.8 }}>
           Data: Q1 2026  Naukri  LinkedIn India  NASSCOM  AmbitionBox

@@ -1,28 +1,33 @@
 'use client';
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import ResumeAnalyzer from '@/components/ResumeAnalyzer.jsx'
-import ModeSelector, { ModePill } from '@/components/ModeSelector.jsx'
+import { ModePill } from '@/components/ModeSelector.jsx'
 import ToolPageWrapper from '@/components/ToolPageWrapper.jsx'
 import { AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 
+import { useJourneyStore } from '@/store/useJourneyStore.js'
+
 const T = { duration: 0.32, ease: [0.4, 0, 0.2, 1] }
 
 export default function ResumeToolPage() {
-  const [mode, setMode] = useState('professional')
-  const [modeLocked, setModeLocked] = useState(false)
+  const mode = useJourneyStore(s => s.mode)
+  const modeLocked = useJourneyStore(s => s.modeLocked)
+  const setMode = useJourneyStore(s => s.setMode)
+  const resetMode = useJourneyStore(s => s.resetMode)
   const router = useRouter()
 
-  const handleModeSelect = (id) => {
-    setMode(id)
-    setModeLocked(true)
-  }
+  useEffect(() => {
+    if (!modeLocked) {
+      const currentPath = window.location.pathname + window.location.search;
+      router.push('/choose-path?returnTo=' + encodeURIComponent(currentPath));
+    }
+  }, [modeLocked, router]);
 
   const handleModeReset = () => {
-    setModeLocked(false)
-    setMode('professional')
+    resetMode()
   }
 
   const handleCertSelected = (certName, city, domain, name) => {
@@ -39,10 +44,7 @@ export default function ResumeToolPage() {
       subtitle="Analysis"
       description="Upload your resume and get personalized certification recommendations based on your experience and career goals."
     >
-      {/* Mode Selector */}
-      <AnimatePresence>
-        {!modeLocked && <ModeSelector onSelect={handleModeSelect} />}
-      </AnimatePresence>
+      {/* Mode Selector (Now a separate page, redirect happens above) */}
 
       {/* Tool Content */}
       {modeLocked && (

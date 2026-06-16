@@ -1,9 +1,8 @@
 'use client';
 import React, { useState, useEffect, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useJourneyStore } from '../store/useJourneyStore.js';
-import ModeSelector, { ModePill } from './ModeSelector.jsx';
 import ResumeAnalyzer from './ResumeAnalyzer.jsx';
 import Hero from './Hero.jsx';
 import Heatmap from './Heatmap.jsx';
@@ -107,6 +106,14 @@ const AppPage = function ({ onCertSelected }) {
     }
   }, [certQuery, prefilledCert, setResumeContext, onTabChange]);
 
+  const router = useRouter();
+  useEffect(() => {
+    if (!modeLocked) {
+      const currentPath = window.location.pathname + window.location.search;
+      router.push('/choose-path?returnTo=' + encodeURIComponent(currentPath));
+    }
+  }, [modeLocked, router]);
+
   return (
     <div
       className="page-top-pad"
@@ -117,16 +124,11 @@ const AppPage = function ({ onCertSelected }) {
       }}
     >
 
-      <AnimatePresence>
-        {!modeLocked ? <ModeSelector onSelect={onModeSelect} /> : null}
-      </AnimatePresence>
-
       {modeLocked ? (
         <div style={{ position: 'relative', zIndex: 1 }}>
           <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 24px 64px' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: isMobile ? 'center' : 'space-between' }}>
-                <ModePill mode={mode} onReset={onModeReset} />
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: isMobile ? 'center' : 'flex-end' }}>
                 {!isMobile && <DataFreshnessBadge />}
               </div>
 
