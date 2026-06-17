@@ -8,6 +8,7 @@ import FilterGraphic from './graphics/FilterGraphic.jsx'
 import PathGraphic from './graphics/PathGraphic.jsx'
 import { useTheme } from '../hooks/useTheme.jsx'
 import { useJourneyStore } from '../store/useJourneyStore.js'
+import { useRouter } from 'next/navigation'
 
 const F_SANS = "var(--font-sans)";
 const F_MONO = "var(--font-mono)";
@@ -40,7 +41,7 @@ function TeaserLink({ to, children }) {
   )
 }
 
-function BoxShell({ label, title, copy, children, activeTab, linkLabel, isLast }) {
+function BoxShell({ label, title, copy, children, activeTab, linkLabel, isLast, router }) {
   return (
     <motion.article
       className="features-bento__box"
@@ -57,7 +58,7 @@ function BoxShell({ label, title, copy, children, activeTab, linkLabel, isLast }
         if (activeTab) {
           useJourneyStore.getState().setActiveTab(activeTab);
         }
-        document.getElementById('workspace')?.scrollIntoView({ behavior: 'smooth' });
+        router.push('/tools/roi');
       }}
     >
       <div
@@ -183,6 +184,7 @@ function PathMock() {
 }
 
 export default function FeaturesBentoGrid() {
+  const router = useRouter()
   return (
     <section
       style={{
@@ -238,6 +240,7 @@ export default function FeaturesBentoGrid() {
             copy="Instantly identify high-demand signals amidst global complexity with our live data integration."
             activeTab="heatmap"
             linkLabel="View Market Pulse"
+            router={router}
           >
             <CertRadarMock />
           </BoxShell>
@@ -248,6 +251,7 @@ export default function FeaturesBentoGrid() {
             copy="Move from vibe to numbers with city-calibrated salary delta and payback period math."
             activeTab="calculator"
             linkLabel="Calculate ROI"
+            router={router}
           >
             <DashboardMock />
           </BoxShell>
@@ -259,6 +263,7 @@ export default function FeaturesBentoGrid() {
             activeTab="compare"
             linkLabel="Route Analysis"
             isLast
+            router={router}
           >
             <PathMock />
           </BoxShell>

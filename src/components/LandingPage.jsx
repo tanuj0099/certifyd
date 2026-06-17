@@ -440,10 +440,10 @@ function DataComposition() {
   const C = useTheme()
   const isMobile = useIsMobile()
 
-  // "" Flat card token - no glass, no blur, no shadow """"""
-  const CARD_BG = C.surface
-  const CARD_BORDER = '1px solid var(--border)'
-  const CARD_RADIUS = '4px'
+  // "" Clean token - no box, no border """"""
+  const CARD_BG = 'transparent'
+  const CARD_BORDER = 'none'
+  const CARD_RADIUS = '0'
 
   // "" Accent rules:
   //   - PRIMARY   C.gold  (5yr gain, +35%)
@@ -530,7 +530,7 @@ function DataComposition() {
           background:   CARD_BG,
           border:       CARD_BORDER,
           borderRadius: CARD_RADIUS,
-          padding:      isMobile ? '32px 28px' : '44px 40px',
+          padding:      isMobile ? '16px 0' : '20px 20px 20px 0',
           display:      'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
@@ -625,7 +625,7 @@ function DataComposition() {
           background:   CARD_BG,
           border:       CARD_BORDER,
           borderRadius: CARD_RADIUS,
-          padding:      isMobile ? '28px' : '32px 28px',
+          padding:      isMobile ? '16px 0' : '20px 0',
           display:      'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
@@ -685,7 +685,7 @@ function DataComposition() {
           background:   CARD_BG,
           border:       CARD_BORDER,
           borderRadius: CARD_RADIUS,
-          padding:      isMobile ? '28px' : '32px 28px',
+          padding:      isMobile ? '16px 0' : '20px 0',
           display:      'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
@@ -864,8 +864,10 @@ function PivotDomainsCard({ onEnter }) {
             {/* Input + state machine */}
             <div style={{ position: 'relative' }}>
               <div style={{
-                display: 'flex', gap: '8px', alignItems: 'center',
-                padding: '4px 4px 4px 14px',
+                display: 'flex', gap: '8px',
+                flexDirection: isMobile ? 'column' : 'row',
+                alignItems: isMobile ? 'stretch' : 'center',
+                padding: isMobile ? '8px' : '4px 4px 4px 14px',
                 minHeight: '52px',
                 borderRadius: '8px',
                 border: '1px solid ' + (pivotFocus ? LINEAR_BLUE + '60' : domainError ? '#D94848' : (!C.isLight ? 'var(--border-subtle)' : 'transparent')),
