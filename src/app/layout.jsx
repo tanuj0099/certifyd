@@ -10,8 +10,8 @@ const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfa
 
 export const metadata = {
   metadataBase: new URL('https://certifyd.in'),
-  title: 'Certifyd | ROI Projections & Career Tools',
-  description: 'AI-powered resume analysis, certification ROI projections, and career roadmaps.',
+  title: 'Certifyd | Certification ROI & Offer Letter Intelligence',
+  description: "The data engine for India's tech careers. Calculate exact certification ROI, safely analyze offer letters, and benchmark salary premiums using verified market data.",
 };
 
 export default function RootLayout({ children }) {
