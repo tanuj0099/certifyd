@@ -81,8 +81,8 @@ function ToolCard({ tool }) {
 export default function ToolsIndex() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)' }}>
-      <div className="page-top-pad" style={{ maxWidth: '1100px', margin: '0 auto', padding: '32px 24px 80px' }}>
-        <div style={{ marginBottom: '48px', borderBottom: '1px solid var(--border)', paddingBottom: '32px' }}>
+      <div className="page-top-pad w-full max-w-6xl mx-auto px-4 md:px-6 py-8 pb-24">
+        <div style={{ marginBottom: '40px', borderBottom: '1px solid var(--border)', paddingBottom: '24px' }}>
           <h1 style={{ fontFamily: FS, fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1.05, color: 'var(--text)', margin: '0 0 16px' }}>
             Career Navigation Tools
           </h1>
@@ -93,7 +93,7 @@ export default function ToolsIndex() {
 
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 320px), 1fr))',
           gap: '16px',
         }}>
           {TOOLS.map((tool) => (

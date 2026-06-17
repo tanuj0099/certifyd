@@ -417,16 +417,16 @@ function MobileBottomBar({ currentPage, user, onSignIn, onNavigate, pathname }) 
                 layoutId="mobile-active-pill"
                 style={{
                   position: 'absolute',
-                  inset: '4px',
-                  borderRadius: '16px',
-                  background: 'color-mix(in srgb, var(--accent) 15%, transparent)',
-                  border: '1px solid color-mix(in srgb, var(--accent) 30%, transparent)',
+                  inset: '2px 8px',
+                  borderRadius: '12px',
+                  background: 'var(--text)',
+                  opacity: 0.1,
                   zIndex: 0,
                 }}
                 transition={{ type: 'spring', stiffness: 400, damping: 30 }}
               />
             )}
-            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, color: active ? 'var(--accent)' : 'inherit' }}>
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, color: active ? 'var(--text)' : 'inherit' }}>
               <Icon
                 size={active ? 22 : 20}
                 strokeWidth={active ? 2.5 : 1.8}
@@ -441,7 +441,7 @@ function MobileBottomBar({ currentPage, user, onSignIn, onNavigate, pathname }) 
               fontWeight: active ? 800 : 500,
               letterSpacing: '0.02em',
               lineHeight: 1,
-              color: active ? 'var(--accent)' : 'inherit',
+              color: active ? 'var(--text)' : 'inherit',
               marginTop: '2px'
             }}>
               {label}

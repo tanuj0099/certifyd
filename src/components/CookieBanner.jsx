@@ -82,7 +82,7 @@ const CookieBanner = () => {
               backgroundColor: '#111111',
               borderTop: '1px solid rgba(255,255,255,0.1)',
               padding: '24px',
-              zIndex: 9998,
+              zIndex: 10000,
               boxShadow: '0 -10px 40px rgba(0,0,0,0.5)',
               fontFamily: F_SANS,
             }}
@@ -165,7 +165,7 @@ const CookieBanner = () => {
       <AnimatePresence>
         {showModal && (
           <div style={{
-            position: 'fixed', inset: 0, zIndex: 9999,
+            position: 'fixed', inset: 0, zIndex: 10001,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             padding: '20px', fontFamily: F_SANS,
           }}>
