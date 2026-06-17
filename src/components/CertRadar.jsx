@@ -330,7 +330,7 @@ const CertRadar = () => {
               <SkeletonGrid />
             ) : (
               <>
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
+                <div className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-6">
                   {certifications.length > 0 ? (
                     certifications.map((cert) => (
                       <CertificationCard 
@@ -395,7 +395,7 @@ const CertRadar = () => {
 
       {/* Mobile Sticky Filter FAB */}
       {!activeCompareMode && (
-        <div className="fixed bottom-6 right-6 lg:hidden z-30">
+        <div className="fixed bottom-24 right-6 lg:hidden z-30">
           <button
             onClick={() => setIsMobileSidebarOpen(true)}
             className="flex items-center gap-2 px-5 py-3 rounded-full shadow-2xl font-semibold text-white transition-transform hover:scale-105 active:scale-95"

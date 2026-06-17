@@ -74,7 +74,7 @@ export function DynamicBreadcrumb() {
   return (
     <div className="w-full px-4 md:px-6 mt-0 mb-0 pt-2 z-10 relative">
       <nav aria-label="Breadcrumb">
-        <ol className="flex flex-wrap items-center gap-1.5 text-sm" style={{ color: 'var(--text-3)' }}>
+        <ol className="flex flex-nowrap items-center gap-1.5 text-[11px] sm:text-sm" style={{ color: 'var(--text-3)', overflowX: 'auto', whiteSpace: 'nowrap', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           <AnimatePresence>
             {segments.map((segment, index) => {
               const Icon = segment.icon;

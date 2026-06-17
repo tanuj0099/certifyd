@@ -96,7 +96,7 @@ const CertificationCard = ({ data, ...props }) => {
       onClick={handleCardClick}
       className={`
         group relative flex flex-col
-        p-4 md:p-5
+        p-3 md:p-5
         glass
         md:hover:scale-[1.015] md:hover:shadow-black/20
         transition-all duration-200
@@ -113,7 +113,7 @@ const CertificationCard = ({ data, ...props }) => {
       }}
     >
       {/*  Header: vendor + difficulty + track  */}
-      <div className="flex flex-wrap items-center gap-1.5 md:gap-2 mb-3 pr-10">
+      <div className="flex flex-wrap items-center gap-1 md:gap-2 mb-2 md:mb-3 pr-8 md:pr-10">
         {vendor && (
           <span className="px-2 py-1 text-[10px] md:text-xs font-semibold uppercase tracking-widest rounded-md transition-colors glass text-[var(--text-2)]">
             {vendor}
@@ -125,14 +125,14 @@ const CertificationCard = ({ data, ...props }) => {
           </span>
         )}
         {data.functional_track && (
-          <span className="px-2 py-1 text-[10px] md:text-xs font-semibold uppercase tracking-widest rounded-md truncate max-w-[100px] md:max-w-[130px] glass text-[var(--text-2)]">
+          <span className="px-1.5 md:px-2 py-0.5 md:py-1 text-[9px] md:text-xs font-semibold uppercase tracking-widest rounded-md truncate max-w-[80px] md:max-w-[130px] glass text-[var(--text-2)]">
             {data.functional_track}
           </span>
         )}
       </div>
 
       {/* Bookmark / Checkbox */}
-      <div className="absolute top-4 right-4 z-10 flex items-center justify-center">
+      <div className="absolute top-2 md:top-4 right-2 md:right-4 z-10 flex items-center justify-center">
         {activeCompareMode ? (
           <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected ? 'bg-[var(--accent)] border-[var(--accent)]' : 'border-[var(--text-3)] bg-transparent'}`}>
             {isSelected && <Check size={14} className="text-[var(--bg)]" strokeWidth={3} />}
@@ -150,12 +150,12 @@ const CertificationCard = ({ data, ...props }) => {
       </div>
 
       {/*  Title + description  */}
-      <div className="flex-grow mb-4">
-        <h3 className="text-sm md:text-base font-semibold mb-2 line-clamp-2 leading-snug group-hover:text-[var(--accent)] transition-colors text-[var(--text)]">
+      <div className="flex-grow mb-2 md:mb-4">
+        <h3 className="text-xs md:text-base font-semibold mb-1 md:mb-2 line-clamp-2 md:line-clamp-2 leading-snug group-hover:text-[var(--accent)] transition-colors text-[var(--text)]">
           {data.name}
         </h3>
         {truncated && (
-          <p className="text-xs md:text-sm leading-relaxed line-clamp-3 text-[var(--text-2)]">
+          <p className="hidden md:block text-xs md:text-sm leading-relaxed line-clamp-3 text-[var(--text-2)]">
             {truncated}
           </p>
         )}
@@ -165,26 +165,26 @@ const CertificationCard = ({ data, ...props }) => {
       <div className="h-px w-full mb-3 md:mb-4 bg-[var(--border)]" />
 
       {/*  Footer metrics  */}
-      <div className="grid grid-cols-2 gap-3">
-        <div className="flex items-center gap-2 p-2 rounded-xl transition-colors duration-300">
-          <div className="w-8 h-8 rounded-full bg-green-500/10 flex items-center justify-center border border-green-500/20 shadow-inner">
-            <DollarSign className="w-4 h-4 text-green-600 dark:text-green-400" />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5 md:gap-3">
+        <div className="flex items-center gap-1.5 md:gap-2 p-1.5 md:p-2 rounded-xl transition-colors duration-300">
+          <div className="w-5 h-5 md:w-8 md:h-8 flex-shrink-0 rounded-full bg-green-500/10 flex items-center justify-center border border-green-500/20 shadow-inner">
+            <DollarSign className="w-3 h-3 md:w-4 md:h-4 text-green-600 dark:text-green-400" />
           </div>
-          <div>
-            <p className="text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-widest leading-none mb-1">Cost</p>
-            <p className="text-[11px] md:text-sm font-bold text-[var(--text)] tracking-tight">
+          <div className="truncate">
+            <p className="hidden md:block text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-widest leading-none mb-1">Cost</p>
+            <p className="text-[10px] md:text-sm font-bold text-[var(--text)] tracking-tight truncate">
               {formatDualCost(data.cost_inr, data.cost_usd)}
             </p>
           </div>
         </div>
         
-        <div className="flex items-center gap-2 p-2">
-          <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
-            <Clock className="w-4 h-4 text-blue-500" />
+        <div className="flex items-center gap-1.5 md:gap-2 p-1.5 md:p-2">
+          <div className="w-5 h-5 md:w-8 md:h-8 flex-shrink-0 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
+            <Clock className="w-3 h-3 md:w-4 md:h-4 text-blue-500" />
           </div>
-          <div>
-            <p className="text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-widest leading-none mb-1">Validity</p>
-            <p className="text-[11px] md:text-sm font-bold text-[var(--text)] tracking-tight">
+          <div className="truncate">
+            <p className="hidden md:block text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-widest leading-none mb-1">Validity</p>
+            <p className="text-[10px] md:text-sm font-bold text-[var(--text)] tracking-tight truncate">
               {formatValidity(data.validity_period_months)}
             </p>
           </div>

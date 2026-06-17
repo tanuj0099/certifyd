@@ -750,7 +750,7 @@ function HowItWorks({ onEnter }) {
     { id: '03', label: 'ROI Dashboard', subtitle: 'See the numbers', desc: 'Estimated payback window, 5-year net gain, monthly delta - all calibrated to your city and salary. A financial projection, not a promise.' },
   ]
   return (
-    <StorySection id="03" title="SYS_ARCHITECTURE" bg={C.surface}>
+    <StorySection id="03" title="SYS_ARCHITECTURE" bg={C.bg}>
       <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }}>
         <h2 style={{ margin: '0 0 52px' }}>Three inputs.<br />Data-driven projections.</h2>
       </motion.div>
@@ -837,7 +837,7 @@ function PivotDomainsCard({ onEnter }) {
   }
 
   return (
-    <StorySection id="02.5" title="PIVOT_ENGINE" bg={C.surface}>
+    <StorySection id="02.5" title="PIVOT_ENGINE" bg={C.bg}>
       <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }}>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '32px' : '64px', alignItems: 'start' }}>
 
