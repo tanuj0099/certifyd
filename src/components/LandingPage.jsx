@@ -997,7 +997,7 @@ function ElevenPM({ onEnter }) {
     { time: '12:03 AM', name: 'Arjun', loc: 'Pune', role: 'CS  Fresh graduate', thought: '"Which cert gets me placed here in India?"', context: 'Three articles. All recommend AWS. All in USD.', answer: 'Student Mode. GCP placed 47 Pune freshers in Q1 2026.' },
   ]
   return (
-    <StorySection id="05" title="USER_STORIES" bg={C.surface}>
+    <StorySection id="05" title="USER_STORIES" bg={C.bg}>
       <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }}>
         <h2 style={{ margin: '0 0 52px' }}>We know what you're<br />thinking right now.</h2>
       </motion.div>
@@ -1074,7 +1074,7 @@ function SocialProof() {
     { quote: 'Student Mode. India-specific. GCP placed 47 Pune freshers in Q1 2026. My ₹5.2L offer was one of them.', name: 'Ananya K.', detail: 'Pune  Fresh Graduate', hike: '₹5.2L offer' },
   ]
   return (
-    <StorySection id="07" title="FIELD_REPORTS" bg={C.surface}>
+    <StorySection id="07" title="FIELD_REPORTS" bg={C.bg}>
       <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }}>
         <h2 style={{ margin: '0 0 52px' }}>They ran the numbers first.<br /><span style={{ color: C.gold }}>Then decided.</span></h2>
       </motion.div>
@@ -1163,7 +1163,7 @@ function FinalCTA({ onEnter }) {
 
   return (
     <div style={{
-      background: C.surface,
+      background: C.bg,
       borderTop: `1px solid ${C.border}`,
       position: 'relative',
       overflow: 'hidden',
