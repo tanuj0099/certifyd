@@ -284,7 +284,7 @@ const CertRadar = () => {
             )}
 
             {/* Search Bar */}
-            <div className="mb-8 border-b pb-3 transition-colors flex items-center gap-3" style={{ borderColor: 'var(--border)' }}>
+            <div className="mb-3 transition-colors flex items-center gap-3">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="w-5 h-5 flex-shrink-0"
@@ -313,6 +313,23 @@ const CertRadar = () => {
                 </button>
               )}
             </div>
+            
+            {/* Mobile Filters Trigger */}
+            <div className="flex lg:hidden items-center justify-between mb-8 pb-4 border-b" style={{ borderColor: 'var(--border)' }}>
+               <button 
+                 onClick={() => setIsMobileSidebarOpen(true)}
+                 className="flex items-center gap-2 text-sm font-semibold transition-colors hover:opacity-80"
+                 style={{ color: 'var(--text)' }}
+               >
+                 <Filter size={16} />
+                 Filters
+                 {activeFilterCount > 0 && <span className="ml-1 bg-[var(--accent)] text-[var(--bg)] rounded-full px-2 py-0.5 text-[10px] font-bold">{activeFilterCount}</span>}
+               </button>
+               {!isLoading && certifications.length > 0 && <span className="text-xs uppercase tracking-widest font-mono" style={{ color: 'var(--text-3)' }}>{certifications.length} Results</span>}
+            </div>
+            
+            {/* Desktop separator */}
+            <div className="hidden lg:block mb-8 border-b" style={{ borderColor: 'var(--border)' }} />
 
             {/* Error state */}
             {error && (
@@ -393,19 +410,7 @@ const CertRadar = () => {
         </div>
       </div>
 
-      {/* Mobile Sticky Filter FAB */}
-      {!activeCompareMode && (
-        <div className="fixed bottom-24 right-6 lg:hidden z-30">
-          <button
-            onClick={() => setIsMobileSidebarOpen(true)}
-            className="flex items-center gap-2 px-5 py-3 rounded-full shadow-2xl font-semibold text-white transition-transform hover:scale-105 active:scale-95"
-            style={{ background: 'var(--accent, #2563eb)' }}
-          >
-            <Filter size={18} />
-            Filters {activeFilterCount > 0 && <span className="ml-1 bg-white text-blue-600 rounded-full px-2 py-0.5 text-xs">{activeFilterCount}</span>}
-          </button>
-        </div>
-      )}
+      {/* Mobile Sticky Filter FAB - REMOVED per user request */}
 
       {/* Compare Mode Sticky Bar */}
       {activeCompareMode && activeCompareCertA && (

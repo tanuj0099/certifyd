@@ -112,8 +112,8 @@ const CertificationCard = ({ data, ...props }) => {
         e.currentTarget.style.transform = 'scale(1)';
       }}
     >
-      {/*  Header: vendor + difficulty + track  */}
-      <div className="flex flex-wrap items-center gap-1 md:gap-2 mb-2 md:mb-3 pr-8 md:pr-10">
+      {/*  Header: vendor + difficulty + track (Desktop only)  */}
+      <div className="hidden md:flex flex-wrap items-center gap-1 md:gap-2 mb-2 md:mb-3 pr-8 md:pr-10">
         {vendor && (
           <span className="px-2 py-1 text-[10px] md:text-xs font-semibold uppercase tracking-widest rounded-md transition-colors glass text-[var(--text-2)]">
             {vendor}
