@@ -127,8 +127,14 @@ export default function FilterSidebar({
   activeTarget,
   resumeDomain
 }) {
+  const [localFilters, setLocalFilters] = React.useState(filters);
+
+  React.useEffect(() => {
+    setLocalFilters(filters);
+  }, [filters]);
+
   const toggleOption = (category, optionId) => {
-    setFilters(prev => {
+    setLocalFilters(prev => {
       const currentList = prev[category] || [];
       const isSelected = currentList.includes(optionId);
       
@@ -142,12 +148,19 @@ export default function FilterSidebar({
   };
 
   const clearFilters = () => {
-    setFilters({ vendors: [], difficulties: [], tracks: [] });
+    setLocalFilters({ vendors: [], difficulties: [], tracks: [] });
   };
 
-  const activeFilterCount = (filters.vendors?.length || 0) + 
-                            (filters.difficulties?.length || 0) + 
-                            (filters.tracks?.length || 0);
+  const handleApply = () => {
+    setFilters(localFilters);
+    if (isMobileOpen) {
+      setIsMobileOpen(false);
+    }
+  };
+
+  const localFilterCount = (localFilters.vendors?.length || 0) + 
+                           (localFilters.difficulties?.length || 0) + 
+                           (localFilters.tracks?.length || 0);
 
   const dynamicSections = React.useMemo(() => {
     return FILTER_SECTIONS.map(section => {
@@ -178,13 +191,13 @@ export default function FilterSidebar({
           <Filter size={18} color="var(--text)" />
           <h2 className="text-lg font-bold" style={{ color: 'var(--text)' }}>Filters</h2>
         </div>
-        {activeFilterCount > 0 && (
+        {localFilterCount > 0 && (
           <button 
             onClick={clearFilters}
             className="text-xs font-medium hover:underline transition-all"
             style={{ color: 'var(--text-3)' }}
           >
-            Clear all ({activeFilterCount})
+            Clear all ({localFilterCount})
           </button>
         )}
       </div>
@@ -195,10 +208,21 @@ export default function FilterSidebar({
           <FilterAccordion 
             key={section.id} 
             section={section} 
-            selectedOptions={filters[section.id] || []}
+            selectedOptions={localFilters[section.id] || []}
             toggleOption={toggleOption}
           />
         ))}
+      </div>
+
+      {/* Desktop apply button (hidden on mobile drawer because we have a sticky bottom button there) */}
+      <div className="hidden lg:block mt-4 pt-4 border-t" style={{ borderColor: 'var(--border)' }}>
+        <button
+          onClick={handleApply}
+          className="w-full py-2.5 rounded-xl font-semibold text-[var(--bg)] transition-all duration-300 shadow-sm hover:opacity-90"
+          style={{ background: 'var(--accent)' }}
+        >
+          {localFilterCount > 0 ? `Apply Filters` : 'Apply All'}
+        </button>
       </div>
     </div>
   );
@@ -245,11 +269,11 @@ export default function FilterSidebar({
               {/* Mobile apply button */}
               <div className="mt-6 pt-4 border-t" style={{ borderColor: 'var(--border)' }}>
                 <button
-                  onClick={() => setIsMobileOpen(false)}
-                  className="w-full py-3 rounded-xl font-semibold text-white transition-all duration-300 shadow-lg"
-                  style={{ background: 'var(--accent, #2563eb)' }}
+                  onClick={handleApply}
+                  className="w-full py-3 rounded-xl font-semibold text-[var(--bg)] transition-all duration-300 shadow-lg hover:opacity-90"
+                  style={{ background: 'var(--accent)' }}
                 >
-                  Show Results
+                  {localFilterCount > 0 ? `Apply Filters` : 'Apply All'}
                 </button>
               </div>
             </motion.div>
