@@ -362,19 +362,18 @@ function MobileBottomBar({ currentPage, user, onSignIn, onNavigate, pathname }) 
       transition={{ type: 'spring', stiffness: 200, damping: 28, delay: 0.2 }}
       style={{
         position: 'fixed',
-        bottom: '20px', left: '16px', right: '16px',
+        bottom: '0px', left: '0px', right: '0px',
         zIndex: 9999,
-        background: 'color-mix(in srgb, var(--bg) 85%, transparent)',
-        border: '1px solid var(--border-mid)',
-        borderRadius: '24px',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
+        background: 'color-mix(in srgb, var(--bg) 50%, transparent)',
+        borderTop: '1px solid var(--border-mid)',
+        boxShadow: '0 -8px 32px rgba(0,0,0,0.1)',
         backdropFilter: 'blur(24px) saturate(180%)',
         WebkitBackdropFilter: 'blur(24px) saturate(180%)',
         display: 'flex',
         alignItems: 'stretch',
         justifyContent: 'space-around',
-        padding: '6px 8px',
-        height: '64px',
+        padding: '6px 8px calc(6px + env(safe-area-inset-bottom, 0px))',
+        height: 'calc(64px + env(safe-area-inset-bottom, 0px))',
       }}
     >
       {tabs.map(tab => {
