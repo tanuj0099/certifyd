@@ -1,7 +1,10 @@
-import { Inter, Plus_Jakarta_Sans, JetBrains_Mono, Playfair_Display } from 'next/font/google';
+import { Inter, Plus_Jakarta_Sans, JetBrains_Mono, Playfair_Display, Geist } from 'next/font/google';
 import Script from 'next/script';
 import { Providers } from './providers';
 import '@/index.css';
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 const plusJakarta = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-jakarta', display: 'swap' });
@@ -16,7 +19,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${inter.variable} ${plusJakarta.variable} ${jetbrains.variable} ${playfair.variable}`} suppressHydrationWarning>
+    <html lang="en" className={cn(inter.variable, plusJakarta.variable, jetbrains.variable, playfair.variable, "font-sans", geist.variable)} suppressHydrationWarning>
       <body suppressHydrationWarning>
         <Script
           strategy="afterInteractive"

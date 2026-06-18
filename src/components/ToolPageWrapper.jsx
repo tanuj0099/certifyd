@@ -13,22 +13,7 @@ import { Sparkles } from 'lucide-react'
 
 const FM = "var(--font-mono)";
 
-const DotMatrixLayer = ({ size, space, opacity, duration, reverse, color }) => (
-  <motion.div
-    animate={{ 
-      backgroundPosition: reverse ? [`0px 0px`, `-${space}px -${space}px`] : [`0px 0px`, `${space}px ${space}px`] 
-    }}
-    transition={{ repeat: Infinity, duration: duration, ease: "linear" }}
-    style={{
-      position: 'absolute',
-      inset: '-100px', 
-      opacity: opacity,
-      backgroundImage: `radial-gradient(${color} ${size}px, transparent ${size}px)`,
-      backgroundSize: `${space}px ${space}px`,
-      pointerEvents: 'none'
-    }}
-  />
-);
+import { DotMatrixBackground } from './DotMatrixBackground.jsx'
 
 const T = { type: 'spring', stiffness: 100, damping: 20 };
 
@@ -78,27 +63,8 @@ export default function ToolPageWrapper({
 
       {/*  Mind-Blowing 7-Layer Dot Matrix Header  */}
       {!hideHeader && (
-        <div className="relative w-full overflow-hidden px-4 md:px-6 pt-2 pb-8" style={{ minHeight: '240px' }}>
-          
-          {/* Background Matrix */}
-          <div 
-            className="absolute inset-0 z-0" 
-            style={{ 
-              maskImage: 'linear-gradient(to bottom, black 10%, transparent 100%)',
-              WebkitMaskImage: 'linear-gradient(to bottom, black 10%, transparent 100%)'
-            }}
-          >
-            <DotMatrixLayer size={1} space={12} opacity={0.15} duration={20} color="var(--accent)" />
-            <DotMatrixLayer size={1.5} space={24} opacity={0.12} duration={30} reverse color="var(--accent)" />
-            <DotMatrixLayer size={2} space={48} opacity={0.1} duration={40} color="var(--text)" />
-            <DotMatrixLayer size={2.5} space={96} opacity={0.08} duration={50} reverse color="var(--text)" />
-            <DotMatrixLayer size={3} space={140} opacity={0.06} duration={60} color="var(--accent)" />
-            <DotMatrixLayer size={4} space={200} opacity={0.04} duration={70} reverse color="var(--text)" />
-            <DotMatrixLayer size={6} space={300} opacity={0.02} duration={80} color="var(--accent)" />
-          </div>
-
-          {/* Content */}
-          <div className="relative z-10 flex flex-col items-start max-w-5xl mx-0 pt-2">
+        <DotMatrixBackground className="px-4 md:px-6 pt-2 pb-8" style={{ minHeight: '240px' }}>
+          <div className="flex flex-col items-start max-w-5xl mx-0 pt-2">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }}>
               
               {/* Title */}
@@ -131,7 +97,7 @@ export default function ToolPageWrapper({
 
             </motion.div>
           </div>
-        </div>
+        </DotMatrixBackground>
       )}
 
       {/*  Tool content - directly on background, hairline above  */}

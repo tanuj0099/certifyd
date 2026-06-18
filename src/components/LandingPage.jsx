@@ -7,7 +7,8 @@ import { THEMES, useThemeContext } from './SharedUI.jsx'
 import { useRouter } from 'next/navigation'
 import SEOHead from './SEOHead.jsx'
 import { validateDomain } from '../services/aiService.jsx'
-
+import { DotMatrixBackground } from './DotMatrixBackground.jsx'
+import { InfiniteToolsLoop } from './InfiniteToolsLoop.jsx'
 function useTheme() {
   return useThemeContext()
 }
@@ -1264,128 +1265,128 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
         transition: 'background 0.3s ease, color 0.3s ease',
       }}>
         {/* -------------------------------------------
-            HERO - centered mountain, tagline on mountain
+            HERO - 2 Column Pro Max
         ------------------------------------------- */}
         <div style={{
           position: 'relative',
-          height: '100vh',
-          minHeight: isMobile ? '100svh' : '680px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          minHeight: isMobile ? '100svh' : '100vh',
           borderBottom: `1px solid ${C.border}`,
           overflow: 'hidden',
+          background: C.bg
         }}>
-
-          {/* Mountain - centered, full bleed */}
-          <div style={{ position: 'absolute', inset: 0, zIndex: 1, background: C.bg }}>
-            {isMobile ? (
-              <img
-                src="/mountain.png"
-                alt="Mountain background"
-                loading="lazy"
-                style={{
-                  position: 'absolute',
-                  bottom: 0, left: 0,
-                  width: '100%',
-                  height: 'auto',
-                  objectFit: 'contain',
-                  objectPosition: 'center bottom',
-                  filter: !C.isLight
-                    ? 'brightness(0.42) contrast(1.08) saturate(0.55)'
-                    : 'brightness(0.62) contrast(1.12) saturate(0.82)',
-                  maskImage: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.45) 55%, transparent 100%)',
-                  WebkitMaskImage: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.45) 55%, transparent 100%)',
-                }}
-              />
-            ) : (
-              <img
-                src="/mountain.png"
-                alt="Mountain background"
-                loading="lazy"
-                style={{
-                  width: '100%', height: '100%',
-                  objectFit: 'cover',
-                  objectPosition: 'center center',
-                  filter: !C.isLight
-                    ? 'brightness(0.38) contrast(1.12) saturate(0.6)'
-                    : 'brightness(0.62) contrast(1.12) saturate(0.82)',
-                }}
-              />
-            )}            {/* Overlay for text readability */}
-            <div style={{
-              position: 'absolute', inset: 0,
-              background: C.isLight
-                ? 'linear-gradient(to bottom, rgba(0,0,0,0.42) 0%, rgba(0,0,0,0.28) 50%, rgba(0,0,0,0.38) 100%)'
-                : 'linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.5) 100%)',
-            }} />
-          </div>
-
-          {/* Centered content ON the mountain */}
+          {/* Core Content Grid */}
           <div style={{
-            position: 'relative', zIndex: 2,
-            display: 'flex', flexDirection: 'column',
-            alignItems: 'center', justifyContent: 'center',
-            textAlign: 'center',
-            /* 16px side padding on phones, 24px on larger */
-            padding: isMobile ? '0 16px' : '0 24px',
-            maxWidth: '820px',
-            width: '100%',
+            position: 'relative',
+            zIndex: 10,
+            display: 'grid',
+            gridTemplateColumns: isMobile ? '1fr' : '1.15fr 0.85fr',
+            minHeight: isMobile ? '100svh' : '100vh',
+            maxWidth: '1440px',
+            margin: '0 auto'
           }}>
+            {/* LEFT: Typography & Call to Action */}
+            <div style={{
+              padding: isMobile ? '80px 24px 60px' : '10vh 4vw 0 max(5vw, 64px)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
+              position: 'relative'
+            }}>
+              {/* Subtle ambient glow behind text to make it pop */}
+              <div style={{
+                position: 'absolute',
+                top: '20%', left: '30%',
+                width: '600px', height: '600px',
+                transform: 'translate(-50%, -50%)',
+                background: 'radial-gradient(circle, rgba(201, 168, 76, 0.08) 0%, transparent 60%)',
+                filter: 'blur(40px)',
+                pointerEvents: 'none',
+                zIndex: -1
+              }} />
 
+              <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.05 }}>
+                
+                <h1 style={{
+                  fontFamily: 'var(--font-sans), sans-serif',
+                  fontWeight: '700',
+                  fontSize: isMobile ? 'clamp(3rem, 11vw, 4rem)' : 'clamp(4rem, 6vw, 6.5rem)',
+                  lineHeight: 1.0,
+                  letterSpacing: '-0.05em',
+                  marginBottom: '24px',
+                  maxWidth: '14ch'
+                }}>
+                  <span style={{
+                    background: 'linear-gradient(to right, var(--text) 0%, var(--text-3) 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                    color: 'transparent'
+                  }}>Know the</span>{' '}
+                  <span style={{
+                    background: 'linear-gradient(to right, var(--gold-val) 0%, var(--gold-light) 50%, var(--gold-val) 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                    color: 'transparent'
+                  }}>ROI</span><br />
+                  <span style={{
+                    background: 'linear-gradient(to right, var(--text) 0%, var(--text-3) 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                    color: 'transparent'
+                  }}>before you invest.</span>
+                </h1>
+                
+                <p style={{
+                  fontFamily: F_SANS,
+                  fontSize: isMobile ? '16px' : '18px',
+                  color: C.text3,
+                  lineHeight: 1.6,
+                  maxWidth: '40ch',
+                  marginBottom: '40px',
+                  fontWeight: '400'
+                }}>
+                  Every tool is built around one question: <strong style={{ color: C.text, fontWeight: '500' }}>will this cert pay off for you?</strong> We run the financial model using verified Indian salary benchmarks.
+                </p>
+                
+                <div style={{ display: 'flex', gap: '24px', alignItems: 'center', flexWrap: 'wrap' }}>
+                  <PillBtn onClick={handleEnter} large primary>Calculate ROI <ArrowRight size={15} /></PillBtn>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: C.text3, fontFamily: F_MONO, fontSize: '11px', letterSpacing: '0.05em' }}>
+                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#2db87a', animation: 'pdot 1.5s infinite' }} />
+                    LIVE DATA 2026
+                  </div>
+                </div>
+              </motion.div>
+            </div>
 
-            {/* Headline - tightly spaced, on the mountain */}
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, delay: 0.06 }}
-              style={{
-                fontFamily: F_SERIF, fontWeight: '400',
-                fontSize: isMobile
-                  ? 'clamp(2.6rem, 9vw, 4.2rem)'
-                  : 'clamp(4rem, 7.5vw, 7.5rem)',
-                lineHeight: 0.88,
-                letterSpacing: '-0.03em',
-                color: '#F4F5F8',
-                marginBottom: '28px',
-                maxWidth: '13ch',
-                textShadow: '0 2px 24px rgba(0,0,0,0.45)',
-              }}
-            >
-              Your next cert<br />
-              is either a{' '}
-              <span style={{ color: C.gold, fontStyle: 'italic' }}>goldmine</span>
-              <br />
-              <span style={{ color: 'rgba(255,255,255,0.6)' }}>or a{' '}</span>
-              <span style={{ color: 'rgba(255,255,255,0.45)', fontStyle: 'italic' }}>mistake.</span>
-            </motion.h1>
-
-            {/* Supporting text */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.18 }}
-              style={{
-                fontFamily: F_SANS,
-                fontSize: isMobile ? '13px' : '16px',
-                color: 'rgba(244,245,248,0.92)',
-                opacity: 1,
-                maxWidth: '380px', lineHeight: '1.6',
-                margin: '0 0 36px',
-                textShadow: '0 1px 20px transparent',
-              }}
-            >
-              Identify high-ROI certifications backed by verified market data and project your exact salary uplift before you invest.
-            </motion.p>
-
-            {/* CTA - button only, no pill box */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.28 }}
-            >
-              <PillBtn onClick={handleEnter} large primary>Calculate ROI <ArrowRight size={15} /></PillBtn>
-            </motion.div>
+            {/* RIGHT: Infinite Tools Loop inside cleanly scoped DotMatrix */}
+            <div style={{
+              position: 'relative',
+              height: isMobile ? '500px' : '100%',
+              width: '100%',
+              overflow: 'hidden'
+            }}>
+              <DotMatrixBackground 
+                className="w-full h-full absolute inset-0"
+                mode="grid"
+                mask={isMobile ? 'radial-gradient(ellipse at center, black 0%, transparent 80%)' : 'radial-gradient(ellipse at center, black 0%, transparent 75%)'}
+              >
+                <div style={{ 
+                  position: 'absolute', inset: 0, 
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  padding: isMobile ? '0' : '0 4vw'
+                }}>
+                  <div className="w-full h-full relative" style={{
+                    maskImage: isMobile 
+                      ? 'linear-gradient(to bottom, transparent, black 15%, black 85%, transparent)' 
+                      : 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)'
+                  }}>
+                     <InfiniteToolsLoop />
+                  </div>
+                </div>
+              </DotMatrixBackground>
+            </div>
           </div>
         </div>
 
