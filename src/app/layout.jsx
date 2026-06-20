@@ -2,6 +2,7 @@ import { Inter, Plus_Jakarta_Sans, JetBrains_Mono, Playfair_Display, Geist } fro
 import Script from 'next/script';
 import { Providers } from './providers';
 import ConsoleGreeting from '@/components/ConsoleGreeting';
+import ConsentManager from '@/components/ConsentManager';
 import '@/index.css';
 import { cn } from "@/lib/utils";
 
@@ -25,20 +26,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={cn(inter.variable, plusJakarta.variable, jetbrains.variable, playfair.variable, "font-sans", geist.variable)} suppressHydrationWarning>
       <body suppressHydrationWarning>
-        <Script
-          strategy="afterInteractive"
-          src={`https://www.googletagmanager.com/gtag/js?id=G-VMZZP1RZYC`}
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-VMZZP1RZYC', {
-              page_path: window.location.pathname,
-            });
-          `}
-        </Script>
+        <ConsentManager />
         <Providers>
           <ConsoleGreeting />
           {children}

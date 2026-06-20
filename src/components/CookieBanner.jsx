@@ -41,6 +41,11 @@ const CookieBanner = () => {
     setPreferences(newPrefs);
     setIsVisible(false);
     setShowModal(false);
+    
+    // Dispatch an event so ConsentManager and Providers know to wake up
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('certifydConsentUpdated'));
+    }
   };
 
   const handleAcceptAll = () => {

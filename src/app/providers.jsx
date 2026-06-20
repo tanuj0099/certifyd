@@ -101,29 +101,59 @@ export function Providers({ children }) {
     const TEST_MODE = isClientTestMode();
     const POSTHOG_KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY;
     const POSTHOG_API_HOST = process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://app.posthog.com';
-
-    if (POSTHOG_KEY && !TEST_MODE) {
-      posthog.init(POSTHOG_KEY, {
-        api_host: POSTHOG_API_HOST,
-        person_profiles: 'identified_only',
-        capture_pageview: true,
-        autocapture: false,
-      });
-    }
-
     const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN;
-    if (SENTRY_DSN && !TEST_MODE) {
-      Sentry.init({
-        dsn: SENTRY_DSN,
-        integrations: [
-          Sentry.browserTracingIntegration(),
-          Sentry.replayIntegration(),
-        ],
-        tracesSampleRate: 1.0, 
-        replaysSessionSampleRate: 0.1,
-        replaysOnErrorSampleRate: 1.0,
-      });
-    }
+
+    let sentryInitialized = false;
+
+    const checkAndInit = () => {
+      try {
+        const saved = localStorage.getItem('certifyd_cookie_preferences');
+        if (saved) {
+          const prefs = JSON.parse(saved);
+
+          // Only initialize PostHog if analytics consent is granted
+          if (prefs.analytics && POSTHOG_KEY && !TEST_MODE) {
+            // Check if already initialized to prevent double init
+            if (!posthog.__loaded) {
+              posthog.init(POSTHOG_KEY, {
+                api_host: POSTHOG_API_HOST,
+                person_profiles: 'identified_only',
+                capture_pageview: true,
+                autocapture: false,
+              });
+            }
+          }
+
+          // Initialize Sentry if performance/functional consent is granted (or map as needed, typically functional/analytics)
+          if ((prefs.functional || prefs.analytics) && SENTRY_DSN && !TEST_MODE) {
+            if (!sentryInitialized) {
+              sentryInitialized = true;
+              Sentry.init({
+                dsn: SENTRY_DSN,
+                integrations: [
+                  Sentry.browserTracingIntegration(),
+                  Sentry.replayIntegration(),
+                ],
+                tracesSampleRate: 1.0, 
+                replaysSessionSampleRate: 0.1,
+                replaysOnErrorSampleRate: 1.0,
+              });
+            }
+          }
+        }
+      } catch (e) {
+        // Ignore JSON parse errors
+      }
+    };
+
+    // Run on initial mount
+    checkAndInit();
+
+    // Listen for consent updates
+    window.addEventListener('certifydConsentUpdated', checkAndInit);
+    return () => {
+      window.removeEventListener('certifydConsentUpdated', checkAndInit);
+    };
   }, []);
 
   return (
