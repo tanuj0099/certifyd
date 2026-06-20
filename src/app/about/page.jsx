@@ -110,13 +110,13 @@ export default function AboutPage() {
         <GlassCard style={{ padding: 'clamp(20px, 4vw, 32px)', background: 'var(--text)', borderColor: 'var(--border-accent)' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '18px', alignItems: 'center' }}>
             <div>
-              <div style={{ fontFamily: FM, fontSize: '10px', color: 'var(--text-3)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '14px' }}>
+              <div style={{ fontFamily: FM, fontSize: '10px', color: 'var(--bg)', opacity: 0.6, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '14px' }}>
                 The outcome
               </div>
               <p style={{ fontFamily: FH, fontSize: 'clamp(1.9rem, 4vw, 3rem)', lineHeight: 0.98, letterSpacing: '-0.03em', color: 'var(--bg)', margin: '0 0 14px' }}>
                 You should know the answer before you pay the exam fee.
               </p>
-              <p style={{ fontFamily: FB, fontSize: '14px', lineHeight: '1.8', color: 'var(--text-2)', margin: 0 }}>
+              <p style={{ fontFamily: FB, fontSize: '14px', lineHeight: '1.8', color: 'var(--bg)', opacity: 0.8, margin: 0 }}>
                 Certifyd is built to make that answer visible, explainable, and fast to evaluate.
               </p>
             </div>
@@ -125,7 +125,7 @@ export default function AboutPage() {
               <PillButton href="/#workspace" wide>
                 Calculate ROI <ArrowRight size={15} />
               </PillButton>
-              <a href="mailto:hello@certifyd.in" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontFamily: FB, fontSize: '13px', color: 'var(--text-2)', textDecoration: 'none' }}>
+              <a href="mailto:hello@certifyd.in" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontFamily: FB, fontSize: '13px', color: 'var(--bg)', opacity: 0.8, textDecoration: 'none' }}>
                 <Mail size={14} /> hello@certifyd.in
               </a>
             </div>
