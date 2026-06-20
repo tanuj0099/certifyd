@@ -15,15 +15,20 @@ const buildROIPrompt = ({ certName, currentSalary, certCost, hikePercent, isStud
 
   const context = isStudent
     ? `STUDENT with no salary, targeting first job in India. Cert: ${certName}. Goal: first offer Rs.4.8L+.`
-    : `Salary: Rs.${currentSalary}L/yr → Rs.${(hikedSalary/100000).toFixed(1)}L. Cost: Rs.${certCost}L. Break-even: ${breakEvenMonths} months. 5yr net: Rs.${(fiveYearGain/100000).toFixed(1)}L.`
+    : `Salary: Rs.${currentSalary}L/yr. Cost: Rs.${certCost}L. City: ${city}. Domain: ${domain}.`
 
-  return `You are Certify, a brutally honest career advisor for Indian professionals (2026).
+  return `You are Certify, an elite, brutally honest career and salary negotiation analyst for Indian professionals (2026).
 ${context}
 Certification: ${certName || 'General IT Certification'}
+
+Your task is to predict the exact, realistic salary hike percentage this specific professional will get if they earn this certification in their city/domain. Do NOT just give a generic average. If the cert is highly demanded in their city (e.g., AWS in Bangalore), predict a higher hike (e.g., 25-45%). If it's saturated or irrelevant to their domain, predict a low hike (e.g., 5-10%).
+
+Calculate the break-even months based on the predicted hike. Current salary is ${currentSalary}L. Certification cost is ${certCost}L.
 
 Respond with ONLY a valid JSON object — no markdown, no prose, no code fences.
 
 {
+  "predictedHikePercent": integer (e.g. 25, 12, 30),
   "verdict": "Strong ROI / Moderate ROI / Weak ROI — one sentence with % and timeline",
   "breakEven": "X months",
   "projection": "Rs.X.XL",
@@ -55,7 +60,8 @@ const safeParseJSON = (text) => {
 }
 
 // ── Fallback when JSON parse fails ───────────────────────
-const roiFallback = (text) => ({
+const roiFallback = (text, fallbackHike) => ({
+  predictedHikePercent: fallbackHike || 15,
   verdict:      'Analysis complete — see raw output below',
   breakEven:    '—',
   projection:   '—',
@@ -102,11 +108,11 @@ const callGroq = async (messages, maxTokens = 700, temperature = 0.65, jsonMode 
 
 // ── Public exports ────────────────────────────────────────
 
-export const analyzeROI = async ({ certName, currentSalary, certCost, hikePercent, isStudent = false }) => {
+export const analyzeROI = async ({ certName, currentSalary, certCost, fallbackHikePercent, isStudent = false, city = '', domain = '' }) => {
   const text   = await callGroq(
     [
       { role: 'system', content: 'You are Certify. Respond ONLY with a valid JSON object. India market 2026.' },
-      { role: 'user',   content: buildROIPrompt({ certName, currentSalary, certCost, hikePercent, isStudent }) },
+      { role: 'user',   content: buildROIPrompt({ certName, currentSalary, certCost, isStudent, city, domain }) },
     ],
     700,
     0.65,
@@ -114,9 +120,10 @@ export const analyzeROI = async ({ certName, currentSalary, certCost, hikePercen
   )
 
   const parsed = safeParseJSON(text)
-  if (!parsed) return roiFallback(text)
+  if (!parsed) return roiFallback(text, fallbackHikePercent)
 
   return {
+    predictedHikePercent: parsed.predictedHikePercent || fallbackHikePercent || 15,
     verdict:      parsed.verdict      || '',
     breakEven:    parsed.breakEven    || '',
     projection:   parsed.projection   || '',

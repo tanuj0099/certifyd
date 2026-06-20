@@ -934,10 +934,21 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
     setAiResult(null);
     setAiError(null);
     try {
-      var r = await analyzeROI({ certName, currentSalary: salary, certCost, hikePercent, isStudent });
+      var r = await analyzeROI({ 
+        certName, 
+        currentSalary: salary, 
+        certCost, 
+        fallbackHikePercent: hikePercent, 
+        isStudent,
+        city: resumeCity,
+        domain: resumeDomain
+      });
       setAiResult(r);
+      if (r.predictedHikePercent) {
+        setHikePercent(r.predictedHikePercent);
+      }
       try {
-        trackAiAnalysisRun({ certName, currentSalary: salary, certCost, hikePercent, isStudent, aiResult: r })
+        trackAiAnalysisRun({ certName, currentSalary: salary, certCost, hikePercent: r.predictedHikePercent || hikePercent, isStudent, aiResult: r })
       } catch (_) {}
       try {
         trackRoiCalculated({ certName, roiPercent: roi.roiPercent, breakEvenMonths: roi.breakEvenMonths, fiveYearGainINR: roi.fiveYearGainINR })

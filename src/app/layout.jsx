@@ -1,6 +1,7 @@
 import { Inter, Plus_Jakarta_Sans, JetBrains_Mono, Playfair_Display, Geist } from 'next/font/google';
 import Script from 'next/script';
 import { Providers } from './providers';
+import ConsoleGreeting from '@/components/ConsoleGreeting';
 import '@/index.css';
 import { cn } from "@/lib/utils";
 
@@ -39,6 +40,7 @@ export default function RootLayout({ children }) {
           `}
         </Script>
         <Providers>
+          <ConsoleGreeting />
           {children}
         </Providers>
       </body>

@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import {
@@ -6,7 +6,8 @@ import {
   CheckCircle, AlertCircle, Info, ExternalLink,
   Shield, Search
 } from 'lucide-react'
-import { GOVT_DATA, PRIVATE_DATA, MANDATORY_FINANCIAL_CERTS } from '../data/jobCertData.js'
+
+import { supabase } from '../services/supabase.js'
 
 const F_HEAD = "var(--font-head)";
 const F_MONO = "var(--font-mono)";
@@ -249,10 +250,91 @@ const MandatoryCertCard = ({ cert }) => (
 const JobCertMap = () => {
   const [tab,    setTab]    = useState('govt')
   const [search, setSearch] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [dbData, setDbData] = useState({ govt: [], private: [], mandatory: [] })
+
+  useEffect(() => {
+    let isMounted = true;
+    async function fetchData() {
+      const { data, error } = await supabase
+        .from('jobmap_orgs')
+        .select(`*, tracks:jobmap_tracks (*, certs:jobmap_track_certs (*))`)
+
+      if (error) {
+        console.error("Error fetching jobmap:", error);
+        if (isMounted) setLoading(false);
+        return;
+      }
+
+      const govt = [];
+      const priv = [];
+      const mand = [];
+
+      data.forEach(org => {
+        if (org.org_type === 'govt') {
+          govt.push({
+            org: org.name,
+            sector: org.sector,
+            color: org.color,
+            emoji: org.emoji,
+            description: org.description_or_size,
+            roles: org.tracks.map(t => ({
+              role: t.title_or_to_role,
+              transition: t.transition_or_from_role,
+              cert: t.certs[0]?.cert_name || '',
+              certId: t.certs[0]?.cert_slug || null,
+              mandatory: t.is_mandatory,
+              source: org.source_text || '',
+              note: t.note,
+              salaryRange: t.salary_range,
+              openings: t.openings
+            }))
+          })
+        } else if (org.org_type === 'private') {
+          priv.push({
+            company: org.name,
+            sector: org.sector,
+            color: org.color,
+            emoji: org.emoji,
+            size: org.description_or_size,
+            verified: org.is_verified,
+            source: org.source_text,
+            disclaimer: org.disclaimer,
+            tracks: org.tracks.map(t => ({
+              from: t.transition_or_from_role,
+              to: t.title_or_to_role,
+              certs: t.certs.map(c => c.cert_name),
+              mandatory: t.is_mandatory,
+              note: t.note,
+              typicalTime: t.typical_time,
+              salaryJump: t.salary_jump
+            }))
+          })
+        } else if (org.org_type === 'mandatory') {
+          org.tracks.forEach(t => {
+            mand.push({
+              cert: t.title_or_to_role,
+              authority: org.name,
+              who: org.description_or_size?.replace('Who needs it: ', '') || '',
+              penalty: org.disclaimer,
+              link: org.source_text
+            })
+          })
+        }
+      });
+
+      if (isMounted) {
+        setDbData({ govt, private: priv, mandatory: mand });
+        setLoading(false);
+      }
+    }
+    fetchData();
+    return () => { isMounted = false; }
+  }, []);
 
   const query = search.toLowerCase()
 
-  const filteredGovt = GOVT_DATA.filter(org =>
+  const filteredGovt = dbData.govt.filter(org =>
     !query ||
     org.org.toLowerCase().includes(query) ||
     org.sector.toLowerCase().includes(query) ||
@@ -263,7 +345,7 @@ const JobCertMap = () => {
     )
   )
 
-  const filteredPrivate = PRIVATE_DATA.filter(co =>
+  const filteredPrivate = dbData.private.filter(co =>
     !query ||
     co.company.toLowerCase().includes(query) ||
     co.sector.toLowerCase().includes(query) ||
@@ -273,6 +355,10 @@ const JobCertMap = () => {
       t.certs.some(c => c.toLowerCase().includes(query))
     )
   )
+
+  if (loading) {
+    return <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-4)' }}>Loading data...</div>
+  }
 
   return (
     <div>

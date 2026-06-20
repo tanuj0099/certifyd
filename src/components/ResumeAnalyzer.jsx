@@ -1008,40 +1008,32 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
       }
 
       if (parsed.Database_Payload) {
-        console.log("Checking Auth User ID for RLS:", user?.id || user?.uid);
-        if (user?.id || user?.uid) {
-          const dbPayload = {
-            user_id: user.id || user.uid,
-            full_name: parsed.Database_Payload.full_name,
-            current_role: parsed.Database_Payload.current_role,
-            experience_years: parsed.Database_Payload.experience_years,
-            technical_skills: parsed.Database_Payload.technical_skills,
-            education_history: parsed.Database_Payload.education_history,
-            current_salary: parsed.Database_Payload.current_salary,
-            inferred_mobility_level: parsed.Database_Payload.inferred_mobility_level,
-            existing_certifications: parsed.Database_Payload.existing_certifications,
-            applied_projects: parsed.Database_Payload.applied_projects,
-            external_links: parsed.Database_Payload.external_links,
-            domain_bucket: parsed.Database_Payload.domain_bucket,
-            education_tier: parsed.Database_Payload.education_tier,
-            employer_category: parsed.Database_Payload.employer_category
-          };
-          console.log("Exact JSON being sent to Supabase 'resumes' table:", JSON.stringify(dbPayload, null, 2));
-          
-          try {
-            const { error: insertError } = await supabase.from('resumes').insert(dbPayload);
-            if (insertError) {
-              console.error('Supabase DB Error message:', insertError.message);
-              console.error('Supabase DB Error code:', insertError.code);
-              console.error('Supabase DB Error details:', insertError.details);
-              console.error('Supabase DB Error hint:', insertError.hint);
-              console.error('Full Supabase Error Object:', JSON.stringify(insertError));
-            }
-          } catch (dbErr) {
-            console.error('Caught exception during Supabase resume upsert:', dbErr);
+        const dbPayload = {
+          user_id: user?.id || user?.uid || null,
+          full_name: parsed.Database_Payload.full_name,
+          current_role: parsed.Database_Payload.current_role,
+          experience_years: parsed.Database_Payload.experience_years,
+          technical_skills: parsed.Database_Payload.technical_skills,
+          education_history: parsed.Database_Payload.education_history,
+          current_salary: parsed.Database_Payload.current_salary,
+          inferred_mobility_level: parsed.Database_Payload.inferred_mobility_level,
+          existing_certifications: parsed.Database_Payload.existing_certifications,
+          applied_projects: parsed.Database_Payload.applied_projects,
+          external_links: parsed.Database_Payload.external_links,
+          domain_bucket: parsed.Database_Payload.domain_bucket,
+          education_tier: parsed.Database_Payload.education_tier,
+          employer_category: parsed.Database_Payload.employer_category,
+          city: parsed.city || null
+        };
+        console.log("Saving anonymized resume telemetry to Supabase 'resumes' table");
+        
+        try {
+          const { error: insertError } = await supabase.from('resumes').insert(dbPayload);
+          if (insertError) {
+            console.error('Supabase DB Error message:', insertError.message);
           }
-        } else {
-          console.warn('Skipping resume save: user is null or missing ID.');
+        } catch (dbErr) {
+          console.error('Caught exception during Supabase resume upsert:', dbErr);
         }
       }
 

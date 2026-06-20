@@ -55,18 +55,31 @@ export function GlobalSearchCapsule() {
         const localHits = performGlobalSearch(query);
         if (isMounted) setResults(localHits);
 
-        // 2. Fetch from Supabase (the source of truth for 500+ certs)
+        // 2. Fetch from Supabase
         if (supabase) {
           setIsSearchingDb(true);
           try {
-            const { data, error } = await supabase
+            // A. Search Certifications
+            const certsPromise = supabase
               .from('certifications')
               .select('id, slug, name, vendor, functional_track')
               .or(`name.ilike.%${query.trim()}%,vendor.ilike.%${query.trim()}%`)
               .limit(15);
+              
+            // B. Search Jobmap Tracks
+            const tracksPromise = supabase
+              .from('jobmap_tracks')
+              .select('id, title_or_to_role, org:jobmap_orgs(name), certs:jobmap_track_certs(cert_name)')
+              .ilike('title_or_to_role', `%${query.trim()}%`)
+              .limit(10);
 
-            if (!error && data && isMounted) {
-              const dbHits = data.map(cert => ({
+            const [
+              { data: dataCerts, error: errorCerts },
+              { data: dataTracks, error: errorTracks }
+            ] = await Promise.all([certsPromise, tracksPromise]);
+
+            if (!errorCerts && dataCerts && isMounted) {
+              const dbHits = dataCerts.map(cert => ({
                 id: `supabase-${cert.id}`,
                 path: `/tools/cert-radar?search=${encodeURIComponent(cert.slug)}`,
                 label: cert.name,
@@ -76,9 +89,25 @@ export function GlobalSearchCapsule() {
               }));
 
               setResults(prev => {
-                // Avoid duplicating local hits that match Supabase hits
                 const existingLabels = new Set(prev.map(r => r.label.toLowerCase()));
                 const newHits = dbHits.filter(h => !existingLabels.has(h.label.toLowerCase()));
+                return [...prev, ...newHits];
+              });
+            }
+
+            if (!errorTracks && dataTracks && isMounted) {
+              const trackHits = dataTracks.map(track => ({
+                id: `supabase-track-${track.id}`,
+                path: `/tools/jobmap?search=${encodeURIComponent(track.title_or_to_role)}`,
+                label: `${track.org?.name || ''} ${track.title_or_to_role}`.trim(),
+                tag: 'ROLE',
+                desc: `Requires: ${track.certs?.map(c => c.cert_name).join(', ') || 'Certain Certifications'}`,
+                icon: null
+              }));
+
+              setResults(prev => {
+                const existingLabels = new Set(prev.map(r => r.label.toLowerCase()));
+                const newHits = trackHits.filter(h => !existingLabels.has(h.label.toLowerCase()));
                 return [...prev, ...newHits];
               });
             }
