@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import Link from 'next/link'
 import {
   Building2, ChevronDown, ChevronRight,
   CheckCircle, AlertCircle, Info, ExternalLink,
@@ -89,10 +90,18 @@ const GovtCard = ({ org }) => {
                 </div>
 
                 {/* Cert pill */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 12px', borderRadius: '9px', background: `${org.color}08`, border: `1px solid ${org.color}22`, marginBottom: '10px' }}>
-                  <Shield size={13} color={org.color} style={{ flexShrink: 0 }} />
-                  <span style={{ fontFamily: F_HEAD, fontWeight: '700', fontSize: '13px', color: org.color }}>{role.cert}</span>
-                </div>
+                {role.certId ? (
+                  <Link href={`/exams/${role.certId}`} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 12px', borderRadius: '9px', background: `${org.color}08`, border: `1px solid ${org.color}22`, marginBottom: '10px', textDecoration: 'none', transition: 'opacity 0.2s' }} onMouseEnter={e => e.currentTarget.style.opacity = 0.8} onMouseLeave={e => e.currentTarget.style.opacity = 1}>
+                    <Shield size={13} color={org.color} style={{ flexShrink: 0 }} />
+                    <span style={{ fontFamily: F_HEAD, fontWeight: '700', fontSize: '13px', color: org.color }}>{role.cert}</span>
+                    <ExternalLink size={12} color={org.color} style={{ marginLeft: 'auto', opacity: 0.5 }} />
+                  </Link>
+                ) : (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 12px', borderRadius: '9px', background: `${org.color}08`, border: `1px solid ${org.color}22`, marginBottom: '10px' }}>
+                    <Shield size={13} color={org.color} style={{ flexShrink: 0 }} />
+                    <span style={{ fontFamily: F_HEAD, fontWeight: '700', fontSize: '13px', color: org.color }}>{role.cert}</span>
+                  </div>
+                )}
 
                 {/* Details grid */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '8px', marginBottom: '10px' }}>

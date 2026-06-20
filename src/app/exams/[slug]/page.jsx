@@ -131,7 +131,7 @@ function Breadcrumb({ items }) {
 }
 
 //  Main page 
-export default function CertificationPage() {
+export default function ExamPage() {
   const { slug } = useParams()
   const isMobile = useIsMobile()
   const [cert, setCert] = useState(null)
@@ -143,7 +143,7 @@ export default function CertificationPage() {
   useEffect(() => {
     if (!slug) { setCertLoading(false); return }
     let active = true
-    async function loadCertification() {
+    async function loadExam() {
       setCertLoading(true); setCertError(null)
       try {
         if (supabase) {
@@ -155,21 +155,14 @@ export default function CertificationPage() {
         const local = CERTIFICATIONS.find((item) => slugify(item.name) === slug)
         if (active) setCert(local ?? null)
       } catch (err) {
-        if (active) setCertError('Certification metadata is unavailable right now.')
+        if (active) setCertError('Exam metadata is unavailable right now.')
       } finally {
         if (active) setCertLoading(false)
       }
     }
-    loadCertification()
+    loadExam()
     return () => { active = false }
   }, [slug])
-
-  // Redirect to exams route if it's a government exam
-  useEffect(() => {
-    if (cert && (cert.domain === 'government' || cert.domain_name === 'government')) {
-      window.location.replace(`/exams/${slug}`);
-    }
-  }, [cert, slug]);
 
   useEffect(() => {
     if (!cert || !supabase) { setDemandLoading(false); return }
@@ -216,10 +209,10 @@ export default function CertificationPage() {
       <div style={{ minHeight: '60vh', padding: '64px 24px', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--text-3)', fontFamily: FS, background: 'var(--bg)' }}>
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: '40px', marginBottom: '16px' }}></div>
-          <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-2)', marginBottom: '8px' }}>Certification not found</div>
+          <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-2)', marginBottom: '8px' }}>Exam not found</div>
           <div style={{ fontSize: '14px', color: 'var(--text-4)', marginBottom: '24px' }}>{certError || `No data found for "${slug}"`}</div>
           <Link href="/tools/cert-radar" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '10px 18px', borderRadius: '999px', border: '1px solid var(--border)', color: 'var(--text)', textDecoration: 'none', fontFamily: FS, fontSize: '13px' }}>
-            Browse all certifications <ArrowRight size={13} />
+            Browse all exams <ArrowRight size={13} />
           </Link>
         </div>
       </div>
@@ -338,7 +331,7 @@ export default function CertificationPage() {
           </div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(auto-fill, minmax(180px, 1fr))', gap: isMobile ? '10px' : '14px', marginBottom: isMobile ? '28px' : '40px' }}>
-            <StatCard icon={DollarSign}  label="Cert Cost"       value={formatCurrency(costValue)}  accent="#2db87a" />
+            <StatCard icon={DollarSign}  label="Exam Cost"       value={formatCurrency(costValue)}  accent="#2db87a" />
             <StatCard icon={TrendingUp}  label="Median Hike"     value={formatPercent(roiPercent)}  accent="#4f8ef7" />
             <StatCard icon={Calendar}    label="Study Time"      value={formatMonths(timeMonths)}   accent="#a78bfa" />
             <StatCard icon={DollarSign}  label="Monthly Budget"  value={monthlyCost ? formatCurrency(monthlyCost) : '-'} accent="#f59e0b" />
@@ -355,13 +348,13 @@ export default function CertificationPage() {
           {/* Left - Why this cert */}
           <div style={{ border: '1px solid var(--border)', borderRadius: '16px', padding: '28px', background: 'var(--bg-alt)' }}>
             <h2 style={{ margin: '0 0 24px', fontSize: '1.1rem', fontWeight: 800, letterSpacing: '-0.01em', color: 'var(--text)' }}>
-              Why this certification matters
+              Why this exam matters
             </h2>
             <div style={{ display: 'grid', gap: '22px' }}>
               {[
-                { icon: CheckCircle, color: '#10b981', title: 'Job-ready signal', body: 'This certification is mapped to open roles and employer demand in current Indian tech and cloud markets.' },
-                { icon: Clock, color: '#4f8ef7', title: 'Strong salary uplift', body: 'Expected hike estimates are derived from certification outcomes and latest employer salary signals.' },
-                { icon: Trophy, color: '#f59e0b', title: 'Career differentiation', body: 'Hiring managers value certified professionals, especially for architecture, cloud, and specialist roles.' },
+                { icon: CheckCircle, color: '#10b981', title: 'Job-ready signal', body: 'This exam is mapped to open roles and employer demand in current Indian tech and public sector markets.' },
+                { icon: Clock, color: '#4f8ef7', title: 'Strong salary uplift', body: 'Expected hike estimates are derived from exam outcomes and latest employer salary signals.' },
+                { icon: Trophy, color: '#f59e0b', title: 'Career differentiation', body: 'Hiring managers value certified and exam-qualified professionals, especially for highly competitive roles.' },
               ].map(({ icon: Icon, color, title, body }) => (
                 <div key={title} style={{ display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
                   <div style={{ width: '36px', height: '36px', flexShrink: 0, borderRadius: '10px', background: `${color}14`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -397,7 +390,7 @@ export default function CertificationPage() {
               </div>
             ) : !demandData ? (
               <div style={{ color: 'var(--text-4)', fontSize: '13px', lineHeight: 1.65, fontFamily: FS, padding: '16px 0' }}>
-                No live market record found for this certification yet. Data is updated weekly.
+                No live market record found for this exam yet. Data is updated weekly.
               </div>
             ) : (
               <div style={{ display: 'grid', gap: '10px' }}>
@@ -419,7 +412,7 @@ export default function CertificationPage() {
             {/* Compare CTA */}
             <div style={{ marginTop: '20px', paddingTop: '16px', borderTop: '1px solid var(--border)' }}>
               <Link href="/tools/compare" style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-3)', textDecoration: 'none', fontFamily: FM, fontSize: '11px', letterSpacing: '0.08em', textTransform: 'uppercase', transition: 'color 150ms' }}>
-                Compare with another cert <ArrowRight size={11} />
+                Compare with another exam <ArrowRight size={11} />
               </Link>
             </div>
           </div>
@@ -430,7 +423,7 @@ export default function CertificationPage() {
           <div>
             <div style={{ fontFamily: FM, fontSize: '9px', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--text-4)', marginBottom: '4px' }}>Next step</div>
             <div style={{ fontFamily: FS, fontSize: '14px', fontWeight: 700, color: 'var(--text)' }}>
-              See what this cert is worth for your salary + city
+              See what this exam is worth for your salary + city
             </div>
           </div>
           <Link href="/#workspace" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '12px 20px', borderRadius: '12px', background: 'var(--text)', color: 'var(--bg)', textDecoration: 'none', fontWeight: 800, fontSize: '13px', whiteSpace: 'nowrap' }}>

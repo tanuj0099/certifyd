@@ -15,6 +15,9 @@ export const metadata = {
   metadataBase: new URL('https://certifyd.in'),
   title: 'Certifyd | Certification ROI & Offer Letter Intelligence',
   description: "The data engine for India's tech careers. Calculate exact certification ROI, safely analyze offer letters, and benchmark salary premiums using verified market data.",
+  alternates: {
+    canonical: '/',
+  },
 };
 
 export default function RootLayout({ children }) {
