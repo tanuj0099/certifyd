@@ -31,7 +31,7 @@ const FALLBACK_COUNTS = {
   hr: { bangalore: 820, hyderabad: 780, pune: 740, mumbai: 1300, delhi: 1200, chennai: 760, kolkata: 620, ahmedabad: 680 },
 }
 
-function normalizeDemand(jobCount) {
+export function normalizeDemand(jobCount) {
   if (jobCount > 2000) return 5
   if (jobCount >= 1000) return 4
   if (jobCount >= 500) return 3
