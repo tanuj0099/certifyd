@@ -891,6 +891,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
   const [showVerifier, setShowVerifier] = useState(false);
   const [cooldown, setCooldown] = useState(0);
   const [showAll, setShowAll] = useState(false);
+  const [showSignInModal, setShowSignInModal] = useState(false);
 
   //  Derived state 
   const certName = storeCertName || prefilledCert;
@@ -984,7 +985,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
 
   const analyse = useCallback(async function () {
     if (!certName.trim()) { setAiError('Select a certification first'); return; }
-    if (!user && guest.exceeded) { setAiError('Free limit reached - sign in for unlimited'); return; }
+    if (!user && guest.exceeded) { setShowSignInModal(true); return; }
     if (cooldown > 0) return;
     setAiLoading(true);
     setAiResult(null);
@@ -1017,7 +1018,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
     setAiLoading(false);
   }, [certName, salary, certCost, hikePercent, isStudent, user, guest, cooldown]);
 
-  const canAnalyse = certName && (user || !guest.exceeded) && cooldown === 0;
+  const canAnalyse = certName && cooldown === 0;
 
   const demandScore = function (d) {
     return d === 'Very High' ? 4 : d === 'High' ? 3 : d === 'Medium' ? 2 : 1;
@@ -1450,6 +1451,28 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
           </motion.button>
         </div>
       ) : null}
+
+      {/*  Sign In Modal  */}
+      <AnimatePresence>
+        {showSignInModal && (
+          <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'var(--overlay-scrim, rgba(0,0,0,0.6))', display: 'grid', placeItems: 'center', padding: '20px' }}>
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 10 }} 
+              animate={{ opacity: 1, scale: 1, y: 0 }} 
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              style={{ background: 'var(--bg-surface)', padding: '32px', borderRadius: '16px', maxWidth: '400px', width: '100%', border: '1px solid var(--border-subtle)', boxShadow: 'var(--shadow-2)' }}
+            >
+              <h3 style={{ fontSize: '20px', fontFamily: 'var(--font-head)', fontWeight: 'bold', marginBottom: '8px', color: 'var(--text-primary)' }}>Sign in to continue</h3>
+              <p style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '24px', lineHeight: '1.5' }}>You've used all your free guest analyses. Sign in or create a free account to keep estimating your ROI and save your personalized career paths.</p>
+              <div style={{ display: 'flex', gap: '12px', flexDirection: 'column' }}>
+                <Link href="/login" style={{ width: '100%', padding: '12px', background: 'var(--brand-primary)', color: '#fff', borderRadius: '8px', textAlign: 'center', textDecoration: 'none', fontWeight: 'bold', fontSize: '14px' }}>Sign In</Link>
+                <Link href="/signup" style={{ width: '100%', padding: '12px', background: 'transparent', border: '1px solid var(--border-strong)', color: 'var(--text-primary)', borderRadius: '8px', textAlign: 'center', textDecoration: 'none', fontWeight: 'bold', fontSize: '14px' }}>Create Account</Link>
+                <button onClick={() => setShowSignInModal(false)} style={{ width: '100%', padding: '8px', background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', marginTop: '8px', fontSize: '13px', fontWeight: '500' }}>Maybe later</button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
     </div>
   )
