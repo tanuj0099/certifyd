@@ -24,38 +24,55 @@
   :root,
   [data-theme="nordic"],
   [data-theme="dark"] {
-    /* Linear Spec Variables */
-    --background:   #0b0b0f;
-    --card:         #16161a;
-    --card-hover:   #222326;
+    /* User's New Brand & Core Layer */
+    --bg-base: #0B0F19;
+    --bg-surface: #111827;
+    --bg-elevated: #1F2937;
+    --bg-inverse: #F8FAFC;
+    --text-primary: #F8FAFC;
+    --text-secondary: #94A3B8;
+    --text-muted: #475569;
+    --text-inverse: #0F172A;
+    --border-subtle: #1F2937;
+    --border-strong: #374151;
+    --border-focus: #00D4A8;
+    --brand-primary: #00D4A8;
+    --brand-hover: #33DDD4;
+    --brand-subtle: rgba(0, 212, 168, 0.1);
+    
+    --glass-bg: rgba(17, 24, 39, 0.6);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+    
+    --dot-color: rgba(248, 250, 252, 0.03);
+    --dot-bg: radial-gradient(var(--dot-color) 1px, transparent 1px);
+    --gradient-brand: linear-gradient(135deg, #00D4A8 0%, #007BFF 100%);
 
-    --bg:           var(--background);
-    --bg-alt:       var(--card);
-    --surface:      var(--card);
-    --text:         #F4F5F8;
-    --text-2:       #E5E7EB;
-    --text-3:       #9CA3AF;
-    --text-4:       #6B7280;
-    --accent:       #F4F5F8;
+    /* Linear Spec Variables (Mapped for existing site compat) */
+    --background:   var(--bg-base);
+    --card:         var(--bg-surface);
+    --card-hover:   var(--bg-elevated);
+
+    --bg:           var(--bg-base);
+    --bg-alt:       var(--bg-surface);
+    --surface:      var(--bg-surface);
+    --text:         var(--text-primary);
+    --text-2:       var(--text-secondary);
+    --text-3:       var(--text-muted);
+    --text-4:       #334155;
+    --accent:       var(--brand-primary);
     --gold:         #C9A84C;
-    --border:       #222326;
-    --border-mid:   rgba(255,255,255,0.14);
+    --border:       var(--border-subtle);
+    --border-mid:   var(--border-strong);
     --is-light:     0;
 
     /* Derived */
-    --bg-base:       var(--bg);
-    --bg-surface:    var(--bg);
-    --bg-elevated:   var(--bg-alt);
     --app-bg:        var(--bg);
     --bg-secondary:  var(--bg-alt);
     --surface-high:  var(--bg-alt);
     --bg-page:       var(--bg);
 
-    --text-primary:  var(--text);
-    --text-secondary:var(--text-2);
-    --text-muted:    var(--text-3);
-
-    --accent-light:  var(--accent);
+    --accent-light:  var(--brand-primary);
     --gold-val:      var(--gold);
     --gold-light:    #D4B85A;
     --err:           #D94848;
@@ -68,25 +85,20 @@
     --indigo:        var(--accent);
     --indigo-light:  var(--accent);
     --indigo-dim:    transparent;
-    --emerald:       var(--text-3);
-    --emerald-light: var(--text-3);
-    --amber:         var(--text-3);
+    --emerald:       var(--brand-primary);
+    --emerald-light: var(--brand-subtle);
+    --amber:         #F59E0B;
     --red:           #D94848;
     --picton:        var(--accent);
     --picton-dim:    transparent;
 
-    --border-subtle: var(--border);
-    --border-strong: var(--border-mid);
-    --border-accent: var(--accent);
-    --glass-bg:      rgba(11,11,15,0.65);
-    --glass-border:  rgba(255,255,255,0.15);
+    --border-accent: var(--brand-primary);
     --card-border:   var(--border);
-    --dot-color:     var(--border);
     --scrollbar:     var(--border);
     --cool-grey:     var(--text-3);
     --overlay-scrim: rgba(0, 0, 0, 0.72);
 
-    --linear-blue:   var(--text);
+    --linear-blue:   var(--brand-primary);
     --linear-bg:     var(--bg);
     --linear-surface:transparent;
     --linear-border: var(--border);
@@ -106,7 +118,6 @@
     --text-soft:          var(--text-3);
     --text-muted-alt:     var(--text-4);
     --surface-tint:       var(--bg-alt);
-    --card-hover:         var(--bg-alt);
     --border-translucent-strong: var(--border-mid);
     --color-border-translucent-strong: var(--border-mid);
 
@@ -127,68 +138,80 @@
   /* ── ASH (Light) — Premium silver-grey workspace ──────── */
   [data-theme="ash"],
   [data-theme="light"] {
-    /* Global body = soft silver-grey, not blinding white */
-    --bg:         #F4F5F6;
-    --bg-alt:     #FFFFFF;
-    --surface:    #FFFFFF;
-    --card:       #FFFFFF;
-    --card-hover: #FAFAFA;
-    --text:       #121212;
-    --text-2:     #1f2937;
-    --text-3:     #374151;
-    --text-4:     #4b5563;
-    --accent:     #121212;
+    /* User's New Brand & Core Layer */
+    --bg-base: #F8FAFC;
+    --bg-surface: #FFFFFF;
+    --bg-elevated: #F1F5F9;
+    --bg-inverse: #0F172A;
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --text-muted: #94A3B8;
+    --text-inverse: #FFFFFF;
+    --border-subtle: #E2E8F0;
+    --border-strong: #CBD5E1;
+    --border-focus: #00D4A8;
+    --brand-primary: #00D4A8;
+    --brand-hover: #00B38F;
+    --brand-subtle: #CCF6ED;
+    
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.4);
+    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+    
+    --dot-color: rgba(15, 23, 42, 0.05);
+    --dot-bg: radial-gradient(var(--dot-color) 1px, transparent 1px);
+    --gradient-brand: linear-gradient(135deg, #00D4A8 0%, #007BFF 100%);
+
+    /* Derived Mapped */
+    --bg:         var(--bg-base);
+    --bg-alt:     var(--bg-surface);
+    --surface:    var(--bg-surface);
+    --card:       var(--bg-surface);
+    --card-hover: var(--bg-elevated);
+    --text:       var(--text-primary);
+    --text-2:     var(--text-secondary);
+    --text-3:     var(--text-muted);
+    --text-4:     #64748B;
+    --accent:     var(--brand-primary);
     --gold:       #8a6d2f;
-    --border:     rgba(0,0,0,0.07);
-    --border-mid: rgba(0,0,0,0.12);
+    --border:     var(--border-subtle);
+    --border-mid: var(--border-strong);
     --is-light:   1;
-    --err:        #C93636;
+    --err:        #EF4444;
     --scrollbar:  rgba(0,0,0,0.10);
     --cool-grey:  var(--text-3);
-    --overlay-scrim: rgba(18, 18, 18, 0.45);
+    --overlay-scrim: rgba(15, 23, 42, 0.45);
 
-    /* Derived — cards are white panels on the grey body */
-    --bg-base:       #F4F5F6;
-    --bg-surface:    #FFFFFF;
-    --bg-elevated:   #FFFFFF;
-    --app-bg:        #F4F5F6;
-    --bg-secondary:  #FFFFFF;
-    --surface-high:  #FAFAFA;
-    --bg-page:       #F4F5F6;
-    --text-primary:  #121212;
-    --text-secondary:#1f2937;
-    --text-muted:    #374151;
-    --accent-light:  #222326;
-    --gold-val:      #8a6d2f;
+    --app-bg:        var(--bg);
+    --bg-secondary:  var(--bg-alt);
+    --surface-high:  var(--card-hover);
+    --bg-page:       var(--bg);
+    --accent-light:  var(--brand-primary);
+    --gold-val:      var(--gold);
     --gold-light:    #a07830;
-    --border-subtle: rgba(0,0,0,0.07);
-    --border-strong: rgba(0,0,0,0.12);
-    --border-accent: #121212;
-    /* Translucent white pill for the Dynamic Island in light mode */
-    --glass-bg:      rgba(255,255,255,0.7);
-    --glass-border:  rgba(0,0,0,0.12);
-    --card-border:   rgba(0,0,0,0.07);
-    --indigo:        #121212;
-    --indigo-light:  #222326;
-    --indigo-dim:    #F0F0F0;
-    --linear-blue:   #121212;
-    --linear-bg:     #F4F5F6;
-    --linear-surface:#FFFFFF;
-    --linear-border: rgba(0,0,0,0.07);
-    --linear-border-mid:rgba(0,0,0,0.12);
-    --linear-text:   #121212;
-    --linear-text-dim:#62666D;
-    --linear-text-mute:#9a9ea6;
+    --border-accent: var(--brand-primary);
+    
+    --card-border:   var(--border);
+    --indigo:        var(--text-primary);
+    --indigo-light:  var(--text-secondary);
+    --indigo-dim:    #F1F5F9;
+    --linear-blue:   var(--brand-primary);
+    --linear-bg:     var(--bg);
+    --linear-surface:var(--surface);
+    --linear-border: var(--border);
+    --linear-border-mid:var(--border-mid);
+    --linear-text:   var(--text);
+    --linear-text-dim:var(--text-2);
+    --linear-text-mute:var(--text-3);
     --shadow-1:      0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
     --shadow-2:      0 4px 16px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
     --shadow:        0 2px 10px rgba(0,0,0,0.06);
 
-    /* ── Marketing / brand surface tokens ─────────────────── */
-    --color-bg-marketing: #F4F5F6;
+    --color-bg-marketing: var(--bg);
     --color-brand-bg:     transparent;
     --text-soft:          var(--text-3);
     --text-muted-alt:     var(--text-4);
-    --surface-tint:       #FFFFFF;
+    --surface-tint:       var(--surface);
     --border-translucent-strong: rgba(0,0,0,0.12);
     --color-border-translucent-strong: rgba(0,0,0,0.12);
   }
@@ -196,40 +219,53 @@
   /* ── System auto-theme ─────────────────────────────────── */
   @media (prefers-color-scheme: light) {
     :root:not([data-theme]) {
-      --bg:         #F4F5F6;
-      --bg-alt:     #FFFFFF;
-      --surface:    #FFFFFF;
-      --card:       #FFFFFF;
-      --card-hover: #FAFAFA;
-      --text:       #121212;
-      --text-2:     #1f2937;
-      --text-3:     #374151;
-      --text-4:     #4b5563;
-      --accent:     #121212;
-      --gold:       #8a6d2f;
-      --border:     rgba(0,0,0,0.07);
-      --border-mid: rgba(0,0,0,0.12);
-      --is-light:   1;
-      --err:        #C93636;
-      --scrollbar:  rgba(0,0,0,0.10);
-      --bg-base:    #F4F5F6;
+      --bg-base: #F8FAFC;
       --bg-surface: #FFFFFF;
-      --bg-elevated:#FFFFFF;
-      --app-bg:     #F4F5F6;
-      --bg-secondary:#FFFFFF;
-      --surface-high:#FAFAFA;
-      --bg-page:    #F4F5F6;
-      --text-primary:#121212;
-      --text-secondary:#1f2937;
-      --text-muted: #374151;
-      --accent-light:#222326;
-      --border-subtle:rgba(0,0,0,0.07);
-      --border-strong:rgba(0,0,0,0.12);
-      --glass-border:rgba(0,0,0,0.2);
-      --glass-bg:   #FFFFFF;
+      --bg-elevated: #F1F5F9;
+      --bg-inverse: #0F172A;
+      --text-primary: #0F172A;
+      --text-secondary: #475569;
+      --text-muted: #94A3B8;
+      --text-inverse: #FFFFFF;
+      --border-subtle: #E2E8F0;
+      --border-strong: #CBD5E1;
+      --border-focus: #00D4A8;
+      --brand-primary: #00D4A8;
+      --brand-hover: #00B38F;
+      --brand-subtle: #CCF6ED;
+      
+      --glass-bg: rgba(255, 255, 255, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.4);
+      --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+      
+      --dot-color: rgba(15, 23, 42, 0.05);
+      --dot-bg: radial-gradient(var(--dot-color) 1px, transparent 1px);
+      --gradient-brand: linear-gradient(135deg, #00D4A8 0%, #007BFF 100%);
+
+      --bg:         var(--bg-base);
+      --bg-alt:     var(--bg-surface);
+      --surface:    var(--bg-surface);
+      --card:       var(--bg-surface);
+      --card-hover: var(--bg-elevated);
+      --text:       var(--text-primary);
+      --text-2:     var(--text-secondary);
+      --text-3:     var(--text-muted);
+      --text-4:     #64748B;
+      --accent:     var(--brand-primary);
+      --gold:       #8a6d2f;
+      --border:     var(--border-subtle);
+      --border-mid: var(--border-strong);
+      --is-light:   1;
+      --err:        #EF4444;
+      --scrollbar:  rgba(0,0,0,0.10);
+      --app-bg:     var(--bg);
+      --bg-secondary:var(--bg-alt);
+      --surface-high:var(--card-hover);
+      --bg-page:    var(--bg);
+      --accent-light:var(--brand-primary);
+      --border-accent:var(--brand-primary);
     }
   }
-
 
   /* ── Resets ─────────────────────────────────────────────── */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -402,7 +438,7 @@
     -webkit-backdrop-filter: blur(24px);
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-lg);
-    box-shadow: none; /* Removed 3D shadow as requested */
+    box-shadow: var(--glass-shadow);
     transition: border-color 200ms var(--ease-out), transform 200ms var(--ease-out);
   }
   .glass:hover {
@@ -1295,3 +1331,36 @@ body,
     radial-gradient(ellipse 40% 40% at 60% 80%, rgba(16,185,129,0.03) 0%, transparent 50%);
 }
 
+/* ==========================================================================
+   UNIVERSAL UTILITY CLASSES (Use these in React instead of inline styles)
+========================================================================== */
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.card-capsule {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.dot-matrix-bg {
+  background-image: var(--dot-bg);
+  background-size: 20px 20px;
+}
+
+/* Typography Helpers */
+.text-main { color: var(--text-primary); }
+.text-sub { color: var(--text-secondary); }
+.text-brand { color: var(--brand-primary); }
