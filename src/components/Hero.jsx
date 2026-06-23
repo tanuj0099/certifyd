@@ -2,6 +2,7 @@ import { supabase } from '../services/supabase.js';
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import {
   Zap, AlertTriangle, CheckCircle, RefreshCw,
   TrendingUp, MapPin, User, Star, ArrowRight,
@@ -675,8 +676,7 @@ function AIResult({ result, certName, onReset, paybackMonths, fiveYearNetGain, c
         initial={prefersReduced ? false : { opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
         transition={TT}
-        className="glass"
-        style={{ marginTop: '14px', borderRadius: '16px', overflow: 'hidden', minHeight: 320, background: 'var(--text)', color: 'var(--bg)' }}
+        style={{ marginTop: '14px', borderRadius: '16px', overflow: 'hidden', minHeight: 320, backgroundColor: 'var(--text)', color: 'var(--bg)', border: '1px solid var(--border)' }}
       >
         <div style={{ padding: '24px' }}>
           <div style={{ fontFamily: FM, fontSize: 10, letterSpacing: '0.12em', color: 'var(--bg)', opacity: 0.6, marginBottom: 12, textTransform: 'uppercase' }}>
@@ -712,7 +712,7 @@ function AIResult({ result, certName, onReset, paybackMonths, fiveYearNetGain, c
             <div style={{ fontFamily: FB, fontSize: '14px', lineHeight: 1.6, color: 'var(--bg)', opacity: 0.9 }}>
               At ₹{targetOfferLakhs}L starting, you recover cert cost in {daysToRecover} days of salary.<br/>
               3 students from {resumeCity || 'your city'} with similar profiles got offers<br/>
-              in the last 90 days. <a href="/offer-analysis" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>[See their anonymised outcomes →]</a>
+              in the last 90 days. <Link href="/offer-analysis" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>[See their anonymised outcomes →]</Link>
             </div>
           </div>
         </div>
