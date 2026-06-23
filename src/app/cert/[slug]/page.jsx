@@ -342,7 +342,7 @@ export default function CertificationPage() {
             <StatCard icon={TrendingUp}  label="Median Hike"     value={formatPercent(roiPercent)}  accent="#4f8ef7" />
             <StatCard icon={Calendar}    label="Study Time"      value={formatMonths(timeMonths)}   accent="#a78bfa" />
             <StatCard icon={DollarSign}  label="Monthly Budget"  value={monthlyCost ? formatCurrency(monthlyCost) : '-'} accent="#f59e0b" />
-            <StatCard icon={Target}      label="Entry Salary"    value={formatCurrency(salaryFloor)} accent="#10b981" />
+            <StatCard icon={Target}      label="Entry Salary"    value={formatCurrency(salaryFloor)} accent="var(--brand-primary)" />
             <StatCard icon={TrendingUp}  label="Salary Ceiling"  value={formatCurrency(salaryCeiling)} accent="#f43f5e" />
           </div>
         )}
@@ -359,7 +359,7 @@ export default function CertificationPage() {
             </h2>
             <div style={{ display: 'grid', gap: '22px' }}>
               {[
-                { icon: CheckCircle, color: '#10b981', title: 'Job-ready signal', body: 'This certification is mapped to open roles and employer demand in current Indian tech and cloud markets.' },
+                { icon: CheckCircle, color: 'var(--brand-primary)', title: 'Job-ready signal', body: 'This certification is mapped to open roles and employer demand in current Indian tech and cloud markets.' },
                 { icon: Clock, color: '#4f8ef7', title: 'Strong salary uplift', body: 'Expected hike estimates are derived from certification outcomes and latest employer salary signals.' },
                 { icon: Trophy, color: '#f59e0b', title: 'Career differentiation', body: 'Hiring managers value certified professionals, especially for architecture, cloud, and specialist roles.' },
               ].map(({ icon: Icon, color, title, body }) => (

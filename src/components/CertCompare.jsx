@@ -21,7 +21,7 @@ var F_MONO = 'var(--font-mono)'
 var F_BODY = 'var(--font-body)'
 
 var COLORS = ['var(--linear-blue)', 'var(--linear-blue)', 'var(--cool-grey)', '#E11D48']
-var COL_A = '#10B981'       // Cert A — Professional Emerald
+var COL_A = 'var(--brand-primary)'       // Cert A — Professional Emerald
 var COL_B = '#F59E0B'       // Cert B — Professional Amber
 
 function demandColor(d) {

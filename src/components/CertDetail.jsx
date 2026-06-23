@@ -397,7 +397,7 @@ const CertDetail = () => {
             label="Exam Cost"
             value={formatDualCost(cert.cost_inr, cert.cost_usd)}
             valueClass={costValue === 0 ? 'text-emerald-400' : 'text-[var(--text)]'}
-            accent="#10b981"
+            accent="var(--brand-primary)"
           />
           <StatCard
             icon={CalendarDays}
@@ -663,7 +663,7 @@ const CertDetail = () => {
                   title="5-Year Projected Value Trajectory"
                   costValue={costValue || 0}
                   hikePercent={cert.median_roi_percent || getMockHikePercent(cert.difficulty_level)}
-                  color="#10b981"
+                  color="var(--brand-primary)"
                 />
               </div>
             </section>

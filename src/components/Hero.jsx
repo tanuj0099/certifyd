@@ -960,7 +960,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
   let confidenceColor = "#eab308"; // Yellow
   if (confidenceScore >= 71) {
     confidenceLabel = "High Probability";
-    confidenceColor = "#10b981"; // Emerald
+    confidenceColor = "var(--brand-primary)"; // Brand Primary
   } else if (confidenceScore >= 41) {
     confidenceLabel = "Balanced";
     confidenceColor = "#3b82f6"; // Blue
@@ -1378,7 +1378,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
                         <Tooltip formatter={(value) => [`₹${value.toLocaleString()}K`, '']} />
                         <Legend verticalAlign="top" align="right" iconType="circle" wrapperStyle={{ fontSize: '14px', fontWeight: '500', color: '#475569', paddingBottom: '20px' }} />
                         <ReferenceLine y={0} stroke="transparent" strokeDasharray="4 4" />
-                        <Line type="monotone" dataKey="action" name="With Certification" stroke="#10b981" strokeWidth={3} dot={false} activeDot={{ r: 4, fill: "#10b981" }} />
+                        <Line type="monotone" dataKey="action" name="With Certification" stroke="var(--brand-primary)" strokeWidth={3} dot={false} activeDot={{ r: 4, fill: "var(--brand-primary)" }} />
                         <Line type="monotone" dataKey="inaction" name="Inaction" stroke="#94a3b8" strokeWidth={2} strokeDasharray="5 5" dot={false} />
                       </LineChart>
                     </ResponsiveContainer>

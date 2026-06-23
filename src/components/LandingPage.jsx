@@ -1353,7 +1353,7 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
                 <div style={{ display: 'flex', gap: '24px', alignItems: 'center', flexWrap: 'wrap' }}>
                   <PillBtn onClick={handleEnter} large primary>Calculate ROI <ArrowRight size={15} /></PillBtn>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: C.text3, fontFamily: F_MONO, fontSize: '11px', letterSpacing: '0.05em' }}>
-                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#2db87a', animation: 'pdot 1.5s infinite' }} />
+                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--brand-primary)', animation: 'pdot 1.5s infinite' }} />
                     LIVE DATA 2026
                   </div>
                 </div>

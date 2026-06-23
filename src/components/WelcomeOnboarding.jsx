@@ -136,7 +136,7 @@ ${parseData.text.substring(0, 4000)}
             style={{ textAlign: 'center', padding: '64px 24px', background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: '24px' }}
           >
             <div style={{ width: '64px', height: '64px', borderRadius: '32px', background: 'rgba(16, 185, 129, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
-              <CheckCircle2 size={32} color="#10b981" />
+              <CheckCircle2 size={32} color="var(--brand-primary)" />
             </div>
             <h2 style={{ fontFamily: 'var(--font-head)', fontSize: '28px', fontWeight: '700', color: 'var(--text)', marginBottom: '12px' }}>
               Success!

@@ -282,7 +282,7 @@ export default function FeedbackWidget({ source }) {
                     <motion.div
                       initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', damping: 15 }}
                     >
-                      <CheckCircle2 size={64} color="#10B981" />
+                      <CheckCircle2 size={64} color="var(--brand-primary)" />
                     </motion.div>
                     <div>
                       <h3 style={{ fontFamily: 'var(--font-head)', fontSize: '24px', fontWeight: 700, color: 'var(--text)', marginBottom: '8px' }}>

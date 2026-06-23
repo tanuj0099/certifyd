@@ -632,7 +632,7 @@ export default function OfferAnalysisPage() {
 
                     const pieData = [
                       { name: 'Basic Salary', value: result.CTC_Breakdown?.Basic_Salary || 0, color: '#059669' },
-                      { name: 'HRA', value: result.CTC_Breakdown?.HRA || 0, color: '#10b981' },
+                      { name: 'HRA', value: result.CTC_Breakdown?.HRA || 0, color: 'var(--brand-primary)' },
                       { name: 'Special Allowance', value: result.CTC_Breakdown?.Special_Allowance || 0, color: '#34d399' },
                       { name: 'Transport/Medical', value: result.CTC_Breakdown?.Transport_Medical_Flexi || 0, color: '#6ee7b7' },
                       { name: 'LTA', value: result.CTC_Breakdown?.LTA || 0, color: '#a7f3d0' },
