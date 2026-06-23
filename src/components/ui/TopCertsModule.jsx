@@ -54,7 +54,7 @@ export default function TopCertsModule({ roadmapId }) {
 
                 <div className="flex items-center gap-4 md:gap-6 self-end md:self-auto">
                   <div className="flex items-center gap-1.5 text-slate-700 font-bold bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
-                    <DollarSign size={16} className="text-emerald-500"/> {cert.cost}
+                    <DollarSign size={16} className="text-orange-500"/> {cert.cost}
                   </div>
                   <ChevronDown size={20} className={`text-slate-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                 </div>

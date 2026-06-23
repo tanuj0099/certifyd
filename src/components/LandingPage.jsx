@@ -121,8 +121,8 @@ function StorySection({ id = '', title = '', children, bg = '', noBorderTop = fa
     <div style={{
       position: 'relative',
       padding: isMobile ? '16px' : '32px 24px',
-      background: bg || C.bg,
-      borderTop: noBorderTop ? 'none' : `1px solid ${C.border}`,
+      background: bg || 'var(--bg)',
+      borderTop: noBorderTop ? 'none' : `1px solid ${'var(--border)'}`,
     }}>
       <div style={{ 
         maxWidth: '1400px', 
@@ -135,17 +135,17 @@ function StorySection({ id = '', title = '', children, bg = '', noBorderTop = fa
         overflow: 'visible'
       }}>
         {!isMobile && (
-          <div style={{ width: '140px', flexShrink: 0, borderRight: `1px solid ${C.border}`, position: 'relative' }}>
+          <div style={{ width: '140px', flexShrink: 0, borderRight: `1px solid ${'var(--border)'}`, position: 'relative' }}>
             <div style={{ position: 'sticky', top: '120px', padding: '32px 0', display: 'flex', alignItems: 'center', flexDirection: 'column', height: '360px' }}>
-              <CrosshairIcon color={C.text4} />
-              <div style={{ width: '1px', flex: 1, background: C.border, margin: '16px 0' }} />
-              <div style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)', fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.18em' }}>
+              <CrosshairIcon color={'var(--text-4)'} />
+              <div style={{ width: '1px', flex: 1, background: 'var(--border)', margin: '16px 0' }} />
+              <div style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)', fontFamily: F_MONO, fontSize: '11px', color: 'var(--text-3)', letterSpacing: '0.18em' }}>
                 <span style={{ color: C.gold, fontWeight: '700' }}>{id}</span>{' '}
                 <span style={{ opacity: 0.5 }}>//</span>{' '}
                 {title}
               </div>
-              <div style={{ width: '1px', flex: 1, background: C.border, margin: '16px 0' }} />
-              <CrosshairIcon color={C.text4} />
+              <div style={{ width: '1px', flex: 1, background: 'var(--border)', margin: '16px 0' }} />
+              <CrosshairIcon color={'var(--text-4)'} />
             </div>
           </div>
         )}
@@ -153,8 +153,8 @@ function StorySection({ id = '', title = '', children, bg = '', noBorderTop = fa
           {isMobile && (
             <div style={{ marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px' }}>
               <span style={{ fontFamily: F_MONO, fontSize: '11px', color: C.gold, fontWeight: '700', letterSpacing: '0.12em' }}>{id}</span>
-              <div style={{ height: '1px', flex: 1, background: C.border }} />
-              <span style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.12em' }}>{title}</span>
+              <div style={{ height: '1px', flex: 1, background: 'var(--border)' }} />
+              <span style={{ fontFamily: F_MONO, fontSize: '11px', color: 'var(--text-3)', letterSpacing: '0.12em' }}>{title}</span>
             </div>
           )}
           {children}
@@ -178,9 +178,9 @@ function TrustStrip() {
     { tag: 'SYS.DEVOPS', text: 'CKA Kubernetes: highest ROI cert in India 2026' },
   ]
   return (
-    <div style={{ borderBottom: `1px solid ${C.border}`, background: C.bg, position: 'relative', zIndex: 10, height: '48px', display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, background: C.bg, zIndex: 11, borderRight: `1px solid ${C.border}`, display: 'flex', alignItems: 'center', padding: '0 20px', boxShadow: `20px 0 20px -10px ${C.bg}` }}>
-        <span style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.18em' }}>MARKET_DATA</span>
+    <div style={{ borderBottom: `1px solid ${'var(--border)'}`, background: 'var(--bg)', position: 'relative', zIndex: 10, height: '48px', display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, background: 'var(--bg)', zIndex: 11, borderRight: `1px solid ${'var(--border)'}`, display: 'flex', alignItems: 'center', padding: '0 20px', boxShadow: `20px 0 20px -10px ${'var(--bg)'}` }}>
+        <span style={{ fontFamily: F_MONO, fontSize: '11px', color: 'var(--text-3)', letterSpacing: '0.18em' }}>MARKET_DATA</span>
       </div>
       {/*
         BEFORE: paddingLeft: isMobile ? '140px' : '150px'
@@ -192,9 +192,9 @@ function TrustStrip() {
       <div style={{ flex: 1, paddingLeft: isMobile ? '120px' : '150px' }}>
         <motion.div animate={{ x: ['0%', '-50%'] }} transition={{ duration: 45, repeat: Infinity, ease: 'linear' }} style={{ display: 'flex', width: 'max-content' }}>
           {[...items, ...items, ...items].map((item, i) => (
-            <div key={i} style={{ display: 'inline-flex', alignItems: 'center', height: '48px', borderRight: `1px solid ${C.border}`, padding: '0 36px' }}>
-              <span style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, marginRight: '14px', letterSpacing: '0.08em' }}>[{item.tag}]</span>
-              <span style={{ fontFamily: F_SANS, fontSize: '13px', color: C.text2, letterSpacing: '0.01em', fontWeight: '500' }}>{item.text}</span>
+            <div key={i} style={{ display: 'inline-flex', alignItems: 'center', height: '48px', borderRight: `1px solid ${'var(--border)'}`, padding: '0 36px' }}>
+              <span style={{ fontFamily: F_MONO, fontSize: '11px', color: 'var(--text-3)', marginRight: '14px', letterSpacing: '0.08em' }}>[{item.tag}]</span>
+              <span style={{ fontFamily: F_SANS, fontSize: '13px', color: 'var(--text-2)', letterSpacing: '0.01em', fontWeight: '500' }}>{item.text}</span>
             </div>
           ))}
         </motion.div>
@@ -249,7 +249,7 @@ function CertAssembly() {
 
   if (isMobile) {
     return (
-      <div style={{ background: C.bg, borderBottom: `1px solid ${C.border}`, padding: '48px 24px 56px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div style={{ background: 'var(--bg)', borderBottom: `1px solid ${'var(--border)'}`, padding: '48px 24px 56px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <motion.div
           initial={{ opacity: 0, y: 24, scale: 0.94 }}
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
@@ -257,10 +257,10 @@ function CertAssembly() {
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           style={{ width: cardW }}
         >
-          <div style={{ fontFamily: F_MONO, fontSize: '10px', color: C.text4, letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: '20px', textAlign: 'center' }}>
+          <div style={{ fontFamily: F_MONO, fontSize: '10px', color: 'var(--text-4)', letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: '20px', textAlign: 'center' }}>
             // CERT INTELLIGENCE
           </div>
-          <div style={{ position: 'relative', width: '100%', aspectRatio: '480/340', borderRadius: '6px', overflow: 'hidden', border: `1px solid ${C.borderMid}`, background: C.certBg, boxShadow: '0 24px 64px rgba(0,0,0,0.28)' }}>
+          <div style={{ position: 'relative', width: '100%', aspectRatio: '480/340', borderRadius: '6px', overflow: 'hidden', border: `1px solid ${'var(--border-mid)'}`, background: C.certBg, boxShadow: '0 24px 64px rgba(0,0,0,0.28)' }}>
             <svg viewBox="0 0 480 340" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block', pointerEvents: 'none' }}>
               <defs>
                 <linearGradient id="metalGradM" x1="0" y1="0" x2="1" y2="1">
@@ -277,28 +277,28 @@ function CertAssembly() {
               <div style={{ fontFamily: F_MONO, fontSize: '10px', color: C.gold, letterSpacing: '0.18em', marginBottom: '12px', textTransform: 'uppercase' }}>
                 Certify  Cert Intelligence
               </div>
-              <div style={{ fontFamily: F_SERIF, fontWeight: '400', fontSize: '1.5rem', color: C.text, marginBottom: '4px', textAlign: 'center', lineHeight: 1.1 }}>
+              <div style={{ fontFamily: F_SERIF, fontWeight: '400', fontSize: '1.5rem', color: 'var(--text)', marginBottom: '4px', textAlign: 'center', lineHeight: 1.1 }}>
                 Route Briefing
               </div>
-              <div style={{ fontFamily: F_SANS, fontSize: '12px', color: C.text3, marginBottom: '24px', textAlign: 'center' }}>
+              <div style={{ fontFamily: F_SANS, fontSize: '12px', color: 'var(--text-3)', marginBottom: '24px', textAlign: 'center' }}>
                 Personalised  India 2026
               </div>
               <div style={{ display: 'flex', gap: '24px', marginBottom: '20px', justifyContent: 'center', width: '100%' }}>
                 {[
-                  { l: 'PAYBACK',   v: '6 MO',    c: C.text },
+                  { l: 'PAYBACK',   v: '6 MO',    c: 'var(--text)' },
                   { l: '5-YR GAIN', v: '₹14.2L',  c: C.gold },
-                  { l: 'DELTA',     v: '+35%',     c: C.text },
+                  { l: 'DELTA',     v: '+35%',     c: 'var(--text)' },
                 ].map((s, i) => (
                   <div key={i} style={{ textAlign: 'center' }}>
-                    <div style={{ fontFamily: F_MONO, fontSize: '10px', color: C.text3, letterSpacing: '0.1em', marginBottom: '5px' }}>{s.l}</div>
+                    <div style={{ fontFamily: F_MONO, fontSize: '10px', color: 'var(--text-3)', letterSpacing: '0.1em', marginBottom: '5px' }}>{s.l}</div>
                     <div style={{ fontFamily: F_MONO, fontSize: '1.1rem', color: s.c, fontWeight: '600', letterSpacing: '-0.02em' }}>{s.v}</div>
                   </div>
                 ))}
               </div>
-              <div style={{ width: '70%', height: '1px', background: C.borderMid, marginBottom: '12px' }} />
+              <div style={{ width: '70%', height: '1px', background: 'var(--border-mid)', marginBottom: '12px' }} />
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <CheckCircle2 size={11} color={C.gold} />
-                <span style={{ fontFamily: F_MONO, fontSize: '10px', color: C.text3, letterSpacing: '0.08em' }}>
+                <span style={{ fontFamily: F_MONO, fontSize: '10px', color: 'var(--text-3)', letterSpacing: '0.08em' }}>
                   CALCULATED FROM YOUR INPUTS
                 </span>
               </div>
@@ -311,7 +311,7 @@ function CertAssembly() {
             transition={{ delay: 0.4, duration: 0.5 }}
             style={{ marginTop: '16px', textAlign: 'center' }}
           >
-            <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text4, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+            <div style={{ fontFamily: F_MONO, fontSize: '11px', color: 'var(--text-4)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
                Analysis complete
             </div>
           </motion.div>
@@ -324,17 +324,17 @@ function CertAssembly() {
     <div ref={trackRef} style={{
       height: '280vh',
       position: 'relative',
-      borderBottom: `1px solid ${C.border}`,
-      background: C.bg,
+      borderBottom: `1px solid ${'var(--border)'}`,
+      background: 'var(--bg)',
     }}>
       <div style={{ position: 'absolute', width: '100%', height: '100%', pointerEvents: 'none' }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto', position: 'relative', height: '100%' }}>
-          <div style={{ position: 'absolute', left: '140px', top: 0, bottom: 0, width: '1px', background: C.border }} />
+          <div style={{ position: 'absolute', left: '140px', top: 0, bottom: 0, width: '1px', background: 'var(--border)' }} />
         </div>
       </div>
 
       <div style={{ position: 'sticky', top: 0, height: '100vh', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, zIndex: 2, pointerEvents: 'none', background: C.bg, opacity: 0.95 }} />
+        <div style={{ position: 'absolute', inset: 0, zIndex: 2, pointerEvents: 'none', background: 'var(--bg)', opacity: 0.95 }} />
 
         <div style={{ position: 'relative', zIndex: 4 }}>
           <div style={{ transform: `scale(${certScale})`, opacity: certOpacity }}>
@@ -362,24 +362,24 @@ function CertAssembly() {
 
               <div style={{ position: 'absolute', inset: 0, transform: l2Desktop, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '32px' }}>
                 <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.gold, letterSpacing: '0.18em', marginBottom: '14px', textTransform: 'uppercase' }}>Certify  Cert Intelligence</div>
-                <div style={{ fontFamily: F_SERIF, fontWeight: '400', fontSize: 'clamp(1.5rem, 3.2vw, 2.4rem)', color: C.text, marginBottom: '6px', textAlign: 'center', lineHeight: 1.1 }}>ROI Briefing</div>
-                <div style={{ fontFamily: F_SANS, fontSize: '13px', color: C.text3, marginBottom: '28px', textAlign: 'center' }}>Live Data  India 2026</div>
+                <div style={{ fontFamily: F_SERIF, fontWeight: '400', fontSize: 'clamp(1.5rem, 3.2vw, 2.4rem)', color: 'var(--text)', marginBottom: '6px', textAlign: 'center', lineHeight: 1.1 }}>ROI Briefing</div>
+                <div style={{ fontFamily: F_SANS, fontSize: '13px', color: 'var(--text-3)', marginBottom: '28px', textAlign: 'center' }}>Live Data  India 2026</div>
                 <div style={{ display: 'flex', gap: '28px', marginBottom: '20px', width: '100%', justifyContent: 'center' }}>
                   {[
-                    { l: 'PAYBACK',   v: '6 MO',    c: C.text },
+                    { l: 'PAYBACK',   v: '6 MO',    c: 'var(--text)' },
                     { l: '5-YR GAIN', v: '₹14.2L',  c: C.gold },
-                    { l: 'DELTA',     v: '+35%',     c: C.text },
+                    { l: 'DELTA',     v: '+35%',     c: 'var(--text)' },
                   ].map((s, i) => (
                     <div key={i} style={{ textAlign: 'center' }}>
-                      <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.1em', marginBottom: '6px' }}>{s.l}</div>
+                      <div style={{ fontFamily: F_MONO, fontSize: '11px', color: 'var(--text-3)', letterSpacing: '0.1em', marginBottom: '6px' }}>{s.l}</div>
                       <div style={{ fontFamily: F_MONO, fontSize: 'clamp(1rem, 2.6vw, 1.5rem)', color: s.c, fontWeight: '600', letterSpacing: '-0.02em' }}>{s.v}</div>
                     </div>
                   ))}
                 </div>
-                <div style={{ width: '75%', height: '1px', background: C.borderMid, marginBottom: '14px' }} />
+                <div style={{ width: '75%', height: '1px', background: 'var(--border-mid)', marginBottom: '14px' }} />
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <CheckCircle2 size={12} color={C.gold} />
-                  <span style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.08em' }}>CALCULATED FROM YOUR INPUTS</span>
+                  <span style={{ fontFamily: F_MONO, fontSize: '11px', color: 'var(--text-3)', letterSpacing: '0.08em' }}>CALCULATED FROM YOUR INPUTS</span>
                 </div>
               </div>
 
@@ -409,13 +409,13 @@ function CertAssembly() {
 
           <div style={{ opacity: hintOp, marginTop: '36px', textAlign: 'center', pointerEvents: 'none' }}>
             <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}>
-              <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.18em' }}> SCROLL TO BUILD </div>
+              <div style={{ fontFamily: F_MONO, fontSize: '11px', color: 'var(--text-3)', letterSpacing: '0.18em' }}> SCROLL TO BUILD </div>
             </motion.div>
           </div>
         </div>
 
         <div style={{ opacity: assembledOp, position: 'absolute', bottom: '10%', left: 0, right: 0, textAlign: 'center', pointerEvents: 'none', zIndex: 5 }}>
-          <div className="glass" style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.15em', display: 'inline-block', padding: '8px 18px' }}>
+          <div className="glass" style={{ fontFamily: F_MONO, fontSize: '11px', color: 'var(--text-3)', letterSpacing: '0.15em', display: 'inline-block', padding: '8px 18px' }}>
              ANALYSIS COMPLETE
           </div>
         </div>
@@ -448,10 +448,10 @@ function DataComposition() {
 
   // "" Accent rules:
   //   - PRIMARY   C.gold  (5yr gain, +35%)
-  //   - MUTED     C.text3 (payback, labels, icons, decorative borders)
-  //   - NEUTRAL   C.text  (payback value - important but not brand-green)
+  //   - MUTED     'var(--text-3)' (payback, labels, icons, decorative borders)
+  //   - NEUTRAL   'var(--text)'  (payback value - important but not brand-green)
   const PRIMARY_ACCENT = C.gold
-  const MUTED_ACCENT   = C.text3
+  const MUTED_ACCENT   = 'var(--text-3)'
 
   // "" Shared metric label style """""""""""""""""""""""""""
   const labelStyle = {
@@ -501,7 +501,7 @@ function DataComposition() {
         <div style={{
           fontFamily: F_SANS,
           fontSize: '14px',
-          color: C.text2,
+          color: 'var(--text-2)',
           letterSpacing: '0.01em',
           marginBottom: '32px',
           display: 'flex',
@@ -585,7 +585,7 @@ function DataComposition() {
             <div style={{
               fontFamily: F_SANS,
               fontSize: '14px',
-              color: C.text2,
+              color: 'var(--text-2)',
               lineHeight: '1.65',
               maxWidth: '36ch',
               marginTop: '16px',
@@ -637,7 +637,7 @@ function DataComposition() {
             <div style={{
               ...bigNumBase,
               fontSize: isMobile ? 'clamp(2.8rem, 10vw, 4rem)' : 'clamp(2.4rem, 4vw, 3.6rem)',
-              color: C.text,   //  neutral, not green - payback is neutral fact
+              color: 'var(--text)',   //  neutral, not green - payback is neutral fact
               marginBottom: '10px',
             }}>
               <CountUp end={6} suffix=" MO" />
@@ -646,7 +646,7 @@ function DataComposition() {
             <div style={{
               fontFamily: F_SANS,
               fontSize: '13px',
-              color: C.text3,
+              color: 'var(--text-3)',
               lineHeight: '1.6',
             }}>
               Probabilistic payback window with confidence range.
@@ -706,7 +706,7 @@ function DataComposition() {
             <div style={{
               fontFamily: F_SANS,
               fontSize: '13px',
-              color: C.text3,
+              color: 'var(--text-3)',
               lineHeight: '1.6',
             }}>
               India-sourced. City-specific.
@@ -751,7 +751,7 @@ function HowItWorks({ onEnter }) {
     { id: '03', label: 'ROI Dashboard', subtitle: 'See the numbers', desc: 'Estimated payback window, 5-year net gain, monthly delta - all calibrated to your city and salary. A financial projection, not a promise.' },
   ]
   return (
-    <StorySection id="03" title="SYS_ARCHITECTURE" bg={C.bg}>
+    <StorySection id="03" title="SYS_ARCHITECTURE" bg={'var(--bg)'}>
       <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }}>
         <h2 style={{ margin: '0 0 52px' }}>Three inputs.<br />Data-driven projections.</h2>
       </motion.div>
@@ -760,11 +760,11 @@ function HowItWorks({ onEnter }) {
           <motion.div key={step.id} variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '20px' }}>
               <div style={{ fontFamily: F_MONO, fontSize: '30px', color: C.gold, fontWeight: '700', lineHeight: 1 }}>{step.id}</div>
-              <div style={{ width: '100%', height: '1px', background: C.border }} />
+              <div style={{ width: '100%', height: '1px', background: 'var(--border)' }} />
             </div>
-            <div style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: '18px', color: C.text, marginBottom: '6px', letterSpacing: '-0.02em' }}>{step.label}</div>
-            <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '14px' }}>{step.subtitle}</div>
-            <div style={{ fontFamily: F_SANS, fontSize: '14px', color: C.text2, lineHeight: '1.65' }}>{step.desc}</div>
+            <div style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: '18px', color: 'var(--text)', marginBottom: '6px', letterSpacing: '-0.02em' }}>{step.label}</div>
+            <div style={{ fontFamily: F_MONO, fontSize: '11px', color: 'var(--text-3)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '14px' }}>{step.subtitle}</div>
+            <div style={{ fontFamily: F_SANS, fontSize: '14px', color: 'var(--text-2)', lineHeight: '1.65' }}>{step.desc}</div>
           </motion.div>
         ))}
       </div>
@@ -796,7 +796,7 @@ function PivotDomainsCard({ onEnter }) {
 
   const FM = F_MONO
   const LINEAR_BLUE = 'var(--accent)'
-  const COOL_GREY   = C.text3
+  const COOL_GREY   = 'var(--text-3)'
 
   async function handleStartSwitching() {
     // If no domain typed → route to /choose-path for manual selection
@@ -838,15 +838,15 @@ function PivotDomainsCard({ onEnter }) {
   }
 
   return (
-    <StorySection id="02.5" title="PIVOT_ENGINE" bg={C.bg}>
+    <StorySection id="02.5" title="PIVOT_ENGINE" bg={'var(--bg)'}>
       <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }}>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '32px' : '64px', alignItems: 'start' }}>
 
           {/*  Left: Optimize Current Path — routes to /choose-path  */}
           <div>
             <div style={{ fontFamily: FM, fontSize: '10px', color: COOL_GREY, letterSpacing: '0.14em', marginBottom: '14px' }}>// OPTIMIZE CURRENT PATH</div>
-            <div style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: '20px', color: C.text, letterSpacing: '-0.02em', marginBottom: '10px', lineHeight: 1.2 }}>Already in your lane.<br />Go deeper, not wider.</div>
-            <div style={{ fontFamily: F_SANS, fontSize: '14px', color: C.text2, lineHeight: '1.7', marginBottom: '22px' }}>
+            <div style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: '20px', color: 'var(--text)', letterSpacing: '-0.02em', marginBottom: '10px', lineHeight: 1.2 }}>Already in your lane.<br />Go deeper, not wider.</div>
+            <div style={{ fontFamily: F_SANS, fontSize: '14px', color: 'var(--text-2)', lineHeight: '1.7', marginBottom: '22px' }}>
               Select a cert, input your current salary, and we calculate the exact payback window and 5-year gain - down to the rupee.
             </div>
             <PillBtn onClick={() => router.push('/choose-path')}>
@@ -857,9 +857,9 @@ function PivotDomainsCard({ onEnter }) {
           {/*  Right: Pivot Domains  */}
           <div>
             <div style={{ fontFamily: FM, fontSize: '10px', color: COOL_GREY, letterSpacing: '0.14em', marginBottom: '14px' }}>// PIVOT DOMAINS</div>
-            <div style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: '20px', color: C.text, letterSpacing: '-0.02em', marginBottom: '10px', lineHeight: 1.2 }}>Switch fields.<br />Get a cert-first roadmap.</div>
-            <div style={{ fontFamily: F_SANS, fontSize: '14px', color: C.text2, lineHeight: '1.7', marginBottom: '18px' }}>
-              Enter the domain you want to break into — we validate it and surface certs specifically for switchers. Or leave it blank and <strong style={{ color: C.text }}>choose your path</strong> manually.
+            <div style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: '20px', color: 'var(--text)', letterSpacing: '-0.02em', marginBottom: '10px', lineHeight: 1.2 }}>Switch fields.<br />Get a cert-first roadmap.</div>
+            <div style={{ fontFamily: F_SANS, fontSize: '14px', color: 'var(--text-2)', lineHeight: '1.7', marginBottom: '18px' }}>
+              Enter the domain you want to break into — we validate it and surface certs specifically for switchers. Or leave it blank and <strong style={{ color: 'var(--text)' }}>choose your path</strong> manually.
             </div>
 
             {/* Input + state machine */}
@@ -886,7 +886,7 @@ function PivotDomainsCard({ onEnter }) {
                     flex: 1, background: 'transparent', border: 'none', outline: 'none',
                     fontFamily: FM,
                     fontSize: '16px',
-                    color: C.text,
+                    color: 'var(--text)',
                   }}
                 />
                 <button
@@ -939,7 +939,7 @@ function PivotDomainsCard({ onEnter }) {
                   initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}
                   style={{
                     marginTop: '8px', padding: '8px 12px', borderRadius: '6px',
-                    background: C.bgAlt,
+                    background: 'var(--bg-alt)',
                     border: '1px solid ' + (!C.isLight ? 'var(--border-subtle)' : 'transparent'),
                     fontFamily: FM, fontSize: '10px', color: COOL_GREY, letterSpacing: '0.08em',
                   }}
@@ -967,17 +967,17 @@ function VsSection() {
     { wrong: 'US salary data converted to rupees', right: 'Naukri  AmbitionBox  LinkedIn India. 2026 data. Not converted from San Francisco.' },
   ]
   return (
-    <StorySection id="04" title="INDUSTRY_RISKS" bg={C.bg}>
+    <StorySection id="04" title="INDUSTRY_RISKS" bg={'var(--bg)'}>
       <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }}>
         <h2 style={{ margin: '0 0 52px' }}>Every other guide<br />is pointing you wrong.</h2>
       </motion.div>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         {pairs.map((pair, i) => (
-          <motion.div key={i} variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }} transition={{ delay: i * 0.08 }} style={{ paddingTop: i > 0 ? '36px' : '0', paddingBottom: i < pairs.length - 1 ? '36px' : '0', borderBottom: i < pairs.length - 1 ? `1px solid ${C.border}` : 'none' }}>
-            <div style={{ fontFamily: F_SANS, fontWeight: '500', fontSize: '16px', color: C.text3, letterSpacing: '-0.01em', marginBottom: '10px', textDecoration: 'line-through', opacity: 0.5 }}>{pair.wrong}</div>
+          <motion.div key={i} variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }} transition={{ delay: i * 0.08 }} style={{ paddingTop: i > 0 ? '36px' : '0', paddingBottom: i < pairs.length - 1 ? '36px' : '0', borderBottom: i < pairs.length - 1 ? `1px solid ${'var(--border)'}` : 'none' }}>
+            <div style={{ fontFamily: F_SANS, fontWeight: '500', fontSize: '16px', color: 'var(--text-3)', letterSpacing: '-0.01em', marginBottom: '10px', textDecoration: 'line-through', opacity: 0.5 }}>{pair.wrong}</div>
             <div style={{ display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
               <div style={{ width: '3px', height: '14px', background: C.gold, marginTop: '5px', flexShrink: 0 }} />
-              <div style={{ fontFamily: F_SANS, fontSize: '15px', color: C.text, lineHeight: '1.6' }}>{pair.right}</div>
+              <div style={{ fontFamily: F_SANS, fontSize: '15px', color: 'var(--text)', lineHeight: '1.6' }}>{pair.right}</div>
             </div>
           </motion.div>
         ))}
@@ -998,20 +998,20 @@ function ElevenPM({ onEnter }) {
     { time: '12:03 AM', name: 'Arjun', loc: 'Pune', role: 'CS  Fresh graduate', thought: '"Which cert gets me placed here in India?"', context: 'Three articles. All recommend AWS. All in USD.', answer: 'Student Mode. GCP placed 47 Pune freshers in Q1 2026.' },
   ]
   return (
-    <StorySection id="05" title="USER_STORIES" bg={C.bg}>
+    <StorySection id="05" title="USER_STORIES" bg={'var(--bg)'}>
       <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }}>
         <h2 style={{ margin: '0 0 52px' }}>We know what you're<br />thinking right now.</h2>
       </motion.div>
-      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', borderTop: `1px solid ${C.border}` }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', borderTop: `1px solid ${'var(--border)'}` }}>
         {stories.map((s, i) => {
           const last = i === stories.length - 1
           return (
-            <motion.div key={i} variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }} transition={{ delay: i * 0.08 }} onClick={onEnter} style={{ paddingLeft: !isMobile && i > 0 ? '36px' : '0', paddingRight: !isMobile && i < 2 ? '36px' : '0', paddingTop: '36px', paddingBottom: '36px', borderRight: !isMobile && !last ? `1px solid ${C.border}` : 'none', borderBottom: isMobile && !last ? `1px solid ${C.border}` : 'none', cursor: 'pointer' }}>
-              <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.06em', marginBottom: '14px' }}>// LOG_TIME: {s.time}</div>
-              <div style={{ fontFamily: F_SERIF, fontStyle: 'italic', fontWeight: '400', fontSize: '20px', color: C.text, lineHeight: 1.35, marginBottom: '14px' }}>{s.thought}</div>
-              <div style={{ fontFamily: F_SANS, fontSize: '13px', color: C.text2, lineHeight: '1.6', marginBottom: '20px' }}><em style={{ fontStyle: 'italic' }}>{s.name}</em>, {s.loc} - {s.role}. {s.context}</div>
-              <div style={{ width: '20px', height: '2px', background: C.text3, marginBottom: '14px' }} />
-              <div style={{ fontFamily: F_SANS, fontWeight: '600', fontSize: '13px', color: C.text, lineHeight: '1.55' }}>{s.answer}</div>
+            <motion.div key={i} variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }} transition={{ delay: i * 0.08 }} onClick={onEnter} style={{ paddingLeft: !isMobile && i > 0 ? '36px' : '0', paddingRight: !isMobile && i < 2 ? '36px' : '0', paddingTop: '36px', paddingBottom: '36px', borderRight: !isMobile && !last ? `1px solid ${'var(--border)'}` : 'none', borderBottom: isMobile && !last ? `1px solid ${'var(--border)'}` : 'none', cursor: 'pointer' }}>
+              <div style={{ fontFamily: F_MONO, fontSize: '11px', color: 'var(--text-3)', letterSpacing: '0.06em', marginBottom: '14px' }}>// LOG_TIME: {s.time}</div>
+              <div style={{ fontFamily: F_SERIF, fontStyle: 'italic', fontWeight: '400', fontSize: '20px', color: 'var(--text)', lineHeight: 1.35, marginBottom: '14px' }}>{s.thought}</div>
+              <div style={{ fontFamily: F_SANS, fontSize: '13px', color: 'var(--text-2)', lineHeight: '1.6', marginBottom: '20px' }}><em style={{ fontStyle: 'italic' }}>{s.name}</em>, {s.loc} - {s.role}. {s.context}</div>
+              <div style={{ width: '20px', height: '2px', background: 'var(--text-3)', marginBottom: '14px' }} />
+              <div style={{ fontFamily: F_SANS, fontWeight: '600', fontSize: '13px', color: 'var(--text)', lineHeight: '1.55' }}>{s.answer}</div>
             </motion.div>
           )
         })}
@@ -1032,7 +1032,7 @@ function ThreeModes() {
     { id: 'professional', label: 'Level Up',      sub: 'Upskilling for a promotion', desc: 'Maximum ROI on your next cert. Payback window, city benchmarks, and a reimbursement case for your manager.' },
   ]
   return (
-    <StorySection id="06" title="SYS_MODES" bg={C.bg}>
+    <StorySection id="06" title="SYS_MODES" bg={'var(--bg)'}>
       <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }}>
         <h2 style={{ margin: '0 0 52px' }}>Three tracks.<br /><span style={{ color: C.gold }}>One tool.</span></h2>
       </motion.div>
@@ -1053,9 +1053,9 @@ function ThreeModes() {
               setTimeout(() => document.getElementById('workspace')?.scrollIntoView({ behavior: 'smooth' }), 50);
             }}
           >
-            <div style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: '17px', color: C.text, letterSpacing: '-0.02em', marginBottom: '6px' }}>{m.label}</div>
-            <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '14px' }}>{m.sub}</div>
-            <div style={{ fontFamily: F_SANS, fontSize: '14px', color: C.text2, lineHeight: '1.65' }}>{m.desc}</div>
+            <div style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: '17px', color: 'var(--text)', letterSpacing: '-0.02em', marginBottom: '6px' }}>{m.label}</div>
+            <div style={{ fontFamily: F_MONO, fontSize: '11px', color: 'var(--text-3)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '14px' }}>{m.sub}</div>
+            <div style={{ fontFamily: F_SANS, fontSize: '14px', color: 'var(--text-2)', lineHeight: '1.65' }}>{m.desc}</div>
           </motion.div>
         ))}
       </div>
@@ -1075,7 +1075,7 @@ function SocialProof() {
     { quote: 'Student Mode. India-specific. GCP placed 47 Pune freshers in Q1 2026. My ₹5.2L offer was one of them.', name: 'Ananya K.', detail: 'Pune  Fresh Graduate', hike: '₹5.2L offer' },
   ]
   return (
-    <StorySection id="07" title="FIELD_REPORTS" bg={C.bg}>
+    <StorySection id="07" title="FIELD_REPORTS" bg={'var(--bg)'}>
       <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }}>
         <h2 style={{ margin: '0 0 52px' }}>They ran the numbers first.<br /><span style={{ color: C.gold }}>Then decided.</span></h2>
       </motion.div>
@@ -1083,17 +1083,17 @@ function SocialProof() {
         {quotes.map((q, i) => {
           const last = i === quotes.length - 1
           return (
-            <motion.div key={i} variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }} style={{ paddingTop: i > 0 ? '40px' : '0', paddingBottom: !last ? '40px' : '0', borderBottom: !last ? `1px solid ${C.border}` : 'none', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 160px', gap: '20px', alignItems: 'end' }}>
+            <motion.div key={i} variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }} style={{ paddingTop: i > 0 ? '40px' : '0', paddingBottom: !last ? '40px' : '0', borderBottom: !last ? `1px solid ${'var(--border)'}` : 'none', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 160px', gap: '20px', alignItems: 'end' }}>
               <div>
-                <div style={{ fontFamily: F_SERIF, fontStyle: 'italic', fontWeight: '400', fontSize: 'clamp(1.1rem, 2.2vw, 1.6rem)', color: C.text, letterSpacing: '-0.01em', lineHeight: 1.35, marginBottom: '20px' }}>"{q.quote}"</div>
+                <div style={{ fontFamily: F_SERIF, fontStyle: 'italic', fontWeight: '400', fontSize: 'clamp(1.1rem, 2.2vw, 1.6rem)', color: 'var(--text)', letterSpacing: '-0.01em', lineHeight: 1.35, marginBottom: '20px' }}>"{q.quote}"</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-                  <div style={{ width: '16px', height: '2px', background: C.text3, flexShrink: 0 }} />
-                  <span style={{ fontFamily: F_SANS, fontWeight: '600', fontSize: '13px', color: C.text }}>{q.name}</span>
-                  <span style={{ fontFamily: F_MONO, fontSize: '11px', color: C.text3 }}>{q.detail}</span>
+                  <div style={{ width: '16px', height: '2px', background: 'var(--text-3)', flexShrink: 0 }} />
+                  <span style={{ fontFamily: F_SANS, fontWeight: '600', fontSize: '13px', color: 'var(--text)' }}>{q.name}</span>
+                  <span style={{ fontFamily: F_MONO, fontSize: '11px', color: 'var(--text-3)' }}>{q.detail}</span>
                 </div>
               </div>
               <div style={{ textAlign: isMobile ? 'left' : 'right' }}>
-                <div style={{ fontFamily: F_MONO, fontWeight: '600', fontSize: 'clamp(1.4rem, 2.8vw, 1.9rem)', color: C.text, letterSpacing: '-0.04em', lineHeight: 1 }}>{q.hike}</div>
+                <div style={{ fontFamily: F_MONO, fontWeight: '600', fontSize: 'clamp(1.4rem, 2.8vw, 1.9rem)', color: 'var(--text)', letterSpacing: '-0.04em', lineHeight: 1 }}>{q.hike}</div>
               </div>
             </motion.div>
           )
@@ -1118,15 +1118,15 @@ function FAQItem({ item }) {
   const C = useTheme()
   const [open, setOpen] = useState(false)
   return (
-    <div style={{ borderBottom: `1px solid ${C.border}` }}>
+    <div style={{ borderBottom: `1px solid ${'var(--border)'}` }}>
       <button onClick={() => setOpen(!open)} style={{ width: '100%', padding: '22px 0', background: 'none', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', cursor: 'pointer', textAlign: 'left' }}>
-        <span style={{ fontFamily: F_SANS, fontWeight: '600', fontSize: '15px', color: C.text, letterSpacing: '-0.01em', lineHeight: 1.4 }}>{item.q}</span>
-        <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.2 }} style={{ flexShrink: 0 }}><ChevronDown size={16} color={C.text3} /></motion.div>
+        <span style={{ fontFamily: F_SANS, fontWeight: '600', fontSize: '15px', color: 'var(--text)', letterSpacing: '-0.01em', lineHeight: 1.4 }}>{item.q}</span>
+        <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.2 }} style={{ flexShrink: 0 }}><ChevronDown size={16} color={'var(--text-3)'} /></motion.div>
       </button>
       <AnimatePresence initial={false}>
         {open && (
           <motion.div key="ans" initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.24 }} style={{ overflow: 'hidden' }}>
-            <div style={{ paddingBottom: '22px', fontFamily: F_SANS, fontSize: '14px', color: C.text2, lineHeight: '1.65', maxWidth: '64ch' }}>{item.a}</div>
+            <div style={{ paddingBottom: '22px', fontFamily: F_SANS, fontSize: '14px', color: 'var(--text-2)', lineHeight: '1.65', maxWidth: '64ch' }}>{item.a}</div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -1138,13 +1138,13 @@ function FAQ() {
   const C = useTheme()
   const isMobile = useIsMobile()
   return (
-    <StorySection id="08" title="LOGISTICS" bg={C.bg}>
+    <StorySection id="08" title="LOGISTICS" bg={'var(--bg)'}>
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '260px 1fr', gap: isMobile ? '36px' : '64px', alignItems: 'start' }}>
         <div style={{ position: isMobile ? 'static' : 'sticky', top: '140px' }}>
-          <motion.h2 variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }} style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: 'clamp(1.6rem, 2.5vw, 2.2rem)', color: C.text, letterSpacing: '-0.025em', lineHeight: 1.15, margin: 0 }}>Common<br />questions<br />answered.</motion.h2>
+          <motion.h2 variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }} style={{ fontFamily: F_SANS, fontWeight: '700', fontSize: 'clamp(1.6rem, 2.5vw, 2.2rem)', color: 'var(--text)', letterSpacing: '-0.025em', lineHeight: 1.15, margin: 0 }}>Common<br />questions<br />answered.</motion.h2>
         </div>
         <motion.div variants={RISE} initial="hidden" whileInView="show" viewport={{ once: true }}>
-          <div style={{ borderTop: `1px solid ${C.border}` }}>{FAQ_ITEMS.map((item, i) => <FAQItem key={i} item={item} />)}</div>
+          <div style={{ borderTop: `1px solid ${'var(--border)'}` }}>{FAQ_ITEMS.map((item, i) => <FAQItem key={i} item={item} />)}</div>
         </motion.div>
       </div>
     </StorySection>
@@ -1164,8 +1164,8 @@ function FinalCTA({ onEnter }) {
 
   return (
     <div style={{
-      background: C.bg,
-      borderTop: `1px solid ${C.border}`,
+      background: 'var(--bg)',
+      borderTop: `1px solid ${'var(--border)'}`,
       position: 'relative',
       overflow: 'hidden',
       padding: isMobile ? '100px 24px' : '160px 24px',
@@ -1196,7 +1196,7 @@ function FinalCTA({ onEnter }) {
             fontStyle: 'italic',
             fontWeight: '400',
             fontSize: isMobile ? 'clamp(2.8rem, 10vw, 4.5rem)' : 'clamp(3.5rem, 8vw, 6.5rem)',
-            color: C.text,
+            color: 'var(--text)',
             letterSpacing: '-0.025em',
             lineHeight: isMobile ? 1.0 : 0.96,
             margin: '0 0 28px',
@@ -1214,14 +1214,14 @@ function FinalCTA({ onEnter }) {
           style={{
             fontFamily: F_SANS,
             fontSize: isMobile ? '14px' : '16px',
-            color: C.text2,
+            color: 'var(--text-2)',
             lineHeight: '1.65',
             maxWidth: '44ch',
             margin: '0 auto 44px',
           }}
         >
           Stop reading generic advice. Stop asking Reddit.{' '}
-          <span style={{ color: C.text, fontWeight: '600' }}>Know the exact payback period before you pay the exam fee.</span>
+          <span style={{ color: 'var(--text)', fontWeight: '600' }}>Know the exact payback period before you pay the exam fee.</span>
         </motion.p>
 
         <motion.div
@@ -1238,7 +1238,7 @@ function FinalCTA({ onEnter }) {
               <div style={{ width: '4px', height: '10px', background: C.gold }} />
               <div style={{ width: '4px', height: '10px', background: C.gold, opacity: 0.35 }} />
             </div>
-            <span style={{ fontFamily: F_SANS, fontSize: '11px', color: C.text2, letterSpacing: '0.03em', fontWeight: '400' }}>Complimentary  Private  India-calibrated</span>
+            <span style={{ fontFamily: F_SANS, fontSize: '11px', color: 'var(--text-2)', letterSpacing: '0.03em', fontWeight: '400' }}>Complimentary  Private  India-calibrated</span>
           </GlassPill>
         </motion.div>
       </div>
@@ -1259,8 +1259,8 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
   return (
       <div style={{
         minHeight: '100vh',
-        background: C.bg,
-        color: C.text,
+        background: 'var(--bg)',
+        color: 'var(--text)',
         overflow: 'clip',
         transition: 'background 0.3s ease, color 0.3s ease',
       }}>
@@ -1270,9 +1270,9 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
         <div style={{
           position: 'relative',
           minHeight: isMobile ? '100svh' : '100vh',
-          borderBottom: `1px solid ${C.border}`,
+          borderBottom: `1px solid ${'var(--border)'}`,
           overflow: 'hidden',
-          background: C.bg
+          background: 'var(--bg)'
         }}>
           {/* Core Content Grid */}
           <div style={{
@@ -1323,7 +1323,7 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
                     color: 'transparent'
                   }}>Know the</span>{' '}
                   <span style={{
-                    background: 'linear-gradient(to right, var(--gold-val) 0%, var(--gold-light) 50%, var(--gold-val) 100%)',
+                    background: 'var(--gradient-brand)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text',
@@ -1341,21 +1341,18 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
                 <p style={{
                   fontFamily: F_SANS,
                   fontSize: isMobile ? '16px' : '18px',
-                  color: C.text3,
+                  color: 'var(--text-3)',
                   lineHeight: 1.6,
                   maxWidth: '40ch',
                   marginBottom: '40px',
                   fontWeight: '400'
                 }}>
-                  Every tool is built around one question: <strong style={{ color: C.text, fontWeight: '500' }}>will this cert pay off for you?</strong> We run the financial model using verified Indian salary benchmarks.
+                  Every tool is built around one question: <strong style={{ color: 'var(--text)', fontWeight: '500' }}>will this cert pay off for you?</strong> We run the financial model using verified Indian salary benchmarks.
                 </p>
                 
                 <div style={{ display: 'flex', gap: '24px', alignItems: 'center', flexWrap: 'wrap' }}>
                   <PillBtn onClick={handleEnter} large primary>Calculate ROI <ArrowRight size={15} /></PillBtn>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: C.text3, fontFamily: F_MONO, fontSize: '11px', letterSpacing: '0.05em' }}>
-                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--brand-primary)', animation: 'pdot 1.5s infinite' }} />
-                    LIVE DATA 2026
-                  </div>
+                  <PillBtn onClick={() => router.push('/offer-analysis')} large>Offer Letter Analyzer <ArrowRight size={14} /></PillBtn>
                 </div>
               </motion.div>
             </div>

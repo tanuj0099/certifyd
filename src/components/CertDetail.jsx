@@ -65,7 +65,7 @@ function formatQuestions(n) {
 }
 
 const DIFFICULTY_STYLES = {
-  foundational: { bg: 'bg-emerald-500/10', border: 'border-emerald-500/25', text: 'text-emerald-400' },
+  foundational: { bg: 'bg-orange-500/10', border: 'border-orange-500/25', text: 'text-orange-400' },
   associate:    { bg: 'bg-blue-500/10',    border: 'border-blue-500/25',    text: 'text-blue-400'    },
   professional: { bg: 'bg-violet-500/10',  border: 'border-violet-500/25',  text: 'text-violet-400'  },
   expert:       { bg: 'bg-orange-500/10',  border: 'border-orange-500/25',  text: 'text-orange-400'  },
@@ -396,7 +396,7 @@ const CertDetail = () => {
             icon={DollarSign}
             label="Exam Cost"
             value={formatDualCost(cert.cost_inr, cert.cost_usd)}
-            valueClass={costValue === 0 ? 'text-emerald-400' : 'text-[var(--text)]'}
+            valueClass={costValue === 0 ? 'text-orange-400' : 'text-[var(--text)]'}
             accent="var(--brand-primary)"
           />
           <StatCard
@@ -475,8 +475,8 @@ const CertDetail = () => {
 
               {/* Validity */}
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <CalendarDays className="w-4 h-4 text-emerald-400" />
+                <div className="w-8 h-8 rounded-lg bg-orange-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <CalendarDays className="w-4 h-4 text-orange-400" />
                 </div>
                 <div>
                   <p className="text-sm font-medium text-[var(--text-3)] uppercase tracking-widest mb-1">
@@ -599,7 +599,7 @@ const CertDetail = () => {
             {cert.job_roles && cert.job_roles.length > 0 && (
               <section className="p-4 md:p-6 rounded-2xl glass">
                 <div className="flex items-center gap-2 mb-3 md:mb-4">
-                  <div className="w-4 h-4 text-emerald-400 flex items-center justify-center">
+                  <div className="w-4 h-4 text-orange-400 flex items-center justify-center">
                     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>

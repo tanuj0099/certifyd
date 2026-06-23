@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { TOOLS } from '@/data/toolsData';
 import { ArrowRight } from 'lucide-react';
 import { MarketingFooter } from '@/components/MarketingPageShell.jsx';
+import { DotMatrixBackground } from '@/components/DotMatrixBackground.jsx';
 
 const FM = "var(--font-mono)";
 const FS = "var(--font-sans)";
@@ -80,9 +81,15 @@ function ToolCard({ tool }) {
 
 export default function ToolsIndex() {
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)' }}>
-      <div className="page-top-pad w-full max-w-6xl mx-auto px-4 md:px-6 py-8 pb-24">
-        <div style={{ marginBottom: '40px', borderBottom: '1px solid var(--border)', paddingBottom: '24px' }}>
+    <div style={{ minHeight: '100vh', color: 'var(--text)' }}>
+      
+      {/* Banner / Header */}
+      <div style={{ position: 'relative', overflow: 'hidden', borderBottom: '1px solid var(--border)' }}>
+        <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+          <DotMatrixBackground className="w-full h-full absolute inset-0" mode="grid" />
+        </div>
+        
+        <div className="page-top-pad w-full max-w-6xl mx-auto px-4 md:px-6 py-12 pb-16 relative z-10">
           <h1 style={{ fontFamily: FS, fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1.05, color: 'var(--text)', margin: '0 0 16px' }}>
             Career Navigation Tools
           </h1>
@@ -90,7 +97,9 @@ export default function ToolsIndex() {
             Every tool is built around one question: <em style={{ color: 'var(--text-2)' }}>will this cert pay off for you?</em> Pick your starting point.
           </p>
         </div>
+      </div>
 
+      <div className="w-full max-w-6xl mx-auto px-4 md:px-6 py-12 pb-24">
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 320px), 1fr))',

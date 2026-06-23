@@ -301,7 +301,7 @@ function MobileMenu({ open, currentPage, onNavigate, onActivate, onClose, user, 
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -8, scale: 0.98 }}
           transition={{ type: 'spring', stiffness: 360, damping: 32 }}
-          style={{ position: 'fixed', top: '78px', left: '14px', right: '14px', zIndex: 9998, padding: '14px', borderRadius: '24px', border: '1px solid var(--border-mid)', background: 'var(--bg)', backdropFilter: 'blur(18px) saturate(150%)', WebkitBackdropFilter: 'blur(18px) saturate(150%)' }}
+          style={{ position: 'fixed', top: '78px', left: '14px', right: '14px', zIndex: 9998, padding: '14px', borderRadius: '24px', border: '1px solid var(--border-subtle)', background: 'var(--bg-surface)', backdropFilter: 'blur(18px) saturate(150%)', WebkitBackdropFilter: 'blur(18px) saturate(150%)' }}
         >
           <div style={{ margin: '0 0 8px 4px', color: 'var(--text-4)', fontFamily: F_MONO, fontSize: '10px', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Navigate</div>
           <div style={{ display: 'grid', gap: '5px', marginBottom: '16px' }}>
@@ -481,7 +481,7 @@ const DynamicIslandNav = React.memo(({ onNavigate, currentPage, user, onSignIn, 
       <header
         className="hidden md:flex sticky top-0 z-50 w-full border-b backdrop-blur-md transition-colors duration-300"
         style={{
-          backgroundColor: 'color-mix(in srgb, var(--bg) 85%, transparent)',
+          backgroundColor: 'var(--glass-bg)',
           borderColor: 'var(--border-mid)'
         }}
       >

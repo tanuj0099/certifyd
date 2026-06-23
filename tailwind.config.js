@@ -18,10 +18,10 @@ export default {
       colors: {
         emerald: {
           DEFAULT: 'var(--brand-primary)',
-          50: 'rgba(0, 212, 168, 0.1)',
-          100: 'rgba(0, 212, 168, 0.2)',
-          200: 'rgba(0, 212, 168, 0.3)',
-          300: 'rgba(0, 212, 168, 0.5)',
+          50: 'rgba(249, 115, 22, 0.1)',
+          100: 'rgba(249, 115, 22, 0.2)',
+          200: 'rgba(249, 115, 22, 0.3)',
+          300: 'rgba(249, 115, 22, 0.5)',
           400: 'var(--brand-primary)',
           500: 'var(--brand-primary)',
           600: 'var(--brand-primary)',

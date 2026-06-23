@@ -27,7 +27,7 @@ export default function RoadmapDrawer({ isOpen, onClose, nodeData, isCompleted, 
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className={`text-sm font-medium text-slate-600 font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full ${
-                isCompleted ? 'bg-emerald-50 text-emerald-600' : 'bg-indigo-50 text-indigo-600'
+                isCompleted ? 'bg-orange-50 text-orange-600' : 'bg-indigo-50 text-indigo-600'
               }`}>
                 {isCompleted ? 'Completed' : (nodeData.variant === 'checkpoint' ? 'Core Skill' : 'Standard Skill')}
               </span>
@@ -62,7 +62,7 @@ export default function RoadmapDrawer({ isOpen, onClose, nodeData, isCompleted, 
             onClick={() => onToggleComplete(nodeData.id)}
             className={`w-full flex items-center justify-center gap-2 font-bold py-3.5 px-4 rounded-xl transition-all shadow-md hover:shadow-lg ${
               isCompleted 
-                ? 'bg-emerald-500 hover:bg-emerald-600 text-white' 
+                ? 'bg-orange-500 hover:bg-orange-600 text-white' 
                 : 'bg-slate-900 hover:bg-slate-800 text-white'
             }`}
           >

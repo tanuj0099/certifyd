@@ -20,7 +20,7 @@ const FB = "var(--font-body)";
 const T = { duration: 0.28, ease: [0.4, 0, 0.2, 1] }
 
 const PICTON = 'var(--linear-blue)'
-const EMERALD = 'var(--linear-blue)'
+const ORANGE = 'var(--linear-blue)'
 
 const STEP_TABS = [
   { id: 1, num: '1', label: 'Establish Baseline', icon: FileText, desc: 'Upload resume for context' },
@@ -358,7 +358,7 @@ export default function OfferAnalysisPage() {
           {hasFile ? (
             <div style={{ padding: '16px', borderRadius: '11px', background: 'var(--bg-surface)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <FileText size={16} color={EMERALD} />
+                <FileText size={16} color={ORANGE} />
                 <span style={{ fontSize: '13px', color: 'var(--text)', fontWeight: '600', fontFamily: FH }}>{fileName}</span>
               </div>
               <button onClick={() => { isResume ? setResumeFileName('') : setOfferFileName(''); setTextValue('') }} style={{ background: 'none', border: 'none', color: 'var(--text-4)', cursor: 'pointer' }}>
@@ -693,7 +693,7 @@ export default function OfferAnalysisPage() {
                           {/* Negotiation Target */}
                           <div className="mb-8">
                             <div className="text-sm font-bold text-[var(--text-3)] mb-3 font-sans">TARGET COUNTER-OFFER RANGE</div>
-                            <div className="text-emerald-500 dark:text-emerald-400 font-black text-4xl sm:text-5xl font-sans tracking-tight tabular-nums flex flex-col sm:flex-row sm:items-baseline sm:gap-3 drop-shadow-sm">
+                            <div className="text-orange-500 dark:text-orange-400 font-black text-4xl sm:text-5xl font-sans tracking-tight tabular-nums flex flex-col sm:flex-row sm:items-baseline sm:gap-3 drop-shadow-sm">
                               <span>₹{Math.round(Math.max(ctcValue * 1.15, finalMedian * 0.95)).toLocaleString('en-IN')}</span>
                               <span className="hidden sm:inline text-[var(--text-4)] font-normal text-3xl">-</span>
                               <span className="sm:hidden text-[var(--text-4)] text-sm font-medium my-1">to</span>
@@ -730,13 +730,13 @@ export default function OfferAnalysisPage() {
 
                             {(result.Strategic_Negotiation_Output?.Strengths?.length > 0) && (
                               <div>
-                                <div className="text-xs uppercase tracking-[0.1em] text-emerald-500 dark:text-emerald-400 mb-2 font-bold flex items-center gap-2">
+                                <div className="text-xs uppercase tracking-[0.1em] text-orange-500 dark:text-orange-400 mb-2 font-bold flex items-center gap-2">
                                   <Check size={14} strokeWidth={3} /> STRENGTHS
                                 </div>
                                 <ul className="list-none m-0 p-0 flex flex-col gap-2">
                                   {result.Strategic_Negotiation_Output.Strengths.map((str, idx) => (
                                     <li key={idx} className="text-sm md:text-base text-[var(--text-2)] font-sans leading-relaxed flex items-start gap-2.5">
-                                      <span className="text-emerald-500 dark:text-emerald-400 mt-0.5 font-bold">•</span> {str}
+                                      <span className="text-orange-500 dark:text-orange-400 mt-0.5 font-bold">•</span> {str}
                                     </li>
                                   ))}
                                 </ul>
@@ -745,7 +745,7 @@ export default function OfferAnalysisPage() {
 
                             {result.Strategic_Negotiation_Output?.Counter_Offer_Email_Script ? (
                               <div className="mt-4 p-5 md:p-6 rounded-2xl relative group" style={{ background: C.isLight ? 'rgba(0,0,0,0.03)' : 'rgba(0,0,0,0.4)', border: `1px solid ${C.isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)'}` }}>
-                                <div className="text-xs uppercase tracking-[0.1em] text-emerald-500 dark:text-emerald-400 mb-3 font-bold flex items-center gap-2">
+                                <div className="text-xs uppercase tracking-[0.1em] text-orange-500 dark:text-orange-400 mb-3 font-bold flex items-center gap-2">
                                   <Sparkles size={14} /> EMAIL SCRIPT
                                 </div>
                                 <div className="text-[15px] text-[var(--text)] font-sans leading-relaxed whitespace-pre-wrap font-medium">
@@ -761,7 +761,7 @@ export default function OfferAnalysisPage() {
                               </div>
                             ) : (
                               <div>
-                                <div className="text-sm font-medium text-emerald-400 mb-2 font-mono flex items-center gap-2">
+                                <div className="text-sm font-medium text-orange-400 mb-2 font-mono flex items-center gap-2">
                                   <Sparkles size={12} className="flex-shrink-0" /> Actionable Talking Point
                                 </div>
                                 <div className="text-sm sm:text-base text-slate-200 font-sans leading-relaxed">

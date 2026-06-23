@@ -2,14 +2,14 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 const FM = "var(--font-mono)";
-const EMERALD = 'var(--linear-blue)';
+const ORANGE = 'var(--linear-blue)';
 const AMBER   = 'var(--cool-grey)';
 const ROSE    = 'var(--cool-grey)';
 const INDIGO  = 'var(--linear-blue)';
 
 //  SVG Consensus Gauge 
 // pct: 0-100   accent: css color string
-export function ConsensusGauge({ pct = 72, accent = EMERALD, label = 'ROI Score', size = 120 }) {
+export function ConsensusGauge({ pct = 72, accent = ORANGE, label = 'ROI Score', size = 120 }) {
   const R    = 44;
   const cx   = size / 2;
   const cy   = size / 2;
@@ -146,7 +146,7 @@ export function HeroSkeleton() {
 }
 
 //  Number roll ticker 
-export function RollNumber({ value, prefix = '', suffix = '', color = EMERALD, fontSize = 'clamp(1.5rem,4vw,2.2rem)' }) {
+export function RollNumber({ value, prefix = '', suffix = '', color = ORANGE, fontSize = 'clamp(1.5rem,4vw,2.2rem)' }) {
   const [displayed, setDisplayed] = React.useState(0);
   const numVal = parseFloat(String(value).replace(/[^0-9.]/g, '')) || 0;
 
@@ -180,7 +180,7 @@ export function RollNumber({ value, prefix = '', suffix = '', color = EMERALD, f
 export function resolveVerdictStatus(verdict = '', breakEvenMonths = 0) {
   const v = verdict.toLowerCase();
   if (v.includes('strong') || v.includes('excellent') || v.includes('highly recommend')) {
-    return { code: 'STRONG_BUY', label: 'STATUS: STRONG BUY', color: EMERALD, bg: 'transparent', border: 'transparent' };
+    return { code: 'STRONG_BUY', label: 'STATUS: STRONG BUY', color: ORANGE, bg: 'transparent', border: 'transparent' };
   }
   if (v.includes('moderate') || v.includes('consider') || v.includes('conditional')) {
     return { code: 'NEUTRAL', label: 'STATUS: NEUTRAL - VERIFY ASSUMPTIONS', color: AMBER, bg: 'transparent', border: 'transparent' };
@@ -210,8 +210,8 @@ export function DataSyncBadge({ updatedAt }) {
     }}>
       <span style={{
         width: 5, height: 5, borderRadius: '50%',
-        background: EMERALD, flexShrink: 0,
-        boxShadow: `0 0 6px ${EMERALD}`,
+        background: ORANGE, flexShrink: 0,
+        boxShadow: `0 0 6px ${ORANGE}`,
         animation: 'pdot 1.6s ease-in-out infinite',
       }} />
       {label}

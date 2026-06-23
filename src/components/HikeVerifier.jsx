@@ -11,7 +11,7 @@ var F_BODY = "var(--font-body)"
 var F_MONO = "var(--font-mono)"
 
 const PICTON  = 'var(--linear-blue)'
-const EMERALD = 'var(--linear-blue)'
+const ORANGE = 'var(--linear-blue)'
 const AMBER   = 'var(--cool-grey)'
 const INDIGO  = 'var(--linear-blue)'
 const VIOLET  = 'var(--accent)'
@@ -89,7 +89,7 @@ function ScoreBar({ label, actual, projected, color }) {
 function getVerdict(actualHike, projectedHike) {
   var ratio = actualHike / Math.max(projectedHike, 1)
   if (ratio >= 1.3) return { label: 'Exceptional', color: AMBER,   headline: 'You crushed it.',            sub: 'Your actual hike was ' + (actualHike - projectedHike).toFixed(1) + '% above what most people get with this cert. Top ' + (ratio >= 1.5 ? '5%' : '15%') + ' outcome.' }
-  if (ratio >= 1.0) return { label: 'On Target',   color: EMERALD, headline: 'The cert delivered.',        sub: 'You met or beat the projected hike. Your result is better than the majority of people who took this cert.' }
+  if (ratio >= 1.0) return { label: 'On Target',   color: ORANGE, headline: 'The cert delivered.',        sub: 'You met or beat the projected hike. Your result is better than the majority of people who took this cert.' }
   if (ratio >= 0.75)return { label: 'Close',       color: PICTON,  headline: 'Solid, not spectacular.',    sub: 'You came within ' + (projectedHike - actualHike).toFixed(1) + '% of the projection. Market conditions, company, and negotiation skill all play a role here.' }
   if (ratio >= 0.5) return { label: 'Below Target',color: AMBER,   headline: 'Room to push further.',      sub: (projectedHike - actualHike).toFixed(1) + '% below projection. A job switch with this cert on your profile could close the gap fast.' }
   return               { label: 'Needs Action', color: RED,    headline: "The cert alone wasn't enough.", sub: 'Significantly below projection. Consider stacking a second cert or switching companies - the market values this cert, but your current employer may not.' }
@@ -150,10 +150,10 @@ function HikeVerifier({ certName, projectedHike, onClose }) {
       {/*  Header  */}
       <div style={{ padding: '14px 18px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '10px' }}>
         <div style={{ width: 30, height: 30, borderRadius: '8px', background: 'transparent', border: '1px solid transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <Target size={14} color={EMERALD} />
+          <Target size={14} color={ORANGE} />
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontFamily: F_HEAD, fontWeight: '800', fontSize: '12px', color: EMERALD, letterSpacing: '0.04em' }}>DID IT WORK?</div>
+          <div style={{ fontFamily: F_HEAD, fontWeight: '800', fontSize: '12px', color: ORANGE, letterSpacing: '0.04em' }}>DID IT WORK?</div>
           <div style={{ fontSize: '11px', color: 'var(--text-4)', fontFamily: F_MONO, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', letterSpacing: '0.02em' }}>
             {certName}  Projected +{projectedHike}%
           </div>
@@ -188,7 +188,7 @@ function HikeVerifier({ certName, projectedHike, onClose }) {
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '8px', marginBottom: '12px' }}>
                     {[
-                      { label: 'Actual Hike', value: '+' + liveActualHike.toFixed(1) + '%', color: liveActualHike >= projectedHike ? EMERALD : AMBER },
+                      { label: 'Actual Hike', value: '+' + liveActualHike.toFixed(1) + '%', color: liveActualHike >= projectedHike ? ORANGE : AMBER },
                       { label: 'Projected',   value: '+' + projectedHike + '%',              color: PICTON },
                       { label: 'Annual Gain', value: '₹' + (after - before).toFixed(1) + 'L', color: VIOLET },
                     ].map(function(s, i) {
@@ -200,7 +200,7 @@ function HikeVerifier({ certName, projectedHike, onClose }) {
                       )
                     })}
                   </div>
-                  <ScoreBar label="Your hike vs projection" actual={liveActualHike} projected={projectedHike} color={liveActualHike >= projectedHike ? EMERALD : AMBER} />
+                  <ScoreBar label="Your hike vs projection" actual={liveActualHike} projected={projectedHike} color={liveActualHike >= projectedHike ? ORANGE : AMBER} />
                 </motion.div>
               ) : null}
 
@@ -301,7 +301,7 @@ function HikeVerifier({ certName, projectedHike, onClose }) {
                   </div>
                   <div>
                     <div style={{ fontFamily: F_MONO, fontSize: '9px', color: 'var(--text-4)', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Monthly extra</div>
-                    <div style={{ fontFamily: F_MONO, fontSize: '17px', color: EMERALD, fontWeight: '700', letterSpacing: '-0.02em' }}>₹{Math.round((after - before) * 100000 / 12).toLocaleString('en-IN')}</div>
+                    <div style={{ fontFamily: F_MONO, fontSize: '17px', color: ORANGE, fontWeight: '700', letterSpacing: '-0.02em' }}>₹{Math.round((after - before) * 100000 / 12).toLocaleString('en-IN')}</div>
                   </div>
                 </div>
                 <div style={{ fontSize: '12px', color: 'var(--text-3)', fontFamily: F_BODY, lineHeight: '1.65' }}>

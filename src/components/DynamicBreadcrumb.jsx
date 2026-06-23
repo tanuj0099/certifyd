@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { ChevronRight, Home, Folder, FileText, Wrench, Award, Map, User } from 'lucide-react';
@@ -21,6 +21,15 @@ export function DynamicBreadcrumb() {
   const pathname = usePathname();
   const mode = useJourneyStore((s) => s.mode);
   const modeLocked = useJourneyStore((s) => s.modeLocked);
+  const sourceTool = useJourneyStore((s) => s.sourceTool);
+  const clearSourceTool = useJourneyStore((s) => s.clearSourceTool);
+
+  // Clear sourceTool if we go to Home or Tools index
+  useEffect(() => {
+    if (pathname === '/' || pathname === '/tools') {
+      clearSourceTool();
+    }
+  }, [pathname, clearSourceTool]);
 
   // Don't show breadcrumb on home page or auth pages
   if (!pathname || pathname === '/' || pathname === '/login' || pathname === '/signup') {
@@ -28,7 +37,14 @@ export function DynamicBreadcrumb() {
   }
 
   // Split pathname into segments
-  const paths = pathname.split('/').filter(Boolean);
+  let paths = pathname.split('/').filter(Boolean);
+
+  // Logical Path overrides
+  if (paths.includes('offer-analysis') || paths.includes('cert-radar') || paths.includes('market')) {
+    if (paths[0] !== 'tools') {
+      paths = ['tools', ...paths];
+    }
+  }
 
   // Build the breadcrumb segments
   const segments = [
@@ -40,15 +56,17 @@ export function DynamicBreadcrumb() {
     currentPath += `/${path}`;
     const isLast = index === paths.length - 1;
     
-    // Format the label (capitalize, remove dashes)
+    // Format the label
     let label = path.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    if (path === 'roi') label = 'ROI Calculator';
+    if (path === 'cert-radar') label = 'Cert Radar';
+    if (path === 'offer-analysis') label = 'Offer Analysis';
     
-    // Choose an icon based on the path
     let Icon = ICONS.default;
-    if (path.toLowerCase().includes('tool')) Icon = ICONS.tools;
-    else if (path.toLowerCase().includes('cert')) Icon = ICONS.cert;
-    else if (path.toLowerCase().includes('roadmap')) Icon = ICONS.roadmap;
-    else if (path.toLowerCase().includes('profile')) Icon = ICONS.profile;
+    if (path === 'tools') Icon = ICONS.tools;
+    else if (path.includes('cert')) Icon = ICONS.cert;
+    else if (path.includes('roadmap')) Icon = ICONS.roadmap;
+    else if (path.includes('profile')) Icon = ICONS.profile;
 
     segments.push({
       label,
@@ -57,18 +75,17 @@ export function DynamicBreadcrumb() {
       current: isLast
     });
 
-    // If this is the 'tools' segment and a path is chosen, inject the chosen path
-    if (path.toLowerCase() === 'tools' && modeLocked && mode) {
-      const activeMode = MODES.find(m => m.id === mode);
-      if (activeMode) {
-        segments.push({
-          label: activeMode.label,
-          href: '/choose-path', // Clicking it goes back to choose path
-          icon: activeMode.icon || ICONS.default,
-          current: false
-        });
-      }
+    // If we are showing a tool page and we came from another tool, inject it!
+    if (isLast && sourceTool && sourceTool.path !== pathname) {
+      // Insert source tool right before the current tool
+      segments.splice(segments.length - 1, 0, {
+        label: sourceTool.name,
+        href: sourceTool.path,
+        icon: ICONS.tools,
+        current: false
+      });
     }
+
   });
 
   return (

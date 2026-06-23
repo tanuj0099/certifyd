@@ -10,6 +10,8 @@ import { useIsMobile } from '@/components/SharedUI.jsx'
 import { supabase } from '@/lib/supabase.js'
 import CertificationCard from '@/components/CertificationCard.jsx'
 import WelcomeOnboarding from '@/components/WelcomeOnboarding.jsx'
+import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, Cell } from 'recharts'
+import { DotMatrixBackground } from '@/components/DotMatrixBackground.jsx'
 import {
   Award, TrendingUp, BarChart2, Zap, MapPin,
   ChevronRight, BookOpen, Compass, Target, Bookmark,
@@ -173,19 +175,25 @@ export default function DashboardPage() {
   ]
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)', paddingTop: '64px' }}>
+    <div style={{ minHeight: '100vh', color: 'var(--text)', paddingTop: '64px' }}>
 
       {/* ── Page header ── */}
-      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: isMobile ? '24px 16px 0' : '32px 24px 0' }}>
-        <div style={{ fontFamily: FM, fontSize: '10px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--text-4)', marginBottom: '6px' }}>CAREER TOOLS</div>
-        <h1 style={{ fontFamily: FH, fontSize: '32px', fontWeight: '700', color: 'var(--text)', margin: 0 }}>
-          {resumeName ? `${resumeName.split(' ')[0]}'s` : 'Your'} workspace
-        </h1>
-        {resumeCity && (
-          <div style={{ fontFamily: FB, fontSize: '13px', color: 'var(--text-3)', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-            <MapPin size={12} /> {resumeCity}
-          </div>
-        )}
+      <div style={{ position: 'relative', overflow: 'hidden', borderBottom: '1px solid var(--border)', paddingBottom: '32px' }}>
+        <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+          <DotMatrixBackground className="w-full h-full absolute inset-0" mode="grid" />
+        </div>
+        
+        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: isMobile ? '24px 16px 0' : '32px 24px 0', position: 'relative', zIndex: 10 }}>
+          <div style={{ fontFamily: FM, fontSize: '10px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--text-4)', marginBottom: '6px' }}>CAREER TOOLS</div>
+          <h1 style={{ fontFamily: FH, fontSize: '32px', fontWeight: '700', color: 'var(--text)', margin: 0 }}>
+            {resumeName ? `${resumeName.split(' ')[0]}'s` : 'Your'} workspace
+          </h1>
+          {resumeCity && (
+            <div style={{ fontFamily: FB, fontSize: '13px', color: 'var(--text-3)', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <MapPin size={12} /> {resumeCity}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Optional AI Onboarding Banner */}

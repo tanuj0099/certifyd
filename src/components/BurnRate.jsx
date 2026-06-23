@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Flame, CheckCircle, Clock, Target, RotateCcw } from 'lucide-react'
 
 const PICTON  = 'var(--linear-blue)'
-const EMERALD = 'var(--linear-blue)'
+const ORANGE = 'var(--linear-blue)'
 const AMBER   = 'var(--cool-grey)'
 const SPRING  = { type: 'spring', stiffness: 400, damping: 30 }
 
@@ -122,7 +122,7 @@ const BurnRate = ({ certName = 'Your Certification', breakEvenMonths = 6, active
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', marginBottom: '16px' }}>
         {[
           { icon: Flame,       color: AMBER,   label: 'Streak',    value: data.streak + (stats.streakAlive ? '' : ' (paused)'), sub: 'days' },
-          { icon: CheckCircle, color: EMERALD, label: 'Done',      value: stats.completedCount + '/' + totalModules, sub: 'modules' },
+          { icon: CheckCircle, color: ORANGE, label: 'Done',      value: stats.completedCount + '/' + totalModules, sub: 'modules' },
           { icon: Target,      color: PICTON,  label: 'Progress',  value: stats.pct + '%', sub: 'complete' },
           { icon: Clock,       color: 'var(--accent)', label: 'ETA',     value: stats.completedCount === 0 ? '--' : stats.daysToFinish > 365 ? '1yr+' : stats.daysToFinish + 'd', sub: 'remaining' },
         ].map((s, i) => (
@@ -142,7 +142,7 @@ const BurnRate = ({ certName = 'Your Certification', breakEvenMonths = 6, active
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '5px' }}>
           <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: 'var(--text-4)' }}>Started {data.startDate}</span>
-          <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: stats.pct === 100 ? EMERALD : 'var(--text-4)' }}>
+          <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: stats.pct === 100 ? ORANGE : 'var(--text-4)' }}>
             {stats.pct === 100 ? 'Complete' : stats.pct === 0 ? 'Not started' : 'Est. ' + stats.estFinishDate.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
           </span>
         </div>
@@ -164,10 +164,10 @@ const BurnRate = ({ certName = 'Your Certification', breakEvenMonths = 6, active
               transition={{ delay: i * 0.03, duration: 0.2 }}
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.98 }}
-              style={{ width: '100%', padding: '10px 14px', borderRadius: '9px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px', background: done ? `${EMERALD}08` : 'transparent', border: `1px solid ${done ? EMERALD + '28' : 'var(--border)'}`, transition: 'all 0.18s', textAlign: 'left' }}
+              style={{ width: '100%', padding: '10px 14px', borderRadius: '9px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px', background: done ? `${ORANGE}08` : 'transparent', border: `1px solid ${done ? ORANGE + '28' : 'var(--border)'}`, transition: 'all 0.18s', textAlign: 'left' }}
             >
-              <div style={{ width: 20, height: 20, borderRadius: '6px', flexShrink: 0, border: `2px solid ${done ? EMERALD : 'var(--border)'}`, background: done ? `${EMERALD}14` : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.18s' }}>
-                {done && <CheckCircle size={11} color={EMERALD} />}
+              <div style={{ width: 20, height: 20, borderRadius: '6px', flexShrink: 0, border: `2px solid ${done ? ORANGE : 'var(--border)'}`, background: done ? `${ORANGE}14` : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.18s' }}>
+                {done && <CheckCircle size={11} color={ORANGE} />}
               </div>
               <span style={{ fontSize: '13px', color: done ? 'var(--text-3)' : 'var(--text)', fontFamily: 'var(--font-sans)', textDecoration: done ? 'line-through' : 'none', flex: 1, transition: 'all 0.18s' }}>{mod}</span>
               <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: 'var(--text-4)' }}>M{i + 1}</span>
@@ -187,7 +187,7 @@ const BurnRate = ({ certName = 'Your Certification', breakEvenMonths = 6, active
       <AnimatePresence>
         {justChecked && (
           <motion.div initial={{ opacity: 0, y: 10, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -10, scale: 0.95 }} transition={SPRING}
-            style={{ position: 'fixed', bottom: '24px', right: '24px', zIndex: 200, padding: '12px 18px', borderRadius: '12px', background: EMERALD, color: 'white', fontSize: '13px', fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '8px', boxShadow: `0 4px 20px ${EMERALD}44` }}>
+            style={{ position: 'fixed', bottom: '24px', right: '24px', zIndex: 200, padding: '12px 18px', borderRadius: '12px', background: ORANGE, color: 'white', fontSize: '13px', fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '8px', boxShadow: `0 4px 20px ${ORANGE}44` }}>
             <CheckCircle size={15} /> Module done. Keep going.
           </motion.div>
         )}

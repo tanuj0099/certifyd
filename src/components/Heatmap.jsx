@@ -9,7 +9,7 @@ var F_BODY = "var(--font-body)"
 var F_MONO = "var(--font-mono)"
 
 const PICTON  = 'var(--linear-blue)'
-const EMERALD = 'var(--linear-blue)'
+const ORANGE = 'var(--linear-blue)'
 const AMBER   = 'var(--cool-grey)'
 const SPRING  = { type: 'spring', stiffness: 400, damping: 30 }
 
@@ -27,7 +27,7 @@ const CITIES = [
 const CERT_CATEGORIES = [
   { id: 'tech',       label: 'Tech & Cloud',   color: PICTON,    remoteFlag: 'remote',         certs: ['AWS SAA', 'Azure', 'GCP', 'CKA', 'CompTIA Sec+', 'CEH'] },
   { id: 'data',       label: 'Data & AI',      color: 'var(--accent)', remoteFlag: 'remote',         certs: ['Google Data Analytics', 'IBM Data Science', 'TensorFlow', 'Tableau'] },
-  { id: 'management', label: 'Project Mgmt',   color: EMERALD,   remoteFlag: 'hybrid',         certs: ['PMP', 'Scrum Master', 'PRINCE2'] },
+  { id: 'management', label: 'Project Mgmt',   color: ORANGE,   remoteFlag: 'hybrid',         certs: ['PMP', 'Scrum Master', 'PRINCE2'] },
   { id: 'business',   label: 'Business & Ops', color: AMBER,     remoteFlag: 'city-dependent', certs: ['Six Sigma', 'APICS CSCP', 'Google PM'] },
   { id: 'finance',    label: 'Finance',        color: 'var(--linear-blue)', remoteFlag: 'city-dependent', certs: ['CFA Level 1', 'FMVA', 'CPA'] },
   { id: 'marketing',  label: 'Marketing',      color: '#F472B6', remoteFlag: 'hybrid',         certs: ['Google Digital Marketing', 'HubSpot', 'Meta Blueprint'] },
@@ -37,7 +37,7 @@ const CERT_CATEGORIES = [
 
 // Remote flag config
 const REMOTE_FLAG_CONFIG = {
-  'remote':         { label: 'Remote-friendly',    color: EMERALD,   Icon: Wifi,      tip: 'Strong demand for remote roles' },
+  'remote':         { label: 'Remote-friendly',    color: ORANGE,   Icon: Wifi,      tip: 'Strong demand for remote roles' },
   'hybrid':         { label: 'Hybrid',              color: PICTON,    Icon: Globe,     tip: 'Mix of remote and on-site demand' },
   'city-dependent': { label: 'City-dependent',      color: AMBER,     Icon: Building2, tip: 'Most roles require metro presence' },
 }
@@ -54,7 +54,7 @@ const DEMAND = {
 }
 
 const LEVEL_CONFIG = {
-  5: { label: 'Very High', color: EMERALD,   bg: 'transparent',  border: 'transparent', bar: '100%' },
+  5: { label: 'Very High', color: ORANGE,   bg: 'transparent',  border: 'transparent', bar: '100%' },
   4: { label: 'High',      color: PICTON,    bg: 'transparent',  border: 'transparent', bar: '80%'  },
   3: { label: 'Medium',    color: AMBER,     bg: 'transparent',  border: 'transparent', bar: '60%'  },
   2: { label: 'Low',       color: '#64748B', bg: 'transparent', border: 'transparent', bar: '35%' },
@@ -196,11 +196,11 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
             initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={SPRING}
             style={{ marginTop: '12px', padding: '10px 14px', borderRadius: '8px', background: 'transparent', border: '1px solid transparent', display: 'flex', alignItems: 'center', gap: '10px' }}
           >
-            <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: EMERALD, flexShrink: 0 }} />
+            <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: ORANGE, flexShrink: 0 }} />
             <div style={{ fontSize: '12px', color: 'var(--text-3)', fontFamily: F_BODY }}>
               Auto-detected from your resume:
               {prefilledCity   && <strong style={{ color: PICTON,  marginLeft: '6px' }}>{prefilledCity}</strong>}
-              {prefilledDomain && <strong style={{ color: EMERALD, marginLeft: '6px' }}>{CERT_CATEGORIES.find(c => c.id === selectedDomain)?.label || prefilledDomain}</strong>}
+              {prefilledDomain && <strong style={{ color: ORANGE, marginLeft: '6px' }}>{CERT_CATEGORIES.find(c => c.id === selectedDomain)?.label || prefilledDomain}</strong>}
             </div>
           </motion.div>
         )}
@@ -270,7 +270,7 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
                   </div>
                 </div>
                 <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontFamily: F_MONO, fontSize: '1.4rem', color: EMERALD, letterSpacing: '-0.03em', fontWeight: '700', lineHeight: 1 }}>
+                  <div style={{ fontFamily: F_MONO, fontSize: '1.4rem', color: ORANGE, letterSpacing: '-0.03em', fontWeight: '700', lineHeight: 1 }}>
                     {domainData.avgHike}
                   </div>
                   <div style={{ fontFamily: F_MONO, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: '4px' }}>

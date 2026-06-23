@@ -38,13 +38,13 @@ const FB = "var(--font-body)";
 const TT = { duration: 0.28, ease: [0.4, 0, 0.2, 1] }
 
 const PICTON = 'var(--linear-blue)'
-const EMERALD = 'var(--linear-blue)'
+const ORANGE = 'var(--linear-blue)'
 const AMBER = 'var(--cool-grey)'
 const INDIGO = 'var(--linear-blue)'
 const VIOLET = 'var(--accent)'
 
 function dc(d) {
-  if (d === 'Very High') return EMERALD
+  if (d === 'Very High') return ORANGE
   if (d === 'High') return PICTON
   if (d === 'Medium') return AMBER
   return '#94A3B8'
@@ -55,7 +55,7 @@ function getAffordabilityBand(certCostL, salaryL, isStudent) {
   const baseline = isStudent ? 4.8 : salaryL
   if (baseline <= 0 || certCostL <= 0) return null
   const ratio = certCostL / baseline
-  if (ratio <= 0.10) return { label: 'Good value', color: EMERALD, tip: 'Under 10% of salary - well within budget' }
+  if (ratio <= 0.10) return { label: 'Good value', color: ORANGE, tip: 'Under 10% of salary - well within budget' }
   if (ratio <= 0.25) return { label: 'Risky', color: AMBER, tip: '10-25% of salary - tight but manageable' }
   return { label: 'Premium stretch', color: INDIGO, tip: 'Over 25% of salary - significant commitment' }
 }
@@ -73,7 +73,7 @@ function formatCostL(costL) {
 //  Feature 3: Payback confidence 
 function getPaybackConfidence(demand, hikePercent) {
   if ((demand === 'Very High' || demand === 'High') && hikePercent >= 25)
-    return { label: 'High confidence', color: EMERALD }
+    return { label: 'High confidence', color: ORANGE }
   if (demand === 'Medium' || (hikePercent >= 15 && hikePercent < 25))
     return { label: 'Medium confidence', color: AMBER }
   return { label: 'Low confidence', color: '#94A3B8' }
@@ -96,7 +96,7 @@ function getCertReadiness(forWho = '') {
   const lower = forWho.toLowerCase()
   const beginnerSignals = ['fresher', 'entry', 'beginner', 'career switch', 'anyone entering', 'fresh', 'no experience']
   const foundationSignals = ['senior', '2+ yr', '3+ yr', '3+ yrs', '2+ yrs', 'years', '5+ yr', 'experienced', 'mid-level']
-  if (beginnerSignals.some(s => lower.includes(s))) return { label: 'Beginner ready', color: EMERALD }
+  if (beginnerSignals.some(s => lower.includes(s))) return { label: 'Beginner ready', color: ORANGE }
   if (foundationSignals.some(s => lower.includes(s))) return { label: 'Needs foundation', color: VIOLET }
   return { label: 'Intermediate', color: AMBER }
 }
@@ -152,8 +152,8 @@ function ShareURLButton({ certName, salary, certCost, hikePercent, mode }) {
       className={copied ? "" : "glass"}
       style={{
         padding: '8px 16px', borderRadius: '10px', cursor: 'pointer',
-        background: copied ? 'var(--emerald-light)' : undefined,
-        border: '1px solid ' + (copied ? EMERALD : 'var(--border)'),
+        background: copied ? 'var(--orange-light)' : undefined,
+        border: '1px solid ' + (copied ? ORANGE : 'var(--border)'),
         color: copied ? '#115E59' : 'var(--text-2)',
         fontSize: '12px', fontFamily: FH, fontWeight: '700',
         display: 'flex', alignItems: 'center', gap: '6px',
@@ -197,7 +197,7 @@ function getStudentPathSteps(domain, certName, targetOfferLakhs) {
     { num: '01', label: 'Get Certified', detail: certName.split(' ').slice(0, 3).join(' '), time: '2-4 mo', color: INDIGO },
     { num: '02', ...middle[0] },
     { num: '03', ...middle[1] },
-    { num: '04', label: 'First Offer', detail: 'Target entry-level package', time: '', color: EMERALD },
+    { num: '04', label: 'First Offer', detail: 'Target entry-level package', time: '', color: ORANGE },
   ]
 }
 
@@ -461,7 +461,7 @@ function Leadboard({ domainList, sorted, preferred, showAll, setShowAll, activeC
                 }
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontFamily: FH, fontWeight: '700', fontSize: '13px', color: active ? (isPrefill ? EMERALD : PICTON) : 'var(--text)', letterSpacing: '-0.01em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginBottom: '2px' }}>
+                <div style={{ fontFamily: FH, fontWeight: '700', fontSize: '13px', color: active ? (isPrefill ? ORANGE : PICTON) : 'var(--text)', letterSpacing: '-0.01em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginBottom: '2px' }}>
                   {cert.name}
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
@@ -475,14 +475,14 @@ function Leadboard({ domainList, sorted, preferred, showAll, setShowAll, activeC
                 </div>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '3px', flexShrink: 0 }}>
-                <span style={{ fontFamily: FM, fontSize: '11px', fontWeight: '700', color: EMERALD }}>+{cert.avgHike}%</span>
+                <span style={{ fontFamily: FM, fontSize: '11px', fontWeight: '700', color: ORANGE }}>+{cert.avgHike}%</span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <div style={{ width: 5, height: 5, borderRadius: '50%', background: demColor }} />
                   <span style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)' }}>{cert.timeMonths}mo</span>
                 </div>
               </div>
               <motion.div animate={{ x: active ? 2 : 0 }} transition={{ duration: 0.15 }}>
-                <ArrowRight size={12} color={active ? (isPrefill ? EMERALD : PICTON) : 'var(--text-4)'} />
+                <ArrowRight size={12} color={active ? (isPrefill ? ORANGE : PICTON) : 'var(--text-4)'} />
               </motion.div>
             </motion.button>
           )
@@ -532,10 +532,10 @@ function PickMessage({ certName, prefilledCert, firstName }) {
           transition={{ duration: 0.5, delay: 0.1 }}
           style={{ flexShrink: 0, marginTop: '1px' }}
         >
-          <CheckCircle size={16} color={EMERALD} />
+          <CheckCircle size={16} color={ORANGE} />
         </motion.div>
         <div>
-          <div style={{ fontFamily: FH, fontWeight: '800', fontSize: '14px', color: EMERALD, letterSpacing: '-0.01em', marginBottom: '3px' }}>
+          <div style={{ fontFamily: FH, fontWeight: '800', fontSize: '14px', color: ORANGE, letterSpacing: '-0.01em', marginBottom: '3px' }}>
             {firstName ? 'Great choice, ' + firstName + '.' : 'Strong move.'}
           </div>
           <div style={{ fontFamily: FB, fontSize: '12px', color: 'var(--text-3)', lineHeight: 1.6 }}>
@@ -704,15 +704,14 @@ function AIResult({ result, certName, onReset, paybackMonths, fiveYearNetGain, c
           <div style={{ fontFamily: FM, fontSize: '12px', color: 'var(--bg)', opacity: 0.8, borderTop: '1px solid rgba(255,255,255,0.1)', borderBottom: '1px solid rgba(255,255,255,0.1)', padding: '16px 0', marginBottom: '24px' }}>
             Cost: ₹{certCostINR.toLocaleString()}   ·   Study time: ~4 months
           </div>
-
           <div>
             <div style={{ fontFamily: FH, fontSize: '16px', fontWeight: 700, color: 'var(--bg)', marginBottom: '8px' }}>
               Is it worth it for you?
             </div>
             <div style={{ fontFamily: FB, fontSize: '14px', lineHeight: 1.6, color: 'var(--bg)', opacity: 0.9 }}>
               At ₹{targetOfferLakhs}L starting, you recover cert cost in {daysToRecover} days of salary.<br/>
-              3 students from {resumeCity || 'your city'} with similar profiles got offers<br/>
-              in the last 90 days. <Link href="/offer-analysis" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>[See their anonymised outcomes →]</Link>
+              The starting salaries for this role consistently match<br/>
+              or exceed this target in the current market.
             </div>
           </div>
         </div>
@@ -741,7 +740,7 @@ function AIResult({ result, certName, onReset, paybackMonths, fiveYearNetGain, c
           </div>
         </div>
         <div className="w-16 h-16 flex-shrink-0 relative">
-          <div className="flex shrink-0 items-center justify-center w-16 h-16 rounded-full border-[5px] border-emerald-500 text-xl font-black text-slate-900 shadow-sm bg-white">
+          <div className="flex shrink-0 items-center justify-center w-16 h-16 rounded-full border-[5px] border-orange-500 text-xl font-black text-slate-900 shadow-sm bg-white">
             {gaugeScore}
           </div>
           <button onClick={onReset} style={{ position: 'absolute', top: -8, right: -8, background: 'none', border: 'none', color: 'var(--text-4)', cursor: 'pointer', padding: '4px' }}>
@@ -883,9 +882,10 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
   const storeCertName = useJourneyStore(s => s.certName);
   const storeSetSelected = useJourneyStore(s => s.setSelectedCert);
   const storeClearCert = useJourneyStore(s => s.clearCert);
+  const aiResult = useJourneyStore(s => s.aiResult);
+  const setAiResult = useJourneyStore(s => s.setAiResult);
 
   //  Local UI state 
-  const [aiResult, setAiResult] = useState(null);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState(null);
   const [showVerifier, setShowVerifier] = useState(false);
@@ -1093,6 +1093,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
           domainList={domainMatchList} sorted={sortedByDem} preferred={preferredCerts}
           showAll={showAll} setShowAll={setShowAll}
           activeCertName={certName} onPick={pickCert} mappedDomain={mappedDomain} isPrefilled={!!prefilledCert}
+          domains={domainsData}
         />
       )}
 
@@ -1146,10 +1147,21 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
       <div style={{ marginBottom: '20px', padding: '20px 18px', borderRadius: '13px', background: 'transparent', border: 'none' }}>
 
         {isStudent ? (
-          <div style={{ marginBottom: '18px', padding: '11px 13px', borderRadius: '9px', background: 'transparent', border: '1px solid transparent' }}>
-            <div style={{ fontSize: '11px', color: '#4A8C6A', fontFamily: FM, marginBottom: '3px' }}>BREAKING IN</div>
-            <div style={{ fontSize: '12px', color: 'var(--text-3)', fontFamily: FB }}>Target: first offer. Projected ROI based on time-to-hire, not salary hike.</div>
-          </div>
+          <>
+            <div style={{ marginBottom: '18px', padding: '11px 13px', borderRadius: '9px', background: 'transparent', border: '1px solid transparent' }}>
+              <div style={{ fontSize: '11px', color: 'var(--brand-primary)', fontFamily: FM, marginBottom: '3px' }}>BREAKING IN</div>
+              <div style={{ fontSize: '12px', color: 'var(--text-3)', fontFamily: FB }}>Target: first offer. Projected ROI based on time-to-hire, not salary hike.</div>
+            </div>
+            <Slider
+              label="Target First Salary"
+              value={expectedFirstSalary || 4.8}
+              min={2} max={25} step={0.5}
+              onChange={setExpectedFirstSalary}
+              prefix="₹" suffix="L/yr"
+              color={PICTON}
+              note={displayCity || ''}
+            />
+          </>
         ) : (
           <>
             <Slider
@@ -1182,7 +1194,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
             if (currentBase <= 0 || certCost <= 0) return null;
             const costPercentage = ((certCost / currentBase) * 100).toFixed(1);
             const bandLabel = costPercentage > 10 ? 'Risky' : 'Good value';
-            const bandColor = costPercentage > 10 ? AMBER : EMERALD;
+            const bandColor = costPercentage > 10 ? AMBER : ORANGE;
             
             return (
               <motion.div
@@ -1212,7 +1224,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
               min={5} max={80} step={5}
               onChange={setHikePercent}
               suffix="%"
-              color={EMERALD}
+              color={ORANGE}
             />
             <DataNote>
               Hike benchmarks: AmbitionBox post-cert salary data + NASSCOM 2026  India median: 25-40%  Individual results vary by company tier and negotiation
@@ -1328,7 +1340,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
                         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2,1fr)', gap: '8px', marginBottom: '12px' }}>
                           <div style={{ padding: '24px 16px', textAlign: 'center', borderColor: 'var(--border-accent)', background: 'transparent', minHeight: 110, border: 'none' }}>
                             <div className="micro-label" style={{ color: 'var(--text-4)', marginBottom: '8px' }}>PROJECTED 5-YR VALUE ADD</div>
-                            <div style={{ fontFamily: 'var(--font-head)', fontSize: 'clamp(1.5rem,4vw,2.2rem)', fontWeight: '800', color: EMERALD }}>
+                            <div style={{ fontFamily: 'var(--font-head)', fontSize: 'clamp(1.5rem,4vw,2.2rem)', fontWeight: '800', color: ORANGE }}>
                               ₹{(fiveYearNetGain / 100000).toFixed(1)}L
                             </div>
                             <div className="text-sm text-slate-600 mt-2 font-medium">Inflation-adjusted estimate based on {expectedHike}% market movement</div>
@@ -1347,7 +1359,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
 
                         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px', marginBottom: '12px' }}>
                           <StatCard label="New Salary" value={`₹${targetOfferLakhs}L/yr`} color={PICTON} delay={0} />
-                          <StatCard label="ADDITIONAL MONTHLY PAY" value={<span className="text-emerald-600 font-bold">+₹{Math.round(monthlyHikeAmount / 1000)}K</span>} color={VIOLET} delay={0.05} />
+                          <StatCard label="ADDITIONAL MONTHLY PAY" value={<span className="text-orange-600 font-bold">+₹{Math.round(monthlyHikeAmount / 1000)}K</span>} color={VIOLET} delay={0.05} />
                           <StatCard label="Payback Window" value={`${paybackMonths} mo`} color={AMBER} delay={0.1} />
                         </div>
                       </>

@@ -7,7 +7,7 @@ export default function Home() {
   useEffect(() => { setMounted(true); }, []);
 
   if (!mounted) {
-    return <div style={{ minHeight: '100vh', background: 'var(--bg)' }}></div>;
+    return <div style={{ minHeight: '100vh' }}></div>;
   }
 
   return (

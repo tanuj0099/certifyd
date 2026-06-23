@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 
 //  Difficulty badge colours 
 const DIFFICULTY_STYLES = {
-  foundational: { bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', text: 'text-emerald-400' },
+  foundational: { bg: 'bg-orange-500/10', border: 'border-orange-500/20', text: 'text-orange-400' },
   associate:    { bg: 'bg-blue-500/10',    border: 'border-blue-500/20',    text: 'text-blue-400'    },
   professional: { bg: 'bg-violet-500/10',  border: 'border-violet-500/20',  text: 'text-violet-400'  },
   expert:       { bg: 'bg-orange-500/10',  border: 'border-orange-500/20',  text: 'text-orange-400'  },

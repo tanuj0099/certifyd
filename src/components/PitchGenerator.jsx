@@ -4,7 +4,7 @@ import { Mail, MessageSquare, X, Sparkles, Copy, Check } from 'lucide-react'
 import { callGroqForPitch } from '../services/aiService.jsx'
 
 const PICTON  = 'var(--linear-blue)'
-const EMERALD = 'var(--linear-blue)'
+const ORANGE = 'var(--linear-blue)'
 const AMBER   = 'var(--cool-grey)'
 const SPRING  = { type: 'spring', stiffness: 400, damping: 30 }
 
@@ -102,7 +102,7 @@ const PitchGenerator = ({ certName, certCost, currentSalary, hikePercent, onClos
         </div>
 
         <div style={{ padding: '9px 12px', borderRadius: '8px', background: '#0D1117', border: '1px solid var(--border-subtle)', marginBottom: '14px', display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
-          {[{ label: 'CERT', value: certName, color: '#F8FAFC' }, { label: 'COST', value: 'Rs.' + certCost + 'L', color: AMBER }, { label: 'HIKE', value: '+' + hikePercent + '%', color: EMERALD }].map((item, i) => (
+          {[{ label: 'CERT', value: certName, color: '#F8FAFC' }, { label: 'COST', value: 'Rs.' + certCost + 'L', color: AMBER }, { label: 'HIKE', value: '+' + hikePercent + '%', color: ORANGE }].map((item, i) => (
             <div key={i}>
               <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '9px', color: '#1E293B', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '2px' }}>{item.label}</div>
               <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '12px', color: item.color, fontWeight: '600' }}>{item.value}</div>
@@ -123,7 +123,7 @@ const PitchGenerator = ({ certName, certCost, currentSalary, hikePercent, onClos
                 <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', padding: '14px', borderRadius: '9px', background: '#0D1117', border: '1px solid var(--border-subtle)', fontSize: '12px', color: '#94A3B8', lineHeight: '1.7', fontFamily: 'var(--font-sans)', maxHeight: '300px', overflowY: 'auto' }}>
                   {result}
                 </pre>
-                <button onClick={copy} style={{ position: 'absolute', top: '10px', right: '10px', display: 'flex', alignItems: 'center', gap: '4px', padding: '4px 9px', borderRadius: '6px', background: copied ? 'transparent' : '#121826', border: '1px solid ' + (copied ? 'transparent' : 'var(--border-subtle)'), color: copied ? EMERALD : '#475569', fontSize: '11px', cursor: 'pointer', fontFamily: 'JetBrains Mono, monospace', transition: 'all 0.18s' }}>
+                <button onClick={copy} style={{ position: 'absolute', top: '10px', right: '10px', display: 'flex', alignItems: 'center', gap: '4px', padding: '4px 9px', borderRadius: '6px', background: copied ? 'transparent' : '#121826', border: '1px solid ' + (copied ? 'transparent' : 'var(--border-subtle)'), color: copied ? ORANGE : '#475569', fontSize: '11px', cursor: 'pointer', fontFamily: 'JetBrains Mono, monospace', transition: 'all 0.18s' }}>
                   {copied ? <><Check size={10} />Copied</> : <><Copy size={10} />Copy</>}
                 </button>
               </div>

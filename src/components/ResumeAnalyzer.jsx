@@ -12,6 +12,7 @@ import { trackResumeUploaded } from '../lib/analytics.js'
 import { callGroqForResume, validateDomain } from '../services/aiService.jsx'
 import { useJourneyStore } from '../store/useJourneyStore.js'
 import { useAuth } from '../hooks/useAuth.jsx'
+import SignInPopup from './SignInPopup.jsx'
 
 //  Font tokens  CSS variables 
 var FM = 'var(--font-mono)'
@@ -20,7 +21,7 @@ var FH = 'var(--font-head)'
 
 //  Color constants 
 var PICTON = 'var(--linear-blue)'
-var EMERALD = 'var(--linear-blue)'
+var ORANGE = 'var(--linear-blue)'
 var AMBER = 'var(--cool-grey)'
 var INDIGO = 'var(--linear-blue)'
 var VIOLET = 'var(--accent)'
@@ -493,8 +494,8 @@ var PrimaryCertHero = function ({ cert }) {
       <div style={{ position: 'absolute', top: 0, left: '15%', right: '15%', height: '1px', background: 'transparent' }} />
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '11px', flexWrap: 'wrap', gap: '6px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <Star size={12} color={EMERALD} fill={EMERALD} />
-          <span className="micro-label" style={{ color: EMERALD }}>Primary Move</span>
+          <Star size={12} color={ORANGE} fill={ORANGE} />
+          <span className="micro-label" style={{ color: ORANGE }}>Primary Move</span>
         </div>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
           <span style={{ fontFamily: FM, fontSize: '11px', fontWeight: '700', letterSpacing: '0.04em', padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)', color: 'var(--text-2)', background: 'var(--bg)' }}>+{cert.roi}</span>
@@ -525,29 +526,25 @@ var CertLeaderboardRow = function ({ cert, rank, onSelect, mode }) {
   var [hovered, setHovered] = useState(false)
   var col = rank === 2 ? PICTON : VIOLET
 
-  // Switcher: parse AI-returned timeline string to detect over-8-month certs
+  // Switcher limitation removed
   var exceedsSwitcherLimit = false
-  if (mode === 'switcher' && cert.timeline) {
-    var monthMatch = cert.timeline.match(/(\d+)/)
-    if (monthMatch) exceedsSwitcherLimit = parseInt(monthMatch[1], 10) > 8
-  }
 
   return (
     <motion.div
       initial={{ opacity: 0, x: -10 }}
-      animate={{ opacity: exceedsSwitcherLimit ? 0.45 : 1, x: 0 }}
+      animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.3, delay: (rank - 2) * 0.1 }}
       onMouseEnter={function () { setHovered(true) }}
       onMouseLeave={function () { setHovered(false) }}
-      onClick={function () { if (onSelect && !exceedsSwitcherLimit) onSelect(cert.name) }}
+      onClick={function () { if (onSelect) onSelect(cert.name) }}
       style={{
         display: 'flex', alignItems: 'center', gap: '11px', padding: '12px 13px',
         borderRadius: '10px',
-        border: '1px solid ' + (exceedsSwitcherLimit ? 'transparent' : hovered ? col + '33' : 'var(--border)'),
-        background: exceedsSwitcherLimit ? 'transparent' : hovered ? col + '06' : 'transparent',
-        cursor: onSelect && !exceedsSwitcherLimit ? 'pointer' : 'default',
+        border: '1px solid ' + (hovered ? col + '33' : 'var(--border)'),
+        background: hovered ? col + '06' : 'transparent',
+        cursor: onSelect ? 'pointer' : 'default',
         transition: 'all 0.15s', marginBottom: '6px',
-        filter: exceedsSwitcherLimit ? 'grayscale(0.4)' : 'none',
+        filter: 'none',
       }}
     >
       <div style={{ width: '24px', height: '24px', borderRadius: '7px', flexShrink: 0, background: col + '12', border: '1px solid ' + col + '25', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -558,20 +555,12 @@ var CertLeaderboardRow = function ({ cert, rank, onSelect, mode }) {
         <div style={{ fontFamily: FB, fontSize: '12px', color: 'var(--text-4)', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical' }}>{cert.why}</div>
       </div>
       <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-        {exceedsSwitcherLimit ? (
-          <span className="micro-label" style={{ padding: '2px 7px', borderRadius: '5px', background: 'transparent', border: '1px solid transparent', color: AMBER, whiteSpace: 'nowrap' }}>
-            Exceeds 8-mo window
-          </span>
-        ) : (
-          <span style={{ fontFamily: FM, fontSize: '11px', fontWeight: '700', letterSpacing: '0.04em', padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)', color: 'var(--text-2)', background: 'var(--bg)' }}>+{cert.roi}</span>
-        )}
+        <span style={{ fontFamily: FM, fontSize: '11px', fontWeight: '700', letterSpacing: '0.04em', padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)', color: 'var(--text-2)', background: 'var(--bg)' }}>+{cert.roi}</span>
         <span style={{ fontFamily: FM, fontSize: '11px', fontWeight: '600', letterSpacing: '0.04em', padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)', color: 'var(--text-4)', background: 'transparent' }}>{cert.timeline}</span>
       </div>
-      {!exceedsSwitcherLimit && (
-        <motion.div animate={{ x: hovered ? 3 : 0 }} transition={{ duration: 0.13 }}>
-          <ArrowRight size={13} color={hovered ? col : 'var(--text-4)'} />
-        </motion.div>
-      )}
+      <motion.div animate={{ x: hovered ? 3 : 0 }} transition={{ duration: 0.13 }}>
+        <ArrowRight size={13} color={hovered ? col : 'var(--text-4)'} />
+      </motion.div>
     </motion.div>
   )
 }
@@ -582,6 +571,9 @@ var ResultDisplay = function ({ result, onCertSelected, mode, onClear, certDomai
   var primaryCert = result.certs[0]
   var otherCerts = result.certs.slice(1)
   var firstName = result.name ? result.name.split(' ')[0] : ''
+  var roiAttempts = useJourneyStore(function (state) { return state.roiAttempts || 0 })
+  var incrementRoiAttempts = useJourneyStore(function (state) { return state.incrementRoiAttempts })
+  var [showSignInPopup, setShowSignInPopup] = useState(false)
 
   var handleSelect = useCallback(function (certName) {
     if (onCertSelected) onCertSelected(certName, result.city, result.domain, result.name)
@@ -593,7 +585,14 @@ var ResultDisplay = function ({ result, onCertSelected, mode, onClear, certDomai
 
       {primaryCert && onCertSelected && (
         <motion.button
-          onClick={function () { handleSelect(primaryCert.name) }}
+          onClick={function () { 
+            if (roiAttempts >= 3) {
+              setShowSignInPopup(true)
+              return
+            }
+            if (incrementRoiAttempts) incrementRoiAttempts()
+            handleSelect(primaryCert.name) 
+          }}
           initial={{ opacity: 0, y: 7 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.6, duration: 0.35 }}
           whileHover={{ scale: 1.02, y: -2 }} whileTap={{ scale: 0.97 }}
           style={{ width: '100%', padding: '14px 18px', borderRadius: '11px', border: 'none', cursor: 'pointer', background: 'var(--text)', color: 'var(--bg)', fontSize: '14px', fontWeight: '800', fontFamily: FH, letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '9px', boxShadow: 'none', marginBottom: '16px' }}
@@ -697,14 +696,14 @@ var ResultDisplay = function ({ result, onCertSelected, mode, onClear, certDomai
         >
           <div style={{
             borderRadius: '10px',
-            border: '1px solid ' + EMERALD + '25',
-            background: EMERALD + '08',
+            border: '1px solid ' + ORANGE + '25',
+            background: ORANGE + '08',
             padding: '12px 14px',
             display: 'flex', gap: '9px', alignItems: 'flex-start',
           }}>
-            <Target size={13} color={EMERALD} style={{ flexShrink: 0, marginTop: '2px' }} />
+            <Target size={13} color={ORANGE} style={{ flexShrink: 0, marginTop: '2px' }} />
             <div>
-              <div style={{ fontFamily: FM, fontSize: '9px', color: EMERALD, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>
+              <div style={{ fontFamily: FM, fontSize: '9px', color: ORANGE, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>
                 {firstName ? firstName + "'s action this week" : 'Do this week'}
               </div>
               <div style={{ fontFamily: FB, fontSize: '13px', color: 'var(--text-2)', lineHeight: 1.65 }}>{result.immediateAction}</div>
@@ -1179,7 +1178,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
             <div className="glass" style={{ padding: '16px', borderRadius: '11px' }}>
               <div style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '14px' }}>
                 Tag skills you already have - pick at least 3
-                {pickedSkills.length > 0 && <span style={{ color: EMERALD, marginLeft: '8px' }}>{pickedSkills.length} selected</span>}
+                {pickedSkills.length > 0 && <span style={{ color: ORANGE, marginLeft: '8px' }}>{pickedSkills.length} selected</span>}
               </div>
 
               {/* Optional role + exp context */}
@@ -1249,8 +1248,8 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
           >
             <div style={{ /* Removed glass class */
               borderRadius: '11px',
-              border: '1.5px dashed ' + (dragging ? PICTON : hasFile ? EMERALD : 'var(--border)'),
-              background: dragging ? PICTON + '08' : hasFile ? EMERALD + '06' : 'transparent',
+              border: '1.5px dashed ' + (dragging ? PICTON : hasFile ? ORANGE : 'var(--border)'),
+              background: dragging ? PICTON + '08' : hasFile ? ORANGE + '06' : 'transparent',
               backdropFilter: 'blur(16px)',
               WebkitBackdropFilter: 'blur(16px)',
               boxShadow: 'none',
@@ -1281,8 +1280,8 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
                   </div>
                 ) : hasFile ? (
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                    <FileText size={14} color={EMERALD} />
-                    <span style={{ fontSize: '13px', color: EMERALD, fontWeight: '600', fontFamily: FH }}>{fileName}</span>
+                    <FileText size={14} color={ORANGE} />
+                    <span style={{ fontSize: '13px', color: ORANGE, fontWeight: '600', fontFamily: FH }}>{fileName}</span>
                     <button
                       onClick={function (e) { e.stopPropagation(); clearAll() }}
                       style={{ background: 'none', border: 'none', color: 'var(--text-4)', cursor: 'pointer' }}
@@ -1377,7 +1376,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
                   <li><strong className="text-slate-200">What you get:</strong> A personalised counter-offer or career recommendation based on verified market medians.</li>
                 </ul>
                 <div className="flex items-start gap-2">
-                  <span className="text-emerald-400">I understand and consent to Certifyd processing my document as described above.</span>
+                  <span className="text-orange-400">I understand and consent to Certifyd processing my document as described above.</span>
                   <span className="text-red-500 font-bold text-lg leading-none">*</span>
                 </div>
               </label>

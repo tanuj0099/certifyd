@@ -5,7 +5,7 @@ import { GraduationCap, Award, TrendingUp, Clock, DollarSign, CheckCircle, X, Lo
 import { useJourneyStore } from '../store/useJourneyStore.js'
 
 const PICTON = 'var(--linear-blue)'
-const EMERALD = 'var(--linear-blue)'
+const ORANGE = 'var(--linear-blue)'
 const AMBER = 'var(--cool-grey)'
 const INDIGO = 'var(--linear-blue)'
 const SPRING = { type: 'spring', stiffness: 400, damping: 30 }
@@ -142,7 +142,7 @@ const CollegeVsCorporate = () => {
           <SliderRow label="MBA Total Fee (₹L)" value={mbaFee} min={5} max={40} step={1} onChange={setMbaFee} format={v => `₹${v}L`} color={INDIGO} />
           <SliderRow label="4 Certs Total Cost (₹L)" value={certCost} min={0.2} max={8} step={0.1} onChange={setCertCost} format={v => `₹${v.toFixed(1)}L`} color={PICTON} />
           <SliderRow label="MBA Expected Salary Hike %" value={mbaSalaryJump} min={20} max={150} step={5} onChange={setMbaSalaryJump} format={v => `+${v}%`} color={INDIGO} />
-          <SliderRow label="Certs Expected Salary Hike %" value={certSalaryJump} min={10} max={80} step={5} onChange={setCertSalaryJump} format={v => `+${v}%`} color={EMERALD} />
+          <SliderRow label="Certs Expected Salary Hike %" value={certSalaryJump} min={10} max={80} step={5} onChange={setCertSalaryJump} format={v => `+${v}%`} color={ORANGE} />
           
           {/* Context Parameters UI */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '16px' }}>
@@ -202,12 +202,12 @@ const CollegeVsCorporate = () => {
             initial={{ scale: 0.97, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={SPRING} /* Removed glass class */
-            style={{ padding: '18px', borderRadius: '14px', background: calc.winner === 'certs' ? `${EMERALD}0c` : `${INDIGO}0c`, border: `2px solid ${calc.winner === 'certs' ? EMERALD : INDIGO}33`, textAlign: 'center' }}
+            style={{ padding: '18px', borderRadius: '14px', background: calc.winner === 'certs' ? `${ORANGE}0c` : `${INDIGO}0c`, border: `2px solid ${calc.winner === 'certs' ? ORANGE : INDIGO}33`, textAlign: 'center' }}
           >
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '8px' }}>
-              {calc.winner === 'certs' ? <Award size={30} color={EMERALD} /> : <GraduationCap size={30} color={INDIGO} />}
+              {calc.winner === 'certs' ? <Award size={30} color={ORANGE} /> : <GraduationCap size={30} color={INDIGO} />}
             </div>
-            <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: '800', fontSize: '1.1rem', color: calc.winner === 'certs' ? EMERALD : INDIGO, marginBottom: '5px' }}>
+            <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: '800', fontSize: '1.1rem', color: calc.winner === 'certs' ? ORANGE : INDIGO, marginBottom: '5px' }}>
               {calc.winner === 'certs' ? 'Certs Win This Scenario' : 'MBA Wins This Scenario'}
             </div>
             <div style={{ fontSize: '13px', color: 'var(--text-3)', fontFamily: 'var(--font-sans)' }}>
@@ -226,7 +226,7 @@ const CollegeVsCorporate = () => {
                 {[
                   { label: 'Total Cost', value: `₹${calc.mba.totalCost.toFixed(0)}L`, color: 'var(--cool-grey)' },
                   { label: 'New Salary', value: `₹${calc.mba.newSalary.toFixed(1)}L/yr`, color: INDIGO },
-                  { label: '5-yr Net', value: `₹${calc.mba.net5yr.toFixed(1)}L`, color: EMERALD },
+                  { label: '5-yr Net', value: `₹${calc.mba.net5yr.toFixed(1)}L`, color: ORANGE },
                   { label: 'Break-even', value: `${calc.mba.breakEven.toFixed(1)} yrs`, color: AMBER },
                   { label: 'Study Time', value: '2 years', color: 'var(--text-4)' },
                 ].map((s, i) => (
@@ -246,7 +246,7 @@ const CollegeVsCorporate = () => {
                 {[
                   { label: 'Total Cost', value: `₹${calc.cert.totalCost.toFixed(1)}L`, color: 'var(--cool-grey)' },
                   { label: 'New Salary', value: `₹${calc.cert.newSalary.toFixed(1)}L/yr`, color: PICTON },
-                  { label: '5-yr Net', value: `₹${calc.cert.net5yr.toFixed(1)}L`, color: EMERALD },
+                  { label: '5-yr Net', value: `₹${calc.cert.net5yr.toFixed(1)}L`, color: ORANGE },
                   { label: 'Break-even', value: `${calc.cert.breakEven.toFixed(0)} months`, color: AMBER },
                   { label: 'Study Time', value: '4-8 months', color: 'var(--text-4)' },
                 ].map((s, i) => (

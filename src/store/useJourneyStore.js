@@ -148,6 +148,17 @@ export const useJourneyStore = create(
         resumeDomain:  '',
         resumeName:    '',
       }),
+
+      // "?"? ROI Calculation Results (persisted) "?"?"?"?"?"?"?"?"?"?
+      roiAttempts: 0,
+      incrementRoiAttempts: () => set(state => ({ roiAttempts: state.roiAttempts + 1 })),
+      aiResult: null,
+      setAiResult: (res) => set({ aiResult: res }),
+
+      // "?"? Breadcrumb History "?"?"?"?"?"?"?"?"?"?"?"?"?"?"?"?"?"?
+      sourceTool: null,
+      setSourceTool: (toolName, toolPath) => set({ sourceTool: { name: toolName, path: toolPath } }),
+      clearSourceTool: () => set({ sourceTool: null }),
     }),
     {
       name: 'certify-roi-journey',        // localStorage key
@@ -166,6 +177,14 @@ export const useJourneyStore = create(
         certName: state.certName,
         selectedCert: state.selectedCert,
         savedCerts: state.savedCerts,
+        activeTab: state.activeTab,
+        modeLocked: state.modeLocked,
+        resumeCity: state.resumeCity,
+        resumeDomain: state.resumeDomain,
+        resumeName: state.resumeName,
+        roiAttempts: state.roiAttempts,
+        aiResult: state.aiResult,
+        sourceTool: state.sourceTool,
       }),
     }
   )

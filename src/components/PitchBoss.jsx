@@ -7,7 +7,7 @@ const F_HEAD = "var(--font-head)";
 const F_MONO = "var(--font-mono)";
 const F_BODY = "var(--font-body)";
 const T = { duration: 0.28, ease: [0.4, 0, 0.2, 1] }
-const EMERALD = 'var(--linear-blue)'
+const ORANGE = 'var(--linear-blue)'
 const VIOLET = 'var(--linear-blue)'
 const AMBER = 'var(--cool-grey)'
 
@@ -52,7 +52,7 @@ function BulletRow({ icon, label, value, color }) {
       </div>
       <button
         onClick={handleCopy}
-        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', color: copied ? EMERALD : 'var(--text-4)', flexShrink: 0, transition: 'color 0.2s' }}
+        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', color: copied ? ORANGE : 'var(--text-4)', flexShrink: 0, transition: 'color 0.2s' }}
         title="Copy this point"
       >
         {copied ? <Check size={12} /> : <Copy size={12} />}
@@ -211,7 +211,7 @@ const PitchBoss = ({ certName, salary, certCost, hikePercent, name, mode }) => {
                   <BulletRow icon="-" label="Cost" value={bcase.cost} color={AMBER} />
                   <BulletRow icon="-" label="Company Benefit" value={bcase.companyGain} color={VIOLET} />
                   <BulletRow icon="-" label="Time Commitment" value={bcase.timeCommit} color="#94A3B8" />
-                  <BulletRow icon="-" label="ROI" value={bcase.roiStatement} color={EMERALD} />
+                  <BulletRow icon="-" label="ROI" value={bcase.roiStatement} color={ORANGE} />
                   <BulletRow icon="-" label="Market Signal" value={bcase.demandNote} color={AMBER} />
 
                   {/* Actions */}
@@ -219,7 +219,7 @@ const PitchBoss = ({ certName, salary, certCost, hikePercent, name, mode }) => {
                     <motion.button
                       onClick={handleCopyAll}
                       whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
-                      style={{ flex: 1, padding: '9px', borderRadius: '8px', background: copied ? 'transparent' : 'transparent', border: `1px solid ${copied ? 'transparent' : 'var(--border)'}`, color: copied ? EMERALD : 'var(--text-2)', fontSize: '12px', cursor: 'pointer', fontFamily: F_BODY, fontWeight: '600', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', transition: 'all 0.2s' }}
+                      style={{ flex: 1, padding: '9px', borderRadius: '8px', background: copied ? 'transparent' : 'transparent', border: `1px solid ${copied ? 'transparent' : 'var(--border)'}`, color: copied ? ORANGE : 'var(--text-2)', fontSize: '12px', cursor: 'pointer', fontFamily: F_BODY, fontWeight: '600', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', transition: 'all 0.2s' }}
                     >
                       {copied ? <Check size={13} /> : <Copy size={13} />}
                       {copied ? 'Copied all points!' : 'Copy All Points'}

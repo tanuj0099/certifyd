@@ -42,14 +42,14 @@ export default function RoadmapNode({ data }) {
   // 2. STANDARD: The Grid Clusters (More compact for dense packing)
   return (
     <div className={`px-3 py-2.5 shadow-sm transition-all rounded-lg border min-w-[160px] max-w-[200px] bg-white cursor-pointer hover:shadow-md ${
-      isCompleted ? 'border-emerald-500' : 'border-slate-300 hover:border-slate-400'
+      isCompleted ? 'border-orange-500' : 'border-slate-300 hover:border-slate-400'
     }`}>
       {connectionPoints}
 
       <div className="flex flex-col">
         <div className="flex items-center gap-1.5 mb-1">
           {isCompleted ? (
-            <CheckCircle2 size={12} className="text-emerald-500" />
+            <CheckCircle2 size={12} className="text-orange-500" />
           ) : (
             <Circle size={10} className="text-slate-300" />
           )}

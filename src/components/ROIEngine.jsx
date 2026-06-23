@@ -73,10 +73,10 @@ const ROIEngine = ({ currentSalary = DEFAULT_CURRENT_SALARY }) => {
                 type="checkbox" 
                 checked={consentChecked}
                 onChange={(e) => setConsentChecked(e.target.checked)}
-                className="mt-1 w-5 h-5 accent-emerald-500 cursor-pointer flex-shrink-0"
+                className="mt-1 w-5 h-5 accent-orange-500 cursor-pointer flex-shrink-0"
               />
               <span className="text-sm text-zinc-300">
-                I agree to the processing of my data in accordance with the <a href="/terms" className="text-emerald-500 hover:underline">Terms of Service</a> and <a href="/privacy" className="text-emerald-500 hover:underline">Privacy Policy</a>.
+                I agree to the processing of my data in accordance with the <a href="/terms" className="text-orange-500 hover:underline">Terms of Service</a> and <a href="/privacy" className="text-orange-500 hover:underline">Privacy Policy</a>.
               </span>
             </label>
             <button 
@@ -84,7 +84,7 @@ const ROIEngine = ({ currentSalary = DEFAULT_CURRENT_SALARY }) => {
               disabled={!consentChecked}
               className={`w-full py-3 rounded-xl font-bold text-sm transition-all ${
                 consentChecked 
-                  ? 'bg-emerald-500 text-black hover:bg-emerald-400' 
+                  ? 'bg-orange-500 text-black hover:bg-orange-400' 
                   : 'bg-white/5 text-zinc-500 cursor-not-allowed'
               }`}
             >
@@ -143,7 +143,7 @@ const ROIEngine = ({ currentSalary = DEFAULT_CURRENT_SALARY }) => {
           <div className="space-y-4 bg-white/[0.02] border border-white/5 p-6 rounded-2xl">
             <div className="flex justify-between items-center">
               <label className="text-sm font-medium text-zinc-300">Expected Salary Bump</label>
-              <span className="text-lg font-bold text-emerald-400">+{salaryBumpPercent}%</span>
+              <span className="text-lg font-bold text-orange-400">+{salaryBumpPercent}%</span>
             </div>
             <input 
               type="range" 
@@ -152,7 +152,7 @@ const ROIEngine = ({ currentSalary = DEFAULT_CURRENT_SALARY }) => {
               step="1"
               value={salaryBumpPercent} 
               onChange={(e) => setSalaryBumpPercent(Number(e.target.value))}
-              className="w-full accent-emerald-500 h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer"
+              className="w-full accent-orange-500 h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer"
             />
           </div>
         </div>
@@ -161,14 +161,14 @@ const ROIEngine = ({ currentSalary = DEFAULT_CURRENT_SALARY }) => {
         <div className="flex flex-col justify-center gap-8 bg-white/[0.02] border border-white/5 p-8 lg:p-12 rounded-3xl relative overflow-hidden">
           
           {/* Decorative background glow */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-emerald-500/10 blur-[100px] pointer-events-none rounded-full"></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-orange-500/10 blur-[100px] pointer-events-none rounded-full"></div>
           
           <div className="relative z-10 flex flex-col gap-10">
             {/* Massive ROI Readout */}
             <div>
               <p className="text-lg font-medium text-zinc-400 mb-2 uppercase tracking-widest text-sm">Projected ROI</p>
               <div 
-                className="text-5xl lg:text-7xl font-extrabold text-emerald-400 tracking-tighter"
+                className="text-5xl lg:text-7xl font-extrabold text-orange-400 tracking-tighter"
                 style={{ filter: 'drop-shadow(0 0 10px rgba(52, 211, 153, 0.5))' }}
               >
                 {roi > 0 ? '+' : ''}{roi.toFixed(0)}%

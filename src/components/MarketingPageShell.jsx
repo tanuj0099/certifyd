@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, Mail, MapPin, TrendingUp } from 'lucide-react'
-import WaveBg from './WaveBg.jsx'
+import { DotMatrixBackground } from './DotMatrixBackground.jsx'
 import { AppSection } from './SharedUI.jsx'
 import SEOHead from './SEOHead.jsx'
 
@@ -192,7 +192,9 @@ export default function MarketingPageShell({ eyebrow, title, accent, subtitle, c
         description={subtitle || 'Certification ROI Calculator'}
         schema={schema}
       />
-      <WaveBg variant="landing" />
+      <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
+        <DotMatrixBackground className="w-full h-full absolute inset-0" mode="grid" />
+      </div>
       <div style={{ position: 'relative', zIndex: 1, paddingTop: '112px' }}>
         <AppSection id={eyebrow ? eyebrow.substring(0, 2).toUpperCase() : 'PG'} title={eyebrow || 'PAGE'} noBorderTop bg="transparent">
           <div style={{ maxWidth: '880px', margin: '0 auto', width: '100%' }}>
