@@ -655,7 +655,7 @@ function ChartTip({ active, payload, label }) {
 // 
 // AI RESULT PANEL
 // 
-function AIResult({ result, certName, onReset, paybackMonths, fiveYearNetGain, certCostINR }) {
+function AIResult({ result, certName, onReset, paybackMonths, fiveYearNetGain, certCostINR, isStudent, resumeCity, resumeDomain, targetOfferLakhs }) {
   const prefersReduced = useReducedMotion()
   const status = resolveVerdictStatus(result.verdict || '', result.breakEvenMonthsNum || 0)
   const vc = status.color
@@ -665,6 +665,62 @@ function AIResult({ result, certName, onReset, paybackMonths, fiveYearNetGain, c
     : status.code === 'NEUTRAL' ? 52
     : 24
 
+  // ── STUDENT VIEW ──
+  if (isStudent) {
+    const dailySalary = (targetOfferLakhs * 100000) / 365;
+    const daysToRecover = certCostINR > 0 && dailySalary > 0 ? Math.ceil(certCostINR / dailySalary) : 0;
+    
+    return (
+      <motion.div
+        initial={prefersReduced ? false : { opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={TT}
+        className="glass"
+        style={{ marginTop: '14px', borderRadius: '16px', overflow: 'hidden', minHeight: 320, background: 'var(--text)', color: 'var(--bg)' }}
+      >
+        <div style={{ padding: '24px' }}>
+          <div style={{ fontFamily: FM, fontSize: 10, letterSpacing: '0.12em', color: 'var(--bg)', opacity: 0.6, marginBottom: 12, textTransform: 'uppercase' }}>
+            FOR YOUR PROFILE — {resumeCity?.toUpperCase() || 'INDIA'} · FRESHER {resumeDomain ? `· ${resumeDomain.toUpperCase()} BACKGROUND` : ''}
+          </div>
+          
+          <h3 style={{ fontFamily: FH, fontSize: '24px', fontWeight: 800, color: 'var(--bg)', margin: '0 0 24px 0', lineHeight: 1.2 }}>
+            {certName}
+          </h3>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '150px 1fr', gap: '12px 16px', marginBottom: '28px', fontFamily: FB, fontSize: '14px' }}>
+            <div style={{ color: 'var(--bg)', opacity: 0.6 }}>Entry offers seen:</div>
+            <div style={{ color: 'var(--bg)', fontWeight: 600 }}>{result.entryOffers}</div>
+            
+            <div style={{ color: 'var(--bg)', opacity: 0.6 }}>Avg time to offer:</div>
+            <div style={{ color: 'var(--bg)', fontWeight: 600 }}>{result.timeToOffer}</div>
+            
+            <div style={{ color: 'var(--bg)', opacity: 0.6 }}>Top hirers:</div>
+            <div style={{ color: 'var(--bg)', fontWeight: 600 }}>{result.topHirers}</div>
+            
+            <div style={{ color: 'var(--bg)', opacity: 0.6 }}>Demand trend:</div>
+            <div style={{ color: 'var(--bg)', fontWeight: 600 }}>{result.demandTrend}</div>
+          </div>
+
+          <div style={{ fontFamily: FM, fontSize: '12px', color: 'var(--bg)', opacity: 0.8, borderTop: '1px solid rgba(255,255,255,0.1)', borderBottom: '1px solid rgba(255,255,255,0.1)', padding: '16px 0', marginBottom: '24px' }}>
+            Cost: ₹{certCostINR.toLocaleString()}   ·   Study time: ~4 months
+          </div>
+
+          <div>
+            <div style={{ fontFamily: FH, fontSize: '16px', fontWeight: 700, color: 'var(--bg)', marginBottom: '8px' }}>
+              Is it worth it for you?
+            </div>
+            <div style={{ fontFamily: FB, fontSize: '14px', lineHeight: 1.6, color: 'var(--bg)', opacity: 0.9 }}>
+              At ₹{targetOfferLakhs}L starting, you recover cert cost in {daysToRecover} days of salary.<br/>
+              3 students from {resumeCity || 'your city'} with similar profiles got offers<br/>
+              in the last 90 days. <a href="/offer-analysis" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>[See their anonymised outcomes →]</a>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    )
+  }
+
+  // ── PROFESSIONAL VIEW ──
   return (
     <motion.div
       initial={prefersReduced ? false : { opacity: 0, y: 14 }}
@@ -1245,6 +1301,10 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
                 paybackMonths={paybackMonths}
                 fiveYearNetGain={fiveYearNetGain}
                 certCostINR={certCostINR}
+                isStudent={isStudent}
+                resumeCity={displayCity}
+                resumeDomain={resumeDomain}
+                targetOfferLakhs={targetOfferLakhs}
               />
 
               {/*  Data Visualizations  */}

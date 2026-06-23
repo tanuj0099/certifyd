@@ -17,16 +17,15 @@ const buildROIPrompt = ({ certName, currentSalary, certCost, hikePercent, isStud
     ? `STUDENT with no salary, targeting first job in India. Cert: ${certName}. Goal: first offer Rs.4.8L+.`
     : `Salary: Rs.${currentSalary}L/yr. Cost: Rs.${certCost}L. City: ${city}. Domain: ${domain}.`
 
-  return `You are Certify, an elite, brutally honest career and salary negotiation analyst for Indian professionals (2026).
-${context}
-Certification: ${certName || 'General IT Certification'}
+  const studentSchema = `
+{
+  "entryOffers": "₹X.XL – ₹Y.YL",
+  "timeToOffer": "~X weeks post-cert",
+  "topHirers": "Company A, Company B",
+  "demandTrend": "↑ Growing (X open roles)"
+}`;
 
-Your task is to predict the exact, realistic salary hike percentage this specific professional will get if they earn this certification in their city/domain. Do NOT just give a generic average. If the cert is highly demanded in their city (e.g., AWS in Bangalore), predict a higher hike (e.g., 25-45%). If it's saturated or irrelevant to their domain, predict a low hike (e.g., 5-10%).
-
-Calculate the break-even months based on the predicted hike. Current salary is ${currentSalary}L. Certification cost is ${certCost}L.
-
-Respond with ONLY a valid JSON object — no markdown, no prose, no code fences.
-
+  const professionalSchema = `
 {
   "predictedHikePercent": integer (e.g. 25, 12, 30),
   "verdict": "Strong ROI / Moderate ROI / Weak ROI — one sentence with % and timeline",
@@ -41,11 +40,22 @@ Respond with ONLY a valid JSON object — no markdown, no prose, no code fences.
     "biggest real risk",
     "how to mitigate it"
   ],
-  "studentTrack": "${isStudent ? '3 concrete steps + timeline to Rs.4.8L' : ''}",
   "bottomLine": "one punchy action sentence — be direct"
-}
+}`;
 
-Rules: India-specific. Under 260 words total across all fields. No fluff.`
+  return `You are Certify, an elite, brutally honest career and salary analyst for Indian professionals (2026).
+${context}
+Certification: ${certName || 'General IT Certification'}
+
+${isStudent ? 
+`Your task is to predict hiring probability and entry-level packages for a fresher obtaining this certification. Do not predict salary hikes. Provide realistic entry-level numbers, average time to get an offer, top entry-level hirers in India, and the current demand trend for freshers.` : 
+`Your task is to predict the exact, realistic salary hike percentage this professional will get. If it's highly demanded, predict a higher hike (25-45%). If saturated, predict low (5-10%). Calculate break-even months. Current salary: ${currentSalary}L. Cert cost: ${certCost}L.`}
+
+Respond with ONLY a valid JSON object — no markdown, no prose, no code fences.
+
+${isStudent ? studentSchema : professionalSchema}
+
+Rules: India-specific. Under 260 words total. No fluff.`
 }
 
 // ── Safely parse JSON from AI — never throws ─────────────
@@ -131,6 +141,11 @@ export const analyzeROI = async ({ certName, currentSalary, certCost, fallbackHi
     risks:        Array.isArray(parsed.risks)  ? parsed.risks  : [],
     studentTrack: parsed.studentTrack || '',
     bottomLine:   parsed.bottomLine   || '',
+    // Student specific
+    entryOffers:  parsed.entryOffers  || '₹4.5L – ₹7.2L',
+    timeToOffer:  parsed.timeToOffer  || '~12 weeks post-cert',
+    topHirers:    parsed.topHirers    || 'TCS, Infosys, Wipro',
+    demandTrend:  parsed.demandTrend  || '↑ Growing',
     raw:          text,
     parseError:   false,
   }
@@ -168,6 +183,11 @@ export const getMockResponse = ({ certName, currentSalary, certCost, hikePercent
     risks:        ['Cert alone is not enough — build 2 portfolio projects', 'Budget 3 months of real study, not 3 weeks'],
     studentTrack: isStudent ? 'Step 1: Complete cert in 4 months. Step 2: Build 2 GitHub projects. Step 3: Apply to Capgemini iON for Rs.4.8L offer.' : '',
     bottomLine:   'Run: vercel dev (not npm run dev) to enable the API proxy locally.',
+    // Student specific
+    entryOffers:  '₹4.5L – ₹7.2L',
+    timeToOffer:  '~12 weeks post-cert',
+    topHirers:    'TCS, Infosys, Wipro',
+    demandTrend:  '↑ Growing',
     raw:          '(demo)',
     parseError:   false,
   }
