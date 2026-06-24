@@ -20,9 +20,9 @@ var FB = 'var(--font-body)'
 var FH = 'var(--font-head)'
 
 //  Color constants 
-var PICTON = 'var(--linear-blue)'
-var ORANGE = 'var(--linear-blue)'
-var AMBER = 'var(--cool-grey)'
+const PICTON = '#3B82F6'
+const ORANGE = '#F97316'
+const AMBER = '#F59E0B'
 var INDIGO = 'var(--linear-blue)'
 var VIOLET = 'var(--accent)'
 
@@ -740,6 +740,41 @@ var ResultDisplay = function ({ result, onCertSelected, mode, onClear, certDomai
   )
 }
 
+// --- Scanning Beam Loading UI --------------------------------------------------
+const ScanningBeam = () => {
+  const [step, setStep] = useState(0);
+  const steps = [
+    "Reading document text...",
+    "Extracting skills & experience...",
+    "Querying market salaries...",
+    "Calculating certification ROI...",
+    "Finalizing report..."
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setStep(s => Math.min(s + 1, steps.length - 1));
+    }, 1200);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div style={{ marginTop: '24px', width: '100%', maxWidth: '300px', margin: '24px auto 0' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--text-3)', marginBottom: '8px', fontFamily: FB }}>
+        <span>{steps[step]}</span>
+        <span>{Math.round(((step + 1) / steps.length) * 100)}%</span>
+      </div>
+      <div style={{ height: '4px', background: 'var(--border)', borderRadius: '2px', overflow: 'hidden' }}>
+        <motion.div
+          animate={{ width: `${((step + 1) / steps.length) * 100}%` }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
+          style={{ height: '100%', background: 'linear-gradient(90deg, var(--brand-primary), #FCA5A5)' }}
+        />
+      </div>
+    </div>
+  );
+};
+
 //  MAIN 
 var ResumeAnalyzer = function ({ mode, onCertSelected }) {
   //  Database State 
@@ -781,23 +816,8 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
   var [text, setText] = useState('')
   var [fileName, setFileName] = useState('')
   var [loading, setLoading] = useState(false)
-  var [result, setResult] = useState(() => {
-    if (typeof window !== 'undefined') {
-      var saved = sessionStorage.getItem('resumeAnalyzerResult');
-      if (saved) {
-        try { return JSON.parse(saved); } catch (e) { console.error(e); }
-      }
-    }
-    return null;
-  })
-
-  useEffect(() => {
-    if (result) {
-      sessionStorage.setItem('resumeAnalyzerResult', JSON.stringify(result));
-    } else {
-      sessionStorage.removeItem('resumeAnalyzerResult');
-    }
-  }, [result]);
+  var result = useJourneyStore(state => state.aiResult);
+  var setResult = useJourneyStore(state => state.setAiResult);
   var [error, setError] = useState(null)
   var [rejection, setRejection] = useState(null)
   var [dragging, setDragging] = useState(false)
@@ -1368,17 +1388,16 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
               style={{ cursor: 'pointer', width: '16px', height: '16px', flexShrink: 0 }}
             />
             <div className="flex-1">
-              <label htmlFor="dpdpConsent" className="text-[14px] text-slate-300 cursor-pointer relative" style={{ fontFamily: FB, display: 'block', lineHeight: 1.5 }}>
-                <span className="font-semibold text-white mb-2 block">Data Processing Notice</span>
-                <ul className="list-disc pl-4 space-y-1 mb-3 text-[13px] text-slate-400">
-                  <li><strong className="text-slate-200">What we process:</strong> The text of your document, including role, experience, and salary figures.</li>
-                  <li><strong className="text-slate-200">How we process it:</strong> Processed in real time for extraction. The raw document is never stored. Only anonymised data fields are retained.</li>
-                  <li><strong className="text-slate-200">What you get:</strong> A personalised counter-offer or career recommendation based on verified market medians.</li>
+              <label htmlFor="dpdpConsent" className="text-[14px] cursor-pointer relative" style={{ color: 'var(--text-3)', fontFamily: FB, display: 'block', lineHeight: 1.5 }}>
+                <span className="font-semibold mb-2 block" style={{ color: 'var(--text)' }}>Data Processing Notice</span>
+                <ul className="list-disc pl-4 space-y-1 mb-3 text-[13px]" style={{ color: 'var(--text-4)' }}>
+                  <li><strong style={{ color: 'var(--text-2)' }}>What we process:</strong> The text of your document, including role, experience, and salary figures.</li>
+                  <li><strong style={{ color: 'var(--text-2)' }}>How we process it:</strong> Processed in real time for extraction. The raw document is never stored. Only anonymised data fields are retained.</li>
+                  <li><strong style={{ color: 'var(--text-2)' }}>What you get:</strong> A personalised counter-offer or career recommendation based on verified market medians.</li>
                 </ul>
-                <div className="flex items-start gap-2">
-                  <span className="text-orange-400">I understand and consent to Certifyd processing my document as described above.</span>
-                  <span className="text-red-500 font-bold text-lg leading-none">*</span>
-                </div>
+                <span style={{ color: 'var(--brand-primary)', fontWeight: 500, display: 'block' }}>
+                  I understand and consent to Certifyd processing my document as described above. <span style={{ color: 'var(--err)' }}>*</span>
+                </span>
               </label>
             </div>
           </div>
@@ -1423,7 +1442,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
 
       {loading && (
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: '24px' }}>
-          <FeedbackAction status="loading" loadingMessage="Analyzing Resume..." />
+          <ScanningBeam />
         </div>
       )}
 

@@ -26,32 +26,32 @@ export default function RoadmapDrawer({ isOpen, onClose, nodeData, isCompleted, 
         <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-white sticky top-0 z-10">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className={`text-sm font-medium text-slate-600 font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full ${
+              <span className={`text-sm font-medium text-[color:var(--text-3)] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full ${
                 isCompleted ? 'bg-orange-50 text-orange-600' : 'bg-indigo-50 text-indigo-600'
               }`}>
                 {isCompleted ? 'Completed' : (nodeData.variant === 'checkpoint' ? 'Core Skill' : 'Standard Skill')}
               </span>
             </div>
-            <h2 className="text-2xl font-black text-slate-900 tracking-tight">{nodeData.label}</h2>
+            <h2 className="text-2xl font-black text-[color:var(--text)] tracking-tight">{nodeData.label}</h2>
           </div>
-          <button onClick={onClose} className="p-2 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-full transition-colors">
+          <button onClick={onClose} className="p-2 text-[color:var(--text-4)] hover:text-[color:var(--text)] hover:bg-[color:var(--bg-alt)] rounded-full transition-colors">
             <X size={20} />
           </button>
         </div>
 
         {/* Markdown Content */}
-        <div className="flex-1 overflow-y-auto p-6 bg-slate-50/50">
+        <div className="flex-1 overflow-y-auto p-6 bg-[color:var(--bg-alt)]/50">
           {hasContent ? (
             <div className="prose prose-slate prose-headings:font-bold prose-a:text-indigo-600 hover:prose-a:text-indigo-700 max-w-none">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>{nodeData.description}</ReactMarkdown>
             </div>
           ) : (
             <div className="h-full flex flex-col items-center justify-center text-center px-4 py-12">
-              <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mb-4">
-                <BookOpen size={32} className="text-slate-400" />
+              <div className="w-16 h-16 bg-[color:var(--bg-alt)] rounded-2xl flex items-center justify-center mb-4">
+                <BookOpen size={32} className="text-[color:var(--text-4)]" />
               </div>
-              <h3 className="text-lg font-bold text-slate-800 mb-2">Documentation Pending</h3>
-              <p className="text-sm text-slate-500 max-w-sm">We are currently compiling the standard resources and study materials for this specific skill.</p>
+              <h3 className="text-lg font-bold text-[color:var(--text)] mb-2">Documentation Pending</h3>
+              <p className="text-sm text-[color:var(--text-4)] max-w-sm">We are currently compiling the standard resources and study materials for this specific skill.</p>
             </div>
           )}
         </div>

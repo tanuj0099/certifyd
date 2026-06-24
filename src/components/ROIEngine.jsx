@@ -178,7 +178,7 @@ const ROIEngine = ({ currentSalary = DEFAULT_CURRENT_SALARY }) => {
             <div className="grid grid-cols-2 gap-8">
               {/* Payback Period */}
               <div>
-                <p className="text-sm font-medium text-zinc-400 mb-2 uppercase tracking-widest text-sm font-medium text-slate-600">Payback Period</p>
+                <p className="text-sm font-medium text-zinc-400 mb-2 uppercase tracking-widest text-sm font-medium text-[color:var(--text-3)]">Payback Period</p>
                 <div className="text-4xl font-bold text-white tracking-tight">
                   {paybackMonths} <span className="text-xl text-zinc-500 font-medium">mo</span>
                 </div>
@@ -186,7 +186,7 @@ const ROIEngine = ({ currentSalary = DEFAULT_CURRENT_SALARY }) => {
 
               {/* Net Gain */}
               <div>
-                <p className="text-sm font-medium text-zinc-400 mb-2 uppercase tracking-widest text-sm font-medium text-slate-600">Annual Net Gain</p>
+                <p className="text-sm font-medium text-zinc-400 mb-2 uppercase tracking-widest text-sm font-medium text-[color:var(--text-3)]">Annual Net Gain</p>
                 <div className="text-4xl font-bold text-white tracking-tight">
                   {formatINR(netGain)}
                 </div>
@@ -195,7 +195,7 @@ const ROIEngine = ({ currentSalary = DEFAULT_CURRENT_SALARY }) => {
 
             {/* Total True Cost Breakdown */}
             <div className="pt-8 border-t border-white/10">
-              <p className="text-sm font-medium text-zinc-400 mb-2 uppercase tracking-widest text-sm font-medium text-slate-600">Total True Cost (Exam + Time)</p>
+              <p className="text-sm font-medium text-zinc-400 mb-2 uppercase tracking-widest text-sm font-medium text-[color:var(--text-3)]">Total True Cost (Exam + Time)</p>
               <div className="text-3xl font-bold text-zinc-300 tracking-tight">
                 {formatINR(totalCost)}
               </div>

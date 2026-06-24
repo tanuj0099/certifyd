@@ -171,7 +171,7 @@ const CertificationCard = ({ data, ...props }) => {
             <DollarSign className="w-3 h-3 md:w-4 md:h-4 text-green-600 dark:text-green-400" />
           </div>
           <div className="truncate">
-            <p className="hidden md:block text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-widest leading-none mb-1">Cost</p>
+            <p className="hidden md:block text-[10px] md:text-xs font-semibold text-[color:var(--text-4)] uppercase tracking-widest leading-none mb-1">Cost</p>
             <p className="text-[10px] md:text-sm font-bold text-[var(--text)] tracking-tight truncate">
               {formatDualCost(data.cost_inr, data.cost_usd)}
             </p>
@@ -183,7 +183,7 @@ const CertificationCard = ({ data, ...props }) => {
             <Clock className="w-3 h-3 md:w-4 md:h-4 text-blue-500" />
           </div>
           <div className="truncate">
-            <p className="hidden md:block text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-widest leading-none mb-1">Validity</p>
+            <p className="hidden md:block text-[10px] md:text-xs font-semibold text-[color:var(--text-4)] uppercase tracking-widest leading-none mb-1">Validity</p>
             <p className="text-[10px] md:text-sm font-bold text-[var(--text)] tracking-tight truncate">
               {formatValidity(data.validity_period_months)}
             </p>

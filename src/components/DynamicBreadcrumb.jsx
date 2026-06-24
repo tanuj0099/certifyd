@@ -86,6 +86,18 @@ export function DynamicBreadcrumb() {
       });
     }
 
+    if (path === 'tools' && modeLocked && mode && !sourceTool) {
+      const activeMode = MODES.find(m => m.id === mode);
+      if (activeMode) {
+        segments.push({
+          label: activeMode.label,
+          href: '/choose-path',
+          icon: activeMode.icon || ICONS.default,
+          current: false
+        });
+      }
+    }
+
   });
 
   return (

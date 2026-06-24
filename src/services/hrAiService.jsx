@@ -16,38 +16,45 @@ The Bouncer Rule: First evaluate if the text is an actual corporate job offer or
 
 PII ANONYMIZATION: Do not extract, leak, or mention the candidate's real name, email, or phone number anywhere in your response (including the email script). Use placeholders like [Candidate Name] if needed.
 
-Financial Formatting: All monetary figures must be calculated as annual values and formatted strictly as absolute whole numbers in Indian Rupees (e.g., 1450000). DO NOT use Lakhs or decimals. DO NOT output monthly figures.
+Financial Formatting: All monetary figures must be returned as integers (e.g., 1450000). DO NOT use strings, Lakhs, or decimals for money.
 
-The Trap Check: Actively scan the text for hidden corporate deductions like included Employer PF or Gratuity padding, clawbacks, and notice periods.
+The Trap Check: Actively scan the text for hidden corporate deductions like included Employer PF or Gratuity padding, clawbacks, and notice periods. NOTE: In the Indian IT sector, a 60 to 90-day notice period is the industry standard and should NOT be considered a red flag. Only flag notice periods exceeding 90 days.
 
-Expected JSON Output Format (respond ONLY with JSON):
+Math Rules: 
+- Total Fixed Base = Basic + HRA + Allowances (excluding Variable, Bonus, ESOP).
+- HRA = Extract House Rent Allowance explicitly if present.
+- Other_Allowances = Sum of remaining allowances (LTA, Special, Medical, etc., excluding HRA).
+- Estimated_Monthly_In_Hand_Absolute_INR = (Total Fixed Base * 0.70) / 12 (Assuming ~30% tax deduction).
+
+Expected JSON Output Format (respond ONLY with JSON, use actual calculated integers for money):
 {
   "is_valid_offer": true,
   "Offer_Metadata": {
     "Company_Name": "string",
     "Designation": "string",
     "Work_Model": "string (Remote / Hybrid / On-site)",
-    "Notice_Period_Days": 30,
+    "Notice_Period_Days": 0,
     "Bond_or_Clawback_Detected": false
   },
   "Compensation_Analysis": {
-    "Offered_CTC": 1450000,
-    "Offered_Fixed_Base": 1200000,
-    "Offered_Variable": 250000,
+    "Offered_CTC": 0,
+    "Offered_Fixed_Base": 0,
+    "Offered_Variable": 0,
     "Breakdown": {
-      "Basic_Salary": 600000,
-      "Allowances_and_Perks": 600000,
-      "Joining_or_Performance_Bonus": 250000,
+      "Basic_Salary": 0,
+      "HRA": 0,
+      "Other_Allowances": 0,
+      "Joining_or_Performance_Bonus": 0,
       "Stocks_or_ESOPs_Annual_Value": 0,
       "Employer_PF_Included_In_CTC": true,
       "Gratuity_Included_In_CTC": false,
-      "Estimated_Monthly_In_Hand_Absolute_INR": 85000
+      "Estimated_Monthly_In_Hand_Absolute_INR": 0
     }
   },
   "Market_Intelligence_2026": {
-    "Market_Median_Salary": 1500000,
-    "Market_75th_Percentile": 1800000,
-    "Percent_Difference_To_Median": -3,
+    "Market_Median_Salary": 0,
+    "Market_75th_Percentile": 0,
+    "Percent_Difference_To_Median": 0,
     "Market_Trend_Sentence": "string (Current hiring demand velocity for this specific stack/city)",
     "Calculated_Experience_Level_For_Offer": "string (e.g. '5 years' extracted from resume context or offer letter)"
   },
@@ -106,7 +113,8 @@ Expected JSON Output Format (respond ONLY with JSON):
         CTC_Breakdown: {
           Total_CTC_Stated: ctcAbsolute,
           Basic_Salary: toAbsolute(parsed.Compensation_Analysis?.Breakdown?.Basic_Salary),
-          Special_Allowance: toAbsolute(parsed.Compensation_Analysis?.Breakdown?.Allowances_and_Perks),
+          HRA: toAbsolute(parsed.Compensation_Analysis?.Breakdown?.HRA),
+          Special_Allowance: toAbsolute(parsed.Compensation_Analysis?.Breakdown?.Other_Allowances),
           Variable_PLVP: toAbsolute(parsed.Compensation_Analysis?.Offered_Variable),
           ESOP_Annual_Vesting_Value: toAbsolute(parsed.Compensation_Analysis?.Breakdown?.Stocks_or_ESOPs_Annual_Value),
           Estimated_Monthly_In_Hand: parsed.Compensation_Analysis?.Breakdown?.Estimated_Monthly_In_Hand_Absolute_INR || 0,

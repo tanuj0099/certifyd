@@ -11,19 +11,19 @@ export default function TopCertsModule({ roadmapId }) {
 
   const getRankStyle = (rank) => {
     if (rank === 1) return "bg-amber-100 text-amber-700 border-amber-300"; // Gold
-    if (rank === 2) return "bg-slate-200 text-slate-700 border-slate-300"; // Silver
+    if (rank === 2) return "bg-slate-200 text-[color:var(--text-2)] border-slate-300"; // Silver
     if (rank === 3) return "bg-orange-100 text-orange-800 border-orange-300"; // Bronze
-    return "bg-slate-100 text-slate-600 border-slate-200";
+    return "bg-[color:var(--bg-alt)] text-[color:var(--text-3)] border-[color:var(--border)]";
   };
 
   return (
     <div className="w-full max-w-4xl mx-auto py-12 px-4 sm:px-6">
       <div className="mb-8 text-center md:text-left">
-        <h2 className="text-3xl font-black text-slate-900 flex items-center justify-center md:justify-start gap-3 mb-3">
+        <h2 className="text-3xl font-black text-[color:var(--text)] flex items-center justify-center md:justify-start gap-3 mb-3">
           <Trophy className="text-amber-500" size={32} />
           Top 3 Recommended Certifications
         </h2>
-        <p className="text-lg text-slate-600">The highest ROI certificates for this specific path, ranked by industry demand.</p>
+        <p className="text-lg text-[color:var(--text-3)]">The highest ROI certificates for this specific path, ranked by industry demand.</p>
       </div>
 
       <div className="flex flex-col gap-4">
@@ -34,7 +34,7 @@ export default function TopCertsModule({ roadmapId }) {
             <div 
               key={cert.id} 
               className={`bg-white rounded-2xl border transition-all duration-300 shadow-sm ${
-                isExpanded ? 'border-indigo-300 ring-4 ring-indigo-50' : 'border-slate-200 hover:border-slate-300 hover:shadow-md'
+                isExpanded ? 'border-indigo-300 ring-4 ring-indigo-50' : 'border-[color:var(--border)] hover:border-slate-300 hover:shadow-md'
               }`}
             >
               {/* Header (Always visible) */}
@@ -47,57 +47,57 @@ export default function TopCertsModule({ roadmapId }) {
                     #{cert.rank}
                   </div>
                   <div>
-                    <h3 className="text-lg md:text-xl font-bold text-slate-900">{cert.name}</h3>
-                    <p className="text-sm font-medium text-slate-600 font-bold text-slate-500 uppercase tracking-widest">{cert.issuer}</p>
+                    <h3 className="text-lg md:text-xl font-bold text-[color:var(--text)]">{cert.name}</h3>
+                    <p className="text-sm font-medium text-[color:var(--text-3)] font-bold text-[color:var(--text-4)] uppercase tracking-widest">{cert.issuer}</p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-4 md:gap-6 self-end md:self-auto">
-                  <div className="flex items-center gap-1.5 text-slate-700 font-bold bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
+                  <div className="flex items-center gap-1.5 text-[color:var(--text-2)] font-bold bg-[color:var(--bg-alt)] px-3 py-1.5 rounded-lg border border-[color:var(--border)]">
                     <DollarSign size={16} className="text-orange-500"/> {cert.cost}
                   </div>
-                  <ChevronDown size={20} className={`text-slate-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                  <ChevronDown size={20} className={`text-[color:var(--text-4)] transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                 </div>
               </div>
 
               {/* Expandable Details */}
               {isExpanded && (
-                <div className="px-5 pb-6 pt-2 border-t border-slate-100 bg-slate-50/50 rounded-b-2xl">
+                <div className="px-5 pb-6 pt-2 border-t border-slate-100 bg-[color:var(--bg-alt)]/50 rounded-b-2xl">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
                     
                     {/* The "Why & How" (Takes up 2 columns) */}
                     <div className="md:col-span-2 space-y-6">
                       <div>
-                        <h4 className="flex items-center gap-2 text-sm font-medium text-slate-600 font-black text-indigo-900 uppercase tracking-widest mb-2">
+                        <h4 className="flex items-center gap-2 text-sm font-medium text-[color:var(--text-3)] font-black text-indigo-900 uppercase tracking-widest mb-2">
                           <Target size={16} className="text-indigo-500"/> Why it matters
                         </h4>
-                        <p className="text-slate-700 text-sm leading-relaxed">{cert.whyItMatters}</p>
+                        <p className="text-[color:var(--text-2)] text-sm leading-relaxed">{cert.whyItMatters}</p>
                       </div>
                       <div>
-                        <h4 className="flex items-center gap-2 text-sm font-medium text-slate-600 font-black text-indigo-900 uppercase tracking-widest mb-2">
+                        <h4 className="flex items-center gap-2 text-sm font-medium text-[color:var(--text-3)] font-black text-indigo-900 uppercase tracking-widest mb-2">
                           <BookOpen size={16} className="text-indigo-500"/> How to prepare
                         </h4>
-                        <p className="text-slate-700 text-sm leading-relaxed">{cert.howToPrepare}</p>
+                        <p className="text-[color:var(--text-2)] text-sm leading-relaxed">{cert.howToPrepare}</p>
                       </div>
                     </div>
 
                     {/* Logistics Card (Takes up 1 column) */}
-                    <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4 h-fit">
+                    <div className="bg-white p-5 rounded-xl border border-[color:var(--border)] shadow-sm space-y-4 h-fit">
                       <div>
-                        <span className="block text-sm font-medium text-slate-600 font-bold text-slate-400 uppercase tracking-widest mb-1">Difficulty</span>
-                        <span className="text-slate-900 font-bold text-sm">{cert.difficulty}</span>
+                        <span className="block text-sm font-medium text-[color:var(--text-3)] font-bold text-[color:var(--text-4)] uppercase tracking-widest mb-1">Difficulty</span>
+                        <span className="text-[color:var(--text)] font-bold text-sm">{cert.difficulty}</span>
                       </div>
-                      <div className="w-full h-px bg-slate-100"></div>
+                      <div className="w-full h-px bg-[color:var(--bg-alt)]"></div>
                       <div>
-                        <span className="block text-sm font-medium text-slate-600 font-bold text-slate-400 uppercase tracking-widest mb-1">Time to Prep</span>
-                        <div className="flex items-center gap-1.5 text-slate-900 font-bold text-sm">
+                        <span className="block text-sm font-medium text-[color:var(--text-3)] font-bold text-[color:var(--text-4)] uppercase tracking-widest mb-1">Time to Prep</span>
+                        <div className="flex items-center gap-1.5 text-[color:var(--text)] font-bold text-sm">
                           <Clock size={14} className="text-amber-500"/> {cert.timeToPrep}
                         </div>
                       </div>
-                      <div className="w-full h-px bg-slate-100"></div>
+                      <div className="w-full h-px bg-[color:var(--bg-alt)]"></div>
                       <div>
-                        <span className="block text-sm font-medium text-slate-600 font-bold text-slate-400 uppercase tracking-widest mb-1">Eligibility Criteria</span>
-                        <p className="text-slate-700 text-sm font-medium text-slate-600 leading-relaxed">{cert.eligibility}</p>
+                        <span className="block text-sm font-medium text-[color:var(--text-3)] font-bold text-[color:var(--text-4)] uppercase tracking-widest mb-1">Eligibility Criteria</span>
+                        <p className="text-[color:var(--text-2)] text-sm font-medium text-[color:var(--text-3)] leading-relaxed">{cert.eligibility}</p>
                       </div>
                     </div>
 

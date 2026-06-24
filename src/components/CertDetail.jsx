@@ -109,7 +109,7 @@ function StatCard({ icon: Icon, label, value, valueClass = 'text-[var(--text)]',
         >
           <Icon className="w-3 h-3 md:w-3.5 md:h-3.5" style={{ color: accent || '#71717a' }} />
         </div>
-        <span className="text-[9px] md:text-sm font-medium text-slate-600 uppercase tracking-widest font-semibold text-zinc-500 leading-tight">
+        <span className="text-[9px] md:text-sm font-medium text-[color:var(--text-3)] uppercase tracking-widest font-semibold text-zinc-500 leading-tight">
           {label}
         </span>
       </div>
@@ -493,7 +493,7 @@ const CertDetail = () => {
                 <div className="flex items-start gap-3 p-3.5 rounded-xl bg-amber-500/[0.07] border border-amber-500/20">
                   <AlertTriangle className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium text-slate-600 font-semibold text-amber-300 mb-0.5">
+                    <p className="text-sm font-medium text-[color:var(--text-3)] font-semibold text-amber-300 mb-0.5">
                       Mandatory Training Required
                     </p>
                     <p className="text-[11px] text-amber-400/70 leading-relaxed">

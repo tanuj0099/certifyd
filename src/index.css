@@ -30,8 +30,8 @@
     --bg-elevated: #1F2937;
     --bg-inverse: #F8FAFC;
     --text-primary: #F8FAFC;
-    --text-secondary: #94A3B8;
-    --text-muted: #475569;
+    --text-secondary: #CBD5E1;
+    --text-muted: #94A3B8;
     --text-inverse: #0F172A;
     --border-subtle: #1F2937;
     --border-strong: #374151;
@@ -59,7 +59,7 @@
     --text:         var(--text-primary);
     --text-2:       var(--text-secondary);
     --text-3:       var(--text-muted);
-    --text-4:       #334155;
+    --text-4:       #64748B;
     --accent:       var(--brand-primary);
     --gold:          var(--brand-primary);
     --border:       var(--border-subtle);
@@ -144,8 +144,8 @@
     --bg-elevated: #F1F5F9;
     --bg-inverse: #0F172A;
     --text-primary: #0F172A;
-    --text-secondary: #475569;
-    --text-muted: #94A3B8;
+    --text-secondary: #334155;
+    --text-muted: #475569;
     --text-inverse: #FFFFFF;
     --border-subtle: #E2E8F0;
     --border-strong: #CBD5E1;

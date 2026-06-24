@@ -29,12 +29,12 @@ export default function RoadmapNode({ data }) {
       <div className="px-5 py-3 shadow-lg rounded-xl border-2 border-slate-900 min-w-[220px] max-w-[260px] bg-white cursor-pointer flex flex-col items-center text-center relative z-10 transition-transform hover:scale-105">
         {connectionPoints}
         
-        <div className="absolute -top-3.5 bg-slate-900 text-white text-sm font-medium text-slate-600 font-bold px-3 py-1 rounded-md uppercase tracking-widest flex items-center gap-1.5 shadow-sm">
+        <div className="absolute -top-3.5 bg-slate-900 text-white text-sm font-medium text-[color:var(--text-3)] font-bold px-3 py-1 rounded-md uppercase tracking-widest flex items-center gap-1.5 shadow-sm">
           <Target size={12} /> Core
         </div>
         
-        <h3 className="text-sm font-extrabold text-slate-900 mt-2 mb-1">{data.label}</h3>
-        <p className="text-[9px] font-semibold text-slate-500 uppercase tracking-widest">Required</p>
+        <h3 className="text-sm font-extrabold text-[color:var(--text)] mt-2 mb-1">{data.label}</h3>
+        <p className="text-[9px] font-semibold text-[color:var(--text-4)] uppercase tracking-widest">Required</p>
       </div>
     );
   }
@@ -53,12 +53,12 @@ export default function RoadmapNode({ data }) {
           ) : (
             <Circle size={10} className="text-slate-300" />
           )}
-          <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+          <span className="text-[9px] font-bold text-[color:var(--text-4)] uppercase tracking-widest">
             {data.status || 'Pending'}
           </span>
         </div>
         
-        <span className="text-sm font-medium text-slate-600 font-bold text-slate-700 leading-tight">
+        <span className="text-sm font-medium text-[color:var(--text-3)] font-bold text-[color:var(--text-2)] leading-tight">
           {data.label}
         </span>
       </div>

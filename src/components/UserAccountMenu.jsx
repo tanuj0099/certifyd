@@ -184,7 +184,7 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
                     return 'Candidate Profile';
                   })()}
                 </motion.div>
-                <motion.div className="text-zinc-500 dark:text-zinc-400 text-sm font-medium text-slate-600 mt-1 break-all">
+                <motion.div className="text-zinc-500 dark:text-zinc-400 text-sm font-medium text-[color:var(--text-3)] mt-1 break-all">
                   {user?.email || ''}
                 </motion.div>
               </motion.div>

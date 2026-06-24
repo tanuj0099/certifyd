@@ -8,9 +8,9 @@ var F_HEAD = "var(--font-head)"
 var F_BODY = "var(--font-body)"
 var F_MONO = "var(--font-mono)"
 
-const PICTON  = 'var(--linear-blue)'
-const ORANGE = 'var(--linear-blue)'
-const AMBER   = 'var(--cool-grey)'
+const PICTON  = '#3B82F6'
+const ORANGE  = '#F97316'
+const AMBER   = '#F59E0B'
 const SPRING  = { type: 'spring', stiffness: 400, damping: 30 }
 
 const CITIES = [

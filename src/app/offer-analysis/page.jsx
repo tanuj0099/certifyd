@@ -643,18 +643,10 @@ export default function OfferAnalysisPage() {
                       { name: 'ESOP/Stocks', value: result.CTC_Breakdown?.ESOP_Annual_Vesting_Value || 0, color: '#6366f1' }
                     ].filter(d => d.value > 0);
 
-                    const glassStyle = C.isLight ? {
-                      background: 'rgba(255, 255, 255, 0.7)',
-                      backdropFilter: 'blur(20px)',
-                      WebkitBackdropFilter: 'blur(20px)',
-                      border: '1px solid rgba(255, 255, 255, 0.5)',
-                      boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
-                    } : {
-                      background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.7) 100%)',
-                      backdropFilter: 'blur(20px)',
-                      WebkitBackdropFilter: 'blur(20px)',
-                      border: '1px solid rgba(255, 255, 255, 0.08)',
-                      boxShadow: '0 12px 40px 0 rgba(0, 0, 0, 0.3)',
+                    const glassStyle = {
+                      background: 'var(--bg-elevated)',
+                      border: '1px solid var(--border)',
+                      boxShadow: '0 4px 20px 0 rgba(0, 0, 0, 0.05)',
                     };
 
                     const premiumCardClass = "w-full rounded-[2rem] p-6 md:p-8 transition-all duration-300 relative overflow-hidden group";
@@ -702,7 +694,7 @@ export default function OfferAnalysisPage() {
                           </div>
 
                           {/* Negotiation Script */}
-                          <div className="rounded-2xl border flex flex-col gap-5 p-5 md:p-6" style={{ background: C.isLight ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.2)', borderColor: C.isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)' }}>
+                          <div className="rounded-2xl border flex flex-col gap-5 p-5 md:p-6" style={{ background: 'var(--bg)', borderColor: 'var(--border)' }}>
                             
                             {result.Strategic_Negotiation_Output?.Blunt_Assessment && (
                               <div>
@@ -744,7 +736,7 @@ export default function OfferAnalysisPage() {
                             )}
 
                             {result.Strategic_Negotiation_Output?.Counter_Offer_Email_Script ? (
-                              <div className="mt-4 p-5 md:p-6 rounded-2xl relative group" style={{ background: C.isLight ? 'rgba(0,0,0,0.03)' : 'rgba(0,0,0,0.4)', border: `1px solid ${C.isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)'}` }}>
+                              <div className="mt-4 p-5 md:p-6 rounded-2xl relative group" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)' }}>
                                 <div className="text-xs uppercase tracking-[0.1em] text-orange-500 dark:text-orange-400 mb-3 font-bold flex items-center gap-2">
                                   <Sparkles size={14} /> EMAIL SCRIPT
                                 </div>

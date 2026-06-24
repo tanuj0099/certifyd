@@ -213,7 +213,7 @@ function StudentPath({ certName, certCost, domain, targetOfferLakhs }) {
       className="glass"
       style={{ marginBottom: '16px', padding: '18px', borderRadius: '13px' }}
     >
-      <div className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4">
+      <div className="text-sm font-bold text-[color:var(--text-4)] uppercase tracking-widest mb-4">
         YOUR PATH TO YOUR FIRST OFFER
       </div>
 
@@ -231,12 +231,12 @@ function StudentPath({ certName, certCost, domain, targetOfferLakhs }) {
 
             <div style={{ paddingBottom: i < steps.length - 1 ? '14px' : '0', flex: 1 }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2px' }}>
-                <span className="text-lg font-bold text-slate-900">{step.label}</span>
+                <span className="text-lg font-bold text-[color:var(--text)]">{step.label}</span>
                 {step.time && (
                   <span style={{ fontFamily: FM, fontSize: '9px', color: 'var(--text-4)', padding: '2px 7px', borderRadius: '99px', background: step.color + '10', border: '1px solid ' + step.color + '20' }}>{step.time}</span>
                 )}
               </div>
-              <div className={i === steps.length - 1 ? "text-base font-bold text-slate-900 mt-1" : "text-sm font-medium text-slate-600 leading-relaxed"}>
+              <div className={i === steps.length - 1 ? "text-base font-bold text-[color:var(--text)] mt-1" : "text-sm font-medium text-[color:var(--text-3)] leading-relaxed"}>
                 {step.detail}
               </div>
             </div>
@@ -244,7 +244,7 @@ function StudentPath({ certName, certCost, domain, targetOfferLakhs }) {
         ))}
       </div>
 
-      <div className="text-sm font-medium text-slate-600 mt-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
+      <div className="text-sm font-medium text-[color:var(--text-3)] mt-6 p-4 bg-[color:var(--bg-alt)] rounded-xl border border-[color:var(--border)]">
         Total investment: {formatCostL(certCost)} / Timeline: 4-7 months / Target: verified roles in your domain
       </div>
     </motion.div>
@@ -740,7 +740,7 @@ function AIResult({ result, certName, onReset, paybackMonths, fiveYearNetGain, c
           </div>
         </div>
         <div className="w-16 h-16 flex-shrink-0 relative">
-          <div className="flex shrink-0 items-center justify-center w-16 h-16 rounded-full border-[5px] border-orange-500 text-xl font-black text-slate-900 shadow-sm bg-white">
+          <div className="flex shrink-0 items-center justify-center w-16 h-16 rounded-full border-[5px] border-orange-500 text-xl font-black text-[color:var(--text)] shadow-sm bg-white">
             {gaugeScore}
           </div>
           <button onClick={onReset} style={{ position: 'absolute', top: -8, right: -8, background: 'none', border: 'none', color: 'var(--text-4)', cursor: 'pointer', padding: '4px' }}>
@@ -810,7 +810,7 @@ function AIResult({ result, certName, onReset, paybackMonths, fiveYearNetGain, c
       {result.bottomLine && (
         <div style={{ margin: '0 16px 12px', padding: '12px 16px', borderRadius: '12px', background: vc + '12', border: '1px solid ' + vc + '30' }}>
           <div style={{ fontFamily: FM, fontSize: '9px', color: vc, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '6px' }}>BOTTOM LINE</div>
-          <div className="text-base font-bold text-slate-900 mt-2">Invest ₹{(certCostINR/1000).toFixed(0)}K to unlock a potential ₹{(fiveYearNetGain/100000).toFixed(1)}L net gain over 5 years.</div>
+          <div className="text-base font-bold text-[color:var(--text)] mt-2">Invest ₹{(certCostINR/1000).toFixed(0)}K to unlock a potential ₹{(fiveYearNetGain/100000).toFixed(1)}L net gain over 5 years.</div>
         </div>
       )}
 
@@ -1208,7 +1208,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
                   <div style={{ width: 5, height: 5, borderRadius: '50%', background: bandColor }} />
                   <span className="text-sm font-medium" style={{ color: bandColor }}>{bandLabel}</span>
                 </div>
-                <span className="text-sm font-medium text-slate-600">
+                <span className="text-sm font-medium text-[color:var(--text-3)]">
                   {costPercentage}% of your current base - {costPercentage > 10 ? 'High investment, requires commitment' : 'Low risk investment'}
                 </span>
               </motion.div>
@@ -1343,7 +1343,7 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
                             <div style={{ fontFamily: 'var(--font-head)', fontSize: 'clamp(1.5rem,4vw,2.2rem)', fontWeight: '800', color: ORANGE }}>
                               ₹{(fiveYearNetGain / 100000).toFixed(1)}L
                             </div>
-                            <div className="text-sm text-slate-600 mt-2 font-medium">Inflation-adjusted estimate based on {expectedHike}% market movement</div>
+                            <div className="text-sm text-[color:var(--text-3)] mt-2 font-medium">Inflation-adjusted estimate based on {expectedHike}% market movement</div>
                           </div>
                           <div style={{ padding: '24px 16px', textAlign: 'center', borderColor: 'var(--border)', background: 'transparent', minHeight: 110, border: 'none' }}>
                             <div className="micro-label" style={{ color: 'var(--text-4)', marginBottom: '8px' }}>ANNUALIZED RETURN (CAGR)</div>
