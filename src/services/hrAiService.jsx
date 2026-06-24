@@ -22,6 +22,7 @@ The Trap Check: Actively scan the text for hidden corporate deductions like incl
 
 Math Rules: 
 - Total Fixed Base = Basic + HRA + Allowances (excluding Variable, Bonus, ESOP).
+- Basic_Salary = If the offer lists a single "Fixed Component" or "Fixed Pay" without a breakdown, put the entire fixed amount here.
 - HRA = Extract House Rent Allowance explicitly if present.
 - Other_Allowances = Sum of remaining allowances (LTA, Special, Medical, etc., excluding HRA).
 - Estimated_Monthly_In_Hand_Absolute_INR = (Total Fixed Base * 0.70) / 12 (Assuming ~30% tax deduction).
@@ -112,9 +113,10 @@ Expected JSON Output Format (respond ONLY with JSON, use actual calculated integ
         },
         CTC_Breakdown: {
           Total_CTC_Stated: ctcAbsolute,
-          Basic_Salary: toAbsolute(parsed.Compensation_Analysis?.Breakdown?.Basic_Salary),
+          Basic_Salary: toAbsolute(parsed.Compensation_Analysis?.Breakdown?.Basic_Salary) || toAbsolute(parsed.Compensation_Analysis?.Offered_Fixed_Base),
           HRA: toAbsolute(parsed.Compensation_Analysis?.Breakdown?.HRA),
-          Special_Allowance: toAbsolute(parsed.Compensation_Analysis?.Breakdown?.Other_Allowances),
+          Other_Allowances: toAbsolute(parsed.Compensation_Analysis?.Breakdown?.Other_Allowances),
+          Joining_Bonus: toAbsolute(parsed.Compensation_Analysis?.Breakdown?.Joining_or_Performance_Bonus),
           Variable_PLVP: toAbsolute(parsed.Compensation_Analysis?.Offered_Variable),
           ESOP_Annual_Vesting_Value: toAbsolute(parsed.Compensation_Analysis?.Breakdown?.Stocks_or_ESOPs_Annual_Value),
           Estimated_Monthly_In_Hand: parsed.Compensation_Analysis?.Breakdown?.Estimated_Monthly_In_Hand_Absolute_INR || 0,

@@ -631,15 +631,13 @@ export default function OfferAnalysisPage() {
                     }
 
                     const pieData = [
-                      { name: 'Basic Salary', value: result.CTC_Breakdown?.Basic_Salary || 0, color: '#059669' },
+                      { name: 'Basic / Fixed Pay', value: result.CTC_Breakdown?.Basic_Salary || result.Database_Payload?.fixed_base || 0, color: '#059669' },
                       { name: 'HRA', value: result.CTC_Breakdown?.HRA || 0, color: 'var(--brand-primary)' },
-                      { name: 'Special Allowance', value: result.CTC_Breakdown?.Special_Allowance || 0, color: '#34d399' },
-                      { name: 'Transport/Medical', value: result.CTC_Breakdown?.Transport_Medical_Flexi || 0, color: '#6ee7b7' },
-                      { name: 'LTA', value: result.CTC_Breakdown?.LTA || 0, color: '#a7f3d0' },
+                      { name: 'Other Allowances', value: result.CTC_Breakdown?.Other_Allowances || result.CTC_Breakdown?.Special_Allowance || 0, color: '#34d399' },
+                      { name: 'Joining/Perf Bonus', value: result.CTC_Breakdown?.Joining_Bonus || 0, color: '#a7f3d0' },
                       { name: 'Variable/Bonus', value: result.CTC_Breakdown?.Variable_PLVP || 0, color: '#f59e0b' },
                       { name: 'Employer PF', value: result.CTC_Breakdown?.Employer_PF || 0, color: '#475569' },
                       { name: 'Gratuity', value: result.CTC_Breakdown?.Gratuity_Provision || 0, color: '#64748b' },
-                      { name: 'NPS', value: result.CTC_Breakdown?.NPS_Contribution || 0, color: '#94a3b8' },
                       { name: 'ESOP/Stocks', value: result.CTC_Breakdown?.ESOP_Annual_Vesting_Value || 0, color: '#6366f1' }
                     ].filter(d => d.value > 0);
 
