@@ -21,9 +21,11 @@ export default function ConsoleGreeting() {
 
     // We wrap it in a try-catch just in case a strict browser blocks console access
     try {
-      console.log(`%c${asciiArt}`, style1);
-      console.log("%cBuilding the data engine for India's tech careers.", style2);
-      console.log("%cWait, you're looking under the hood? We should talk: founders@certifyd.in", style3);
+      if (process.env.NODE_ENV !== 'production') {
+        console.log(`%c${asciiArt}`, style1);
+        console.log("%cBuilding the data engine for India's tech careers.", style2);
+        console.log("%cWait, you're looking under the hood? We should talk: founders@certifyd.in", style3);
+      }
     } catch (e) {
       // Ignore silently
     }

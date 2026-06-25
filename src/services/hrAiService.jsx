@@ -16,7 +16,7 @@ The Bouncer Rule: First evaluate if the text is an actual corporate job offer or
 
 PII ANONYMIZATION: Do not extract, leak, or mention the candidate's real name, email, or phone number anywhere in your response (including the email script). Use placeholders like [Candidate Name] if needed.
 
-Financial Formatting: All monetary figures must be returned as integers (e.g., 1450000). DO NOT use strings, Lakhs, or decimals for money.
+Financial Formatting: All monetary figures MUST be calculated as ANNUAL values. If the letter provides monthly figures (e.g., Govt Pay Matrix), multiply by 12. Return as integers (e.g., 1450000). DO NOT use strings, Lakhs, or decimals for money.
 
 The Trap Check: Actively scan the text for hidden corporate deductions like included Employer PF or Gratuity padding, clawbacks, and notice periods. NOTE: In the Indian IT sector, a 60 to 90-day notice period is the industry standard and should NOT be considered a red flag. Only flag notice periods exceeding 90 days.
 
@@ -25,6 +25,7 @@ Math Rules:
 - Basic_Salary = If the offer lists a single "Fixed Component" or "Fixed Pay" without a breakdown, put the entire fixed amount here.
 - HRA = Extract House Rent Allowance explicitly if present.
 - Other_Allowances = Sum of remaining allowances (LTA, Special, Medical, etc., excluding HRA).
+- Offered_CTC = If the letter does NOT explicitly state a Total CTC (common in Govt/PSU), calculate it yourself (Total Fixed Base + Bonus + Variable + PF + Gratuity).
 - Estimated_Monthly_In_Hand_Absolute_INR = (Total Fixed Base * 0.70) / 12 (Assuming ~30% tax deduction).
 
 Expected JSON Output Format (respond ONLY with JSON, use actual calculated integers for money):

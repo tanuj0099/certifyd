@@ -241,7 +241,6 @@ var safeParseResumeJSON = function (text) {
     var name = (nameRaw && nameRaw !== 'Not found' && nameRaw.toUpperCase() !== 'ANONYMIZED') ? nameRaw.split(' ').slice(0, 2).join(' ') : ''
 
     var Database_Payload = {
-      full_name: pp.Full_Name,
       current_role: pp.Current_Role,
       experience_years: pp.Experience_Years || 0,
       technical_skills: pp.Technical_Skills || [],
@@ -568,8 +567,9 @@ var CertLeaderboardRow = function ({ cert, rank, onSelect, mode }) {
 //  ResultDisplay 
 var ResultDisplay = function ({ result, onCertSelected, mode, onClear, certDomains, certCount }) {
   var [showOtherCerts, setShowOtherCerts] = useState(false)
-  var primaryCert = result.certs[0]
-  var otherCerts = result.certs.slice(1)
+  if (!result) return null
+  var primaryCert = result?.certs?.[0]
+  var otherCerts = result?.certs?.slice(1) || []
   var firstName = result.name ? result.name.split(' ')[0] : ''
   var roiAttempts = useJourneyStore(function (state) { return state.roiAttempts || 0 })
   var incrementRoiAttempts = useJourneyStore(function (state) { return state.incrementRoiAttempts })
@@ -1029,7 +1029,6 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
       if (parsed.Database_Payload) {
         const dbPayload = {
           user_id: user?.id || user?.uid || null,
-          full_name: parsed.Database_Payload.full_name,
           current_role: parsed.Database_Payload.current_role,
           experience_years: parsed.Database_Payload.experience_years,
           technical_skills: parsed.Database_Payload.technical_skills,
@@ -1044,7 +1043,6 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
           employer_category: parsed.Database_Payload.employer_category,
           city: parsed.city || null
         };
-        console.log("Saving anonymized resume telemetry to Supabase 'resumes' table");
         
         try {
           const { error: insertError } = await supabase.from('resumes').insert(dbPayload);
@@ -1490,5 +1488,4 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
     </div>
   )
 }
-
 export default ResumeAnalyzer

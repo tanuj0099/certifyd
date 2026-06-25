@@ -6,7 +6,7 @@
 // ─────────────────────────────────────────────────────────
 
 // ── ROI prompt — requests strict JSON output ──────────────
-const buildROIPrompt = ({ certName, currentSalary, certCost, hikePercent, isStudent }) => {
+const buildROIPrompt = ({ certName, currentSalary, certCost, hikePercent, isStudent, city = '', domain = '' }) => {
   const annualSalary    = currentSalary * 100000
   const hikedSalary     = annualSalary * (1 + hikePercent / 100)
   const annualGain      = hikedSalary - annualSalary

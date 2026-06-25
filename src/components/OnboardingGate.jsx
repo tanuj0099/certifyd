@@ -21,7 +21,7 @@ import SkeletonLoader from './SkeletonLoader.jsx'
  * Does NOT redirect to /onboarding if already on /onboarding (prevents ping-pong loops).
  *
  * CRITICAL: useEffect dependency uses user.uid (a stable string) NOT the user object
- * reference - using the object would cause infinite re-renders because Firebase/Supabase
+ * reference - using the object would cause infinite re-renders because Supabase
  * re-creates the user object on every auth state subscription tick.
  */
 export default function OnboardingGate({ children }) {
