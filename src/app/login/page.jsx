@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import Link from 'next/link';
 import { motion } from 'framer-motion'
@@ -29,7 +29,9 @@ function GithubIcon() {
   )
 }
 
-export default function LoginPage() {
+import { Suspense } from 'react'
+
+function LoginContent() {
   const { signInGoogle, signInGithub, signInEmail, signInPhone, verifyPhoneOtp, loading } = useAuth()
   const router = useRouter()
   const [error, setError] = useState(null)
@@ -38,12 +40,15 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [otpMode, setOtpMode] = useState(false)
 
+  const searchParams = useSearchParams()
+  const nextPath = searchParams.get('next') || '/dashboard'
+
   async function handleGoogle() {
     setBusy(true)
     setError(null)
     try {
-      await signInGoogle()
-      router.push('/dashboard', { replace: true })
+      await signInGoogle({ redirectTo: window.location.origin + nextPath })
+      router.push(nextPath, { replace: true })
     } catch (err) {
       setError(err?.message || 'Google sign-in failed. Please try again.')
     } finally {
@@ -55,8 +60,8 @@ export default function LoginPage() {
     setBusy(true)
     setError(null)
     try {
-      await signInGithub()
-      router.push('/dashboard', { replace: true })
+      await signInGithub({ redirectTo: window.location.origin + nextPath })
+      router.push(nextPath, { replace: true })
     } catch (err) {
       setError(err?.message || 'GitHub sign-in failed. Please try again.')
     } finally {
@@ -72,11 +77,11 @@ export default function LoginPage() {
     try {
       if (otpMode) {
         await verifyPhoneOtp(identifier, password)
-        router.push('/dashboard', { replace: true })
+        router.push(nextPath, { replace: true })
       } else {
         if (identifier.includes('@')) {
           await signInEmail(identifier, password)
-          router.push('/dashboard', { replace: true })
+          router.push(nextPath, { replace: true })
         } else if (/^\+?[0-9\s-]+$/.test(identifier)) {
           await signInPhone(identifier)
           setOtpMode(true)
@@ -351,5 +356,17 @@ export default function LoginPage() {
         </div>
       </motion.div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div style={{ minHeight: '100vh', background: '#010102', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ color: 'rgba(255,255,255,0.5)', fontFamily: 'var(--font-sans)', fontSize: '14px' }}>Loading...</div>
+      </div>
+    }>
+      <LoginContent />
+    </Suspense>
   )
 }

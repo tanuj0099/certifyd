@@ -70,14 +70,14 @@ export const AuthProvider = ({ children }) => {
     }
   }, [configured])
 
-  const signInGoogle = async () => {
+  const signInGoogle = async (options = {}) => {
     setAuthError(null)
     if (!configured) throw new Error('Supabase not configured')
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/dashboard`
+          redirectTo: options.redirectTo || `${window.location.origin}/dashboard`
         }
       })
       if (error) throw error
@@ -88,14 +88,14 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  const signInGithub = async () => {
+  const signInGithub = async (options = {}) => {
     setAuthError(null)
     if (!configured) throw new Error('Supabase not configured')
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'github',
         options: {
-          redirectTo: `${window.location.origin}/dashboard`
+          redirectTo: options.redirectTo || `${window.location.origin}/dashboard`
         }
       })
       if (error) throw error

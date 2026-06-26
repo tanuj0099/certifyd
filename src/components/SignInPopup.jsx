@@ -39,14 +39,14 @@ export default function SignInPopup({ isOpen, onClose }) {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <button 
-                onClick={() => router.push('/signup')}
+                onClick={() => router.push(`/signup?next=${encodeURIComponent(window.location.pathname + window.location.search)}`)}
                 style={{ width: '100%', padding: '14px', borderRadius: '12px', background: 'var(--brand-primary)', color: '#000', fontWeight: '700', fontSize: '15px', border: 'none', cursor: 'pointer' }}
               >
                 Create Free Account
               </button>
               
               <button 
-                onClick={() => router.push('/login')}
+                onClick={() => router.push(`/login?next=${encodeURIComponent(window.location.pathname + window.location.search)}`)}
                 style={{ width: '100%', padding: '14px', borderRadius: '12px', background: 'transparent', color: 'var(--text)', fontWeight: '600', fontSize: '15px', border: '1px solid var(--border)', cursor: 'pointer' }}
               >
                 Sign in to existing account

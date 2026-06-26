@@ -118,9 +118,9 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
           fontFamily: F_SANS,
         }}
       >
-        {user?.user_metadata?.avatar_url ? (
+        {(user?.user_metadata?.avatar_url || user?.user_metadata?.picture) ? (
           <img
-            src={user.user_metadata.avatar_url}
+            src={user.user_metadata.avatar_url || user.user_metadata.picture}
             alt=""
             style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover' }}
           />

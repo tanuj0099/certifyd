@@ -568,6 +568,7 @@ var CertLeaderboardRow = function ({ cert, rank, onSelect, mode }) {
 //  ResultDisplay 
 var ResultDisplay = function ({ result, onCertSelected, mode, onClear, certDomains, certCount }) {
   var [showOtherCerts, setShowOtherCerts] = useState(false)
+  var { user } = useAuth()
   if (!result) return null
   var primaryCert = result?.certs?.[0]
   var otherCerts = result?.certs?.slice(1) || []
@@ -587,7 +588,7 @@ var ResultDisplay = function ({ result, onCertSelected, mode, onClear, certDomai
       {primaryCert && onCertSelected && (
         <motion.button
           onClick={function () { 
-            if (roiAttempts >= 3) {
+            if (!user && roiAttempts >= 3) {
               setShowSignInPopup(true)
               return
             }
