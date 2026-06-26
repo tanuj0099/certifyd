@@ -69,3 +69,6 @@ CREATE POLICY "Anyone can insert rate limits" ON api_rate_limits FOR INSERT WITH
 
 -- NOTE: Supabase 'service_role' key bypasses all RLS policies automatically.
 -- Ensure that your backend API routes use the service_role key for administrative tasks (like updating domains/certs).
+-- resumes
+ALTER TABLE IF EXISTS resumes ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Anyone can insert resumes" ON resumes FOR INSERT WITH CHECK (true);

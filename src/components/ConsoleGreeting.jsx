@@ -24,7 +24,7 @@ export default function ConsoleGreeting() {
       if (process.env.NODE_ENV !== 'production') {
         console.log(`%c${asciiArt}`, style1);
         console.log("%cBuilding the data engine for India's tech careers.", style2);
-        console.log("%cWait, you're looking under the hood? We should talk: founders@certifyd.in", style3);
+        console.log("%cWait, you're looking under the hood? Thats cool", style3);
       }
     } catch (e) {
       // Ignore silently
@@ -32,5 +32,5 @@ export default function ConsoleGreeting() {
   }, []); // Empty dependency array ensures this only prints once on initial load
 
   // This component doesn't render anything to the actual screen
-  return null; 
+  return null;
 }

@@ -1,12 +1,53 @@
 import { NextResponse } from 'next/server';
 import pdf from 'pdf-parse';
 import mammoth from 'mammoth';
+import { Ratelimit } from '@upstash/ratelimit';
+import { Redis } from '@upstash/redis';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
+let ratelimit = null;
+
+function getRatelimit() {
+  if (ratelimit) return ratelimit;
+  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) return null;
+
+  ratelimit = new Ratelimit({
+    redis: Redis.fromEnv(),
+    limiter: Ratelimit.slidingWindow(5, '60 s'),
+    analytics: false,
+  });
+  return ratelimit;
+}
+
 export async function POST(request) {
   try {
+    const rl = getRatelimit();
+    if (rl) {
+      const ip =
+        request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+        request.headers.get('x-real-ip') ||
+        'anonymous';
+      const { success, limit, remaining, reset } = await rl.limit(`parse_resume_${ip}`);
+
+      if (!success) {
+        return NextResponse.json(
+          {
+            error: 'Rate limit exceeded. Please wait before uploading another resume.',
+            retryAfter: Math.ceil((reset - Date.now()) / 1000),
+          },
+          {
+            status: 429,
+            headers: {
+              'X-RateLimit-Limit': String(limit),
+              'X-RateLimit-Remaining': String(remaining),
+              'X-RateLimit-Reset': String(reset),
+            },
+          }
+        );
+      }
+    }
     const formData = await request.formData();
     const file = formData.get('file');
 

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
+import crypto from 'crypto';
 import { createMockGroqResponse, isServerTestMode } from '../../../../server/testMode.js';
 
 // Bypass corporate firewall/SSL inspection certificate errors (e.g. Zscaler)
@@ -105,6 +106,25 @@ export async function POST(request) {
     content: typeof message.content === 'string' ? message.content : '',
   }));
 
+  let cacheKey = null;
+  const redisClient = process.env.UPSTASH_REDIS_REST_URL ? Redis.fromEnv() : null;
+
+  if (redisClient) {
+    try {
+      const payloadString = JSON.stringify({ ...body, messages: safeMessages });
+      const hash = crypto.createHash('sha256').update(payloadString).digest('hex');
+      cacheKey = `groq_cache_${hash}`;
+
+      const cachedResponse = await redisClient.get(cacheKey);
+      if (cachedResponse) {
+        console.log(`[Cache Hit] Serving from Redis: ${cacheKey}`);
+        return json(cachedResponse);
+      }
+    } catch (cacheErr) {
+      console.error('Redis get error:', cacheErr);
+    }
+  }
+
   try {
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
@@ -122,6 +142,15 @@ export async function POST(request) {
     if (!response.ok) {
       console.error('Groq API Error:', response.status, data);
       return json(data, { status: response.status });
+    }
+
+    if (redisClient && cacheKey) {
+      try {
+        await redisClient.set(cacheKey, data, { ex: 86400 }); // 24 hours
+        console.log(`[Cache Set] Stored in Redis: ${cacheKey}`);
+      } catch (cacheErr) {
+        console.error('Redis set error:', cacheErr);
+      }
     }
 
     return json(data);

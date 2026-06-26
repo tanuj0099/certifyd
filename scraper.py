@@ -212,7 +212,7 @@ def scrape_ambitionbox(page: Page, domain: str) -> dict:
         
         # Check if page is valid
         if "not found" in title.lower() or "404" in title.lower():
-            print(f"    ⚠️ Page not found: {title}")
+            print(f"    [WARN] Page not found: {title}")
             return NULL_SALARY.copy()
         
         # Pattern 1: "₹ 4.0 Lakhs to ₹ 30.6 Lakhs per year"
@@ -222,7 +222,7 @@ def scrape_ambitionbox(page: Page, domain: str) -> dict:
             hi = float(m.group(2)) * 100_000
             r = _validate_range(lo, hi)
             if r:
-                print(f"    ✅ Range: ₹{r['min']:,.0f} - ₹{r['max']:,.0f}")
+                print(f"    [OK] Range: INR {r['min']:,.0f} - INR {r['max']:,.0f}")
                 return {"min_salary": int(r["min"]), "max_salary": int(r["max"]), "source": "ambitionbox"}
         
         # Pattern 2: Experience table "Fresher ₹5.0 Lakhs to ₹6.4 Lakhs per year"
@@ -232,7 +232,7 @@ def scrape_ambitionbox(page: Page, domain: str) -> dict:
             hi = float(m.group(2)) * 100_000
             r = _validate_range(lo, hi)
             if r:
-                print(f"    ✅ Fresher range: ₹{r['min']:,.0f} - ₹{r['max']:,.0f}")
+                print(f"    [OK] Fresher range: INR {r['min']:,.0f} - INR {r['max']:,.0f}")
                 return {"min_salary": int(r["min"]), "max_salary": int(r["max"]), "source": "ambitionbox"}
         
         # Pattern 3: Average salary
@@ -241,13 +241,13 @@ def scrape_ambitionbox(page: Page, domain: str) -> dict:
             avg = float(m.group(1)) * 100_000
             r = _validate_range(avg * 0.6, avg * 1.8)
             if r:
-                print(f"    ✅ Avg estimate: ₹{r['min']:,.0f} - ₹{r['max']:,.0f}")
+                print(f"    [OK] Avg estimate: INR {r['min']:,.0f} - INR {r['max']:,.0f}")
                 return {"min_salary": int(r["min"]), "max_salary": int(r["max"]), "source": "ambitionbox"}
         
-        print(f"    ❌ No salary data found")
+        print(f"    [ERR] No salary data found")
         
     except Exception as e:
-        print(f"    ❌ Error: {e}")
+        print(f"    [ERR] Error: {e}")
     
     return NULL_SALARY.copy()
 
@@ -276,12 +276,12 @@ def scrape_naukri(page: Page, domain: str) -> int:
             )
             if matches:
                 count = int(matches[0].replace(',', ''))
-                print(f"    ✅ {count} jobs")
+                print(f"    [OK] {count} jobs")
                 return count
             if attempt == 0:
                 print(f"    Retrying...")
     except Exception as e:
-        print(f"    ❌ Error: {e}")
+        print(f"    [ERR] Error: {e}")
     
     return 0
 
@@ -310,7 +310,7 @@ def run_engine():
     with Stealth().use_sync(sync_playwright()) as p:
         browser = p.chromium.launch(
             headless=False,
-            args=["--disable-blink-features=AutomationControlled", "--no-sandbox"],
+            args=["--disable-blink-features=AutomationControlled", "--no-sandbox", "--disable-http2"],
         )
         
         context = browser.new_context(
@@ -400,7 +400,7 @@ def run_engine():
     hits = sum(1 for r in results_log if float(r["min_lpa"]) > 0)
     print(f"  Success rate: {hits}/{len(results_log)}")
     for r in results_log:
-        flag = "✅" if float(r["min_lpa"]) > 0 else "❌"
+        flag = "[OK]" if float(r["min_lpa"]) > 0 else "[ERR]"
         print(f"  {flag} {r['domain']:<40} {r['min_lpa']}-{r['max_lpa']} LPA | {r['jobs']} jobs | {r['source']}")
     print(f"{'='*60}\nDONE.")
 
@@ -411,7 +411,7 @@ def run_engine():
     })
     posthog_client.shutdown()
 
-supabase = create_client("https://ejgadkswcjorkyzkqhfl.supabase.co", "YOUR_SUPABASE_KEY")
+# supabase = create_client("https://ejgadkswcjorkyzkqhfl.supabase.co", "YOUR_SUPABASE_KEY")
 
 def save_scraped_certification(cert_name, cost, difficulty, months, roi):
     # Auto-generate a clean URL slug (e.g., "AWS Certified Cloud Practitioner" -> "aws-certified-cloud-practitioner")

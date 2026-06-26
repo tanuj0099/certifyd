@@ -1,46 +1,47 @@
-import { Component } from 'react'
+'use client';
 
-class ErrorBoundary extends Component {
+import React from 'react';
+import { AlertTriangle, RefreshCw } from 'lucide-react';
+
+export class ErrorBoundary extends React.Component {
   constructor(props) {
-    super(props)
-    this.state = { hasError: false, error: null }
+    super(props);
+    this.state = { hasError: false, error: null };
   }
 
   static getDerivedStateFromError(error) {
-    return { hasError: true, error }
+    return { hasError: true, error };
   }
 
-  componentDidCatch(error, info) {
-    console.error('Certify Error:', error, info)
+  componentDidCatch(error, errorInfo) {
+    console.error("ErrorBoundary caught an error:", error, errorInfo);
   }
 
   render() {
     if (this.state.hasError) {
+      if (this.props.fallback) {
+        return this.props.fallback;
+      }
       return (
-        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg)', padding: '24px' }}>
-          <div style={{ maxWidth: '480px', textAlign: 'center', background: 'transparent', border: '1px solid transparent', borderRadius: '16px', padding: '40px', boxShadow: 'none' }}>
-            <div style={{ fontSize: '3rem', marginBottom: '16px' }}></div>
-            <h2 style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: '800', fontSize: '1.4rem', color: 'var(--text)', marginBottom: '8px', letterSpacing: '-0.01em' }}>
-              Something went wrong
-            </h2>
-            <p style={{ fontSize: '13px', color: 'var(--text-3)', marginBottom: '8px', lineHeight: '1.65', fontFamily: 'var(--font-sans)' }}>
-              {this.state.error?.message || 'An unexpected error occurred.'}
-            </p>
-            <p style={{ fontSize: '12px', color: 'var(--text-4)', marginBottom: '24px', fontFamily: 'JetBrains Mono, monospace' }}>
-              Check browser console for details.
+        <div className="p-6 rounded-xl border border-red-500/20 bg-red-500/5 flex flex-col items-center justify-center text-center space-y-3 w-full">
+          <AlertTriangle className="w-8 h-8 text-red-500 opacity-80" />
+          <div>
+            <h3 className="text-red-500 font-semibold mb-1">Component Failed to Load</h3>
+            <p className="text-sm text-red-400/80 mb-4 max-w-sm">
+              We encountered an unexpected error rendering this section. The rest of the page should still work.
             </p>
             <button
-              onClick={() => { this.setState({ hasError: false, error: null }); window.location.reload() }}
-              style={{ padding: '11px 28px', borderRadius: '999px', background: 'var(--text)', border: '1px solid var(--text)', color: 'var(--bg)', fontSize: '14px', fontWeight: '800', cursor: 'pointer', fontFamily: 'var(--font-sans)', boxShadow: 'none' }}
+              onClick={() => this.setState({ hasError: false })}
+              className="inline-flex items-center space-x-2 px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-lg text-sm font-medium transition-colors"
             >
-              Reload App
+              <RefreshCw className="w-4 h-4" />
+              <span>Try Again</span>
             </button>
           </div>
         </div>
-      )
+      );
     }
-    return this.props.children
+
+    return this.props.children;
   }
 }
-
-export default ErrorBoundary

@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { ErrorBoundary } from './ErrorBoundary.jsx'
 
 import { FeedbackAction } from './watermelon-ui/feedback-action-base.jsx'
 import {
@@ -1481,7 +1482,9 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
 
       <AnimatePresence>
         {result && (
-          <ResultDisplay result={result} onCertSelected={onCertSelected} mode={mode} onClear={clearAll} certDomains={CERT_DOMAINS} certCount={CERTIFICATIONS.length} />
+          <ErrorBoundary>
+            <ResultDisplay result={result} onCertSelected={onCertSelected} mode={mode} onClear={clearAll} certDomains={CERT_DOMAINS} certCount={CERTIFICATIONS.length} />
+          </ErrorBoundary>
         )}
       </AnimatePresence>
 
