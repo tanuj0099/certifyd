@@ -57,3 +57,21 @@ export async function syncUserProfile(user) {
   if ((!user?.id && !user?.uid) || !supabase) return null
   return upsertUserProfile(user)
 }
+
+export async function updateUserAvatar(user, avatarUrl) {
+  if (!user || !supabase) return;
+  
+  // Update Supabase Auth user metadata
+  const { error: authError } = await supabase.auth.updateUser({
+    data: { avatar_url: avatarUrl }
+  });
+  if (authError) throw authError;
+
+  // Update user_profiles table
+  const { error: dbError } = await supabase
+    .from(PROFILE_TABLE)
+    .update({ avatar_url: avatarUrl })
+    .eq('user_id', user.id || user.uid);
+    
+  if (dbError) throw dbError;
+}

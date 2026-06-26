@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronDown, LogOut, Settings, ShieldCheck, Trash2, Download, Ban } from 'lucide-react'
 import { supabase } from '../lib/supabase.js'
 import { useRouter } from 'next/navigation'
+import { AnimatedAvatar, getAnimAvatarId } from './AnimatedAvatar.jsx'
 
 const F_SANS = "var(--font-sans)";
 
@@ -118,30 +119,41 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
           fontFamily: F_SANS,
         }}
       >
-        {(user?.user_metadata?.avatar_url || user?.user_metadata?.picture) ? (
-          <img
-            src={user.user_metadata.avatar_url || user.user_metadata.picture}
-            alt=""
-            style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover' }}
-          />
-        ) : (
-          <span
-            style={{
-              width: 28,
-              height: 28,
-              borderRadius: '50%',
-              background: 'var(--text)',
-              color: 'var(--bg)',
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '11px',
-              fontWeight: 800,
-            }}
-          >
-            {initialsFromUser(user)}
-          </span>
-        )}
+        {(() => {
+          const avatarSrc = user?.user_metadata?.avatar_url || user?.user_metadata?.picture;
+          const animId = getAnimAvatarId(avatarSrc);
+          
+          if (animId) {
+            return <AnimatedAvatar id={animId} size={28} />;
+          }
+          if (avatarSrc) {
+            return (
+              <img
+                src={avatarSrc}
+                alt=""
+                style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover' }}
+              />
+            );
+          }
+          return (
+            <span
+              style={{
+                width: 28,
+                height: 28,
+                borderRadius: '50%',
+                background: 'var(--text)',
+                color: 'var(--bg)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '11px',
+                fontWeight: 800,
+              }}
+            >
+              {initialsFromUser(user)}
+            </span>
+          );
+        })()}
         <span style={{ fontSize: '12px', fontWeight: 700, maxWidth: 120, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
           {(() => {
             const mName = user?.user_metadata?.full_name;

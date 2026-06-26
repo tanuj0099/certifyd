@@ -5,8 +5,9 @@ import { useRouter } from 'next/navigation';
 
 import { motion, AnimatePresence } from 'framer-motion'
 import { supabase } from '@/lib/supabase.js'
-import { upsertUserProfile } from '@/services/userProfileService.js'
+import { upsertUserProfile, updateUserAvatar } from '@/services/userProfileService.js'
 import { useAuth } from '@/hooks/useAuth.jsx'
+import { AvatarSelector } from '@/components/AnimatedAvatar.jsx'
 
 const FS = "var(--font-sans)";
 const FM = "var(--font-mono)";
@@ -89,6 +90,7 @@ export default function Onboarding() {
   const [workspaceName, setWorkspaceName] = useState('')
   const [workspaceSlug, setWorkspaceSlug] = useState('')
   const [slugManual, setSlugManual] = useState(false)
+  const [selectedAvatarId, setSelectedAvatarId] = useState(null)
 
   // Step 2 state
   const [careerFocus, setCareerFocus] = useState('')
@@ -145,6 +147,10 @@ export default function Onboarding() {
         target_domain: targetDomain || '',
         provider,
       })
+
+      if (selectedAvatarId) {
+        await updateUserAvatar(user, selectedAvatarId)
+      }
 
       // Also upsert into profiles table for onboarding gate compatibility
       if (supabase) {
@@ -432,22 +438,23 @@ export default function Onboarding() {
                 </p>
 
                 {/* Avatar block */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '28px', padding: '18px', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.07)', background: 'rgba(255,255,255,0.02)' }}>
-                  <div style={{
-                    width: '52px', height: '52px', borderRadius: '14px', flexShrink: 0,
-                    background: avatarColor.bg, display: 'flex', alignItems: 'center',
-                    justifyContent: 'center', fontSize: '22px', fontWeight: 800,
-                    color: avatarColor.text, fontFamily: FS,
-                  }}>
-                    {initials}
+                <div style={{ marginBottom: '28px', padding: '18px', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.07)', background: 'rgba(255,255,255,0.02)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px' }}>
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ fontSize: '14px', fontWeight: 700, color: '#f4f5f8', marginBottom: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {workspaceName || 'My Workspace'}
+                      </div>
+                      <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.3)', fontFamily: FM, letterSpacing: '0.06em' }}>
+                        certifyd.in/ws/{workspaceSlug || 'workspace'}
+                      </div>
+                    </div>
                   </div>
-                  <div style={{ minWidth: 0 }}>
-                    <div style={{ fontSize: '14px', fontWeight: 700, color: '#f4f5f8', marginBottom: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      {workspaceName || 'My Workspace'}
-                    </div>
-                    <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.3)', fontFamily: FM, letterSpacing: '0.06em' }}>
-                      certifyd.in/ws/{workspaceSlug || 'workspace'}
-                    </div>
+                  
+                  <div style={{ marginTop: '16px', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '16px' }}>
+                    <label style={{ display: 'block', fontSize: '11px', color: 'rgba(255,255,255,0.4)', fontFamily: FM, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '12px' }}>
+                      Choose your Avatar
+                    </label>
+                    <AvatarSelector selectedId={selectedAvatarId} onSelect={setSelectedAvatarId} />
                   </div>
                 </div>
 

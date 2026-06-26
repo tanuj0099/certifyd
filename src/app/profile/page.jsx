@@ -5,8 +5,9 @@ import { Save, Send, Sparkles, Trash2, Ban } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth.jsx'
 import { useTheme } from '@/hooks/useTheme.jsx'
 import { supabase } from '@/lib/supabase.js'
-import { fetchUserProfile, upsertUserProfile } from '@/services/userProfileService.js'
+import { fetchUserProfile, upsertUserProfile, updateUserAvatar } from '@/services/userProfileService.js'
 import { submitFeedback } from '@/services/feedbackService.js'
+import { AvatarSelector, getAnimAvatarId } from '@/components/AnimatedAvatar.jsx'
 import DashboardShell, {
   DashPanel,
   DashField,
@@ -269,7 +270,28 @@ export default function ProfilePage() {
 
         {activeTab === 'account' ? (
           <DashPanel>
-            <div style={{ display: 'grid', gap: 14, maxWidth: 520 }}>
+            <div style={{ marginBottom: 32 }}>
+              <h3 style={{ margin: '0 0 16px', fontSize: 16, fontWeight: 800, color: 'var(--text)' }}>Profile Avatar</h3>
+              <p style={{ fontSize: 13, color: 'var(--text-2)', marginBottom: 20 }}>Select a custom animated avatar to display across the platform.</p>
+              <AvatarSelector
+                selectedId={getAnimAvatarId(user?.user_metadata?.avatar_url)}
+                onSelect={async (id) => {
+                  setSyncState('saving')
+                  setMessage('')
+                  try {
+                    await updateUserAvatar(user, id)
+                    setSyncState('ready')
+                    setMessage('Avatar updated successfully.')
+                    // Optionally force a reload of the user object by calling a refresh if needed,
+                    // but the auth state usually updates reactively if hooked properly.
+                  } catch (err) {
+                    setSyncState('error')
+                    setMessage(err?.message || 'Could not update avatar.')
+                  }
+                }}
+              />
+            </div>
+            <div style={{ display: 'grid', gap: 14, maxWidth: 520, paddingTop: 32, borderTop: '1px solid var(--border)' }}>
               {[
                 ['Email', user?.email],
                 ['User ID', user?.uid],
