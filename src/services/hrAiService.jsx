@@ -83,7 +83,10 @@ Expected JSON Output Format (respond ONLY with JSON, use actual calculated integ
   if (!response.ok) {
     const errData = await response.json().catch(() => ({}));
     console.error('AI API Error Details:', errData);
-    throw new Error(`Failed to parse offer letter via AI: ${errData.error?.message || response.statusText}`);
+    
+    // Safely extract the error message whether it's an object or a string
+    const errorMessage = typeof errData.error === 'object' ? errData.error?.message : errData.error;
+    throw new Error(`Failed to parse offer letter via AI: ${errorMessage || response.statusText}`);
   }
 
   const data = await response.json();
