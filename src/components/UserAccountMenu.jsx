@@ -141,13 +141,15 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
                 width: 28,
                 height: 28,
                 borderRadius: '50%',
-                background: 'var(--text)',
-                color: 'var(--bg)',
+                background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)',
+                color: '#ffffff',
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontSize: '11px',
                 fontWeight: 800,
+                boxShadow: 'inset 0 1px 2px rgba(255,255,255,0.1), 0 2px 4px rgba(0,0,0,0.1)',
+                textShadow: '0 1px 2px rgba(0,0,0,0.5)'
               }}
             >
               {initialsFromUser(user)}
