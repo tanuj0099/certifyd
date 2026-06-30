@@ -4,17 +4,17 @@ import { Check, User } from 'lucide-react';
 import Image from 'next/image';
 
 const AVATAR_PRESETS = [
-  { id: 'anim:1', id_alias: 'anim:pro-1', name: 'Advay', seed: 'Nova', gradient: 'linear-gradient(135deg, #fef08a 0%, #f59e0b 100%)' },
-  { id: 'anim:2', id_alias: 'anim:pro-2', name: 'Reyansh', seed: 'Apex', gradient: 'linear-gradient(135deg, #bfdbfe 0%, #3b82f6 100%)' },
+  { id: 'anim:1', id_alias: 'anim:pro-1', name: 'Nyra', seed: 'Nova', gradient: 'linear-gradient(135deg, #fef08a 0%, #f59e0b 100%)' },
+  { id: 'anim:2', id_alias: 'anim:pro-2', name: 'Vanya', seed: 'Apex', gradient: 'linear-gradient(135deg, #bfdbfe 0%, #3b82f6 100%)' },
   { id: 'anim:3', id_alias: 'anim:pro-3', name: 'Zikra', seed: 'Zenith', gradient: 'linear-gradient(135deg, #fbcfe8 0%, #ec4899 100%)' },
-  { id: 'anim:4', id_alias: 'anim:pro-4', name: 'Tvarita', seed: 'Nexus', gradient: 'linear-gradient(135deg, #a7f3d0 0%, #10b981 100%)' },
-  { id: 'anim:5', id_alias: 'anim:pro-5', name: 'Ojas', seed: 'Vertex', gradient: 'linear-gradient(135deg, #e5e7eb 0%, #9ca3af 100%)' },
-  { id: 'anim:6', id_alias: 'anim:pro-6', name: 'Vanya', seed: 'Pulse', gradient: 'linear-gradient(135deg, #fecaca 0%, #ef4444 100%)' },
-  { id: 'anim:7', id_alias: 'anim:pro-7', name: 'Ahil', seed: 'Aura', gradient: 'linear-gradient(135deg, #bae6fd 0%, #06b6d4 100%)' },
-  { id: 'anim:8', id_alias: 'anim:pro-8', name: 'Nivin', seed: 'Echo', gradient: 'linear-gradient(135deg, #e9d5ff 0%, #8b5cf6 100%)' },
-  { id: 'anim:9', id_alias: 'anim:pro-9', name: 'Myra', seed: 'Lumen', gradient: 'linear-gradient(135deg, #ccfbf1 0%, #14b8a6 100%)' },
-  { id: 'anim:10', id_alias: 'anim:pro-10', name: 'Kairav', seed: 'Onyx', gradient: 'linear-gradient(135deg, #ddd6fe 0%, #6366f1 100%)' },
-  { id: 'anim:11', id_alias: 'anim:pro-11', name: 'Anika', seed: 'Sage', gradient: 'linear-gradient(135deg, #d9f99d 0%, #84cc16 100%)' },
+  { id: 'anim:4', id_alias: 'anim:pro-4', name: 'Advay', seed: 'Nexus', gradient: 'linear-gradient(135deg, #a7f3d0 0%, #10b981 100%)' },
+  { id: 'anim:5', id_alias: 'anim:pro-5', name: 'Reyansh', seed: 'Vertex', gradient: 'linear-gradient(135deg, #e5e7eb 0%, #9ca3af 100%)' },
+  { id: 'anim:6', id_alias: 'anim:pro-6', name: 'Tvarita', seed: 'Pulse', gradient: 'linear-gradient(135deg, #fecaca 0%, #ef4444 100%)' },
+  { id: 'anim:7', id_alias: 'anim:pro-7', name: 'Myra', seed: 'Aura', gradient: 'linear-gradient(135deg, #bae6fd 0%, #06b6d4 100%)' },
+  { id: 'anim:8', id_alias: 'anim:pro-8', name: 'Anika', seed: 'Echo', gradient: 'linear-gradient(135deg, #e9d5ff 0%, #8b5cf6 100%)' },
+  { id: 'anim:9', id_alias: 'anim:pro-9', name: 'Ojas', seed: 'Lumen', gradient: 'linear-gradient(135deg, #ccfbf1 0%, #14b8a6 100%)' },
+  { id: 'anim:10', id_alias: 'anim:pro-10', name: 'Samaira', seed: 'Onyx', gradient: 'linear-gradient(135deg, #ddd6fe 0%, #6366f1 100%)' },
+  { id: 'anim:11', id_alias: 'anim:pro-11', name: 'Kairav', seed: 'Sage', gradient: 'linear-gradient(135deg, #d9f99d 0%, #84cc16 100%)' },
   { id: 'anim:12', id_alias: 'anim:pro-12', name: 'Ivaan', seed: 'Vanguard', gradient: 'linear-gradient(135deg, #fecdd3 0%, #f43f5e 100%)' },
 ];
 
