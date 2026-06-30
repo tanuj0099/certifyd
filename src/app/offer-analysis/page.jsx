@@ -13,6 +13,7 @@ import { useAuth } from '@/hooks/useAuth.jsx'
 import { AppSection, useThemeContext } from '@/components/SharedUI.jsx'
 import ToolPageWrapper from '@/components/ToolPageWrapper.jsx'
 import { parseOfferLetter } from '@/services/hrAiService.jsx'
+import { scanAndScrubPII } from '@/utils/piiScanner.js'
 
 const FH = "var(--font-head)";
 const FM = "var(--font-mono)";
@@ -164,6 +165,8 @@ export default function OfferAnalysisPage() {
   const fetchMedianFromDB = async (city, targetTitle, companyTier) => {
     if (!supabase || !city || !targetTitle) return { median: 0, tierMatched: false };
 
+    const K_ANONYMITY_THRESHOLD = 5;
+
     const calcMedian = (data) => {
       if (!data || data.length === 0) return 0;
       const ctcs = data.map(d => Number(d.offered_ctc)).filter(c => c > 0).sort((a, b) => a - b);
@@ -186,7 +189,7 @@ export default function OfferAnalysisPage() {
 
       const { data: exactData, error: exactError } = await exactQuery;
 
-      if (!exactError && exactData && exactData.length > 0) {
+      if (!exactError && exactData && exactData.length >= K_ANONYMITY_THRESHOLD) {
         return { median: calcMedian(exactData), tierMatched: true };
       }
 
@@ -196,7 +199,7 @@ export default function OfferAnalysisPage() {
         .select('offered_ctc')
         .ilike('target_job_title', `%${targetTitle}%`);
 
-      if (!fallbackError && fallbackData && fallbackData.length > 0) {
+      if (!fallbackError && fallbackData && fallbackData.length >= K_ANONYMITY_THRESHOLD) {
         return { median: calcMedian(fallbackData), tierMatched: false };
       }
 
@@ -244,38 +247,43 @@ export default function OfferAnalysisPage() {
 
       // Save to Supabase (Data Flywheel)
       if (supabase && ctcStated > 0) {
+        
+        // Defense in Depth Layer 3: PII Scrubber
+        const scrubbedAnalysis = scanAndScrubPII(analysis);
+        const scrubbedPayload = scanAndScrubPII(analysis.Database_Payload);
+        
         supabase.from('offer_analyses').insert({
           user_id: user?.uid || null,
           city: location,
           target_job_title: title,
           offered_ctc: ctcStated,
           market_median: medianResult.median,
-          raw_json: analysis,
-          blunt_assessment: analysis.Strategic_Negotiation_Output?.Blunt_Assessment || null,
-          red_flags: analysis.Strategic_Negotiation_Output?.Red_Flags || null,
-          strengths: analysis.Strategic_Negotiation_Output?.Strengths || null
+          raw_json: scrubbedAnalysis,
+          blunt_assessment: scrubbedAnalysis.Strategic_Negotiation_Output?.Blunt_Assessment || null,
+          red_flags: scrubbedAnalysis.Strategic_Negotiation_Output?.Red_Flags || null,
+          strengths: scrubbedAnalysis.Strategic_Negotiation_Output?.Strengths || null
         }).then(({ error: insertErr }) => {
           if (insertErr) console.warn('Failed to save analysis:', insertErr.message)
         })
 
-        if (analysis.Database_Payload) {
+        if (scrubbedPayload) {
           supabase.from('offer_letters').insert({
             user_id: user?.id || user?.uid || null,
-            fixed_base: analysis.Database_Payload.fixed_base,
-            variable_pay: analysis.Database_Payload.variable_pay,
-            hra: analysis.Database_Payload.hra,
-            special_allowance: analysis.Database_Payload.special_allowance,
-            pf: analysis.Database_Payload.pf,
-            company_tier: analysis.Database_Payload.company_tier,
-            role: analysis.Database_Payload.role,
-            experience_years: analysis.Database_Payload.experience_years,
-            company_name: analysis.Database_Payload.company_name,
-            work_model: analysis.Database_Payload.work_model,
-            bond_or_clawback_detected: analysis.Database_Payload.bond_or_clawback_detected,
-            employer_pf_included: analysis.Database_Payload.employer_pf_included,
-            gratuity_included: analysis.Database_Payload.gratuity_included,
-            joining_bonus: analysis.Database_Payload.joining_bonus,
-            allowances_and_perks: analysis.Database_Payload.allowances_and_perks
+            fixed_base: scrubbedPayload.fixed_base,
+            variable_pay: scrubbedPayload.variable_pay,
+            hra: scrubbedPayload.hra,
+            special_allowance: scrubbedPayload.special_allowance,
+            pf: scrubbedPayload.pf,
+            company_tier: scrubbedPayload.company_tier,
+            role: scrubbedPayload.role,
+            experience_years: scrubbedPayload.experience_years,
+            company_name: scrubbedPayload.company_name,
+            work_model: scrubbedPayload.work_model,
+            bond_or_clawback_detected: scrubbedPayload.bond_or_clawback_detected,
+            employer_pf_included: scrubbedPayload.employer_pf_included,
+            gratuity_included: scrubbedPayload.gratuity_included,
+            joining_bonus: scrubbedPayload.joining_bonus,
+            allowances_and_perks: scrubbedPayload.allowances_and_perks
           }).then(({ error: insertErr }) => {
             if (insertErr) console.warn('Failed to save structured offer letter to DB:', insertErr.message)
           })
