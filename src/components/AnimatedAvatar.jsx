@@ -1,42 +1,43 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Check } from 'lucide-react';
+import { Check, Aperture, Command, Hexagon, Box, CircleDashed, Triangle, Zap, Layers, Globe, Cpu, Fingerprint, Target, User } from 'lucide-react';
 
 const AVATAR_PRESETS = [
-  { id: 'anim:bot-1', name: 'Sparky', seed: 'Felix', collection: 'bottts' },
-  { id: 'anim:bot-2', name: 'Buster', seed: 'Buster', collection: 'bottts' },
-  { id: 'anim:bot-3', name: 'Gizmo', seed: 'Gizmo', collection: 'bottts' },
-  { id: 'anim:bot-4', name: 'Whiz', seed: 'Whiz', collection: 'bottts' },
-  { id: 'anim:adv-1', name: 'Finn', seed: 'Finn', collection: 'adventurer' },
-  { id: 'anim:adv-2', name: 'Mia', seed: 'Mia', collection: 'adventurer' },
-  { id: 'anim:adv-3', name: 'Leo', seed: 'Leo', collection: 'adventurer' },
-  { id: 'anim:adv-4', name: 'Zoe', seed: 'Zoe', collection: 'adventurer' },
-  { id: 'anim:fun-1', name: 'Happy', seed: 'Happy', collection: 'fun-emoji' },
-  { id: 'anim:fun-2', name: 'Silly', seed: 'Silly', collection: 'fun-emoji' },
-  { id: 'anim:fun-3', name: 'Wink', seed: 'Wink', collection: 'fun-emoji' },
-  { id: 'anim:fun-4', name: 'Cool', seed: 'Cool', collection: 'fun-emoji' },
+  { id: 'anim:pro-1', name: 'Nova', icon: Aperture, gradient: 'linear-gradient(135deg, #0f172a 0%, #3b82f6 100%)' },
+  { id: 'anim:pro-2', name: 'Apex', icon: Command, gradient: 'linear-gradient(135deg, #334155 0%, #8b5cf6 100%)' },
+  { id: 'anim:pro-3', name: 'Zenith', icon: Hexagon, gradient: 'linear-gradient(135deg, #0f172a 0%, #ec4899 100%)' },
+  { id: 'anim:pro-4', name: 'Nexus', icon: Box, gradient: 'linear-gradient(135deg, #1e293b 0%, #10b981 100%)' },
+  { id: 'anim:pro-5', name: 'Vertex', icon: CircleDashed, gradient: 'linear-gradient(135deg, #0f172a 0%, #f59e0b 100%)' },
+  { id: 'anim:pro-6', name: 'Pulse', icon: Zap, gradient: 'linear-gradient(135deg, #334155 0%, #ef4444 100%)' },
+  { id: 'anim:pro-7', name: 'Aura', icon: Globe, gradient: 'linear-gradient(135deg, #0f172a 0%, #06b6d4 100%)' },
+  { id: 'anim:pro-8', name: 'Echo', icon: Layers, gradient: 'linear-gradient(135deg, #1e293b 0%, #8b5cf6 100%)' },
+  { id: 'anim:pro-9', name: 'Lumen', icon: Cpu, gradient: 'linear-gradient(135deg, #0f172a 0%, #14b8a6 100%)' },
+  { id: 'anim:pro-10', name: 'Onyx', icon: Fingerprint, gradient: 'linear-gradient(135deg, #334155 0%, #6366f1 100%)' },
+  { id: 'anim:pro-11', name: 'Sage', icon: Target, gradient: 'linear-gradient(135deg, #0f172a 0%, #84cc16 100%)' },
+  { id: 'anim:pro-12', name: 'Vanguard', icon: Triangle, gradient: 'linear-gradient(135deg, #1e293b 0%, #f43f5e 100%)' },
 ];
 
 export function AnimatedAvatar({ id, size = 40 }) {
-  const preset = AVATAR_PRESETS.find(p => p.id === id);
+  const preset = AVATAR_PRESETS.find(p => p.id === id) || { icon: User, gradient: 'linear-gradient(135deg, #334155 0%, #94a3b8 100%)' };
   
-  if (!preset) {
-    // Check if it's an old animated one, just fallback to a generic avatar
-    return (
-      <img 
-        src={`https://api.dicebear.com/7.x/bottts/svg?seed=${id || 'default'}`}
-        alt="Avatar"
-        style={{ width: size, height: size, borderRadius: '50%', background: 'var(--border)' }}
-      />
-    );
-  }
+  const IconComponent = preset.icon;
+  const iconSize = Math.floor(size * 0.5);
   
   return (
-    <img 
-      src={`https://api.dicebear.com/7.x/${preset.collection}/svg?seed=${preset.seed}&backgroundColor=transparent`}
-      alt={preset.name}
-      style={{ width: size, height: size, borderRadius: '50%', background: 'var(--brand-subtle)', objectFit: 'contain' }}
-    />
+    <div 
+      style={{ 
+        width: size, 
+        height: size, 
+        borderRadius: '50%', 
+        background: preset.gradient, 
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.1)'
+      }}
+    >
+      <IconComponent size={iconSize} color="#ffffff" strokeWidth={1.5} />
+    </div>
   );
 }
 
