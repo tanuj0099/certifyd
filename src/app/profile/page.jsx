@@ -282,14 +282,38 @@ export default function ProfilePage() {
                     await updateUserAvatar(user, id)
                     setSyncState('ready')
                     setMessage('Avatar updated successfully.')
-                    // Optionally force a reload of the user object by calling a refresh if needed,
-                    // but the auth state usually updates reactively if hooked properly.
                   } catch (err) {
                     setSyncState('error')
                     setMessage(err?.message || 'Could not update avatar.')
                   }
                 }}
               />
+              <div style={{ marginTop: 16 }}>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    setSyncState('saving')
+                    setMessage('')
+                    try {
+                      await updateUserAvatar(user, '')
+                      setSyncState('ready')
+                      setMessage('Avatar removed successfully.')
+                    } catch (err) {
+                      setSyncState('error')
+                      setMessage(err?.message || 'Could not remove avatar.')
+                    }
+                  }}
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 6,
+                    padding: '6px 12px', borderRadius: 6, border: '1px solid var(--border)',
+                    background: 'var(--bg-alt)', color: 'var(--text-3)', fontSize: 12, fontWeight: 500,
+                    cursor: 'pointer', fontFamily: 'inherit'
+                  }}
+                >
+                  <Trash2 size={13} />
+                  Remove custom avatar
+                </button>
+              </div>
             </div>
             <div style={{ display: 'grid', gap: 14, maxWidth: 520, paddingTop: 32, borderTop: '1px solid var(--border)' }}>
               {[
