@@ -107,6 +107,17 @@ Expected JSON Output Format (respond ONLY with JSON, use actual calculated integ
       const ctcRaw = parsed.Compensation_Analysis?.Offered_CTC || 0;
       const ctcAbsolute = toAbsolute(ctcRaw);
       
+      // Defense in Depth Layer: Prompt Injection Validation (Bounds Checking)
+      if (ctcAbsolute < 0 || ctcAbsolute > 100000000) { // Max 10 Cr (100 Million INR) limit
+        throw new Error("Validation Failed: Extracted CTC exceeds mathematically reasonable bounds (Possible AI Hallucination/Injection).");
+      }
+      if (parsed.Offer_Metadata?.Designation && String(parsed.Offer_Metadata.Designation).length > 100) {
+        throw new Error("Validation Failed: Designation length exceeds typical bounds.");
+      }
+      if (parsed.Offer_Metadata?.Company_Name && String(parsed.Offer_Metadata.Company_Name).length > 100) {
+        throw new Error("Validation Failed: Company name length exceeds typical bounds.");
+      }
+      
       const mapped = {
         // Fallback metadata so UI doesn't crash
         Analysis_Metadata: {
