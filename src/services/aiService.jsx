@@ -100,13 +100,15 @@ const callGroq = async (messages, maxTokens = 700, temperature = 0.65, jsonMode 
   })
 
   if (!response.ok) {
-    const err = await response.json().catch(() => ({}))
-    const msg = err?.error?.message || err?.error || 'HTTP ' + response.status
-    if (response.status === 401) throw new Error('Invalid API key — check GROQ_API_KEY in .env')
-    if (response.status === 403) throw new Error('Access denied — check GROQ_API_KEY in .env')
-    if (response.status === 429) throw new Error('Rate limit — wait 30 seconds and retry')
-    if (response.status === 404) throw new Error('API endpoint not found — run: vercel dev (not npm run dev)')
-    if (response.status === 500) throw new Error('Server error — GROQ_API_KEY may not be set in .env')
+    const rawText = await response.text().catch(() => '')
+    let err = {}
+    try { err = JSON.parse(rawText) } catch (_) { err = { error: rawText } }
+    const msg = err?.error?.message || err?.error || rawText || 'HTTP ' + response.status
+    if (response.status === 401) throw new Error('Invalid API key (401) — ' + msg + ' (Check GROQ_API_KEY in .env)')
+    if (response.status === 403) throw new Error('Access denied (403) — ' + msg + ' (Verify GROQ_API_KEY or Cloudflare WAF restrictions)')
+    if (response.status === 429) throw new Error('Rate limit (429) — wait 30 seconds and retry. (' + msg + ')')
+    if (response.status === 404) throw new Error('API endpoint not found (404) — run: vercel dev (not npm run dev)')
+    if (response.status >= 500) throw new Error('Server error (' + response.status + ') — ' + msg)
     throw new Error(msg)
   }
 
@@ -270,9 +272,9 @@ export const analyzeOffer = async ({ offerText, certStack, city, yoe }) => {
   If it IS a valid offer letter, proceed with analysis:
 
 OFFER LETTER TEXT:
-"""
+--- START OFFER TEXT ---
 ${offerText.substring(0, 6000)}
-"""
+--- END OFFER TEXT ---
 
 CANDIDATE PROFILE:
 - Certifications: ${certLabels || 'None'}

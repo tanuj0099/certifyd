@@ -124,7 +124,7 @@ var validateDocument = function (text) {
   var tools = ['excel', 'powerpoint', 'canva', 'python', 'java', 'sql', 'tableau', 'figma', 'aws', 'azure', 'docker', 'git', 'tally', 'powerbi']
   if (tools.filter(function (t2) { return t.includes(t2) }).length >= 2) score += 2
   
-  if (text.trim().length < 500) return { isResume: false, rejectedBy: 'INVALID_DOCUMENT', score: score }
+  if (text.trim().length < 50) return { isResume: false, rejectedBy: 'INVALID_DOCUMENT', score: score }
   if (!t.includes('education') && !t.includes('skills') && !t.includes('experience')) return { isResume: false, rejectedBy: 'INVALID_DOCUMENT', score: score }
 
   return { isResume: score >= 8, score: score, sectionHits: sectionHits, verbHits: verbHits }

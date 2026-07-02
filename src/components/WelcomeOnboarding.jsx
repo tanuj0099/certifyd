@@ -51,9 +51,9 @@ export default function WelcomeOnboarding({ onComplete }) {
 }
 
 Resume Text:
-"""
+--- START RESUME TEXT ---
 ${parseData.text.substring(0, 4000)}
-"""`;
+--- END RESUME TEXT ---`;
 
       const aiText = await callGroqForResume(null, prompt);
       const cleaned = aiText.replace(/^```(?:json)?\\s*/i, '').replace(/\\s*```\\s*$/, '').trim();

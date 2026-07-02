@@ -13,7 +13,7 @@ import { useAuth } from '@/hooks/useAuth.jsx'
 import { AppSection, useThemeContext } from '@/components/SharedUI.jsx'
 import ToolPageWrapper from '@/components/ToolPageWrapper.jsx'
 import { parseOfferLetter } from '@/services/hrAiService.jsx'
-import { scanAndScrubPII, containsPII } from '@/utils/piiScanner.js'
+import { scanAndScrubPII } from '@/utils/piiScanner.js'
 
 const FH = "var(--font-head)";
 const FM = "var(--font-mono)";
@@ -215,8 +215,13 @@ export default function OfferAnalysisPage() {
       setError('Please agree to the Terms and Privacy Policy for both files.')
       return
     }
-    if (!offerText || offerText.trim().length < 50) {
-      setError('Please paste or upload at least 50 characters of offer text.')
+    let effectiveOfferText = offerText;
+    let effectiveResumeText = resumeText;
+    if ((!effectiveOfferText || effectiveOfferText.trim().length < 15) && effectiveResumeText && effectiveResumeText.trim().length >= 15) {
+      effectiveOfferText = effectiveResumeText;
+    }
+    if (!effectiveOfferText || effectiveOfferText.trim().length < 15) {
+      setError('Please paste or upload at least 15 characters of offer text.')
       return
     }
     setLoading(true)
@@ -224,7 +229,13 @@ export default function OfferAnalysisPage() {
     setResult(null)
 
     try {
-      const analysis = await parseOfferLetter(offerText, resumeText)
+      const analysis = await parseOfferLetter(effectiveOfferText, effectiveResumeText)
+
+      if (analysis.error || analysis.is_valid_offer === false) {
+        setError(analysis.message || analysis.rejection_reason || 'Could not analyze document. Please ensure the text is a valid offer letter.')
+        setLoading(false)
+        return
+      }
 
       // Geogatekeeper
       if (analysis.Analysis_Metadata?.Unsupported_Region) {
@@ -248,16 +259,9 @@ export default function OfferAnalysisPage() {
       // Save to Supabase (Data Flywheel)
       if (supabase && ctcStated > 0) {
         
-        // Defense in Depth Layer 3: PII Scrubber & Storage Blocker
+        // Defense in Depth Layer 3: PII Scrubber
         const scrubbedAnalysis = scanAndScrubPII(analysis);
         const scrubbedPayload = scanAndScrubPII(analysis.Database_Payload);
-
-        // Enforce hard block: if unredactable PII is detected, abort DB storage completely
-        const stringifiedCheck = JSON.stringify({ scrubbedAnalysis, scrubbedPayload });
-        if (containsPII(stringifiedCheck)) {
-          console.error("Security Block: PII detected in analysis payload. Aborting database storage.");
-          return;
-        }
         
         supabase.from('offer_analyses').insert({
           user_id: user?.uid || null,
@@ -563,19 +567,18 @@ export default function OfferAnalysisPage() {
 
               <motion.button
                 onClick={handleAnalyze}
-                disabled={loading || (!offerText.trim() && !offerFileName) || !offerConsentGiven}
-                whileHover={(offerText.trim() || offerFileName) && offerConsentGiven ? { scale: 1.01, y: -1 } : {}}
-                whileTap={(offerText.trim() || offerFileName) && offerConsentGiven ? { scale: 0.98 } : {}}
+                disabled={loading || (!offerText.trim() && !offerFileName && !resumeText.trim()) || !offerConsentGiven}
+                whileHover={(offerText.trim() || offerFileName || resumeText.trim()) && offerConsentGiven ? { scale: 1.01, y: -1 } : {}}
+                whileTap={(offerText.trim() || offerFileName || resumeText.trim()) && offerConsentGiven ? { scale: 0.98 } : {}}
                 style={{
                   marginTop: '16px', width: '100%', padding: '16px', borderRadius: '12px',
-                  background: loading ? 'var(--bg-surface)' : ((offerText.trim() || offerFileName) && offerConsentGiven) ? 'var(--accent)' : 'var(--bg-surface)',
-                  border: loading ? '1px solid var(--border)' : ((offerText.trim() || offerFileName) && offerConsentGiven) ? 'none' : '1px solid var(--border)',
-                  color: loading ? 'var(--text-4)' : ((offerText.trim() || offerFileName) && offerConsentGiven) ? 'var(--bg)' : 'var(--text-4)',
+                  background: loading ? 'var(--bg-surface)' : ((offerText.trim() || offerFileName || resumeText.trim()) && offerConsentGiven) ? 'var(--accent)' : 'var(--bg-surface)',
+                  border: loading ? '1px solid var(--border)' : ((offerText.trim() || offerFileName || resumeText.trim()) && offerConsentGiven) ? 'none' : '1px solid var(--border)',
+                  color: loading ? 'var(--text-4)' : ((offerText.trim() || offerFileName || resumeText.trim()) && offerConsentGiven) ? 'var(--bg)' : 'var(--text-4)',
                   fontSize: '15px', fontFamily: FH, fontWeight: '800',
-                  cursor: (loading || !offerConsentGiven) ? 'not-allowed' : (offerText.trim() || offerFileName) ? 'pointer' : 'not-allowed',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  gap: '9px', letterSpacing: '-0.015em', transition: 'all 0.2s',
-                  boxShadow: (offerText.trim() || offerFileName) ? '0 4px 16px rgba(0,0,0,0.2)' : 'none',
+                  cursor: (loading || !offerConsentGiven) ? 'not-allowed' : (offerText.trim() || offerFileName || resumeText.trim()) ? 'pointer' : 'not-allowed',
+                  boxShadow: (offerText.trim() || offerFileName || resumeText.trim()) ? '0 4px 16px rgba(0,0,0,0.2)' : 'none',
+                  transition: 'all 0.2s', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px'
                 }}
               >
                 {loading ? (

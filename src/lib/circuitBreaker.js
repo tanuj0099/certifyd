@@ -10,7 +10,10 @@ const groqCallOptions = {
 
 async function executeGroqFetch(url, options) {
   const res = await fetch(url, options);
-  const data = await res.json().catch(() => ({ error: res.statusText }));
+  let data = await res.json().catch(() => ({ error: res.statusText || `HTTP ${res.status}` }));
+  if (!res.ok && (!data || Object.keys(data).length === 0)) {
+    data = { error: res.statusText || `HTTP Error ${res.status} from Groq API` };
+  }
   if (res.status >= 500) {
     throw new Error(`Groq API Server Error (${res.status})`);
   }

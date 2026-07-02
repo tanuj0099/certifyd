@@ -322,31 +322,78 @@ function CertCompare({ salary, prefilledCertA, prefilledCertB }) {
   useEffect(() => {
     async function fetchDatabase() {
       try {
-        const [certsResponse, domainsResponse, vendorsResponse] = await Promise.all([
-          supabase.from('certifications').select('*'),
-          supabase.from('domains').select('*'),
-          supabase.from('vendors').select('*')
-        ]);
+        let certsResponse = { data: null };
+        let domainsResponse = { data: null };
+        let vendorsResponse = { data: null };
 
-        if (certsResponse.data) {
-          // Normalize all rows to camelCase with defaults so no field is ever undefined
-          setCertificationsData(certsResponse.data.map(normalizeCert));
+        if (supabase) {
+          [certsResponse, domainsResponse, vendorsResponse] = await Promise.all([
+            supabase.from('certifications').select('*').catch(() => ({ data: null })),
+            supabase.from('domains').select('*').catch(() => ({ data: null })),
+            supabase.from('vendors').select('*').catch(() => ({ data: null }))
+          ]);
         }
+
         let allDomains = [];
-        if (domainsResponse.data) allDomains = allDomains.concat(domainsResponse.data);
-        if (vendorsResponse.data) allDomains = allDomains.concat(vendorsResponse.data);
+        if (domainsResponse?.data) allDomains = allDomains.concat(domainsResponse.data);
+        if (vendorsResponse?.data) allDomains = allDomains.concat(vendorsResponse.data);
+
+        let domainMap = {};
+        allDomains.forEach(d => {
+          const readable = d.name || d.vendor_name || d.domain_name || d.label || '';
+          if (readable && !/^[0-9a-f]{8}-[0-9a-f]{4}/i.test(readable)) {
+            if (d.id) domainMap[d.id] = readable;
+            if (d.vendor_id) domainMap[d.vendor_id] = readable;
+            if (d.slug) domainMap[d.slug] = readable;
+          }
+        });
+
         if (allDomains.length > 0) {
-          // Domains table can have varied shapes - normalize to { id, label }
           const normalized = allDomains.map(function(d) {
+            const readable = d.name || d.vendor_name || d.domain_name || d.label || d.id || 'General IT';
+            const cleanLabel = /^[0-9a-f]{8}-[0-9a-f]{4}/i.test(readable) ? 'General IT' : readable;
             return {
-              id:    d.id    || d.domain_id || d.vendor_id || d.slug || String(d.name || d.domain_name || d.label || ''),
-              label: d.domain_name || d.label || d.name      || d.id   || 'Unknown',
+              id:    cleanLabel,
+              label: cleanLabel,
             }
-          })
-          setDomainsData(normalized);
+          });
+          const uniqueDomains = Array.from(new Map(normalized.map(item => [item.label, item])).values());
+          setDomainsData(uniqueDomains);
+        } else {
+          setDomainsData([
+            { id: 'Amazon Web Services (AWS)', label: 'Amazon Web Services (AWS)' },
+            { id: 'Google Cloud Platform (GCP)', label: 'Google Cloud Platform (GCP)' },
+            { id: 'Microsoft Azure', label: 'Microsoft Azure' },
+            { id: 'Cisco Systems', label: 'Cisco Systems' },
+            { id: 'CompTIA', label: 'CompTIA' },
+            { id: 'ISACA / ISC2', label: 'ISACA / ISC2' },
+          ]);
+        }
+
+        if (certsResponse?.data && certsResponse.data.length > 0) {
+          const certs = certsResponse.data.map(row => {
+            const cert = normalizeCert(row);
+            if (cert.domain && domainMap[cert.domain]) {
+              cert.domain = domainMap[cert.domain];
+            } else if (/^[0-9a-f]{8}-[0-9a-f]{4}/i.test(cert.domain)) {
+              cert.domain = 'General IT';
+            }
+            return cert;
+          });
+          setCertificationsData(certs);
+        } else {
+          // Static fallback if DB is empty or offline
+          setCertificationsData([
+            { id: 'aws-sa', name: 'AWS Certified Solutions Architect – Associate', avgHike: 25, avgCost: 15000, avgCostUSD: 150, timeMonths: 3, demand: 'Very High', domain: 'Amazon Web Services (AWS)', forWho: 'Cloud engineers and backend developers targeting AWS architecture roles.', tags: ['Cloud', 'AWS', 'Architecture'], link: 'https://aws.amazon.com/certification/', slug: 'aws-solutions-architect' },
+            { id: 'azure-az104', name: 'Microsoft Certified: Azure Administrator Associate (AZ-104)', avgHike: 20, avgCost: 13500, avgCostUSD: 165, timeMonths: 2.5, demand: 'High', domain: 'Microsoft Azure', forWho: 'System administrators and DevOps professionals working on Azure infrastructure.', tags: ['Cloud', 'Azure', 'Admin'], link: 'https://learn.microsoft.com/certifications/', slug: 'azure-administrator' },
+            { id: 'gcp-pca', name: 'Google Cloud Certified – Professional Cloud Architect', avgHike: 30, avgCost: 16500, avgCostUSD: 200, timeMonths: 4, demand: 'Very High', domain: 'Google Cloud Platform (GCP)', forWho: 'Senior developers and architects designing scalable GCP enterprise architectures.', tags: ['Cloud', 'GCP', 'Professional'], link: 'https://cloud.google.com/learn/certification', slug: 'gcp-cloud-architect' },
+            { id: 'cisa', name: 'Certified Information Systems Auditor (CISA)', avgHike: 22, avgCost: 55000, avgCostUSD: 575, timeMonths: 4.5, demand: 'High', domain: 'ISACA / ISC2', forWho: 'IT audit, risk, and compliance consultants in financial services and big 4 firms.', tags: ['Security', 'Audit', 'Governance'], link: 'https://www.isaca.org/credentialing/cisa', slug: 'cisa' },
+            { id: 'cissp', name: 'Certified Information Systems Security Professional (CISSP)', avgHike: 35, avgCost: 65000, avgCostUSD: 749, timeMonths: 6, demand: 'Very High', domain: 'ISACA / ISC2', forWho: 'Experienced cybersecurity leads and security architects.', tags: ['Security', 'Management', 'Enterprise'], link: 'https://www.isc2.org/Certifications/CISSP', slug: 'cissp' },
+            { id: 'oscp', name: 'OffSec Certified Professional (OSCP)', avgHike: 40, avgCost: 125000, avgCostUSD: 1599, timeMonths: 5, demand: 'Very High', domain: 'General IT', forWho: 'Hands-on penetration testers and offensive security engineers.', tags: ['Security', 'PenTest', 'Offensive'], link: 'https://www.offsec.com/courses/pen-200/', slug: 'oscp' },
+          ]);
         }
       } catch (error) {
-        console.error("CertCompare: Failed to fetch Supabase data:", error);
+        console.warn("CertCompare: Failed to fetch Supabase data:", error);
       } finally {
         setDbLoading(false);
       }

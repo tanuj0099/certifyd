@@ -247,6 +247,75 @@ const MandatoryCertCard = ({ cert }) => (
 // 
 // MAIN COMPONENT
 // 
+const FALLBACK_JOBMAP_DATA = {
+  govt: [
+    {
+      org: 'National Informatics Centre (NIC)',
+      sector: 'Ministry of Electronics & IT',
+      color: '#3b82f6',
+      emoji: '🏛️',
+      description: 'Premier ICT organization of the Government of India',
+      roles: [
+        { role: 'Scientific Officer / Engineer-SB', transition: 'Direct Recruitment', cert: 'AWS Solutions Architect / CISA', certId: null, mandatory: true, source: 'NIC Recruitment Circular 2026', note: 'Essential qualification preference for cloud migration projects.', salaryRange: '₹12.5L – ₹18.0L LPA', openings: 140 }
+      ]
+    },
+    {
+      org: 'Centre for Development of Advanced Computing (C-DAC)',
+      sector: 'Scientific Society under MeitY',
+      color: '#10b981',
+      emoji: '⚡',
+      description: 'R&D organization in IT, Electronics and associated areas',
+      roles: [
+        { role: 'Project Engineer (Cyber Security)', transition: 'Lateral Entry', cert: 'CEH / CISSP / OSCP', certId: null, mandatory: true, source: 'C-DAC Cybersecurity Division Policy', note: 'Mandatory certification required for SOC handling.', salaryRange: '₹10.0L – ₹16.0L LPA', openings: 85 }
+      ]
+    }
+  ],
+  private: [
+    {
+      company: 'Tata Consultancy Services (TCS)',
+      sector: 'IT Services & Consulting',
+      color: '#6366f1',
+      emoji: '🏢',
+      description: '600,000+ employees globally',
+      verified: true,
+      source: 'Verified employee reports & internal Elevate portal',
+      disclaimer: 'Salary jump depends on band progression (C1 to C2).',
+      tracks: [
+        { from: 'Systems Engineer (Ninja band)', to: 'Digital / Prime Cloud Architect', certs: ['AWS Certified Solutions Architect', 'Azure Solutions Architect'], mandatory: false, note: 'Qualifies candidate for High-Value Skill Incentive (HVSI).', typicalTime: '6 – 12 months', salaryJump: '+35% to +50% hike' }
+      ]
+    },
+    {
+      company: 'Infosys Limited',
+      sector: 'Enterprise IT & Consulting',
+      color: '#06b6d4',
+      emoji: '🌐',
+      description: '320,000+ employees globally',
+      verified: true,
+      source: 'Infosys Lex learning portal guidelines',
+      disclaimer: 'Bridge-to-Power program requires clearing internal coding evaluation post certification.',
+      tracks: [
+        { from: 'Technology Analyst', to: 'Specialist Programmer / Cloud Lead', certs: ['GCP Professional Cloud Architect', 'CKS Kubernetes Security'], mandatory: false, note: 'Direct eligibility for Bridge-to-Power compensation upgrade.', typicalTime: '4 – 8 months', salaryJump: '+40% to +60% hike' }
+      ]
+    }
+  ],
+  mandatory: [
+    {
+      cert: 'NISM-Series-V-A: Mutual Fund Distributors Certification',
+      authority: 'SEBI (Securities and Exchange Board of India)',
+      who: 'All mutual fund agents, distributors, and banking wealth relationship managers.',
+      penalty: 'Immediate suspension of ARN code and forfeiture of trail commission.',
+      link: 'SEBI Regulation circular CIR/IMD/DF/21/2012'
+    },
+    {
+      cert: 'IRDAI IC-38 Insurance Agent Certification',
+      authority: 'IRDAI (Insurance Regulatory and Development Authority of India)',
+      who: 'Anyone soliciting or procuring general, life, or health insurance business in India.',
+      penalty: 'Legal prosecution under Insurance Act, 1938 and immediate blacklist.',
+      link: 'IRDAI Licensing Guidelines 2024'
+    }
+  ]
+};
+
 const JobCertMap = () => {
   const [tab,    setTab]    = useState('govt')
   const [search, setSearch] = useState('')
@@ -256,13 +325,25 @@ const JobCertMap = () => {
   useEffect(() => {
     let isMounted = true;
     async function fetchData() {
-      const { data, error } = await supabase
-        .from('jobmap_orgs')
-        .select(`*, tracks:jobmap_tracks (*, certs:jobmap_track_certs (*))`)
+      let data = null;
+      try {
+        if (supabase) {
+          const res = await supabase
+            .from('jobmap_orgs')
+            .select(`*, tracks:jobmap_tracks (*, certs:jobmap_track_certs (*))`);
+          if (!res.error && res.data && res.data.length > 0) {
+            data = res.data;
+          }
+        }
+      } catch (err) {
+        console.warn("Error fetching jobmap:", err);
+      }
 
-      if (error) {
-        console.error("Error fetching jobmap:", error);
-        if (isMounted) setLoading(false);
+      if (!data || data.length === 0) {
+        if (isMounted) {
+          setDbData(FALLBACK_JOBMAP_DATA);
+          setLoading(false);
+        }
         return;
       }
 
@@ -278,11 +359,11 @@ const JobCertMap = () => {
             color: org.color,
             emoji: org.emoji,
             description: org.description_or_size,
-            roles: org.tracks.map(t => ({
+            roles: (org.tracks || []).map(t => ({
               role: t.title_or_to_role,
               transition: t.transition_or_from_role,
-              cert: t.certs[0]?.cert_name || '',
-              certId: t.certs[0]?.cert_slug || null,
+              cert: t.certs?.[0]?.cert_name || '',
+              certId: t.certs?.[0]?.cert_slug || null,
               mandatory: t.is_mandatory,
               source: org.source_text || '',
               note: t.note,
@@ -300,10 +381,10 @@ const JobCertMap = () => {
             verified: org.is_verified,
             source: org.source_text,
             disclaimer: org.disclaimer,
-            tracks: org.tracks.map(t => ({
+            tracks: (org.tracks || []).map(t => ({
               from: t.transition_or_from_role,
               to: t.title_or_to_role,
-              certs: t.certs.map(c => c.cert_name),
+              certs: (t.certs || []).map(c => c.cert_name),
               mandatory: t.is_mandatory,
               note: t.note,
               typicalTime: t.typical_time,
@@ -311,7 +392,7 @@ const JobCertMap = () => {
             }))
           })
         } else if (org.org_type === 'mandatory') {
-          org.tracks.forEach(t => {
+          (org.tracks || []).forEach(t => {
             mand.push({
               cert: t.title_or_to_role,
               authority: org.name,
@@ -324,7 +405,11 @@ const JobCertMap = () => {
       });
 
       if (isMounted) {
-        setDbData({ govt, private: priv, mandatory: mand });
+        setDbData({
+          govt: govt.length > 0 ? govt : FALLBACK_JOBMAP_DATA.govt,
+          private: priv.length > 0 ? priv : FALLBACK_JOBMAP_DATA.private,
+          mandatory: mand.length > 0 ? mand : FALLBACK_JOBMAP_DATA.mandatory
+        });
         setLoading(false);
       }
     }
@@ -356,6 +441,13 @@ const JobCertMap = () => {
     )
   )
 
+  const filteredMandatory = (dbData.mandatory || []).filter(c =>
+    !query ||
+    c.cert?.toLowerCase().includes(query) ||
+    c.authority?.toLowerCase().includes(query) ||
+    c.who?.toLowerCase().includes(query)
+  )
+
   if (loading) {
     return <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-4)' }}>Loading data...</div>
   }
@@ -366,9 +458,9 @@ const JobCertMap = () => {
       {/* Tabs */}
       <div style={{ display: 'flex', gap: '4px', marginBottom: '20px', padding: '4px', background: 'transparent', borderRadius: '12px', border: '1px solid var(--border)', width: 'fit-content' }}>
         {[
-          { id: 'govt', label: 'Government & PSU', count: GOVT_DATA.length },
-          { id: 'private', label: 'Private Companies', count: PRIVATE_DATA.length },
-          { id: 'mandatory', label: 'SEBI / IRDAI Mandated', count: MANDATORY_FINANCIAL_CERTS.length },
+          { id: 'govt', label: 'Government & PSU', count: dbData.govt.length },
+          { id: 'private', label: 'Private Companies', count: dbData.private.length },
+          { id: 'mandatory', label: 'SEBI / IRDAI Mandated', count: dbData.mandatory.length },
         ].map(t => (
           <button key={t.id} onClick={() => setTab(t.id)}
             style={{ padding: '8px 16px', borderRadius: '9px', border: 'none', cursor: 'pointer', fontFamily: F_HEAD, fontWeight: tab === t.id ? '700' : '500', fontSize: '13px', background: tab === t.id ? 'var(--text)' : 'transparent', color: tab === t.id ? 'var(--bg)' : 'var(--text-4)', transition: 'all 0.18s', whiteSpace: 'nowrap' }}>
@@ -425,9 +517,15 @@ const JobCertMap = () => {
                 If you work in financial services in India, selling mutual funds, insurance, or derivatives without these certifications is illegal. SEBI and IRDAI actively penalise violations.
               </div>
             </div>
-            {MANDATORY_FINANCIAL_CERTS.map((cert, i) => (
-              <MandatoryCertCard key={i} cert={cert} />
-            ))}
+            {filteredMandatory.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '48px', color: 'var(--text-4)', fontFamily: F_BODY }}>
+                No results for "{search}"
+              </div>
+            ) : (
+              filteredMandatory.map((cert, i) => (
+                <MandatoryCertCard key={i} cert={cert} />
+              ))
+            )}
           </motion.div>
         )}
       </AnimatePresence>

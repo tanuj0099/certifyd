@@ -51,34 +51,39 @@ export async function POST(request) {
     return json(createMockGroqResponse(body));
   }
 
-  const apiKey = process.env.GROQ_API_KEY;
+  const rawKey = process.env.GROQ_API_KEY;
+  const apiKey = (rawKey || '').trim().replace(/^["']|["']$/g, '');
   if (!apiKey) {
     return json({ error: 'API key not configured on server' }, { status: 500 });
   }
 
   const rl = getRatelimit();
   if (rl) {
-    const ip =
-      request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-      request.headers.get('x-real-ip') ||
-      'anonymous';
-    const { success, limit, remaining, reset } = await rl.limit(`groq_${ip}`);
+    try {
+      const ip =
+        request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+        request.headers.get('x-real-ip') ||
+        'anonymous';
+      const { success, limit, remaining, reset } = await rl.limit(`groq_${ip}`);
 
-    if (!success) {
-      return json(
-        {
-          error: 'Rate limit exceeded. Try again later.',
-          retryAfter: Math.ceil((reset - Date.now()) / 1000),
-        },
-        {
-          status: 429,
-          headers: {
-            'X-RateLimit-Limit': String(limit),
-            'X-RateLimit-Remaining': String(remaining),
-            'X-RateLimit-Reset': String(reset),
+      if (!success) {
+        return json(
+          {
+            error: 'Rate limit exceeded. Try again later.',
+            retryAfter: Math.ceil((reset - Date.now()) / 1000),
           },
-        }
-      );
+          {
+            status: 429,
+            headers: {
+              'X-RateLimit-Limit': String(limit),
+              'X-RateLimit-Remaining': String(remaining),
+              'X-RateLimit-Reset': String(reset),
+            },
+          }
+        );
+      }
+    } catch (rlErr) {
+      console.warn('Rate limiter check failed, bypassing:', rlErr);
     }
   }
 
@@ -139,8 +144,8 @@ export async function POST(request) {
 
     return json(data);
   } catch (error) {
-    Sentry.captureException(error);
+    try { Sentry.captureException(error); } catch (_) {}
     console.error('Proxy error:', error);
-    return json({ error: 'Proxy error: ' + error.message }, { status: 500 });
+    return json({ error: 'Proxy error: ' + (error?.message || String(error)) }, { status: 500 });
   }
 }

@@ -13,8 +13,8 @@ const PII_PATTERNS = [
   /\b[A-Z]{5}[0-9]{4}[A-Z]{1}\b/g,
   // Aadhaar Number (India specific) - 12 digits, optional spaces/hyphens
   /\b\d{4}[\s-]?\d{4}[\s-]?\d{4}\b/g,
-  // Phone numbers (basic international/national patterns)
-  /\b(?:\+?\d{1,3}[\s-]?)?(?:\(?\d{2,4}\)?[\s-]?)?\d{3,4}[\s-]?\d{4}\b/g,
+  // Phone numbers (Indian mobile +91/0 or international format starting with +)
+  /(?:\+91[\s-]?)?[0]?[6-9]\d{9}\b|\b\+\d{1,3}[\s-]?\d{8,11}\b/g,
 ];
 
 /**

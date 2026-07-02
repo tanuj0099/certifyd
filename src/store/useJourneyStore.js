@@ -133,6 +133,11 @@ export const useJourneyStore = create(
         };
       }),
 
+      setResumeName:    (name)   => set({ resumeName:    name   || '' }),
+      setResumeCity:    (city)   => set({ resumeCity:    city   || '' }),
+      setResumeDomain:  (domain) => set({ resumeDomain:  domain || '' }),
+      setPrefilledCert: (cert)   => set({ prefilledCert: cert   || '' }),
+
       setResumeContext: ({ certName, city, domain, name }) => {
         set({
           prefilledCert: certName || '',
