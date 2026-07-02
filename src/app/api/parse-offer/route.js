@@ -6,7 +6,7 @@ import { offerSubmissionLimiter } from '@/lib/ratelimit.js';
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
-export const POST = Sentry.wrapRouteHandlerWithSentry(async (request) => {
+export async function POST(request) {
   try {
     if (offerSubmissionLimiter) {
       const ip =
@@ -55,4 +55,4 @@ export const POST = Sentry.wrapRouteHandlerWithSentry(async (request) => {
       { status: 500 }
     );
   }
-});
+}

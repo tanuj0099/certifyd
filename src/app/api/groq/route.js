@@ -38,7 +38,7 @@ function json(data, init) {
   return NextResponse.json(data, init);
 }
 
-export const POST = Sentry.wrapRouteHandlerWithSentry(async (request) => {
+export async function POST(request) {
   let body;
   try {
     body = await request.json();
@@ -62,12 +62,12 @@ export const POST = Sentry.wrapRouteHandlerWithSentry(async (request) => {
       request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
       request.headers.get('x-real-ip') ||
       'anonymous';
-    const { success, limit, remaining, reset } = await rl.limit(ip);
+    const { success, limit, remaining, reset } = await rl.limit(`groq_${ip}`);
 
     if (!success) {
       return json(
         {
-          error: 'Rate limit exceeded. Please wait before making another request.',
+          error: 'Rate limit exceeded. Try again later.',
           retryAfter: Math.ceil((reset - Date.now()) / 1000),
         },
         {
@@ -143,4 +143,4 @@ export const POST = Sentry.wrapRouteHandlerWithSentry(async (request) => {
     console.error('Proxy error:', error);
     return json({ error: 'Proxy error: ' + error.message }, { status: 500 });
   }
-});
+}
