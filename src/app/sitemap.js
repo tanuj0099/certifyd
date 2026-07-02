@@ -20,7 +20,6 @@ export default async function sitemap() {
     '/tools/roi',
     '/tools/simulator',
     '/offer-analysis',
-    '/roadmap',
     '/roadmaps',
     '/features',
     '/how-it-works',

@@ -47,11 +47,18 @@ CREATE POLICY "Users can view own journey" ON journey_tracking FOR SELECT USING 
 CREATE POLICY "Users can insert own journey" ON journey_tracking FOR INSERT WITH CHECK (auth.uid() = user_id);
 CREATE POLICY "Users can update own journey" ON journey_tracking FOR UPDATE USING (auth.uid() = user_id);
 
--- offer_analyses
+-- offer_analyses (Anyone can insert for Data Flywheel, users can only read/update their own)
 CREATE POLICY "Users can view own offers" ON offer_analyses FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY "Users can insert own offers" ON offer_analyses FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Anyone can insert offers" ON offer_analyses FOR INSERT WITH CHECK (true);
 CREATE POLICY "Users can update own offers" ON offer_analyses FOR UPDATE USING (auth.uid() = user_id);
 CREATE POLICY "Users can delete own offers" ON offer_analyses FOR DELETE USING (auth.uid() = user_id);
+
+-- offer_letters (Anyone can insert for Data Flywheel, users can only read/update their own)
+ALTER TABLE IF EXISTS offer_letters ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can view own offer letters" ON offer_letters FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Anyone can insert offer letters" ON offer_letters FOR INSERT WITH CHECK (true);
+CREATE POLICY "Users can update own offer letters" ON offer_letters FOR UPDATE USING (auth.uid() = user_id);
+CREATE POLICY "Users can delete own offer letters" ON offer_letters FOR DELETE USING (auth.uid() = user_id);
 
 -- 4. Public Submissions (Anyone can insert, but only admins/service_role can view)
 
