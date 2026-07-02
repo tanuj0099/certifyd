@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import pdf from 'pdf-parse';
+import { extractText, getDocumentProxy } from 'unpdf';
 import mammoth from 'mammoth';
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
@@ -69,9 +69,10 @@ export async function POST(request) {
     const magicBytes = buffer.subarray(0, 5).toString('utf8');
     
     if (magicBytes === '%PDF-') {
-      // Parse PDF
-      const parsedData = await pdf(buffer);
-      extractedText = parsedData.text;
+      // Parse PDF using unpdf
+      const pdf = await getDocumentProxy(new Uint8Array(buffer));
+      const { text } = await extractText(pdf, { mergePages: true });
+      extractedText = text;
     } else if (buffer.subarray(0, 4).toString('hex') === '504b0304') {
       // Parse DOCX (ZIP signature PK..)
       const result = await mammoth.extractRawText({ buffer });
