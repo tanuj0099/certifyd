@@ -2,13 +2,14 @@ import { NextResponse } from 'next/server';
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
 import crypto from 'crypto';
+import * as Sentry from '@sentry/nextjs';
 import { createMockGroqResponse, isServerTestMode } from '../../../../server/testMode.js';
-
-// Bypass corporate firewall/SSL inspection certificate errors (e.g. Zscaler)
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+import { validateGroqRequest } from '@/lib/validations/offer.js';
+import { groqCircuitBreaker } from '@/lib/circuitBreaker.js';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
+export const maxDuration = 60;
 
 let ratelimit = null;
 
@@ -37,7 +38,7 @@ function json(data, init) {
   return NextResponse.json(data, init);
 }
 
-export async function POST(request) {
+export const POST = Sentry.wrapRouteHandlerWithSentry(async (request) => {
   let body;
   try {
     body = await request.json();
@@ -81,30 +82,12 @@ export async function POST(request) {
     }
   }
 
-  if (!body || typeof body !== 'object') {
-    return json({ error: 'Invalid request body' }, { status: 400 });
+  const validation = validateGroqRequest(body);
+  if (!validation.success) {
+    return json({ error: 'Validation failed', details: validation.error.errors }, { status: 400 });
   }
 
-  if (body.model && !ALLOWED_MODELS.has(body.model)) {
-    return json({ error: 'Model not permitted: ' + body.model }, { status: 400 });
-  }
-
-  if (!Array.isArray(body.messages)) {
-    return json({ error: 'messages must be an array' }, { status: 400 });
-  }
-
-  const totalChars = body.messages.reduce((acc, message) => {
-    return acc + (typeof message.content === 'string' ? message.content.length : 0);
-  }, 0);
-
-  if (totalChars > 60000) {
-    return json({ error: 'Prompt too large. Reduce input size.' }, { status: 413 });
-  }
-
-  const safeMessages = body.messages.map((message) => ({
-    role: ['user', 'assistant', 'system'].includes(message.role) ? message.role : 'user',
-    content: typeof message.content === 'string' ? message.content : '',
-  }));
+  const safeMessages = validation.data.messages;
 
   let cacheKey = null;
   const redisClient = process.env.UPSTASH_REDIS_REST_URL ? Redis.fromEnv() : null;
@@ -126,7 +109,7 @@ export async function POST(request) {
   }
 
   try {
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    const result = await groqCircuitBreaker.fire('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         Authorization: 'Bearer ' + apiKey,
@@ -138,11 +121,12 @@ export async function POST(request) {
       }),
     });
 
-    const data = await response.json();
-    if (!response.ok) {
-      console.error('Groq API Error:', response.status, data);
-      return json(data, { status: response.status });
+    if (!result.ok) {
+      console.error('Groq API Error:', result.status, result.data);
+      return json(result.data, { status: result.status });
     }
+
+    const data = result.data;
 
     if (redisClient && cacheKey) {
       try {
@@ -155,7 +139,8 @@ export async function POST(request) {
 
     return json(data);
   } catch (error) {
+    Sentry.captureException(error);
     console.error('Proxy error:', error);
     return json({ error: 'Proxy error: ' + error.message }, { status: 500 });
   }
-}
+});

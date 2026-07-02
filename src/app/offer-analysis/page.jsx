@@ -13,7 +13,7 @@ import { useAuth } from '@/hooks/useAuth.jsx'
 import { AppSection, useThemeContext } from '@/components/SharedUI.jsx'
 import ToolPageWrapper from '@/components/ToolPageWrapper.jsx'
 import { parseOfferLetter } from '@/services/hrAiService.jsx'
-import { scanAndScrubPII } from '@/utils/piiScanner.js'
+import { scanAndScrubPII, containsPII } from '@/utils/piiScanner.js'
 
 const FH = "var(--font-head)";
 const FM = "var(--font-mono)";
@@ -248,9 +248,16 @@ export default function OfferAnalysisPage() {
       // Save to Supabase (Data Flywheel)
       if (supabase && ctcStated > 0) {
         
-        // Defense in Depth Layer 3: PII Scrubber
+        // Defense in Depth Layer 3: PII Scrubber & Storage Blocker
         const scrubbedAnalysis = scanAndScrubPII(analysis);
         const scrubbedPayload = scanAndScrubPII(analysis.Database_Payload);
+
+        // Enforce hard block: if unredactable PII is detected, abort DB storage completely
+        const stringifiedCheck = JSON.stringify({ scrubbedAnalysis, scrubbedPayload });
+        if (containsPII(stringifiedCheck)) {
+          console.error("Security Block: PII detected in analysis payload. Aborting database storage.");
+          return;
+        }
         
         supabase.from('offer_analyses').insert({
           user_id: user?.uid || null,

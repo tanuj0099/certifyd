@@ -19,6 +19,8 @@ export default function middleware(req) {
   if (url.pathname.startsWith('/api/')) {
     const origin = req.headers.get('origin');
     const allowedOrigins = [
+      'https://certifyd.in',
+      'https://www.certifyd.in',
       'https://certifyd.com',
       'https://www.certifyd.com',
       'https://certifyd.vercel.app'
@@ -27,28 +29,34 @@ export default function middleware(req) {
     // For localhost development, you might want to allow it
     if (url.hostname.includes('localhost')) {
       allowedOrigins.push(`http://localhost:${url.port || '5173'}`);
+      allowedOrigins.push('http://localhost:3000');
     }
 
-    const isAllowed = allowedOrigins.includes(origin) || origin?.endsWith('.vercel.app');
+    // Restrict to allowed origins or specific team project Vercel preview domains
+    const isAllowed = origin && (
+      allowedOrigins.includes(origin) ||
+      /^https:\/\/certifyroi-[a-z0-9]+-tanuj0099s-projects\.vercel\.app$/.test(origin)
+    );
+
+    const headers = new Headers();
+    if (isAllowed) {
+      headers.set('Access-Control-Allow-Origin', origin);
+      headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+      headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-api-key');
+      headers.set('Access-Control-Max-Age', '86400');
+    }
 
     if (req.method === 'OPTIONS') {
       return new Response(null, {
-        status: 204,
-        headers: {
-          'Access-Control-Allow-Origin': isAllowed ? origin : allowedOrigins[0],
-          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-api-key',
-          'Access-Control-Max-Age': '86400',
-        },
+        status: isAllowed ? 204 : 403,
+        headers,
       });
     }
 
     // Prepare response headers for normal API requests
     const res = next();
     if (isAllowed) {
-      res.headers.set('Access-Control-Allow-Origin', origin);
-    } else {
-      res.headers.set('Access-Control-Allow-Origin', allowedOrigins[0]);
+      headers.forEach((val, key) => res.headers.set(key, val));
     }
     return res;
   }
@@ -62,8 +70,10 @@ export default function middleware(req) {
       const authValue = basicAuth.split(' ')[1];
       const [user, pwd] = atob(authValue).split(':');
 
-      // Change your credentials here!
-      if (user === 'admin' && pwd === 'hakunamatata') {
+      // Use environment variables for staging credentials
+      const expectedUser = process.env.STAGING_AUTH_USER || 'admin';
+      const expectedPwd = process.env.STAGING_AUTH_PASSWORD;
+      if (expectedPwd && user === expectedUser && pwd === expectedPwd) {
         return next(); // Let them through!
       }
     }

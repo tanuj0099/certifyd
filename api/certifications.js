@@ -3,11 +3,20 @@ import { Ratelimit } from '@upstash/ratelimit'
 import { Redis }     from '@upstash/redis'
 
 let ratelimit = null
+let redisClient = null
+function getRedis() {
+  if (redisClient) return redisClient
+  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) return null
+  redisClient = Redis.fromEnv()
+  return redisClient
+}
+
 function getRatelimit() {
   if (ratelimit) return ratelimit
-  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) return null
+  const redis = getRedis()
+  if (!redis) return null
   ratelimit = new Ratelimit({
-    redis:     Redis.fromEnv(),
+    redis,
     limiter:   Ratelimit.slidingWindow(20, '60 s'),
     analytics: false,
   })
@@ -38,6 +47,19 @@ export default async function handler(req, res) {
   const reqLimit = Math.min(Math.max(Number(req.query.limit || 100), 1), 200)
   res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400')
 
+  const redis = getRedis()
+  const cacheKey = `cache:certifications:${domain || 'all'}:${reqLimit}`
+  if (redis) {
+    try {
+      const cached = await redis.get(cacheKey)
+      if (cached) {
+        return res.status(200).json({ source: 'redis-cache', certifications: cached })
+      }
+    } catch (err) {
+      console.warn('Redis get error:', err)
+    }
+  }
+
   const supabase = getSupabase()
   if (!supabase) {
     return res.status(200).json({
@@ -47,20 +69,37 @@ export default async function handler(req, res) {
   }
 
   try {
-    let query = supabase
-      .from('certifications')
-      .select('id,name,avg_cost,avg_hike,time_months,demand,link,affiliate,tags,domain_id,for_who')
-      .order('avg_hike', { ascending: false })
-      .limit(reqLimit)
+    const buildQuery = (colName) => {
+      let q = supabase
+        .from('certifications')
+        .select('*')
+        .order('avg_hike', { ascending: false })
+        .limit(reqLimit)
+      if (domain && colName) q = q.eq(colName, domain)
+      return q
+    }
 
-    if (domain) query = query.eq('domain_id', domain)
-
-    const { data, error } = await query
+    let { data, error } = await buildQuery(domain ? 'domain_id' : null)
+    if (error && (error.code === '42703' || error.message?.includes('does not exist'))) {
+      // Fallback if the database schema uses 'domain' instead of 'domain_id'
+      const fallbackRes = await buildQuery('domain')
+      data = fallbackRes.data
+      error = fallbackRes.error
+    }
     if (error) throw error
+
+    const certifications = (data || []).map(normalizeCertification)
+    if (redis) {
+      try {
+        await redis.set(cacheKey, certifications, { ex: 86400 }) // 24 hours TTL
+      } catch (err) {
+        console.warn('Redis set error:', err)
+      }
+    }
 
     return res.status(200).json({
       source: 'supabase',
-      certifications: (data || []).map(normalizeCertification),
+      certifications,
     })
   } catch (error) {
     return res.status(200).json({

@@ -18,12 +18,20 @@ export async function checkRateLimit(userId, actionType, sourceIp = null) {
     throw new Error('Rate limit requires a user or IP identifier.')
   }
 
-  // TODO(SECURITY): RACE CONDITION VULNERABILITY DETECTED
-  // This JS-level read-then-write is vulnerable to concurrent burst requests.
-  // The backend engineer MUST migrate this to a raw Postgres RPC function:
-  // e.g., SELECT check_and_increment_rate_limit(p_user_id, p_action, p_max)
-  // which uses SELECT FOR UPDATE or an atomic counter table.
-  // Below is the vulnerable client-side fallback until the RPC is deployed.
+  // Atomic Postgres RPC check to prevent race conditions on burst requests
+  try {
+    const { data: rpcResult, error: rpcError } = await supabase.rpc('check_and_increment_rate_limit', {
+      p_user_id: userId || null,
+      p_action: actionType,
+      p_ip: sourceIp || null,
+      p_max: 5
+    });
+    if (!rpcError && rpcResult !== null && typeof rpcResult === 'object') {
+      return rpcResult;
+    }
+  } catch (err) {
+    console.warn('RPC check_and_increment_rate_limit unavailable, falling back to query check', err);
+  }
 
   const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString()
   let query = supabase.from('api_rate_limits').select('id', { count: 'exact' }).gte('created_at', oneHourAgo).eq('action_type', actionType)
@@ -39,7 +47,6 @@ export async function checkRateLimit(userId, actionType, sourceIp = null) {
   const { count, error: countError } = await query
   if (countError) {
     console.error('Rate limit count lookup failed - Failsafe triggered to block bypass', countError)
-    // Defense in Depth: Fail securely. Do not allow bypass if DB is down or erroring.
     throw new Error('Internal validation error during rate limit check.')
   }
 

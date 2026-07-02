@@ -4,11 +4,20 @@ import { Ratelimit } from '@upstash/ratelimit'
 import { Redis }     from '@upstash/redis'
 
 let ratelimit = null
+let redisClient = null
+function getRedis() {
+  if (redisClient) return redisClient
+  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) return null
+  redisClient = Redis.fromEnv()
+  return redisClient
+}
+
 function getRatelimit() {
   if (ratelimit) return ratelimit
-  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) return null
+  const redis = getRedis()
+  if (!redis) return null
   ratelimit = new Ratelimit({
-    redis:     Redis.fromEnv(),
+    redis,
     limiter:   Ratelimit.slidingWindow(30, '60 s'),
     analytics: false,
   })
@@ -34,6 +43,19 @@ export default async function handler(req, res) {
 
   res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400')
 
+  const redis = getRedis()
+  const cacheKey = 'cache:domains:all'
+  if (redis) {
+    try {
+      const cached = await redis.get(cacheKey)
+      if (cached) {
+        return res.status(200).json({ source: 'redis-cache', domains: cached })
+      }
+    } catch (err) {
+      console.warn('Redis get error:', err)
+    }
+  }
+
   const supabase = getSupabase()
   if (!supabase) {
     return res.status(200).json({ source: 'token-fallback', domains: fallbackDomains() })
@@ -47,9 +69,18 @@ export default async function handler(req, res) {
 
     if (error) throw error
 
+    const domains = (data || []).map(normalizeDomain)
+    if (redis) {
+      try {
+        await redis.set(cacheKey, domains, { ex: 86400 }) // 24 hours TTL
+      } catch (err) {
+        console.warn('Redis set error:', err)
+      }
+    }
+
     return res.status(200).json({
       source: 'supabase',
-      domains: (data || []).map(normalizeDomain),
+      domains,
     })
   } catch (error) {
     return res.status(200).json({

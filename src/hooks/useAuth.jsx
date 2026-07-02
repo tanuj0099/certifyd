@@ -70,10 +70,23 @@ export const AuthProvider = ({ children }) => {
     }
   }, [configured])
 
+  const checkRateLimitBeforeAuth = async (endpoint, fallbackMsg) => {
+    try {
+      const res = await fetch(endpoint, { method: 'POST' });
+      if (res.status === 429) {
+        const payload = await res.json().catch(() => ({}));
+        throw new Error(payload.error || fallbackMsg);
+      }
+    } catch (e) {
+      if (e?.message?.includes('Too many') || e?.message?.includes('attempts')) throw e;
+    }
+  };
+
   const signInGoogle = async (options = {}) => {
     setAuthError(null)
     if (!configured) throw new Error('Supabase not configured')
     try {
+      await checkRateLimitBeforeAuth('/api/auth/login-check', 'Too many login attempts.');
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -92,6 +105,7 @@ export const AuthProvider = ({ children }) => {
     setAuthError(null)
     if (!configured) throw new Error('Supabase not configured')
     try {
+      await checkRateLimitBeforeAuth('/api/auth/login-check', 'Too many login attempts.');
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'github',
         options: {
@@ -110,6 +124,7 @@ export const AuthProvider = ({ children }) => {
     setAuthError(null)
     if (!configured) throw new Error('Supabase not configured')
     try {
+      await checkRateLimitBeforeAuth('/api/auth/login-check', 'Too many login attempts.');
       const { error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) throw error
     } catch (e) {
@@ -123,6 +138,7 @@ export const AuthProvider = ({ children }) => {
     setAuthError(null)
     if (!configured) throw new Error('Supabase not configured')
     try {
+      await checkRateLimitBeforeAuth('/api/auth/signup-check', 'Too many signup attempts.');
       const { error } = await supabase.auth.signUp({ email, password })
       if (error) throw error
     } catch (e) {
