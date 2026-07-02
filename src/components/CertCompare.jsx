@@ -2,6 +2,7 @@ import { useState, useCallback, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Award, ChevronDown, Scale, Info, Zap, DollarSign, TrendingUp, Search } from 'lucide-react'
 import { supabase } from '../lib/supabase.js'
+import { CERT_DOMAINS as STATIC_DOMAINS } from '../tokens.js'
 import {
   BarChart,
   Bar,
@@ -321,8 +322,9 @@ function CertCompare({ salary, prefilledCertA, prefilledCertB }) {
   useEffect(() => {
     async function fetchDatabase() {
       try {
-        const [certsResponse, domainsResponse] = await Promise.all([
+        const [certsResponse, domainsResponse, vendorsResponse] = await Promise.all([
           supabase.from('certifications').select('*'),
+          supabase.from('domains').select('*'),
           supabase.from('vendors').select('*')
         ]);
 
@@ -330,11 +332,14 @@ function CertCompare({ salary, prefilledCertA, prefilledCertB }) {
           // Normalize all rows to camelCase with defaults so no field is ever undefined
           setCertificationsData(certsResponse.data.map(normalizeCert));
         }
-        if (domainsResponse.data) {
+        let allDomains = [];
+        if (domainsResponse.data) allDomains = allDomains.concat(domainsResponse.data);
+        if (vendorsResponse.data) allDomains = allDomains.concat(vendorsResponse.data);
+        if (allDomains.length > 0) {
           // Domains table can have varied shapes - normalize to { id, label }
-          const normalized = domainsResponse.data.map(function(d) {
+          const normalized = allDomains.map(function(d) {
             return {
-              id:    d.id    || d.domain_id || d.slug || String(d.name || d.domain_name || d.label || ''),
+              id:    d.id    || d.domain_id || d.vendor_id || d.slug || String(d.name || d.domain_name || d.label || ''),
               label: d.domain_name || d.label || d.name      || d.id   || 'Unknown',
             }
           })
@@ -637,8 +642,15 @@ function CertCompare({ salary, prefilledCertA, prefilledCertB }) {
                 var rawDomain = item.cert.domain_name || item.cert.domain || item.cert.provider || null
                 var domain = rawDomain;
                 if (rawDomain && CERT_DOMAINS && CERT_DOMAINS.length > 0) {
-                  const match = CERT_DOMAINS.find(function(d) { return d.id === rawDomain });
+                  const match = CERT_DOMAINS.find(function(d) { return d.id === rawDomain || d.slug === rawDomain });
                   if (match) domain = match.label;
+                }
+                if ((!domain || domain === rawDomain) && STATIC_DOMAINS && STATIC_DOMAINS.length > 0) {
+                  const staticMatch = STATIC_DOMAINS.find(function(d) { return d.id === rawDomain || d.slug === rawDomain });
+                  if (staticMatch) domain = staticMatch.label;
+                }
+                if (!domain || /^[0-9a-f]{8}-/i.test(String(domain))) {
+                  domain = 'Tech & Cloud';
                 }
                 return (
                   <div key={i} style={{ padding: '14px', borderRadius: '10px', background: item.color + '07', border: '1px solid ' + item.color + '20' }}>
