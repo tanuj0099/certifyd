@@ -17,6 +17,8 @@ import {
   Plus,
   Trash2,
   ShieldAlert,
+  MessageSquare,
+  UserCheck
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -32,6 +34,8 @@ export interface CertRecord {
   serving_status: 'serving' | 'stale' | 'needs_review';
   career_stage: string;
   skills: string[];
+  assigned_to?: string;
+  internal_notes?: string[];
   diff_summary?: {
     field: string;
     old_val: string;
@@ -42,24 +46,73 @@ export interface CertRecord {
 interface CertificationsClientProps {
   initialLive: CertRecord[];
   initialStaging: CertRecord[];
-  userRole: 'SUPER_ADMIN' | 'TEAM_MEMBER';
+  userRole?: string;
 }
 
-export function CertificationsClient({ initialLive, initialStaging, userRole }: CertificationsClientProps) {
+export function CertificationsClient({
+  initialLive,
+  initialStaging,
+  userRole = 'SUPER_ADMIN',
+}: CertificationsClientProps) {
   const [activeTab, setActiveTab] = useState<'live' | 'staging'>('live');
   const [liveList, setLiveList] = useState<CertRecord[]>(initialLive);
   const [stagingList, setStagingList] = useState<CertRecord[]>(initialStaging);
 
-  // Edit slide-over
-  const [editingCert, setEditingCert] = useState<CertRecord | null>(null);
-  const [editForm, setEditForm] = useState<any>({});
-  const [skillsInput, setSkillsInput] = useState<string>('');
+  // Search, Sort, and Filter state
+  const [domainFilter, setDomainFilter] = useState<string>('All');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [sortCol, setSortCol] = useState<'name' | 'vendor' | 'domain' | 'lift' | 'demand' | 'difficulty'>('demand');
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
 
-  // Push modal
+  // Edit & Notes Modal State
+  const [editingCert, setEditingCert] = useState<CertRecord | null>(null);
+  const [editForm, setEditForm] = useState<Partial<CertRecord>>({});
+  const [skillsInput, setSkillsInput] = useState('');
   const [showPushModal, setShowPushModal] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const [notesModalCert, setNotesModalCert] = useState<CertRecord | null>(null);
+  const [newNoteText, setNewNoteText] = useState('');
+
   const { showToast } = useToast();
+
+  function handleSort(col: typeof sortCol) {
+    if (sortCol === col) {
+      setSortDir(sortDir === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortCol(col);
+      setSortDir('desc');
+    }
+  }
+
+  function handleAssign(id: string, assignee: string) {
+    const updateList = (list: CertRecord[]) =>
+      list.map((c) => (c.id === id ? { ...c, assigned_to: assignee } : c));
+    if (activeTab === 'live') setLiveList(updateList);
+    else setStagingList(updateList);
+    showToast(`Assigned task to ${assignee} ✓`, 'success');
+  }
+
+  function handleAddNote(e: React.FormEvent) {
+    e.preventDefault();
+    if (!notesModalCert || !newNoteText.trim()) return;
+    const noteEntry = `[${new Date().toLocaleDateString()}] ${newNoteText.trim()}`;
+    const updateList = (list: CertRecord[]) =>
+      list.map((c) =>
+        c.id === notesModalCert.id
+          ? { ...c, internal_notes: [...(c.internal_notes || []), noteEntry] }
+          : c
+      );
+
+    if (activeTab === 'live') setLiveList(updateList);
+    else setStagingList(updateList);
+
+    setNotesModalCert((prev) =>
+      prev ? { ...prev, internal_notes: [...(prev.internal_notes || []), noteEntry] } : null
+    );
+    setNewNoteText('');
+    showToast('Added internal note to record ✓', 'success');
+  }
 
   function openEdit(cert: CertRecord) {
     setEditingCert(cert);
@@ -81,27 +134,26 @@ export function CertificationsClient({ initialLive, initialStaging, userRole }: 
           {
             field: 'avg_salary_lift',
             old_val: editingCert?.avg_salary_lift || '28%',
-            new_val: editForm.avg_salary_lift,
+            new_val: editForm.avg_salary_lift || '32%',
           },
           {
             field: 'demand_score',
             old_val: String(editingCert?.demand_score || 8),
-            new_val: String(editForm.demand_score),
+            new_val: String(editForm.demand_score || 9),
           },
         ],
       };
 
       await saveStagingRecordAction('certifications_staging', updatedRecord);
 
-      // Update local staging list
       setStagingList((prev) => {
         const idx = prev.findIndex((i) => i.id === updatedRecord.id);
         if (idx >= 0) {
           const next = [...prev];
-          next[idx] = updatedRecord;
+          next[idx] = updatedRecord as CertRecord;
           return next;
         }
-        return [updatedRecord, ...prev];
+        return [updatedRecord as CertRecord, ...prev];
       });
 
       showToast(`Saved "${updatedRecord.name}" to staging queue ✓`, 'success');
@@ -122,7 +174,6 @@ export function CertificationsClient({ initialLive, initialStaging, userRole }: 
     setLoading(true);
     try {
       const res = await pushStagingToLiveAction('certifications');
-      // Merge staging into live locally
       setLiveList((prev) => {
         const next = [...prev];
         stagingList.forEach((s) => {
@@ -143,14 +194,58 @@ export function CertificationsClient({ initialLive, initialStaging, userRole }: 
     }
   }
 
+  // Apply Domain Filter, Search Query, and Sorting
+  const currentSource = activeTab === 'live' ? liveList : stagingList;
+  const filteredList = currentSource
+    .filter((item) => {
+      if (domainFilter !== 'All') {
+        const domainStr = (item.domain || '').toLowerCase();
+        const nameStr = (item.name || '').toLowerCase();
+        const vendorStr = (item.vendor || '').toLowerCase();
+        const skillsStr = (item.skills || []).join(' ').toLowerCase();
+        const combined = `${domainStr} ${nameStr} ${vendorStr} ${skillsStr}`;
+
+        if (domainFilter === 'Data Management') {
+          if (!combined.includes('data') && !combined.includes('sql') && !combined.includes('db') && !combined.includes('analytic') && !combined.includes('bi')) {
+            return false;
+          }
+        } else if (domainFilter === 'Cloud Architecture') {
+          if (!combined.includes('cloud') && !combined.includes('aws') && !combined.includes('azure') && !combined.includes('gcp') && !combined.includes('architect')) {
+            return false;
+          }
+        } else if (!combined.includes(domainFilter.toLowerCase())) {
+          return false;
+        }
+      }
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        const combined = `${item.name} ${item.vendor} ${item.domain} ${item.skills?.join(' ')}`.toLowerCase();
+        if (!combined.includes(q)) return false;
+      }
+      return true;
+    })
+    .sort((a, b) => {
+      if (sortCol === 'name') return sortDir === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
+      if (sortCol === 'vendor') return sortDir === 'asc' ? a.vendor.localeCompare(b.vendor) : b.vendor.localeCompare(a.vendor);
+      if (sortCol === 'domain') return sortDir === 'asc' ? (a.domain || '').localeCompare(b.domain || '') : (b.domain || '').localeCompare(a.domain || '');
+      if (sortCol === 'lift') {
+        const liftA = parseInt(a.avg_salary_lift || '0', 10);
+        const liftB = parseInt(b.avg_salary_lift || '0', 10);
+        return sortDir === 'asc' ? liftA - liftB : liftB - liftA;
+      }
+      if (sortCol === 'demand') return sortDir === 'asc' ? a.demand_score - b.demand_score : b.demand_score - a.demand_score;
+      if (sortCol === 'difficulty') return sortDir === 'asc' ? a.difficulty.localeCompare(b.difficulty) : b.difficulty.localeCompare(a.difficulty);
+      return 0;
+    });
+
   return (
-    <div className="space-y-6">
-      {/* Title */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-6 pb-12">
+      {/* HEADER */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.06] pb-6">
         <div>
           <h1 className="text-2xl font-bold text-white tracking-tight">Certifications Reference Table</h1>
           <p className="text-xs text-[#8B949E] font-mono mt-0.5">
-            Core knowledge graph serving ROI calculations on certifyd.in
+            Core knowledge graph serving ROI calculations on certifyd.in ({currentSource.length} records in database)
           </p>
         </div>
 
@@ -227,68 +322,107 @@ export function CertificationsClient({ initialLive, initialStaging, userRole }: 
         </div>
       )}
 
+      {/* SEARCH & DOMAIN FILTERS BAR */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#0F1218] p-4 rounded-2xl border border-white/[0.06] shadow-lg">
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-2 md:pb-0 font-mono text-xs">
+          {['All', 'Cloud Architecture', 'Data Management', 'Cybersecurity', 'DevOps & SRE', 'AI & ML'].map((d) => (
+            <button
+              key={d}
+              onClick={() => setDomainFilter(d)}
+              className={`px-3.5 py-1.5 rounded-xl whitespace-nowrap transition-all ${
+                domainFilter === d
+                  ? 'bg-[#00D4A8] text-[#080A0E] font-bold shadow-sm shadow-[#00D4A8]/20'
+                  : 'bg-[#161B22] text-[#8B949E] hover:text-white border border-white/5'
+              }`}
+            >
+              {d}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-2">
+          <input
+            type="text"
+            placeholder="Search certs, vendor, skill..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-1.5 text-xs text-white placeholder:text-[#8B949E] focus:outline-none focus:border-[#00D4A8] w-64 font-mono"
+          />
+          {searchQuery && (
+            <button onClick={() => setSearchQuery('')} className="text-[#8B949E] hover:text-white text-xs font-mono px-2">
+              ✕
+            </button>
+          )}
+        </div>
+      </div>
+
       {/* TABLE */}
       <div className="bg-[#0F1218] border border-white/[0.06] rounded-2xl shadow-xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="border-b border-white/[0.06] bg-[#161B22]/60 text-[#8B949E] font-mono uppercase tracking-wider">
-                <th className="py-3.5 px-4 font-medium">STATUS</th>
-                <th className="py-3.5 px-4 font-medium">CERTIFICATION NAME</th>
-                <th className="py-3.5 px-4 font-medium">VENDOR</th>
-                <th className="py-3.5 px-4 font-medium">DOMAIN</th>
-                <th className="py-3.5 px-4 font-medium text-right">AVG SALARY LIFT</th>
-                <th className="py-3.5 px-4 font-medium text-right">DEMAND SCORE</th>
-                <th className="py-3.5 px-4 font-medium">DIFFICULTY</th>
-                <th className="py-3.5 px-4 font-medium">LAST VERIFIED</th>
-                <th className="py-3.5 px-4 font-medium text-right">ACTIONS</th>
+              <tr className="border-b border-white/[0.06] bg-[#161B22]/60 text-[#8B949E] font-mono uppercase tracking-wider select-none">
+                <th className="py-3.5 px-3 font-medium">STATUS</th>
+                <th onClick={() => handleSort('name')} className="py-3.5 px-4 font-medium cursor-pointer hover:text-white transition-colors">
+                  CERTIFICATION NAME {sortCol === 'name' ? (sortDir === 'asc' ? '↑' : '↓') : ''}
+                </th>
+                <th onClick={() => handleSort('vendor')} className="py-3.5 px-3 font-medium cursor-pointer hover:text-white transition-colors">
+                  VENDOR {sortCol === 'vendor' ? (sortDir === 'asc' ? '↑' : '↓') : ''}
+                </th>
+                <th onClick={() => handleSort('domain')} className="py-3.5 px-3 font-medium cursor-pointer hover:text-white transition-colors">
+                  DOMAIN {sortCol === 'domain' ? (sortDir === 'asc' ? '↑' : '↓') : ''}
+                </th>
+                <th onClick={() => handleSort('lift')} className="py-3.5 px-3 font-medium text-right cursor-pointer hover:text-white transition-colors">
+                  AVG LIFT {sortCol === 'lift' ? (sortDir === 'asc' ? '↑' : '↓') : ''}
+                </th>
+                <th onClick={() => handleSort('demand')} className="py-3.5 px-3 font-medium text-right cursor-pointer hover:text-white transition-colors">
+                  DEMAND {sortCol === 'demand' ? (sortDir === 'asc' ? '↑' : '↓') : ''}
+                </th>
+                <th onClick={() => handleSort('difficulty')} className="py-3.5 px-3 font-medium cursor-pointer hover:text-white transition-colors">
+                  DIFFICULTY {sortCol === 'difficulty' ? (sortDir === 'asc' ? '↑' : '↓') : ''}
+                </th>
+                <th className="py-3.5 px-3 font-medium">ASSIGNED TASK</th>
+                <th className="py-3.5 px-3 font-medium text-right">ACTIONS</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/[0.04]">
-              {(activeTab === 'live' ? liveList : stagingList).length === 0 ? (
+              {filteredList.length === 0 ? (
                 <tr>
                   <td colSpan={9} className="py-12 text-center text-[#8B949E] font-mono">
-                    {activeTab === 'live'
-                      ? 'No live certification records found.'
-                      : 'Staging queue is clean — no pending updates waiting to push ✓'}
+                    No certification records match your current search or domain filter.
                   </td>
                 </tr>
               ) : (
-                (activeTab === 'live' ? liveList : stagingList).map((cert) => {
+                filteredList.map((cert) => {
                   const isStaging = activeTab === 'staging';
 
                   return (
                     <tr key={cert.id} className="hover:bg-white/[0.02] transition-colors">
-                      <td className="py-4 px-4 font-mono">
+                      <td className="py-3.5 px-3 font-mono">
                         {isStaging ? (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#3B82F6]/15 text-[#3B82F6] border border-[#3B82F6]/30 font-semibold text-[10px] uppercase">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#3B82F6]/15 text-[#3B82F6] border border-[#3B82F6]/30 font-semibold text-[10px] uppercase">
                             <span className="w-1.5 h-1.5 rounded-full bg-[#3B82F6] animate-pulse" />
-                            STAGED DIFF
+                            STAGED
                           </span>
                         ) : cert.serving_status === 'serving' ? (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/30 font-semibold text-[10px] uppercase">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/30 font-semibold text-[10px] uppercase">
                             <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E]" />
                             SERVING
                           </span>
-                        ) : cert.serving_status === 'stale' ? (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#E8C547]/15 text-[#E8C547] border border-[#E8C547]/30 font-semibold text-[10px] uppercase">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#E8C547]" />
-                            STALE &gt;30d
-                          </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#F85149]/15 text-[#F85149] border border-[#F85149]/30 font-semibold text-[10px] uppercase">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#F85149]" />
-                            NEEDS REVIEW
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#E8C547]/15 text-[#E8C547] border border-[#E8C547]/30 font-semibold text-[10px] uppercase">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#E8C547]" />
+                            STALE
                           </span>
                         )}
                       </td>
-                      <td className="py-4 px-4 font-medium text-white">
+                      <td className="py-3.5 px-4 font-medium text-white max-w-xs">
                         <div>
-                          <span>{cert.name}</span>
+                          <span className="block truncate" title={cert.name}>{cert.name}</span>
                           {isStaging && cert.diff_summary && (
                             <div className="mt-1 flex flex-wrap gap-2 font-mono text-[11px]">
                               {cert.diff_summary.map((d, idx) => (
-                                <span key={idx} className="px-2 py-0.5 rounded bg-[#161B22] border border-white/10 text-[#8B949E]">
+                                <span key={idx} className="px-1.5 py-0.5 rounded bg-[#161B22] border border-white/10 text-[#8B949E]">
                                   {d.field}: <span className="line-through text-[#F85149]">{d.old_val}</span>{' '}
                                   <ArrowRight className="w-3 h-3 inline text-[#8B949E]" />{' '}
                                   <span className="text-[#22C55E] font-bold">{d.new_val}</span>
@@ -298,26 +432,49 @@ export function CertificationsClient({ initialLive, initialStaging, userRole }: 
                           )}
                         </div>
                       </td>
-                      <td className="py-4 px-4 text-[#8B949E] font-mono">{cert.vendor}</td>
-                      <td className="py-4 px-4 text-white">{cert.domain}</td>
-                      <td className="py-4 px-4 font-mono text-right font-bold text-[#00D4A8]">{cert.avg_salary_lift}</td>
-                      <td className="py-4 px-4 font-mono text-right font-bold text-[#E8C547]">{cert.demand_score} / 10</td>
-                      <td className="py-4 px-4 font-mono">
-                        <span className="px-2 py-0.5 rounded bg-white/[0.04] text-[#8B949E] text-[11px]">
+                      <td className="py-3.5 px-3 text-[#8B949E] font-mono whitespace-nowrap">{cert.vendor}</td>
+                      <td className="py-3.5 px-3 text-white whitespace-nowrap">{cert.domain}</td>
+                      <td className="py-3.5 px-3 font-mono text-right font-bold text-[#00D4A8] whitespace-nowrap">{cert.avg_salary_lift}</td>
+                      <td className="py-3.5 px-3 font-mono text-right font-bold text-[#E8C547] whitespace-nowrap">{cert.demand_score} / 10</td>
+                      <td className="py-3.5 px-3 font-mono whitespace-nowrap">
+                        <span className="px-2 py-0.5 rounded bg-white/[0.04] text-[#8B949E] text-[10px]">
                           {cert.difficulty}
                         </span>
                       </td>
-                      <td className="py-4 px-4 font-mono text-[#8B949E]">
-                        {new Date(cert.last_verified).toLocaleDateString()}
+                      <td className="py-3.5 px-3 font-mono whitespace-nowrap">
+                        <div className="flex items-center gap-1.5">
+                          <UserCheck className="w-3.5 h-3.5 text-[#3B82F6]" />
+                          <select
+                            value={cert.assigned_to || 'Unassigned'}
+                            onChange={(e) => handleAssign(cert.id, e.target.value)}
+                            className="bg-[#161B22] border border-white/[0.08] rounded px-2 py-1 text-white text-[11px] focus:outline-none focus:border-[#00D4A8]"
+                          >
+                            <option value="Unassigned">Unassigned</option>
+                            <option value="Admin Tanuj">Admin Tanuj</option>
+                            <option value="Worker 1 (Priya)">Worker 1 (Priya)</option>
+                            <option value="Worker 2 (Rahul)">Worker 2 (Rahul)</option>
+                            <option value="Worker 3 (Ankit)">Worker 3 (Ankit)</option>
+                          </select>
+                        </div>
                       </td>
-                      <td className="py-4 px-4 text-right">
-                        <button
-                          onClick={() => openEdit(cert)}
-                          className="px-3 py-1.5 rounded-xl bg-white/[0.04] hover:bg-[#00D4A8]/15 hover:text-[#00D4A8] text-white font-mono text-xs font-semibold transition-all inline-flex items-center gap-1.5"
-                        >
-                          <Edit3 className="w-3.5 h-3.5" />
-                          <span>{isStaging ? 'Edit Staged' : 'Edit to Staging'}</span>
-                        </button>
+                      <td className="py-3.5 px-3 text-right whitespace-nowrap">
+                        <div className="flex items-center justify-end gap-1.5">
+                          <button
+                            onClick={() => setNotesModalCert(cert)}
+                            className="px-2.5 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-[#8B949E] hover:text-white font-mono text-[11px] inline-flex items-center gap-1 transition-all"
+                            title="View / Add Notes"
+                          >
+                            <MessageSquare className="w-3 h-3 text-[#E8C547]" />
+                            <span>({cert.internal_notes?.length || 0})</span>
+                          </button>
+                          <button
+                            onClick={() => openEdit(cert)}
+                            className="px-2.5 py-1.5 rounded-lg bg-white/[0.04] hover:bg-[#00D4A8]/15 hover:text-[#00D4A8] text-white font-mono text-[11px] font-semibold transition-all inline-flex items-center gap-1"
+                          >
+                            <Edit3 className="w-3 h-3" />
+                            <span>{isStaging ? 'Edit' : 'Stage'}</span>
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );
@@ -338,6 +495,73 @@ export function CertificationsClient({ initialLive, initialStaging, userRole }: 
         confirmWord="PUSH"
         loading={loading}
       />
+
+      {/* Notes Modal */}
+      <AnimatePresence>
+        {notesModalCert && (
+          <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-[#0F1218] border border-white/[0.1] rounded-2xl w-full max-w-md p-6 shadow-2xl space-y-4 font-mono text-xs"
+            >
+              <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+                <div className="flex items-center gap-2 text-white font-bold">
+                  <MessageSquare className="w-4 h-4 text-[#E8C547]" />
+                  <span>Internal Notes & Audit Log</span>
+                </div>
+                <button onClick={() => setNotesModalCert(null)} className="text-[#8B949E] hover:text-white">
+                  ✕
+                </button>
+              </div>
+
+              <div>
+                <p className="text-[#8B949E]">Target Record:</p>
+                <p className="text-white font-bold text-sm mt-0.5">{notesModalCert.name}</p>
+                <p className="text-[10px] text-[#00D4A8] mt-0.5">Assigned to: {notesModalCert.assigned_to || 'Unassigned'}</p>
+              </div>
+
+              <div className="bg-[#161B22] border border-white/[0.04] rounded-xl p-3.5 max-h-48 overflow-y-auto space-y-2">
+                {(!notesModalCert.internal_notes || notesModalCert.internal_notes.length === 0) ? (
+                  <p className="text-[#8B949E] text-center py-4">No internal notes attached yet.</p>
+                ) : (
+                  notesModalCert.internal_notes.map((n, i) => (
+                    <div key={i} className="p-2 rounded bg-white/[0.02] border border-white/[0.04] text-white/90">
+                      {n}
+                    </div>
+                  ))
+                )}
+              </div>
+
+              <form onSubmit={handleAddNote} className="space-y-3 pt-2">
+                <input
+                  type="text"
+                  placeholder="Add a new audit note or verification message..."
+                  value={newNoteText}
+                  onChange={(e) => setNewNoteText(e.target.value)}
+                  className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-[#00D4A8]"
+                />
+                <div className="flex justify-end gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setNotesModalCert(null)}
+                    className="px-4 py-2 rounded-xl bg-white/[0.04] text-[#8B949E] hover:text-white"
+                  >
+                    Close
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 rounded-xl bg-[#E8C547] text-[#080A0E] font-bold hover:bg-[#E8C547]/90"
+                  >
+                    Add Note
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* Edit Slide-over Panel */}
       <AnimatePresence>
@@ -409,7 +633,7 @@ export function CertificationsClient({ initialLive, initialStaging, userRole }: 
                     <label className="block text-xs text-[#8B949E] font-mono uppercase mb-1.5">Difficulty Level</label>
                     <select
                       value={editForm.difficulty || 'Intermediate'}
-                      onChange={(e) => setEditForm({ ...editForm, difficulty: e.target.value })}
+                      onChange={(e) => setEditForm({ ...editForm, difficulty: e.target.value as any })}
                       className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-[#00D4A8]"
                     >
                       <option value="Beginner">Beginner</option>

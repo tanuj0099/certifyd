@@ -3,6 +3,7 @@ import { supabaseAdmin } from '@/lib/supabase/server';
 import { getSession } from '@/lib/auth/session';
 import { CertificationsClient, CertRecord } from '@/components/data/CertificationsClient';
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default async function CertificationsPage() {
@@ -14,8 +15,8 @@ export default async function CertificationsPage() {
 
   try {
     const [liveRes, stagingRes] = await Promise.all([
-      supabaseAdmin.from('certifications').select('*').limit(50),
-      supabaseAdmin.from('certifications_staging').select('*').limit(50),
+      supabaseAdmin.from('certifications').select('*').limit(5000),
+      supabaseAdmin.from('certifications_staging').select('*').limit(5000),
     ]);
 
     if (liveRes.data && liveRes.data.length > 0) {
@@ -23,7 +24,7 @@ export default async function CertificationsPage() {
         id: c.id,
         name: c.cert_name || c.name || 'AWS Certified Solutions Architect',
         vendor: c.vendor || 'Amazon Web Services',
-        domain: c.domain || c.vendor || 'Cloud Architecture',
+        domain: c.domain || c.functional_track || c.role_category || c.vendor || 'Cloud Architecture',
         avg_salary_lift: c.avg_salary_lift || '32%',
         demand_score: c.demand_score || 9,
         difficulty: c.difficulty || 'Intermediate',

@@ -3,6 +3,7 @@ import { supabaseAdmin } from '@/lib/supabase/server';
 import { getSession } from '@/lib/auth/session';
 import { JobsClient, JobRecord } from '@/components/data/JobsClient';
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default async function JobsPage() {
@@ -14,8 +15,8 @@ export default async function JobsPage() {
 
   try {
     const [liveRes, stagingRes] = await Promise.all([
-      supabaseAdmin.from('market_jobs').select('*').limit(50),
-      supabaseAdmin.from('market_jobs_staging').select('*').limit(50),
+      supabaseAdmin.from('market_jobs').select('*').limit(5000),
+      supabaseAdmin.from('market_jobs_staging').select('*').limit(5000),
     ]);
 
     if (liveRes.data && liveRes.data.length > 0) {

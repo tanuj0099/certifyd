@@ -1051,6 +1051,16 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
           if (insertError) {
             console.error('Supabase DB Error message:', insertError.message);
           }
+          await supabase.from('resume_submissions').insert({
+            user_id: user?.id || user?.uid || null,
+            city: parsed.city || null,
+            domain: parsed.Database_Payload.domain_bucket || parsed.Database_Payload.current_role || null,
+            certs_found: parsed.Database_Payload.existing_certifications || [],
+            exp_band: parsed.Database_Payload.experience_years ? `${parsed.Database_Payload.experience_years} yrs` : null,
+            status: 'pending',
+            extracted_data: parsed.Database_Payload || {},
+            submitted_at: new Date().toISOString()
+          });
         } catch (dbErr) {
           console.error('Caught exception during Supabase resume upsert:', dbErr);
         }

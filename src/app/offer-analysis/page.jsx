@@ -298,6 +298,20 @@ export default function OfferAnalysisPage() {
           }).then(({ error: insertErr }) => {
             if (insertErr) console.warn('Failed to save structured offer letter to DB:', insertErr.message)
           })
+
+          supabase.from('offer_letter_submissions').insert({
+            user_id: user?.id || user?.uid || null,
+            city: location || null,
+            domain: scrubbedPayload.role || title || null,
+            ctc_band: ctcStated ? `₹${Math.round(ctcStated/100000)}L` : null,
+            role_category: scrubbedPayload.role || title || null,
+            employer_sector: scrubbedPayload.company_tier || null,
+            status: 'pending',
+            extracted_data: scrubbedPayload || {},
+            submitted_at: new Date().toISOString()
+          }).then(({ error: subErr }) => {
+            if (subErr) console.warn('Failed to save to offer_letter_submissions:', subErr.message)
+          })
         }
       }
     } catch (err) {

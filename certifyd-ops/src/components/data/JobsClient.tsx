@@ -15,6 +15,8 @@ import {
   X,
   MapPin,
   TrendingUp,
+  MessageSquare,
+  UserCheck
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -31,6 +33,8 @@ export interface JobRecord {
   serving_status: 'serving' | 'stale' | 'needs_review';
   top_cert: string;
   skills: string[];
+  assigned_to?: string;
+  internal_notes?: string[];
   diff_summary?: {
     field: string;
     old_val: string;
@@ -41,13 +45,19 @@ export interface JobRecord {
 interface JobsClientProps {
   initialLive: JobRecord[];
   initialStaging: JobRecord[];
-  userRole: 'SUPER_ADMIN' | 'TEAM_MEMBER';
+  userRole?: string;
 }
 
-export function JobsClient({ initialLive, initialStaging, userRole }: JobsClientProps) {
+export function JobsClient({ initialLive, initialStaging, userRole = 'SUPER_ADMIN' }: JobsClientProps) {
   const [activeTab, setActiveTab] = useState<'live' | 'staging'>('live');
   const [liveList, setLiveList] = useState<JobRecord[]>(initialLive);
   const [stagingList, setStagingList] = useState<JobRecord[]>(initialStaging);
+
+  // Search, Sort, and Filter state
+  const [domainFilter, setDomainFilter] = useState<string>('All');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [sortCol, setSortCol] = useState<'title' | 'city' | 'exp' | 'ctc' | 'sample'>('sample');
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
 
   const [editingJob, setEditingJob] = useState<JobRecord | null>(null);
   const [editForm, setEditForm] = useState<any>({});
@@ -56,7 +66,48 @@ export function JobsClient({ initialLive, initialStaging, userRole }: JobsClient
   const [showPushModal, setShowPushModal] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const [notesModalJob, setNotesModalJob] = useState<JobRecord | null>(null);
+  const [newNoteText, setNewNoteText] = useState('');
+
   const { showToast } = useToast();
+
+  function handleSort(col: typeof sortCol) {
+    if (sortCol === col) {
+      setSortDir(sortDir === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortCol(col);
+      setSortDir('desc');
+    }
+  }
+
+  function handleAssign(id: string, assignee: string) {
+    const updateList = (list: JobRecord[]) =>
+      list.map((j) => (j.id === id ? { ...j, assigned_to: assignee } : j));
+    if (activeTab === 'live') setLiveList(updateList);
+    else setStagingList(updateList);
+    showToast(`Assigned market job task to ${assignee} ✓`, 'success');
+  }
+
+  function handleAddNote(e: React.FormEvent) {
+    e.preventDefault();
+    if (!notesModalJob || !newNoteText.trim()) return;
+    const noteEntry = `[${new Date().toLocaleDateString()}] ${newNoteText.trim()}`;
+    const updateList = (list: JobRecord[]) =>
+      list.map((j) =>
+        j.id === notesModalJob.id
+          ? { ...j, internal_notes: [...(j.internal_notes || []), noteEntry] }
+          : j
+      );
+
+    if (activeTab === 'live') setLiveList(updateList);
+    else setStagingList(updateList);
+
+    setNotesModalJob((prev) =>
+      prev ? { ...prev, internal_notes: [...(prev.internal_notes || []), noteEntry] } : null
+    );
+    setNewNoteText('');
+    showToast('Added internal note to job benchmark ✓', 'success');
+  }
 
   function openEdit(job: JobRecord) {
     setEditingJob(job);
@@ -77,13 +128,13 @@ export function JobsClient({ initialLive, initialStaging, userRole }: JobsClient
         diff_summary: [
           {
             field: 'median_ctc',
-            old_val: editingJob?.median_ctc || '₹16.0L',
-            new_val: editForm.median_ctc,
+            old_val: editingJob?.median_ctc || '₹18.4L',
+            new_val: editForm.median_ctc || '₹20.0L',
           },
           {
             field: 'sample_size',
-            old_val: String(editingJob?.sample_size || 45),
-            new_val: String(editForm.sample_size),
+            old_val: String(editingJob?.sample_size || 50),
+            new_val: String(editForm.sample_size || 55),
           },
         ],
       };
@@ -94,17 +145,17 @@ export function JobsClient({ initialLive, initialStaging, userRole }: JobsClient
         const idx = prev.findIndex((i) => i.id === updatedRecord.id);
         if (idx >= 0) {
           const next = [...prev];
-          next[idx] = updatedRecord;
+          next[idx] = updatedRecord as JobRecord;
           return next;
         }
-        return [updatedRecord, ...prev];
+        return [updatedRecord as JobRecord, ...prev];
       });
 
-      showToast(`Saved "${updatedRecord.title}" (${updatedRecord.city}) to staging queue ✓`, 'success');
+      showToast(`Saved "${updatedRecord.title}" to staging queue ✓`, 'success');
       setEditingJob(null);
       setActiveTab('staging');
     } catch (err: any) {
-      showToast(err.message || 'Failed to save staging job', 'error');
+      showToast(err.message || 'Failed to save staging record', 'error');
     } finally {
       setLoading(false);
     }
@@ -129,7 +180,7 @@ export function JobsClient({ initialLive, initialStaging, userRole }: JobsClient
       });
       setStagingList([]);
       setShowPushModal(false);
-      showToast(`Pushed ${res.count} job market salary updates to live production on certifyd.in! 🚀`, 'success');
+      showToast(`Pushed ${res.count} market job updates to live production on certifyd.in! 🚀`, 'success');
       setActiveTab('live');
     } catch (err: any) {
       showToast(err.message || 'Push to live failed', 'error');
@@ -138,16 +189,60 @@ export function JobsClient({ initialLive, initialStaging, userRole }: JobsClient
     }
   }
 
+  // Apply Domain Filter, Search Query, and Sorting
+  const currentSource = activeTab === 'live' ? liveList : stagingList;
+  const filteredList = currentSource
+    .filter((item) => {
+      if (domainFilter !== 'All') {
+        const titleStr = (item.title || '').toLowerCase();
+        const topCertStr = (item.top_cert || '').toLowerCase();
+        const skillsStr = (item.skills || []).join(' ').toLowerCase();
+        const combined = `${titleStr} ${topCertStr} ${skillsStr}`;
+
+        if (domainFilter === 'Data Management') {
+          if (!combined.includes('data') && !combined.includes('sql') && !combined.includes('db') && !combined.includes('analytic') && !combined.includes('bi')) {
+            return false;
+          }
+        } else if (domainFilter === 'Cloud Architecture') {
+          if (!combined.includes('cloud') && !combined.includes('aws') && !combined.includes('azure') && !combined.includes('gcp') && !combined.includes('architect')) {
+            return false;
+          }
+        } else if (!combined.includes(domainFilter.toLowerCase())) {
+          return false;
+        }
+      }
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        const combined = `${item.title} ${item.city} ${item.top_cert} ${item.skills?.join(' ')}`.toLowerCase();
+        if (!combined.includes(q)) return false;
+      }
+      return true;
+    })
+    .sort((a, b) => {
+      if (sortCol === 'title') return sortDir === 'asc' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title);
+      if (sortCol === 'city') return sortDir === 'asc' ? a.city.localeCompare(b.city) : b.city.localeCompare(a.city);
+      if (sortCol === 'exp') return sortDir === 'asc' ? a.exp_band.localeCompare(b.exp_band) : b.exp_band.localeCompare(a.exp_band);
+      if (sortCol === 'ctc') {
+        const ctcA = parseFloat((a.median_ctc || '0').replace(/[^0-9.]/g, ''));
+        const ctcB = parseFloat((b.median_ctc || '0').replace(/[^0-9.]/g, ''));
+        return sortDir === 'asc' ? ctcA - ctcB : ctcB - ctcA;
+      }
+      if (sortCol === 'sample') return sortDir === 'asc' ? a.sample_size - b.sample_size : b.sample_size - a.sample_size;
+      return 0;
+    });
+
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-6 pb-12">
+      {/* HEADER */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.06] pb-6">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Market Jobs Reference Table</h1>
+          <h1 className="text-2xl font-bold text-white tracking-tight">Market Jobs Benchmarks Table</h1>
           <p className="text-xs text-[#8B949E] font-mono mt-0.5">
-            Real-time scraped compensation medians and confidence samples serving certifyd.in
+            Verified salary bands and sample size distributions across India tech hubs ({currentSource.length} records in database)
           </p>
         </div>
 
+        {/* Tab Switcher */}
         <div className="flex items-center gap-1 bg-[#0F1218] p-1 rounded-xl border border-white/[0.06] font-mono text-xs">
           <button
             onClick={() => setActiveTab('live')}
@@ -177,6 +272,7 @@ export function JobsClient({ initialLive, initialStaging, userRole }: JobsClient
         </div>
       </div>
 
+      {/* STAGING TAB TOP BAR */}
       {activeTab === 'staging' && (
         <div className="bg-gradient-to-r from-[#161B22] via-[#0F1218] to-[#161B22] border border-[#3B82F6]/30 rounded-2xl p-5 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
@@ -185,10 +281,10 @@ export function JobsClient({ initialLive, initialStaging, userRole }: JobsClient
             </div>
             <div>
               <h3 className="text-sm font-semibold text-white">
-                Staged Salary Benchmarks ({stagingList.length} updates waiting)
+                Staging Workflow ({stagingList.length} updates pending)
               </h3>
               <p className="text-xs text-[#8B949E] mt-0.5">
-                Review diff summaries below. Pushing updates compensation percentiles across certifyd.in ROI calculators.
+                Review diff summaries below. Pushing to live instantly updates production market salary bands.
               </p>
             </div>
           </div>
@@ -212,70 +308,112 @@ export function JobsClient({ initialLive, initialStaging, userRole }: JobsClient
                 className="px-5 py-2.5 rounded-xl bg-[#22C55E] hover:bg-[#22C55E]/90 text-[#080A0E] text-xs font-bold font-mono transition-all shadow-lg shadow-[#22C55E]/20 disabled:opacity-40 flex items-center gap-2"
               >
                 <CheckCircle2 className="w-4 h-4" />
-                <span>PUSH {stagingList.length} JOB BENCHMARKS 🚀</span>
+                <span>PUSH {stagingList.length} UPDATES TO LIVE 🚀</span>
               </button>
             )}
           </div>
         </div>
       )}
 
+      {/* SEARCH & DOMAIN FILTERS BAR */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#0F1218] p-4 rounded-2xl border border-white/[0.06] shadow-lg">
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-2 md:pb-0 font-mono text-xs">
+          {['All', 'Cloud Architecture', 'Data Management', 'Cybersecurity', 'DevOps & SRE', 'AI & ML'].map((d) => (
+            <button
+              key={d}
+              onClick={() => setDomainFilter(d)}
+              className={`px-3.5 py-1.5 rounded-xl whitespace-nowrap transition-all ${
+                domainFilter === d
+                  ? 'bg-[#00D4A8] text-[#080A0E] font-bold shadow-sm shadow-[#00D4A8]/20'
+                  : 'bg-[#161B22] text-[#8B949E] hover:text-white border border-white/5'
+              }`}
+            >
+              {d}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-2">
+          <input
+            type="text"
+            placeholder="Search roles, city, skill..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-1.5 text-xs text-white placeholder:text-[#8B949E] focus:outline-none focus:border-[#00D4A8] w-64 font-mono"
+          />
+          {searchQuery && (
+            <button onClick={() => setSearchQuery('')} className="text-[#8B949E] hover:text-white text-xs font-mono px-2">
+              ✕
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* TABLE */}
       <div className="bg-[#0F1218] border border-white/[0.06] rounded-2xl shadow-xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="border-b border-white/[0.06] bg-[#161B22]/60 text-[#8B949E] font-mono uppercase tracking-wider">
-                <th className="py-3.5 px-4 font-medium">STATUS</th>
-                <th className="py-3.5 px-4 font-medium">JOB TITLE</th>
-                <th className="py-3.5 px-4 font-medium">CITY</th>
-                <th className="py-3.5 px-4 font-medium">EXP BAND</th>
-                <th className="py-3.5 px-4 font-medium text-right">MEDIAN CTC</th>
-                <th className="py-3.5 px-4 font-medium text-right">75TH PERCENTILE</th>
-                <th className="py-3.5 px-4 font-medium text-right">SAMPLE SIZE</th>
-                <th className="py-3.5 px-4 font-medium">SOURCE / SCRAPED</th>
-                <th className="py-3.5 px-4 font-medium text-right">ACTIONS</th>
+              <tr className="border-b border-white/[0.06] bg-[#161B22]/60 text-[#8B949E] font-mono uppercase tracking-wider select-none">
+                <th className="py-3.5 px-3 font-medium">STATUS</th>
+                <th onClick={() => handleSort('title')} className="py-3.5 px-4 font-medium cursor-pointer hover:text-white transition-colors">
+                  JOB ROLE TITLE {sortCol === 'title' ? (sortDir === 'asc' ? '↑' : '↓') : ''}
+                </th>
+                <th onClick={() => handleSort('city')} className="py-3.5 px-3 font-medium cursor-pointer hover:text-white transition-colors">
+                  CITY {sortCol === 'city' ? (sortDir === 'asc' ? '↑' : '↓') : ''}
+                </th>
+                <th onClick={() => handleSort('exp')} className="py-3.5 px-3 font-medium cursor-pointer hover:text-white transition-colors">
+                  EXP BAND {sortCol === 'exp' ? (sortDir === 'asc' ? '↑' : '↓') : ''}
+                </th>
+                <th onClick={() => handleSort('ctc')} className="py-3.5 px-3 font-medium text-right cursor-pointer hover:text-white transition-colors">
+                  MEDIAN CTC {sortCol === 'ctc' ? (sortDir === 'asc' ? '↑' : '↓') : ''}
+                </th>
+                <th onClick={() => handleSort('sample')} className="py-3.5 px-3 font-medium text-right cursor-pointer hover:text-white transition-colors">
+                  SAMPLE SIZE {sortCol === 'sample' ? (sortDir === 'asc' ? '↑' : '↓') : ''}
+                </th>
+                <th className="py-3.5 px-3 font-medium">TOP REQUIRED CERT</th>
+                <th className="py-3.5 px-3 font-medium">ASSIGNED TASK</th>
+                <th className="py-3.5 px-3 font-medium text-right">ACTIONS</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/[0.04]">
-              {(activeTab === 'live' ? liveList : stagingList).length === 0 ? (
+              {filteredList.length === 0 ? (
                 <tr>
                   <td colSpan={9} className="py-12 text-center text-[#8B949E] font-mono">
-                    {activeTab === 'live'
-                      ? 'No live job market benchmarks found.'
-                      : 'Staging queue is clean — no pending job updates waiting to push ✓'}
+                    No market job benchmarks match your current search or domain filter.
                   </td>
                 </tr>
               ) : (
-                (activeTab === 'live' ? liveList : stagingList).map((job) => {
+                filteredList.map((job) => {
                   const isStaging = activeTab === 'staging';
-                  const isLowConfidence = job.sample_size < 30;
 
                   return (
                     <tr key={job.id} className="hover:bg-white/[0.02] transition-colors">
-                      <td className="py-4 px-4 font-mono">
+                      <td className="py-3.5 px-3 font-mono">
                         {isStaging ? (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#3B82F6]/15 text-[#3B82F6] border border-[#3B82F6]/30 font-semibold text-[10px] uppercase">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#3B82F6]/15 text-[#3B82F6] border border-[#3B82F6]/30 font-semibold text-[10px] uppercase">
                             <span className="w-1.5 h-1.5 rounded-full bg-[#3B82F6] animate-pulse" />
-                            STAGED DIFF
+                            STAGED
                           </span>
                         ) : job.serving_status === 'serving' ? (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/30 font-semibold text-[10px] uppercase">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/30 font-semibold text-[10px] uppercase">
                             <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E]" />
                             SERVING
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#E8C547]/15 text-[#E8C547] border border-[#E8C547]/30 font-semibold text-[10px] uppercase">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#E8C547]/15 text-[#E8C547] border border-[#E8C547]/30 font-semibold text-[10px] uppercase">
                             <span className="w-1.5 h-1.5 rounded-full bg-[#E8C547]" />
-                            NEEDS REVIEW
+                            STALE
                           </span>
                         )}
                       </td>
-                      <td className="py-4 px-4 font-medium text-white">
+                      <td className="py-3.5 px-4 font-medium text-white max-w-xs">
                         <div>
-                          <span>{job.title}</span>
+                          <span className="block truncate" title={job.title}>{job.title}</span>
                           {isStaging && job.diff_summary && (
                             <div className="mt-1 flex flex-wrap gap-2 font-mono text-[11px]">
                               {job.diff_summary.map((d, idx) => (
-                                <span key={idx} className="px-2 py-0.5 rounded bg-[#161B22] border border-white/10 text-[#8B949E]">
+                                <span key={idx} className="px-1.5 py-0.5 rounded bg-[#161B22] border border-white/10 text-[#8B949E]">
                                   {d.field}: <span className="line-through text-[#F85149]">{d.old_val}</span>{' '}
                                   <ArrowRight className="w-3 h-3 inline text-[#8B949E]" />{' '}
                                   <span className="text-[#22C55E] font-bold">{d.new_val}</span>
@@ -285,35 +423,52 @@ export function JobsClient({ initialLive, initialStaging, userRole }: JobsClient
                           )}
                         </div>
                       </td>
-                      <td className="py-4 px-4 text-white font-medium flex items-center gap-1.5 mt-2">
-                        <MapPin className="w-3.5 h-3.5 text-[#3B82F6] shrink-0" />
-                        <span>{job.city}</span>
-                      </td>
-                      <td className="py-4 px-4 font-mono text-[#8B949E]">{job.exp_band}</td>
-                      <td className="py-4 px-4 font-mono text-right font-bold text-[#00D4A8]">{job.median_ctc}</td>
-                      <td className="py-4 px-4 font-mono text-right font-bold text-[#22C55E]">{job.p75_ctc}</td>
-                      <td className="py-4 px-4 font-mono text-right">
-                        <div className="flex flex-col items-end">
-                          <span className="font-semibold text-white">{job.sample_size} postings</span>
-                          {isLowConfidence && (
-                            <span className="text-[10px] text-[#E8C547] bg-[#E8C547]/10 px-1.5 py-0.2 rounded mt-0.5 font-bold flex items-center gap-1">
-                              <AlertTriangle className="w-2.5 h-2.5" /> Low Confidence
-                            </span>
-                          )}
+                      <td className="py-3.5 px-3 text-[#8B949E] font-mono whitespace-nowrap">
+                        <div className="flex items-center gap-1">
+                          <MapPin className="w-3 h-3 text-[#3B82F6]" />
+                          <span>{job.city}</span>
                         </div>
                       </td>
-                      <td className="py-4 px-4 font-mono text-[#8B949E]">
-                        <div>{job.source}</div>
-                        <div className="text-[10px] text-[#8B949E]/60">{new Date(job.last_scraped).toLocaleDateString()}</div>
+                      <td className="py-3.5 px-3 text-white font-mono whitespace-nowrap">{job.exp_band}</td>
+                      <td className="py-3.5 px-3 font-mono text-right font-bold text-[#00D4A8] whitespace-nowrap">{job.median_ctc}</td>
+                      <td className="py-3.5 px-3 font-mono text-right font-bold text-[#E8C547] whitespace-nowrap">{job.sample_size} roles</td>
+                      <td className="py-3.5 px-3 font-mono text-white/80 max-w-xs truncate" title={job.top_cert}>
+                        {job.top_cert}
                       </td>
-                      <td className="py-4 px-4 text-right">
-                        <button
-                          onClick={() => openEdit(job)}
-                          className="px-3 py-1.5 rounded-xl bg-white/[0.04] hover:bg-[#00D4A8]/15 hover:text-[#00D4A8] text-white font-mono text-xs font-semibold transition-all inline-flex items-center gap-1.5"
-                        >
-                          <Edit3 className="w-3.5 h-3.5" />
-                          <span>{isStaging ? 'Edit Staged' : 'Edit to Staging'}</span>
-                        </button>
+                      <td className="py-3.5 px-3 font-mono whitespace-nowrap">
+                        <div className="flex items-center gap-1.5">
+                          <UserCheck className="w-3.5 h-3.5 text-[#3B82F6]" />
+                          <select
+                            value={job.assigned_to || 'Unassigned'}
+                            onChange={(e) => handleAssign(job.id, e.target.value)}
+                            className="bg-[#161B22] border border-white/[0.08] rounded px-2 py-1 text-white text-[11px] focus:outline-none focus:border-[#00D4A8]"
+                          >
+                            <option value="Unassigned">Unassigned</option>
+                            <option value="Admin Tanuj">Admin Tanuj</option>
+                            <option value="Worker 1 (Priya)">Worker 1 (Priya)</option>
+                            <option value="Worker 2 (Rahul)">Worker 2 (Rahul)</option>
+                            <option value="Worker 3 (Ankit)">Worker 3 (Ankit)</option>
+                          </select>
+                        </div>
+                      </td>
+                      <td className="py-3.5 px-3 text-right whitespace-nowrap">
+                        <div className="flex items-center justify-end gap-1.5">
+                          <button
+                            onClick={() => setNotesModalJob(job)}
+                            className="px-2.5 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-[#8B949E] hover:text-white font-mono text-[11px] inline-flex items-center gap-1 transition-all"
+                            title="View / Add Notes"
+                          >
+                            <MessageSquare className="w-3 h-3 text-[#E8C547]" />
+                            <span>({job.internal_notes?.length || 0})</span>
+                          </button>
+                          <button
+                            onClick={() => openEdit(job)}
+                            className="px-2.5 py-1.5 rounded-lg bg-white/[0.04] hover:bg-[#00D4A8]/15 hover:text-[#00D4A8] text-white font-mono text-[11px] font-semibold transition-all inline-flex items-center gap-1"
+                          >
+                            <Edit3 className="w-3 h-3" />
+                            <span>{isStaging ? 'Edit' : 'Stage'}</span>
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );
@@ -324,16 +479,85 @@ export function JobsClient({ initialLive, initialStaging, userRole }: JobsClient
         </div>
       </div>
 
+      {/* Push to Live Modal */}
       <ConfirmModal
         isOpen={showPushModal}
         onClose={() => setShowPushModal(false)}
         onConfirm={handleConfirmPush}
-        title={`Push ${stagingList.length} Staged Job Benchmarks to Live Production`}
-        impact="This will instantly overwrite live market salary medians on certifyd.in. Candidates evaluating their CTC against regional percentiles will immediately see these updated figures."
+        title={`Push ${stagingList.length} Staged Jobs to Live Production`}
+        impact="This will instantly overwrite live market job salary benchmarks on certifyd.in."
         confirmWord="PUSH"
         loading={loading}
       />
 
+      {/* Notes Modal */}
+      <AnimatePresence>
+        {notesModalJob && (
+          <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-[#0F1218] border border-white/[0.1] rounded-2xl w-full max-w-md p-6 shadow-2xl space-y-4 font-mono text-xs"
+            >
+              <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+                <div className="flex items-center gap-2 text-white font-bold">
+                  <MessageSquare className="w-4 h-4 text-[#E8C547]" />
+                  <span>Internal Notes & Audit Log</span>
+                </div>
+                <button onClick={() => setNotesModalJob(null)} className="text-[#8B949E] hover:text-white">
+                  ✕
+                </button>
+              </div>
+
+              <div>
+                <p className="text-[#8B949E]">Target Role:</p>
+                <p className="text-white font-bold text-sm mt-0.5">{notesModalJob.title} ({notesModalJob.city})</p>
+                <p className="text-[10px] text-[#00D4A8] mt-0.5">Assigned to: {notesModalJob.assigned_to || 'Unassigned'}</p>
+              </div>
+
+              <div className="bg-[#161B22] border border-white/[0.04] rounded-xl p-3.5 max-h-48 overflow-y-auto space-y-2">
+                {(!notesModalJob.internal_notes || notesModalJob.internal_notes.length === 0) ? (
+                  <p className="text-[#8B949E] text-center py-4">No internal notes attached yet.</p>
+                ) : (
+                  notesModalJob.internal_notes.map((n, i) => (
+                    <div key={i} className="p-2 rounded bg-white/[0.02] border border-white/[0.04] text-white/90">
+                      {n}
+                    </div>
+                  ))
+                )}
+              </div>
+
+              <form onSubmit={handleAddNote} className="space-y-3 pt-2">
+                <input
+                  type="text"
+                  placeholder="Add a new audit note or verification message..."
+                  value={newNoteText}
+                  onChange={(e) => setNewNoteText(e.target.value)}
+                  className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-[#00D4A8]"
+                />
+                <div className="flex justify-end gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setNotesModalJob(null)}
+                    className="px-4 py-2 rounded-xl bg-white/[0.04] text-[#8B949E] hover:text-white"
+                  >
+                    Close
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 rounded-xl bg-[#E8C547] text-[#080A0E] font-bold hover:bg-[#E8C547]/90"
+                  >
+                    Add Note
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Edit Slide-over Panel */}
       <AnimatePresence>
         {editingJob && (
           <>
@@ -351,8 +575,8 @@ export function JobsClient({ initialLive, initialStaging, userRole }: JobsClient
                     <Edit3 className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-semibold text-white font-mono">Stage Job Market Benchmark</h3>
-                    <p className="text-xs text-[#8B949E] mt-0.5">{editingJob.title} • {editingJob.city}</p>
+                    <h3 className="text-sm font-semibold text-white font-mono">Stage Market Job Benchmark</h3>
+                    <p className="text-xs text-[#8B949E] mt-0.5 truncate max-w-[260px]">{editingJob.title}</p>
                   </div>
                 </div>
                 <button onClick={() => setEditingJob(null)} className="p-1 text-[#8B949E] hover:text-white">
@@ -363,48 +587,47 @@ export function JobsClient({ initialLive, initialStaging, userRole }: JobsClient
               <form onSubmit={handleSaveStaging} className="flex-1 overflow-y-auto p-6 space-y-5">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs text-[#8B949E] font-mono uppercase mb-1.5">Median CTC</label>
+                    <label className="block text-xs text-[#8B949E] font-mono uppercase mb-1.5">Job Title</label>
                     <input
                       type="text"
-                      required
-                      value={editForm.median_ctc || ''}
-                      onChange={(e) => setEditForm({ ...editForm, median_ctc: e.target.value })}
-                      placeholder="₹16.5L"
-                      className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-[#00D4A8]"
+                      value={editForm.title || ''}
+                      disabled
+                      className="w-full bg-[#161B22] border border-white/[0.04] rounded-xl px-3.5 py-2 text-sm text-[#8B949E] font-mono cursor-not-allowed"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs text-[#8B949E] font-mono uppercase mb-1.5">75th Percentile CTC</label>
+                    <label className="block text-xs text-[#8B949E] font-mono uppercase mb-1.5">City Hub</label>
                     <input
                       type="text"
-                      required
-                      value={editForm.p75_ctc || ''}
-                      onChange={(e) => setEditForm({ ...editForm, p75_ctc: e.target.value })}
-                      placeholder="₹22.0L"
-                      className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-[#00D4A8]"
+                      value={editForm.city || ''}
+                      disabled
+                      className="w-full bg-[#161B22] border border-white/[0.04] rounded-xl px-3.5 py-2 text-sm text-[#8B949E] font-mono cursor-not-allowed"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs text-[#8B949E] font-mono uppercase mb-1.5">Sample Size (postings)</label>
+                    <label className="block text-xs text-[#8B949E] font-mono uppercase mb-1.5">Median CTC</label>
                     <input
-                      type="number"
+                      type="text"
                       required
-                      value={editForm.sample_size || 45}
-                      onChange={(e) => setEditForm({ ...editForm, sample_size: Number(e.target.value) })}
+                      value={editForm.median_ctc || ''}
+                      onChange={(e) => setEditForm({ ...editForm, median_ctc: e.target.value })}
+                      placeholder="e.g. ₹18.4L"
                       className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-[#00D4A8]"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs text-[#8B949E] font-mono uppercase mb-1.5">Top Certification</label>
+                    <label className="block text-xs text-[#8B949E] font-mono uppercase mb-1.5">Sample Size Roles</label>
                     <input
-                      type="text"
-                      value={editForm.top_cert || ''}
-                      onChange={(e) => setEditForm({ ...editForm, top_cert: e.target.value })}
+                      type="number"
+                      min={1}
+                      required
+                      value={editForm.sample_size || 50}
+                      onChange={(e) => setEditForm({ ...editForm, sample_size: Number(e.target.value) })}
                       className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-[#00D4A8]"
                     />
                   </div>
@@ -412,19 +635,31 @@ export function JobsClient({ initialLive, initialStaging, userRole }: JobsClient
 
                 <div>
                   <label className="block text-xs text-[#8B949E] font-mono uppercase mb-1.5">
-                    Skills in Demand (comma separated)
+                    Top Required Certification Benchmark
+                  </label>
+                  <input
+                    type="text"
+                    value={editForm.top_cert || ''}
+                    onChange={(e) => setEditForm({ ...editForm, top_cert: e.target.value })}
+                    className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-[#00D4A8]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs text-[#8B949E] font-mono uppercase mb-1.5">
+                    Required Skills Tags (comma separated)
                   </label>
                   <input
                     type="text"
                     value={skillsInput}
                     onChange={(e) => setSkillsInput(e.target.value)}
-                    placeholder="Kubernetes, Terraform, AWS, Python, CI/CD"
+                    placeholder="Kubernetes, AWS, Terraform, Python"
                     className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-[#00D4A8]"
                   />
                 </div>
 
                 <div className="p-3.5 rounded-xl bg-[#00D4A8]/10 border border-[#00D4A8]/20 text-xs text-[#00D4A8] leading-relaxed">
-                  <strong>Staging Safety Notice:</strong> Changes are saved to the staging queue and will only go live when a Super Admin executes "Push to Live".
+                  <strong>Staging Safety Notice:</strong> Saving changes places them in the staging queue. They will NOT affect calculations on certifyd.in until a Super Admin executes "Push to Live".
                 </div>
 
                 <div className="pt-4 flex items-center justify-end gap-3">

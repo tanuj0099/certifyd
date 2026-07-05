@@ -5,6 +5,7 @@ import { useJourneyStore } from '@/store/useJourneyStore.js';
 import { FeedbackAction } from './watermelon-ui/feedback-action-base.jsx';
 import { supabase } from '../lib/supabase.js';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '../hooks/useAuth.jsx';
 import { callGroqForResume } from '@/services/aiService.jsx';
 
 export default function WelcomeOnboarding({ onComplete }) {
@@ -12,17 +13,15 @@ export default function WelcomeOnboarding({ onComplete }) {
   const [errorMsg, setErrorMsg] = useState('');
   const setResumeName = useJourneyStore(s => s.setResumeName);
   const router = useRouter();
+  const { user } = useAuth();
 
   const handleFileUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setStatus('uploading');
-    
-    // Simulate upload delay for premium feel
-    await new Promise(r => setTimeout(r, 1200));
-    
-    setStatus('extracting');
+    setErrorMsg('');
+
     try {
       const formData = new FormData();
       formData.append('file', file);
@@ -41,13 +40,17 @@ export default function WelcomeOnboarding({ onComplete }) {
 
       setStatus('extracting');
 
-      const prompt = `You are a career data extractor. Read this resume text and output ONLY a JSON object.
+      const prompt = `You are an expert career data extractor. Read this resume text and output ONLY a JSON object with real extracted values from the text.
       
 {
-  "inferredRole": "Their current or most recent job title",
+  "inferredRole": "Their current or most recent job title extracted from resume",
   "recommendedDomain": "One of: Cloud / Tech, Data & AI, Cybersecurity, Finance, Management, Marketing, HR & People. (Pick closest match)",
-  "estimatedSalary": "A realistic number in Lakhs (e.g., 6.5) based on their YOE and role. If unknown, guess based on Indian market.",
-  "topSkills": ["skill1", "skill2", "skill3", "skill4"]
+  "estimatedSalary": "A realistic number in Lakhs (e.g., 6.5) based on their YOE and role",
+  "topSkills": ["skill1", "skill2", "skill3", "skill4"],
+  "city": "Their current city or nearest tech hub extracted from resume (e.g. Bengaluru, Hyderabad, Pune, Mumbai, Delhi / NCR, Chennai, Kolkata)",
+  "experienceYears": 4,
+  "experienceBand": "Their experience band e.g. '0-2 yrs', '3-5 yrs', '6-10 yrs', or '10+ yrs'",
+  "existingCertifications": ["List any real certification names found in their resume"]
 }
 
 Resume Text:
@@ -56,7 +59,7 @@ ${parseData.text.substring(0, 4000)}
 --- END RESUME TEXT ---`;
 
       const aiText = await callGroqForResume(null, prompt);
-      const cleaned = aiText.replace(/^```(?:json)?\\s*/i, '').replace(/\\s*```\\s*$/, '').trim();
+      const cleaned = aiText.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').trim();
       const data = JSON.parse(cleaned);
 
       // Set to store
@@ -67,6 +70,33 @@ ${parseData.text.substring(0, 4000)}
         currentSalary: data.estimatedSalary || '',
         skills: data.topSkills || []
       });
+
+      // Save dynamic real data to Supabase so it immediately reflects on certifyd-ops
+      try {
+        if (supabase) {
+          const realUserId = user?.id || user?.uid || null;
+          const payload = {
+            user_id: realUserId,
+            city: data.city || null,
+            domain: data.recommendedDomain || data.inferredRole || null,
+            certs_found: data.existingCertifications || [],
+            exp_band: data.experienceBand || (data.experienceYears ? `${data.experienceYears} yrs` : null),
+            status: 'pending',
+            extracted_data: {
+              role_category: data.inferredRole || null,
+              current_salary: data.estimatedSalary || null,
+              top_skills: data.topSkills || [],
+              experience_years: data.experienceYears || null,
+              file_name: file.name
+            },
+            submitted_at: new Date().toISOString()
+          };
+          await supabase.from('resume_submissions').insert(payload);
+          await supabase.from('resumes').insert({ ...payload, technical_skills: data.topSkills || [], current_role: data.inferredRole || null });
+        }
+      } catch (dbErr) {
+        console.warn('Ops upload sync warning:', dbErr);
+      }
 
       setStatus('success');
     } catch (err) {
