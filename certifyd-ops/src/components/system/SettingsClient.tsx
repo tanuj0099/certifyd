@@ -44,6 +44,7 @@ export function SettingsClient({
 
   // Security & Credential state
   const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [adminEmailInput, setAdminEmailInput] = useState(currentAdminEmail);
 
@@ -59,12 +60,17 @@ export function SettingsClient({
       showToast('Password must be at least 6 characters long.', 'error');
       return;
     }
+    if (newPassword !== confirmPassword) {
+      showToast('Passwords do not match. Please check and re-enter.', 'error');
+      return;
+    }
     setLoading(true);
     try {
       const res = await updateUserPasswordAction(currentAdminEmail, newPassword);
       if (res.success) {
-        showToast('Password updated successfully! ✓', 'success');
+        showToast('Password updated successfully! ✓ You can use this immediately on login.', 'success');
         setNewPassword('');
+        setConfirmPassword('');
       } else {
         showToast(res.message || 'Failed to update password', 'error');
       }
@@ -274,9 +280,23 @@ export function SettingsClient({
                 </button>
               </div>
             </div>
+            <div>
+              <label className="block text-xs font-mono text-[#8B949E] mb-1">Confirm New Password</label>
+              <div className="relative">
+                <input
+                  type={showNewPassword ? 'text' : 'password'}
+                  required
+                  minLength={6}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Re-enter your new password"
+                  className="w-full bg-[#0D1117] border border-white/10 rounded-xl pl-3.5 pr-10 py-2 text-sm text-white focus:outline-none focus:border-[#F97316] font-mono"
+                />
+              </div>
+            </div>
             <button
               type="submit"
-              disabled={loading || !newPassword}
+              disabled={loading || !newPassword || !confirmPassword || newPassword !== confirmPassword}
               className="px-4 py-2 rounded-xl bg-[#F97316] text-[#080A0E] text-xs font-bold font-mono hover:bg-[#F97316]/90 disabled:opacity-40 transition-all flex items-center gap-1.5"
             >
               <Save className="w-3.5 h-3.5" />

@@ -38,30 +38,38 @@ export async function loginAction(formData: FormData) {
   }
 
   // Validate credentials
-  const { email: adminEmail, hasCustomPassword } = await getAdminCredentialsAction();
+  const { email: adminEmail } = await getAdminCredentialsAction();
   const envUsername = process.env.ADMIN_USERNAME || 'admin@certifyd.in';
   const envHash = process.env.ADMIN_PASSWORD_HASH;
 
   let isValid = false;
   let role: 'SUPER_ADMIN' | 'TEAM_MEMBER' = 'SUPER_ADMIN';
 
+  const fs = await import('fs');
+  const path = await import('path');
+  const authCacheFile = path.join(process.cwd(), '.next', 'ops_cache', 'admin_credentials.json');
+  let cachedCreds: Record<string, string> = {};
+  try {
+    if (fs.existsSync(authCacheFile)) {
+      cachedCreds = JSON.parse(fs.readFileSync(authCacheFile, 'utf-8'));
+    }
+  } catch (e) {}
+
+  const cleanUser = username.toLowerCase().trim();
+  const isAdmin =
+    cleanUser === adminEmail.toLowerCase() ||
+    cleanUser === envUsername.toLowerCase() ||
+    cleanUser === 'admin@certifyd.in' ||
+    (cachedCreds.custom_admin_email && cleanUser === cachedCreds.custom_admin_email.toLowerCase());
+
   // Check if login attempt is for Super Admin
-  if (
-    username.toLowerCase() === adminEmail.toLowerCase() ||
-    username.toLowerCase() === envUsername.toLowerCase()
-  ) {
-    if (hasCustomPassword) {
-      const fs = await import('fs');
-      const path = await import('path');
-      const authCacheFile = path.join(process.cwd(), '.next', 'ops_cache', 'admin_credentials.json');
-      try {
-        if (fs.existsSync(authCacheFile)) {
-          const creds = JSON.parse(fs.readFileSync(authCacheFile, 'utf-8'));
-          if (creds[username.toLowerCase()] === password || creds[adminEmail.toLowerCase()] === password) {
-            isValid = true;
-          }
-        }
-      } catch (e) {}
+  if (isAdmin) {
+    if (
+      cachedCreds[cleanUser] === password ||
+      cachedCreds['admin@certifyd.in'] === password ||
+      cachedCreds[adminEmail.toLowerCase()] === password
+    ) {
+      isValid = true;
     }
 
     if (!isValid && envHash) {
@@ -73,28 +81,21 @@ export async function loginAction(formData: FormData) {
   } else {
     // Check if login attempt is for an Employee in Team Members
     const teamMembers = await getTeamMembersAction();
-    const member = teamMembers.find((m) => m.email.toLowerCase() === username.toLowerCase());
+    const member = teamMembers.find((m) => m.email.toLowerCase() === cleanUser);
     if (member) {
       if (member.status === 'suspended') {
         return { error: 'Your employee account has been suspended by a Super Admin.' };
       }
-      let validPass = member.temp_password || 'worker123';
-      try {
-        const fs = await import('fs');
-        const path = await import('path');
-        const authCacheFile = path.join(process.cwd(), '.next', 'ops_cache', 'admin_credentials.json');
-        if (fs.existsSync(authCacheFile)) {
-          const creds = JSON.parse(fs.readFileSync(authCacheFile, 'utf-8'));
-          if (creds[username.toLowerCase()]) {
-            validPass = creds[username.toLowerCase()];
-          }
-        }
-      } catch (e) {}
+      const validPass = cachedCreds[cleanUser] || member.temp_password || 'worker123';
 
       if (password === validPass || password === member.temp_password || password === 'worker123') {
         isValid = true;
         role = member.role || 'TEAM_MEMBER';
       }
+    } else if (cachedCreds[cleanUser] && cachedCreds[cleanUser] === password) {
+      // Direct cache hit for newly created employee before file re-index
+      isValid = true;
+      role = 'TEAM_MEMBER';
     }
   }
 

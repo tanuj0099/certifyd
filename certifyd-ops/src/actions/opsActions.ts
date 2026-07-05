@@ -422,12 +422,12 @@ export async function updateUserPasswordAction(
     return { success: false, message: 'Password must be at least 6 characters long.' };
   }
 
+  const cleanEmail = email.toLowerCase().trim();
   const list = await getTeamMembersAction();
-  const idx = list.findIndex((m) => m.email.toLowerCase() === email.toLowerCase());
+  const idx = list.findIndex((m) => m.email.toLowerCase() === cleanEmail);
   if (idx >= 0) {
     list[idx].temp_password = newPassword;
     await saveTeamMemberAction(list[idx]);
-    return { success: true, message: 'Password updated successfully.' };
   }
 
   const authCacheFile = path.join(CACHE_DIR, 'admin_credentials.json');
@@ -436,9 +436,17 @@ export async function updateUserPasswordAction(
     if (fs.existsSync(authCacheFile)) {
       creds = JSON.parse(fs.readFileSync(authCacheFile, 'utf-8'));
     }
-    creds[email.toLowerCase()] = newPassword;
+    creds[cleanEmail] = newPassword;
+    if (cleanEmail === 'admin@certifyd.in' || cleanEmail === (process.env.ADMIN_USERNAME || '').toLowerCase() || cleanEmail === creds.custom_admin_email) {
+      creds['admin@certifyd.in'] = newPassword;
+      if (creds.custom_admin_email) {
+        creds[creds.custom_admin_email] = newPassword;
+      }
+    }
     fs.writeFileSync(authCacheFile, JSON.stringify(creds, null, 2), 'utf-8');
-  } catch (e) {}
+  } catch (e) {
+    console.error('Failed to update admin_credentials.json:', e);
+  }
 
   return { success: true, message: 'Password updated successfully.' };
 }
@@ -449,9 +457,9 @@ export async function getAdminCredentialsAction(): Promise<{ email: string; hasC
   try {
     if (fs.existsSync(authCacheFile)) {
       const creds = JSON.parse(fs.readFileSync(authCacheFile, 'utf-8'));
-      if (creds.custom_admin_email) {
-        return { email: creds.custom_admin_email, hasCustomPassword: !!creds[creds.custom_admin_email] };
-      }
+      const activeEmail = creds.custom_admin_email || defaultEmail;
+      const hasCustom = !!(creds[activeEmail.toLowerCase()] || creds[defaultEmail.toLowerCase()] || creds['admin@certifyd.in']);
+      return { email: activeEmail, hasCustomPassword: hasCustom };
     }
   } catch (e) {}
   return { email: defaultEmail, hasCustomPassword: false };
@@ -461,13 +469,18 @@ export async function updateAdminEmailAction(newEmail: string): Promise<{ succes
   if (!newEmail || !newEmail.includes('@')) {
     return { success: false, message: 'Please enter a valid email address.' };
   }
+  const cleanEmail = newEmail.toLowerCase().trim();
   const authCacheFile = path.join(CACHE_DIR, 'admin_credentials.json');
   try {
     let creds: Record<string, string> = {};
     if (fs.existsSync(authCacheFile)) {
       creds = JSON.parse(fs.readFileSync(authCacheFile, 'utf-8'));
     }
-    creds.custom_admin_email = newEmail.toLowerCase().trim();
+    const oldEmail = creds.custom_admin_email || 'admin@certifyd.in';
+    const existingPass = creds[oldEmail] || creds['admin@certifyd.in'] || 'admin123';
+    
+    creds.custom_admin_email = cleanEmail;
+    creds[cleanEmail] = existingPass;
     fs.writeFileSync(authCacheFile, JSON.stringify(creds, null, 2), 'utf-8');
   } catch (e) {}
   return { success: true, message: 'Admin email updated successfully.' };
