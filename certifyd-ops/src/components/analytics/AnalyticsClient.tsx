@@ -49,7 +49,7 @@ export function AnalyticsClient({
               onClick={() => setRange(r)}
               className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
                 range === r
-                  ? 'bg-[#00D4A8] text-[#080A0E] font-semibold shadow-sm shadow-[#00D4A8]/20'
+                  ? 'bg-[#F97316] text-[#080A0E] font-semibold shadow-sm shadow-[#F97316]/20'
                   : 'text-[#8B949E] hover:text-white hover:bg-white/[0.04]'
               }`}
             >
@@ -60,8 +60,8 @@ export function AnalyticsClient({
       </div>
 
       {selectedCity && (
-        <div className="bg-[#00D4A8]/10 border border-[#00D4A8]/30 rounded-xl p-3 flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2 text-[#00D4A8]">
+        <div className="bg-[#F97316]/10 border border-[#F97316]/30 rounded-xl p-3 flex items-center justify-between text-xs">
+          <div className="flex items-center gap-2 text-[#F97316]">
             <MapPin className="w-4 h-4" />
             <span>Filtering intelligence for city: <strong className="font-mono underline">{selectedCity}</strong></span>
           </div>
@@ -79,12 +79,12 @@ export function AnalyticsClient({
         <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
           <div>
             <h2 className="text-base font-semibold text-white flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-[#00D4A8]" />
+              <TrendingUp className="w-4 h-4 text-[#F97316]" />
               <span>Section 1 — Traffic & Conversion Funnel (Live Database)</span>
             </h2>
             <p className="text-xs text-[#8B949E] mt-0.5">End-to-end user progression from session start to verified data submission</p>
           </div>
-          <div className="flex items-center gap-2 text-xs font-mono text-[#00D4A8] bg-[#00D4A8]/10 px-3 py-1 rounded-full border border-[#00D4A8]/20">
+          <div className="flex items-center gap-2 text-xs font-mono text-[#F97316] bg-[#F97316]/10 px-3 py-1 rounded-full border border-[#F97316]/20">
             <CheckCircle2 className="w-3.5 h-3.5" />
             <span>Real-time Live Sync</span>
           </div>
@@ -170,7 +170,7 @@ export function AnalyticsClient({
                   }}
                   className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-full flex flex-col items-center justify-center border transition-all cursor-pointer shadow-lg ${
                     isSelected
-                      ? 'bg-[#00D4A8]/30 border-[#00D4A8] text-white shadow-[#00D4A8]/30 z-20 scale-110'
+                      ? 'bg-[#F97316]/30 border-[#F97316] text-white shadow-[#F97316]/30 z-20 scale-110'
                       : 'bg-[#3B82F6]/20 border-[#3B82F6]/50 text-white/90 hover:border-[#3B82F6] z-10'
                   }`}
                 >
@@ -191,14 +191,14 @@ export function AnalyticsClient({
                   onClick={() => setSelectedCity(isSelected ? null : city.city)}
                   className={`p-3.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between ${
                     isSelected
-                      ? 'bg-[#00D4A8]/10 border-[#00D4A8]/40 shadow-sm'
+                      ? 'bg-[#F97316]/10 border-[#F97316]/40 shadow-sm'
                       : 'bg-[#161B22] border-white/[0.04] hover:bg-white/[0.02]'
                   }`}
                 >
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="font-semibold text-sm text-white">{city.city}</span>
-                      <span className="text-[10px] font-mono text-[#00D4A8] bg-[#00D4A8]/10 px-1.5 py-0.5 rounded">
+                      <span className="text-[10px] font-mono text-[#F97316] bg-[#F97316]/10 px-1.5 py-0.5 rounded">
                         {city.growth}
                       </span>
                     </div>
@@ -272,7 +272,7 @@ export function AnalyticsClient({
               />
               <Bar
                 dataKey={certView}
-                fill={certView === 'avgRoi' ? '#E8C547' : certView === 'submitVol' ? '#00D4A8' : '#3B82F6'}
+                fill={certView === 'avgRoi' ? '#E8C547' : certView === 'submitVol' ? '#F97316' : '#3B82F6'}
                 radius={[6, 6, 0, 0]}
               />
             </BarChart>

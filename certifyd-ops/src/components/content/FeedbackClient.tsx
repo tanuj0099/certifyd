@@ -124,13 +124,13 @@ export function FeedbackClient({ initialRecords, userRole }: FeedbackClientProps
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search feedback text or 8-char user ID..."
-              className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl pl-10 pr-4 py-2 text-xs text-white placeholder-[#8B949E]/50 focus:outline-none focus:border-[#00D4A8] font-mono transition-colors"
+              className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl pl-10 pr-4 py-2 text-xs text-white placeholder-[#8B949E]/50 focus:outline-none focus:border-[#F97316] font-mono transition-colors"
             />
           </div>
 
           <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
             <div className="flex items-center gap-1.5 bg-[#161B22] px-2.5 py-1.5 rounded-xl border border-white/[0.06]">
-              <Filter className="w-3.5 h-3.5 text-[#00D4A8]" />
+              <Filter className="w-3.5 h-3.5 text-[#F97316]" />
               <span className="text-[#8B949E]">Tool:</span>
               <select
                 value={toolFilter}
@@ -232,7 +232,7 @@ export function FeedbackClient({ initialRecords, userRole }: FeedbackClientProps
                         </span>
                       </td>
                       <td className="py-4 px-4 text-white max-w-xs truncate">{item.message}</td>
-                      <td className="py-4 px-4 font-mono text-[#00D4A8]">#{item.user_id.substring(0, 8)}</td>
+                      <td className="py-4 px-4 font-mono text-[#F97316]">#{item.user_id.substring(0, 8)}</td>
                       <td className="py-4 px-4">
                         <span
                           className={`px-2.5 py-0.5 rounded-full font-mono text-[10px] font-semibold uppercase ${
@@ -280,7 +280,7 @@ export function FeedbackClient({ initialRecords, userRole }: FeedbackClientProps
             >
               <div className="p-5 border-b border-white/[0.06] flex items-center justify-between shrink-0 bg-[#161B22]">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-[#00D4A8]/10 border border-[#00D4A8]/20 flex items-center justify-center text-[#00D4A8]">
+                  <div className="w-9 h-9 rounded-xl bg-[#F97316]/10 border border-[#F97316]/20 flex items-center justify-center text-[#F97316]">
                     <MessageSquare className="w-5 h-5" />
                   </div>
                   <div>
@@ -318,14 +318,14 @@ export function FeedbackClient({ initialRecords, userRole }: FeedbackClientProps
                 </div>
 
                 {currentRecord.submission_id && (
-                  <div className="p-3.5 rounded-xl bg-[#00D4A8]/10 border border-[#00D4A8]/20 flex items-center justify-between text-xs">
+                  <div className="p-3.5 rounded-xl bg-[#F97316]/10 border border-[#F97316]/20 flex items-center justify-between text-xs">
                     <div>
-                      <p className="text-[#00D4A8] font-bold font-mono">Associated {currentRecord.submission_type?.toUpperCase()} Submission</p>
+                      <p className="text-[#F97316] font-bold font-mono">Associated {currentRecord.submission_type?.toUpperCase()} Submission</p>
                       <p className="text-[#8B949E] text-[11px] mt-0.5">User submitted data prior to feedback</p>
                     </div>
                     <a
                       href={`/submissions/${currentRecord.submission_type === 'offer' ? 'offers' : 'resumes'}`}
-                      className="px-3 py-1.5 rounded-lg bg-[#00D4A8] text-[#080A0E] font-mono text-xs font-semibold hover:bg-[#00D4A8]/90 flex items-center gap-1"
+                      className="px-3 py-1.5 rounded-lg bg-[#F97316] text-[#080A0E] font-mono text-xs font-semibold hover:bg-[#F97316]/90 flex items-center gap-1"
                     >
                       <span>View Submission</span>
                       <ExternalLink className="w-3.5 h-3.5" />
@@ -343,7 +343,7 @@ export function FeedbackClient({ initialRecords, userRole }: FeedbackClientProps
                         disabled={loading || currentRecord.status === st}
                         className={`py-2 rounded-xl text-xs font-mono font-semibold transition-all ${
                           currentRecord.status === st
-                            ? 'bg-[#00D4A8] text-[#080A0E] shadow-md'
+                            ? 'bg-[#F97316] text-[#080A0E] shadow-md'
                             : 'bg-[#161B22] border border-white/10 text-[#8B949E] hover:text-white'
                         }`}
                       >
@@ -363,7 +363,7 @@ export function FeedbackClient({ initialRecords, userRole }: FeedbackClientProps
                     ) : (
                       currentRecord.internal_notes.map((n, i) => (
                         <div key={i} className="p-2.5 rounded-xl bg-[#161B22] text-xs">
-                          <span className="text-[#00D4A8] font-mono font-bold mr-2">{n.author}:</span>
+                          <span className="text-[#F97316] font-mono font-bold mr-2">{n.author}:</span>
                           <span className="text-white">{n.text}</span>
                         </div>
                       ))
@@ -378,12 +378,12 @@ export function FeedbackClient({ initialRecords, userRole }: FeedbackClientProps
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') handleAddNote(currentRecord.id);
                       }}
-                      className="flex-1 bg-[#161B22] border border-white/[0.08] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#00D4A8] font-mono"
+                      className="flex-1 bg-[#161B22] border border-white/[0.08] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#F97316] font-mono"
                     />
                     <button
                       onClick={() => handleAddNote(currentRecord.id)}
                       disabled={!newNoteText.trim() || loading}
-                      className="px-3 py-2 rounded-xl bg-[#00D4A8] text-[#080A0E] hover:bg-[#00D4A8]/90 disabled:opacity-40"
+                      className="px-3 py-2 rounded-xl bg-[#F97316] text-[#080A0E] hover:bg-[#F97316]/90 disabled:opacity-40"
                     >
                       <Send className="w-3.5 h-3.5" />
                     </button>

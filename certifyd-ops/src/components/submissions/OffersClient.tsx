@@ -199,13 +199,13 @@ export function OffersClient({ initialRecords, userRole }: OffersClientProps) {
                 setCurrentPage(1);
               }}
               placeholder="Search by ID, city, role category..."
-              className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl pl-10 pr-4 py-2 text-xs text-white placeholder-[#8B949E]/50 focus:outline-none focus:border-[#00D4A8] font-mono transition-colors"
+              className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl pl-10 pr-4 py-2 text-xs text-white placeholder-[#8B949E]/50 focus:outline-none focus:border-[#F97316] font-mono transition-colors"
             />
           </div>
 
           <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
             <div className="flex items-center gap-1.5 bg-[#161B22] px-2.5 py-1.5 rounded-xl border border-white/[0.06]">
-              <Filter className="w-3.5 h-3.5 text-[#00D4A8]" />
+              <Filter className="w-3.5 h-3.5 text-[#F97316]" />
               <span className="text-[#8B949E]">Status:</span>
               <select
                 value={statusFilter}
@@ -276,7 +276,7 @@ export function OffersClient({ initialRecords, userRole }: OffersClientProps) {
                       key={row.id}
                       onClick={() => setSelectedIdx(idx)}
                       className={`hover:bg-white/[0.02] cursor-pointer transition-colors ${
-                        selectedIdx === idx ? 'bg-[#00D4A8]/10' : ''
+                        selectedIdx === idx ? 'bg-[#F97316]/10' : ''
                       }`}
                     >
                       <td className="py-3.5 px-4 font-mono font-semibold text-white">#{shortId}</td>
@@ -284,7 +284,7 @@ export function OffersClient({ initialRecords, userRole }: OffersClientProps) {
                       <td className="py-3.5 px-4 text-white font-medium">{row.city}</td>
                       <td className="py-3.5 px-4 text-white">{row.role_category}</td>
                       <td className="py-3.5 px-4 text-[#8B949E] font-mono">{row.employer_sector}</td>
-                      <td className="py-3.5 px-4 font-mono font-bold text-[#00D4A8]">{row.ctc_band}</td>
+                      <td className="py-3.5 px-4 font-mono font-bold text-[#F97316]">{row.ctc_band}</td>
                       <td className="py-3.5 px-4">
                         <div className="flex flex-wrap gap-1">
                           {row.trap_flags.map((flag) => {
@@ -501,7 +501,7 @@ export function OffersClient({ initialRecords, userRole }: OffersClientProps) {
               <div className="w-full sm:w-[60%] border-r border-white/[0.06] flex flex-col h-full bg-[#0F1218]">
                 <div className="p-5 border-b border-white/[0.06] flex items-center justify-between shrink-0">
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-[#00D4A8]/10 border border-[#00D4A8]/20 flex items-center justify-center text-[#00D4A8] font-mono font-bold">
+                    <div className="w-9 h-9 rounded-xl bg-[#F97316]/10 border border-[#F97316]/20 flex items-center justify-center text-[#F97316] font-mono font-bold">
                       #{currentRecord.id.substring(0, 4)}
                     </div>
                     <div>
@@ -526,7 +526,7 @@ export function OffersClient({ initialRecords, userRole }: OffersClientProps) {
                       <h4 className="text-xs font-semibold text-[#8B949E] font-mono uppercase tracking-wider">
                         Market Compensation Percentile
                       </h4>
-                      <span className="text-[10px] font-mono text-[#00D4A8] bg-[#00D4A8]/10 px-2 py-0.5 rounded border border-[#00D4A8]/20">
+                      <span className="text-[10px] font-mono text-[#F97316] bg-[#F97316]/10 px-2 py-0.5 rounded border border-[#F97316]/20">
                         BENCHMARKED IN BENGALURU
                       </span>
                     </div>
@@ -599,7 +599,7 @@ export function OffersClient({ initialRecords, userRole }: OffersClientProps) {
                       <h4 className="text-xs font-semibold text-[#8B949E] uppercase tracking-wider">
                         What The Candidate Saw (QA Output)
                       </h4>
-                      <span className="text-[10px] text-[#00D4A8]">AI COUNTER OFFER GENERATED</span>
+                      <span className="text-[10px] text-[#F97316]">AI COUNTER OFFER GENERATED</span>
                     </div>
                     <div className="p-3 rounded-xl bg-[#0F1218] border border-white/[0.04] space-y-2">
                       <div className="flex justify-between items-center text-xs text-white">
@@ -696,7 +696,7 @@ export function OffersClient({ initialRecords, userRole }: OffersClientProps) {
                       ) : (
                         currentRecord.internal_notes.map((n, i) => (
                           <div key={i} className="p-3 rounded-xl bg-[#161B22] border border-white/[0.04] text-xs space-y-1">
-                            <div className="flex items-center justify-between font-mono text-[10px] text-[#00D4A8]">
+                            <div className="flex items-center justify-between font-mono text-[10px] text-[#F97316]">
                               <span>{n.author}</span>
                               <span className="text-[#8B949E]">{new Date(n.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                             </div>
@@ -714,12 +714,12 @@ export function OffersClient({ initialRecords, userRole }: OffersClientProps) {
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') handleAddNote(currentRecord.id);
                         }}
-                        className="flex-1 bg-[#161B22] border border-white/[0.08] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#00D4A8] font-mono"
+                        className="flex-1 bg-[#161B22] border border-white/[0.08] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#F97316] font-mono"
                       />
                       <button
                         onClick={() => handleAddNote(currentRecord.id)}
                         disabled={!newNoteText.trim() || actionLoading}
-                        className="px-3 py-2 rounded-xl bg-[#00D4A8] text-[#080A0E] hover:bg-[#00D4A8]/90 disabled:opacity-40 transition-colors"
+                        className="px-3 py-2 rounded-xl bg-[#F97316] text-[#080A0E] hover:bg-[#F97316]/90 disabled:opacity-40 transition-colors"
                       >
                         <Send className="w-3.5 h-3.5" />
                       </button>

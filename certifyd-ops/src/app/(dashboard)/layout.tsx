@@ -16,7 +16,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <ToastProvider>
-      <div className="min-h-screen bg-[#080A0E] text-[#F0F6FC] font-sans selection:bg-[#00D4A8]/30 flex">
+      <div className="min-h-screen bg-[#080A0E] text-[#F0F6FC] font-sans selection:bg-[#F97316]/30 flex">
         {/* Fixed Navigation Sidebar */}
         <Sidebar userEmail={email} userRole={role} />
 

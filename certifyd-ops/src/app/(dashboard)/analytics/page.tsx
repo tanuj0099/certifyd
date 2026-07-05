@@ -82,7 +82,7 @@ export default async function AnalyticsPage() {
 
   const funnelData: FunnelItem[] = [
     { stage: 'Total Sessions', count: totalSessions, percentage: '100%', fill: '#3B82F6' },
-    { stage: 'Tool Opens', count: toolOpens, percentage: `${((toolOpens/totalSessions)*100).toFixed(1)}%`, fill: '#00D4A8' },
+    { stage: 'Tool Opens', count: toolOpens, percentage: `${((toolOpens/totalSessions)*100).toFixed(1)}%`, fill: '#F97316' },
     { stage: 'Analyses Completed', count: analysesCompleted, percentage: `${((analysesCompleted/totalSessions)*100).toFixed(1)}%`, fill: '#E8C547' },
     { stage: 'Data Submitted', count: totalSubmissions, percentage: `${((totalSubmissions/totalSessions)*100).toFixed(1)}%`, fill: '#A855F7' },
   ];

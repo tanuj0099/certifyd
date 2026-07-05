@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useToast } from '../ui/Toast';
 import { ConfirmModal } from '../ui/ConfirmModal';
 import { addAdminUserAction, removeAdminUserAction, clearOldFeedbackAction } from '../../actions/systemActions';
+import { updateUserPasswordAction, updateAdminEmailAction } from '../../actions/opsActions';
 import {
   Shield,
   UserPlus,
@@ -16,6 +17,11 @@ import {
   Download,
   AlertTriangle,
   Lock,
+  Key,
+  Mail,
+  Save,
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 
 export interface AdminUserRecord {
@@ -36,11 +42,59 @@ export function SettingsClient({
   const [newRole, setNewRole] = useState<'SUPER_ADMIN' | 'TEAM_MEMBER'>('TEAM_MEMBER');
   const [loading, setLoading] = useState(false);
 
+  // Security & Credential state
+  const [newPassword, setNewPassword] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [adminEmailInput, setAdminEmailInput] = useState(currentAdminEmail);
+
   // Hygiene modal
   const [showHygieneModal, setShowHygieneModal] = useState(false);
   const [removingEmail, setRemovingEmail] = useState<string | null>(null);
 
   const { showToast } = useToast();
+
+  async function handleUpdatePassword(e: React.FormEvent) {
+    e.preventDefault();
+    if (!newPassword || newPassword.length < 6) {
+      showToast('Password must be at least 6 characters long.', 'error');
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await updateUserPasswordAction(currentAdminEmail, newPassword);
+      if (res.success) {
+        showToast('Password updated successfully! ✓', 'success');
+        setNewPassword('');
+      } else {
+        showToast(res.message || 'Failed to update password', 'error');
+      }
+    } catch (err: any) {
+      showToast('Error updating password', 'error');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleUpdateAdminEmail(e: React.FormEvent) {
+    e.preventDefault();
+    if (!adminEmailInput || !adminEmailInput.includes('@')) {
+      showToast('Please enter a valid email address.', 'error');
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await updateAdminEmailAction(adminEmailInput);
+      if (res.success) {
+        showToast('Admin email updated successfully! ✓', 'success');
+      } else {
+        showToast(res.message || 'Failed to update admin email', 'error');
+      }
+    } catch (err: any) {
+      showToast('Error updating admin email', 'error');
+    } finally {
+      setLoading(false);
+    }
+  }
 
   async function handleAddAdmin(e: React.FormEvent) {
     e.preventDefault();
@@ -116,7 +170,7 @@ export function SettingsClient({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded bg-[#00D4A8]/15 text-[#00D4A8] text-[10px] font-mono font-bold uppercase">
+            <span className="px-2 py-0.5 rounded bg-[#F97316]/15 text-[#F97316] text-[10px] font-mono font-bold uppercase">
               SUPER ADMIN ONLY
             </span>
             <h1 className="text-2xl font-bold text-white tracking-tight">System Settings & Access Governance</h1>
@@ -130,7 +184,7 @@ export function SettingsClient({
       {/* System Status & Diagnostics Grid */}
       <div className="space-y-3">
         <h3 className="text-xs font-mono font-bold text-[#8B949E] uppercase tracking-wider flex items-center gap-2">
-          <Activity className="w-4 h-4 text-[#00D4A8]" />
+          <Activity className="w-4 h-4 text-[#F97316]" />
           <span>Infrastructure & Diagnostic Health checks</span>
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-mono">
@@ -148,7 +202,7 @@ export function SettingsClient({
           <div className="bg-[#0F1218] border border-white/[0.06] rounded-2xl p-4 space-y-2">
             <div className="flex items-center justify-between text-xs">
               <span className="text-[#8B949E] flex items-center gap-1.5">
-                <Globe className="w-3.5 h-3.5 text-[#00D4A8]" /> Cloudflare Access
+                <Globe className="w-3.5 h-3.5 text-[#F97316]" /> Cloudflare Access
               </span>
               <span className="text-[#22C55E] bg-[#22C55E]/15 px-2 py-0.5 rounded text-[10px] font-bold">GUARDED ✓</span>
             </div>
@@ -180,12 +234,90 @@ export function SettingsClient({
         </div>
       </div>
 
+      {/* Security & Password Management */}
+      <div className="bg-[#0F1218] border border-white/[0.06] rounded-2xl p-6 shadow-xl space-y-6">
+        <div className="pb-4 border-b border-white/[0.06]">
+          <h3 className="text-base font-semibold text-white flex items-center gap-2 font-mono">
+            <Lock className="w-5 h-5 text-[#F97316]" />
+            <span>Security & Credential Management</span>
+          </h3>
+          <p className="text-xs text-[#8B949E] mt-0.5 font-mono">
+            Update your account password or modify the Super Admin contact email address
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <form onSubmit={handleUpdatePassword} className="space-y-4 bg-[#161B22]/50 p-4 rounded-xl border border-white/5">
+            <div className="flex items-center gap-2 text-sm font-bold text-white">
+              <Key className="w-4 h-4 text-[#F97316]" />
+              <span>Change Account Password</span>
+            </div>
+            <div>
+              <label className="block text-xs font-mono text-[#8B949E] mb-1">New Password</label>
+              <div className="relative">
+                <input
+                  type={showNewPassword ? 'text' : 'password'}
+                  required
+                  minLength={6}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="Enter at least 6 characters"
+                  className="w-full bg-[#0D1117] border border-white/10 rounded-xl pl-3.5 pr-10 py-2 text-sm text-white focus:outline-none focus:border-[#F97316] font-mono"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8B949E] hover:text-white transition-colors"
+                  title={showNewPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+            <button
+              type="submit"
+              disabled={loading || !newPassword}
+              className="px-4 py-2 rounded-xl bg-[#F97316] text-[#080A0E] text-xs font-bold font-mono hover:bg-[#F97316]/90 disabled:opacity-40 transition-all flex items-center gap-1.5"
+            >
+              <Save className="w-3.5 h-3.5" />
+              <span>Update Password</span>
+            </button>
+          </form>
+
+          <form onSubmit={handleUpdateAdminEmail} className="space-y-4 bg-[#161B22]/50 p-4 rounded-xl border border-white/5">
+            <div className="flex items-center gap-2 text-sm font-bold text-white">
+              <Mail className="w-4 h-4 text-[#3B82F6]" />
+              <span>Update Admin Email</span>
+            </div>
+            <div>
+              <label className="block text-xs font-mono text-[#8B949E] mb-1">Admin Contact Email</label>
+              <input
+                type="email"
+                required
+                value={adminEmailInput}
+                onChange={(e) => setAdminEmailInput(e.target.value)}
+                placeholder="admin@certifyd.in"
+                className="w-full bg-[#0D1117] border border-white/10 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-[#3B82F6] font-mono"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading || !adminEmailInput}
+              className="px-4 py-2 rounded-xl bg-[#3B82F6] text-white text-xs font-bold font-mono hover:bg-[#3B82F6]/90 disabled:opacity-40 transition-all flex items-center gap-1.5"
+            >
+              <Save className="w-3.5 h-3.5" />
+              <span>Save Admin Email</span>
+            </button>
+          </form>
+        </div>
+      </div>
+
       {/* Admin Users Management */}
       <div className="bg-[#0F1218] border border-white/[0.06] rounded-2xl p-6 shadow-xl space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/[0.06]">
           <div>
             <h3 className="text-base font-semibold text-white flex items-center gap-2 font-mono">
-              <Shield className="w-5 h-5 text-[#00D4A8]" />
+              <Shield className="w-5 h-5 text-[#F97316]" />
               <span>Administrative Users & Role Allowlist ({admins.length})</span>
             </h3>
             <p className="text-xs text-[#8B949E] mt-0.5">
@@ -200,7 +332,7 @@ export function SettingsClient({
               placeholder="colleague@certifyd.in"
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
-              className="bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-xs text-white placeholder-[#8B949E]/50 focus:outline-none focus:border-[#00D4A8] font-mono"
+              className="bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-xs text-white placeholder-[#8B949E]/50 focus:outline-none focus:border-[#F97316] font-mono"
             />
             <select
               value={newRole}
@@ -213,7 +345,7 @@ export function SettingsClient({
             <button
               type="submit"
               disabled={loading || !newEmail.trim()}
-              className="px-4 py-2 rounded-xl bg-[#00D4A8] text-[#080A0E] text-xs font-bold font-mono hover:bg-[#00D4A8]/90 disabled:opacity-40 transition-all flex items-center gap-1.5"
+              className="px-4 py-2 rounded-xl bg-[#F97316] text-[#080A0E] text-xs font-bold font-mono hover:bg-[#F97316]/90 disabled:opacity-40 transition-all flex items-center gap-1.5"
             >
               <UserPlus className="w-3.5 h-3.5" />
               <span>Grant Access</span>
@@ -240,7 +372,7 @@ export function SettingsClient({
                     <td className="py-3.5 px-4 font-semibold text-white flex items-center gap-2">
                       <span>{admin.email}</span>
                       {isSelf && (
-                        <span className="text-[10px] bg-[#00D4A8]/15 text-[#00D4A8] px-1.5 py-0.2 rounded font-bold">
+                        <span className="text-[10px] bg-[#F97316]/15 text-[#F97316] px-1.5 py-0.2 rounded font-bold">
                           YOU
                         </span>
                       )}
@@ -249,7 +381,7 @@ export function SettingsClient({
                       <span
                         className={`px-2.5 py-0.5 rounded text-[10px] font-bold uppercase ${
                           admin.role === 'SUPER_ADMIN'
-                            ? 'bg-[#00D4A8]/15 text-[#00D4A8] border border-[#00D4A8]/30'
+                            ? 'bg-[#F97316]/15 text-[#F97316] border border-[#F97316]/30'
                             : 'bg-[#3B82F6]/15 text-[#3B82F6] border border-[#3B82F6]/30'
                         }`}
                       >

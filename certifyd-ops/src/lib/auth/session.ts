@@ -59,10 +59,9 @@ export function getUserRoleFromEnv(email: string): 'SUPER_ADMIN' | 'TEAM_MEMBER'
   try {
     const adminUsersJson = process.env.ADMIN_USERS;
     if (!adminUsersJson) {
-      // Default fallback for local testing if env var not set
-      if (email === 'tanuj@example.com' || email === 'tanuj@x.com' || email === 'admin@certifyd.in') return 'SUPER_ADMIN';
-      if (email === 'teammate@example.com' || email === 'hire@x.com') return 'TEAM_MEMBER';
-      return 'SUPER_ADMIN'; // default fallback for test ease
+      if (email.toLowerCase() === 'admin@certifyd.in' || email.toLowerCase() === 'superadmin@certifyd.in' || email.toLowerCase() === process.env.ADMIN_USERNAME?.toLowerCase()) return 'SUPER_ADMIN';
+      if (email.toLowerCase() === 'team@certifyd.in') return 'TEAM_MEMBER';
+      return null;
     }
     const users: { email: string; role: string }[] = JSON.parse(adminUsersJson);
     const found = users.find((u) => u.email.toLowerCase() === email.toLowerCase());

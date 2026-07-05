@@ -52,7 +52,7 @@ export function AuditClient({ initialLogs }: { initialLogs: AuditRecord[] }) {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded bg-[#00D4A8]/15 text-[#00D4A8] text-[10px] font-mono font-bold uppercase">
+            <span className="px-2 py-0.5 rounded bg-[#F97316]/15 text-[#F97316] text-[10px] font-mono font-bold uppercase">
               IMMUTABLE RECORD
             </span>
             <h1 className="text-2xl font-bold text-white tracking-tight">System Audit & Governance Log</h1>
@@ -62,7 +62,7 @@ export function AuditClient({ initialLogs }: { initialLogs: AuditRecord[] }) {
           </p>
         </div>
         <div className="flex items-center gap-2 text-xs font-mono text-[#8B949E] bg-[#0F1218] px-3 py-1.5 rounded-xl border border-white/[0.06]">
-          <Lock className="w-3.5 h-3.5 text-[#00D4A8]" />
+          <Lock className="w-3.5 h-3.5 text-[#F97316]" />
           <span>No deletions or edits permitted</span>
         </div>
       </div>
@@ -77,13 +77,13 @@ export function AuditClient({ initialLogs }: { initialLogs: AuditRecord[] }) {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search admin email, action type, target ID..."
-              className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl pl-10 pr-4 py-2 text-xs text-white placeholder-[#8B949E]/50 focus:outline-none focus:border-[#00D4A8] font-mono transition-colors"
+              className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl pl-10 pr-4 py-2 text-xs text-white placeholder-[#8B949E]/50 focus:outline-none focus:border-[#F97316] font-mono transition-colors"
             />
           </div>
 
           <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
             <div className="flex items-center gap-1.5 bg-[#161B22] px-2.5 py-1.5 rounded-xl border border-white/[0.06]">
-              <Filter className="w-3.5 h-3.5 text-[#00D4A8]" />
+              <Filter className="w-3.5 h-3.5 text-[#F97316]" />
               <span className="text-[#8B949E]">Admin:</span>
               <select
                 value={adminFilter}
@@ -157,7 +157,7 @@ export function AuditClient({ initialLogs }: { initialLogs: AuditRecord[] }) {
                         <span
                           className={`px-2 py-0.5 rounded text-[10px] font-semibold uppercase ${
                             log.admin_role === 'SUPER_ADMIN'
-                              ? 'bg-[#00D4A8]/15 text-[#00D4A8]'
+                              ? 'bg-[#F97316]/15 text-[#F97316]'
                               : 'bg-[#3B82F6]/15 text-[#3B82F6]'
                           }`}
                         >
@@ -178,7 +178,7 @@ export function AuditClient({ initialLogs }: { initialLogs: AuditRecord[] }) {
                         </span>
                       </td>
                       <td className="py-4 px-4 text-[#8B949E] font-mono">{log.target_table}</td>
-                      <td className="py-4 px-4 font-mono text-[#00D4A8]">{log.target_id || '—'}</td>
+                      <td className="py-4 px-4 font-mono text-[#F97316]">{log.target_id || '—'}</td>
                       <td className="py-4 px-4 text-[#8B949E] font-mono">{log.ip_address}</td>
                       <td className="py-4 px-4 text-right" onClick={(e) => e.stopPropagation()}>
                         <button
@@ -235,7 +235,7 @@ export function AuditClient({ initialLogs }: { initialLogs: AuditRecord[] }) {
                   </div>
                   <div>
                     <span className="text-[#8B949E] block">IP Address:</span>
-                    <span className="text-[#00D4A8]">{selectedLog.ip_address}</span>
+                    <span className="text-[#F97316]">{selectedLog.ip_address}</span>
                   </div>
                 </div>
 

@@ -21,6 +21,9 @@ import {
   ChevronRight,
   Shield,
   LogOut,
+  CheckSquare,
+  Calendar,
+  Users,
 } from 'lucide-react';
 import { logoutAction } from '../../actions/authActions';
 
@@ -41,6 +44,9 @@ const ICON_MAP: Record<string, React.ElementType> = {
   ToggleRight,
   ShieldCheck,
   Settings,
+  CheckSquare,
+  Calendar,
+  Users,
 };
 
 export function Sidebar({ userEmail, userRole }: SidebarProps) {
@@ -54,6 +60,15 @@ export function Sidebar({ userEmail, userRole }: SidebarProps) {
       items: [
         { name: 'Dashboard', href: '/', icon: 'LayoutDashboard', restricted: false },
         { name: 'Analytics', href: '/analytics', icon: 'BarChart2', restricted: false },
+      ],
+    },
+    {
+      title: 'Team Workspace',
+      items: [
+        { name: 'Task Delegation', href: '/ops/tasks', icon: 'CheckSquare', restricted: false },
+        { name: 'Team Calendar', href: '/ops/calendar', icon: 'Calendar', restricted: false },
+        { name: 'Notes & Comments', href: '/ops/notes', icon: 'FileText', restricted: false },
+        { name: 'Team Access', href: '/ops/team', icon: 'Users', restricted: true, superAdminOnly: true },
       ],
     },
     {
@@ -97,7 +112,7 @@ export function Sidebar({ userEmail, userRole }: SidebarProps) {
       {/* Brand Header */}
       <div className="h-14 border-b border-white/[0.06] flex items-center justify-between px-3.5 shrink-0">
         <div className="flex items-center gap-2.5 overflow-hidden">
-          <div className="w-8 h-8 rounded-lg bg-[#00D4A8]/10 border border-[#00D4A8]/20 flex items-center justify-center text-[#00D4A8] shrink-0">
+          <div className="w-8 h-8 rounded-lg bg-[#F97316]/10 border border-[#F97316]/20 flex items-center justify-center text-[#F97316] shrink-0">
             <Shield className="w-4 h-4" />
           </div>
           {!collapsed && (
@@ -130,11 +145,11 @@ export function Sidebar({ userEmail, userRole }: SidebarProps) {
                 </p>
               )}
               <div className="space-y-0.5">
-                {group.items.map((item) => {
+                {group.items.filter((item) => !((item as any).superAdminOnly && userRole !== 'SUPER_ADMIN')).map((item) => {
                   const Icon = ICON_MAP[item.icon] || LayoutDashboard;
                   const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
                   const isLocked = item.restricted && userRole !== 'SUPER_ADMIN';
-                  const showPublishLock = ('publishLock' in item && item.publishLock) && userRole === 'TEAM_MEMBER';
+                  const showPublishLock = Boolean(('publishLock' in item && item.publishLock) && userRole === 'TEAM_MEMBER');
 
                   if (isLocked) {
                     return (
@@ -165,12 +180,12 @@ export function Sidebar({ userEmail, userRole }: SidebarProps) {
                       href={item.href}
                       className={`flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-medium transition-all ${
                         isActive
-                          ? 'bg-[#00D4A8]/10 text-[#00D4A8] border border-[#00D4A8]/20 shadow-sm'
+                          ? 'bg-[#F97316]/10 text-[#F97316] border border-[#F97316]/20 shadow-sm'
                           : 'text-[#8B949E] hover:text-white hover:bg-white/[0.04]'
                       } ${collapsed ? 'justify-center' : ''}`}
                       title={collapsed ? item.name : undefined}
                     >
-                      <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#00D4A8]' : ''}`} />
+                      <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#F97316]' : ''}`} />
                       {!collapsed && (
                         <div className="flex items-center justify-between flex-1 overflow-hidden">
                           <span className="truncate">{item.name}</span>
@@ -201,7 +216,7 @@ export function Sidebar({ userEmail, userRole }: SidebarProps) {
               <span
                 className={`text-[9px] font-mono px-1.5 py-0.2 rounded inline-block w-fit uppercase font-semibold mt-0.5 ${
                   userRole === 'SUPER_ADMIN'
-                    ? 'bg-[#00D4A8]/15 text-[#00D4A8] border border-[#00D4A8]/30'
+                    ? 'bg-[#F97316]/15 text-[#F97316] border border-[#F97316]/30'
                     : 'bg-white/10 text-[#8B949E] border border-white/10'
                 }`}
               >

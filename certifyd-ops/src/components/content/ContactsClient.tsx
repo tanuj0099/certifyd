@@ -42,7 +42,7 @@ interface ContactsClientProps {
 
 const TEMPLATES: Record<string, string> = {
   placement: `Dear Prof. [Name],\n\nThank you for reaching out from [Organization] Training & Placement Cell.\n\nWe would be delighted to partner with your institution to provide your engineering students with free, verified ROI benchmarks and compensation intelligence. Our team can organize an interactive virtual workshop on "Avoiding CTC Inflation & Selecting High-ROI Tech Certifications" for your final-year batch.\n\nPlease let us know your preferred date and time this week for a brief 15-minute introductory call.\n\nWarm regards,\nCertifyd Operations Team`,
-  investor: `Dear [Name],\n\nThank you for your interest in Certifyd.\n\nWe are building the definitive compensation and certification intelligence platform for India's 5M+ tech workforce. Our AI-driven ingestion flywheel is currently processing high-volume candidate extractions with a 98.4% PII compliance pass rate.\n\nI have attached our latest Executive Summary and Q3 growth metrics. Let us schedule a 30-minute overview call at your convenience.\n\nBest regards,\nTanuj Rajdev\nFounder, Certifyd`,
+  investor: `Dear [Name],\n\nThank you for your interest in Certifyd.\n\nWe are building the definitive compensation and certification intelligence platform for India's 5M+ tech workforce. Our AI-driven ingestion flywheel is currently processing high-volume candidate extractions with a 98.4% PII compliance pass rate.\n\nI have attached our latest Executive Summary and Q3 growth metrics. Let us schedule a 30-minute overview call at your convenience.\n\nBest regards,\nCertifyd Operations Team`,
   general: `Dear [Name],\n\nThank you for contacting Certifyd Support.\n\nWe have received your message regarding "[Subject]" and our technical team has investigated the inquiry. Everything is functioning normally on the platform.\n\nPlease let us know if you have any additional questions or need further assistance.\n\nBest regards,\nCertifyd Support Team`,
 };
 
@@ -155,13 +155,13 @@ export function ContactsClient({ initialRecords, userRole }: ContactsClientProps
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search sender name, email, org, or subject..."
-              className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl pl-10 pr-4 py-2 text-xs text-white placeholder-[#8B949E]/50 focus:outline-none focus:border-[#00D4A8] font-mono transition-colors"
+              className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl pl-10 pr-4 py-2 text-xs text-white placeholder-[#8B949E]/50 focus:outline-none focus:border-[#F97316] font-mono transition-colors"
             />
           </div>
 
           <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
             <div className="flex items-center gap-1.5 bg-[#161B22] px-2.5 py-1.5 rounded-xl border border-white/[0.06]">
-              <Filter className="w-3.5 h-3.5 text-[#00D4A8]" />
+              <Filter className="w-3.5 h-3.5 text-[#F97316]" />
               <span className="text-[#8B949E]">Type:</span>
               <select
                 value={typeFilter}
@@ -234,7 +234,7 @@ export function ContactsClient({ initialRecords, userRole }: ContactsClientProps
                     >
                       <td className="py-4 px-4 text-[#8B949E] font-mono">{new Date(item.created_at).toLocaleDateString()}</td>
                       <td className="py-4 px-4 text-white font-semibold">{item.name}</td>
-                      <td className="py-4 px-4 text-[#00D4A8] font-mono">{item.email}</td>
+                      <td className="py-4 px-4 text-[#F97316] font-mono">{item.email}</td>
                       <td className="py-4 px-4 text-white">{item.organization || '—'}</td>
                       <td className="py-4 px-4 font-mono">
                         <span
@@ -302,7 +302,7 @@ export function ContactsClient({ initialRecords, userRole }: ContactsClientProps
             >
               <div className="p-5 border-b border-white/[0.06] flex items-center justify-between shrink-0 bg-[#161B22]">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-[#00D4A8]/10 border border-[#00D4A8]/20 flex items-center justify-center text-[#00D4A8]">
+                  <div className="w-9 h-9 rounded-xl bg-[#F97316]/10 border border-[#F97316]/20 flex items-center justify-center text-[#F97316]">
                     <Mail className="w-5 h-5" />
                   </div>
                   <div>
@@ -321,7 +321,7 @@ export function ContactsClient({ initialRecords, userRole }: ContactsClientProps
                   <div className="p-3.5 rounded-xl bg-[#161B22] border border-white/[0.04]">
                     <p className="text-[#8B949E] uppercase text-[10px]">From Sender</p>
                     <p className="text-white font-bold mt-1 text-sm">{currentRecord.name}</p>
-                    <p className="text-[#00D4A8] mt-0.5">{currentRecord.email}</p>
+                    <p className="text-[#F97316] mt-0.5">{currentRecord.email}</p>
                   </div>
                   <div className="p-3.5 rounded-xl bg-[#161B22] border border-white/[0.04]">
                     <p className="text-[#8B949E] uppercase text-[10px]">Organization & Date</p>
@@ -349,7 +349,7 @@ export function ContactsClient({ initialRecords, userRole }: ContactsClientProps
                         disabled={loading || currentRecord.status === st}
                         className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
                           currentRecord.status === st
-                            ? 'bg-[#00D4A8] text-[#080A0E] shadow-sm'
+                            ? 'bg-[#F97316] text-[#080A0E] shadow-sm'
                             : 'bg-[#0F1218] border border-white/10 text-[#8B949E] hover:text-white'
                         }`}
                       >
@@ -362,7 +362,7 @@ export function ContactsClient({ initialRecords, userRole }: ContactsClientProps
                 {/* Reply Composer */}
                 <div className="p-5 rounded-2xl bg-[#161B22] border border-white/[0.06] space-y-4">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-xs font-mono text-[#00D4A8] uppercase font-bold flex items-center gap-1.5">
+                    <h4 className="text-xs font-mono text-[#F97316] uppercase font-bold flex items-center gap-1.5">
                       <Send className="w-3.5 h-3.5" />
                       <span>Email Reply Composer</span>
                     </h4>
@@ -395,7 +395,7 @@ export function ContactsClient({ initialRecords, userRole }: ContactsClientProps
                     placeholder={`Write email response to ${currentRecord.name} (${currentRecord.email})...`}
                     value={replyText}
                     onChange={(e) => setReplyText(e.target.value)}
-                    className="w-full bg-[#0F1218] border border-white/[0.08] rounded-xl p-3.5 text-xs text-white placeholder-[#8B949E]/50 focus:outline-none focus:border-[#00D4A8] font-sans transition-colors"
+                    className="w-full bg-[#0F1218] border border-white/[0.08] rounded-xl p-3.5 text-xs text-white placeholder-[#8B949E]/50 focus:outline-none focus:border-[#F97316] font-sans transition-colors"
                   />
 
                   <div className="flex items-center justify-between pt-2">
@@ -405,7 +405,7 @@ export function ContactsClient({ initialRecords, userRole }: ContactsClientProps
                     <button
                       onClick={() => handleSendReply(currentRecord)}
                       disabled={!replyText.trim() || loading}
-                      className="px-5 py-2 rounded-xl bg-[#00D4A8] text-[#080A0E] font-mono text-xs font-bold hover:bg-[#00D4A8]/90 disabled:opacity-40 transition-all shadow-lg shadow-[#00D4A8]/20 flex items-center gap-1.5"
+                      className="px-5 py-2 rounded-xl bg-[#F97316] text-[#080A0E] font-mono text-xs font-bold hover:bg-[#F97316]/90 disabled:opacity-40 transition-all shadow-lg shadow-[#F97316]/20 flex items-center gap-1.5"
                     >
                       {loading ? (
                         <div className="w-3.5 h-3.5 border-2 border-black/30 border-t-black rounded-full animate-spin" />

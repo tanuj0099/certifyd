@@ -159,7 +159,7 @@ export function DashboardClient({
               trend="+12.4%"
               isPositive={true}
               icon={Users}
-              color="#00D4A8"
+              color="#F97316"
               data={[110, 115, 120, 122, 130, 138, 145]}
             />
             <StatCard
@@ -199,7 +199,7 @@ export function DashboardClient({
               trend="+24.0%"
               isPositive={true}
               icon={FileText}
-              color="#00D4A8"
+              color="#F97316"
               data={[10, 12, 15, 14, 18, 22, 28]}
             />
             <StatCard
@@ -233,11 +233,11 @@ export function DashboardClient({
 
           {/* Quick Insights Banner */}
           <div className="bg-gradient-to-r from-[#0F1218] via-[#161B22] to-[#0F1218] border border-white/[0.08] rounded-2xl p-6 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-[#00D4A8]/5 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#F97316]/5 rounded-full blur-3xl pointer-events-none" />
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="px-2 py-0.5 rounded bg-[#00D4A8]/15 text-[#00D4A8] text-[10px] font-mono font-semibold uppercase">
+                  <span className="px-2 py-0.5 rounded bg-[#F97316]/15 text-[#F97316] text-[10px] font-mono font-semibold uppercase">
                     AI Flywheel Status
                   </span>
                   <span className="text-xs text-[#8B949E] font-mono">Model: llama3-70b-8192</span>
@@ -249,7 +249,7 @@ export function DashboardClient({
               </div>
               <a
                 href="/submissions/resumes"
-                className="px-4 py-2.5 rounded-xl bg-[#00D4A8] text-[#080A0E] text-xs font-semibold hover:bg-[#00D4A8]/90 transition-all shadow-lg shadow-[#00D4A8]/15 shrink-0"
+                className="px-4 py-2.5 rounded-xl bg-[#F97316] text-[#080A0E] text-xs font-semibold hover:bg-[#F97316]/90 transition-all shadow-lg shadow-[#F97316]/15 shrink-0"
               >
                 Review Pending Submissions →
               </a>
@@ -261,7 +261,7 @@ export function DashboardClient({
         <div className="lg:col-span-3 bg-[#0F1218] border border-white/[0.06] rounded-2xl p-5 shadow-lg flex flex-col h-[580px]">
           <div className="flex items-center justify-between pb-4 border-b border-white/[0.06] mb-4 shrink-0">
             <div className="flex items-center gap-2">
-              <Activity className="w-4 h-4 text-[#00D4A8]" />
+              <Activity className="w-4 h-4 text-[#F97316]" />
               <h3 className="text-sm font-semibold text-white">Live Activity Feed</h3>
             </div>
             <span className="flex items-center gap-1 text-[10px] font-mono text-[#22C55E] bg-[#22C55E]/10 px-2 py-0.5 rounded-full border border-[#22C55E]/20">
@@ -290,7 +290,7 @@ export function DashboardClient({
                         ? 'bg-[#F85149]/15 text-[#F85149] border border-[#F85149]/30'
                         : act.type === 'submit_offer'
                         ? 'bg-[#A855F7]/15 text-[#A855F7] border border-[#A855F7]/30'
-                        : 'bg-[#00D4A8]/15 text-[#00D4A8] border border-[#00D4A8]/30'
+                        : 'bg-[#F97316]/15 text-[#F97316] border border-[#F97316]/30'
                     }`}
                   >
                     {act.type === 'approve' && <CheckCircle2 className="w-3.5 h-3.5" />}
@@ -315,7 +315,7 @@ export function DashboardClient({
       {/* System Health Bar */}
       <div className="bg-[#0F1218] border border-white/[0.06] rounded-2xl p-4 shadow-md flex flex-wrap items-center justify-between gap-4 text-xs font-mono">
         <div className="flex items-center gap-2 text-[#8B949E]">
-          <Shield className="w-4 h-4 text-[#00D4A8]" />
+          <Shield className="w-4 h-4 text-[#F97316]" />
           <span className="font-semibold text-white">System Health:</span>
         </div>
 

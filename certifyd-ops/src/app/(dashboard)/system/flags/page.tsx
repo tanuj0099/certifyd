@@ -22,7 +22,7 @@ export default async function FlagsPage() {
         name: f.name || f.flag_name || f.flag_key,
         description: f.description || 'System runtime control flag',
         is_enabled: f.enabled !== undefined ? !!f.enabled : !!f.is_enabled,
-        updated_by: f.updated_by || 'tanuj@x.com',
+        updated_by: f.updated_by || 'admin@certifyd.in',
         updated_at: f.updated_at || new Date().toISOString(),
       }));
     }

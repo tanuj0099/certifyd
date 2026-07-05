@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { loginAction } from '../../../actions/authActions';
-import { Shield, Lock, User, AlertCircle, CheckCircle2, Terminal } from 'lucide-react';
+import { Shield, Lock, User, AlertCircle, CheckCircle2, Terminal, Eye, EyeOff } from 'lucide-react';
 
 export default function LoginPage() {
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [lockedUntil, setLockedUntil] = useState<number | null>(null);
@@ -52,14 +53,14 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#080A0E] text-[#F0F6FC] flex flex-col items-center justify-center p-4 selection:bg-[#00D4A8]/30 font-sans">
+    <div className="min-h-screen bg-[#080A0E] text-[#F0F6FC] flex flex-col items-center justify-center p-4 selection:bg-[#F97316]/30 font-sans">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(0,212,168,0.08),rgba(255,255,255,0))] pointer-events-none" />
       
       <div className="w-full max-w-md relative z-10">
         {/* Header Badge */}
         <div className="flex items-center justify-center gap-2 mb-6">
-          <div className="w-9 h-9 rounded-lg bg-[#00D4A8]/10 border border-[#00D4A8]/20 flex items-center justify-center text-[#00D4A8]">
+          <div className="w-9 h-9 rounded-lg bg-[#F97316]/10 border border-[#F97316]/20 flex items-center justify-center text-[#F97316]">
             <Shield className="w-5 h-5" />
           </div>
           <span className="text-xl font-semibold tracking-tight">Certifyd Ops</span>
@@ -70,7 +71,7 @@ export default function LoginPage() {
 
         {/* Login Card */}
         <div className="bg-[#0F1218] border border-white/[0.06] rounded-2xl p-8 shadow-2xl shadow-black/80 relative overflow-hidden backdrop-blur-xl">
-          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#00D4A8] to-transparent opacity-60" />
+          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#F97316] to-transparent opacity-60" />
 
           <div className="mb-6">
             <h1 className="text-xl font-semibold text-white">Admin Authentication</h1>
@@ -107,7 +108,7 @@ export default function LoginPage() {
                   required
                   disabled={!!lockedUntil || loading}
                   placeholder="admin@certifyd.in"
-                  className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-[#8B949E]/50 focus:outline-none focus:border-[#00D4A8] transition-colors disabled:opacity-50 font-mono"
+                  className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-[#8B949E]/50 focus:outline-none focus:border-[#F97316] transition-colors disabled:opacity-50 font-mono"
                 />
               </div>
             </div>
@@ -119,20 +120,28 @@ export default function LoginPage() {
               <div className="relative">
                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8B949E]" />
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   name="password"
                   required
                   disabled={!!lockedUntil || loading}
                   placeholder="••••••••••••••••"
-                  className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-[#8B949E]/50 focus:outline-none focus:border-[#00D4A8] transition-colors disabled:opacity-50 font-mono"
+                  className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl pl-10 pr-10 py-2.5 text-sm text-white placeholder-[#8B949E]/50 focus:outline-none focus:border-[#F97316] transition-colors disabled:opacity-50 font-mono"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#8B949E] hover:text-white transition-colors"
+                  title={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
             </div>
 
             <button
               type="submit"
               disabled={!!lockedUntil || loading}
-              className="w-full mt-2 bg-[#00D4A8] hover:bg-[#00D4A8]/90 active:bg-[#00D4A8]/80 text-[#080A0E] font-medium py-2.5 rounded-xl text-sm transition-all shadow-lg shadow-[#00D4A8]/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full mt-2 bg-[#F97316] hover:bg-[#F97316]/90 active:bg-[#F97316]/80 text-[#080A0E] font-medium py-2.5 rounded-xl text-sm transition-all shadow-lg shadow-[#F97316]/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>

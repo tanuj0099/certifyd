@@ -16,9 +16,7 @@ import {
   X,
   Plus,
   Trash2,
-  ShieldAlert,
-  MessageSquare,
-  UserCheck
+  MessageSquare
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -83,14 +81,6 @@ export function CertificationsClient({
       setSortCol(col);
       setSortDir('desc');
     }
-  }
-
-  function handleAssign(id: string, assignee: string) {
-    const updateList = (list: CertRecord[]) =>
-      list.map((c) => (c.id === id ? { ...c, assigned_to: assignee } : c));
-    if (activeTab === 'live') setLiveList(updateList);
-    else setStagingList(updateList);
-    showToast(`Assigned task to ${assignee} ✓`, 'success');
   }
 
   function handleAddNote(e: React.FormEvent) {
@@ -255,7 +245,7 @@ export function CertificationsClient({
             onClick={() => setActiveTab('live')}
             className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
               activeTab === 'live'
-                ? 'bg-[#00D4A8] text-[#080A0E] font-semibold shadow-sm'
+                ? 'bg-[#F97316] text-[#080A0E] font-semibold shadow-sm'
                 : 'text-[#8B949E] hover:text-white'
             }`}
           >
@@ -331,7 +321,7 @@ export function CertificationsClient({
               onClick={() => setDomainFilter(d)}
               className={`px-3.5 py-1.5 rounded-xl whitespace-nowrap transition-all ${
                 domainFilter === d
-                  ? 'bg-[#00D4A8] text-[#080A0E] font-bold shadow-sm shadow-[#00D4A8]/20'
+                  ? 'bg-[#F97316] text-[#080A0E] font-bold shadow-sm shadow-[#F97316]/20'
                   : 'bg-[#161B22] text-[#8B949E] hover:text-white border border-white/5'
               }`}
             >
@@ -346,7 +336,7 @@ export function CertificationsClient({
             placeholder="Search certs, vendor, skill..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-1.5 text-xs text-white placeholder:text-[#8B949E] focus:outline-none focus:border-[#00D4A8] w-64 font-mono"
+            className="bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-1.5 text-xs text-white placeholder:text-[#8B949E] focus:outline-none focus:border-[#F97316] w-64 font-mono"
           />
           {searchQuery && (
             <button onClick={() => setSearchQuery('')} className="text-[#8B949E] hover:text-white text-xs font-mono px-2">
@@ -381,14 +371,13 @@ export function CertificationsClient({
                 <th onClick={() => handleSort('difficulty')} className="py-3.5 px-3 font-medium cursor-pointer hover:text-white transition-colors">
                   DIFFICULTY {sortCol === 'difficulty' ? (sortDir === 'asc' ? '↑' : '↓') : ''}
                 </th>
-                <th className="py-3.5 px-3 font-medium">ASSIGNED TASK</th>
                 <th className="py-3.5 px-3 font-medium text-right">ACTIONS</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/[0.04]">
               {filteredList.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="py-12 text-center text-[#8B949E] font-mono">
+                  <td colSpan={8} className="py-12 text-center text-[#8B949E] font-mono">
                     No certification records match your current search or domain filter.
                   </td>
                 </tr>
@@ -434,28 +423,12 @@ export function CertificationsClient({
                       </td>
                       <td className="py-3.5 px-3 text-[#8B949E] font-mono whitespace-nowrap">{cert.vendor}</td>
                       <td className="py-3.5 px-3 text-white whitespace-nowrap">{cert.domain}</td>
-                      <td className="py-3.5 px-3 font-mono text-right font-bold text-[#00D4A8] whitespace-nowrap">{cert.avg_salary_lift}</td>
+                      <td className="py-3.5 px-3 font-mono text-right font-bold text-[#F97316] whitespace-nowrap">{cert.avg_salary_lift}</td>
                       <td className="py-3.5 px-3 font-mono text-right font-bold text-[#E8C547] whitespace-nowrap">{cert.demand_score} / 10</td>
                       <td className="py-3.5 px-3 font-mono whitespace-nowrap">
                         <span className="px-2 py-0.5 rounded bg-white/[0.04] text-[#8B949E] text-[10px]">
                           {cert.difficulty}
                         </span>
-                      </td>
-                      <td className="py-3.5 px-3 font-mono whitespace-nowrap">
-                        <div className="flex items-center gap-1.5">
-                          <UserCheck className="w-3.5 h-3.5 text-[#3B82F6]" />
-                          <select
-                            value={cert.assigned_to || 'Unassigned'}
-                            onChange={(e) => handleAssign(cert.id, e.target.value)}
-                            className="bg-[#161B22] border border-white/[0.08] rounded px-2 py-1 text-white text-[11px] focus:outline-none focus:border-[#00D4A8]"
-                          >
-                            <option value="Unassigned">Unassigned</option>
-                            <option value="Admin Tanuj">Admin Tanuj</option>
-                            <option value="Worker 1 (Priya)">Worker 1 (Priya)</option>
-                            <option value="Worker 2 (Rahul)">Worker 2 (Rahul)</option>
-                            <option value="Worker 3 (Ankit)">Worker 3 (Ankit)</option>
-                          </select>
-                        </div>
                       </td>
                       <td className="py-3.5 px-3 text-right whitespace-nowrap">
                         <div className="flex items-center justify-end gap-1.5">
@@ -469,7 +442,7 @@ export function CertificationsClient({
                           </button>
                           <button
                             onClick={() => openEdit(cert)}
-                            className="px-2.5 py-1.5 rounded-lg bg-white/[0.04] hover:bg-[#00D4A8]/15 hover:text-[#00D4A8] text-white font-mono text-[11px] font-semibold transition-all inline-flex items-center gap-1"
+                            className="px-2.5 py-1.5 rounded-lg bg-white/[0.04] hover:bg-[#F97316]/15 hover:text-[#F97316] text-white font-mono text-[11px] font-semibold transition-all inline-flex items-center gap-1"
                           >
                             <Edit3 className="w-3 h-3" />
                             <span>{isStaging ? 'Edit' : 'Stage'}</span>
@@ -519,7 +492,6 @@ export function CertificationsClient({
               <div>
                 <p className="text-[#8B949E]">Target Record:</p>
                 <p className="text-white font-bold text-sm mt-0.5">{notesModalCert.name}</p>
-                <p className="text-[10px] text-[#00D4A8] mt-0.5">Assigned to: {notesModalCert.assigned_to || 'Unassigned'}</p>
               </div>
 
               <div className="bg-[#161B22] border border-white/[0.04] rounded-xl p-3.5 max-h-48 overflow-y-auto space-y-2">
@@ -540,7 +512,7 @@ export function CertificationsClient({
                   placeholder="Add a new audit note or verification message..."
                   value={newNoteText}
                   onChange={(e) => setNewNoteText(e.target.value)}
-                  className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-[#00D4A8]"
+                  className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-[#F97316]"
                 />
                 <div className="flex justify-end gap-2">
                   <button
@@ -577,7 +549,7 @@ export function CertificationsClient({
             >
               <div className="p-5 border-b border-white/[0.06] flex items-center justify-between shrink-0 bg-[#161B22]">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-[#00D4A8]/10 border border-[#00D4A8]/20 flex items-center justify-center text-[#00D4A8]">
+                  <div className="w-9 h-9 rounded-xl bg-[#F97316]/10 border border-[#F97316]/20 flex items-center justify-center text-[#F97316]">
                     <Edit3 className="w-5 h-5" />
                   </div>
                   <div>
@@ -610,7 +582,7 @@ export function CertificationsClient({
                       value={editForm.avg_salary_lift || ''}
                       onChange={(e) => setEditForm({ ...editForm, avg_salary_lift: e.target.value })}
                       placeholder="e.g. 32%"
-                      className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-[#00D4A8]"
+                      className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-[#F97316]"
                     />
                   </div>
 
@@ -623,7 +595,7 @@ export function CertificationsClient({
                       required
                       value={editForm.demand_score || 8}
                       onChange={(e) => setEditForm({ ...editForm, demand_score: Number(e.target.value) })}
-                      className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-[#00D4A8]"
+                      className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-[#F97316]"
                     />
                   </div>
                 </div>
@@ -634,7 +606,7 @@ export function CertificationsClient({
                     <select
                       value={editForm.difficulty || 'Intermediate'}
                       onChange={(e) => setEditForm({ ...editForm, difficulty: e.target.value as any })}
-                      className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-[#00D4A8]"
+                      className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-[#F97316]"
                     >
                       <option value="Beginner">Beginner</option>
                       <option value="Intermediate">Intermediate</option>
@@ -650,7 +622,7 @@ export function CertificationsClient({
                       value={editForm.career_stage || 'Mid-Level'}
                       onChange={(e) => setEditForm({ ...editForm, career_stage: e.target.value })}
                       placeholder="e.g. Mid-Level (3-6 yrs)"
-                      className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-[#00D4A8]"
+                      className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-[#F97316]"
                     />
                   </div>
                 </div>
@@ -664,11 +636,11 @@ export function CertificationsClient({
                     value={skillsInput}
                     onChange={(e) => setSkillsInput(e.target.value)}
                     placeholder="AWS, VPC, EC2, Terraform, IAM"
-                    className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-[#00D4A8]"
+                    className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-[#F97316]"
                   />
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-[#00D4A8]/10 border border-[#00D4A8]/20 text-xs text-[#00D4A8] leading-relaxed">
+                <div className="p-3.5 rounded-xl bg-[#F97316]/10 border border-[#F97316]/20 text-xs text-[#F97316] leading-relaxed">
                   <strong>Staging Safety Notice:</strong> Saving changes places them in the staging queue. They will NOT affect calculations on certifyd.in until a Super Admin executes "Push to Live".
                 </div>
 
@@ -683,7 +655,7 @@ export function CertificationsClient({
                   <button
                     type="submit"
                     disabled={loading}
-                    className="px-5 py-2.5 rounded-xl bg-[#00D4A8] text-[#080A0E] hover:bg-[#00D4A8]/90 font-bold text-xs font-mono shadow-lg shadow-[#00D4A8]/20 transition-all flex items-center gap-2"
+                    className="px-5 py-2.5 rounded-xl bg-[#F97316] text-[#080A0E] hover:bg-[#F97316]/90 font-bold text-xs font-mono shadow-lg shadow-[#F97316]/20 transition-all flex items-center gap-2"
                   >
                     {loading && <div className="w-3.5 h-3.5 border-2 border-black/30 border-t-black rounded-full animate-spin" />}
                     <span>Save to Staging Queue</span>

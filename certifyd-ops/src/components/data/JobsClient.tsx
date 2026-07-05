@@ -14,9 +14,7 @@ import {
   AlertTriangle,
   X,
   MapPin,
-  TrendingUp,
-  MessageSquare,
-  UserCheck
+  MessageSquare
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -78,14 +76,6 @@ export function JobsClient({ initialLive, initialStaging, userRole = 'SUPER_ADMI
       setSortCol(col);
       setSortDir('desc');
     }
-  }
-
-  function handleAssign(id: string, assignee: string) {
-    const updateList = (list: JobRecord[]) =>
-      list.map((j) => (j.id === id ? { ...j, assigned_to: assignee } : j));
-    if (activeTab === 'live') setLiveList(updateList);
-    else setStagingList(updateList);
-    showToast(`Assigned market job task to ${assignee} ✓`, 'success');
   }
 
   function handleAddNote(e: React.FormEvent) {
@@ -248,7 +238,7 @@ export function JobsClient({ initialLive, initialStaging, userRole = 'SUPER_ADMI
             onClick={() => setActiveTab('live')}
             className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
               activeTab === 'live'
-                ? 'bg-[#00D4A8] text-[#080A0E] font-semibold shadow-sm'
+                ? 'bg-[#F97316] text-[#080A0E] font-semibold shadow-sm'
                 : 'text-[#8B949E] hover:text-white'
             }`}
           >
@@ -324,7 +314,7 @@ export function JobsClient({ initialLive, initialStaging, userRole = 'SUPER_ADMI
               onClick={() => setDomainFilter(d)}
               className={`px-3.5 py-1.5 rounded-xl whitespace-nowrap transition-all ${
                 domainFilter === d
-                  ? 'bg-[#00D4A8] text-[#080A0E] font-bold shadow-sm shadow-[#00D4A8]/20'
+                  ? 'bg-[#F97316] text-[#080A0E] font-bold shadow-sm shadow-[#F97316]/20'
                   : 'bg-[#161B22] text-[#8B949E] hover:text-white border border-white/5'
               }`}
             >
@@ -339,7 +329,7 @@ export function JobsClient({ initialLive, initialStaging, userRole = 'SUPER_ADMI
             placeholder="Search roles, city, skill..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-1.5 text-xs text-white placeholder:text-[#8B949E] focus:outline-none focus:border-[#00D4A8] w-64 font-mono"
+            className="bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-1.5 text-xs text-white placeholder:text-[#8B949E] focus:outline-none focus:border-[#F97316] w-64 font-mono"
           />
           {searchQuery && (
             <button onClick={() => setSearchQuery('')} className="text-[#8B949E] hover:text-white text-xs font-mono px-2">
@@ -372,14 +362,13 @@ export function JobsClient({ initialLive, initialStaging, userRole = 'SUPER_ADMI
                   SAMPLE SIZE {sortCol === 'sample' ? (sortDir === 'asc' ? '↑' : '↓') : ''}
                 </th>
                 <th className="py-3.5 px-3 font-medium">TOP REQUIRED CERT</th>
-                <th className="py-3.5 px-3 font-medium">ASSIGNED TASK</th>
                 <th className="py-3.5 px-3 font-medium text-right">ACTIONS</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/[0.04]">
               {filteredList.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="py-12 text-center text-[#8B949E] font-mono">
+                  <td colSpan={8} className="py-12 text-center text-[#8B949E] font-mono">
                     No market job benchmarks match your current search or domain filter.
                   </td>
                 </tr>
@@ -430,26 +419,10 @@ export function JobsClient({ initialLive, initialStaging, userRole = 'SUPER_ADMI
                         </div>
                       </td>
                       <td className="py-3.5 px-3 text-white font-mono whitespace-nowrap">{job.exp_band}</td>
-                      <td className="py-3.5 px-3 font-mono text-right font-bold text-[#00D4A8] whitespace-nowrap">{job.median_ctc}</td>
+                      <td className="py-3.5 px-3 font-mono text-right font-bold text-[#F97316] whitespace-nowrap">{job.median_ctc}</td>
                       <td className="py-3.5 px-3 font-mono text-right font-bold text-[#E8C547] whitespace-nowrap">{job.sample_size} roles</td>
                       <td className="py-3.5 px-3 font-mono text-white/80 max-w-xs truncate" title={job.top_cert}>
                         {job.top_cert}
-                      </td>
-                      <td className="py-3.5 px-3 font-mono whitespace-nowrap">
-                        <div className="flex items-center gap-1.5">
-                          <UserCheck className="w-3.5 h-3.5 text-[#3B82F6]" />
-                          <select
-                            value={job.assigned_to || 'Unassigned'}
-                            onChange={(e) => handleAssign(job.id, e.target.value)}
-                            className="bg-[#161B22] border border-white/[0.08] rounded px-2 py-1 text-white text-[11px] focus:outline-none focus:border-[#00D4A8]"
-                          >
-                            <option value="Unassigned">Unassigned</option>
-                            <option value="Admin Tanuj">Admin Tanuj</option>
-                            <option value="Worker 1 (Priya)">Worker 1 (Priya)</option>
-                            <option value="Worker 2 (Rahul)">Worker 2 (Rahul)</option>
-                            <option value="Worker 3 (Ankit)">Worker 3 (Ankit)</option>
-                          </select>
-                        </div>
                       </td>
                       <td className="py-3.5 px-3 text-right whitespace-nowrap">
                         <div className="flex items-center justify-end gap-1.5">
@@ -463,7 +436,7 @@ export function JobsClient({ initialLive, initialStaging, userRole = 'SUPER_ADMI
                           </button>
                           <button
                             onClick={() => openEdit(job)}
-                            className="px-2.5 py-1.5 rounded-lg bg-white/[0.04] hover:bg-[#00D4A8]/15 hover:text-[#00D4A8] text-white font-mono text-[11px] font-semibold transition-all inline-flex items-center gap-1"
+                            className="px-2.5 py-1.5 rounded-lg bg-white/[0.04] hover:bg-[#F97316]/15 hover:text-[#F97316] text-white font-mono text-[11px] font-semibold transition-all inline-flex items-center gap-1"
                           >
                             <Edit3 className="w-3 h-3" />
                             <span>{isStaging ? 'Edit' : 'Stage'}</span>
@@ -513,7 +486,6 @@ export function JobsClient({ initialLive, initialStaging, userRole = 'SUPER_ADMI
               <div>
                 <p className="text-[#8B949E]">Target Role:</p>
                 <p className="text-white font-bold text-sm mt-0.5">{notesModalJob.title} ({notesModalJob.city})</p>
-                <p className="text-[10px] text-[#00D4A8] mt-0.5">Assigned to: {notesModalJob.assigned_to || 'Unassigned'}</p>
               </div>
 
               <div className="bg-[#161B22] border border-white/[0.04] rounded-xl p-3.5 max-h-48 overflow-y-auto space-y-2">
@@ -534,7 +506,7 @@ export function JobsClient({ initialLive, initialStaging, userRole = 'SUPER_ADMI
                   placeholder="Add a new audit note or verification message..."
                   value={newNoteText}
                   onChange={(e) => setNewNoteText(e.target.value)}
-                  className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-[#00D4A8]"
+                  className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-[#F97316]"
                 />
                 <div className="flex justify-end gap-2">
                   <button
@@ -571,7 +543,7 @@ export function JobsClient({ initialLive, initialStaging, userRole = 'SUPER_ADMI
             >
               <div className="p-5 border-b border-white/[0.06] flex items-center justify-between shrink-0 bg-[#161B22]">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-[#00D4A8]/10 border border-[#00D4A8]/20 flex items-center justify-center text-[#00D4A8]">
+                  <div className="w-9 h-9 rounded-xl bg-[#F97316]/10 border border-[#F97316]/20 flex items-center justify-center text-[#F97316]">
                     <Edit3 className="w-5 h-5" />
                   </div>
                   <div>
@@ -616,7 +588,7 @@ export function JobsClient({ initialLive, initialStaging, userRole = 'SUPER_ADMI
                       value={editForm.median_ctc || ''}
                       onChange={(e) => setEditForm({ ...editForm, median_ctc: e.target.value })}
                       placeholder="e.g. ₹18.4L"
-                      className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-[#00D4A8]"
+                      className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-[#F97316]"
                     />
                   </div>
 
@@ -628,7 +600,7 @@ export function JobsClient({ initialLive, initialStaging, userRole = 'SUPER_ADMI
                       required
                       value={editForm.sample_size || 50}
                       onChange={(e) => setEditForm({ ...editForm, sample_size: Number(e.target.value) })}
-                      className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-[#00D4A8]"
+                      className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-[#F97316]"
                     />
                   </div>
                 </div>
@@ -641,7 +613,7 @@ export function JobsClient({ initialLive, initialStaging, userRole = 'SUPER_ADMI
                     type="text"
                     value={editForm.top_cert || ''}
                     onChange={(e) => setEditForm({ ...editForm, top_cert: e.target.value })}
-                    className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-[#00D4A8]"
+                    className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-[#F97316]"
                   />
                 </div>
 
@@ -654,11 +626,11 @@ export function JobsClient({ initialLive, initialStaging, userRole = 'SUPER_ADMI
                     value={skillsInput}
                     onChange={(e) => setSkillsInput(e.target.value)}
                     placeholder="Kubernetes, AWS, Terraform, Python"
-                    className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-[#00D4A8]"
+                    className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-[#F97316]"
                   />
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-[#00D4A8]/10 border border-[#00D4A8]/20 text-xs text-[#00D4A8] leading-relaxed">
+                <div className="p-3.5 rounded-xl bg-[#F97316]/10 border border-[#F97316]/20 text-xs text-[#F97316] leading-relaxed">
                   <strong>Staging Safety Notice:</strong> Saving changes places them in the staging queue. They will NOT affect calculations on certifyd.in until a Super Admin executes "Push to Live".
                 </div>
 
@@ -673,7 +645,7 @@ export function JobsClient({ initialLive, initialStaging, userRole = 'SUPER_ADMI
                   <button
                     type="submit"
                     disabled={loading}
-                    className="px-5 py-2.5 rounded-xl bg-[#00D4A8] text-[#080A0E] hover:bg-[#00D4A8]/90 font-bold text-xs font-mono shadow-lg shadow-[#00D4A8]/20 transition-all flex items-center gap-2"
+                    className="px-5 py-2.5 rounded-xl bg-[#F97316] text-[#080A0E] hover:bg-[#F97316]/90 font-bold text-xs font-mono shadow-lg shadow-[#F97316]/20 transition-all flex items-center gap-2"
                   >
                     {loading && <div className="w-3.5 h-3.5 border-2 border-black/30 border-t-black rounded-full animate-spin" />}
                     <span>Save to Staging Queue</span>

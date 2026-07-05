@@ -24,3 +24,58 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* ==========================================
+   LIGHT MODE OVERRIDES (Amazon Seller style)
+   ========================================== */
+html.light, html.light body {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+html.light [class*="bg-[#080A0E]"] {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+html.light [class*="bg-[#0F1218]"] {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.03) !important;
+}
+
+html.light [class*="bg-[#161B22]"],
+html.light [class*="bg-[#1C2128]"] {
+  background-color: #f8fafc !important;
+  color: #1e293b !important;
+}
+
+html.light .text-white,
+html.light [class*="text-[#F0F6FC]"] {
+  color: #0f172a !important;
+}
+
+html.light [class*="text-[#8B949E]"] {
+  color: #64748b !important;
+}
+
+html.light [class*="border-white/"],
+html.light [class*="border-white"] {
+  border-color: #e2e8f0 !important;
+}
+
+html.light [class*="divide-white/"] > * + * {
+  border-color: #e2e8f0 !important;
+}
+
+html.light input,
+html.light select,
+html.light textarea {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+html.light [class*="hover:bg-white/"]:hover {
+  background-color: #f1f5f9 !important;
+}

@@ -25,7 +25,7 @@ export default async function AuditPage() {
       logs = data.map((l) => ({
         id: l.id,
         timestamp: l.timestamp || new Date().toISOString(),
-        admin_email: l.admin_email || 'tanuj@x.com',
+        admin_email: l.admin_email || session?.email || 'admin@certifyd.in',
         admin_role: l.admin_role || 'SUPER_ADMIN',
         action_type: l.action_type || 'UPDATE_STATUS',
         target_table: l.target_table || 'resume_submissions',

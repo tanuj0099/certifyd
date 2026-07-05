@@ -28,14 +28,14 @@ export default async function SettingsPage() {
   }
 
   if (admins.length === 0) {
-    const envEmails = (process.env.ALLOWED_EMAILS || 'tanuj@example.com,teammate@example.com')
+    const envEmails = (process.env.ALLOWED_EMAILS || 'admin@certifyd.in,superadmin@certifyd.in,team@certifyd.in')
       .split(',')
       .map((s) => s.trim())
       .filter(Boolean);
 
     admins = envEmails.map((email, idx) => ({
       email,
-      role: idx === 0 || email.includes('tanuj') ? 'SUPER_ADMIN' : 'TEAM_MEMBER',
+      role: idx === 0 || email.includes('admin') ? 'SUPER_ADMIN' : 'TEAM_MEMBER',
       added_at: new Date(Date.now() - (idx + 1) * 864000000).toISOString(),
     }));
   }

@@ -48,7 +48,7 @@ export function FlagsClient({ initialFlags }: { initialFlags: FlagRecord[] }) {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded bg-[#00D4A8]/15 text-[#00D4A8] text-[10px] font-mono font-bold uppercase">
+            <span className="px-2 py-0.5 rounded bg-[#F97316]/15 text-[#F97316] text-[10px] font-mono font-bold uppercase">
               SUPER ADMIN ONLY
             </span>
             <h1 className="text-2xl font-bold text-white tracking-tight">System Feature Flags</h1>
@@ -88,7 +88,7 @@ export function FlagsClient({ initialFlags }: { initialFlags: FlagRecord[] }) {
                           className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
                             isMaintenance
                               ? 'bg-[#F85149]/15 text-[#F85149] border border-[#F85149]/30'
-                              : 'bg-[#00D4A8]/15 text-[#00D4A8] border border-[#00D4A8]/30'
+                              : 'bg-[#F97316]/15 text-[#F97316] border border-[#F97316]/30'
                           }`}
                         >
                           {flag.flag_key === 'enable_ai_analyzer' && <Cpu className="w-4 h-4" />}
@@ -107,7 +107,7 @@ export function FlagsClient({ initialFlags }: { initialFlags: FlagRecord[] }) {
                       </div>
                     </td>
                     <td className="py-5 px-4 text-[#F0F6FC] max-w-md leading-relaxed">{flag.description}</td>
-                    <td className="py-5 px-4 text-[#00D4A8] font-mono">{flag.updated_by}</td>
+                    <td className="py-5 px-4 text-[#F97316] font-mono">{flag.updated_by}</td>
                     <td className="py-5 px-4 text-[#8B949E] font-mono">{new Date(flag.updated_at).toLocaleString()}</td>
                     <td className="py-5 px-6 text-right">
                       <button

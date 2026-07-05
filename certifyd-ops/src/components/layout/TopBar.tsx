@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Bell, RefreshCw, LogOut, Check, Trash2, AlertTriangle, MessageSquare } from 'lucide-react';
+import { Bell, RefreshCw, LogOut, Check, Trash2, AlertTriangle, MessageSquare, Sun, Moon } from 'lucide-react';
 import { logoutAction } from '../../actions/authActions';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -20,6 +20,7 @@ interface Notification {
 }
 
 export function TopBar({ userEmail, userRole }: TopBarProps) {
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [lastSync, setLastSync] = useState<string>('Just now');
   const [syncing, setSyncing] = useState(false);
   const [showNotifs, setShowNotifs] = useState(false);
@@ -75,6 +76,26 @@ export function TopBar({ userEmail, userRole }: TopBarProps) {
     }, 800);
   }
 
+  useEffect(() => {
+    const saved = localStorage.getItem('certifyd-ops-theme') as 'dark' | 'light' | null;
+    if (saved === 'light') {
+      setTheme('light');
+      document.documentElement.classList.add('light');
+    }
+  }, []);
+
+  function toggleTheme() {
+    if (theme === 'dark') {
+      setTheme('light');
+      document.documentElement.classList.add('light');
+      localStorage.setItem('certifyd-ops-theme', 'light');
+    } else {
+      setTheme('dark');
+      document.documentElement.classList.remove('light');
+      localStorage.setItem('certifyd-ops-theme', 'dark');
+    }
+  }
+
   return (
     <header className="h-14 bg-[#080A0E]/90 backdrop-blur-md border-b border-white/[0.06] sticky top-0 z-30 flex items-center justify-between px-6">
       {/* Left section - Last Sync & Status */}
@@ -90,7 +111,7 @@ export function TopBar({ userEmail, userRole }: TopBarProps) {
             className="ml-1 text-[#8B949E] hover:text-white transition-colors p-0.5"
             title="Force Manual Sync"
           >
-            <RefreshCw className={`w-3 h-3 ${syncing ? 'animate-spin text-[#00D4A8]' : ''}`} />
+            <RefreshCw className={`w-3 h-3 ${syncing ? 'animate-spin text-[#F97316]' : ''}`} />
           </button>
         </div>
       </div>
@@ -102,7 +123,7 @@ export function TopBar({ userEmail, userRole }: TopBarProps) {
           <span
             className={`px-1.5 py-0.5 rounded uppercase font-semibold text-[10px] ${
               userRole === 'SUPER_ADMIN'
-                ? 'bg-[#00D4A8]/15 text-[#00D4A8] border border-[#00D4A8]/30'
+                ? 'bg-[#F97316]/15 text-[#F97316] border border-[#F97316]/30'
                 : 'bg-white/10 text-[#8B949E] border border-white/10'
             }`}
           >
@@ -110,6 +131,15 @@ export function TopBar({ userEmail, userRole }: TopBarProps) {
           </span>
           <span className="text-white font-medium">{userEmail}</span>
         </div>
+
+        {/* Theme Toggle Button */}
+        <button
+          onClick={toggleTheme}
+          className="p-2 rounded-xl bg-[#0F1218] hover:bg-[#161B22] border border-white/[0.06] text-[#8B949E] hover:text-white transition-colors flex items-center justify-center"
+          title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+        >
+          {theme === 'dark' ? <Sun className="w-4 h-4 text-[#E8C547]" /> : <Moon className="w-4 h-4 text-[#3B82F6]" />}
+        </button>
 
         {/* Notifications Bell */}
         <div className="relative">
@@ -139,7 +169,7 @@ export function TopBar({ userEmail, userRole }: TopBarProps) {
                 >
                   <div className="p-4 border-b border-white/[0.06] flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <Bell className="w-4 h-4 text-[#00D4A8]" />
+                      <Bell className="w-4 h-4 text-[#F97316]" />
                       <span className="text-sm font-semibold text-white">Notifications</span>
                       <span className="px-1.5 py-0.2 rounded-full bg-white/10 text-[10px] font-mono text-[#8B949E]">
                         {unreadCount}

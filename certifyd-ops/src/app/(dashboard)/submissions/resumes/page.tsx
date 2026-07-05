@@ -14,10 +14,13 @@ export default async function ResumesPage() {
   const seenIds = new Set<string>();
 
   try {
-    const [subRes, resRes] = await Promise.all([
+    const results = await Promise.allSettled([
       supabaseAdmin.from('resume_submissions').select('*').order('submitted_at', { ascending: false }).limit(2000),
-      supabaseAdmin.from('resumes').select('*').limit(2000),
+      supabaseAdmin.from('resumes').select('*').order('updated_at', { ascending: false }).limit(2000),
     ]);
+
+    const subRes = results[0].status === 'fulfilled' ? results[0].value : { data: null };
+    const resRes = results[1].status === 'fulfilled' ? results[1].value : { data: null };
 
     if (subRes.data && subRes.data.length > 0) {
       subRes.data.forEach((item) => {
@@ -45,7 +48,7 @@ export default async function ResumesPage() {
           seenIds.add(item.id);
           records.push({
             id: item.id,
-            submitted_at: item.created_at || new Date().toISOString(),
+            submitted_at: item.updated_at || item.created_at || new Date().toISOString(),
             city: item.city || 'Unspecified',
             domain: item.domain_bucket || item.current_role || 'General Tech',
             certs_found: Array.isArray(item.existing_certifications) ? item.existing_certifications : [],
@@ -55,7 +58,8 @@ export default async function ResumesPage() {
             status: 'pending',
             extracted_data: {
               role_category: item.current_role || undefined,
-              cert_stack: item.existing_certifications || []
+              cert_stack: item.existing_certifications || [],
+              ...item
             } as any,
             rejection_reason: undefined,
             internal_notes: [],
