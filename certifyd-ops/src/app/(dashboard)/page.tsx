@@ -18,7 +18,7 @@ export default async function DashboardPage() {
   let initialActivities: any[] = [];
 
   try {
-    const [resumesCountRes, offersCountRes, resumesRes, offersRes, feedbackRes, usersRes, auditRes] = await Promise.all([
+    const results = await Promise.allSettled([
       supabaseAdmin.from('resume_submissions').select('id', { count: 'exact', head: true }),
       supabaseAdmin.from('offer_letter_submissions').select('id', { count: 'exact', head: true }),
       supabaseAdmin.from('resume_submissions').select('id, status, submitted_at, domain, user_id').order('submitted_at', { ascending: false }).limit(20),
@@ -26,7 +26,17 @@ export default async function DashboardPage() {
       supabaseAdmin.from('feedback_messages').select('id, created_at, rating, tool_used, user_id').order('created_at', { ascending: false }).limit(10),
       supabaseAdmin.from('profiles').select('id', { count: 'exact', head: true }),
       supabaseAdmin.from('audit_log').select('*').order('timestamp', { ascending: false }).limit(10),
+      supabaseAdmin.from('resumes').select('id, status, submitted_at, domain, user_id').order('submitted_at', { ascending: false }).limit(20),
+      supabaseAdmin.from('offer_letters').select('id, status, submitted_at, role_category, ctc_band, user_id').order('submitted_at', { ascending: false }).limit(20),
     ]);
+
+    const resumesCountRes = results[0].status === 'fulfilled' ? results[0].value : { count: 0 };
+    const offersCountRes = results[1].status === 'fulfilled' ? results[1].value : { count: 0 };
+    const resumesRes = { data: (results[2].status === 'fulfilled' && results[2].value.data && results[2].value.data.length > 0) ? results[2].value.data : ((results[7].status === 'fulfilled' && results[7].value.data) ? results[7].value.data : []) };
+    const offersRes = { data: (results[3].status === 'fulfilled' && results[3].value.data && results[3].value.data.length > 0) ? results[3].value.data : ((results[8].status === 'fulfilled' && results[8].value.data) ? results[8].value.data : []) };
+    const feedbackRes = results[4].status === 'fulfilled' ? results[4].value : { data: [] };
+    const usersRes = results[5].status === 'fulfilled' ? results[5].value : { count: 0 };
+    const auditRes = results[6].status === 'fulfilled' ? results[6].value : { data: [] };
 
     const resumeCount = Math.max(resumesCountRes.count || 0, resumesRes.data?.length || 0);
     const offerCount = Math.max(offersCountRes.count || 0, offersRes.data?.length || 0);

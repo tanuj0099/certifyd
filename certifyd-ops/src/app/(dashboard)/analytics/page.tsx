@@ -18,14 +18,23 @@ export default async function AnalyticsPage() {
   let approvedCount = 0;
 
   try {
-    const [resumesRes, offersRes, certsRes, jobsRes, usersRes, auditRes] = await Promise.all([
+    const results = await Promise.allSettled([
       supabaseAdmin.from('resume_submissions').select('id, city, domain, certs_found, status, anomaly_score, submitted_at').limit(1000),
       supabaseAdmin.from('offer_letter_submissions').select('id, city, role_category, ctc_band, status, submitted_at').limit(1000),
       supabaseAdmin.from('certifications').select('name, functional_track, difficulty_level, base_cost_usd').limit(1000),
       supabaseAdmin.from('market_jobs').select('title, company, location, salary_range_inr').limit(1000),
       supabaseAdmin.from('profiles').select('id', { count: 'exact', head: true }),
       supabaseAdmin.from('audit_log').select('*').limit(500),
+      supabaseAdmin.from('resumes').select('id, city, domain, certs_found, status, anomaly_score, submitted_at').limit(1000),
+      supabaseAdmin.from('offer_letters').select('id, city, role_category, ctc_band, status, submitted_at').limit(1000),
     ]);
+
+    const resumesRes = { data: (results[0].status === 'fulfilled' && results[0].value.data && results[0].value.data.length > 0) ? results[0].value.data : ((results[6].status === 'fulfilled' && results[6].value.data) ? results[6].value.data : []) };
+    const offersRes = { data: (results[1].status === 'fulfilled' && results[1].value.data && results[1].value.data.length > 0) ? results[1].value.data : ((results[7].status === 'fulfilled' && results[7].value.data) ? results[7].value.data : []) };
+    const certsRes = results[2].status === 'fulfilled' ? results[2].value : { data: [] };
+    const jobsRes = results[3].status === 'fulfilled' ? results[3].value : { data: [] };
+    const usersRes = results[4].status === 'fulfilled' ? results[4].value : { count: 0 };
+    const auditRes = results[5].status === 'fulfilled' ? results[5].value : { data: [] };
 
     resumesCount = resumesRes.data?.length || 0;
     offersCount = offersRes.data?.length || 0;
