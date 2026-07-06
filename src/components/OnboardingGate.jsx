@@ -1,108 +1,104 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react'
-import { usePathname } from 'next/navigation';
-import { Navigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 
-import { useAuth } from '../hooks/useAuth.jsx'
-import { supabase } from '../lib/supabase.js'
-import SkeletonLoader from './SkeletonLoader.jsx'
+import { useAuth } from '../hooks/useAuth.jsx';
+import { supabase } from '../lib/supabase.js';
+import SkeletonLoader from './SkeletonLoader.jsx';
 
 /**
  * OnboardingGate - wraps protected routes that require a completed profile.
- *
- * Flow:
- *  1. User must be signed in (else  /)
- *  2. Supabase 'profiles' table is checked for onboarding_complete = true
- *  3. If profile is missing or incomplete  /onboarding
- *  4. If complete  render children
- *
- * Does NOT redirect if Supabase is unavailable (graceful degradation).
- * Does NOT redirect to /onboarding if already on /onboarding (prevents ping-pong loops).
- *
- * CRITICAL: useEffect dependency uses user.uid (a stable string) NOT the user object
- * reference - using the object would cause infinite re-renders because Supabase
- * re-creates the user object on every auth state subscription tick.
+ * Works natively with Next.js App Router.
  */
 export default function OnboardingGate({ children }) {
-  const { user, loading: authLoading } = useAuth()
-  const location = { pathname: usePathname() }
+  const { user, loading: authLoading } = useAuth();
+  const pathname = usePathname();
+  const router = useRouter();
 
-  const [profileChecked, setProfileChecked] = useState(false)
-  const [needsOnboarding, setNeedsOnboarding] = useState(false)
+  const [profileChecked, setProfileChecked] = useState(false);
+  const [needsOnboarding, setNeedsOnboarding] = useState(false);
 
-  // Stable user identity string - avoids object reference churn in deps
-  const userId = user?.uid || user?.id || null
-
-  // Track the last userId we ran a check for - skip duplicate runs
-  const lastCheckedRef = useRef(null)
+  const userId = user?.uid || user?.id || null;
+  const lastCheckedRef = useRef(null);
 
   useEffect(() => {
-    // Wait for auth to settle
-    if (authLoading) return
-    // No user - nothing to check
-    if (!userId) return
-    // Already checked this exact user - prevent re-fire
-    if (lastCheckedRef.current === userId) return
-    // Supabase not configured - pass user through without blocking
+    if (authLoading) return;
+    if (!userId) {
+      if (pathname !== '/' && pathname !== '/login' && pathname !== '/signup') {
+        router.replace('/login');
+      }
+      return;
+    }
+    if (lastCheckedRef.current === userId) return;
     if (!supabase) {
-      lastCheckedRef.current = userId
-      setProfileChecked(true)
-      return
+      lastCheckedRef.current = userId;
+      setProfileChecked(true);
+      return;
     }
 
-    let cancelled = false
-    lastCheckedRef.current = userId
+    let cancelled = false;
+    lastCheckedRef.current = userId;
 
     async function checkProfile() {
       try {
-        const { data, error } = await supabase
-          .from('user_profiles')
-          .select('*')
-          .eq('user_id', userId)
-          .single()
+        const [{ data: userProfile }, { data: profile }] = await Promise.all([
+          supabase.from('user_profiles').select('*').eq('user_id', userId).maybeSingle(),
+          supabase.from('profiles').select('*').eq('id', userId).maybeSingle(),
+        ]);
 
-        if (cancelled) return
+        if (cancelled) return;
 
-        if (error || !data) {
-          if (!cancelled) setNeedsOnboarding(true)
+        const isComplete = Boolean(
+          userProfile?.onboarding_complete === true ||
+          profile?.onboarding_complete === true ||
+          (userProfile?.target_domain && userProfile?.target_domain !== '' && userProfile?.job_role && userProfile?.job_role !== '' && userProfile?.job_role !== 'Student') ||
+          (profile?.career_focus && profile?.career_focus !== '' && profile?.workspace_slug)
+        );
+
+        if (!isComplete) {
+          setNeedsOnboarding(true);
+          if (pathname !== '/onboarding') {
+            router.replace('/onboarding');
+          }
         } else {
-          // If data exists, check if onboarding is strictly marked incomplete if we had such a flag,
-          // else simply presence of profile implies not needing onboarding.
-          if (!cancelled) setNeedsOnboarding(false)
+          setNeedsOnboarding(false);
         }
       } catch (err) {
         if (!cancelled) {
-          console.error("Profile gate check exception:", err)
+          console.error("Profile gate check exception:", err);
         }
       } finally {
         if (!cancelled) {
-          setProfileChecked(true)
+          setProfileChecked(true);
         }
       }
     }
 
-    checkProfile()
+    checkProfile();
     return () => {
-      cancelled = true
-      lastCheckedRef.current = null
+      cancelled = true;
+      lastCheckedRef.current = null;
+    };
+  }, [userId, authLoading, pathname, router]);
+
+  useEffect(() => {
+    if (profileChecked && needsOnboarding && pathname !== '/onboarding') {
+      router.replace('/onboarding');
     }
-  }, [userId, authLoading]) // stable primitives only - no object references
+  }, [profileChecked, needsOnboarding, pathname, router]);
 
-  // Auth still loading
-  if (authLoading) {
-    return <SkeletonLoader type="dashboard" />
+  if (authLoading || (!profileChecked && userId)) {
+    return <SkeletonLoader type="dashboard" />;
   }
 
-  // Not signed in  root (preserve the attempted path in state)
-  if (!user) {
-    return <Navigate to="/" replace state={{ authRequired: true, from: location.pathname }} />
+  if (!user && pathname !== '/' && pathname !== '/login' && pathname !== '/signup') {
+    return null;
   }
 
-  // Profile check still in-flight
-  if (!profileChecked) {
-    return <SkeletonLoader type="dashboard" />
+  if (needsOnboarding && pathname !== '/onboarding') {
+    return <SkeletonLoader type="dashboard" />;
   }
 
-  return children
+  return children;
 }

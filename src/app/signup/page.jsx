@@ -70,11 +70,9 @@ export default function SignupPage() {
     setBusy(true)
     setError(null)
     try {
-      await signInGoogle()
-      router.push('/onboarding', { replace: true })
+      await signInGoogle({ redirectTo: window.location.origin + '/onboarding' })
     } catch (err) {
       setError(err?.message || 'Google sign-up failed. Please try again.')
-    } finally {
       setBusy(false)
     }
   }
@@ -83,11 +81,9 @@ export default function SignupPage() {
     setBusy(true)
     setError(null)
     try {
-      await signInGithub()
-      router.push('/onboarding', { replace: true })
+      await signInGithub({ redirectTo: window.location.origin + '/onboarding' })
     } catch (err) {
       setError(err?.message || 'GitHub sign-up failed. Please try again.')
-    } finally {
       setBusy(false)
     }
   }

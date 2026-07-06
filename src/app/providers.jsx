@@ -14,6 +14,7 @@ import { AnimatePresence } from 'framer-motion';
 import { useNetworkStatus } from '@/hooks/useNetworkStatus.js';
 import { DynamicBreadcrumb } from '@/components/DynamicBreadcrumb.jsx';
 import { GlobalSearchCapsule } from '@/components/GlobalSearchCapsule.jsx';
+import OnboardingGate from '@/components/OnboardingGate.jsx';
 
 function GlobalUI({ children }) {
   const [mounted, setMounted] = useState(false);
@@ -65,12 +66,14 @@ function GlobalUI({ children }) {
     !isRoadmapPage &&
     !isCertPage;
 
+  const requiresOnboardingGate = ['/dashboard', '/profile', '/user-profile', '/offer-analysis', '/roadmaps', '/cert-radar', '/app'].some(p => pathname?.startsWith(p));
+
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <AnimatePresence>
         {mounted && !isOnline && <OfflineBanner key="offline" />}
       </AnimatePresence>
-
+      
       {!isAuthPage && (
         <DynamicIslandNav
           isDark={isDark}
@@ -85,7 +88,11 @@ function GlobalUI({ children }) {
 
       <main style={{ flex: 1 }}>
         <DynamicBreadcrumb />
-        {children}
+        {requiresOnboardingGate ? (
+          <OnboardingGate>{children}</OnboardingGate>
+        ) : (
+          children
+        )}
       </main>
 
       <GlobalSearchCapsule />
