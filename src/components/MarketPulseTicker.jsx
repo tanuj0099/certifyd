@@ -89,9 +89,9 @@ export default function MarketPulseTicker({ compact = false }) {
         <div style={{
           overflow: 'hidden', width: '100%',
           borderTop: '1px solid var(--border-subtle)',
-          paddingTop: 6, marginTop: 4, /* Removed maskImage and WebkitMaskImage */
-          maskImage: 'transparent',
-          WebkitMaskImage: 'transparent',
+          paddingTop: 6, marginTop: 4,
+          maskImage: 'none',
+          WebkitMaskImage: 'none',
         }}>
           <div className="market-ticker-track">
             {/* duplicated for seamless loop */}

@@ -109,9 +109,18 @@ export function JobsClient({ initialLive, initialStaging, userRole = 'SUPER_ADMI
     e.preventDefault();
     setLoading(true);
     try {
+      const cleanTitle = (editForm.title || '').trim();
+      if (!cleanTitle) {
+        showToast('Job Title is required!', 'error');
+        setLoading(false);
+        return;
+      }
+      const cleanCity = (editForm.city || 'Bangalore').trim();
       const parsedSkills = skillsInput.split(',').map((s) => s.trim()).filter(Boolean);
       const updatedRecord = {
         ...editForm,
+        title: cleanTitle,
+        city: cleanCity,
         skills: parsedSkills,
         staged_by: 'current_admin',
         staged_at: new Date().toISOString(),

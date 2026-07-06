@@ -32,6 +32,7 @@ export interface CertRecord {
   serving_status: 'serving' | 'stale' | 'needs_review';
   career_stage: string;
   skills: string[];
+  slug?: string;
   assigned_to?: string;
   internal_notes?: string[];
   diff_summary?: {
@@ -114,9 +115,20 @@ export function CertificationsClient({
     e.preventDefault();
     setLoading(true);
     try {
+      const cleanName = (editForm.name || '').trim();
+      if (!cleanName) {
+        showToast('Certification Name is required!', 'error');
+        setLoading(false);
+        return;
+      }
+      const cleanVendor = (editForm.vendor || 'Unknown Vendor').trim();
+      const cleanSlug = (editForm.slug || cleanName.toLowerCase().replace(/[^a-z0-9]+/g, '-')).replace(/^-+|-+$/g, '');
       const parsedSkills = skillsInput.split(',').map((s) => s.trim()).filter(Boolean);
       const updatedRecord = {
         ...editForm,
+        name: cleanName,
+        vendor: cleanVendor,
+        slug: cleanSlug,
         skills: parsedSkills,
         staged_by: 'current_admin',
         staged_at: new Date().toISOString(),
