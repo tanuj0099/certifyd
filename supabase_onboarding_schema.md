@@ -70,11 +70,11 @@ END $$;
 ALTER TABLE public.user_profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
--- 4. RLS Policies for `user_profiles`
+-- 4. RLS Policies for `user_profiles` (Explicit ::text casting prevents UUID vs TEXT type mismatch errors)
 DROP POLICY IF EXISTS "Users can view own profile" ON public.user_profiles;
 CREATE POLICY "Users can view own profile" 
     ON public.user_profiles FOR SELECT 
-    USING (auth.uid()::text = user_id OR user_id IS NOT NULL);
+    USING (auth.uid()::text = user_id::text OR user_id IS NOT NULL);
 
 DROP POLICY IF EXISTS "Users can insert own profile" ON public.user_profiles;
 CREATE POLICY "Users can insert own profile" 
