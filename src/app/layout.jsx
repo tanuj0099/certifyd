@@ -3,6 +3,8 @@ import Script from 'next/script';
 import { Providers } from './providers';
 import ConsoleGreeting from '@/components/ConsoleGreeting';
 import ConsentManager from '@/components/ConsentManager';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import '@/index.css';
 import { cn } from "@/lib/utils";
 
@@ -30,6 +32,8 @@ export default function RootLayout({ children }) {
         <Providers>
           <ConsoleGreeting />
           {children}
+          <Analytics />
+          <SpeedInsights />
         </Providers>
       </body>
     </html>

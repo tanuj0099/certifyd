@@ -67,35 +67,46 @@ export interface OpsNoteThread {
 }
 
 // --- Persistent Fallback Cache for Dynamic Operation if SQL Tables are uncreated ---
-const CACHE_DIR = path.join(process.cwd(), '.next', 'ops_cache');
-if (!fs.existsSync(CACHE_DIR)) {
-  try { fs.mkdirSync(CACHE_DIR, { recursive: true }); } catch (e) {}
+const CACHE_DIRS = [
+  path.join(process.cwd(), 'data', 'ops_cache'),
+  path.join('/tmp', 'ops_cache'),
+  path.join(process.cwd(), '.next', 'ops_cache')
+];
+
+for (const dir of CACHE_DIRS) {
+  try { if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true }); } catch (e) {}
 }
 
-function getCacheFilePath(table: string): string {
-  return path.join(CACHE_DIR, `${table}.json`);
+function getCacheFilePath(dir: string, table: string): string {
+  return path.join(dir, `${table}.json`);
 }
 
 function readLocalCache<T>(table: string, defaultData: T[]): T[] {
-  try {
-    const file = getCacheFilePath(table);
-    if (fs.existsSync(file)) {
-      const content = fs.readFileSync(file, 'utf-8');
-      return JSON.parse(content);
+  for (const dir of CACHE_DIRS) {
+    try {
+      const file = getCacheFilePath(dir, table);
+      if (fs.existsSync(file)) {
+        const content = fs.readFileSync(file, 'utf-8');
+        const parsed = JSON.parse(content);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {
+      console.warn(`Error reading local ops cache for ${table} in ${dir}:`, e);
     }
-  } catch (e) {
-    console.warn(`Error reading local ops cache for ${table}:`, e);
   }
   writeLocalCache(table, defaultData);
   return defaultData;
 }
 
 function writeLocalCache<T>(table: string, data: T[]): void {
-  try {
-    const file = getCacheFilePath(table);
-    fs.writeFileSync(file, JSON.stringify(data, null, 2), 'utf-8');
-  } catch (e) {
-    console.warn(`Error writing local ops cache for ${table}:`, e);
+  for (const dir of CACHE_DIRS) {
+    try {
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      const file = getCacheFilePath(dir, table);
+      fs.writeFileSync(file, JSON.stringify(data, null, 2), 'utf-8');
+    } catch (e) {
+      console.warn(`Error writing local ops cache for ${table} in ${dir}:`, e);
+    }
   }
 }
 
@@ -168,17 +179,18 @@ export async function saveTeamMemberAction(member: OpsTeamMember): Promise<{ suc
   writeLocalCache('ops_team_members', list);
 
   if (member.temp_password) {
-    try {
-      const cacheDir = getCacheFilePath('');
-      if (!fs.existsSync(cacheDir)) fs.mkdirSync(cacheDir, { recursive: true });
-      const credsFile = path.join(cacheDir, 'admin_credentials.json');
-      let creds: Record<string, string> = {};
-      if (fs.existsSync(credsFile)) {
-        creds = JSON.parse(fs.readFileSync(credsFile, 'utf-8'));
-      }
-      creds[member.email.toLowerCase()] = member.temp_password;
-      fs.writeFileSync(credsFile, JSON.stringify(creds, null, 2), 'utf-8');
-    } catch (e) {}
+    for (const dir of CACHE_DIRS) {
+      try {
+        if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+        const credsFile = path.join(dir, 'admin_credentials.json');
+        let creds: Record<string, string> = {};
+        if (fs.existsSync(credsFile)) {
+          creds = JSON.parse(fs.readFileSync(credsFile, 'utf-8'));
+        }
+        creds[member.email.toLowerCase()] = member.temp_password;
+        fs.writeFileSync(credsFile, JSON.stringify(creds, null, 2), 'utf-8');
+      } catch (e) {}
+    }
   }
 
   revalidatePath('/ops/team');
@@ -430,22 +442,25 @@ export async function updateUserPasswordAction(
     await saveTeamMemberAction(list[idx]);
   }
 
-  const authCacheFile = path.join(CACHE_DIR, 'admin_credentials.json');
-  try {
-    let creds: Record<string, string> = {};
-    if (fs.existsSync(authCacheFile)) {
-      creds = JSON.parse(fs.readFileSync(authCacheFile, 'utf-8'));
-    }
-    creds[cleanEmail] = newPassword;
-    if (cleanEmail === 'admin@certifyd.in' || cleanEmail === (process.env.ADMIN_USERNAME || '').toLowerCase() || cleanEmail === creds.custom_admin_email) {
-      creds['admin@certifyd.in'] = newPassword;
-      if (creds.custom_admin_email) {
-        creds[creds.custom_admin_email] = newPassword;
+  for (const dir of CACHE_DIRS) {
+    const authCacheFile = path.join(dir, 'admin_credentials.json');
+    try {
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      let creds: Record<string, string> = {};
+      if (fs.existsSync(authCacheFile)) {
+        creds = JSON.parse(fs.readFileSync(authCacheFile, 'utf-8'));
       }
+      creds[cleanEmail] = newPassword;
+      if (cleanEmail === 'admin@certifyd.in' || cleanEmail === (process.env.ADMIN_USERNAME || '').toLowerCase() || cleanEmail === creds.custom_admin_email) {
+        creds['admin@certifyd.in'] = newPassword;
+        if (creds.custom_admin_email) {
+          creds[creds.custom_admin_email] = newPassword;
+        }
+      }
+      fs.writeFileSync(authCacheFile, JSON.stringify(creds, null, 2), 'utf-8');
+    } catch (e) {
+      console.error('Failed to update admin_credentials.json in', dir, e);
     }
-    fs.writeFileSync(authCacheFile, JSON.stringify(creds, null, 2), 'utf-8');
-  } catch (e) {
-    console.error('Failed to update admin_credentials.json:', e);
   }
 
   return { success: true, message: 'Password updated successfully.' };
@@ -453,15 +468,17 @@ export async function updateUserPasswordAction(
 
 export async function getAdminCredentialsAction(): Promise<{ email: string; hasCustomPassword: boolean }> {
   const defaultEmail = process.env.ADMIN_USERNAME || 'admin@certifyd.in';
-  const authCacheFile = path.join(CACHE_DIR, 'admin_credentials.json');
-  try {
-    if (fs.existsSync(authCacheFile)) {
-      const creds = JSON.parse(fs.readFileSync(authCacheFile, 'utf-8'));
-      const activeEmail = creds.custom_admin_email || defaultEmail;
-      const hasCustom = !!(creds[activeEmail.toLowerCase()] || creds[defaultEmail.toLowerCase()] || creds['admin@certifyd.in']);
-      return { email: activeEmail, hasCustomPassword: hasCustom };
-    }
-  } catch (e) {}
+  for (const dir of CACHE_DIRS) {
+    const authCacheFile = path.join(dir, 'admin_credentials.json');
+    try {
+      if (fs.existsSync(authCacheFile)) {
+        const creds = JSON.parse(fs.readFileSync(authCacheFile, 'utf-8'));
+        const activeEmail = creds.custom_admin_email || defaultEmail;
+        const hasCustom = !!(creds[activeEmail.toLowerCase()] || creds[defaultEmail.toLowerCase()] || creds['admin@certifyd.in']);
+        return { email: activeEmail, hasCustomPassword: hasCustom };
+      }
+    } catch (e) {}
+  }
   return { email: defaultEmail, hasCustomPassword: false };
 }
 
@@ -470,18 +487,23 @@ export async function updateAdminEmailAction(newEmail: string): Promise<{ succes
     return { success: false, message: 'Please enter a valid email address.' };
   }
   const cleanEmail = newEmail.toLowerCase().trim();
-  const authCacheFile = path.join(CACHE_DIR, 'admin_credentials.json');
-  try {
-    let creds: Record<string, string> = {};
-    if (fs.existsSync(authCacheFile)) {
-      creds = JSON.parse(fs.readFileSync(authCacheFile, 'utf-8'));
+  for (const dir of CACHE_DIRS) {
+    const authCacheFile = path.join(dir, 'admin_credentials.json');
+    try {
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      let creds: Record<string, string> = {};
+      if (fs.existsSync(authCacheFile)) {
+        creds = JSON.parse(fs.readFileSync(authCacheFile, 'utf-8'));
+      }
+      const oldEmail = creds.custom_admin_email || 'admin@certifyd.in';
+      const existingPass = creds[oldEmail] || creds['admin@certifyd.in'] || 'admin123';
+      
+      creds.custom_admin_email = cleanEmail;
+      creds[cleanEmail] = existingPass;
+      fs.writeFileSync(authCacheFile, JSON.stringify(creds, null, 2), 'utf-8');
+    } catch (e) {
+      console.error('Failed to update admin email in', dir, e);
     }
-    const oldEmail = creds.custom_admin_email || 'admin@certifyd.in';
-    const existingPass = creds[oldEmail] || creds['admin@certifyd.in'] || 'admin123';
-    
-    creds.custom_admin_email = cleanEmail;
-    creds[cleanEmail] = existingPass;
-    fs.writeFileSync(authCacheFile, JSON.stringify(creds, null, 2), 'utf-8');
-  } catch (e) {}
+  }
   return { success: true, message: 'Admin email updated successfully.' };
 }

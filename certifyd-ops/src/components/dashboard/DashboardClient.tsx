@@ -156,38 +156,38 @@ export function DashboardClient({
             <StatCard
               title="Total Users"
               value={initialStats.totalUsers}
-              trend="+12.4%"
-              isPositive={true}
+              trend={initialStats.totalUsersTrend || "0.0%"}
+              isPositive={initialStats.totalUsersPositive ?? true}
               icon={Users}
               color="#F97316"
-              data={[110, 115, 120, 122, 130, 138, 145]}
+              data={initialStats.totalUsersHistory || [10, 12, 15]}
             />
             <StatCard
               title="Active Today"
               value={initialStats.activeToday}
-              trend="+8.1%"
-              isPositive={true}
+              trend={initialStats.activeTodayTrend || "0.0%"}
+              isPositive={initialStats.activeTodayPositive ?? true}
               icon={Activity}
               color="#3B82F6"
-              data={[20, 25, 22, 30, 35, 32, 42]}
+              data={initialStats.activeTodayHistory || [1, 1, 1]}
             />
             <StatCard
               title="Total Submissions"
               value={initialStats.totalSubmissions}
-              trend="+15.3%"
-              isPositive={true}
+              trend={initialStats.totalSubmissionsTrend || "0.0%"}
+              isPositive={initialStats.totalSubmissionsPositive ?? true}
               icon={FileText}
               color="#A855F7"
-              data={[80, 85, 90, 95, 102, 110, 124]}
+              data={initialStats.totalSubmissionsHistory || [0, 0, 0]}
             />
             <StatCard
               title="Pending Review"
               value={initialStats.pendingReview}
-              trend="-4.2%"
-              isPositive={true}
+              trend={initialStats.pendingReviewTrend || "0.0%"}
+              isPositive={initialStats.pendingReviewPositive ?? true}
               icon={Clock}
               color="#E8C547"
-              data={[18, 16, 20, 15, 14, 12, 11]}
+              data={initialStats.pendingReviewHistory || [0, 0, 0]}
             />
           </div>
 
@@ -196,38 +196,38 @@ export function DashboardClient({
             <StatCard
               title="Resumes Today"
               value={initialStats.resumesToday}
-              trend="+24.0%"
-              isPositive={true}
+              trend={initialStats.resumesTodayTrend || "0.0%"}
+              isPositive={initialStats.resumesTodayPositive ?? true}
               icon={FileText}
               color="#F97316"
-              data={[10, 12, 15, 14, 18, 22, 28]}
+              data={initialStats.resumesTodayHistory || [0, 0]}
             />
             <StatCard
               title="Offer Letters Today"
               value={initialStats.offersToday}
-              trend="+18.5%"
-              isPositive={true}
+              trend={initialStats.offersTodayTrend || "0.0%"}
+              isPositive={initialStats.offersTodayPositive ?? true}
               icon={Briefcase}
               color="#22C55E"
-              data={[5, 8, 7, 10, 12, 15, 19]}
+              data={initialStats.offersTodayHistory || [0, 0]}
             />
             <StatCard
               title="Avg ROI Score"
               value={`${initialStats.avgRoiScore}%`}
-              trend="+3.2%"
-              isPositive={true}
+              trend={initialStats.avgRoiScoreTrend || "0.0%"}
+              isPositive={initialStats.avgRoiScorePositive ?? true}
               icon={TrendingUp}
               color="#E8C547"
-              data={[78, 80, 81, 80, 82, 83, 84]}
+              data={initialStats.avgRoiScoreHistory || [80, 82, 84]}
             />
             <StatCard
               title="Feedback This Week"
               value={initialStats.feedbackWeek}
-              trend="+31.0%"
-              isPositive={true}
+              trend={initialStats.feedbackWeekTrend || "0.0%"}
+              isPositive={initialStats.feedbackWeekPositive ?? true}
               icon={MessageSquare}
               color="#3B82F6"
-              data={[12, 15, 18, 20, 25, 30, 38]}
+              data={initialStats.feedbackWeekHistory || [0, 0]}
             />
           </div>
 
