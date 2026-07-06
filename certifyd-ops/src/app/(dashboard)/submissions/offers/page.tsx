@@ -2,6 +2,7 @@ import React from 'react';
 import { supabaseAdmin } from '@/lib/supabase/server';
 import { getSession } from '@/lib/auth/session';
 import { OffersClient, OfferRecord } from '@/components/submissions/OffersClient';
+import { getSubmissionOverrides } from '@/lib/cache/submissionsCache';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -14,6 +15,7 @@ export default async function OffersPage() {
   const seenIds = new Set<string>();
 
   try {
+    const overrides = getSubmissionOverrides();
     const results = await Promise.allSettled([
       supabaseAdmin.from('offer_letter_submissions').select('*').order('submitted_at', { ascending: false }).limit(2000),
       supabaseAdmin.from('offer_analyses').select('*').order('created_at', { ascending: false }).limit(2000),
@@ -28,6 +30,7 @@ export default async function OffersPage() {
     if (subRes.data && subRes.data.length > 0) {
       subRes.data.forEach((item) => {
         seenIds.add(item.id);
+        const ov = overrides[item.id];
         records.push({
           id: item.id,
           submitted_at: item.submitted_at || item.created_at || new Date().toISOString(),
@@ -40,10 +43,10 @@ export default async function OffersPage() {
           counter_offer_shown: item.counter_offer_shown || (item.extracted_data?.targetCompensation ? `₹${Math.round(item.extracted_data.targetCompensation/100000)}L` : 'N/A'),
           negotiation_email: item.negotiation_email || item.extracted_data?.emailScript || 'N/A',
           anomaly_score: item.anomaly_score || 15,
-          status: (item.status as any) || 'pending',
+          status: ov?.status || (item.status as any) || 'pending',
           extracted_data: item.extracted_data || {},
-          rejection_reason: item.rejection_reason,
-          internal_notes: Array.isArray(item.internal_notes) ? item.internal_notes : [],
+          rejection_reason: ov?.rejection_reason || item.rejection_reason,
+          internal_notes: ov?.internal_notes || (Array.isArray(item.internal_notes) ? item.internal_notes : []),
         });
       });
     }
@@ -53,6 +56,7 @@ export default async function OffersPage() {
       anaRes.data.forEach((item) => {
         if (!seenIds.has(item.id)) {
           seenIds.add(item.id);
+          const ov = overrides[item.id];
           const raw = item.raw_json || {};
           const ctcVal = item.offered_ctc || raw.CTC_Breakdown?.Total_CTC_Stated || 0;
           const targetRole = item.target_job_title || raw.Database_Payload?.role || raw.Offer_Metadata?.Designation || 'Tech Engineering';
@@ -71,7 +75,7 @@ export default async function OffersPage() {
             counter_offer_shown: p75 > 0 ? `₹${Math.round(p75/100000)}L` : (ctcVal > 0 ? `₹${Math.round((ctcVal * 1.15)/100000)}L` : 'N/A'),
             negotiation_email: raw.Strategic_Negotiation_Output?.Counter_Offer_Email_Script || raw.Strategic_Negotiation_Output?.Blunt_Assessment || item.blunt_assessment || 'N/A',
             anomaly_score: item.percentile_rank ? Math.abs(50 - item.percentile_rank) : 12,
-            status: 'pending',
+            status: ov?.status || (item.status as any) || 'pending',
             extracted_data: {
               headline_ctc: ctcVal > 0 ? `₹${(ctcVal/100000).toFixed(1)}L` : undefined,
               gross_takehome: raw.CTC_Breakdown?.Estimated_Monthly_In_Hand ? `₹${(raw.CTC_Breakdown.Estimated_Monthly_In_Hand * 12 / 100000).toFixed(2)}L` : undefined,
@@ -80,8 +84,8 @@ export default async function OffersPage() {
               clawback_clause: raw.Database_Payload?.bond_or_clawback_detected || raw.Offer_Metadata?.Bond_or_Clawback_Detected || false,
               ...raw
             },
-            rejection_reason: undefined,
-            internal_notes: [],
+            rejection_reason: ov?.rejection_reason || item.rejection_reason,
+            internal_notes: ov?.internal_notes || [],
           });
         }
       });
@@ -92,6 +96,7 @@ export default async function OffersPage() {
       letRes.data.forEach((item) => {
         if (!seenIds.has(item.id)) {
           seenIds.add(item.id);
+          const ov = overrides[item.id];
           const totalCalc = (item.fixed_base || 0) + (item.variable_pay || 0) + (item.hra || 0) + (item.special_allowance || 0) + (item.pf || 0) + (item.joining_bonus || 0);
           records.push({
             id: item.id,
@@ -105,7 +110,7 @@ export default async function OffersPage() {
             counter_offer_shown: totalCalc > 0 ? `₹${Math.round((totalCalc * 1.15)/100000)}L` : 'N/A',
             negotiation_email: `Dear Hiring Manager,\n\nThank you for extending the offer for the ${item.role || 'position'}. Based on market benchmarking for my experience level, I would like to request a revision to the fixed base structure.\n\nBest regards,\nCandidate`,
             anomaly_score: (item.notice_period_days || 0) > 60 ? 25 : 10,
-            status: 'pending',
+            status: ov?.status || (item.status as any) || 'pending',
             extracted_data: {
               headline_ctc: totalCalc > 0 ? `₹${(totalCalc/100000).toFixed(1)}L` : undefined,
               gross_takehome: item.fixed_base ? `₹${((item.fixed_base + (item.hra || 0))/100000).toFixed(2)}L` : undefined,
@@ -114,8 +119,8 @@ export default async function OffersPage() {
               clawback_clause: item.bond_or_clawback_detected || false,
               ...item
             },
-            rejection_reason: undefined,
-            internal_notes: [],
+            rejection_reason: ov?.rejection_reason || item.rejection_reason,
+            internal_notes: ov?.internal_notes || [],
           });
         }
       });
