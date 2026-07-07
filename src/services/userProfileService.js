@@ -16,10 +16,9 @@ export function buildUserProfilePayload(user, values = {}) {
   }
 
   if ('city' in values) payload.city = values.city || ''
-  if ('career_stage' in values) payload.career_stage = values.career_stage || ''
-  if ('primary_intent' in values) payload.primary_intent = values.primary_intent || ''
-  if ('profile_completion_pct' in values) payload.profile_completion_pct = Number(values.profile_completion_pct)
-  if ('job_role' in values || 'role' in values) payload.job_role = values.job_role || values.role || ''
+  if ('job_role' in values || 'role' in values || 'career_stage' in values) {
+    payload.job_role = values.job_role || values.role || values.career_stage || ''
+  }
   if ('current_salary' in values) payload.current_salary = values.current_salary ? Number(values.current_salary) : null
   if ('current_salary_band' in values) payload.current_salary_band = values.current_salary_band || ''
   if ('target_domain' in values || 'domain' in values) payload.target_domain = values.target_domain || values.domain || ''
@@ -27,9 +26,27 @@ export function buildUserProfilePayload(user, values = {}) {
   if ('weekly_hours' in values) payload.weekly_hours = values.weekly_hours || ''
   if ('motivation' in values) payload.motivation = values.motivation || ''
   if ('onboarding_complete' in values) payload.onboarding_complete = Boolean(values.onboarding_complete)
-  if ('preferences' in values) payload.preferences = values.preferences || {}
+
+  // Put fields without dedicated SQL columns into preferences JSONB
+  const preferences = { ...(values.preferences || {}) };
+  if ('career_stage' in values) preferences.career_stage = values.career_stage || '';
+  if ('primary_intent' in values) preferences.primary_intent = values.primary_intent || '';
+  if ('profile_completion_pct' in values) preferences.profile_completion_pct = Number(values.profile_completion_pct);
+  if ('is_remote' in values) preferences.is_remote = Boolean(values.is_remote);
+  payload.preferences = preferences;
 
   return payload
+}
+
+function formatProfileResponse(data) {
+  if (!data) return null;
+  return {
+    ...data,
+    career_stage: data.preferences?.career_stage || data.job_role || '',
+    primary_intent: data.preferences?.primary_intent || '',
+    profile_completion_pct: data.preferences?.profile_completion_pct || 0,
+    is_remote: data.preferences?.is_remote || false
+  };
 }
 
 export async function upsertUserProfile(user, values = {}) {
@@ -44,7 +61,7 @@ export async function upsertUserProfile(user, values = {}) {
     .maybeSingle()
 
   if (error) throw error
-  return data || payload
+  return formatProfileResponse(data || payload)
 }
 
 export async function fetchUserProfile(userId) {
@@ -58,7 +75,7 @@ export async function fetchUserProfile(userId) {
     .maybeSingle()
 
   if (error) throw error
-  return data
+  return formatProfileResponse(data)
 }
 
 export async function syncUserProfile(user) {
