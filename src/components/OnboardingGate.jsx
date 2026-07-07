@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -25,7 +26,8 @@ export default function OnboardingGate({ children }) {
   useEffect(() => {
     if (authLoading) return;
     if (!userId) {
-      if (pathname !== '/' && pathname !== '/login' && pathname !== '/signup') {
+      const isDemo = typeof window !== 'undefined' && window.location.search.includes('demo=true');
+      if (!isDemo && pathname !== '/' && pathname !== '/login' && pathname !== '/signup' && pathname !== '/onboarding' && pathname !== '/verify-email') {
         router.replace('/login');
       }
       return;
@@ -92,7 +94,8 @@ export default function OnboardingGate({ children }) {
     return <SkeletonLoader type="dashboard" />;
   }
 
-  if (!user && pathname !== '/' && pathname !== '/login' && pathname !== '/signup') {
+  const isDemo = typeof window !== 'undefined' && window.location.search.includes('demo=true');
+  if (!user && !isDemo && pathname !== '/' && pathname !== '/login' && pathname !== '/signup' && pathname !== '/onboarding' && pathname !== '/verify-email') {
     return null;
   }
 

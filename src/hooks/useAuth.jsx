@@ -128,7 +128,14 @@ export const AuthProvider = ({ children }) => {
       const { error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) throw error
     } catch (e) {
-      const msg = e?.message || 'Email sign-in failed.'
+      let msg = e?.message || 'Email sign-in failed.'
+      if (msg.toLowerCase().includes('email not confirmed')) {
+        msg = 'Your email address is not confirmed yet! Please check your inbox and click the verification link.'
+      } else if (msg.includes('Invalid login credentials')) {
+        msg = 'Invalid email or password. Please try again.'
+      } else if (msg.includes('Failed to fetch')) {
+        msg = 'Network connection failed. Please check your internet connection or disable adblockers.'
+      }
       setAuthError(msg)
       throw new Error(msg)
     }
@@ -139,10 +146,21 @@ export const AuthProvider = ({ children }) => {
     if (!configured) throw new Error('Supabase not configured')
     try {
       await checkRateLimitBeforeAuth('/api/auth/signup-check', 'Too many signup attempts.');
-      const { error } = await supabase.auth.signUp({ email, password })
-      if (error) throw error
+      const { data, error } = await supabase.auth.signUp({ email, password })
+      if (error) {
+        if (error.message?.toLowerCase().includes('already registered') || error.message?.toLowerCase().includes('already exists') || error.status === 400 || error.status === 422) {
+          throw new Error('This email account is already registered! Please switch to Sign In.');
+        }
+        throw error;
+      }
+      if (data?.user && data?.user?.identities && data.user.identities.length === 0) {
+        throw new Error('This email account is already registered! Please switch to Sign In.');
+      }
     } catch (e) {
-      const msg = e?.message || 'Email sign-up failed.'
+      let msg = e?.message || 'Email sign-up failed.'
+      if (msg.includes('Failed to fetch')) {
+        msg = 'Network connection failed. Please check your internet connection or disable adblockers.'
+      }
       setAuthError(msg)
       throw new Error(msg)
     }
@@ -174,6 +192,24 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
+  const checkEmailExists = async (email) => {
+    if (!email) return false;
+    try {
+      const res = await fetch('/api/auth/check-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+      if (res.ok) {
+        const payload = await res.json();
+        return Boolean(payload.exists);
+      }
+    } catch (e) {
+      console.warn('checkEmailExists error:', e);
+    }
+    return false;
+  };
+
   const resetPassword = async () => { throw new Error('Password reset is not implemented.') }
 
   const signOut = async () => {
@@ -193,6 +229,7 @@ export const AuthProvider = ({ children }) => {
       loading,
       authError,
       configured,
+      checkEmailExists,
       signInGoogle,
       signInGithub,
       signInPhone,

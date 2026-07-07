@@ -26,7 +26,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={cn(inter.variable, plusJakarta.variable, jetbrains.variable, playfair.variable, "font-sans", geist.variable)} suppressHydrationWarning>
+    <html lang="en" data-scroll-behavior="smooth" className={cn(inter.variable, plusJakarta.variable, jetbrains.variable, playfair.variable, "font-sans", geist.variable)} suppressHydrationWarning>
       <body suppressHydrationWarning>
         <ConsentManager />
         <Providers>

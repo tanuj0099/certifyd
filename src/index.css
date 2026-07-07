@@ -4,6 +4,18 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Hide Vercel / Next.js development toolbars and indicators completely */
+vercel-live-feedback,
+vercel-toolbar,
+#vercel-toolbar,
+[data-vercel-toolbar],
+[data-nextjs-toast],
+#next-logo {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
 /* ═══════════════════════════════════════════════════════════
    STRICT LINEAR SPEC — 2 themes only
 

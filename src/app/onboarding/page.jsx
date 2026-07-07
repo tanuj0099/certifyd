@@ -2,722 +2,527 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { supabase } from '@/lib/supabase.js';
-import { upsertUserProfile, updateUserAvatar } from '@/services/userProfileService.js';
+import { GraduationCap, Briefcase, TrendingUp, RefreshCw } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth.jsx';
-import { AvatarSelector } from '@/components/AnimatedAvatar.jsx';
-import { 
-  CheckCircle2, Sparkles, Target, Briefcase, DollarSign, 
-  Clock, Flame, MapPin, Building, ArrowRight, ArrowLeft 
-} from 'lucide-react';
+import { upsertUserProfile } from '@/services/userProfileService.js';
+import { supabase } from '@/lib/supabase.js';
 
-const FS = "var(--font-sans)";
-const FM = "var(--font-mono)";
-
-const AVATAR_COLORS = [
-  { bg: '#1a2e1a', text: '#2db87a' },
-  { bg: '#1a1a2e', text: '#7c6af4' },
-  { bg: '#2e1a1a', text: '#f47c6a' },
-  { bg: '#2e261a', text: '#f4c06a' },
-  { bg: '#1a2a2e', text: '#6ab8f4' },
+const careerStages = [
+  {
+    id: 'student',
+    icon: GraduationCap,
+    title: 'Student / Final Year',
+    desc: 'Looking for first role'
+  },
+  {
+    id: 'early_career',
+    icon: Briefcase,
+    title: 'Early Career (0-3 years)',
+    desc: 'First major career move'
+  },
+  {
+    id: 'mid_level',
+    icon: TrendingUp,
+    title: 'Mid-Level (3-8 years)',
+    desc: 'Upskilling or moving up'
+  },
+  {
+    id: 'career_switcher',
+    icon: RefreshCw,
+    title: 'Career Switcher',
+    desc: 'Changing domain'
+  }
 ];
 
-const CAREER_FOCUSES = [
-  'Student / Fresh Grad',
-  'Software Engineer',
-  'Cloud & DevOps Engineer',
-  'Data & AI Engineer',
-  'Product & Design',
-  'Cybersecurity Specialist',
-  'Finance / FinTech Pro',
-  'Engineering Leadership',
-];
-
-const TARGET_DOMAINS = [
-  'Cloud & AI Infrastructure',
-  'FinTech & Banking',
-  'SaaS & Enterprise',
-  'Cybersecurity & Infosec',
-  'E-commerce & Consumer Tech',
-  'HealthTech & Bio',
-  'AI / Machine Learning',
-  'Web3 / Decentralized Systems',
-];
-
-const CITIES = [
-  'Bangalore',
-  'Mumbai',
-  'Delhi NCR',
+const topCities = [
+  'Bengaluru',
   'Hyderabad',
   'Pune',
+  'Mumbai',
+  'Delhi NCR',
   'Chennai',
-  'Kolkata',
-  'Remote / Global',
+  'Noida',
+  'Gurugram'
 ];
 
-const SALARY_BANDS = [
-  'Student / ₹0',
-  '< ₹10L PA',
-  '₹10L – ₹20L PA',
-  '₹20L – ₹35L PA',
-  '₹35L – ₹50L PA',
-  '₹50L – ₹80L PA',
-  '₹80L+ PA',
+const intentCards = [
+  {
+    id: 'cert_decision',
+    title: 'Deciding which certification to get next',
+    dest: 'Show me ROI Calculator',
+    path: '/tools/roi'
+  },
+  {
+    id: 'offer_negotiation',
+    title: 'I have an offer letter and want to know if I should negotiate',
+    dest: 'Show me Offer Letter Analyzer',
+    path: '/offer-analysis'
+  },
+  {
+    id: 'market_research',
+    title: 'I want to see what certs are in demand in my city',
+    dest: 'Show me Market Pulse',
+    path: '/tools/market'
+  }
 ];
 
-const SALARY_GOALS = [
-  { label: '+30% Annual Hike Goal', desc: 'Accelerate within my current career trajectory' },
-  { label: '+50% Aggressive Growth', desc: 'Level up with strategic certifications & switch' },
-  { label: '2x Salary Jump', desc: 'Pivot into high-paying Cloud/AI/Fintech roles' },
-  { label: 'Global Remote / Dollar Pay', desc: 'Secure top-tier remote opportunities worldwide' },
-  { label: 'Leadership / Staff Promotion', desc: 'Transition to Staff Engineer or Management' },
-  { label: 'Break into Big Tech (FAANG)', desc: 'Master system design and algorithmic readiness' },
-];
-
-const WEEKLY_COMMITMENTS = [
-  { label: '2–4 hrs / week', desc: 'Casual upskilling alongside full-time work', badge: 'Steady' },
-  { label: '5–10 hrs / week', desc: 'Dedicated career switch & certification track', badge: 'Recommended' },
-  { label: '10–20 hrs / week', desc: 'Aggressive bootcamp intensity for rapid leap', badge: 'Intense' },
-];
-
-const MOTIVATIONS = [
-  'Break into Tech / New Domain',
-  'Crack Top-Tier / FAANG Interviews',
-  'Master Cloud & AI Certifications',
-  'Overcome Career Stagnation / Plateau',
-  'Build High-ROI Portfolio Projects',
-];
-
-function slugify(str) {
-  return (str || '')
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-');
-}
-
-export default function Onboarding() {
-  const { user } = useAuth();
+export default function OnboardingPage() {
+  const { user, loading: authLoading } = useAuth();
   const router = useRouter();
-  const [step, setStep] = useState(0);
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState('');
 
-  // Step 0: Workspace Identity
-  const [workspaceName, setWorkspaceName] = useState('');
-  const [workspaceSlug, setWorkspaceSlug] = useState('');
-  const [slugManual, setSlugManual] = useState(false);
-  const [city, setCity] = useState('Bangalore');
+  const [step, setStep] = useState(1);
+  const [careerStage, setCareerStage] = useState('');
+  const [city, setCity] = useState('');
+  const [isRemote, setIsRemote] = useState(false);
+  const [citySearch, setCitySearch] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState(null);
+  const [showWelcome, setShowWelcome] = useState(true);
 
-  // Step 1: Role & Domain
-  const [careerFocus, setCareerFocus] = useState('Software Engineer');
-  const [targetDomain, setTargetDomain] = useState('Cloud & AI Infrastructure');
-
-  // Step 2: Compensation & Goals
-  const [currentSalaryBand, setCurrentSalaryBand] = useState('₹10L – ₹20L PA');
-  const [targetSalaryGoal, setTargetSalaryGoal] = useState('+50% Aggressive Growth');
-
-  // Step 3: Commitment & Style
-  const [weeklyHours, setWeeklyHours] = useState('5–10 hrs / week');
-  const [motivation, setMotivation] = useState('Master Cloud & AI Certifications');
-
-  // Step 4: Avatar Selection
-  const [selectedAvatarId, setSelectedAvatarId] = useState(null);
-
-  const totalSteps = 5;
-  const progressPercent = Math.round(((step + 1) / totalSteps) * 100);
-
-  const initials = (() => {
-    if (!user) return '?';
-    const name = user.displayName || user.email || '';
-    const parts = name.split(/[\s@]/);
-    return parts[0]?.[0]?.toUpperCase() || '?';
-  })();
-
+  // 2-second welcome banner
   useEffect(() => {
-    if (!slugManual) {
-      setWorkspaceSlug(slugify(workspaceName));
-    }
-  }, [workspaceName, slugManual]);
+    const timer = setTimeout(() => {
+      setShowWelcome(false);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
 
+  // Geo IP Pre-fill
   useEffect(() => {
-    if (user && !workspaceName) {
-      const name = user.displayName || '';
-      if (name) setWorkspaceName(name);
+    async function fetchGeo() {
+      try {
+        const res = await fetch('https://ipapi.co/json/');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.city && data.region && !city) {
+            setCity(`${data.city}, ${data.region}`);
+            setCitySearch(`${data.city}, ${data.region}`);
+          }
+        }
+      } catch {
+        // Fallback or ignore
+      }
     }
-  }, [user]);
+    fetchGeo();
+  }, [city]);
 
-  async function handleComplete() {
-    setSubmitting(true);
-    setError('');
+  // Protect route & check onboarding complete
+  useEffect(() => {
+    const isDemo = typeof window !== 'undefined' && window.location.search.includes('demo=true');
+    if (authLoading) return;
+    if (!user && !isDemo) {
+      router.replace('/login');
+      return;
+    }
+    if (user && !isDemo) {
+      let cancelled = false;
+      async function checkOnboarded() {
+        try {
+          const userId = user.id || user.uid;
+          if (!supabase || !userId) return;
+          const [{ data: userProfile }, { data: profile }] = await Promise.all([
+            supabase.from('user_profiles').select('onboarding_complete').eq('user_id', userId).maybeSingle(),
+            supabase.from('profiles').select('onboarding_complete').eq('id', userId).maybeSingle()
+          ]);
+          if (!cancelled && (userProfile?.onboarding_complete || profile?.onboarding_complete)) {
+            router.replace('/dashboard');
+          }
+        } catch (err) {
+          console.error('Onboarding check err:', err);
+        }
+      }
+      checkOnboarded();
+      return () => { cancelled = true; };
+    }
+  }, [user, authLoading, router]);
+
+  function handleStageSelect(stageId) {
+    setCareerStage(stageId);
+    setStep(2);
+  }
+
+  function handleCityPillSelect(cityName) {
+    setIsRemote(false);
+    setCity(cityName);
+    setCitySearch(cityName);
+  }
+
+  function handleRemoteSelect() {
+    setIsRemote(true);
+    setCity('Remote / Pan-India');
+    setCitySearch('Remote / Pan-India');
+  }
+
+  function handleCityContinue() {
+    if (!city && !citySearch && !isRemote) return;
+    if (!city && citySearch) {
+      setCity(citySearch.trim());
+    }
+    setStep(3);
+  }
+
+  async function handleIntentSelect(intentItem) {
+    if (busy) return;
+    setBusy(true);
+    setError(null);
     try {
-      const { data: { user: activeUser }, error: authError } = await supabase.auth.getUser();
-      if (authError || !activeUser) {
-        throw new Error('No authenticated session found. Please sign in again.');
-      }
-
-      const provider = activeUser.app_metadata?.provider || 'password';
-
-      // Upsert into user_profiles via our enriched service
-      await upsertUserProfile(activeUser, {
-        email: activeUser.email || user?.email || '',
-        full_name: workspaceName.trim() || activeUser.user_metadata?.full_name || user?.displayName || '',
-        avatar_url: activeUser.user_metadata?.avatar_url || user?.photoURL || '',
-        job_role: careerFocus || 'Software Engineer',
-        city: city || 'Bangalore',
-        current_salary_band: currentSalaryBand || '',
-        target_domain: targetDomain || '',
-        target_salary_goal: targetSalaryGoal || '',
-        weekly_hours: weeklyHours || '',
-        motivation: motivation || '',
-        onboarding_complete: true,
-        provider,
-      });
-
-      if (selectedAvatarId) {
-        await updateUserAvatar(user, selectedAvatarId);
-      }
-
-      // Also upsert into profiles table for backward compatibility
-      if (supabase) {
-        const profileData = {
-          id: activeUser.id,
-          email: activeUser.email,
-          workspace_name: workspaceName.trim() || 'My Workspace',
-          workspace_slug: workspaceSlug.trim() || slugify(workspaceName) || activeUser.id,
-          career_focus: careerFocus || 'Software Engineer',
-          city: city || 'Bangalore',
-          avatar_initials: initials,
+      const finalCity = isRemote ? 'Remote / Pan-India' : (city || citySearch.trim() || 'Bengaluru');
+      if (user) {
+        await upsertUserProfile(user, {
+          career_stage: careerStage || 'early_career',
+          job_role: careerStage || 'early_career',
+          city: finalCity,
+          is_remote: isRemote,
+          primary_intent: intentItem.id,
           onboarding_complete: true,
-          updated_at: new Date().toISOString(),
-        };
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .upsert(profileData, { onConflict: 'id' });
-        if (profileError) console.warn('profiles compatibility upsert warning:', profileError.message);
+          profile_completion_pct: 30
+        });
       }
-
-      router.push('/dashboard', { replace: true });
+      const isDemo = typeof window !== 'undefined' && window.location.search.includes('demo=true');
+      const destUrl = `${intentItem.path}${isDemo ? '?demo=true' : ''}`;
+      router.push(destUrl, { replace: true });
     } catch (err) {
-      console.error('Onboarding save failed:', err);
       setError(err?.message || 'Failed to save profile. Please try again.');
-    } finally {
-      setSubmitting(false);
+      setBusy(false);
     }
   }
 
-  const canAdvanceStep0 = workspaceName.trim().length >= 2 && /^[a-z0-9-]+$/.test(workspaceSlug) && !!city;
-  const canAdvanceStep1 = !!careerFocus && !!targetDomain;
-  const canAdvanceStep2 = !!currentSalaryBand && !!targetSalaryGoal;
-  const canAdvanceStep3 = !!weeklyHours && !!motivation;
-
-  const stepTitles = [
-    "Workspace & Base City",
-    "Role & Industry Domain",
-    "Compensation & Goals",
-    "Upskilling Commitment",
-    "Profile Confirmation"
-  ];
+  if (authLoading) {
+    return (
+      <div style={{ display: 'flex', minHeight: '100vh', width: '100%', background: '#080A0E', alignItems: 'center', justifyContent: 'center', color: '#8B949E', fontFamily: 'Inter, sans-serif', fontSize: '14px' }}>
+        Loading your workspace...
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-[#08080c] text-zinc-900 dark:text-zinc-100 flex flex-col justify-center items-center p-4 sm:p-6 transition-colors duration-300 font-sans">
-      <div className="w-full max-w-[540px] my-auto">
-        
-        {/* Brand Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-mono text-[11px] tracking-wider uppercase mb-3">
-            <Sparkles className="w-3.5 h-3.5" /> Certifyd Career Intelligence
+    <div style={{ display: 'flex', minHeight: '100vh', width: '100%', background: '#080A0E', color: '#F0F6FC', fontFamily: 'Inter, sans-serif', flexDirection: 'column', position: 'relative' }}>
+      
+      {/* Top Header */}
+      <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '24px 40px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        <Link href="/" style={{ textDecoration: 'none' }}>
+          <div style={{ fontSize: '18px', fontWeight: '600', color: '#00D4A8', letterSpacing: '0.12em' }}>
+            CERTIFYD
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white mb-1.5">
-            Set up your custom workspace
-          </h1>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400 font-medium">
-            Answer a few quick questions to personalize your AI career radar and salary benchmarks.
-          </p>
-        </div>
-
-        {/* Progress Bar Container */}
-        <div className="mb-6 bg-white dark:bg-[#121218] border border-zinc-200 dark:border-white/10 rounded-2xl p-4 shadow-sm">
-          <div className="flex justify-between items-center text-xs font-mono mb-2">
-            <span className="text-zinc-500 dark:text-zinc-400 uppercase tracking-wider font-semibold">
-              Step {step + 1} of {totalSteps}: <span className="text-zinc-900 dark:text-white">{stepTitles[step]}</span>
-            </span>
-            <span className="text-emerald-600 dark:text-emerald-400 font-bold">
-              {progressPercent}% Complete
-            </span>
-          </div>
-          
-          <div className="w-full h-2 bg-zinc-100 dark:bg-white/5 rounded-full overflow-hidden">
-            <motion.div 
-              className="h-full bg-gradient-to-r from-emerald-500 via-teal-500 to-indigo-500 rounded-full"
-              initial={{ width: 0 }}
-              animate={{ width: `${progressPercent}%` }}
-              transition={{ duration: 0.35, ease: "easeInOut" }}
-            />
-          </div>
-
-          <div className="flex justify-between mt-2.5 px-1">
-            {Array.from({ length: totalSteps }).map((_, idx) => (
-              <div 
-                key={idx} 
-                className={`flex items-center gap-1.5 text-[10px] font-mono transition-colors ${
-                  idx === step ? 'text-emerald-600 dark:text-emerald-400 font-bold' :
-                  idx < step ? 'text-zinc-500 dark:text-zinc-400' : 'text-zinc-300 dark:text-zinc-600'
-                }`}
-              >
-                <div className={`w-2 h-2 rounded-full ${
-                  idx === step ? 'bg-emerald-500 ring-2 ring-emerald-500/30' :
-                  idx < step ? 'bg-emerald-500' : 'bg-zinc-300 dark:bg-zinc-700'
-                }`} />
-                <span className="hidden sm:inline">Step {idx + 1}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Card Body */}
-        <div className="bg-white dark:bg-[#121218] border border-zinc-200 dark:border-white/10 rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={step}
-              initial={{ opacity: 0, x: 16 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -16 }}
-              transition={{ duration: 0.22, ease: "easeInOut" }}
+        </Link>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          {step > 1 && !busy && !showWelcome && (
+            <button
+              type="button"
+              onClick={() => setStep(step - 1)}
+              style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.12)', color: '#8B949E', padding: '6px 14px', borderRadius: '6px', fontSize: '12px', cursor: 'pointer' }}
+              onMouseOver={(e) => e.target.style.color = '#F0F6FC'}
+              onMouseOut={(e) => e.target.style.color = '#8B949E'}
             >
-              
-              {/* STEP 0: WORKSPACE & BASE CITY */}
-              {step === 0 && (
-                <div>
-                  <div className="flex items-center gap-2 text-xs font-mono text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider mb-2">
-                    <Building className="w-4 h-4" /> Workspace Identity
-                  </div>
-                  <h2 className="text-lg font-bold text-zinc-900 dark:text-white mb-1">
-                    Name your personal career hub
-                  </h2>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-6">
-                    This creates your custom URL for portfolio reviews and salary benchmarking reports.
-                  </p>
+              ← Back
+            </button>
+          )}
+          <div style={{ fontSize: '13px', fontWeight: '500', color: '#8B949E', fontFamily: 'JetBrains Mono, monospace' }}>
+            {step} of 3
+          </div>
+        </div>
+      </header>
 
-                  <div className="space-y-5">
-                    <div>
-                      <label className="block text-xs font-mono font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-2">
-                        Workspace Name
-                      </label>
-                      <input
-                        autoFocus
-                        type="text"
-                        value={workspaceName}
-                        onChange={(e) => setWorkspaceName(e.target.value)}
-                        placeholder="e.g. Tanuj's Career Radar"
-                        className="w-full px-4 py-3 rounded-xl border border-zinc-300 dark:border-white/10 bg-zinc-50 dark:bg-black/40 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-600 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-mono font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-2">
-                        Workspace URL
-                      </label>
-                      <div className="flex items-center rounded-xl border border-zinc-300 dark:border-white/10 bg-zinc-50 dark:bg-black/40 overflow-hidden text-sm font-mono">
-                        <span className="px-3.5 py-3 text-zinc-500 dark:text-zinc-500 border-r border-zinc-200 dark:border-white/10 select-none bg-zinc-100 dark:bg-white/[0.03]">
-                          certifyd.in/ws/
-                        </span>
-                        <input
-                          type="text"
-                          value={workspaceSlug}
-                          onChange={(e) => { setSlugManual(true); setWorkspaceSlug(slugify(e.target.value)); }}
-                          placeholder="your-slug"
-                          className="flex-1 px-3.5 py-3 bg-transparent text-zinc-900 dark:text-white focus:outline-none font-medium"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-mono font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-2.5">
-                        <MapPin className="w-3.5 h-3.5 inline mr-1 text-emerald-500" /> Primary Location / Work Model
-                      </label>
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                        {CITIES.map((c) => (
-                          <button
-                            key={c}
-                            type="button"
-                            onClick={() => setCity(c)}
-                            className={`px-3 py-2.5 rounded-xl text-xs font-semibold transition-all border text-center ${
-                              city === c 
-                                ? 'bg-emerald-500 text-black border-emerald-400 shadow-md shadow-emerald-500/20' 
-                                : 'bg-zinc-50 dark:bg-white/5 border-zinc-200 dark:border-white/10 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/10'
-                            }`}
-                          >
-                            {c}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-8">
-                    <button
-                      type="button"
-                      onClick={() => setStep(1)}
-                      disabled={!canAdvanceStep0}
-                      className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-black font-extrabold text-sm shadow-lg shadow-emerald-500/25 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                    >
-                      Continue to Role & Domain <ArrowRight className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* STEP 1: ROLE & DOMAIN */}
+      {/* Main Container */}
+      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 24px', maxWidth: '720px', margin: '0 auto', width: '100%' }}>
+        <AnimatePresence mode="wait">
+          
+          {/* Welcome Banner Before Step 1 */}
+          {showWelcome ? (
+            <motion.div
+              key="welcome-banner"
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              style={{ width: '100%', textAlign: 'center', padding: '60px 0' }}
+            >
+              <div style={{ fontFamily: 'Inter, sans-serif', fontWeight: 300, fontSize: '14px', color: '#00D4A8' }}>
+                Account verified. Let&apos;s set up your profile.
+              </div>
+            </motion.div>
+          ) : (
+            <>
+              {/* STEP 1: CAREER STAGE */}
               {step === 1 && (
-                <div>
-                  <div className="flex items-center gap-2 text-xs font-mono text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider mb-2">
-                    <Briefcase className="w-4 h-4" /> Role & Industry Domain
-                  </div>
-                  <h2 className="text-lg font-bold text-zinc-900 dark:text-white mb-1">
-                    What describes your career profile?
-                  </h2>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-6">
-                    We calibrate skill gap analyzers and certification ROI scores according to your target role.
-                  </p>
-
-                  <div className="space-y-6">
-                    <div>
-                      <label className="block text-xs font-mono font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-2.5">
-                        Current Role Stage
-                      </label>
-                      <div className="grid grid-cols-2 gap-2">
-                        {CAREER_FOCUSES.map((focus) => (
-                          <button
-                            key={focus}
-                            type="button"
-                            onClick={() => setCareerFocus(focus)}
-                            className={`px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all border text-left flex items-center justify-between ${
-                              careerFocus === focus 
-                                ? 'bg-emerald-500 text-black border-emerald-400 shadow-md shadow-emerald-500/20' 
-                                : 'bg-zinc-50 dark:bg-white/5 border-zinc-200 dark:border-white/10 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/10'
-                            }`}
-                          >
-                            <span>{focus}</span>
-                            {careerFocus === focus && <CheckCircle2 className="w-4 h-4 text-black shrink-0 ml-1" />}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-mono font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-2.5">
-                        Target Industry Domain
-                      </label>
-                      <div className="grid grid-cols-2 gap-2">
-                        {TARGET_DOMAINS.map((domain) => (
-                          <button
-                            key={domain}
-                            type="button"
-                            onClick={() => setTargetDomain(domain)}
-                            className={`px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all border text-left flex items-center justify-between ${
-                              targetDomain === domain 
-                                ? 'bg-emerald-500 text-black border-emerald-400 shadow-md shadow-emerald-500/20' 
-                                : 'bg-zinc-50 dark:bg-white/5 border-zinc-200 dark:border-white/10 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/10'
-                            }`}
-                          >
-                            <span>{domain}</span>
-                            {targetDomain === domain && <CheckCircle2 className="w-4 h-4 text-black shrink-0 ml-1" />}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
+                <motion.div
+                  key="step-1"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                  style={{ width: '100%' }}
+                >
+                  <div style={{ textAlign: 'center', marginBottom: '36px' }}>
+                    <h1 style={{ fontSize: '28px', fontWeight: '600', color: '#F0F6FC', margin: '0 0 8px 0' }}>
+                      First, who are you right now?
+                    </h1>
+                    <p style={{ fontSize: '15px', color: '#8B949E', margin: 0 }}>
+                      This personalizes your cert recommendations immediately.
+                    </p>
                   </div>
 
-                  <div className="mt-8 flex gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setStep(0)}
-                      className="px-5 py-3.5 rounded-xl border border-zinc-300 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-700 dark:text-zinc-300 font-bold text-sm transition-all flex items-center gap-1.5"
-                    >
-                      <ArrowLeft className="w-4 h-4" /> Back
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setStep(2)}
-                      disabled={!canAdvanceStep1}
-                      className="flex-1 py-3.5 px-6 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-black font-extrabold text-sm shadow-lg shadow-emerald-500/25 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                    >
-                      Continue to Compensation <ArrowRight className="w-4 h-4" />
-                    </button>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4" style={{ width: '100%' }}>
+                    {careerStages.map((stage) => {
+                      const isSelected = careerStage === stage.id;
+                      const IconComponent = stage.icon;
+                      return (
+                        <button
+                          key={stage.id}
+                          type="button"
+                          onClick={() => handleStageSelect(stage.id)}
+                          style={{
+                            background: isSelected ? 'rgba(0,212,168,0.06)' : '#0F1218',
+                            border: `1px solid ${isSelected ? '#00D4A8' : 'rgba(255,255,255,0.06)'}`,
+                            borderRadius: '10px',
+                            padding: '24px',
+                            textAlign: 'left',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '16px',
+                            transition: 'all 200ms ease-out',
+                            outline: 'none',
+                            width: '100%'
+                          }}
+                          onMouseOver={(e) => {
+                            if (!isSelected) e.currentTarget.style.borderColor = '#00D4A8';
+                          }}
+                          onMouseOut={(e) => {
+                            if (!isSelected) e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)';
+                          }}
+                        >
+                          <div style={{ width: '40px', height: '40px', borderRadius: '8px', background: 'rgba(0,212,168,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <IconComponent size={22} color="#00D4A8" />
+                          </div>
+                          <div>
+                            <div style={{ fontSize: '16px', fontWeight: '600', color: '#F0F6FC', marginBottom: '4px' }}>
+                              {stage.title}
+                            </div>
+                            <div style={{ fontSize: '13px', color: '#8B949E' }}>
+                              {stage.desc}
+                            </div>
+                          </div>
+                        </button>
+                      );
+                    })}
                   </div>
-                </div>
+                </motion.div>
               )}
 
-              {/* STEP 2: COMPENSATION & GOALS */}
+              {/* STEP 2: CITY & LOCATION */}
               {step === 2 && (
-                <div>
-                  <div className="flex items-center gap-2 text-xs font-mono text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider mb-2">
-                    <DollarSign className="w-4 h-4" /> Compensation & Growth Goals
-                  </div>
-                  <h2 className="text-lg font-bold text-zinc-900 dark:text-white mb-1">
-                    Where do you stand & where are you heading?
-                  </h2>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-6">
-                    This lets us calculate exact hike percentages and ROI forecasts for certification investments.
-                  </p>
-
-                  <div className="space-y-6">
-                    <div>
-                      <label className="block text-xs font-mono font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-2.5">
-                        Current Annual Salary Band (INR)
-                      </label>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        {SALARY_BANDS.map((band) => (
-                          <button
-                            key={band}
-                            type="button"
-                            onClick={() => setCurrentSalaryBand(band)}
-                            className={`px-3 py-2.5 rounded-xl text-xs font-semibold transition-all border text-center ${
-                              currentSalaryBand === band 
-                                ? 'bg-emerald-500 text-black border-emerald-400 shadow-md shadow-emerald-500/20' 
-                                : 'bg-zinc-50 dark:bg-white/5 border-zinc-200 dark:border-white/10 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/10'
-                            }`}
-                          >
-                            {band}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-mono font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-2.5">
-                        Primary Career & Salary Goal
-                      </label>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                        {SALARY_GOALS.map((goal) => (
-                          <button
-                            key={goal.label}
-                            type="button"
-                            onClick={() => setTargetSalaryGoal(goal.label)}
-                            className={`p-3 rounded-xl transition-all border text-left flex flex-col justify-between ${
-                              targetSalaryGoal === goal.label 
-                                ? 'bg-emerald-500/10 dark:bg-emerald-500/15 border-emerald-500 text-emerald-900 dark:text-emerald-300 shadow-sm' 
-                                : 'bg-zinc-50 dark:bg-white/5 border-zinc-200 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/10'
-                            }`}
-                          >
-                            <div className="flex items-center justify-between w-full mb-1">
-                              <span className="text-xs font-bold text-zinc-900 dark:text-white">{goal.label}</span>
-                              {targetSalaryGoal === goal.label && <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />}
-                            </div>
-                            <span className="text-[11px] text-zinc-500 dark:text-zinc-400 leading-normal">{goal.desc}</span>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
+                <motion.div
+                  key="step-2"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                  style={{ width: '100%', maxWidth: '540px' }}
+                >
+                  <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+                    <h1 style={{ fontSize: '28px', fontWeight: '600', color: '#F0F6FC', margin: '0 0 8px 0' }}>
+                      Which city are you in?
+                    </h1>
+                    <p style={{ fontSize: '14px', color: '#8B949E', margin: 0, lineHeight: '1.6' }}>
+                      Cert demand varies significantly by city. Bengaluru data is very different from Pune data.
+                    </p>
                   </div>
 
-                  <div className="mt-8 flex gap-3">
+                  <div style={{ marginBottom: '24px' }}>
+                    <input
+                      type="text"
+                      placeholder="Type your city..."
+                      value={citySearch}
+                      onChange={(e) => {
+                        setCitySearch(e.target.value);
+                        setCity(e.target.value);
+                        setIsRemote(false);
+                      }}
+                      style={{
+                        width: '100%',
+                        height: '48px',
+                        background: '#0F1218',
+                        border: '1px solid rgba(255,255,255,0.12)',
+                        borderRadius: '8px',
+                        padding: '0 16px',
+                        color: '#F0F6FC',
+                        fontSize: '15px',
+                        outline: 'none',
+                        transition: 'border-color 150ms ease-out',
+                        fontFamily: 'Inter, sans-serif'
+                      }}
+                      onFocus={(e) => e.target.style.borderColor = '#00D4A8'}
+                      onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.12)'}
+                    />
+                  </div>
+
+                  <div style={{ fontSize: '12px', fontWeight: '500', color: '#8B949E', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                    Quick select top tech markets:
+                  </div>
+
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '20px' }}>
+                    {topCities.map((cityName) => {
+                      const isSel = city === cityName && !isRemote;
+                      return (
+                        <button
+                          key={cityName}
+                          type="button"
+                          onClick={() => handleCityPillSelect(cityName)}
+                          style={{
+                            background: isSel ? 'rgba(0,212,168,0.1)' : 'transparent',
+                            border: `1px solid ${isSel ? '#00D4A8' : 'rgba(255,255,255,0.12)'}`,
+                            color: isSel ? '#00D4A8' : '#8B949E',
+                            borderRadius: '20px',
+                            padding: '6px 14px',
+                            fontSize: '13px',
+                            fontWeight: '500',
+                            cursor: 'pointer',
+                            transition: 'all 150ms ease-out'
+                          }}
+                        >
+                          {cityName}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <div style={{ marginBottom: '32px' }}>
                     <button
                       type="button"
-                      onClick={() => setStep(1)}
-                      className="px-5 py-3.5 rounded-xl border border-zinc-300 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-700 dark:text-zinc-300 font-bold text-sm transition-all flex items-center gap-1.5"
+                      onClick={handleRemoteSelect}
+                      style={{
+                        background: isRemote ? 'rgba(0,212,168,0.1)' : 'transparent',
+                        border: `1px solid ${isRemote ? '#00D4A8' : 'rgba(255,255,255,0.12)'}`,
+                        color: isRemote ? '#00D4A8' : '#8B949E',
+                        borderRadius: '20px',
+                        padding: '6px 14px',
+                        fontSize: '13px',
+                        fontWeight: '500',
+                        cursor: 'pointer',
+                        transition: 'all 150ms ease-out',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px'
+                      }}
                     >
-                      <ArrowLeft className="w-4 h-4" /> Back
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setStep(3)}
-                      disabled={!canAdvanceStep2}
-                      className="flex-1 py-3.5 px-6 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-black font-extrabold text-sm shadow-lg shadow-emerald-500/25 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                    >
-                      Continue to Commitment <ArrowRight className="w-4 h-4" />
+                      <span>+</span>
+                      <span>I work remotely / Pan-India</span>
                     </button>
                   </div>
-                </div>
+
+                  <button
+                    type="button"
+                    disabled={!city && !citySearch && !isRemote}
+                    onClick={handleCityContinue}
+                    style={{
+                      width: '100%',
+                      height: '44px',
+                      background: '#00D4A8',
+                      color: '#080A0E',
+                      border: 'none',
+                      borderRadius: '6px',
+                      fontWeight: '500',
+                      fontSize: '14px',
+                      letterSpacing: '0.04em',
+                      cursor: (!city && !citySearch && !isRemote) ? 'not-allowed' : 'pointer',
+                      opacity: (!city && !citySearch && !isRemote) ? 0.5 : 1,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      transition: 'all 150ms ease-out'
+                    }}
+                  >
+                    Continue →
+                  </button>
+                </motion.div>
               )}
 
-              {/* STEP 3: UPSKILLING COMMITMENT */}
+              {/* STEP 3: PRIMARY INTENT & VALUE ROUTING */}
               {step === 3 && (
-                <div>
-                  <div className="flex items-center gap-2 text-xs font-mono text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider mb-2">
-                    <Clock className="w-4 h-4" /> Upskilling Commitment
-                  </div>
-                  <h2 className="text-lg font-bold text-zinc-900 dark:text-white mb-1">
-                    How much weekly time can you commit?
-                  </h2>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-6">
-                    We tailor study plans and certification deadlines around your bandwidth.
-                  </p>
-
-                  <div className="space-y-6">
-                    <div>
-                      <label className="block text-xs font-mono font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-2.5">
-                        Weekly Study Bandwidth
-                      </label>
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        {WEEKLY_COMMITMENTS.map((comm) => (
-                          <button
-                            key={comm.label}
-                            type="button"
-                            onClick={() => setWeeklyHours(comm.label)}
-                            className={`p-3.5 rounded-xl transition-all border text-left flex flex-col justify-between relative ${
-                              weeklyHours === comm.label 
-                                ? 'bg-emerald-500/10 dark:bg-emerald-500/15 border-emerald-500 shadow-sm' 
-                                : 'bg-zinc-50 dark:bg-white/5 border-zinc-200 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/10'
-                            }`}
-                          >
-                            <span className="absolute top-2.5 right-2.5 px-1.5 py-0.5 rounded text-[9px] font-mono font-bold uppercase bg-zinc-200 dark:bg-white/10 text-zinc-700 dark:text-zinc-300">
-                              {comm.badge}
-                            </span>
-                            <div className="text-sm font-bold text-zinc-900 dark:text-white mb-1.5 pr-12">
-                              {comm.label}
-                            </div>
-                            <div className="text-[11px] text-zinc-500 dark:text-zinc-400 leading-normal">
-                              {comm.desc}
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-mono font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-2.5">
-                        Core Motivation Driving This Upskilling
-                      </label>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {MOTIVATIONS.map((mot) => (
-                          <button
-                            key={mot}
-                            type="button"
-                            onClick={() => setMotivation(mot)}
-                            className={`px-3.5 py-3 rounded-xl text-xs font-semibold transition-all border text-left flex items-center justify-between ${
-                              motivation === mot 
-                                ? 'bg-emerald-500 text-black border-emerald-400 shadow-md shadow-emerald-500/20' 
-                                : 'bg-zinc-50 dark:bg-white/5 border-zinc-200 dark:border-white/10 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/10'
-                            }`}
-                          >
-                            <span>{mot}</span>
-                            {motivation === mot && <CheckCircle2 className="w-4 h-4 text-black shrink-0 ml-1" />}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-8 flex gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setStep(2)}
-                      className="px-5 py-3.5 rounded-xl border border-zinc-300 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-700 dark:text-zinc-300 font-bold text-sm transition-all flex items-center gap-1.5"
-                    >
-                      <ArrowLeft className="w-4 h-4" /> Back
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setStep(4)}
-                      disabled={!canAdvanceStep3}
-                      className="flex-1 py-3.5 px-6 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-black font-extrabold text-sm shadow-lg shadow-emerald-500/25 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                    >
-                      Review & Launch <ArrowRight className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* STEP 4: AVATAR & FINAL REVIEW */}
-              {step === 4 && (
-                <div>
-                  <div className="flex items-center gap-2 text-xs font-mono text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider mb-2">
-                    <Flame className="w-4 h-4 text-amber-500" /> Final Confirmation
-                  </div>
-                  <h2 className="text-lg font-bold text-zinc-900 dark:text-white mb-1">
-                    Your career intelligence hub is ready
-                  </h2>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-6">
-                    Pick an avatar and launch your personalized dashboard.
-                  </p>
-
-                  <div className="bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200 dark:border-white/10 rounded-2xl p-4 mb-6">
-                    <div className="flex items-center gap-3 mb-4 pb-3 border-b border-zinc-200 dark:border-white/10">
-                      <div className="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-extrabold flex items-center justify-center text-base shrink-0">
-                        {initials}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="text-sm font-bold text-zinc-900 dark:text-white truncate">
-                          {workspaceName || 'My Workspace'}
-                        </div>
-                        <div className="text-[11px] font-mono text-zinc-500 dark:text-zinc-400 truncate">
-                          certifyd.in/ws/{workspaceSlug || 'workspace'}
-                        </div>
-                      </div>
-                    </div>
-
-                    <label className="block text-xs font-mono font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-3">
-                      Choose Your Avatar Style
-                    </label>
-                    <AvatarSelector selectedId={selectedAvatarId} onSelect={setSelectedAvatarId} />
-                  </div>
-
-                  {/* Summary Checklist */}
-                  <div className="grid grid-cols-2 gap-2 text-xs mb-6">
-                    {[
-                      { label: 'Role Stage', val: careerFocus },
-                      { label: 'Domain', val: targetDomain },
-                      { label: 'Location', val: city },
-                      { label: 'Current Salary', val: currentSalaryBand },
-                      { label: 'Goal', val: targetSalaryGoal },
-                      { label: 'Commitment', val: weeklyHours },
-                    ].map((item, idx) => (
-                      <div key={idx} className="p-2.5 rounded-xl bg-zinc-100 dark:bg-white/5 border border-zinc-200 dark:border-white/5 flex flex-col justify-between">
-                        <span className="text-[10px] font-mono text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">{item.label}</span>
-                        <span className="text-xs font-bold text-zinc-900 dark:text-white mt-1 truncate" title={item.val}>{item.val}</span>
-                      </div>
-                    ))}
+                <motion.div
+                  key="step-3"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                  style={{ width: '100%', maxWidth: '580px' }}
+                >
+                  <div style={{ textAlign: 'center', marginBottom: '36px' }}>
+                    <h1 style={{ fontSize: '28px', fontWeight: '600', color: '#F0F6FC', margin: '0 0 8px 0' }}>
+                      What brings you to Certifyd?
+                    </h1>
+                    <p style={{ fontSize: '15px', color: '#8B949E', margin: 0 }}>
+                      We&apos;ll show you the most relevant tool first.
+                    </p>
                   </div>
 
                   {error && (
-                    <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-600 dark:text-red-400 text-xs font-medium">
+                    <div style={{ padding: '12px 16px', background: 'rgba(248,81,73,0.1)', border: '1px solid #F85149', borderRadius: '8px', color: '#F85149', fontSize: '13px', marginBottom: '20px', textAlign: 'center' }}>
                       {error}
                     </div>
                   )}
 
-                  <div className="flex gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setStep(3)}
-                      disabled={submitting}
-                      className="px-5 py-3.5 rounded-xl border border-zinc-300 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-700 dark:text-zinc-300 font-bold text-sm transition-all flex items-center gap-1.5 disabled:opacity-40"
-                    >
-                      <ArrowLeft className="w-4 h-4" /> Back
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleComplete}
-                      disabled={submitting}
-                      className="flex-1 py-3.5 px-6 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-indigo-500 hover:opacity-95 text-black font-extrabold text-sm shadow-xl shadow-emerald-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                    >
-                      {submitting ? (
-                        <>
-                          <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
-                          Launching Workspace...
-                        </>
-                      ) : (
-                        <>
-                          Launch My Career Hub <Sparkles className="w-4 h-4" />
-                        </>
-                      )}
-                    </button>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%' }}>
+                    {intentCards.map((card) => (
+                      <button
+                        key={card.id}
+                        type="button"
+                        disabled={busy}
+                        onClick={() => handleIntentSelect(card)}
+                        style={{
+                          background: '#0F1218',
+                          border: '1px solid rgba(255,255,255,0.06)',
+                          borderRadius: '10px',
+                          padding: '24px',
+                          textAlign: 'left',
+                          cursor: busy ? 'wait' : 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          gap: '16px',
+                          transition: 'all 200ms ease-out',
+                          outline: 'none',
+                          width: '100%'
+                        }}
+                        onMouseOver={(e) => {
+                          if (!busy) e.currentTarget.style.borderColor = '#00D4A8';
+                        }}
+                        onMouseOut={(e) => {
+                          if (!busy) e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)';
+                        }}
+                      >
+                        <div>
+                          <div style={{ fontSize: '16px', fontWeight: '500', color: '#F0F6FC', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span style={{ color: '#00D4A8' }}>→</span>
+                            <span>{card.title}</span>
+                          </div>
+                          <div style={{ fontSize: '13px', color: '#8B949E', fontFamily: 'JetBrains Mono, monospace', paddingLeft: '20px' }}>
+                            &ldquo;{card.dest}&rdquo;
+                          </div>
+                        </div>
+                        {busy ? (
+                          <span style={{ width: '18px', height: '18px', border: '2px solid #00D4A8', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.6s linear infinite' }} />
+                        ) : (
+                          <span style={{ fontSize: '18px', color: '#8B949E' }}>›</span>
+                        )}
+                      </button>
+                    ))}
                   </div>
-                </div>
+                </motion.div>
               )}
+            </>
+          )}
 
-            </motion.div>
-          </AnimatePresence>
-        </div>
-        
-        {/* Footer info */}
-        <div className="text-center mt-6 text-[11px] font-mono text-zinc-400 dark:text-zinc-600">
-          Secured by Certifyd Enterprise Auth • AES-256 Encryption
-        </div>
-      </div>
+        </AnimatePresence>
+      </main>
+      <style jsx global>{`
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   );
 }

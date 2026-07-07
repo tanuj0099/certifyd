@@ -16,6 +16,9 @@ export function buildUserProfilePayload(user, values = {}) {
   }
 
   if ('city' in values) payload.city = values.city || ''
+  if ('career_stage' in values) payload.career_stage = values.career_stage || ''
+  if ('primary_intent' in values) payload.primary_intent = values.primary_intent || ''
+  if ('profile_completion_pct' in values) payload.profile_completion_pct = Number(values.profile_completion_pct)
   if ('job_role' in values || 'role' in values) payload.job_role = values.job_role || values.role || ''
   if ('current_salary' in values) payload.current_salary = values.current_salary ? Number(values.current_salary) : null
   if ('current_salary_band' in values) payload.current_salary_band = values.current_salary_band || ''

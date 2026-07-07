@@ -1,6 +1,26 @@
 import { withSentryConfig } from "@sentry/nextjs";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  devIndicators: false,
+  async redirects() {
+    return [
+      {
+        source: '/roi-calculator',
+        destination: '/tools/roi',
+        permanent: false,
+      },
+      {
+        source: '/offer-letter-analyzer',
+        destination: '/offer-analysis',
+        permanent: false,
+      },
+      {
+        source: '/market-pulse',
+        destination: '/tools/market',
+        permanent: false,
+      },
+    ];
+  },
   serverExternalPackages: ['unpdf', 'pdfjs-dist', 'mammoth'],
   experimental: {
     serverActions: {

@@ -21,7 +21,8 @@ export default function ConsoleGreeting() {
 
     // We wrap it in a try-catch just in case a strict browser blocks console access
     try {
-      if (process.env.NODE_ENV !== 'production') {
+      if (typeof window !== 'undefined' && !window.__certifyd_greeted && process.env.NODE_ENV === 'production') {
+        window.__certifyd_greeted = true;
         console.log(`%c${asciiArt}`, style1);
         console.log("%cBuilding the data engine for India's tech careers.", style2);
         console.log("%cWait, you're looking under the hood? Thats cool", style3);

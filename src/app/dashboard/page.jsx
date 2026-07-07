@@ -10,6 +10,7 @@ import { useIsMobile } from '@/components/SharedUI.jsx'
 import { supabase } from '@/lib/supabase.js'
 import CertificationCard from '@/components/CertificationCard.jsx'
 import WelcomeOnboarding from '@/components/WelcomeOnboarding.jsx'
+import GuidedTour from '@/components/GuidedTour.jsx'
 import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, Cell } from 'recharts'
 import { DotMatrixBackground } from '@/components/DotMatrixBackground.jsx'
 import {
@@ -125,6 +126,18 @@ export default function DashboardPage() {
   const breakEvenMonths = 6
   const isMobile = useIsMobile()
   const [showOnboarding, setShowOnboarding] = useState(!resumeName)
+  const [showTour, setShowTour] = useState(false)
+  const [showProgressiveBanner, setShowProgressiveBanner] = useState(true)
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const startTour = localStorage.getItem('certifyd_start_tour') === 'true';
+      const hasSeen = localStorage.getItem('certifyd_has_seen_tour') === 'true';
+      if (startTour || (!hasSeen && !showOnboarding)) {
+        setTimeout(() => setShowTour(true), 600);
+      }
+    }
+  }, [showOnboarding]);
 
   const [activeSection, setActiveSection] = useState('active-paths')
   const [activeCert, setActiveCert] = useState(null)
@@ -156,9 +169,9 @@ export default function DashboardPage() {
           .from('certifications')
           .select('*')
           .in('slug', savedCertsSlugs);
-        if (data) setSavedCertsData(data);
+        setSavedCertsData(data || []);
       } catch (err) {
-        console.error('Error fetching saved certs:', err);
+        console.warn('Error loading saved certs:', err);
       } finally {
         setLoadingSaved(false);
       }
@@ -176,6 +189,24 @@ export default function DashboardPage() {
 
   return (
     <div style={{ minHeight: '100vh', color: 'var(--text)', paddingTop: '64px' }}>
+
+      {/* ── Progressive Disclosure Banner ── */}
+      {showProgressiveBanner && (
+        <div style={{ background: 'rgba(0,212,168,0.1)', borderBottom: '1px solid #00D4A8', padding: '10px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '13px', color: '#F0F6FC' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+            <span style={{ color: '#00D4A8', fontWeight: 'bold' }}>🚀</span>
+            <span>Your profile is 30% complete — finish it to unlock personalized recommendations.</span>
+            <a href="/onboarding" style={{ color: '#00D4A8', fontWeight: '500', textDecoration: 'underline', marginLeft: '4px' }}>Complete profile →</a>
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowProgressiveBanner(false)}
+            style={{ background: 'transparent', border: 'none', color: '#8B949E', fontSize: '18px', cursor: 'pointer', padding: '0 4px' }}
+          >
+            ×
+          </button>
+        </div>
+      )}
 
       {/* ── Page header ── */}
       <div style={{ position: 'relative', overflow: 'hidden', borderBottom: '1px solid var(--border)', paddingBottom: '32px' }}>
@@ -257,7 +288,7 @@ export default function DashboardPage() {
         </div>
 
         {/* ── CENTRE: main content ── */}
-        <div style={{ minWidth: 0 }}>
+        <div style={{ minWidth: 0 }} data-tour="main-content">
           {/* Section heading */}
           <div style={{ marginBottom: '24px', borderBottom: '1px solid var(--border)', paddingBottom: '16px' }}>
             <h2 style={{ fontFamily: FH, fontSize: '22px', fontWeight: '700', color: 'var(--text)', margin: 0 }}>
@@ -406,12 +437,15 @@ export default function DashboardPage() {
           <div style={{ fontFamily: FH, fontSize: '28px', fontWeight: '800', color: 'var(--text)', lineHeight: 1 }}>{certName ? 1 : 0}</div>
           <div style={{ fontFamily: FB, fontSize: '12px', color: 'var(--text-3)', marginTop: '4px', marginBottom: '4px' }}>active cert paths tracked!</div>
 
-          <SideLabel>Quick Actions</SideLabel>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <ActionBtn label="Run ROI Calculator" onClick={() => router.push('/')} />
-            <ActionBtn label="Cert Radar" onClick={() => router.push('/tools/cert-radar')} />
-            <ActionBtn label="Market Pulse" onClick={() => router.push('/market-pulse')} />
-            <ActionBtn label="Analyze Offer Letter" onClick={() => router.push('/offer-analysis')} />
+          <div data-tour="quick-actions">
+            <SideLabel>Quick Actions</SideLabel>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <ActionBtn label="Run ROI Calculator" onClick={() => router.push('/')} />
+              <ActionBtn label="Cert Radar" onClick={() => router.push('/tools/cert-radar')} />
+              <ActionBtn label="Market Pulse" onClick={() => router.push('/market-pulse')} />
+              <ActionBtn label="Analyze Offer Letter" onClick={() => router.push('/offer-analysis')} />
+              <ActionBtn label="Re-run Guided Tour" onClick={() => setShowTour(true)} />
+            </div>
           </div>
 
           <SideLabel>Saved Future Explorations</SideLabel>
@@ -433,6 +467,11 @@ export default function DashboardPage() {
       </div>
 
       <MarketingFooter />
+      <GuidedTour
+        isOpen={showTour}
+        onClose={() => setShowTour(false)}
+        onSectionChange={(sec) => setActiveSection(sec)}
+      />
         </>
       )}
     </div>
