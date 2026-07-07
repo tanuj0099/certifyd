@@ -190,24 +190,6 @@ export default function DashboardPage() {
   return (
     <div style={{ minHeight: '100vh', color: 'var(--text)', paddingTop: '64px' }}>
 
-      {/* ── Progressive Disclosure Banner ── */}
-      {showProgressiveBanner && (
-        <div style={{ background: 'rgba(0,212,168,0.1)', borderBottom: '1px solid #00D4A8', padding: '10px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '13px', color: '#F0F6FC' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-            <span style={{ color: '#00D4A8', fontWeight: 'bold' }}>🚀</span>
-            <span>Your profile is 30% complete — finish it to unlock personalized recommendations.</span>
-            <a href="/onboarding" style={{ color: '#00D4A8', fontWeight: '500', textDecoration: 'underline', marginLeft: '4px' }}>Complete profile →</a>
-          </div>
-          <button
-            type="button"
-            onClick={() => setShowProgressiveBanner(false)}
-            style={{ background: 'transparent', border: 'none', color: '#8B949E', fontSize: '18px', cursor: 'pointer', padding: '0 4px' }}
-          >
-            ×
-          </button>
-        </div>
-      )}
-
       {/* ── Page header ── */}
       <div style={{ position: 'relative', overflow: 'hidden', borderBottom: '1px solid var(--border)', paddingBottom: '32px' }}>
         <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
@@ -432,6 +414,68 @@ export default function DashboardPage() {
           flexDirection: 'column',
           marginTop: isMobile ? '24px' : '0'
         }}>
+
+          {/* Profile Completion Status Card */}
+          {showProgressiveBanner && (
+            <div style={{
+              background: 'var(--bg)',
+              border: '1px solid var(--border)',
+              borderRadius: '10px',
+              padding: '14px',
+              marginBottom: '16px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '10px',
+              position: 'relative'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span style={{ fontFamily: FM, fontSize: '10px', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--accent)', fontWeight: '700' }}>
+                  Profile Completion
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setShowProgressiveBanner(false)}
+                  style={{ background: 'transparent', border: 'none', color: 'var(--text-3)', fontSize: '16px', cursor: 'pointer', lineHeight: 1 }}
+                  aria-label="Dismiss banner"
+                >
+                  ×
+                </button>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontFamily: FH, fontSize: '13px', fontWeight: '700', color: 'var(--text)' }}>
+                <span>Profile setup</span>
+                <span style={{ color: 'var(--accent)', fontFamily: FM }}>30%</span>
+              </div>
+              <div style={{ width: '100%', height: '6px', background: 'var(--border)', borderRadius: '99px', overflow: 'hidden' }}>
+                <div style={{ width: '30%', height: '100%', background: 'var(--accent)', borderRadius: '99px' }} />
+              </div>
+              <p style={{ fontFamily: FB, fontSize: '11px', color: 'var(--text-3)', margin: 0, lineHeight: 1.4 }}>
+                Finish your profile to unlock personalized recommendations.
+              </p>
+              <button
+                type="button"
+                onClick={() => router.push('/onboarding')}
+                style={{
+                  width: '100%',
+                  padding: '7px 10px',
+                  borderRadius: '6px',
+                  background: 'var(--accent)',
+                  color: 'var(--bg)',
+                  border: 'none',
+                  fontFamily: FH,
+                  fontSize: '11px',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '4px',
+                  marginTop: '2px'
+                }}
+              >
+                Complete profile <ChevronRight size={12} />
+              </button>
+            </div>
+          )}
 
           <SideLabel>Milestone Moats</SideLabel>
           <div style={{ fontFamily: FH, fontSize: '28px', fontWeight: '800', color: 'var(--text)', lineHeight: 1 }}>{certName ? 1 : 0}</div>
