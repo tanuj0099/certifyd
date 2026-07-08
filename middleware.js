@@ -21,43 +21,29 @@ export default function middleware(req) {
     const allowedOrigins = [
       'https://certifyd.in',
       'https://www.certifyd.in',
-      'https://certifyd.com',
-      'https://www.certifyd.com',
-      'https://certifyd.vercel.app'
-    ];
-    
-    // For localhost development, you might want to allow it
-    if (url.hostname.includes('localhost')) {
-      allowedOrigins.push(`http://localhost:${url.port || '5173'}`);
-      allowedOrigins.push('http://localhost:3000');
-    }
+      process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : null,
+    ].filter(Boolean);
 
-    // Restrict to allowed origins or specific team project Vercel preview domains
-    const isAllowed = origin && (
-      allowedOrigins.includes(origin) ||
-      /^https:\/\/certifyroi-[a-z0-9]+-tanuj0099s-projects\.vercel\.app$/.test(origin)
-    );
+    const isAllowed = origin && allowedOrigins.includes(origin);
+    const allowOrigin = isAllowed ? origin : allowedOrigins[0];
 
-    const headers = new Headers();
-    if (isAllowed) {
-      headers.set('Access-Control-Allow-Origin', origin);
-      headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-      headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-api-key');
-      headers.set('Access-Control-Max-Age', '86400');
-    }
+    const corsHeaders = {
+      'Access-Control-Allow-Origin': allowOrigin,
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'Access-Control-Allow-Credentials': 'true',
+    };
 
     if (req.method === 'OPTIONS') {
       return new Response(null, {
-        status: isAllowed ? 204 : 403,
-        headers,
+        status: 204,
+        headers: corsHeaders,
       });
     }
 
     // Prepare response headers for normal API requests
     const res = next();
-    if (isAllowed) {
-      headers.forEach((val, key) => res.headers.set(key, val));
-    }
+    Object.entries(corsHeaders).forEach(([key, val]) => res.headers.set(key, val));
     return res;
   }
 

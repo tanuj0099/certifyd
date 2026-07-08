@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
-import { Ratelimit } from '@upstash/ratelimit';
-import { Redis } from '@upstash/redis';
 import crypto from 'crypto';
 import * as Sentry from '@sentry/nextjs';
 import { createMockGroqResponse, isServerTestMode } from '../../../../server/testMode.js';
 import { validateGroqRequest } from '@/lib/validations/offer.js';
 import { groqCircuitBreaker } from '@/lib/circuitBreaker.js';
+import { rateLimiters, getRateLimitId, applyRateLimit } from '@/lib/ratelimit.js';
+import { logger } from '@/lib/logger.js';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -43,7 +43,7 @@ export async function POST(request) {
   try {
     body = await request.json();
   } catch (err) {
-    console.error('request.json() failed:', err);
+    logger.error('request.json() failed', err);
     return json({ error: 'Invalid request body', details: err.message }, { status: 400 });
   }
 
@@ -54,39 +54,13 @@ export async function POST(request) {
   const rawKey = process.env.GROQ_API_KEY;
   const apiKey = (rawKey || '').trim().replace(/^["']|["']$/g, '');
   if (!apiKey) {
-    console.warn('[API Key Missing] Falling back to deterministic test mode response.');
+    logger.warn('[API Key Missing] Falling back to deterministic test mode response.');
     return json(createMockGroqResponse(body));
   }
 
-  const rl = getRatelimit();
-  if (rl) {
-    try {
-      const ip =
-        request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-        request.headers.get('x-real-ip') ||
-        'anonymous';
-      const { success, limit, remaining, reset } = await rl.limit(`groq_${ip}`);
-
-      if (!success) {
-        return json(
-          {
-            error: 'Rate limit exceeded. Try again later.',
-            retryAfter: Math.ceil((reset - Date.now()) / 1000),
-          },
-          {
-            status: 429,
-            headers: {
-              'X-RateLimit-Limit': String(limit),
-              'X-RateLimit-Remaining': String(remaining),
-              'X-RateLimit-Reset': String(reset),
-            },
-          }
-        );
-      }
-    } catch (rlErr) {
-      console.warn('Rate limiter check failed, bypassing:', rlErr);
-    }
-  }
+  const id = getRateLimitId(request);
+  const { limited, response } = await applyRateLimit(rateLimiters.offerLetter, id);
+  if (limited) return response;
 
   const validation = validateGroqRequest(body);
   if (!validation.success) {

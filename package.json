@@ -25,6 +25,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dagre": "^0.8.5",
+    "file-type": "^22.0.1",
     "firebase": "^12.15.0",
     "framer-motion": "^11.18.2",
     "lucide-react": "^0.405.0",

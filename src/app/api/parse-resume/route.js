@@ -1,53 +1,19 @@
 import { NextResponse } from 'next/server';
 import { extractText } from 'unpdf';
 import mammoth from 'mammoth';
-import { Ratelimit } from '@upstash/ratelimit';
-import { Redis } from '@upstash/redis';
+import { rateLimiters, getRateLimitId, applyRateLimit } from '@/lib/ratelimit.js';
+import { validateUploadedFile } from '@/lib/fileValidation.js';
+import { logger } from '@/lib/logger.js';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
-let ratelimit = null;
-
-function getRatelimit() {
-  if (ratelimit) return ratelimit;
-  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) return null;
-
-  ratelimit = new Ratelimit({
-    redis: Redis.fromEnv(),
-    limiter: Ratelimit.slidingWindow(5, '60 s'),
-    analytics: false,
-  });
-  return ratelimit;
-}
-
 export async function POST(request) {
   try {
-    const rl = getRatelimit();
-    if (rl) {
-      const ip =
-        request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-        request.headers.get('x-real-ip') ||
-        'anonymous';
-      const { success, limit, remaining, reset } = await rl.limit(`parse_resume_${ip}`);
+    const id = getRateLimitId(request);
+    const { limited, response } = await applyRateLimit(rateLimiters.resumeAnalysis, id);
+    if (limited) return response;
 
-      if (!success) {
-        return NextResponse.json(
-          {
-            error: 'Rate limit exceeded. Please wait before uploading another resume.',
-            retryAfter: Math.ceil((reset - Date.now()) / 1000),
-          },
-          {
-            status: 429,
-            headers: {
-              'X-RateLimit-Limit': String(limit),
-              'X-RateLimit-Remaining': String(remaining),
-              'X-RateLimit-Reset': String(reset),
-            },
-          }
-        );
-      }
-    }
     const formData = await request.formData();
     const file = formData.get('file');
 
@@ -58,9 +24,11 @@ export async function POST(request) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // Size Validation (4MB limit)
-    if (buffer.length > 4 * 1024 * 1024) {
-      return NextResponse.json({ error: 'File too large. Max size is 4MB.' }, { status: 413 });
+    // Secure server-side file validation
+    const validation = await validateUploadedFile(buffer, file.type || 'application/pdf');
+    if (!validation.valid) {
+      logger.warn('Resume upload rejected', { reason: validation.reason });
+      return NextResponse.json({ error: validation.reason }, { status: 400 });
     }
 
     let extractedText = '';
@@ -86,7 +54,7 @@ export async function POST(request) {
 
     return NextResponse.json({ text: extractedText.trim() });
   } catch (error) {
-    console.error('File parsing error:', error);
+    logger.error('File parsing error', error);
     return NextResponse.json(
       { error: 'Failed to parse file.', details: error.message },
       { status: 500 }

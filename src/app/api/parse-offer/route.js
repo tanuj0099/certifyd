@@ -1,26 +1,18 @@
 import { NextResponse } from 'next/server';
 import { extractText } from 'unpdf';
 import * as Sentry from '@sentry/nextjs';
-import { offerSubmissionLimiter } from '@/lib/ratelimit.js';
+import { rateLimiters, getRateLimitId, applyRateLimit } from '@/lib/ratelimit.js';
+import { validateUploadedFile } from '@/lib/fileValidation.js';
+import { logger } from '@/lib/logger.js';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 export async function POST(request) {
   try {
-    if (offerSubmissionLimiter) {
-      const ip =
-        request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-        request.headers.get('x-real-ip') ||
-        'anonymous';
-      const { success, limit, remaining, reset } = await offerSubmissionLimiter.limit(ip);
-      if (!success) {
-        return NextResponse.json(
-          { error: 'Rate limit exceeded for PDF processing. Try again later.', retryAfter: Math.ceil((reset - Date.now()) / 1000) },
-          { status: 429, headers: { 'X-RateLimit-Limit': String(limit), 'X-RateLimit-Remaining': String(remaining), 'X-RateLimit-Reset': String(reset) } }
-        );
-      }
-    }
+    const id = getRateLimitId(request);
+    const { limited, response } = await applyRateLimit(rateLimiters.offerLetter, id);
+    if (limited) return response;
 
     const formData = await request.formData();
     const file = formData.get('file');
@@ -30,26 +22,25 @@ export async function POST(request) {
     }
 
     const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    // Deep server-side file validation
+    const validation = await validateUploadedFile(buffer, file.type || 'application/pdf');
+    if (!validation.valid) {
+      logger.warn('Offer letter upload rejected', { reason: validation.reason });
+      return NextResponse.json({ error: validation.reason }, { status: 400 });
+    }
+
     const data = new Uint8Array(arrayBuffer);
 
-    // Size Validation (4MB limit)
-    if (data.length > 4 * 1024 * 1024) {
-      return NextResponse.json({ error: 'File too large. Max size is 4MB.' }, { status: 413 });
-    }
-
-    // Magic Bytes Validation for PDF (%PDF- at the start)
-    if (data.length < 5 || String.fromCharCode(...data.subarray(0, 5)) !== '%PDF-') {
-      return NextResponse.json({ error: 'Invalid file format. Only PDFs are allowed.' }, { status: 400 });
-    }
-
-    // Parse the PDF text entirely in memory using unpdf (secure against Prototype Pollution / Arbitrary Code Execution)
+    // Parse the PDF text entirely in memory using unpdf
     const { text } = await extractText(data);
     const parsedText = Array.isArray(text) ? text.join('\n').trim() : String(text).trim();
 
     return NextResponse.json({ text: parsedText });
   } catch (error) {
     Sentry.captureException(error);
-    console.error('PDF parsing error:', error);
+    logger.error('PDF parsing error', error);
     return NextResponse.json(
       { error: 'Failed to parse PDF file.', details: error.message },
       { status: 500 }
