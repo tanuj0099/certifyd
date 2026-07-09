@@ -11,6 +11,24 @@ if (!supabaseUrl || !supabaseKey) {
   )
 }
 
+const safeFetch = async (url, options) => {
+  try {
+    return await fetch(url, options)
+  } catch (error) {
+    console.warn('Supabase fetch handled safely:', error?.message || 'Failed to fetch')
+    return new Response(
+      JSON.stringify({
+        error: 'network_error',
+        error_description: error?.message || 'Failed to fetch from Supabase network'
+      }),
+      {
+        status: 503,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
+  }
+}
+
 export const supabase =
   supabaseUrl && supabaseKey
     ? globalThis[SUPABASE_SINGLETON_KEY] ||
@@ -21,5 +39,9 @@ export const supabase =
           autoRefreshToken: true,
           detectSessionInUrl: true,
         },
+        global: {
+          fetch: safeFetch,
+        },
       }))
     : null
+

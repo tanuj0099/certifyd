@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     const clearStaleSession = async (message) => {
-      if (!/refresh token|invalid refresh|not found/i.test(message || '')) return false
+      if (!/refresh token|invalid refresh|not found|network_error|failed to fetch/i.test(message || '')) return false
 
       try {
         await supabase.auth.signOut({ scope: 'local' })
