@@ -11,6 +11,7 @@ import { supabase } from '@/lib/supabase.js'
 import CertificationCard from '@/components/CertificationCard.jsx'
 import WelcomeOnboarding from '@/components/WelcomeOnboarding.jsx'
 import GuidedTour from '@/components/GuidedTour.jsx'
+import DashboardTokensAndReferral from '@/components/DashboardTokensAndReferral.jsx'
 import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, Cell } from 'recharts'
 import { DotMatrixBackground } from '@/components/DotMatrixBackground.jsx'
 import {
@@ -271,6 +272,8 @@ export default function DashboardPage() {
 
         {/* ── CENTRE: main content ── */}
         <div style={{ minWidth: 0 }} data-tour="main-content">
+          <DashboardTokensAndReferral />
+
           {/* Section heading */}
           <div style={{ marginBottom: '24px', borderBottom: '1px solid var(--border)', paddingBottom: '16px' }}>
             <h2 style={{ fontFamily: FH, fontSize: '22px', fontWeight: '700', color: 'var(--text)', margin: 0 }}>

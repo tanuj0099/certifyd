@@ -2,10 +2,18 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 
+function getSafeRedirectPath(path: string | null, fallback = '/dashboard'): string {
+  if (!path || path === '/onboarding') return fallback;
+  if (path.startsWith('/') && !path.startsWith('//') && !path.startsWith('/\\')) {
+    return path;
+  }
+  return fallback;
+}
+
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
-  const next = searchParams.get('next') ?? '/onboarding'
+  const rawNext = searchParams.get('next')
 
   if (code) {
     const cookieStore = await cookies()
@@ -55,9 +63,9 @@ export async function GET(request: Request) {
         }
         
         if (profile?.onboarding_complete) {
-          // Already onboarded → dashboard
-          const target = next !== '/onboarding' ? next : '/dashboard'
-          return NextResponse.redirect(`${origin}${target.startsWith('/') ? target : '/' + target}`)
+          // Already onboarded → safe dashboard or relative redirect
+          const targetPath = getSafeRedirectPath(rawNext, '/dashboard')
+          return NextResponse.redirect(`${origin}${targetPath}`)
         } else {
           // Not onboarded → onboarding
           return NextResponse.redirect(`${origin}/onboarding`)

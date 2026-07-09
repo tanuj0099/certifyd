@@ -36,9 +36,9 @@ export const TOOLS = [
     id: 'offer-analysis',
     path: '/offer-analysis',
     icon: CheckCircle,
-    label: 'Offer Letter Analysis',
+    label: 'Counter-Offer Arsenal',
     tag: 'NEGOTIATE',
-    desc: 'Paste a job offer and get a precision breakdown - is this number fair for your city and cert stack?',
+    desc: 'Analyze & Auto-Delete offer letters to get a 12-point breakdown and negotiation script.',
   },
   {
     id: 'compare',

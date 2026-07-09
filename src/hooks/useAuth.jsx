@@ -210,7 +210,21 @@ export const AuthProvider = ({ children }) => {
     return false;
   };
 
-  const resetPassword = async () => { throw new Error('Password reset is not implemented.') }
+  const resetPassword = async (email) => {
+    setAuthError(null);
+    if (!configured) throw new Error('Supabase not configured');
+    try {
+      await checkRateLimitBeforeAuth('/api/auth/login-check', 'Too many password reset requests.');
+      const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+        redirectTo: `${typeof window !== 'undefined' ? window.location.origin : ''}/auth/reset-password`,
+      });
+      if (error) throw error;
+    } catch (e) {
+      const msg = e?.message || 'Failed to send password reset email.';
+      setAuthError(msg);
+      throw new Error(msg);
+    }
+  };
 
   const signOut = async () => {
     try {

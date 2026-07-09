@@ -154,6 +154,7 @@ export function MarketingFooter() {
           <div>
             <div style={{ fontFamily: FM, fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-4)', marginBottom: '12px' }}>Resources</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <Link href="/trust" style={{ fontFamily: FB, fontSize: '13px', color: '#00D4A8', fontWeight: '700', textDecoration: 'none' }}>DPDP Trust &amp; Erasure</Link>
               <Link href="/blog" style={{ fontFamily: FB, fontSize: '13px', color: 'var(--text-4)', textDecoration: 'none' }}>Blog</Link>
               <Link href="/terms" style={{ fontFamily: FB, fontSize: '13px', color: 'var(--text-4)', textDecoration: 'none' }}>Terms</Link>
               <Link href="/privacy" style={{ fontFamily: FB, fontSize: '13px', color: 'var(--text-4)', textDecoration: 'none' }}>Privacy</Link>

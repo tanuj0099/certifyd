@@ -1,18 +1,25 @@
-import { next } from '@vercel/edge';
+import { NextResponse } from 'next/server';
+import { createServerClient } from '@supabase/ssr';
 
 export const config = {
   // Matches all routes except static assets
-  matcher: ['/((?!assets|vite.svg|favicon.ico).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|assets|vite.svg|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'],
 };
 
-export default function middleware(req) {
+export default async function middleware(req) {
+  let res = NextResponse.next({
+    request: {
+      headers: req.headers,
+    },
+  });
+
   const url = new URL(req.url);
 
   // 1. Force HTTPS
   // In Vercel, x-forwarded-proto tells us if the original request was http
   if (req.headers.get('x-forwarded-proto') === 'http' && !url.hostname.includes('localhost')) {
     url.protocol = 'https:';
-    return Response.redirect(url, 301);
+    return NextResponse.redirect(url, 301);
   }
 
   // 2. CORS Handling for API routes
@@ -25,7 +32,7 @@ export default function middleware(req) {
     ].filter(Boolean);
 
     const isAllowed = origin && allowedOrigins.includes(origin);
-    const allowOrigin = isAllowed ? origin : allowedOrigins[0];
+    const allowOrigin = isAllowed ? origin : allowedOrigins[0] || '*';
 
     const corsHeaders = {
       'Access-Control-Allow-Origin': allowOrigin,
@@ -35,20 +42,17 @@ export default function middleware(req) {
     };
 
     if (req.method === 'OPTIONS') {
-      return new Response(null, {
+      return new NextResponse(null, {
         status: 204,
         headers: corsHeaders,
       });
     }
 
     // Prepare response headers for normal API requests
-    const res = next();
     Object.entries(corsHeaders).forEach(([key, val]) => res.headers.set(key, val));
-    return res;
   }
 
   // 3. Staging Basic Auth
-  // Check if it's the staging branch or your specific vercel domain
   if (url.hostname.includes('staging') || url.hostname.includes('certifyd.vercel.app')) {
     const basicAuth = req.headers.get('authorization');
 
@@ -56,23 +60,63 @@ export default function middleware(req) {
       const authValue = basicAuth.split(' ')[1];
       const [user, pwd] = atob(authValue).split(':');
 
-      // Use environment variables for staging credentials
       const expectedUser = process.env.STAGING_AUTH_USER || 'admin';
       const expectedPwd = process.env.STAGING_AUTH_PASSWORD;
       if (expectedPwd && user === expectedUser && pwd === expectedPwd) {
-        return next(); // Let them through!
+        // Continue to Supabase session refresh
+      } else {
+        return new NextResponse('Unauthorized Access', {
+          status: 401,
+          headers: {
+            'WWW-Authenticate': 'Basic realm="Certifyd Staging Area"',
+          },
+        });
       }
+    } else {
+      return new NextResponse('Unauthorized Access', {
+        status: 401,
+        headers: {
+          'WWW-Authenticate': 'Basic realm="Certifyd Staging Area"',
+        },
+      });
     }
-
-    // Trigger the un-hackable browser login prompt
-    return new Response('Unauthorized Access', {
-      status: 401,
-      headers: {
-        'WWW-Authenticate': 'Basic realm="Certifyd Staging Area"',
-      },
-    });
   }
 
-  // If it's a production custom domain, just let them through immediately
-  return next();
+  // 4. Supabase Session Token Rotation (prevents session fixation & refreshes access tokens)
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (supabaseUrl && supabaseAnonKey) {
+    try {
+      const supabase = createServerClient(
+        supabaseUrl,
+        supabaseAnonKey,
+        {
+          cookies: {
+            getAll() {
+              return req.cookies.getAll();
+            },
+            setAll(cookiesToSet) {
+              cookiesToSet.forEach(({ name, value }) => req.cookies.set(name, value));
+              res = NextResponse.next({
+                request: {
+                  headers: req.headers,
+                },
+              });
+              cookiesToSet.forEach(({ name, value, options }) =>
+                res.cookies.set(name, value, options)
+              );
+            },
+          },
+        }
+      );
+
+      // Refresh session if expired
+      await supabase.auth.getUser();
+    } catch {
+      // Ignore errors if Supabase is unreachable in edge context
+    }
+  }
+
+  return res;
 }

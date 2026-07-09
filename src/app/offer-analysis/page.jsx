@@ -12,6 +12,7 @@ import { supabase } from '@/lib/supabase.js'
 import { useAuth } from '@/hooks/useAuth.jsx'
 import { AppSection, useThemeContext } from '@/components/SharedUI.jsx'
 import ToolPageWrapper from '@/components/ToolPageWrapper.jsx'
+import AutoDeleteUpload from '@/components/AutoDeleteUpload.jsx'
 import { parseOfferLetter } from '@/services/hrAiService.jsx'
 import { scanAndScrubPII } from '@/utils/piiScanner.js'
 
@@ -557,11 +558,13 @@ export default function OfferAnalysisPage() {
                 <button onClick={() => setStep(1)} style={{ background: 'none', border: '1px solid var(--border)', padding: '6px 12px', borderRadius: '6px', color: 'var(--text-3)', fontSize: '11px', fontFamily: FH, cursor: 'pointer' }}>Back to Resume</button>
               </div>
 
-              {renderUploadZone(
-                "Drop your Offer Letter PDF", offerDragging, setOfferDragging, !!offerFileName, offerFileName, offerPdfLoading, handleOfferDrop, offerFileInputRef,
-                (file) => readFile(file, setOfferFileName, setOfferText, setOfferPdfLoading, setError),
-                offerText, setOfferText, false
-              )}
+              <AutoDeleteUpload
+                onComplete={(extractedData, deletedAt) => {
+                  setOfferFileName('VERIFIED_DELETED_OFFER.pdf');
+                  setOfferText(JSON.stringify(extractedData, null, 2));
+                  setError('');
+                }}
+              />
 
               <div style={{ marginTop: '24px', marginBottom: '8px', display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
                 <input 
@@ -603,7 +606,7 @@ export default function OfferAnalysisPage() {
                   </>
                 ) : (
                   <>
-                    <Sparkles size={16} /> Generate Offer Intelligence
+                    <Sparkles size={16} /> Analyze & Auto-Delete
                   </>
                 )}
               </motion.button>

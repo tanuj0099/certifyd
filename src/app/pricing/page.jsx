@@ -1,271 +1,166 @@
 'use client';
 
-import { motion } from 'framer-motion'
-import { Check, Zap, Shield, Headphones } from 'lucide-react'
-import MarketingPageShell from '@/components/MarketingPageShell.jsx'
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Check, Zap, Shield, ArrowRight, Sparkles, Lock } from 'lucide-react';
+import MarketingPageShell from '@/components/MarketingPageShell.jsx';
+import Link from 'next/link';
 
 const F_HEAD = "var(--font-head)";
 const F_BODY = "var(--font-body)";
 const F_MONO = "var(--font-mono)";
 
-const FREE_FEATURES = [
-  'Live ROI calculator with break-even timelines',
-  '3 free analyses as guest (unlimited after sign-in)',
-  'AI-powered resume analysis',
-  'City-specific salary data (8 metros)',
-  'Market demand scores from Naukri + LinkedIn',
-  'Loss aversion charts (5-year projection)',
-  'Student Mode for freshers',
-  'Hike Verifier tool',
-  'Pitch Your Boss generator',
-  'No credit card required',
-  'We never sell your data',
-]
+const FREE_DIAGNOSIS_FEATURES = [
+  '10-Second Quick CTC Check (no upload required)',
+  'Instant Percentile Gap Diagnosis across 8 metros',
+  'Shows exactly where your CTC ranks against live benchmarks',
+  'Calculates annual money left on the table',
+  'Loss aversion 5-year career trajectory projection',
+  'DPDP Act 2023 compliant anonymous analysis',
+];
 
-const WHY_FREE = [
-  {
-    icon: Shield,
-    title: 'No affiliate deals',
-    desc: "We don't earn commissions from certification sales. Our only incentive is honest numbers.",
-  },
-  {
-    icon: Zap,
-    title: 'Built from frustration',
-    desc: 'I wasted 2 months building a spreadsheet because no one gave me straight answers. This tool is that spreadsheet, scaled.',
-  },
-  {
-    icon: Headphones,
-    title: 'Free because it should be',
-    desc: 'Career decisions are too important to gatekeep behind paywalls. Everyone deserves access to real data.',
-  },
-]
+const ARSENAL_FEATURES = [
+  'Analyze & Auto-Delete synchronous offer letter extraction',
+  'Custom copy-pasteable negotiation counter-offer email script',
+  '12-point granular structural component CTC breakdown',
+  'Hidden deduction, clawback & employer PF trap detection',
+  'Resume context & gap analysis against target role benchmarks',
+  'Zero file retention with verifiable server deletion timestamp',
+];
 
 export default function PricingPage() {
   return (
     <MarketingPageShell
-      eyebrow="PRICING"
-      title="Free Forever"
+      eyebrow="PRICING & TIERS"
+      title="Transparent & High-ROI"
       accent="No Catch"
-      subtitle="Certifyd is completely free. Sign in with Google or phone OTP after 3 guest analyses to continue using all features at no cost."
+      subtitle="Start free with the diagnosis, or unlock the complete Counter-Offer Arsenal to negotiate your compensation with hard data."
     >
       <div style={{
-        maxWidth: '900px',
+        maxWidth: '1000px',
         margin: '0 auto',
-        padding: '0 0 12px',
+        padding: '12px 0 36px',
       }}>
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
-          className="glass"
-          style={{
-            padding: '32px 40px',
-            border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-xl)',
-            marginBottom: '48px',
-          }}
-        >
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            marginBottom: '24px',
-          }}>
-            <div style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: '10px',
-              background: 'var(--text)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-              <Zap size={20} color="var(--bg)" strokeWidth={2.5} />
-            </div>
+        {/* Pricing Cards Container */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-12">
+          {/* Free Tier: The Diagnosis */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: 0.1 }}
+            className="p-7 sm:p-8 rounded-2xl border border-[var(--border)] bg-[var(--surface)] flex flex-col justify-between shadow-lg"
+          >
             <div>
-              <h2 style={{
-                fontFamily: F_HEAD,
-                fontSize: '28px',
-                fontWeight: '700',
-                color: 'var(--text)',
-                margin: 0,
-                lineHeight: 1.1,
-              }}>
-                Everything is free
-              </h2>
-              <p style={{
-                fontFamily: F_MONO,
-                fontSize: '11px',
-                color: 'var(--text-4)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-                margin: 0,
-              }}>
-                All features - Unlimited use after sign-in
-              </p>
-            </div>
-          </div>
-
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '12px',
-          }}>
-            {FREE_FEATURES.map((feature, i) => (
-              <div
-                key={i}
-                style={{
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  gap: '10px',
-                }}
-              >
-                <Check
-                  size={18}
-                  color="var(--accent)"
-                  style={{ flexShrink: 0, marginTop: '2px' }}
-                />
-                <span style={{
-                  fontFamily: F_BODY,
-                  fontSize: '14px',
-                  color: 'var(--text-2)',
-                  lineHeight: 1.5,
-                }}>
-                  {feature}
-                </span>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--bg)] border border-[var(--border)] text-xs font-mono text-[var(--text)]/70 uppercase tracking-wider mb-4">
+                <span>Free Tier</span>
               </div>
-            ))}
-          </div>
 
-          <div style={{
-            marginTop: '32px',
-            paddingTop: '24px',
-            borderTop: '1px solid var(--border)',
-            display: 'flex',
-            gap: '12px',
-            flexWrap: 'wrap',
-          }}>
-            <a href="/" className="btn-primary">
-              Start Free Analysis
-            </a>
-            <a
-              href="/features"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '12px 20px',
-                borderRadius: 'var(--radius-md)',
-                border: '1px solid var(--border-strong)',
-                color: 'var(--text-2)',
-                fontFamily: F_BODY,
-                fontSize: '13px',
-                fontWeight: '600',
-                textDecoration: 'none',
-              }}
-            >
-              See All Features
-            </a>
-          </div>
-        </motion.div>
+              <h2 className="text-2xl sm:text-3xl font-bold text-[var(--text)] mb-2 font-sans">
+                The Diagnosis
+              </h2>
+              <p className="text-sm text-[var(--text)]/70 mb-6 font-medium">
+                Shows the percentile gap, doesn&apos;t show the fix.
+              </p>
 
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.2 }}
-          style={{ marginBottom: '32px' }}
-        >
-          <p style={{
-            fontFamily: F_MONO,
-            fontSize: '11px',
-            color: 'var(--text-4)',
-            textTransform: 'uppercase',
-            letterSpacing: '0.1em',
-            marginBottom: '20px',
-            textAlign: 'center',
-          }}>
-            Why is this free?
-          </p>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-            gap: '20px',
-          }}>
-            {WHY_FREE.map((item, i) => {
-              const Icon = item.icon
-              return (
-                <div
-                  key={i}
-                  className="glass"
-                  style={{
-                    padding: '24px',
-                    border: '1px solid var(--border)',
-                    borderRadius: 'var(--radius-xl)',
-                  }}
-                >
-                  <div style={{
-                    width: '36px',
-                    height: '36px',
-                    borderRadius: '8px',
-                    background: 'var(--bg-secondary)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginBottom: '16px',
-                  }}>
-                    <Icon size={18} color="var(--text-2)" strokeWidth={2} />
-                  </div>
-                  <h3 style={{
-                    fontFamily: F_HEAD,
-                    fontSize: '22px',
-                    fontWeight: '700',
-                    color: 'var(--text)',
-                    marginBottom: '8px',
-                    lineHeight: 1.2,
-                  }}>
-                    {item.title}
-                  </h3>
-                  <p style={{
-                    fontFamily: F_BODY,
-                    fontSize: '13px',
-                    color: 'var(--text-3)',
-                    lineHeight: '1.65',
-                    margin: 0,
-                  }}>
-                    {item.desc}
-                  </p>
+              <div className="mb-6 pb-6 border-b border-[var(--border)]">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-4xl sm:text-5xl font-extrabold text-[var(--text)] font-sans">₹0</span>
+                  <span className="text-xs font-mono text-[var(--text)]/60 uppercase">/ forever</span>
                 </div>
-              )
-            })}
-          </div>
-        </motion.div>
+              </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.3 }}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px',
-            padding: '8px 14px',
-            borderRadius: '8px',
-            background: 'var(--picton-dim)',
-            border: '1px solid var(--border-accent)',
-          }}
-        >
-          <div style={{
-            width: '6px',
-            height: '6px',
-            borderRadius: '50%',
-            background: 'var(--accent)',
-            boxShadow: 'none',
-          }} />
-          <div className="mono-tag" style={{ fontFamily: F_MONO, fontSize: '11px', color: 'var(--accent)', letterSpacing: '0.06em' }}>
-            Data: Q1 2026 - LinkedIn India - NASSCOM - Naukri - AmbitionBox
+              <ul className="space-y-3.5 mb-8">
+                {FREE_DIAGNOSIS_FEATURES.map((feature, idx) => (
+                  <li key={idx} className="flex items-start gap-3">
+                    <Check className="w-5 h-5 text-[#00D4A8] flex-shrink-0 mt-0.5" />
+                    <span className="text-sm text-[var(--text)]/80 leading-relaxed font-medium">
+                      {feature}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <Link
+                href="/tools/quick-check"
+                className="w-full py-3.5 px-6 rounded-xl bg-[var(--bg)] hover:bg-[var(--bg)]/80 border border-[var(--border)] text-[var(--text)] font-semibold text-sm transition-all flex items-center justify-center gap-2"
+              >
+                <span>Check My Standing Free</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </motion.div>
+
+          {/* ₹99 Tier: The Counter-Offer Arsenal */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: 0.2 }}
+            className="p-7 sm:p-8 rounded-2xl border-2 border-[#00D4A8] bg-[var(--surface)] flex flex-col justify-between shadow-2xl relative overflow-hidden"
+          >
+            {/* Recommended Corner Ribbon */}
+            <div className="absolute top-0 right-0 bg-[#00D4A8] text-[#080A0E] text-[10px] font-mono font-bold uppercase tracking-wider px-4 py-1 rounded-bl-xl">
+              High Leverage
+            </div>
+
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00D4A8]/10 border border-[#00D4A8]/30 text-[#00D4A8] text-xs font-mono uppercase tracking-wider mb-4">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>₹99 Tier</span>
+              </div>
+
+              <h2 className="text-2xl sm:text-3xl font-bold text-[var(--text)] mb-2 font-sans">
+                The Counter-Offer Arsenal
+              </h2>
+              <p className="text-sm text-[var(--text)]/70 mb-6 font-medium">
+                Negotiation script, component breakdown, resume gap analysis.
+              </p>
+
+              <div className="mb-6 pb-6 border-b border-[var(--border)]">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-4xl sm:text-5xl font-extrabold text-[var(--text)] font-sans">₹99</span>
+                  <span className="text-xs font-mono text-[var(--text)]/60 uppercase">/ one-time unlock</span>
+                </div>
+              </div>
+
+              <ul className="space-y-3.5 mb-8">
+                {ARSENAL_FEATURES.map((feature, idx) => (
+                  <li key={idx} className="flex items-start gap-3">
+                    <Check className="w-5 h-5 text-[#00D4A8] flex-shrink-0 mt-0.5" />
+                    <span className="text-sm text-[var(--text)]/90 leading-relaxed font-semibold">
+                      {feature}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              {/* Required Anchor Line */}
+              <p className="text-xs sm:text-sm font-mono font-bold text-[#00D4A8] text-center mb-3">
+                ₹99 to potentially negotiate ₹50,000 more. Do the math.
+              </p>
+
+              <Link
+                href="/offer-analysis"
+                className="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-[#00D4A8] to-[#00bda6] hover:opacity-95 text-[#080A0E] font-extrabold text-base shadow-xl shadow-[#00D4A8]/20 transition-all flex items-center justify-center gap-2"
+              >
+                <span>Unlock the Arsenal</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Security / Compliance Note */}
+        <div className="text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--surface)] border border-[var(--border)] text-xs font-mono text-[var(--text)]/60">
+            <Lock className="w-3.5 h-3.5 text-[#00D4A8]" />
+            <span>DPDP Act 2023 Compliant • All source files deleted synchronously after extraction</span>
           </div>
-        </motion.div>
+        </div>
       </div>
     </MarketingPageShell>
-  )
+  );
 }
