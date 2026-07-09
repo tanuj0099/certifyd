@@ -20,7 +20,7 @@ ALTER TABLE public.leverage_tokens ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Users can read own token ledger"
   ON public.leverage_tokens
   FOR SELECT
-  USING (true);
+  USING (auth.uid()::text = user_id::text);
 
 CREATE POLICY "System can insert token transactions"
   ON public.leverage_tokens
