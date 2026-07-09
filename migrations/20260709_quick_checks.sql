@@ -22,12 +22,14 @@ CREATE INDEX IF NOT EXISTS idx_quick_checks_ip_hash_created ON public.quick_chec
 ALTER TABLE public.quick_checks ENABLE ROW LEVEL SECURITY;
 
 -- Allow anonymous inserts from the API / public lead magnet
+DROP POLICY IF EXISTS "Allow public inserts for quick checks" ON public.quick_checks;
 CREATE POLICY "Allow public inserts for quick checks"
   ON public.quick_checks
   FOR INSERT
   WITH CHECK (true);
 
 -- Only service role / admins can read all quick checks
+DROP POLICY IF EXISTS "Allow admins to read quick checks" ON public.quick_checks;
 CREATE POLICY "Allow admins to read quick checks"
   ON public.quick_checks
   FOR SELECT

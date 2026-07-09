@@ -19,16 +19,19 @@ CREATE INDEX IF NOT EXISTS idx_offer_uploads_user_id ON public.offer_uploads(use
 ALTER TABLE public.offer_uploads ENABLE ROW LEVEL SECURITY;
 
 -- Allow users or anonymous sessions to insert/select their upload by ID
+DROP POLICY IF EXISTS "Allow read offer upload by ID" ON public.offer_uploads;
 CREATE POLICY "Allow read offer upload by ID"
   ON public.offer_uploads
   FOR SELECT
   USING (true);
 
+DROP POLICY IF EXISTS "Allow insert offer upload" ON public.offer_uploads;
 CREATE POLICY "Allow insert offer upload"
   ON public.offer_uploads
   FOR INSERT
   WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Allow update offer upload" ON public.offer_uploads;
 CREATE POLICY "Allow update offer upload"
   ON public.offer_uploads
   FOR UPDATE

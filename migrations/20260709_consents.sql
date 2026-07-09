@@ -17,11 +17,13 @@ CREATE INDEX IF NOT EXISTS idx_consents_type_version ON public.consents(consent_
 
 ALTER TABLE public.consents ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Users can view their own consents" ON public.consents;
 CREATE POLICY "Users can view their own consents"
   ON public.consents
   FOR SELECT
   USING (true);
 
+DROP POLICY IF EXISTS "Anyone can insert consent logs" ON public.consents;
 CREATE POLICY "Anyone can insert consent logs"
   ON public.consents
   FOR INSERT

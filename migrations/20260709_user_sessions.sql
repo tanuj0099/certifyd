@@ -22,18 +22,19 @@ CREATE INDEX IF NOT EXISTS idx_user_sessions_token_hash ON public.user_sessions(
 -- Enable RLS
 ALTER TABLE public.user_sessions ENABLE ROW LEVEL SECURITY;
 
--- Users can only view their own sessions
+DROP POLICY IF EXISTS "Users can view own sessions" ON public.user_sessions;
 CREATE POLICY "Users can view own sessions"
   ON public.user_sessions
   FOR SELECT
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id::text);
 
 -- Users can update/revoke their own sessions
+DROP POLICY IF EXISTS "Users can update own sessions" ON public.user_sessions;
 CREATE POLICY "Users can update own sessions"
   ON public.user_sessions
   FOR UPDATE
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id::text)
+  WITH CHECK (auth.uid()::text = user_id::text);
 
 -- Enforce Max 5 Active Sessions per User
 CREATE OR REPLACE FUNCTION public.enforce_max_concurrent_sessions()

@@ -1,6 +1,7 @@
 -- ============================================================================
 -- Certifyd Phase 5 & 6: Leverage Tokens & Double-Sided Referrals
 -- Minimal, non-gamified balance ledger and referral tracking
+-- Idempotent RLS definitions (safe to re-run multiple times)
 -- ============================================================================
 
 -- 1. LEVERAGE TOKENS LEDGER
@@ -17,11 +18,13 @@ CREATE INDEX IF NOT EXISTS idx_leverage_tokens_reason_created ON public.leverage
 
 ALTER TABLE public.leverage_tokens ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Users can read own token ledger" ON public.leverage_tokens;
 CREATE POLICY "Users can read own token ledger"
   ON public.leverage_tokens
   FOR SELECT
   USING (auth.uid()::text = user_id::text);
 
+DROP POLICY IF EXISTS "System can insert token transactions" ON public.leverage_tokens;
 CREATE POLICY "System can insert token transactions"
   ON public.leverage_tokens
   FOR INSERT
@@ -48,11 +51,13 @@ CREATE INDEX IF NOT EXISTS idx_referrals_referee ON public.referrals(referee_id)
 
 ALTER TABLE public.referrals ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Users can read own referrals" ON public.referrals;
 CREATE POLICY "Users can read own referrals"
   ON public.referrals
   FOR SELECT
   USING (true);
 
+DROP POLICY IF EXISTS "Anyone can insert or update referrals" ON public.referrals;
 CREATE POLICY "Anyone can insert or update referrals"
   ON public.referrals
   FOR ALL
