@@ -22,17 +22,25 @@ export default async function middleware(req) {
     return NextResponse.redirect(url, 301);
   }
 
-  // 2. CORS Handling for API routes
+  // 2. Strict CORS Handling & CSRF Protection for API routes
   if (url.pathname.startsWith('/api/')) {
     const origin = req.headers.get('origin');
     const allowedOrigins = [
       'https://certifyd.in',
       'https://www.certifyd.in',
       process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : null,
+      process.env.NODE_ENV === 'development' ? 'http://127.0.0.1:3000' : null,
     ].filter(Boolean);
 
-    const isAllowed = origin && allowedOrigins.includes(origin);
-    const allowOrigin = isAllowed ? origin : allowedOrigins[0] || '*';
+    // If a cross-origin mutation is attempted from an unapproved Origin, reject immediately with 403 Forbidden
+    if (origin && !allowedOrigins.includes(origin) && ['POST', 'PUT', 'DELETE', 'PATCH'].includes(req.method)) {
+      return NextResponse.json(
+        { error: 'Forbidden: Unauthorized cross-origin request.' },
+        { status: 403 }
+      );
+    }
+
+    const allowOrigin = origin && allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
 
     const corsHeaders = {
       'Access-Control-Allow-Origin': allowOrigin,
