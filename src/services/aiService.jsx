@@ -173,27 +173,7 @@ export const callGroqForResume = async (_unusedApiKey, prompt) => {
   )
 }
 
-export const getMockResponse = ({ certName, currentSalary, certCost, hikePercent, isStudent }) => {
-  const annualGain      = currentSalary * 100000 * hikePercent / 100
-  const breakEvenMonths = annualGain > 0 ? Math.ceil((certCost * 100000) / (annualGain / 12)) : 0
-  const fiveYearGain    = ((annualGain * 5 - certCost * 100000) / 100000).toFixed(1)
-  return {
-    verdict:      `Strong ROI — ${certName} projected +${hikePercent}% hike, break-even in ${breakEvenMonths} months`,
-    breakEven:    `${breakEvenMonths} months — roughly ${Math.round(breakEvenMonths * 1.3)} months of Bangalore PG rent`,
-    projection:   `Rs.${fiveYearGain}L net over 5 years`,
-    demand:       ['2,400+ open roles on Naukri right now', 'Top hirers: TCS, Infosys, Wipro, Accenture', 'Demand up 34% YoY per LinkedIn'],
-    risks:        ['Cert alone is not enough — build 2 portfolio projects', 'Budget 3 months of real study, not 3 weeks'],
-    studentTrack: isStudent ? 'Step 1: Complete cert in 4 months. Step 2: Build 2 GitHub projects. Step 3: Apply to Capgemini iON for Rs.4.8L offer.' : '',
-    bottomLine:   'Run: vercel dev (not npm run dev) to enable the API proxy locally.',
-    // Student specific
-    entryOffers:  '₹4.5L – ₹7.2L',
-    timeToOffer:  '~12 weeks post-cert',
-    topHirers:    'TCS, Infosys, Wipro',
-    demandTrend:  '↑ Growing',
-    raw:          '(demo)',
-    parseError:   false,
-  }
-}
+
 
 // ── Domain validation via Groq ────────────────────────────
 // Returns { isValid: bool, normalized: string, reason: string }

@@ -1,3 +1,5 @@
+import { logger } from '@/lib/logger.js';
+
 export const parseOfferLetter = async (offerLetterText, userProfileData) => {
   if (!offerLetterText || offerLetterText.trim().length < 15) {
     return { error: "INVALID_DOCUMENT", message: "Document too short to be a valid offer letter." };
@@ -100,7 +102,7 @@ ${safeOffer}
     } catch (e) {
       errData = { error: rawText || `HTTP Error ${response.status}: ${response.statusText}` };
     }
-    console.error('AI API Error Details:', errData, 'HTTP Status:', response.status);
+    logger.error('AI API Error Details', { errData, status: response.status });
     
     if (response.status === 401) throw new Error('Invalid API Key — check GROQ_API_KEY in your .env or .env.local file.');
     if (response.status === 403) throw new Error('Access Denied (HTTP 403) — Groq API firewall or key restriction blocked the request. Verify your GROQ_API_KEY permissions.');
@@ -184,7 +186,7 @@ ${safeOffer}
 
     return parsed;
   } catch (error) {
-    console.error("JSON parsing error:", content);
+    logger.error("JSON parsing error", { content, error });
     throw new Error(error.message || 'AI returned invalid JSON format');
   }
 };

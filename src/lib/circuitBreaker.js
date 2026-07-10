@@ -20,8 +20,9 @@ async function executeGroqFetch(url, options) {
   return { status: res.status, ok: res.ok, data };
 }
 
+import { logger } from '@/lib/logger.js';
 export const groqCircuitBreaker = new CircuitBreaker(executeGroqFetch, groqCallOptions);
 
-groqCircuitBreaker.on('open', () => console.warn('[CircuitBreaker] Groq API breaker OPENED — rejecting fast to protect server resources.'));
-groqCircuitBreaker.on('halfOpen', () => console.log('[CircuitBreaker] Groq API breaker HALF-OPEN — testing connection.'));
-groqCircuitBreaker.on('close', () => console.log('[CircuitBreaker] Groq API breaker CLOSED — service restored.'));
+groqCircuitBreaker.on('open', () => logger.warn('[CircuitBreaker] Groq API breaker OPENED — rejecting fast to protect server resources.'));
+groqCircuitBreaker.on('halfOpen', () => logger.info('[CircuitBreaker] Groq API breaker HALF-OPEN — testing connection.'));
+groqCircuitBreaker.on('close', () => logger.info('[CircuitBreaker] Groq API breaker CLOSED — service restored.'));

@@ -109,7 +109,8 @@ def run_engine():
         )
         page = context.new_page()
 
-        # 3. Loop and Update
+        # 3. Loop and collect batch updates to prevent N+1 queries
+        batch_updates = []
         for i, cert in enumerate(certs):
             print(f"[{i+1}/{len(certs)}] {cert['name']}")
             
@@ -118,17 +119,22 @@ def run_engine():
             
             print(f"  ✅ Result: {jobs:,} jobs | ₹{salary['min']:,} - ₹{salary['max']:,} INR")
             
-            # Push live to Supabase Certifications table
-            supabase.table('certifications').update({
+            # Accumulate payload for batch upsert
+            batch_updates.append({
+                'id': cert['id'],
+                'name': cert['name'],
                 'job_count': jobs,
                 'salary_floor': salary['min'],
                 'salary_ceiling': salary['max']
-            }).eq('id', cert['id']).execute()
+            })
             
             delay = random.uniform(3, 6)
             time.sleep(delay)
             print("-" * 50)
             
+        if batch_updates:
+            supabase.table('certifications').upsert(batch_updates).execute()
+            print(f"  ✅ Batch updated {len(batch_updates)} certifications in a single query!")
         browser.close()
     print("🚀 Market Pulse Playwright Run Complete!")
 

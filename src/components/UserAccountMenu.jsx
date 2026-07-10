@@ -23,6 +23,7 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState('')
+  const [statusMsg, setStatusMsg] = useState('')
   const rootRef = useRef(null)
   const router = useRouter()
 
@@ -56,11 +57,12 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
     }
   }
 
-  async function downloadData() {
+  async function downloadUserData() {
     try {
       const { data, error } = await supabase.from('user_profiles').select('*').eq('user_id', user?.id || user?.uid).single();
       if (error) throw error;
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const jsonStr = JSON.stringify(data, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -69,8 +71,10 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+      setStatusMsg('Data download started.');
     } catch (err) {
       console.error('Failed to download data', err);
+      setStatusMsg('Failed to download data.');
     }
   }
 
@@ -84,11 +88,10 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
         applied_projects: []
       }).eq('user_id', user?.id || user?.uid);
       if (error) throw error;
-      alert("Consent withdrawn. Your ROI and career data has been wiped from active tables.");
-      setOpen(false);
+      setStatusMsg("Consent withdrawn. Active career data wiped.");
     } catch (err) {
-      console.error('Withdraw consent failed:', err);
-      alert("Failed to withdraw consent. Please try again.");
+      console.error('Withdraw consent failed', err);
+      setStatusMsg("Failed to withdraw consent.");
     }
   }
 
@@ -201,6 +204,11 @@ export default function UserAccountMenu({ user, onNavigate, onSignOut }) {
                 <motion.div className="text-zinc-500 dark:text-zinc-400 text-sm font-medium text-[color:var(--text-3)] mt-1 break-all">
                   {user?.email || ''}
                 </motion.div>
+                {statusMsg && (
+                  <div style={{ marginTop: '6px', padding: '6px 8px', borderRadius: '6px', background: 'var(--accent)', color: '#fff', fontSize: '11px', fontWeight: 600 }}>
+                    {statusMsg}
+                  </div>
+                )}
               </motion.div>
 
               {[

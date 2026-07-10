@@ -3,9 +3,7 @@ import { motion } from 'framer-motion'
 
 const SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ''
 
-export function isTurnstileEnabled() {
-  return Boolean(SITE_KEY)
-}
+export { isTurnstileEnabled } from '../services/turnstileService.js'
 
 export default function TurnstileWidget({ onVerify, onExpire, onError }) {
   const containerRef = useRef(null)

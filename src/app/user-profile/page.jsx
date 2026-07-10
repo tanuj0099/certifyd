@@ -7,6 +7,7 @@ import ToolPageWrapper from '@/components/ToolPageWrapper.jsx';
 import { useAuth } from '@/hooks/useAuth.jsx';
 import { useProfile } from '@/hooks/useProfile.jsx';
 import { supabase } from '@/lib/supabase.js';
+import { logger } from '@/lib/logger.js';
 
 export default function UserProfile() {
   const { user, signOut } = useAuth();
@@ -19,6 +20,7 @@ export default function UserProfile() {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState('');
+  const [statusMsg, setStatusMsg] = useState('');
 
   React.useEffect(() => {
     if (profile?.display_name) {
@@ -85,8 +87,10 @@ export default function UserProfile() {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+      setStatusMsg('Data export downloaded successfully.');
     } catch (err) {
-      console.error('Failed to download data', err);
+      logger.error('Failed to download data', err);
+      setStatusMsg('Failed to export data.');
     }
   }
 
@@ -99,10 +103,10 @@ export default function UserProfile() {
         applied_projects: []
       }).eq('user_id', user?.id || user?.uid);
       if (error) throw error;
-      alert("Consent withdrawn. Your ROI and career data has been wiped from active tables.");
+      setStatusMsg("Consent withdrawn. Your ROI and career data has been wiped from active tables.");
     } catch (err) {
-      console.error('Withdraw consent failed:', err);
-      alert("Failed to withdraw consent. Please try again.");
+      logger.error('Withdraw consent failed', err);
+      setStatusMsg("Failed to withdraw consent. Please try again.");
     }
   }
 
@@ -118,6 +122,20 @@ export default function UserProfile() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
+        {statusMsg && (
+          <div style={{
+            padding: '12px 16px',
+            marginBottom: '20px',
+            borderRadius: '10px',
+            background: 'var(--accent)',
+            color: '#fff',
+            fontFamily: 'var(--font-body)',
+            fontSize: '13px',
+            fontWeight: '600'
+          }}>
+            {statusMsg}
+          </div>
+        )}
         <div style={{
           display: 'grid', gridTemplateColumns: '1fr', gap: '24px',
           maxWidth: '600px'

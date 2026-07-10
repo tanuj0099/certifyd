@@ -964,12 +964,25 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
     setText(''); setFileName(''); setResult(null); setError(null); setRejection(null); setTextReady(true)
   }
 
-  // FIX: completely nullify all text states on reset
+  // FIX: completely nullify all file/rejection states on reset without wiping user pasted text
   var dismissRejection = function () {
     setRejection(null)
-    setFileName('')   // clear any file reference
-    setText('')       // clear extracted text
+    if (fileName) {
+      setText('')     // only clear extracted file text
+    }
+    setFileName('')   // clear file reference
     setError(null)
+  }
+
+  // Validate before setting text state
+  var handleTextChange = function (e) {
+    var val = e.target.value
+    if (val.length > 50000) {
+      setError('Text exceeds maximum length (50,000 characters).')
+      return
+    }
+    setText(val)
+    if (error && error.includes('exceeds')) setError(null)
   }
 
   var handleAnalyse = async function () {
@@ -1354,7 +1367,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
           >
             <textarea
               value={text}
-              onChange={function (e) { setText(e.target.value) }}
+              onChange={handleTextChange}
               placeholder="Paste your resume, LinkedIn About section, or work experience here. Include your city for better results."
               rows={6}
               style={{ width: '100%', padding: '14px', background: 'var(--bg)', border: '1px solid ' + (text.trim() ? PICTON + '44' : 'var(--border)'), borderRadius: '11px', color: 'var(--text)', fontSize: '13px', fontFamily: FB, outline: 'none', resize: 'vertical', lineHeight: '1.6', transition: 'border-color 0.18s', boxSizing: 'border-box' }}

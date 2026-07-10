@@ -80,11 +80,11 @@ export async function POST(request) {
 
       const cachedResponse = await redisClient.get(cacheKey);
       if (cachedResponse) {
-        console.log(`[Cache Hit] Serving from Redis: ${cacheKey}`);
+        logger.info(`[Cache Hit] Serving from Redis: ${cacheKey}`);
         return json(cachedResponse);
       }
     } catch (cacheErr) {
-      console.error('Redis get error:', cacheErr);
+      logger.error('Redis get error', cacheErr);
     }
   }
 
@@ -102,7 +102,7 @@ export async function POST(request) {
     });
 
     if (!result.ok) {
-      console.error('Groq API Error:', result.status, result.data);
+      logger.error('Groq API Error', { status: result.status, data: result.data });
       return json(result.data, { status: result.status });
     }
 
@@ -111,9 +111,9 @@ export async function POST(request) {
     if (redisClient && cacheKey) {
       try {
         await redisClient.set(cacheKey, data, { ex: 86400 }); // 24 hours
-        console.log(`[Cache Set] Stored in Redis: ${cacheKey}`);
+        logger.info(`[Cache Set] Stored in Redis: ${cacheKey}`);
       } catch (cacheErr) {
-        console.error('Redis set error:', cacheErr);
+        logger.error('Redis set error', cacheErr);
       }
     }
 

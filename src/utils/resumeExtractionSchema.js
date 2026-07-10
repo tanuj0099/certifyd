@@ -29,26 +29,36 @@ function normalizeYearsExperience(value) {
 }
 
 export function parseExtractedSkills(input) {
-  const value = typeof input === 'string' ? JSON.parse(input) : input;
+  try {
+    const value = typeof input === 'string' ? JSON.parse(input) : input;
 
-  if (!value || typeof value !== 'object' || Array.isArray(value)) {
-    throw new Error('extraction payload must be an object');
+    if (!value || typeof value !== 'object' || Array.isArray(value)) {
+      throw new Error('extraction payload must be an object');
+    }
+
+    if (!Array.isArray(value.skills)) {
+      throw new Error('skills must be an array');
+    }
+
+    const skills = value.skills
+      .map((skill) => String(skill || '').trim())
+      .filter(Boolean);
+
+    if (skills.length === 0) {
+      throw new Error('skills must contain at least one skill');
+    }
+
+    return {
+      skills,
+      years_experience: normalizeYearsExperience(value.years_experience),
+      success: true,
+    };
+  } catch (err) {
+    return {
+      skills: [],
+      years_experience: 0,
+      success: false,
+      error: err.message,
+    };
   }
-
-  if (!Array.isArray(value.skills)) {
-    throw new Error('skills must be an array');
-  }
-
-  const skills = value.skills
-    .map((skill) => String(skill || '').trim())
-    .filter(Boolean);
-
-  if (skills.length === 0) {
-    throw new Error('skills must contain at least one skill');
-  }
-
-  return {
-    skills,
-    years_experience: normalizeYearsExperience(value.years_experience),
-  };
 }

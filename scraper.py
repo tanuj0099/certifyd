@@ -289,8 +289,14 @@ def scrape_naukri(page: Page, domain: str) -> int:
 # ─────────────────────────────────────────────────────────────────────────────
 # 7. MAIN ENGINE
 # ─────────────────────────────────────────────────────────────────────────────
+_market_data_cache = {}
+
 def get_market_data(page: Page, domain: str) -> dict:
-    """Simple: AmbitionBox for salary, Naukri for jobs."""
+    """Simple: AmbitionBox for salary, Naukri for jobs with memory caching."""
+    cache_key = domain.lower().strip()
+    if cache_key in _market_data_cache:
+        print(f"  [Cache Hit] Serving cached market data for: {domain}")
+        return _market_data_cache[cache_key]
     
     # Salary from AmbitionBox
     salary = scrape_ambitionbox(page, domain)
@@ -298,12 +304,14 @@ def get_market_data(page: Page, domain: str) -> dict:
     # Job count from Naukri
     jobs = scrape_naukri(page, domain)
     
-    return {
+    data = {
         "min_salary": salary["min_salary"],
         "max_salary": salary["max_salary"],
         "job_count": jobs,
         "source": salary["source"],
     }
+    _market_data_cache[cache_key] = data
+    return data
 
 
 def run_engine():

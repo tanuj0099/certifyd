@@ -67,3 +67,13 @@ export function containsPII(text) {
   }
   return false;
 }
+
+/**
+ * Checks a deeply nested object for any PII fields.
+ * @param {any} data - The object to scan
+ * @returns {{ hasPII: boolean }}
+ */
+export function scanObjectForPII(data) {
+  const jsonStr = JSON.stringify(data || {});
+  return { hasPII: containsPII(jsonStr) };
+}

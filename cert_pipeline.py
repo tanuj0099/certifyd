@@ -1010,15 +1010,26 @@ def dispatch(page: Page, cert: dict) -> dict:
 # ─────────────────────────────────────────────────────────────────────────────
 def sync_certificates(cert_data: list):
     print("\nStarting Certification Sync to Supabase...")
-    for cert in cert_data:
-        try:
-            supabase.table('certificates').upsert(
-                cert,
-                on_conflict='cert_name'
-            ).execute()
-            print(f"  Synced: {cert['cert_name']} (Rs {cert['cost_inr']})")
-        except Exception as e:
-            print(f"  Failed to sync {cert['cert_name']}: {str(e)}")
+    if not cert_data:
+        print("No certification data to sync.")
+        return
+    try:
+        supabase.table('certificates').upsert(
+            cert_data,
+            on_conflict='cert_name'
+        ).execute()
+        print(f"  Successfully batch synced {len(cert_data)} certificates!")
+    except Exception as e:
+        print(f"  Batch sync failed ({e}), falling back to item-by-item sync...")
+        for cert in cert_data:
+            try:
+                supabase.table('certificates').upsert(
+                    cert,
+                    on_conflict='cert_name'
+                ).execute()
+                print(f"  Synced: {cert['cert_name']} (Rs {cert['cost_inr']})")
+            except Exception as item_err:
+                print(f"  Failed to sync {cert['cert_name']}: {str(item_err)}")
     print("Sync complete.")
 
 

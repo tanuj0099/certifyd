@@ -10,7 +10,7 @@ export const CERT_DATABASE = {
       timeToPrep: "2-3 Months",
       eligibility: "No strict prerequisites, but 1 year of hands-on AWS experience is highly recommended.",
       whyItMatters: "This is the undisputed gold standard for cloud computing. It proves you know how to design resilient, high-performing, and secure cloud infrastructure. It bypasses HR filters instantly.",
-      howToPrepare: "Use Adrian Cantrill's course or Stephane Maarek on Udemy, combined with TutorialsDojo practice exams."
+      howToPrepare: "Use Adrian Cantrill's course or Stephane Maarek on Udemy (typically ₹499–₹649 during frequent Udemy India sales), combined with TutorialsDojo practice exams."
     },
     {
       rank: 2,
@@ -22,7 +22,7 @@ export const CERT_DATABASE = {
       timeToPrep: "1-2 Months",
       eligibility: "No prerequisites. Best taken after the Solutions Architect exam.",
       whyItMatters: "Proves you can actually write and deploy code natively on AWS (Lambda, DynamoDB, API Gateway) rather than just clicking around the console.",
-      howToPrepare: "Stephane Maarek's Udemy course is the industry standard for this specific exam."
+      howToPrepare: "Stephane Maarek's Udemy course (available for ~₹499–₹649 during Udemy India flash sales) is the industry standard for this specific exam."
     },
     {
       rank: 3,
