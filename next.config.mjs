@@ -25,11 +25,11 @@ const securityHeaders = [
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.posthog.com https://*.sentry.io https://va.vercel-scripts.com https://*.vercel-scripts.com https://challenges.cloudflare.com",
+      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.posthog.com https://*.sentry.io https://va.vercel-scripts.com https://*.vercel-scripts.com https://challenges.cloudflare.com https://www.googletagmanager.com",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com data:",
       "img-src 'self' data: https:",
-      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.groq.com https://*.posthog.com https://*.sentry.io https://vitals.vercel-insights.com https://*.vercel-insights.com",
+      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.groq.com https://*.posthog.com https://*.sentry.io https://vitals.vercel-insights.com https://*.vercel-insights.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com",
       "frame-src 'self' https://challenges.cloudflare.com",
       "frame-ancestors 'none'",
     ].join('; '),
