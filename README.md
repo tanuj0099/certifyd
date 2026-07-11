@@ -1,121 +1,86 @@
-# Certifyd 🚀
+# Certifyd — India's Tech Career Intelligence Engine ⚡
 
-**Bangalore's #1 Certification ROI Calculator** — powered by Groq AI (llama3-70b-8192, ~500 tokens/sec).
-
-Know your break-even, 5-year gain, and market demand before spending ₹25K on AWS certs.
+**Certifyd** is a real-time data and decision engine built specifically for India's tech ecosystem. Calculate exact certification ROI, benchmark career switch paths, simulate salary hikes, and safely audit offer letters with PII-protected AI analysis.
 
 ---
 
-## ⚡ Quick Start (4 commands)
+## 🔥 Key Capabilities
+
+- **3D Certification ROI & Payback Engine** — Dynamic financial modeling that calculates exact break-even timelines, 5-year CTC delta gains, and Indian tech market payback horizons.
+- **Offer Letter Risk & Equity Analyzer** — Privacy-first offer evaluation featuring nested-object PII sanitization before AI inference.
+- **Live Market Pulse & Salary Benchmarks** — Calibrated against verified Indian engineering compensation tiers (Bengaluru, Hyderabad, NCR, Pune).
+- **Career Switch Simulator & Hike Verifier** — Interactive decision matrices for transitioning across roles, tech stacks, and seniority levels.
+- **Enterprise Security & Idempotent Architecture** — Zero-trust Supabase RLS policies, automated soft deletes, and Cloudflare Turnstile anti-bot verification.
+
+---
+
+## ⚡ Quick Start
 
 ```bash
-# 1. Install dependencies
+# 1. Clone & install dependencies
+git clone https://github.com/tanuj0099/certifyroi.git
+cd certifyroi
 npm install
 
-# 2. Set up environment
-cp .env.example .env
-# Edit .env → add your VITE_GROQ_API_KEY from https://console.groq.com
+# 2. Configure environment variables (.env.local)
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+GROQ_API_KEY=your_groq_api_key
 
-# 3. Run dev server
+# 3. Launch local development server
 npm run dev
-# → http://localhost:5173
-
-# 4. Deploy to Vercel
-npm run build && vercel
+# → Application live at http://localhost:3000
 ```
 
 ---
 
-## 🎯 Features
+## 🏗️ Architecture & Technology Stack
 
-- **Live ROI sliders** — Salary (₹0–40L), Cert Cost, Expected Hike %
-- **Student Mode** — Set salary to ₹0 → see path to first 4.8L offer
-- **Groq AI Analysis** — "AWS Solutions Architect" → risks, break-even, Bangalore market context
-- **Loss aversion chart** — "With Cert" (emerald) vs "Inaction" (grey dashed)
-- **3 free guest queries** → Firebase Google Auth gate
-- **Dark luxury UI** — #0B0E14 bg, glassmorphism cards, 60fps animations
-
----
-
-## 🔑 Environment Variables
-
-| Variable | Required | Description |
-|---|---|---|
-| `VITE_GROQ_API_KEY` | **Yes** | Free at [console.groq.com](https://console.groq.com) |
-| `VITE_GUEST_FREE_LIMIT` | No | Free queries before auth (default: 3) |
-| `VITE_FIREBASE_*` | No | For Google/Phone auth (see firebase.js) |
-
-> **Without GROQ key:** App runs in demo mode with realistic mock responses.
-
----
-
-## 🏗️ Tech Stack
-
-| Layer | Tech |
+| Layer | Technologies |
 |---|---|
-| Frontend | React 18 + Vite |
-| Styling | Tailwind CSS + CSS Variables |
-| Animations | Framer Motion |
-| Charts | Recharts |
-| AI | Groq SDK (llama3-70b-8192) |
-| Auth | Firebase (Google + Phone OTP) |
-| Icons | Lucide React |
+| **Core Application** | Next.js 16 App Router · React 19 · Node.js |
+| **Interactive UI & Motion** | Vanilla CSS Tokens · Framer Motion · Canvas Graphics |
+| **Backend & Database** | Supabase PostgreSQL · Row Level Security (RLS) · Idempotent RPCs |
+| **AI Intelligence Layer** | Server-side Groq Llama 3 Inference Pipelines |
+| **Security & Observability** | Cloudflare Turnstile · Deep PII Scanners · Sentry · Vercel Analytics |
 
 ---
 
-## 📁 Project Structure
+## 📁 System Structure
 
 ```
-certifyd/
+certifyroi/
 ├── src/
-│   ├── components/
-│   │   ├── Hero.jsx        ← Main calculator UI
-│   │   └── Navigation.jsx  ← Top bar + auth buttons
-│   ├── hooks/
-│   │   ├── hooks.js        ← ROI calc, guest counter, utilities
-│   │   └── useAuth.js      ← Firebase auth context
-│   ├── services/
-│   │   └── aiService.js    ← Groq API + response parser
-│   ├── firebase.js         ← Firebase config template
-│   └── tokens.js           ← Design tokens + cert data
+│   ├── app/                    # Next.js 16 App Router pages & API routes
+│   │   ├── api/                # Server-side AI & secure data endpoints
+│   │   ├── offer-analysis/     # Offer letter risk & CTC analyzer
+│   │   ├── tools/              # Specialized career intelligence tools
+│   │   └── user-profile/       # Secure user data & consent management
+│   ├── components/             # Reusable UI & interactive visual components
+│   │   ├── Hero.jsx            # Dynamic ROI modeling interface
+│   │   ├── LandingPage.jsx     # Accelerated 3D certificate scroll experience
+│   │   └── ResumeAnalyzer.jsx  # PII-safe candidate skill extraction
+│   ├── data/                   # Calibrated Indian tech market benchmarks
+│   ├── lib/                    # Core clients, analytics, and circuit breakers
+│   └── services/               # Supabase, AI, Turnstile, and data services
+├── migrations/                 # Idempotent database & RLS hardening schemas
+└── next.config.mjs             # Strict Content Security Policy (CSP) & headers
 ```
 
 ---
 
-## 🎨 Design System
+## 🛡️ Security & Privacy First
 
-```css
-BG:      #0B0E14  (deep space)
-Text:    #F8FAFC  (soft white, 7:1 contrast)
-Glass:   rgba(18,24,38,0.88) + blur(20px)
-Indigo:  #6366F1  (primary action)
-Emerald: #10B981  (gain/positive)
-Fonts:   Bebas Neue (headings) · Inter (body)
-```
+- **PII Scrubbing**: Client-side & server-side object scanners (`src/utils/piiScanner.js`) strip names, contact numbers, and sensitive candidate identifiers prior to external AI evaluation.
+- **Strict Content Security Policy**: Configured in `next.config.mjs` with explicit domain whitelisting to prevent unauthorized third-party scripts.
+- **Data Sovereignty**: Built-in account soft-delete and instant GDPR/DPDP-compliant data erasure workflows.
 
 ---
 
-## 🔥 Firebase Setup (optional)
+## 🚀 Deployment
 
-1. Go to [console.firebase.google.com](https://console.firebase.google.com)
-2. Create project → Add Web App
-3. Enable **Authentication** → Google + Phone
-4. Copy config to `.env`
-
-> Without Firebase config, auth UI shows but sign-in will fail gracefully.
-
----
-
-## 📦 Deploy
+Built for instant zero-config deployment on **Vercel**:
 
 ```bash
-# Vercel (recommended)
-npm run build && vercel
-
-# Netlify
-npm run build && netlify deploy --prod --dir=dist
+npm run build && vercel --prod
 ```
-
----
-
-Made with ❤️ for Bangalore tech professionals who hate wasting money on the wrong certs. (Updated via Manus AI during testing)
