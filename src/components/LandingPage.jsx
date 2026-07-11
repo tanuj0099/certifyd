@@ -228,22 +228,22 @@ function CertAssembly() {
   }, [scrollY])
 
   useEffect(() => {
-    if (!isMobile && prog > 0.86 && !showSwoosh) {
-      const timer = setTimeout(() => setShowSwoosh(true), 200)
+    if (!isMobile && prog > 0.48 && !showSwoosh) {
+      const timer = setTimeout(() => setShowSwoosh(true), 150)
       return () => clearTimeout(timer)
     }
   }, [prog, showSwoosh, isMobile])
 
   const rm = (p, a, b, c, d) => c + (d - c) * Math.max(0, Math.min(1, (p - a) / (b - a)))
-  const p8 = rm(prog, 0, 0.8, 0, 1)
+  const p8 = rm(prog, 0, 0.45, 0, 1)
 
   const l1Desktop = `perspective(1200px) translateZ(${rm(p8, 0, 1, -220, 0)}px) translateY(${rm(p8, 0, 1, -55, 0)}px) rotateY(${rm(p8, 0, 1, 26, 0)}deg) rotateX(${rm(p8, 0, 1, 11, 0)}deg)`
   const l2Desktop = `perspective(1200px) translateZ(${rm(p8, 0, 1, 220, 0)}px) translateY(${rm(p8, 0, 1, 55, 0)}px) rotateY(${rm(p8, 0, 1, -20, 0)}deg) rotateX(${rm(p8, 0, 1, -8, 0)}deg)`
 
-  const certScale = prog < 0.8 ? rm(prog, 0, 0.8, 0.64, 1.0) : rm(prog, 0.8, 1.0, 1.0, 0.9)
-  const certOpacity = prog < 0.05 ? rm(prog, 0, 0.05, 0, 1) : prog > 0.9 ? rm(prog, 0.9, 1.0, 1, 0.4) : 1
-  const hintOp = prog > 0.16 ? 0 : prog > 0.06 ? rm(prog, 0.06, 0.16, 1, 0) : 1
-  const assembledOp = rm(prog, 0.8, 0.88, 0, 1)
+  const certScale = prog < 0.45 ? rm(prog, 0, 0.45, 0.72, 1.0) : rm(prog, 0.45, 1.0, 1.0, 0.95)
+  const certOpacity = prog < 0.03 ? rm(prog, 0, 0.03, 0, 1) : prog > 0.9 ? rm(prog, 0.9, 1.0, 1, 0.4) : 1
+  const hintOp = prog > 0.12 ? 0 : prog > 0.04 ? rm(prog, 0.04, 0.12, 1, 0) : 1
+  const assembledOp = rm(prog, 0.45, 0.52, 0, 1)
 
   const cardW = isMobile ? 'min(320px, 90vw)' : 'min(440px, 76vw)'
 
@@ -322,7 +322,7 @@ function CertAssembly() {
 
   return (
     <div ref={trackRef} style={{
-      height: '280vh',
+      height: '150vh',
       position: 'relative',
       borderBottom: `1px solid ${'var(--border)'}`,
       background: 'var(--bg)',
