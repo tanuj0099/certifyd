@@ -1,14 +1,17 @@
 import os
 from supabase import create_client, Client
 
-url = os.environ.get("SUPABASE_URL", "https://ejgadkswcjorkyzkqhfl.supabase.co")
+url = os.environ.get("SUPABASE_URL")
 key = os.environ.get("SUPABASE_KEY")
-if not key:
+if not key and os.path.exists("../.env.local"):
     with open("../.env.local", "r") as f:
         for line in f:
             if "NEXT_PUBLIC_SUPABASE_ANON_KEY" in line or "SUPABASE_KEY" in line:
                 key = line.split("=")[1].strip().strip('"').strip("'")
                 break
+
+if not url or not key:
+    raise EnvironmentError("Missing SUPABASE_URL or SUPABASE_KEY in environment variables.")
 
 supabase: Client = create_client(url, key)
 

@@ -139,8 +139,18 @@ export function Providers({ children }) {
                 dsn: SENTRY_DSN,
                 integrations: [
                   Sentry.browserTracingIntegration(),
-                  Sentry.replayIntegration(),
+                  Sentry.replayIntegration({
+                    maskAllText: true,
+                    blockAllMedia: true,
+                  }),
                 ],
+                beforeSend(event) {
+                  if (event.user) {
+                    delete event.user.email;
+                    delete event.user.ip_address;
+                  }
+                  return event;
+                },
                 tracesSampleRate: 1.0, 
                 replaysSessionSampleRate: 0.1,
                 replaysOnErrorSampleRate: 1.0,

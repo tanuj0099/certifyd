@@ -30,11 +30,11 @@ with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     load_dotenv()
 
-SUPABASE_URL = "https://ejgadkswcjorkyzkqhfl.supabase.co"
+SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
-if not SUPABASE_KEY:
-    print("WARNING: SUPABASE_KEY not found!")
+if not SUPABASE_URL or not SUPABASE_KEY:
+    print("WARNING: SUPABASE_URL or SUPABASE_KEY not found in environment!")
     supabase = None
 else:
     supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
@@ -419,7 +419,7 @@ def run_engine():
     })
     posthog_client.shutdown()
 
-# supabase = create_client("https://ejgadkswcjorkyzkqhfl.supabase.co", "YOUR_SUPABASE_KEY")
+# Supabase client initialized via environment variables above
 
 def save_scraped_certification(cert_name, cost, difficulty, months, roi):
     # Auto-generate a clean URL slug (e.g., "AWS Certified Cloud Practitioner" -> "aws-certified-cloud-practitioner")

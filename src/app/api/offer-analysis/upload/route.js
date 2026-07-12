@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { extractText } from 'unpdf';
 import crypto from 'crypto';
+import { scanAndScrubPII } from '@/utils/piiScanner.js';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -111,7 +112,8 @@ async function extract12DataPoints(rawText) {
   const groqApiKey = process.env.GROQ_API_KEY;
   if (groqApiKey && rawText.length > 20) {
     try {
-      const sanitizedDocInput = rawText
+      const scrubbedText = scanAndScrubPII(rawText);
+      const sanitizedDocInput = scrubbedText
         .replace(/system prompt|ignore previous instructions|override system/gi, '[REDACTED]')
         .slice(0, 8000);
 
@@ -207,9 +209,44 @@ export async function POST(request) {
       return NextResponse.json({ error: 'No offer letter document uploaded.' }, { status: 400 });
     }
 
+    // Security check 1: Enforce strict file size limit (5 MB max)
+    const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024;
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      return NextResponse.json(
+        { error: 'File size exceeds maximum allowed limit of 5MB.' },
+        { status: 400 }
+      );
+    }
+
+    // Security check 2: Validate MIME type allowlist
+    const ALLOWED_MIME_TYPES = [
+      'application/pdf',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/msword',
+      'text/plain',
+    ];
+    if (file.type && !ALLOWED_MIME_TYPES.includes(file.type)) {
+      return NextResponse.json(
+        { error: 'Invalid file format. Only PDF, DOCX, DOC, and TXT files are permitted.' },
+        { status: 400 }
+      );
+    }
+
     const uploadId = crypto.randomUUID();
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
+
+    // Security check 3: Verify magic byte headers to prevent extension/MIME spoofing
+    const isPDF = buffer.length >= 4 && buffer[0] === 0x25 && buffer[1] === 0x50 && buffer[2] === 0x44 && buffer[3] === 0x46; // %PDF
+    const isZipDocx = buffer.length >= 4 && buffer[0] === 0x50 && buffer[1] === 0x4b; // PK (zip/docx)
+    const isTextOrDoc = file.name?.endsWith('.txt') || file.name?.endsWith('.doc') || file.type === 'text/plain';
+
+    if (!isPDF && !isZipDocx && !isTextOrDoc) {
+      return NextResponse.json(
+        { error: 'File signature mismatch. Uploaded file does not match a valid PDF or Word document format.' },
+        { status: 400 }
+      );
+    }
 
     const supabase = getSupabaseClient();
     const consentGranted = formData.get('consentGranted');
@@ -248,8 +285,10 @@ export async function POST(request) {
       uploadId,
     });
   } catch (error) {
+    const correlationId = crypto.randomUUID();
+    console.error(`[Correlation ID: ${correlationId}] Offer letter upload error:`, error?.message || '[REDACTED]');
     return NextResponse.json(
-      { error: 'Failed to process offer letter upload.' },
+      { error: 'Failed to process offer letter upload.', correlationId },
       { status: 500 }
     );
   }

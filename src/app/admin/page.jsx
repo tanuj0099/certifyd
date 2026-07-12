@@ -23,8 +23,17 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
+  const allowlistedAdmins = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || '')
+    .split(',')
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
+
+  const isAllowlistedAdmin = Boolean(
+    user?.email && allowlistedAdmins.includes(user.email.toLowerCase())
+  );
+
   const load = useCallback(async () => {
-    if (!user) return
+    if (!user || !isAllowlistedAdmin) return
     setLoading(true)
     setError('')
     try {
@@ -35,11 +44,19 @@ export default function AdminDashboard() {
     } finally {
       setLoading(false)
     }
-  }, [user])
+  }, [user, isAllowlistedAdmin])
 
   useEffect(() => {
     load()
   }, [load])
+
+  if (process.env.NODE_ENV === 'production' && (!user || !isAllowlistedAdmin)) {
+    return (
+      <div style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: F_MONO, color: 'var(--text-2)' }}>
+        404 — Page Not Found
+      </div>
+    );
+  }
 
   const stats = data?.stats || {}
 

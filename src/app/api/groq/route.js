@@ -5,6 +5,7 @@ import { createMockGroqResponse, isServerTestMode } from '../../../../server/tes
 import { validateGroqRequest } from '@/lib/validations/offer.js';
 import { groqCircuitBreaker } from '@/lib/circuitBreaker.js';
 import { rateLimiters, getRateLimitId, applyRateLimit } from '@/lib/ratelimit.js';
+import { scanAndScrubPII } from '@/utils/piiScanner.js';
 import { logger } from '@/lib/logger.js';
 
 export const dynamic = 'force-dynamic';
@@ -67,7 +68,7 @@ export async function POST(request) {
     return json({ error: 'Validation failed', details: validation.error.errors }, { status: 400 });
   }
 
-  const safeMessages = validation.data.messages;
+  const safeMessages = scanAndScrubPII(validation.data.messages);
 
   let cacheKey = null;
   const redisClient = process.env.UPSTASH_REDIS_REST_URL ? Redis.fromEnv() : null;
@@ -102,8 +103,9 @@ export async function POST(request) {
     });
 
     if (!result.ok) {
-      logger.error('Groq API Error', { status: result.status, data: result.data });
-      return json(result.data, { status: result.status });
+      const correlationId = crypto.randomUUID();
+      logger.error(`[Correlation ID: ${correlationId}] Groq API Error`, { status: result.status });
+      return json({ error: 'AI inference service temporarily unavailable.', correlationId }, { status: result.status });
     }
 
     const data = result.data;
@@ -120,7 +122,7 @@ export async function POST(request) {
     return json(data);
   } catch (error) {
     try { Sentry.captureException(error); } catch (_) {}
-    console.warn('Proxy error, falling back to mock response:', error?.message || error);
+    console.warn('Proxy error, falling back to mock response:', error?.message || '[REDACTED]');
     return json(createMockGroqResponse(body));
   }
 }

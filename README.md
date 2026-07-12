@@ -74,6 +74,7 @@ certifyroi/
 - **PII Scrubbing**: Client-side & server-side object scanners (`src/utils/piiScanner.js`) strip names, contact numbers, and sensitive candidate identifiers prior to external AI evaluation.
 - **Strict Content Security Policy**: Configured in `next.config.mjs` with explicit domain whitelisting to prevent unauthorized third-party scripts.
 - **Data Sovereignty**: Built-in account soft-delete and instant GDPR/DPDP-compliant data erasure workflows.
+- **Environment & Secrets Safety**: All API keys, database credentials, and service tokens must be configured in environment variables (`.env.local`). **CRITICAL WARNING**: If any secret was previously hardcoded in past commits, that old value remains stored in git history. Immediately rotate and revoke any previously hardcoded secrets (Supabase keys, Groq keys, Apify tokens, etc.) across provider dashboards.
 
 ---
 

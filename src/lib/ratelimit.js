@@ -12,16 +12,53 @@ const redis = hasRedis
     })
   : null;
 
+// In-memory fallback rate limiter when Redis is unconfigured
+const inMemoryStores = new Map();
+
+class InMemoryRateLimiter {
+  constructor(maxRequests, windowMs, prefix) {
+    this.maxRequests = maxRequests;
+    this.windowMs = windowMs;
+    this.prefix = prefix;
+  }
+
+  async limit(identifier) {
+    const key = `${this.prefix}:${identifier}`;
+    const now = Date.now();
+    let record = inMemoryStores.get(key);
+
+    if (!record || now > record.reset) {
+      record = { count: 0, reset: now + this.windowMs };
+    }
+
+    record.count += 1;
+    inMemoryStores.set(key, record);
+
+    const success = record.count <= this.maxRequests;
+    const remaining = Math.max(0, this.maxRequests - record.count);
+    return { success, limit: this.maxRequests, remaining, reset: record.reset };
+  }
+}
+
 // Different limits for different endpoints
 export const rateLimiters = {
-  // Auth endpoints — strict
+  // Auth endpoints — strict (5 per 15 mins)
   auth: redis
     ? new Ratelimit({
         redis,
         limiter: Ratelimit.slidingWindow(5, '15 m'),
         prefix: 'rl:auth',
       })
-    : null,
+    : new InMemoryRateLimiter(5, 15 * 60 * 1000, 'rl:auth'),
+
+  // Password reset — strict (3 per 1 hour)
+  passwordReset: redis
+    ? new Ratelimit({
+        redis,
+        limiter: Ratelimit.slidingWindow(3, '1 h'),
+        prefix: 'rl:reset',
+      })
+    : new InMemoryRateLimiter(3, 60 * 60 * 1000, 'rl:reset'),
 
   // Offer letter submission — per user
   offerLetter: redis
@@ -30,7 +67,7 @@ export const rateLimiters = {
         limiter: Ratelimit.slidingWindow(10, '1 h'),
         prefix: 'rl:offer',
       })
-    : null,
+    : new InMemoryRateLimiter(10, 60 * 60 * 1000, 'rl:offer'),
 
   // Resume analysis — per user
   resumeAnalysis: redis
@@ -39,7 +76,7 @@ export const rateLimiters = {
         limiter: Ratelimit.slidingWindow(10, '1 h'),
         prefix: 'rl:resume',
       })
-    : null,
+    : new InMemoryRateLimiter(10, 60 * 60 * 1000, 'rl:resume'),
 
   // ROI calculator — generous, no auth required
   roiCalc: redis
@@ -48,7 +85,7 @@ export const rateLimiters = {
         limiter: Ratelimit.slidingWindow(30, '1 h'),
         prefix: 'rl:roi',
       })
-    : null,
+    : new InMemoryRateLimiter(30, 60 * 60 * 1000, 'rl:roi'),
 
   // General API — catch-all
   general: redis
@@ -57,7 +94,7 @@ export const rateLimiters = {
         limiter: Ratelimit.slidingWindow(100, '1 h'),
         prefix: 'rl:general',
       })
-    : null,
+    : new InMemoryRateLimiter(100, 60 * 60 * 1000, 'rl:general'),
 };
 
 // Backwards compatibility alias for existing routes
