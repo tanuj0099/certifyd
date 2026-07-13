@@ -59,11 +59,22 @@ export default async function AnalyticsPage() {
     auditCount = auditRes.data?.length || 0;
     approvedCount = auditRes.data?.filter((a: any) => a.action_type?.includes('APPROVE') || a.action_type?.includes('PUSH')).length || 0;
 
+    const parseCtcLakhs = (item: any) => {
+      const str = item.ctc_band || item.extracted_data?.headline_ctc || '';
+      const matches = String(str).match(/(\d+(?:\.\d+)?)/g);
+      if (matches && matches.length > 0) {
+        return parseFloat(matches[0]);
+      }
+      return 0;
+    };
+
     if (resumesRes.data) {
       resumesRes.data.forEach((r: any) => {
-        const c = r.city || 'Bengaluru';
-        if (!cityMap[c]) cityMap[c] = { count: 0, totalCtc: 18, topCert: {} };
+        const c = r.city || 'Unknown Location';
+        const parsedCtc = parseCtcLakhs(r);
+        if (!cityMap[c]) cityMap[c] = { count: 0, totalCtc: 0, topCert: {} };
         cityMap[c].count++;
+        if (parsedCtc > 0) cityMap[c].totalCtc += parsedCtc;
         if (Array.isArray(r.certs_found) && r.certs_found.length > 0) {
           r.certs_found.forEach((certName: string) => {
             cityMap[c].topCert[certName] = (cityMap[c].topCert[certName] || 0) + 1;
@@ -74,22 +85,28 @@ export default async function AnalyticsPage() {
 
     if (offersRes.data) {
       offersRes.data.forEach((o: any) => {
-        const c = o.city || 'Hyderabad';
-        if (!cityMap[c]) cityMap[c] = { count: 0, totalCtc: 22, topCert: {} };
+        const c = o.city || 'Unknown Location';
+        const parsedCtc = parseCtcLakhs(o);
+        if (!cityMap[c]) cityMap[c] = { count: 0, totalCtc: 0, topCert: {} };
         cityMap[c].count++;
+        if (parsedCtc > 0) cityMap[c].totalCtc += parsedCtc;
       });
     }
 
     if (certsRes.data) {
       certsRes.data.forEach((cert: any) => {
-        const name = cert.name || 'Cloud Certification';
+        const name = cert.name || 'General Certification';
+        const lift = Number(cert.avg_salary_lift_pct || cert.roi_score || 0);
         if (!certMap[name]) {
           certMap[name] = {
             count: 1,
-            avgLift: 85
+            avgLift: lift > 0 ? lift : 0,
           };
         } else {
           certMap[name].count++;
+          if (lift > 0) {
+            certMap[name].avgLift = Math.round((certMap[name].avgLift + lift) / 2);
+          }
         }
       });
     }
@@ -124,10 +141,14 @@ export default async function AnalyticsPage() {
     const certEntries = Object.entries(val.topCert).sort((a, b) => b[1] - a[1]);
     if (certEntries.length > 0) topCertName = certEntries[0][0];
 
+    const averageCtc = val.count > 0 && val.totalCtc > 0
+      ? (val.totalCtc / val.count).toFixed(1)
+      : '16.0';
+
     return {
       city,
       submissions: val.count,
-      avgCtc: `₹${val.totalCtc}L`,
+      avgCtc: `₹${averageCtc}L`,
       topCert: topCertName,
       growth: `+${Math.round((val.count / Math.max(1, totalSubmissions)) * 30 + 5)}%`,
       x: coords[idx % coords.length].x,
