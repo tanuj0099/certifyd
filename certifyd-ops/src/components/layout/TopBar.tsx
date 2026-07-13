@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Bell, RefreshCw, LogOut, Check, Trash2, AlertTriangle, MessageSquare, Sun, Moon } from 'lucide-react';
 import { logoutAction } from '../../actions/authActions';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -59,12 +59,17 @@ export function TopBar({ userEmail, userRole }: TopBarProps) {
 
   const unreadCount = visibleNotifs.length;
 
+  const syncTimeRef = useRef<number>(Date.now());
+
   useEffect(() => {
     const timer = setInterval(() => {
-      const times = ['Just now', '1m ago', '2m ago', '5m ago'];
-      const randomTime = times[Math.floor(Math.random() * times.length)];
-      setLastSync(randomTime);
-    }, 30000);
+      const diffSec = Math.floor((Date.now() - syncTimeRef.current) / 1000);
+      if (diffSec < 60) {
+        setLastSync('Just now');
+      } else {
+        setLastSync(`${Math.floor(diffSec / 60)}m ago`);
+      }
+    }, 15000);
     return () => clearInterval(timer);
   }, []);
 
@@ -72,6 +77,7 @@ export function TopBar({ userEmail, userRole }: TopBarProps) {
     setSyncing(true);
     setTimeout(() => {
       setSyncing(false);
+      syncTimeRef.current = Date.now();
       setLastSync('Just now');
     }, 800);
   }

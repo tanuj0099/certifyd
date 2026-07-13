@@ -80,12 +80,27 @@ function StatCard({ title, value, trend, isPositive, icon: Icon, data, color }: 
   );
 }
 
+import { useRouter } from 'next/navigation';
+
+function formatRelativeTime(dateStr?: string): string {
+  if (!dateStr) return '';
+  const time = new Date(dateStr).getTime();
+  if (isNaN(time)) return dateStr;
+  const diffSec = Math.floor((Date.now() - time) / 1000);
+  if (diffSec < 60) return 'Just now';
+  if (diffSec < 3600) return `${Math.floor(diffSec / 60)}m ago`;
+  if (diffSec < 86400) return `${Math.floor(diffSec / 3600)}h ago`;
+  if (diffSec < 604800) return `${Math.floor(diffSec / 86400)}d ago`;
+  return new Date(time).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' });
+}
+
 interface ActivityItem {
   id: string;
   type: 'submit_resume' | 'submit_offer' | 'approve' | 'flag' | 'feedback';
   description: string;
   user: string;
   time: string;
+  timestamp?: string;
 }
 
 export function DashboardClient({
@@ -95,40 +110,43 @@ export function DashboardClient({
   initialStats: any;
   initialActivities: ActivityItem[];
 }) {
+  const router = useRouter();
+  const [stats, setStats] = useState<any>(initialStats);
   const [activities, setActivities] = useState<ActivityItem[]>(initialActivities);
-  const [latency, setLatency] = useState<number>(12);
+  const [latency, setLatency] = useState<number>(14);
 
-  // Simulate real-time activity stream
+  // Sync with live server initial props
   useEffect(() => {
-    const timer = setInterval(() => {
-      const types: ('submit_resume' | 'submit_offer' | 'approve' | 'flag')[] = [
-        'submit_resume',
-        'submit_offer',
-        'approve',
-        'flag',
-      ];
-      const randomType = types[Math.floor(Math.random() * types.length)];
-      const randomId = Math.random().toString(36).substring(2, 10);
-      const randomUser = `user_${Math.random().toString(36).substring(2, 6)}`;
+    setStats(initialStats);
+    setActivities(initialActivities);
+  }, [initialStats, initialActivities]);
 
-      let desc = 'Uploaded Cloud Engineer resume for review';
-      if (randomType === 'submit_offer') desc = 'Submitted ₹14.5L offer letter for analysis';
-      if (randomType === 'approve') desc = `Approved submission #${randomId.substring(0, 6)} to live`;
-      if (randomType === 'flag') desc = `Flagged submission #${randomId.substring(0, 6)} for CTC anomaly`;
+  // Continuous live data engine: poll /api/ops/live every 4 seconds
+  useEffect(() => {
+    let isMounted = true;
+    const fetchLiveData = async () => {
+      const start = performance.now();
+      try {
+        const res = await fetch('/api/ops/live', { cache: 'no-store' });
+        if (res.ok) {
+          const data = await res.json();
+          if (isMounted && data) {
+            if (data.stats) setStats(data.stats);
+            if (data.activities && Array.isArray(data.activities)) setActivities(data.activities);
+            setLatency(Math.max(8, Math.round(performance.now() - start)));
+          }
+        }
+      } catch {
+        // Silent fallback if network temporarily disconnects
+      }
+    };
 
-      const newItem: ActivityItem = {
-        id: randomId,
-        type: randomType,
-        description: desc,
-        user: randomUser,
-        time: 'Just now',
-      };
-
-      setActivities((prev) => [newItem, ...prev.slice(0, 14)]);
-      setLatency(Math.floor(Math.random() * 8) + 10); // 10-18ms
-    }, 12000); // New event every 12s
-
-    return () => clearInterval(timer);
+    fetchLiveData();
+    const timer = setInterval(fetchLiveData, 4000);
+    return () => {
+      isMounted = false;
+      clearInterval(timer);
+    };
   }, []);
 
   return (
@@ -143,7 +161,7 @@ export function DashboardClient({
         </div>
         <div className="flex items-center gap-2">
           <StatusPill status="live" size="md" />
-          <span className="text-xs font-mono text-[#8B949E]">Auto-refresh: 10s</span>
+          <span className="text-xs font-mono text-[#8B949E]">Auto-refresh: 4s</span>
         </div>
       </div>
 
@@ -155,39 +173,39 @@ export function DashboardClient({
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
             <StatCard
               title="Total Users"
-              value={initialStats.totalUsers}
-              trend={initialStats.totalUsersTrend || "0.0%"}
-              isPositive={initialStats.totalUsersPositive ?? true}
+              value={stats.totalUsers}
+              trend={stats.totalUsersTrend || "0.0%"}
+              isPositive={stats.totalUsersPositive ?? true}
               icon={Users}
               color="#F97316"
-              data={initialStats.totalUsersHistory || [10, 12, 15]}
+              data={stats.totalUsersHistory || [10, 12, 15]}
             />
             <StatCard
               title="Active Today"
-              value={initialStats.activeToday}
-              trend={initialStats.activeTodayTrend || "0.0%"}
-              isPositive={initialStats.activeTodayPositive ?? true}
+              value={stats.activeToday}
+              trend={stats.activeTodayTrend || "0.0%"}
+              isPositive={stats.activeTodayPositive ?? true}
               icon={Activity}
               color="#3B82F6"
-              data={initialStats.activeTodayHistory || [1, 1, 1]}
+              data={stats.activeTodayHistory || [1, 1, 1]}
             />
             <StatCard
               title="Total Submissions"
-              value={initialStats.totalSubmissions}
-              trend={initialStats.totalSubmissionsTrend || "0.0%"}
-              isPositive={initialStats.totalSubmissionsPositive ?? true}
+              value={stats.totalSubmissions}
+              trend={stats.totalSubmissionsTrend || "0.0%"}
+              isPositive={stats.totalSubmissionsPositive ?? true}
               icon={FileText}
               color="#A855F7"
-              data={initialStats.totalSubmissionsHistory || [0, 0, 0]}
+              data={stats.totalSubmissionsHistory || [0, 0, 0]}
             />
             <StatCard
               title="Pending Review"
-              value={initialStats.pendingReview}
-              trend={initialStats.pendingReviewTrend || "0.0%"}
-              isPositive={initialStats.pendingReviewPositive ?? true}
+              value={stats.pendingReview}
+              trend={stats.pendingReviewTrend || "0.0%"}
+              isPositive={stats.pendingReviewPositive ?? true}
               icon={Clock}
               color="#E8C547"
-              data={initialStats.pendingReviewHistory || [0, 0, 0]}
+              data={stats.pendingReviewHistory || [0, 0, 0]}
             />
           </div>
 
@@ -195,39 +213,39 @@ export function DashboardClient({
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
             <StatCard
               title="Resumes Today"
-              value={initialStats.resumesToday}
-              trend={initialStats.resumesTodayTrend || "0.0%"}
-              isPositive={initialStats.resumesTodayPositive ?? true}
+              value={stats.resumesToday}
+              trend={stats.resumesTodayTrend || "0.0%"}
+              isPositive={stats.resumesTodayPositive ?? true}
               icon={FileText}
               color="#F97316"
-              data={initialStats.resumesTodayHistory || [0, 0]}
+              data={stats.resumesTodayHistory || [0, 0]}
             />
             <StatCard
               title="Offer Letters Today"
-              value={initialStats.offersToday}
-              trend={initialStats.offersTodayTrend || "0.0%"}
-              isPositive={initialStats.offersTodayPositive ?? true}
+              value={stats.offersToday}
+              trend={stats.offersTodayTrend || "0.0%"}
+              isPositive={stats.offersTodayPositive ?? true}
               icon={Briefcase}
               color="#22C55E"
-              data={initialStats.offersTodayHistory || [0, 0]}
+              data={stats.offersTodayHistory || [0, 0]}
             />
             <StatCard
               title="Avg ROI Score"
-              value={`${initialStats.avgRoiScore}%`}
-              trend={initialStats.avgRoiScoreTrend || "0.0%"}
-              isPositive={initialStats.avgRoiScorePositive ?? true}
+              value={`${stats.avgRoiScore}%`}
+              trend={stats.avgRoiScoreTrend || "0.0%"}
+              isPositive={stats.avgRoiScorePositive ?? true}
               icon={TrendingUp}
               color="#E8C547"
-              data={initialStats.avgRoiScoreHistory || [80, 82, 84]}
+              data={stats.avgRoiScoreHistory || [80, 82, 84]}
             />
             <StatCard
               title="Feedback This Week"
-              value={initialStats.feedbackWeek}
-              trend={initialStats.feedbackWeekTrend || "0.0%"}
-              isPositive={initialStats.feedbackWeekPositive ?? true}
+              value={stats.feedbackWeek}
+              trend={stats.feedbackWeekTrend || "0.0%"}
+              isPositive={stats.feedbackWeekPositive ?? true}
               icon={MessageSquare}
               color="#3B82F6"
-              data={initialStats.feedbackWeekHistory || [0, 0]}
+              data={stats.feedbackWeekHistory || [0, 0]}
             />
           </div>
 
@@ -272,41 +290,51 @@ export function DashboardClient({
 
           <div className="flex-1 overflow-y-auto space-y-3 pr-1 scrollbar-none">
             <AnimatePresence mode="popLayout">
-              {activities.map((act) => (
-                <motion.div
-                  key={act.id}
-                  layout
-                  initial={{ opacity: 0, y: -15, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.25 }}
-                  className="p-3 rounded-xl bg-[#161B22]/80 border border-white/[0.04] hover:border-white/[0.08] transition-colors flex items-start gap-3 text-xs"
-                >
-                  <div
-                    className={`w-7 h-7 rounded-lg shrink-0 flex items-center justify-center mt-0.5 ${
-                      act.type === 'approve'
-                        ? 'bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/30'
-                        : act.type === 'flag'
-                        ? 'bg-[#F85149]/15 text-[#F85149] border border-[#F85149]/30'
-                        : act.type === 'submit_offer'
-                        ? 'bg-[#A855F7]/15 text-[#A855F7] border border-[#A855F7]/30'
-                        : 'bg-[#F97316]/15 text-[#F97316] border border-[#F97316]/30'
-                    }`}
+              {activities.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-full text-center py-12 px-4 text-[#8B949E]">
+                  <Activity className="w-8 h-8 text-[#8B949E]/30 mb-2" />
+                  <p className="text-xs font-mono">No recent live activity</p>
+                  <p className="text-[10px] text-[#8B949E]/60 mt-1">Real-time uploads and system events will stream here automatically.</p>
+                </div>
+              ) : (
+                activities.map((act) => (
+                  <motion.div
+                    key={act.id}
+                    layout
+                    initial={{ opacity: 0, y: -15, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.25 }}
+                    className="p-3 rounded-xl bg-[#161B22]/80 border border-white/[0.04] hover:border-white/[0.08] transition-colors flex items-start gap-3 text-xs"
                   >
-                    {act.type === 'approve' && <CheckCircle2 className="w-3.5 h-3.5" />}
-                    {act.type === 'flag' && <AlertTriangle className="w-3.5 h-3.5" />}
-                    {act.type === 'submit_offer' && <Briefcase className="w-3.5 h-3.5" />}
-                    {(act.type === 'submit_resume' || act.type === 'feedback') && <FileText className="w-3.5 h-3.5" />}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-white font-medium truncate leading-tight">{act.description}</p>
-                    <div className="flex items-center justify-between gap-2 mt-1.5 text-[10px] font-mono text-[#8B949E]">
-                      <span className="truncate bg-white/[0.04] px-1.5 py-0.2 rounded">{act.user}</span>
-                      <span className="shrink-0 text-[#8B949E]/70">{act.time}</span>
+                    <div
+                      className={`w-7 h-7 rounded-lg shrink-0 flex items-center justify-center mt-0.5 ${
+                        act.type === 'approve'
+                          ? 'bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/30'
+                          : act.type === 'flag'
+                          ? 'bg-[#F85149]/15 text-[#F85149] border border-[#F85149]/30'
+                          : act.type === 'submit_offer'
+                          ? 'bg-[#A855F7]/15 text-[#A855F7] border border-[#A855F7]/30'
+                          : 'bg-[#F97316]/15 text-[#F97316] border border-[#F97316]/30'
+                      }`}
+                    >
+                      {act.type === 'approve' && <CheckCircle2 className="w-3.5 h-3.5" />}
+                      {act.type === 'flag' && <AlertTriangle className="w-3.5 h-3.5" />}
+                      {act.type === 'submit_offer' && <Briefcase className="w-3.5 h-3.5" />}
+                      {(act.type === 'submit_resume' || act.type === 'feedback') && <FileText className="w-3.5 h-3.5" />}
                     </div>
-                  </div>
-                </motion.div>
-              ))}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-white font-medium truncate leading-tight">{act.description}</p>
+                      <div className="flex items-center justify-between gap-2 mt-1.5 text-[10px] font-mono text-[#8B949E]">
+                        <span className="truncate bg-white/[0.04] px-1.5 py-0.2 rounded">{act.user}</span>
+                        <span className="shrink-0 text-[#8B949E]/70">
+                          {act.timestamp ? formatRelativeTime(act.timestamp) : act.time}
+                        </span>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))
+              )}
             </AnimatePresence>
           </div>
         </div>

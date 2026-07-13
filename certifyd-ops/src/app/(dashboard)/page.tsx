@@ -77,52 +77,57 @@ export default async function DashboardPage() {
     // Combine recent database actions into real activity feed
     const activities: any[] = [];
     if (resumesRes.data) {
-      resumesRes.data.slice(0, 2).forEach((r: any) => {
+      resumesRes.data.forEach((r: any) => {
         activities.push({
           id: r.id,
           type: 'submit_resume' as const,
           description: `Uploaded ${r.domain || 'Cloud Engineer'} resume for review`,
           user: r.user_id ? `user_${r.user_id.slice(0, 4)}` : 'user_dev',
           time: new Date(r.submitted_at || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          timestamp: r.submitted_at || new Date().toISOString(),
         });
       });
     }
     if (offersRes.data) {
-      offersRes.data.slice(0, 2).forEach((o: any) => {
+      offersRes.data.forEach((o: any) => {
         activities.push({
           id: o.id,
           type: 'submit_offer' as const,
           description: `Submitted ${o.ctc_band || 'offer letter'} for analysis`,
           user: o.user_id ? `user_${o.user_id.slice(0, 4)}` : 'user_dev',
           time: new Date(o.submitted_at || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          timestamp: o.submitted_at || new Date().toISOString(),
         });
       });
     }
     if (auditRes.data) {
-      auditRes.data.slice(0, 2).forEach((a: any) => {
+      auditRes.data.forEach((a: any) => {
         activities.push({
           id: a.id,
           type: a.action_type?.includes('APPROVE') || a.action_type?.includes('PUSH') ? ('approve' as const) : ('flag' as const),
           description: `${a.action_type || 'System Event'}: ${a.target_table || 'Database'}`,
           user: a.admin_email || 'admin@certifyd.in',
           time: new Date(a.timestamp || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          timestamp: a.timestamp || new Date().toISOString(),
         });
       });
     }
-    if (feedbackRes.data && feedbackRes.data.length > 0) {
-      const fb = feedbackRes.data[0];
-      activities.push({
-        id: fb.id,
-        type: 'feedback' as const,
-        description: `New ⭐ ${fb.rating || 5}.0 feedback received on ${fb.tool_used || 'ROI Calculator'}`,
-        user: fb.user_id ? `user_${fb.user_id.slice(0, 4)}` : 'user_dev',
-        time: new Date(fb.created_at || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    if (feedbackRes.data) {
+      feedbackRes.data.forEach((fb: any) => {
+        activities.push({
+          id: fb.id,
+          type: 'feedback' as const,
+          description: `New feedback (${fb.rating || 5}.0/5) received on ${fb.tool_used || 'ROI Calculator'}`,
+          user: fb.user_id ? `user_${fb.user_id.slice(0, 4)}` : 'user_dev',
+          time: new Date(fb.created_at || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          timestamp: fb.created_at || new Date().toISOString(),
+        });
       });
     }
 
-    if (activities.length > 0) {
-      initialActivities = activities.slice(0, 6);
-    }
+    // Strictly sort all real activity items by timestamp newest first
+    activities.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    initialActivities = activities.slice(0, 15);
   } catch (e) {
     console.warn('Dashboard Supabase fetch warning:', e);
   }

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Award, ChevronDown, Scale, Info, Zap, DollarSign, TrendingUp, Search } from 'lucide-react'
 import { supabase } from '../lib/supabase.js'
 import { CERT_DOMAINS as STATIC_DOMAINS } from '../tokens.js'
+import { logCertComparison } from '../lib/analytics/logEvent.js'
 import {
   BarChart,
   Bar,
@@ -451,6 +452,19 @@ function CertCompare({ salary, prefilledCertA, prefilledCertB }) {
   var winner = bothReady
     ? (parseFloat(roiA.fiveYearNet) > parseFloat(roiB.fiveYearNet) ? 'A' : 'B')
     : null
+
+  // ML Layer 1 Telemetry: Capture absolute detail on what certs user is comparing
+  useEffect(() => {
+    if (dataA || dataB) {
+      logCertComparison({
+        certA: dataA || null,
+        certB: dataB || null,
+        userContext: {
+          currentSalaryLakhs: actualSalary || null,
+        }
+      })
+    }
+  }, [dataA, dataB, actualSalary])
 
   const INR_FMT = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 })
   var TABLE_ROWS = bothReady ? [

@@ -17,9 +17,12 @@ import { useAuth } from '../hooks/useAuth.jsx'
 import { useIsMobile } from './SharedUI.jsx'
 import { analyzeROI } from '../services/aiService.jsx'
 import { trackAiAnalysisRun, trackRoiCalculated } from '../lib/analytics.js'
+import { logRoiCalculation, logEvent } from '../lib/analytics/logEvent.js'
+import { saveEntitySnapshot, logPrediction } from '../lib/analytics/logPrediction.js'
 import { fetchCertifications, fetchDomains } from '../services/dataService.jsx'
 import AILoadingState from './AILoadingState.jsx'
 import HikeVerifier from './HikeVerifier.jsx'
+import OutcomeVerificationModal from './OutcomeVerificationModal.jsx'
 import PitchBoss from './PitchBoss.jsx'
 import ShareROICard from './ShareROICard.jsx'
 
@@ -889,6 +892,8 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState(null);
   const [showVerifier, setShowVerifier] = useState(false);
+  const [showOutcomeModal, setShowOutcomeModal] = useState(false);
+  const [lastPredictionId, setLastPredictionId] = useState(null);
   const [cooldown, setCooldown] = useState(0);
   const [showAll, setShowAll] = useState(false);
   const [showSignInModal, setShowSignInModal] = useState(false);
@@ -981,6 +986,22 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
     storeSetSelected(cert);
     setAiResult(null);
     setAiError(null);
+    try {
+      logEvent('cert_selected', 'tool_usage', {
+        certification: {
+          id: cert?.id || null,
+          name: cert?.name || cert?.cert_name || 'Unknown Cert',
+          domain: cert?.domain || cert?.vendor_id || null,
+          cost_inr: Number(cert?.avgCost ?? cert?.cost_inr ?? 0),
+          expected_hike_pct: Number(cert?.avgHike ?? cert?.median_roi_percent ?? 0),
+          demand_level: cert?.demand || cert?.difficulty || null,
+        }
+      }, {
+        toolName: 'roi_calculator',
+        entityType: 'certification',
+        entityId: cert?.id || null
+      });
+    } catch (_) {}
   }, [storeSetSelected]);
 
   const analyse = useCallback(async function () {
@@ -1009,6 +1030,39 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
       } catch (_) {}
       try {
         trackRoiCalculated({ certName, roiPercent: roi.roiPercent, breakEvenMonths: roi.breakEvenMonths, fiveYearGainINR: roi.fiveYearGainINR })
+      } catch (_) {}
+      try {
+        logRoiCalculation({
+          cert: { name: certName, avgCost: certCost, avgHike: r.predictedHikePercent || hikePercent, domain: resumeDomain },
+          inputs: { currentSalaryLakhs: salary, city: resumeCity, isStudent },
+          results: { paybackMonths: roi.breakEvenMonths, fiveYearGain: roi.fiveYearGainINR, predictedHike: r.predictedHikePercent || hikePercent }
+        });
+        saveEntitySnapshot({
+          entityType: 'roi_profile',
+          structuredData: {
+            cert_name: certName,
+            current_salary_lakhs: salary,
+            city: resumeCity,
+            is_student: isStudent,
+            domain: resumeDomain,
+          },
+          modelUsed: 'roi-heuristic-v1',
+        }).then((snapId) => {
+          if (snapId) {
+            logPrediction({
+              toolName: 'roi_calculator',
+              snapshotId: snapId,
+              prediction: {
+                predicted_hike_pct: r.predictedHikePercent || hikePercent,
+                break_even_months: roi.breakEvenMonths,
+                five_year_gain_inr: roi.fiveYearGainINR,
+              },
+              modelVersion: 'roi-heuristic-v1',
+            }).then((predId) => {
+              if (predId) setLastPredictionId(predId);
+            });
+          }
+        });
       } catch (_) {}
       if (!user) guest.increment();
       setCooldown(10);
@@ -1412,6 +1466,14 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
           >
             <CheckCircle size={12} /> Verify My Hike
           </a>
+          <button
+            type="button"
+            onClick={() => setShowOutcomeModal(true)}
+            title="Calibrate predictions with your actual certification completion & salary hike"
+            style={{ padding: '8px 14px', borderRadius: '9px', background: 'var(--brand-primary-dim)', border: '1px solid var(--brand-primary)', color: 'var(--brand-primary)', fontSize: '12px', cursor: 'pointer', fontFamily: FB, fontWeight: '600', display: 'flex', alignItems: 'center', gap: '5px', transition: 'all 0.18s' }}
+          >
+            Verify Outcome (Ground Truth)
+          </button>
           <ShareURLButton certName={certName} salary={salary} certCost={certCost} hikePercent={hikePercent} mode={mode} />
         </div>
       ) : null}
@@ -1486,6 +1548,13 @@ function Hero({ mode, prefilledCert, resumeName, resumeCity, resumeDomain }) {
         )}
       </AnimatePresence>
 
+      <OutcomeVerificationModal
+        isOpen={showOutcomeModal}
+        onClose={() => setShowOutcomeModal(false)}
+        certName={certName || 'Cloud Certification'}
+        defaultHike={aiResult?.predictedHikePercent || hikePercent || 25}
+        predictionId={lastPredictionId}
+      />
     </div>
   )
 }
