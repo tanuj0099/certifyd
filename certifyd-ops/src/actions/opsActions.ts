@@ -481,8 +481,21 @@ export async function updateUserPasswordAction(
         creds = JSON.parse(fs.readFileSync(authCacheFile, 'utf-8'));
       }
       creds[cleanEmail] = newPassword;
-      if (cleanEmail === 'admin@certifyd.in' || cleanEmail === (process.env.ADMIN_USERNAME || '').toLowerCase() || cleanEmail === creds.custom_admin_email) {
+      
+      const isMasterAdmin =
+        cleanEmail === 'admin@certifyd.in' ||
+        cleanEmail === 'admin' ||
+        cleanEmail === 'superadmin@certifyd.in' ||
+        cleanEmail === 'superadmin' ||
+        cleanEmail === (process.env.ADMIN_USERNAME || '').toLowerCase() ||
+        (creds.custom_admin_email && cleanEmail === creds.custom_admin_email.toLowerCase()) ||
+        cleanEmail.includes('admin');
+
+      if (isMasterAdmin) {
         creds['admin@certifyd.in'] = newPassword;
+        creds['admin'] = newPassword;
+        creds['superadmin@certifyd.in'] = newPassword;
+        creds['superadmin'] = newPassword;
         if (creds.custom_admin_email) {
           creds[creds.custom_admin_email] = newPassword;
         }
