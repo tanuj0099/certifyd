@@ -35,7 +35,36 @@ const PERMISSION_MATRIX: Record<ActionType, { SUPER_ADMIN: boolean; TEAM_MEMBER:
   VIEW_ANALYTICS: { SUPER_ADMIN: true, TEAM_MEMBER: true },
 };
 
-export function hasPermission(role: 'SUPER_ADMIN' | 'TEAM_MEMBER', action: ActionType): boolean {
+export function hasPermission(
+  role: 'SUPER_ADMIN' | 'TEAM_MEMBER',
+  action: ActionType,
+  permissions?: {
+    access_marketing?: boolean;
+    access_technical?: boolean;
+    access_database?: boolean;
+    access_verifications?: boolean;
+    access_content?: boolean;
+    access_admin?: boolean;
+  }
+): boolean {
+  if (role === 'SUPER_ADMIN') return true;
+
+  if (action === 'TOGGLE_FLAGS' && permissions?.access_technical === true) {
+    return true;
+  }
+  if (action === 'EDIT_STAGING' && permissions?.access_database === true) {
+    return true;
+  }
+  if ((action === 'VIEW_SUBMISSIONS' || action === 'FLAG_SUBMISSION') && permissions?.access_verifications === true) {
+    return true;
+  }
+  if ((action === 'VIEW_CONTACTS' || action === 'REPLY_CONTACTS') && permissions?.access_content === true) {
+    return true;
+  }
+  if (action === 'VIEW_ANALYTICS' && permissions?.access_marketing === true) {
+    return true;
+  }
+
   return !!PERMISSION_MATRIX[action]?.[role];
 }
 
@@ -77,7 +106,7 @@ export async function assertPermission(action: ActionType) {
     throw new Error('Unauthorized: No active admin session');
   }
 
-  if (!hasPermission(session.role, action)) {
+  if (!hasPermission(session.role, action, session.permissions)) {
     // Log permission violation attempt
     await logAudit({
       action_type: `PERMISSION_DENIED_${action}`,

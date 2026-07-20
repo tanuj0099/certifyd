@@ -25,6 +25,7 @@ export interface OpsTeamMember {
   status: 'active' | 'suspended';
   created_at: string;
   temp_password?: string;
+  avatar_url?: string;
 }
 
 export interface OpsTaskItem {
@@ -70,7 +71,7 @@ export interface OpsNoteThread {
 const CACHE_DIRS = [
   path.join(process.cwd(), 'data', 'ops_cache'),
   path.join('/tmp', 'ops_cache'),
-  path.join(process.cwd(), '.next', 'ops_cache')
+  path.join(process.cwd(), '.next', 'ops_cache'),
 ];
 
 for (const dir of CACHE_DIRS) {
@@ -82,18 +83,22 @@ function getCacheFilePath(dir: string, table: string): string {
 }
 
 function readLocalCache<T>(table: string, defaultData: T[]): T[] {
+  let combined: T[] = [];
   for (const dir of CACHE_DIRS) {
     try {
       const file = getCacheFilePath(dir, table);
       if (fs.existsSync(file)) {
         const content = fs.readFileSync(file, 'utf-8');
         const parsed = JSON.parse(content);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          combined = [...combined, ...parsed];
+        }
       }
     } catch (e) {
       console.warn(`Error reading local ops cache for ${table} in ${dir}:`, e);
     }
   }
+  if (combined.length > 0) return combined;
   writeLocalCache(table, defaultData);
   return defaultData;
 }
@@ -127,6 +132,7 @@ const INITIAL_TEAM: OpsTeamMember[] = [
     },
     status: 'active',
     created_at: new Date().toISOString(),
+    avatar_url: `https://api.dicebear.com/7.x/avataaars/svg?seed=admin%40certifyd.in&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`,
   },
 ];
 
@@ -153,32 +159,55 @@ export async function getTeamMembersAction(): Promise<OpsTeamMember[]> {
 
   const map = new Map<string, OpsTeamMember>();
   for (const m of cacheMembers) {
-    map.set(m.email.toLowerCase(), m);
+    if (!m.email) continue;
+    const cleanEmail = m.email.toLowerCase().trim();
+    const existing = map.get(cleanEmail);
+    map.set(cleanEmail, {
+      ...existing,
+      ...m,
+      email: cleanEmail,
+      avatar_url: m.avatar_url || existing?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(cleanEmail)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`,
+    });
   }
   for (const m of dbMembers) {
-    const existing = map.get(m.email.toLowerCase());
-    map.set(m.email.toLowerCase(), { ...existing, ...m, temp_password: m.temp_password || existing?.temp_password });
+    if (!m.email) continue;
+    const cleanEmail = m.email.toLowerCase().trim();
+    const existing = map.get(cleanEmail);
+    map.set(cleanEmail, {
+      ...existing,
+      ...m,
+      email: cleanEmail,
+      temp_password: m.temp_password || existing?.temp_password,
+      avatar_url: m.avatar_url || existing?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(cleanEmail)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`,
+    });
   }
 
   return Array.from(map.values());
 }
 
 export async function saveTeamMemberAction(member: OpsTeamMember): Promise<{ success: boolean; data: OpsTeamMember }> {
+  const cleanEmail = member.email.toLowerCase().trim();
+  const enhancedMember: OpsTeamMember = {
+    ...member,
+    email: cleanEmail,
+    avatar_url: member.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(cleanEmail)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`,
+  };
+
   try {
-    const { error } = await supabaseAdmin.from('ops_team_members').upsert(member).select().single();
+    const { error } = await supabaseAdmin.from('ops_team_members').upsert(enhancedMember).select().single();
     if (error) {
-      const { temp_password, ...rest } = member as any;
+      const { temp_password, ...rest } = enhancedMember as any;
       await supabaseAdmin.from('ops_team_members').upsert(rest);
     }
   } catch (e) {}
 
-  const list = readLocalCache<OpsTeamMember>('ops_team_members', INITIAL_TEAM);
-  const idx = list.findIndex((m) => m.id === member.id || m.email.toLowerCase() === member.email.toLowerCase());
-  if (idx >= 0) list[idx] = { ...list[idx], ...member };
-  else list.push(member);
+  const list = await getTeamMembersAction();
+  const idx = list.findIndex((m) => m.id === enhancedMember.id || m.email.toLowerCase() === cleanEmail);
+  if (idx >= 0) list[idx] = { ...list[idx], ...enhancedMember };
+  else list.push(enhancedMember);
   writeLocalCache('ops_team_members', list);
 
-  if (member.temp_password) {
+  if (enhancedMember.temp_password) {
     for (const dir of CACHE_DIRS) {
       try {
         if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
@@ -187,14 +216,14 @@ export async function saveTeamMemberAction(member: OpsTeamMember): Promise<{ suc
         if (fs.existsSync(credsFile)) {
           creds = JSON.parse(fs.readFileSync(credsFile, 'utf-8'));
         }
-        creds[member.email.toLowerCase()] = member.temp_password;
+        creds[cleanEmail] = enhancedMember.temp_password;
         fs.writeFileSync(credsFile, JSON.stringify(creds, null, 2), 'utf-8');
       } catch (e) {}
     }
   }
 
   revalidatePath('/ops/team');
-  return { success: true, data: member };
+  return { success: true, data: enhancedMember };
 }
 
 export async function deleteTeamMemberAction(id: string): Promise<{ success: boolean }> {
@@ -411,6 +440,7 @@ export async function createEmployeeProfileAction(
     status: 'active',
     created_at: new Date().toISOString(),
     temp_password: tempPassword,
+    avatar_url: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(email.toLowerCase())}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`,
   };
 
   await saveTeamMemberAction(newMember);

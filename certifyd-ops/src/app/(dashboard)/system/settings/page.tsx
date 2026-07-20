@@ -8,7 +8,7 @@ export const revalidate = 0;
 
 export default async function SettingsPage() {
   const session = await getSession();
-  if (!session || session.role !== 'SUPER_ADMIN') {
+  if (!session || (session.role !== 'SUPER_ADMIN' && !session.permissions?.access_technical)) {
     redirect('/');
   }
 

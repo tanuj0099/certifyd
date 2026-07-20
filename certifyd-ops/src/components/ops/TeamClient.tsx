@@ -33,6 +33,10 @@ interface TeamClientProps {
 export function TeamClient({ initialTeam, currentUserRole, currentUserEmail }: TeamClientProps) {
   const [team, setTeam] = useState<OpsTeamMember[]>(initialTeam || []);
   const [searchQuery, setSearchQuery] = useState('');
+
+  React.useEffect(() => {
+    if (initialTeam) setTeam(initialTeam);
+  }, [initialTeam]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [newEmail, setNewEmail] = useState('');
   const [newName, setNewName] = useState('');
@@ -219,12 +223,16 @@ export function TeamClient({ initialTeam, currentUserRole, currentUserEmail }: T
                 {/* Top bar of card */}
                 <div className="flex items-start justify-between gap-4 pb-4 border-b border-white/[0.06]">
                   <div className="flex items-center gap-3.5">
-                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-lg ${
+                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-lg overflow-hidden shrink-0 ${
                       isMemberSuperAdmin
                         ? 'bg-[#F97316]/15 text-[#F97316] border border-[#F97316]/30'
-                        : 'bg-[#3B82F6]/15 text-[#3B82F6] border border-[#3B82F6]/30'
+                        : 'bg-[#00D4A8]/15 text-[#00D4A8] border border-[#00D4A8]/30'
                     }`}>
-                      {member.name.charAt(0).toUpperCase()}
+                      <img
+                        src={member.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(member.email)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`}
+                        alt={member.name}
+                        className="w-full h-full object-cover bg-[#080A0E]"
+                      />
                     </div>
                     <div>
                       <div className="flex items-center gap-2">

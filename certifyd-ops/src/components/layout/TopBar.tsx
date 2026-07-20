@@ -8,6 +8,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 interface TopBarProps {
   userEmail: string;
   userRole: 'SUPER_ADMIN' | 'TEAM_MEMBER';
+  userPermissions?: any;
+  userAvatar?: string;
 }
 
 interface Notification {
@@ -19,7 +21,7 @@ interface Notification {
   type: 'submission' | 'contact' | 'system';
 }
 
-export function TopBar({ userEmail, userRole }: TopBarProps) {
+export function TopBar({ userEmail, userRole, userPermissions, userAvatar }: TopBarProps) {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [lastSync, setLastSync] = useState<string>('Just now');
   const [syncing, setSyncing] = useState(false);
@@ -50,6 +52,9 @@ export function TopBar({ userEmail, userRole }: TopBarProps) {
       type: 'system',
     },
   ]);
+
+  const defaultAvatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(userEmail)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
+  const avatarToShow = userAvatar || defaultAvatar;
 
   // Filter notifications for TEAM_MEMBER
   const visibleNotifs = notifications.filter((n) => {
@@ -124,18 +129,23 @@ export function TopBar({ userEmail, userRole }: TopBarProps) {
 
       {/* Right section - User & Notifications */}
       <div className="flex items-center gap-4">
-        {/* Role & Email Badge */}
-        <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-xl bg-[#0F1218] border border-white/[0.06] text-xs font-mono">
+        {/* Role & Email Badge with DP Avatar */}
+        <div className="hidden sm:flex items-center gap-2.5 px-3 py-1 rounded-xl bg-[#0F1218] border border-white/[0.06] text-xs font-mono">
+          <img
+            src={avatarToShow}
+            alt="User DP"
+            className="w-6 h-6 rounded-full border border-white/10 shrink-0 bg-[#080A0E] object-cover"
+          />
           <span
             className={`px-1.5 py-0.5 rounded uppercase font-semibold text-[10px] ${
               userRole === 'SUPER_ADMIN'
                 ? 'bg-[#F97316]/15 text-[#F97316] border border-[#F97316]/30'
-                : 'bg-white/10 text-[#8B949E] border border-white/10'
+                : 'bg-[#00D4A8]/15 text-[#00D4A8] border border-[#00D4A8]/30'
             }`}
           >
-            {userRole === 'SUPER_ADMIN' ? 'SUPER ADMIN' : 'TEAM'}
+            {userRole === 'SUPER_ADMIN' ? 'SUPER ADMIN' : 'EMPLOYEE'}
           </span>
-          <span className="text-white font-medium">{userEmail}</span>
+          <span className="text-white font-medium truncate max-w-[150px]">{userEmail}</span>
         </div>
 
         {/* Theme Toggle Button */}

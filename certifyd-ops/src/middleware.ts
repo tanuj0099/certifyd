@@ -75,10 +75,20 @@ export async function middleware(req: NextRequest) {
 
     // LAYER 3: Role-Based Access Protection for /system routes
     if (pathname.startsWith('/system') && role !== 'SUPER_ADMIN') {
-      return new NextResponse(
-        JSON.stringify({ error: '403 Forbidden - SUPER_ADMIN privileges required for system routes' }),
-        { status: 403, headers: { 'content-type': 'application/json' } }
-      );
+      const permissions = payload.permissions as any;
+      const isAuditRoute = pathname.startsWith('/system/audit');
+      if (isAuditRoute) {
+        return new NextResponse(
+          JSON.stringify({ error: '403 Forbidden - SUPER_ADMIN privileges required for Audit Log' }),
+          { status: 403, headers: { 'content-type': 'application/json' } }
+        );
+      }
+      if (permissions && permissions.access_technical !== true) {
+        return new NextResponse(
+          JSON.stringify({ error: '403 Forbidden - Technical privileges required for system control routes' }),
+          { status: 403, headers: { 'content-type': 'application/json' } }
+        );
+      }
     }
 
     // Attach role header for downstream layout/server actions

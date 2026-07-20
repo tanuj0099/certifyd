@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { OpsNoteThread, saveOpsNoteAction, deleteOpsNoteAction, addNoteCommentAction } from '../../actions/opsActions';
+import { OpsNoteThread, saveOpsNoteAction, deleteOpsNoteAction, addNoteCommentAction, getOpsNotesAction } from '../../actions/opsActions';
 import { useToast } from '../ui/Toast';
 import { ConfirmModal } from '../ui/ConfirmModal';
 import {
@@ -33,7 +33,28 @@ type SectionType = 'all' | 'marketing' | 'technical' | 'database' | 'verificatio
 export function NotesClient({ initialNotes, currentUserRole, currentUserEmail }: NotesClientProps) {
   const [notes, setNotes] = useState<OpsNoteThread[]>(initialNotes || []);
   const [activeSection, setActiveSection] = useState<SectionType>('all');
+  const [privacyFilter, setPrivacyFilter] = useState<'all' | 'mine' | 'private'>('all');
   const [searchQuery, setSearchQuery] = useState('');
+
+  React.useEffect(() => {
+    if (initialNotes) setNotes(initialNotes);
+  }, [initialNotes]);
+
+  React.useEffect(() => {
+    let isMounted = true;
+    const interval = setInterval(async () => {
+      try {
+        const liveNotes = await getOpsNotesAction();
+        if (isMounted && liveNotes) {
+          setNotes(liveNotes);
+        }
+      } catch (e) {}
+    }, 3000);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, []);
 
   // Modal for new/edit note
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -67,6 +88,13 @@ export function NotesClient({ initialNotes, currentUserRole, currentUserEmail }:
                    (isSuperAdmin && (creator.includes('Admin') || creator.includes('admin')));
     
     if (n.is_private && !isMine) {
+      return false;
+    }
+
+    if (privacyFilter === 'mine' && !isMine) {
+      return false;
+    }
+    if (privacyFilter === 'private' && (!n.is_private || !isMine)) {
       return false;
     }
 
@@ -150,6 +178,8 @@ export function NotesClient({ initialNotes, currentUserRole, currentUserEmail }:
 
     setIsModalOpen(false);
     await saveOpsNoteAction(noteData);
+    const latest = await getOpsNotesAction();
+    if (latest) setNotes(latest);
     showToast(editingNote ? 'Updated department note!' : 'Created new department note!', 'success');
   }
 
@@ -172,6 +202,8 @@ export function NotesClient({ initialNotes, currentUserRole, currentUserEmail }:
     setNewCommentText('');
 
     await addNoteCommentAction(activeNote.id, comment.author, comment.text);
+    const latest = await getOpsNotesAction();
+    if (latest) setNotes(latest);
     showToast('Added comment to note thread', 'success');
   }
 
@@ -181,6 +213,8 @@ export function NotesClient({ initialNotes, currentUserRole, currentUserEmail }:
     setNotes((prev) => prev.map((n) => (n.id === note.id ? updated : n)));
     if (activeNote && activeNote.id === note.id) setActiveNote(updated);
     await saveOpsNoteAction(updated);
+    const latest = await getOpsNotesAction();
+    if (latest) setNotes(latest);
     showToast(updated.pinned ? 'Pinned note to top!' : 'Unpinned note', 'success');
   }
 
@@ -190,6 +224,8 @@ export function NotesClient({ initialNotes, currentUserRole, currentUserEmail }:
     if (activeNote && activeNote.id === deleteId) setActiveNote(null);
     setDeleteId(null);
     await deleteOpsNoteAction(deleteId);
+    const latest = await getOpsNotesAction();
+    if (latest) setNotes(latest);
     showToast('Deleted note thread', 'success');
   }
 
@@ -270,6 +306,45 @@ export function NotesClient({ initialNotes, currentUserRole, currentUserEmail }:
             </button>
           );
         })}
+      </div>
+
+      {/* Team Visibility & Ownership Filter */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-[#161B22]/60 p-3.5 rounded-2xl border border-white/10">
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
+          <button
+            onClick={() => setPrivacyFilter('all')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all flex items-center gap-1.5 ${
+              privacyFilter === 'all'
+                ? 'bg-[#F97316] text-[#080A0E] shadow'
+                : 'bg-[#0D1117] text-[#8B949E] hover:text-white border border-white/10'
+            }`}
+          >
+            <Globe className="w-3.5 h-3.5" />
+            <span>All Notes</span>
+          </button>
+          <button
+            onClick={() => setPrivacyFilter('mine')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all flex items-center gap-1.5 ${
+              privacyFilter === 'mine'
+                ? 'bg-[#F97316] text-[#080A0E] shadow'
+                : 'bg-[#0D1117] text-[#8B949E] hover:text-white border border-white/10'
+            }`}
+          >
+            <User className="w-3.5 h-3.5" />
+            <span>My Notes</span>
+          </button>
+          <button
+            onClick={() => setPrivacyFilter('private')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all flex items-center gap-1.5 ${
+              privacyFilter === 'private'
+                ? 'bg-[#E8C547] text-[#080A0E] shadow'
+                : 'bg-[#0D1117] text-[#8B949E] hover:text-white border border-white/10'
+            }`}
+          >
+            <Lock className="w-3.5 h-3.5" />
+            <span>Personal Note Only</span>
+          </button>
+        </div>
       </div>
 
       {/* Notes Grid Display */}

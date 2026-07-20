@@ -47,13 +47,21 @@ export async function loginAction(formData: FormData) {
 
   const fs = await import('fs');
   const path = await import('path');
-  const authCacheFile = path.join(process.cwd(), '.next', 'ops_cache', 'admin_credentials.json');
+  const cacheDirs = [
+    path.join(process.cwd(), 'data', 'ops_cache'),
+    path.join('/tmp', 'ops_cache'),
+    path.join(process.cwd(), '.next', 'ops_cache'),
+  ];
   let cachedCreds: Record<string, string> = {};
-  try {
-    if (fs.existsSync(authCacheFile)) {
-      cachedCreds = JSON.parse(fs.readFileSync(authCacheFile, 'utf-8'));
-    }
-  } catch (e) {}
+  for (const dir of cacheDirs) {
+    try {
+      const authCacheFile = path.join(dir, 'admin_credentials.json');
+      if (fs.existsSync(authCacheFile)) {
+        const parsed = JSON.parse(fs.readFileSync(authCacheFile, 'utf-8'));
+        cachedCreds = { ...cachedCreds, ...parsed };
+      }
+    } catch (e) {}
+  }
 
   const cleanUser = username.toLowerCase().trim();
   const isAdmin =
@@ -61,6 +69,9 @@ export async function loginAction(formData: FormData) {
     cleanUser === envUsername.toLowerCase() ||
     cleanUser === 'admin@certifyd.in' ||
     (cachedCreds.custom_admin_email && cleanUser === cachedCreds.custom_admin_email.toLowerCase());
+
+  let memberPermissions: any = undefined;
+  let memberAvatarUrl: string | undefined = undefined;
 
   // Check if login attempt is for Super Admin
   if (isAdmin) {
@@ -91,6 +102,8 @@ export async function loginAction(formData: FormData) {
       if (password === validPass || password === member.temp_password || password === 'worker123') {
         isValid = true;
         role = member.role || 'TEAM_MEMBER';
+        memberPermissions = member.permissions;
+        memberAvatarUrl = member.avatar_url;
       }
     } else if (cachedCreds[cleanUser] && cachedCreds[cleanUser] === password) {
       // Direct cache hit for newly created employee before file re-index
@@ -114,7 +127,7 @@ export async function loginAction(formData: FormData) {
   await resetRateLimit(cleanIp);
   const finalRole = getUserRoleFromEnv(username) || role;
 
-  await createSession(username, finalRole);
+  await createSession(username, finalRole, memberPermissions, memberAvatarUrl);
 
   await logAudit({
     action_type: 'LOGIN_SUCCESS',

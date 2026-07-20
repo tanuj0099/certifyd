@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { OpsCalendarEvent, saveCalendarEventAction, deleteCalendarEventAction } from '../../actions/opsActions';
+import { OpsCalendarEvent, saveCalendarEventAction, deleteCalendarEventAction, getCalendarEventsAction } from '../../actions/opsActions';
 import { useToast } from '../ui/Toast';
 import { ConfirmModal } from '../ui/ConfirmModal';
 import {
@@ -37,6 +37,26 @@ export function CalendarClient({ initialEvents, currentUserRole, currentUserEmai
   const [viewMode, setViewMode] = useState<'month' | 'agenda'>('month');
   const [ownershipFilter, setOwnershipFilter] = useState<'all' | 'mine' | 'private' | string>('all');
 
+  React.useEffect(() => {
+    if (initialEvents) setEvents(initialEvents);
+  }, [initialEvents]);
+
+  React.useEffect(() => {
+    let isMounted = true;
+    const interval = setInterval(async () => {
+      try {
+        const liveEvents = await getCalendarEventsAction();
+        if (isMounted && liveEvents) {
+          setEvents(liveEvents);
+        }
+      } catch (e) {}
+    }, 3000);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, []);
+
   // Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState<OpsCalendarEvent | null>(null);
@@ -71,7 +91,7 @@ export function CalendarClient({ initialEvents, currentUserRole, currentUserEmai
     if (ownershipFilter === 'mine' && !isMine) {
       return false;
     }
-    if (ownershipFilter === 'private' && !ev.is_private) {
+    if (ownershipFilter === 'private' && (!ev.is_private || !isMine)) {
       return false;
     }
     if (ownershipFilter !== 'all' && ownershipFilter !== 'mine' && ownershipFilter !== 'private') {
@@ -144,6 +164,8 @@ export function CalendarClient({ initialEvents, currentUserRole, currentUserEmai
 
     setIsModalOpen(false);
     await saveCalendarEventAction(eventData);
+    const latest = await getCalendarEventsAction();
+    if (latest) setEvents(latest);
     showToast(editingEvent ? 'Updated calendar event!' : 'Added new calendar event!', 'success');
   }
 
@@ -152,6 +174,8 @@ export function CalendarClient({ initialEvents, currentUserRole, currentUserEmai
     setEvents((prev) => prev.filter((ev) => ev.id !== deleteId));
     setDeleteId(null);
     await deleteCalendarEventAction(deleteId);
+    const latest = await getCalendarEventsAction();
+    if (latest) setEvents(latest);
     showToast('Removed calendar event', 'success');
   }
 
@@ -302,7 +326,7 @@ export function CalendarClient({ initialEvents, currentUserRole, currentUserEmai
             }`}
           >
             <Lock className="w-3.5 h-3.5" />
-            <span>Private Events</span>
+            <span>Personal Event Only</span>
           </button>
         </div>
 

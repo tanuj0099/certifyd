@@ -1,5 +1,7 @@
 import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
+import fs from 'fs';
+import path from 'path';
 
 const secretKey = process.env.JWT_SECRET || 'super-secret-default-key-for-local-dev-only-change-in-prod-64-chars';
 const key = new TextEncoder().encode(secretKey);
@@ -7,6 +9,15 @@ const key = new TextEncoder().encode(secretKey);
 export interface SessionPayload {
   email: string;
   role: 'SUPER_ADMIN' | 'TEAM_MEMBER';
+  permissions?: {
+    access_marketing?: boolean;
+    access_technical?: boolean;
+    access_database?: boolean;
+    access_verifications?: boolean;
+    access_content?: boolean;
+    access_admin?: boolean;
+  };
+  avatar_url?: string;
   expiresAt: number;
 }
 
@@ -30,9 +41,20 @@ export async function decryptSession(session: string | undefined = ''): Promise<
   }
 }
 
-export async function createSession(email: string, role: 'SUPER_ADMIN' | 'TEAM_MEMBER') {
+export async function createSession(
+  email: string,
+  role: 'SUPER_ADMIN' | 'TEAM_MEMBER',
+  permissions?: SessionPayload['permissions'],
+  avatarUrl?: string
+) {
   const expiresAt = Date.now() + 8 * 60 * 60 * 1000; // 8 hours
-  const session = await encryptSession({ email, role, expiresAt });
+  const session = await encryptSession({
+    email,
+    role,
+    permissions,
+    avatar_url: avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(email)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`,
+    expiresAt,
+  });
   const cookieStore = await cookies();
 
   cookieStore.set('admin_session', session, {
@@ -47,7 +69,37 @@ export async function createSession(email: string, role: 'SUPER_ADMIN' | 'TEAM_M
 export async function getSession(): Promise<SessionPayload | null> {
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get('admin_session')?.value;
-  return decryptSession(sessionCookie);
+  const payload = await decryptSession(sessionCookie);
+  if (!payload) return null;
+
+  // Enhance payload with live permissions / avatar from local cache if available
+  try {
+    const cacheDirs = [
+      path.join(process.cwd(), 'data', 'ops_cache'),
+      path.join('/tmp', 'ops_cache'),
+      path.join(process.cwd(), '.next', 'ops_cache'),
+    ];
+    for (const dir of cacheDirs) {
+      const file = path.join(dir, 'ops_team_members.json');
+      if (fs.existsSync(file)) {
+        const list = JSON.parse(fs.readFileSync(file, 'utf-8'));
+        if (Array.isArray(list)) {
+          const member = list.find((m: any) => m.email?.toLowerCase() === payload.email?.toLowerCase());
+          if (member) {
+            payload.permissions = member.permissions || payload.permissions;
+            payload.avatar_url = member.avatar_url || payload.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(payload.email)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
+            break;
+          }
+        }
+      }
+    }
+  } catch (e) {}
+
+  if (!payload.avatar_url) {
+    payload.avatar_url = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(payload.email)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
+  }
+
+  return payload;
 }
 
 export async function deleteSession() {

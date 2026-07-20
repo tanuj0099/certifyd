@@ -30,6 +30,10 @@ import { logoutAction } from '../../actions/authActions';
 interface SidebarProps {
   userEmail: string;
   userRole: 'SUPER_ADMIN' | 'TEAM_MEMBER';
+  userPermissions?: any;
+  userAvatar?: string;
+  collapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
 const ICON_MAP: Record<string, React.ElementType> = {
@@ -49,10 +53,29 @@ const ICON_MAP: Record<string, React.ElementType> = {
   Users,
 };
 
-export function Sidebar({ userEmail, userRole }: SidebarProps) {
-  const [collapsed, setCollapsed] = useState(false);
+export function Sidebar({
+  userEmail,
+  userRole,
+  userPermissions,
+  userAvatar,
+  collapsed: externalCollapsed,
+  onToggleCollapse,
+}: SidebarProps) {
+  const [internalCollapsed, setInternalCollapsed] = useState(false);
+  const collapsed = externalCollapsed !== undefined ? externalCollapsed : internalCollapsed;
   const pathname = usePathname();
   const { showToast } = useToast();
+
+  const handleToggle = () => {
+    if (onToggleCollapse) onToggleCollapse();
+    else setInternalCollapsed(!internalCollapsed);
+  };
+
+  const isEmployee = userRole === 'TEAM_MEMBER';
+  const hasTechAccess = userRole === 'SUPER_ADMIN' || userPermissions?.access_technical === true;
+
+  const defaultAvatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(userEmail)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
+  const avatarToShow = userAvatar || defaultAvatar;
 
   const groups = [
     {
@@ -96,9 +119,9 @@ export function Sidebar({ userEmail, userRole }: SidebarProps) {
       title: 'System',
       superAdminOnly: true,
       items: [
-        { name: 'Feature Flags', href: '/system/flags', icon: 'ToggleRight', restricted: true },
+        { name: 'Feature Flags', href: '/system/flags', icon: 'ToggleRight', restricted: !hasTechAccess },
         { name: 'Audit Log', href: '/system/audit', icon: 'ShieldCheck', restricted: true },
-        { name: 'Settings', href: '/system/settings', icon: 'Settings', restricted: true },
+        { name: 'Settings', href: '/system/settings', icon: 'Settings', restricted: !hasTechAccess },
       ],
     },
   ];
@@ -109,21 +132,33 @@ export function Sidebar({ userEmail, userRole }: SidebarProps) {
         collapsed ? 'w-[60px]' : 'w-[220px]'
       }`}
     >
-      {/* Brand Header */}
+      {/* Brand Header optimized for Super Admin vs Employee */}
       <div className="h-14 border-b border-white/[0.06] flex items-center justify-between px-3.5 shrink-0">
         <div className="flex items-center gap-2.5 overflow-hidden">
-          <div className="w-8 h-8 rounded-lg bg-[#F97316]/10 border border-[#F97316]/20 flex items-center justify-center text-[#F97316] shrink-0">
+          <div
+            className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 border transition-colors ${
+              isEmployee
+                ? 'bg-[#00D4A8]/10 border-[#00D4A8]/20 text-[#00D4A8]'
+                : 'bg-[#F97316]/10 border-[#F97316]/20 text-[#F97316]'
+            }`}
+          >
             <Shield className="w-4 h-4" />
           </div>
           {!collapsed && (
             <div className="flex flex-col">
               <span className="font-semibold text-sm text-white tracking-tight truncate">Certifyd Ops</span>
-              <span className="text-[10px] font-mono text-[#8B949E]">ADMIN SUITE</span>
+              <span
+                className={`text-[10px] font-mono tracking-wider font-semibold ${
+                  isEmployee ? 'text-[#00D4A8]' : 'text-[#8B949E]'
+                }`}
+              >
+                {isEmployee ? 'OPS WORKSPACE' : 'ADMIN SUITE'}
+              </span>
             </div>
           )}
         </div>
         <button
-          onClick={() => setCollapsed(!collapsed)}
+          onClick={handleToggle}
           className="p-1 rounded-lg hover:bg-white/[0.04] text-[#8B949E] hover:text-white transition-colors"
           title={collapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
         >
@@ -134,8 +169,8 @@ export function Sidebar({ userEmail, userRole }: SidebarProps) {
       {/* Nav Groups */}
       <div className="flex-1 overflow-y-auto p-2 space-y-5 scrollbar-none">
         {groups.map((group) => {
-          // Hide System section entirely for TEAM_MEMBER
-          if (group.superAdminOnly && userRole !== 'SUPER_ADMIN') return null;
+          // Hide System section ONLY if user is not Super Admin AND has no Tech access
+          if (group.superAdminOnly && !hasTechAccess) return null;
 
           return (
             <div key={group.title}>
@@ -145,100 +180,117 @@ export function Sidebar({ userEmail, userRole }: SidebarProps) {
                 </p>
               )}
               <div className="space-y-0.5">
-                {group.items.filter((item) => !((item as any).superAdminOnly && userRole !== 'SUPER_ADMIN')).map((item) => {
-                  const Icon = ICON_MAP[item.icon] || LayoutDashboard;
-                  const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
-                  const isLocked = item.restricted && userRole !== 'SUPER_ADMIN';
-                  const showPublishLock = Boolean(('publishLock' in item && item.publishLock) && userRole === 'TEAM_MEMBER');
+                {group.items
+                  .filter((item) => !((item as any).superAdminOnly && userRole !== 'SUPER_ADMIN'))
+                  .map((item) => {
+                    const Icon = ICON_MAP[item.icon] || LayoutDashboard;
+                    const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
+                    const isLocked = item.restricted && userRole !== 'SUPER_ADMIN' && !hasTechAccess;
+                    const showPublishLock = Boolean(('publishLock' in item && item.publishLock) && userRole === 'TEAM_MEMBER');
 
-                  if (isLocked) {
+                    if (isLocked) {
+                      return (
+                        <button
+                          key={item.name}
+                          onClick={() =>
+                            showToast('Insufficient permissions. Privileges required for this action.', 'warning')
+                          }
+                          className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-medium text-[#8B949E]/50 hover:bg-white/[0.02] cursor-not-allowed transition-colors ${
+                            collapsed ? 'justify-center' : ''
+                          }`}
+                          title={collapsed ? `${item.name} (Locked)` : undefined}
+                        >
+                          <Icon className="w-4 h-4 shrink-0 opacity-40" />
+                          {!collapsed && (
+                            <div className="flex items-center justify-between flex-1 overflow-hidden">
+                              <span className="truncate">{item.name}</span>
+                              <Lock className="w-3 h-3 text-[#E8C547] shrink-0" />
+                            </div>
+                          )}
+                        </button>
+                      );
+                    }
+
                     return (
-                      <button
+                      <Link
                         key={item.name}
-                        onClick={() =>
-                          showToast('Insufficient permissions. Super Admin privileges required.', 'warning')
-                        }
-                        className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-medium text-[#8B949E]/50 hover:bg-white/[0.02] cursor-not-allowed transition-colors ${
-                          collapsed ? 'justify-center' : ''
-                        }`}
-                        title={collapsed ? `${item.name} (Locked)` : undefined}
+                        href={item.href}
+                        className={`flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-medium transition-all ${
+                          isActive
+                            ? 'bg-[#F97316]/10 text-[#F97316] border border-[#F97316]/20 shadow-sm'
+                            : 'text-[#8B949E] hover:text-white hover:bg-white/[0.04]'
+                        } ${collapsed ? 'justify-center' : ''}`}
+                        title={collapsed ? item.name : undefined}
                       >
-                        <Icon className="w-4 h-4 shrink-0 opacity-40" />
+                        <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#F97316]' : ''}`} />
                         {!collapsed && (
                           <div className="flex items-center justify-between flex-1 overflow-hidden">
                             <span className="truncate">{item.name}</span>
-                            <Lock className="w-3 h-3 text-[#E8C547] shrink-0" />
+                            {showPublishLock && (
+                              <span title="Team Member: Staging edit only" className="text-[10px] text-[#E8C547] flex items-center gap-0.5 font-mono">
+                                <Lock className="w-2.5 h-2.5" />
+                              </span>
+                            )}
                           </div>
                         )}
-                      </button>
+                      </Link>
                     );
-                  }
-
-                  return (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className={`flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-medium transition-all ${
-                        isActive
-                          ? 'bg-[#F97316]/10 text-[#F97316] border border-[#F97316]/20 shadow-sm'
-                          : 'text-[#8B949E] hover:text-white hover:bg-white/[0.04]'
-                      } ${collapsed ? 'justify-center' : ''}`}
-                      title={collapsed ? item.name : undefined}
-                    >
-                      <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#F97316]' : ''}`} />
-                      {!collapsed && (
-                        <div className="flex items-center justify-between flex-1 overflow-hidden">
-                          <span className="truncate">{item.name}</span>
-                          {showPublishLock && (
-                            <span title="Team Member: Staging edit only" className="text-[10px] text-[#E8C547] flex items-center gap-0.5 font-mono">
-                              <Lock className="w-2.5 h-2.5" />
-                            </span>
-                          )}
-                        </div>
-                      )}
-                    </Link>
-                  );
-                })}
+                  })}
               </div>
             </div>
           );
         })}
       </div>
 
-      {/* User Footer */}
+      {/* User Footer with Avatar / DP */}
       <div className="border-t border-white/[0.06] p-2.5 shrink-0 bg-[#0F1218]">
         {!collapsed ? (
-          <div className="flex items-center justify-between gap-2 bg-[#161B22] p-2 rounded-xl border border-white/[0.04]">
-            <div className="flex flex-col min-w-0">
-              <span className="text-xs font-mono font-medium text-white truncate" title={userEmail}>
-                {userEmail.split('@')[0]}
-              </span>
-              <span
-                className={`text-[9px] font-mono px-1.5 py-0.2 rounded inline-block w-fit uppercase font-semibold mt-0.5 ${
-                  userRole === 'SUPER_ADMIN'
-                    ? 'bg-[#F97316]/15 text-[#F97316] border border-[#F97316]/30'
-                    : 'bg-white/10 text-[#8B949E] border border-white/10'
-                }`}
-              >
-                {userRole === 'SUPER_ADMIN' ? 'SUPER ADMIN' : 'TEAM'}
-              </span>
+          <div className="flex items-center justify-between gap-2.5 bg-[#161B22] p-2 rounded-xl border border-white/[0.04]">
+            <div className="flex items-center gap-2.5 min-w-0 overflow-hidden">
+              <img
+                src={avatarToShow}
+                alt="DP"
+                className="w-8 h-8 rounded-full border border-white/10 shrink-0 bg-[#080A0E] object-cover"
+              />
+              <div className="flex flex-col min-w-0">
+                <span className="text-xs font-mono font-medium text-white truncate" title={userEmail}>
+                  {userEmail.split('@')[0]}
+                </span>
+                <span
+                  className={`text-[9px] font-mono px-1.5 py-0.2 rounded inline-block w-fit uppercase font-semibold mt-0.5 ${
+                    userRole === 'SUPER_ADMIN'
+                      ? 'bg-[#F97316]/15 text-[#F97316] border border-[#F97316]/30'
+                      : 'bg-[#00D4A8]/15 text-[#00D4A8] border border-[#00D4A8]/30'
+                  }`}
+                >
+                  {userRole === 'SUPER_ADMIN' ? 'SUPER ADMIN' : 'EMPLOYEE'}
+                </span>
+              </div>
             </div>
             <button
               onClick={() => logoutAction()}
-              className="p-1.5 rounded-lg text-[#8B949E] hover:text-[#F85149] hover:bg-[#F85149]/10 transition-colors"
+              className="p-1.5 rounded-lg text-[#8B949E] hover:text-[#F85149] hover:bg-[#F85149]/10 transition-colors shrink-0"
               title="Logout"
             >
               <LogOut className="w-4 h-4" />
             </button>
           </div>
         ) : (
-          <button
-            onClick={() => logoutAction()}
-            className="w-full flex items-center justify-center p-2 rounded-xl bg-[#161B22] text-[#8B949E] hover:text-[#F85149] hover:bg-[#F85149]/10 transition-colors"
-            title="Logout"
-          >
-            <LogOut className="w-4 h-4" />
-          </button>
+          <div className="flex flex-col items-center gap-2">
+            <img
+              src={avatarToShow}
+              alt="DP"
+              className="w-8 h-8 rounded-full border border-white/10 bg-[#080A0E] object-cover"
+              title={userEmail}
+            />
+            <button
+              onClick={() => logoutAction()}
+              className="w-full flex items-center justify-center p-2 rounded-xl bg-[#161B22] text-[#8B949E] hover:text-[#F85149] hover:bg-[#F85149]/10 transition-colors"
+              title="Logout"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          </div>
         )}
       </div>
     </aside>

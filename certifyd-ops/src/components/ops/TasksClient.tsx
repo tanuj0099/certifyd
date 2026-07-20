@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { OpsTaskItem, OpsTeamMember, saveOpsTaskAction, deleteOpsTaskAction } from '../../actions/opsActions';
+import { OpsTaskItem, OpsTeamMember, saveOpsTaskAction, deleteOpsTaskAction, getOpsTasksAction } from '../../actions/opsActions';
 import { useToast } from '../ui/Toast';
 import { ConfirmModal } from '../ui/ConfirmModal';
 import {
@@ -39,6 +39,30 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
   const [activeSection, setActiveSection] = useState<SectionType>('all');
   const [viewMode, setViewMode] = useState<'kanban' | 'list'>('kanban');
   const [searchQuery, setSearchQuery] = useState('');
+
+  const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
+  const [dragOverColumn, setDragOverColumn] = useState<string | null>(null);
+  const [dragOverSection, setDragOverSection] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (initialTasks) setTasks(initialTasks);
+  }, [initialTasks]);
+
+  React.useEffect(() => {
+    let isMounted = true;
+    const interval = setInterval(async () => {
+      try {
+        const liveTasks = await getOpsTasksAction();
+        if (isMounted && liveTasks) {
+          setTasks(liveTasks);
+        }
+      } catch (e) {}
+    }, 3000);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, []);
 
   // Add / Edit Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -156,6 +180,8 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
 
     setIsModalOpen(false);
     await saveOpsTaskAction(taskData);
+    const latest = await getOpsTasksAction();
+    if (latest) setTasks(latest);
     showToast(editingTask ? 'Updated delegated task!' : 'Delegated new section task!', 'success');
   }
 
@@ -164,6 +190,8 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
     setTasks((prev) => prev.map((t) => (t.id === task.id ? updated : t)));
     if (activeTask && activeTask.id === task.id) setActiveTask(updated);
     await saveOpsTaskAction(updated);
+    const latest = await getOpsTasksAction();
+    if (latest) setTasks(latest);
     showToast(`Task moved to ${newStatus}`, 'success');
   }
 
@@ -175,6 +203,8 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
     setTasks((prev) => prev.map((t) => (t.id === task.id ? updated : t)));
     if (activeTask && activeTask.id === task.id) setActiveTask(updated);
     await saveOpsTaskAction(updated);
+    const latest = await getOpsTasksAction();
+    if (latest) setTasks(latest);
   }
 
   async function handleAddNote(e: React.FormEvent) {
@@ -195,6 +225,8 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
     setNewNoteText('');
 
     await saveOpsTaskAction(updatedTask);
+    const latest = await getOpsTasksAction();
+    if (latest) setTasks(latest);
     showToast('Added comment to task log', 'success');
   }
 
@@ -204,7 +236,33 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
     if (activeTask && activeTask.id === deleteId) setActiveTask(null);
     setDeleteId(null);
     await deleteOpsTaskAction(deleteId);
+    const latest = await getOpsTasksAction();
+    if (latest) setTasks(latest);
     showToast('Deleted delegated task', 'success');
+  }
+
+  async function handleDropTaskStatus(taskId: string, newStatus: OpsTaskItem['status']) {
+    const target = tasks.find((t) => t.id === taskId);
+    if (!target || target.status === newStatus) return;
+    const updated = { ...target, status: newStatus };
+    setTasks((prev) => prev.map((t) => (t.id === taskId ? updated : t)));
+    if (activeTask && activeTask.id === taskId) setActiveTask(updated);
+    await saveOpsTaskAction(updated);
+    const latest = await getOpsTasksAction();
+    if (latest) setTasks(latest);
+    showToast(`Task moved to "${newStatus}"`, 'success');
+  }
+
+  async function handleDropTaskSection(taskId: string, newSection: OpsTaskItem['section']) {
+    const target = tasks.find((t) => t.id === taskId);
+    if (!target || target.section === newSection) return;
+    const updated = { ...target, section: newSection };
+    setTasks((prev) => prev.map((t) => (t.id === taskId ? updated : t)));
+    if (activeTask && activeTask.id === taskId) setActiveTask(updated);
+    await saveOpsTaskAction(updated);
+    const latest = await getOpsTasksAction();
+    if (latest) setTasks(latest);
+    showToast(`Re-assigned task to department: ${newSection}`, 'success');
   }
 
   const priorityColors: Record<OpsTaskItem['priority'], string> = {
@@ -272,8 +330,24 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
             <button
               key={s.id}
               onClick={() => setActiveSection(s.id)}
+              onDragOver={(e) => {
+                if (s.id === 'all') return;
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                setDragOverSection(s.id);
+              }}
+              onDragLeave={() => setDragOverSection(null)}
+              onDrop={async (e) => {
+                if (s.id === 'all') return;
+                e.preventDefault();
+                setDragOverSection(null);
+                const taskId = e.dataTransfer.getData('text/plain');
+                if (taskId) await handleDropTaskSection(taskId, s.id as any);
+              }}
               className={`px-3.5 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 whitespace-nowrap ${
-                isActive
+                dragOverSection === s.id
+                  ? 'bg-[#F97316] text-[#080A0E] scale-105 shadow-lg font-bold'
+                  : isActive
                   ? 'bg-[#F97316]/15 text-[#F97316] border border-[#F97316]/30 font-bold'
                   : 'bg-[#161B22]/60 text-[#8B949E] hover:bg-[#161B22] hover:text-white border border-transparent'
               }`}
@@ -308,7 +382,26 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
             const colTasks = filteredTasks.filter((t) => t.status === colStatus);
 
             return (
-              <div key={colStatus} className="bg-[#0D1117]/80 border border-white/[0.06] rounded-2xl p-4 min-h-[450px] flex flex-col">
+              <div
+                key={colStatus}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  e.dataTransfer.dropEffect = 'move';
+                  setDragOverColumn(colStatus);
+                }}
+                onDragLeave={() => setDragOverColumn(null)}
+                onDrop={async (e) => {
+                  e.preventDefault();
+                  setDragOverColumn(null);
+                  const taskId = e.dataTransfer.getData('text/plain');
+                  if (taskId) await handleDropTaskStatus(taskId, colStatus);
+                }}
+                className={`bg-[#0D1117]/80 border rounded-2xl p-4 min-h-[450px] flex flex-col transition-all ${
+                  dragOverColumn === colStatus
+                    ? 'border-[#F97316] bg-[#F97316]/[0.03] ring-2 ring-[#F97316]/30'
+                    : 'border-white/[0.06]'
+                }`}
+              >
                 <div className="flex items-center justify-between pb-3 border-b border-white/[0.06] mb-3">
                   <div className="flex items-center gap-2">
                     <span className={`w-2.5 h-2.5 rounded-full ${
@@ -339,11 +432,22 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
                           <motion.div
                             key={task.id}
                             layout
+                            draggable={true}
+                            onDragStart={(e: any) => {
+                              e.dataTransfer.setData('text/plain', task.id);
+                              e.dataTransfer.effectAllowed = 'move';
+                              setDraggedTaskId(task.id);
+                            }}
+                            onDragEnd={() => setDraggedTaskId(null)}
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95 }}
                             onClick={() => setActiveTask(task)}
-                            className="bg-[#161B22] border border-white/[0.08] hover:border-[#F97316]/40 rounded-xl p-4 transition-all cursor-pointer shadow-md hover:shadow-xl group relative"
+                            className={`bg-[#161B22] border rounded-xl p-4 transition-all cursor-pointer shadow-md hover:shadow-xl group relative select-none ${
+                              draggedTaskId === task.id
+                                ? 'opacity-40 scale-95 border-[#F97316]'
+                                : 'border-white/[0.08] hover:border-[#F97316]/40'
+                            }`}
                           >
                             <div className="flex items-center justify-between gap-2 mb-2">
                               <span className={`px-2 py-0.5 rounded text-[10px] font-mono uppercase font-bold border ${priorityColors[task.priority]}`}>
