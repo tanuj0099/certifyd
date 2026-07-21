@@ -76,6 +76,7 @@ vercel-toolbar,
     --gold:          var(--brand-primary);
     --border:       var(--border-subtle);
     --border-mid:   var(--border-strong);
+    --cert-bg:      var(--bg-base);
     --is-light:     0;
 
     /* Derived */
@@ -188,6 +189,7 @@ vercel-toolbar,
     --gold:          var(--brand-primary);
     --border:     var(--border-subtle);
     --border-mid: var(--border-strong);
+    --cert-bg:    var(--bg-surface);
     --is-light:   1;
     --err:        #EF4444;
     --scrollbar:  rgba(0,0,0,0.10);

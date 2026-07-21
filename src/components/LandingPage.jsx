@@ -260,7 +260,7 @@ function CertAssembly() {
           <div style={{ fontFamily: F_MONO, fontSize: '10px', color: 'var(--text-4)', letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: '20px', textAlign: 'center' }}>
             // CERT INTELLIGENCE
           </div>
-          <div style={{ position: 'relative', width: '100%', aspectRatio: '480/340', borderRadius: '6px', overflow: 'hidden', border: `1px solid ${'var(--border-mid)'}`, background: C.certBg, boxShadow: '0 24px 64px rgba(0,0,0,0.28)' }}>
+          <div style={{ position: 'relative', width: '100%', aspectRatio: '480/340', borderRadius: '6px', overflow: 'hidden', border: `1px solid ${'var(--border-mid)'}`, background: 'var(--cert-bg)', boxShadow: '0 24px 64px rgba(0,0,0,0.28)' }}>
             <svg viewBox="0 0 480 340" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block', pointerEvents: 'none' }}>
               <defs>
                 <linearGradient id="metalGradM" x1="0" y1="0" x2="1" y2="1">
@@ -354,7 +354,7 @@ function CertAssembly() {
                       <stop offset="100%" stopColor="#444" />
                     </linearGradient>
                   </defs>
-                  <rect x="0" y="0" width="480" height="340" fill={C.certBg} />
+                  <rect x="0" y="0" width="480" height="340" fill="var(--cert-bg)" />
                   <rect x="1.5" y="1.5" width="477" height="337" fill="none" stroke="url(#metalGrad)" strokeWidth="1.5" />
                   <rect x="12" y="12" width="456" height="316" fill="none" stroke="#2a2a2a" strokeWidth="0.8" />
                 </svg>

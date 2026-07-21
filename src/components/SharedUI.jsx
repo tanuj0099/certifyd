@@ -25,7 +25,7 @@ export const THEMES = Object.fromEntries(
     lineHeavy: t.borderMid,
     border:    t.border,
     borderMid: t.borderMid,
-    certBg:    t.bg,
+    certBg:    'var(--cert-bg)',
   }])
 )
 
