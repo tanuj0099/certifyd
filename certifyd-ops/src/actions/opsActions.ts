@@ -483,26 +483,60 @@ export async function deleteTeamMemberAction(id: string): Promise<{ success: boo
 // ==========================================
 
 export async function getOpsTasksAction(): Promise<OpsTaskItem[]> {
-  let dbTasks: OpsTaskItem[] = [];
   try {
     const { data, error } = await supabaseAdmin.from('ops_tasks').select('*').order('created_at', { ascending: false });
-    if (!error && data) {
-      dbTasks = data as OpsTaskItem[];
+    if (error) {
+      console.error('Supabase getOpsTasksAction error:', error);
+    } else if (data && Array.isArray(data)) {
+      const parsedTasks = data.map((d: any) => ({
+        id: d.id,
+        title: d.title || 'Untitled Task',
+        section: d.section || 'admin',
+        priority: d.priority || 'Medium',
+        assignee: d.assignee || 'Unassigned',
+        status: d.status || 'todo',
+        deadline: d.deadline || '',
+        notes: typeof d.notes === 'string' ? JSON.parse(d.notes || '[]') : (Array.isArray(d.notes) ? d.notes : []),
+        created_by: d.created_by || 'admin@certifyd.in',
+        created_at: d.created_at || new Date().toISOString(),
+      })) as OpsTaskItem[];
+
+      return parsedTasks;
     }
-  } catch (e) {}
+  } catch (e) {
+    console.error('getOpsTasksAction exception:', e);
+  }
 
-  const cacheTasks = readLocalCache<OpsTaskItem>('ops_tasks', INITIAL_TASKS);
-  const map = new Map<string, OpsTaskItem>();
-  for (const item of cacheTasks) map.set(item.id, item);
-  for (const item of dbTasks) map.set(item.id, item);
-
-  return Array.from(map.values()).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  return readLocalCache<OpsTaskItem>('ops_tasks', INITIAL_TASKS);
 }
 
 export async function saveOpsTaskAction(task: OpsTaskItem): Promise<{ success: boolean; data: OpsTaskItem }> {
   try {
-    await supabaseAdmin.from('ops_tasks').upsert(task);
-  } catch (e) {}
+    const cleanPayload = {
+      id: task.id,
+      title: task.title || 'Untitled Task',
+      section: task.section || 'admin',
+      priority: task.priority || 'Medium',
+      assignee: task.assignee || 'Unassigned',
+      status: task.status || 'todo',
+      deadline: task.deadline || '',
+      notes: typeof task.notes === 'string' ? JSON.parse(task.notes) : (task.notes || []),
+      created_by: task.created_by || 'admin@certifyd.in',
+      created_at: task.created_at || new Date().toISOString(),
+    };
+
+    const { error } = await supabaseAdmin.from('ops_tasks').upsert(cleanPayload, { onConflict: 'id' });
+    if (error) {
+      console.error('Supabase ops_tasks upsert error 1:', error);
+      const { error: err2 } = await supabaseAdmin.from('ops_tasks').upsert({
+        ...cleanPayload,
+        notes: typeof cleanPayload.notes === 'string' ? cleanPayload.notes : JSON.stringify(cleanPayload.notes || []),
+      }, { onConflict: 'id' });
+      if (err2) console.error('Supabase ops_tasks upsert error 2:', err2);
+    }
+  } catch (e) {
+    console.error('saveOpsTaskAction exception:', e);
+  }
 
   const list = readLocalCache<OpsTaskItem>('ops_tasks', INITIAL_TASKS);
   const idx = list.findIndex((t) => t.id === task.id);
@@ -527,8 +561,11 @@ export async function saveOpsTaskAction(task: OpsTaskItem): Promise<{ success: b
 
 export async function deleteOpsTaskAction(id: string): Promise<{ success: boolean }> {
   try {
-    await supabaseAdmin.from('ops_tasks').delete().eq('id', id);
-  } catch (e) {}
+    const { error } = await supabaseAdmin.from('ops_tasks').delete().eq('id', id);
+    if (error) console.error('deleteOpsTaskAction error:', error);
+  } catch (e) {
+    console.error('deleteOpsTaskAction exception:', e);
+  }
 
   const list = readLocalCache<OpsTaskItem>('ops_tasks', INITIAL_TASKS);
   const filtered = list.filter((t) => t.id !== id);
@@ -543,26 +580,53 @@ export async function deleteOpsTaskAction(id: string): Promise<{ success: boolea
 // ==========================================
 
 export async function getCalendarEventsAction(): Promise<OpsCalendarEvent[]> {
-  let dbEvents: OpsCalendarEvent[] = [];
   try {
     const { data, error } = await supabaseAdmin.from('ops_calendar_events').select('*').order('date', { ascending: true });
-    if (!error && data) {
-      dbEvents = data as OpsCalendarEvent[];
+    if (error) {
+      console.error('Supabase getCalendarEventsAction error:', error);
+    } else if (data && Array.isArray(data)) {
+      const parsedEvents = data.map((d: any) => ({
+        id: d.id,
+        title: d.title || 'Untitled Event',
+        date: d.date || '',
+        time: d.time || '',
+        section: d.section || 'admin',
+        description: d.description || '',
+        is_private: Boolean(d.is_private),
+        assignee: d.assignee || 'Unassigned',
+        created_by: d.created_by || 'admin@certifyd.in',
+        created_at: d.created_at || new Date().toISOString(),
+      })) as OpsCalendarEvent[];
+
+      return parsedEvents;
     }
-  } catch (e) {}
+  } catch (e) {
+    console.error('getCalendarEventsAction exception:', e);
+  }
 
-  const cacheEvents = readLocalCache<OpsCalendarEvent>('ops_calendar_events', INITIAL_EVENTS);
-  const map = new Map<string, OpsCalendarEvent>();
-  for (const item of cacheEvents) map.set(item.id, item);
-  for (const item of dbEvents) map.set(item.id, item);
-
-  return Array.from(map.values()).sort((a, b) => a.date.localeCompare(b.date));
+  return readLocalCache<OpsCalendarEvent>('ops_calendar_events', INITIAL_EVENTS);
 }
 
 export async function saveCalendarEventAction(event: OpsCalendarEvent): Promise<{ success: boolean; data: OpsCalendarEvent }> {
   try {
-    await supabaseAdmin.from('ops_calendar_events').upsert(event);
-  } catch (e) {}
+    const cleanPayload = {
+      id: event.id,
+      title: event.title || 'Untitled Event',
+      date: event.date || '',
+      time: event.time || '',
+      section: event.section || 'admin',
+      description: event.description || '',
+      is_private: Boolean(event.is_private),
+      assignee: event.assignee || 'Unassigned',
+      created_by: event.created_by || 'admin@certifyd.in',
+      created_at: event.created_at || new Date().toISOString(),
+    };
+
+    const { error } = await supabaseAdmin.from('ops_calendar_events').upsert(cleanPayload, { onConflict: 'id' });
+    if (error) console.error('Supabase ops_calendar_events upsert error:', error);
+  } catch (e) {
+    console.error('saveCalendarEventAction exception:', e);
+  }
 
   const list = readLocalCache<OpsCalendarEvent>('ops_calendar_events', INITIAL_EVENTS);
   const idx = list.findIndex((ev) => ev.id === event.id);
@@ -587,8 +651,11 @@ export async function saveCalendarEventAction(event: OpsCalendarEvent): Promise<
 
 export async function deleteCalendarEventAction(id: string): Promise<{ success: boolean }> {
   try {
-    await supabaseAdmin.from('ops_calendar_events').delete().eq('id', id);
-  } catch (e) {}
+    const { error } = await supabaseAdmin.from('ops_calendar_events').delete().eq('id', id);
+    if (error) console.error('deleteCalendarEventAction error:', error);
+  } catch (e) {
+    console.error('deleteCalendarEventAction exception:', e);
+  }
 
   const list = readLocalCache<OpsCalendarEvent>('ops_calendar_events', INITIAL_EVENTS);
   const filtered = list.filter((ev) => ev.id !== id);
@@ -603,26 +670,64 @@ export async function deleteCalendarEventAction(id: string): Promise<{ success: 
 // ==========================================
 
 export async function getOpsNotesAction(): Promise<OpsNoteThread[]> {
-  let dbNotes: OpsNoteThread[] = [];
   try {
     const { data, error } = await supabaseAdmin.from('ops_notes').select('*').order('created_at', { ascending: false });
-    if (!error && data) {
-      dbNotes = data as OpsNoteThread[];
+    if (error) {
+      console.error('Supabase getOpsNotesAction error:', error);
+    } else if (data && Array.isArray(data)) {
+      const parsedNotes = data.map((d: any) => ({
+        id: d.id,
+        title: d.title || 'Untitled',
+        content: d.content || '',
+        section: d.section || 'admin',
+        is_private: Boolean(d.is_private),
+        pinned: Boolean(d.pinned),
+        assignee: d.assignee || 'Unassigned',
+        comments: typeof d.comments === 'string' ? JSON.parse(d.comments || '[]') : (Array.isArray(d.comments) ? d.comments : []),
+        created_by: d.created_by || 'admin@certifyd.in',
+        created_at: d.created_at || new Date().toISOString(),
+      })) as OpsNoteThread[];
+
+      // If database responded without error, return the database notes directly so Vercel workers never overwrite with INITIAL_NOTES!
+      return parsedNotes;
     }
-  } catch (e) {}
+  } catch (e) {
+    console.error('getOpsNotesAction exception:', e);
+  }
 
-  const cacheNotes = readLocalCache<OpsNoteThread>('ops_notes', INITIAL_NOTES);
-  const map = new Map<string, OpsNoteThread>();
-  for (const item of cacheNotes) map.set(item.id, item);
-  for (const item of dbNotes) map.set(item.id, item);
-
-  return Array.from(map.values()).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  return readLocalCache<OpsNoteThread>('ops_notes', INITIAL_NOTES);
 }
 
 export async function saveOpsNoteAction(note: OpsNoteThread): Promise<{ success: boolean; data: OpsNoteThread }> {
   try {
-    await supabaseAdmin.from('ops_notes').upsert(note);
-  } catch (e) {}
+    const cleanPayload = {
+      id: note.id,
+      title: note.title || 'Untitled Note',
+      content: note.content || '',
+      section: note.section || 'admin',
+      is_private: Boolean(note.is_private),
+      pinned: Boolean(note.pinned),
+      assignee: note.assignee || 'Unassigned',
+      comments: typeof note.comments === 'string' ? JSON.parse(note.comments) : (note.comments || []),
+      created_by: note.created_by || 'admin@certifyd.in',
+      created_at: note.created_at || new Date().toISOString(),
+    };
+
+    const { error } = await supabaseAdmin.from('ops_notes').upsert(cleanPayload, { onConflict: 'id' });
+    if (error) {
+      console.error('Supabase ops_notes upsert error 1:', error);
+      // Fallback: retry with stringified comments if JSON column type expects string or array
+      const { error: err2 } = await supabaseAdmin.from('ops_notes').upsert({
+        ...cleanPayload,
+        comments: typeof cleanPayload.comments === 'string' ? cleanPayload.comments : JSON.stringify(cleanPayload.comments || []),
+      }, { onConflict: 'id' });
+      if (err2) {
+        console.error('Supabase ops_notes upsert error 2:', err2);
+      }
+    }
+  } catch (e) {
+    console.error('saveOpsNoteAction exception:', e);
+  }
 
   const list = readLocalCache<OpsNoteThread>('ops_notes', INITIAL_NOTES);
   const idx = list.findIndex((n) => n.id === note.id);
@@ -647,8 +752,11 @@ export async function saveOpsNoteAction(note: OpsNoteThread): Promise<{ success:
 
 export async function deleteOpsNoteAction(id: string): Promise<{ success: boolean }> {
   try {
-    await supabaseAdmin.from('ops_notes').delete().eq('id', id);
-  } catch (e) {}
+    const { error } = await supabaseAdmin.from('ops_notes').delete().eq('id', id);
+    if (error) console.error('deleteOpsNoteAction error:', error);
+  } catch (e) {
+    console.error('deleteOpsNoteAction exception:', e);
+  }
 
   const list = readLocalCache<OpsNoteThread>('ops_notes', INITIAL_NOTES);
   const filtered = list.filter((n) => n.id !== id);
@@ -667,12 +775,21 @@ export async function addNoteCommentAction(noteId: string, author: string, text:
   };
 
   try {
-    const { data: note } = await supabaseAdmin.from('ops_notes').select('*').eq('id', noteId).single();
-    if (note) {
-      const updatedComments = [...(note.comments || []), comment];
-      await supabaseAdmin.from('ops_notes').update({ comments: updatedComments }).eq('id', noteId);
+    const { data: note, error } = await supabaseAdmin.from('ops_notes').select('*').eq('id', noteId).single();
+    if (error) {
+      console.error('addNoteCommentAction select error:', error);
+    } else if (note) {
+      const existingComments = typeof note.comments === 'string' ? JSON.parse(note.comments || '[]') : (Array.isArray(note.comments) ? note.comments : []);
+      const updatedComments = [...existingComments, comment];
+      const { error: updErr } = await supabaseAdmin.from('ops_notes').update({ comments: updatedComments }).eq('id', noteId);
+      if (updErr) {
+        // Retry stringified
+        await supabaseAdmin.from('ops_notes').update({ comments: JSON.stringify(updatedComments) }).eq('id', noteId);
+      }
     }
-  } catch (e) {}
+  } catch (e) {
+    console.error('addNoteCommentAction exception:', e);
+  }
 
   const list = readLocalCache<OpsNoteThread>('ops_notes', INITIAL_NOTES);
   const idx = list.findIndex((n) => n.id === noteId);
