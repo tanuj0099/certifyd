@@ -774,6 +774,23 @@ export async function updateUserPasswordAction(
     await saveTeamMemberAction(list[idx]);
   }
 
+  try {
+    const { data: existingAllow } = await supabaseAdmin.from('admin_users_allowlist').select('*').eq('email', cleanEmail).single();
+    let permsObj: any = {};
+    if (existingAllow && existingAllow.permissions) {
+      try {
+        permsObj = typeof existingAllow.permissions === 'string' ? JSON.parse(existingAllow.permissions) : existingAllow.permissions;
+      } catch (e) {}
+    }
+    permsObj._pass = newPassword;
+    await supabaseAdmin.from('admin_users_allowlist').upsert({
+      email: cleanEmail,
+      role: isMasterAdmin ? 'SUPER_ADMIN' : (existingAllow?.role || 'TEAM_MEMBER'),
+      permissions: JSON.stringify(permsObj),
+      added_at: existingAllow?.added_at || new Date().toISOString(),
+    });
+  } catch (e) {}
+
   for (const dir of CACHE_DIRS) {
     const authCacheFile = path.join(dir, 'admin_credentials.json');
     try {

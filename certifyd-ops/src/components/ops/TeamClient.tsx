@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { OpsTeamMember, saveTeamMemberAction, deleteTeamMemberAction, createEmployeeProfileAction } from '../../actions/opsActions';
+import { OpsTeamMember, saveTeamMemberAction, deleteTeamMemberAction, createEmployeeProfileAction, updateUserPasswordAction } from '../../actions/opsActions';
 import { useToast } from '../ui/Toast';
 import { ConfirmModal } from '../ui/ConfirmModal';
 import {
@@ -20,7 +20,9 @@ import {
   Check,
   X,
   Copy,
-  Key
+  Key,
+  KeyRound,
+  Sparkles
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -52,6 +54,9 @@ export function TeamClient({ initialTeam, currentUserRole, currentUserEmail }: T
   const [generatedCreds, setGeneratedCreds] = useState<{ name: string; email: string; tempPassword: string } | null>(null);
   const [isSaving, setIsSaving] = useState<Record<string, boolean>>({});
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [resetMember, setResetMember] = useState<OpsTeamMember | null>(null);
+  const [resetPassword, setResetPassword] = useState('');
+  const [isResetting, setIsResetting] = useState(false);
 
   const { showToast } = useToast();
   const isSuperAdmin = currentUserRole === 'SUPER_ADMIN';
@@ -140,6 +145,30 @@ export function TeamClient({ initialTeam, currentUserRole, currentUserEmail }: T
     setDeleteId(null);
     await deleteTeamMemberAction(deleteId!);
     showToast('Removed team member.', 'success');
+  }
+
+  async function handleResetPassword(e: React.FormEvent) {
+    e.preventDefault();
+    if (!resetMember || !resetPassword.trim()) return;
+
+    const targetEmail = resetMember.email;
+    const targetName = resetMember.name;
+    setIsResetting(true);
+    try {
+      const res = await updateUserPasswordAction(targetEmail, resetPassword);
+      if (res.success) {
+        showToast(`Reset password for ${targetName}!`, 'success');
+        setTeam((prev) => prev.map((m) => (m.id === resetMember.id ? { ...m, temp_password: resetPassword } : m)));
+        setResetMember(null);
+        setGeneratedCreds({ name: targetName, email: targetEmail, tempPassword: resetPassword });
+      } else {
+        showToast(res.message || 'Failed to update password.', 'error');
+      }
+    } catch (err) {
+      showToast('Error resetting password.', 'error');
+    } finally {
+      setIsResetting(false);
+    }
   }
 
   const permLabels: { key: keyof OpsTeamMember['permissions']; label: string; icon: string; desc: string }[] = [
@@ -268,6 +297,19 @@ export function TeamClient({ initialTeam, currentUserRole, currentUserEmail }: T
                           title={member.status === 'active' ? 'Suspend Access' : 'Activate Access'}
                         >
                           {member.status === 'active' ? <Lock className="w-3.5 h-3.5" /> : <Unlock className="w-3.5 h-3.5" />}
+                        </button>
+                        <button
+                          onClick={() => {
+                            setResetMember(member);
+                            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$';
+                            let pass = 'Cert#';
+                            for (let i = 0; i < 6; i++) pass += chars.charAt(Math.floor(Math.random() * chars.length));
+                            setResetPassword(pass);
+                          }}
+                          className="p-1.5 rounded-lg bg-white/[0.04] hover:bg-[#F97316]/20 text-[#8B949E] hover:text-[#F97316] transition-colors"
+                          title="Reset & View Password"
+                        >
+                          <KeyRound className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => setDeleteId(member.id)}
@@ -497,6 +539,85 @@ export function TeamClient({ initialTeam, currentUserRole, currentUserEmail }: T
                   Done & Close
                 </button>
               </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Reset Password Modal */}
+      <AnimatePresence>
+        {resetMember && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-[#161B22] border border-white/[0.1] rounded-2xl p-6 max-w-md w-full shadow-2xl relative"
+            >
+              <button
+                onClick={() => setResetMember(null)}
+                className="absolute right-4 top-4 text-[#8B949E] hover:text-white p-1"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-xl bg-[#F97316]/10 border border-[#F97316]/20 flex items-center justify-center text-[#F97316]">
+                  <KeyRound className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white">Reset Password</h3>
+                  <p className="text-xs font-mono text-[#8B949E]">{resetMember.name} ({resetMember.email})</p>
+                </div>
+              </div>
+
+              <form onSubmit={handleResetPassword} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-mono uppercase text-[#8B949E] mb-1">New Temporary Password</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      required
+                      value={resetPassword}
+                      onChange={(e) => setResetPassword(e.target.value)}
+                      placeholder="e.g. Cert#xYz123"
+                      className="flex-1 bg-[#0D1117] border border-white/[0.1] rounded-xl px-3.5 py-2.5 text-sm font-mono text-white focus:outline-none focus:border-[#F97316] transition-colors"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$';
+                        let pass = 'Cert#';
+                        for (let i = 0; i < 6; i++) pass += chars.charAt(Math.floor(Math.random() * chars.length));
+                        setResetPassword(pass);
+                      }}
+                      className="px-3 py-2.5 bg-white/[0.06] hover:bg-white/[0.12] rounded-xl text-xs font-mono text-[#8B949E] hover:text-white transition-colors flex items-center gap-1.5 shrink-0"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-[#F97316]" /> Gen
+                    </button>
+                  </div>
+                  <p className="text-[11px] text-[#8B949E] mt-1.5 leading-relaxed">
+                    Set any password above or click <span className="text-[#F97316] font-semibold">Gen</span> for a random one. When updated, you can instantly copy and share the credentials.
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-end gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setResetMember(null)}
+                    className="px-4 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-sm text-[#8B949E] hover:text-white transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isResetting || !resetPassword.trim()}
+                    className="px-5 py-2 rounded-xl bg-[#F97316] hover:bg-[#F97316]/90 text-[#080A0E] font-bold text-sm transition-all disabled:opacity-50"
+                  >
+                    {isResetting ? 'Saving...' : 'Update & View Password'}
+                  </button>
+                </div>
+              </form>
             </motion.div>
           </div>
         )}
