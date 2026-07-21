@@ -262,11 +262,16 @@ export async function getTeamMembersAction(): Promise<OpsTeamMember[]> {
     if (!m.email) continue;
     const cleanEmail = m.email.toLowerCase().trim();
     const existing = map.get(cleanEmail);
-    const pass = m.temp_password || (m.permissions && typeof m.permissions === 'object' ? (m.permissions as any)._pass : undefined);
+    let parsedPerms = m.permissions;
+    if (typeof m.permissions === 'string') {
+      try { parsedPerms = JSON.parse(m.permissions); } catch (e) {}
+    }
+    const pass = m.temp_password || (parsedPerms && typeof parsedPerms === 'object' ? (parsedPerms as any)._pass : undefined);
     map.set(cleanEmail, {
       ...existing,
       ...m,
       email: cleanEmail,
+      permissions: parsedPerms || existing?.permissions,
       temp_password: pass || existing?.temp_password,
       avatar_url: m.avatar_url || existing?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(cleanEmail)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`,
     });
@@ -332,7 +337,7 @@ export async function getTeamMembersAction(): Promise<OpsTeamMember[]> {
   });
 }
 
-export async function saveTeamMemberAction(member: OpsTeamMember): Promise<{ success: boolean; data: OpsTeamMember }> {
+export async function saveTeamMemberAction(member: OpsTeamMember): Promise<{ success: boolean; data: OpsTeamMember; message?: string }> {
   const cleanEmail = member.email.toLowerCase().trim();
   const enhancedMember: OpsTeamMember = {
     ...member,
@@ -340,23 +345,71 @@ export async function saveTeamMemberAction(member: OpsTeamMember): Promise<{ suc
     avatar_url: member.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(cleanEmail)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`,
   };
 
+  let dbSuccess = false;
   try {
     const { error } = await supabaseAdmin.from('ops_team_members').upsert(enhancedMember).select().single();
-    if (error) {
-      const { temp_password, ...rest } = enhancedMember as any;
-      await supabaseAdmin.from('ops_team_members').upsert(rest);
+    if (!error) {
+      dbSuccess = true;
+    } else {
+      console.error('Supabase ops_team_members upsert error 1:', error);
+      // Fallback 1: try with stringified permissions and without temp_password/avatar_url if schema columns differ
+      const { temp_password, avatar_url, ...coreRest } = enhancedMember as any;
+      const { error: err2 } = await supabaseAdmin.from('ops_team_members').upsert({
+        ...coreRest,
+        permissions: typeof enhancedMember.permissions === 'string' ? enhancedMember.permissions : JSON.stringify(enhancedMember.permissions || {}),
+      });
+      if (!err2) {
+        dbSuccess = true;
+      } else {
+        console.error('Supabase ops_team_members upsert error 2:', err2);
+        // Fallback 2: try core columns with object permissions
+        const { error: err3 } = await supabaseAdmin.from('ops_team_members').upsert(coreRest);
+        if (!err3) {
+          dbSuccess = true;
+        } else {
+          console.error('Supabase ops_team_members upsert error 3:', err3);
+          // Fallback 3: try minimal core columns
+          const { error: err4 } = await supabaseAdmin.from('ops_team_members').upsert({
+            id: enhancedMember.id,
+            email: enhancedMember.email,
+            name: enhancedMember.name,
+            role: enhancedMember.role,
+            status: enhancedMember.status,
+            permissions: typeof enhancedMember.permissions === 'string' ? enhancedMember.permissions : JSON.stringify(enhancedMember.permissions || {}),
+          });
+          if (!err4) dbSuccess = true;
+          else console.error('Supabase ops_team_members upsert error 4:', err4);
+        }
+      }
     }
-  } catch (e) {}
+  } catch (e) {
+    console.error('saveTeamMemberAction ops_team_members exception:', e);
+  }
 
   try {
     const permsPayload = enhancedMember.temp_password ? { ...(enhancedMember.permissions || {}), _pass: enhancedMember.temp_password } : enhancedMember.permissions;
-    await supabaseAdmin.from('admin_users_allowlist').upsert({
+    const { error } = await supabaseAdmin.from('admin_users_allowlist').upsert({
       email: cleanEmail,
       role: enhancedMember.role || 'TEAM_MEMBER',
       permissions: JSON.stringify(permsPayload),
       added_at: enhancedMember.created_at || new Date().toISOString(),
     });
-  } catch (e) {}
+    if (!error) {
+      dbSuccess = true;
+    } else {
+      console.error('Supabase admin_users_allowlist upsert error 1:', error);
+      // Fallback: strip permissions column if admin_users_allowlist schema lacks permissions column
+      const { error: err2 } = await supabaseAdmin.from('admin_users_allowlist').upsert({
+        email: cleanEmail,
+        role: enhancedMember.role || 'TEAM_MEMBER',
+        added_at: enhancedMember.created_at || new Date().toISOString(),
+      });
+      if (!err2) dbSuccess = true;
+      else console.error('Supabase admin_users_allowlist upsert error 2:', err2);
+    }
+  } catch (e) {
+    console.error('saveTeamMemberAction admin_users_allowlist exception:', e);
+  }
 
   const list = await getTeamMembersAction();
   const idx = list.findIndex((m) => m.id === enhancedMember.id || m.email.toLowerCase() === cleanEmail);

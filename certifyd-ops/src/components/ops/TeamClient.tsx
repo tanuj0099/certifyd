@@ -88,8 +88,12 @@ export function TeamClient({ initialTeam, currentUserRole, currentUserEmail }: T
     setIsSaving((prev) => ({ ...prev, [member.id]: true }));
 
     try {
-      await saveTeamMemberAction(updatedMember);
-      showToast(`Updated access permissions for ${member.name}`, 'success');
+      const res = await saveTeamMemberAction(updatedMember);
+      if (res && res.success) {
+        showToast(`Updated access permissions for ${member.name}`, 'success');
+      } else {
+        showToast(res?.message || 'Failed to save permissions to database.', 'error');
+      }
     } catch (e) {
       showToast('Failed to save permissions to database.', 'error');
     } finally {
@@ -114,8 +118,12 @@ export function TeamClient({ initialTeam, currentUserRole, currentUserEmail }: T
     };
 
     setTeam((prev) => prev.map((m) => (m.id === member.id ? updatedMember : m)));
-    await saveTeamMemberAction(updatedMember);
-    showToast(`Member ${updatedMember.name} is now ${updatedMember.status}`, 'success');
+    const res = await saveTeamMemberAction(updatedMember);
+    if (res && res.success) {
+      showToast(`Member ${updatedMember.name} is now ${updatedMember.status}`, 'success');
+    } else {
+      showToast(res?.message || 'Failed to update member status in database.', 'error');
+    }
   }
 
   async function handleAddMember(e: React.FormEvent) {
