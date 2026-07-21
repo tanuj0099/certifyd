@@ -51,6 +51,7 @@ export interface OpsCalendarEvent {
   section: 'marketing' | 'technical' | 'database' | 'verifications' | 'content' | 'admin';
   description?: string;
   is_private: boolean;
+  assignee?: string;
   created_by: string;
   created_at: string;
 }
@@ -62,6 +63,7 @@ export interface OpsNoteThread {
   section: 'marketing' | 'technical' | 'database' | 'verifications' | 'content' | 'admin';
   is_private: boolean;
   pinned: boolean;
+  assignee?: string;
   comments: { id: string; author: string; text: string; date: string }[];
   created_by: string;
   created_at: string;
@@ -74,16 +76,34 @@ export interface OpsMarketingIdea {
   script_content: string;
   target_audience: string;
   status: 'Draft' | 'In Review' | 'Approved' | 'Live';
+  assignee?: string;
   created_by: string;
   created_at: string;
   comments: { id: string; author: string; text: string; date: string }[];
 }
 
+export interface OpsNotification {
+  id: string;
+  recipient_email?: string;
+  recipient_name?: string;
+  title: string;
+  message: string;
+  link_url?: string;
+  time: string;
+  read: boolean;
+  priority: 'high' | 'normal';
+  type: 'task' | 'calendar' | 'note' | 'marketing' | 'submission' | 'contact' | 'system';
+  created_at: string;
+}
+
 // --- Persistent Fallback Cache for Dynamic Operation if SQL Tables are uncreated ---
 const CACHE_DIRS = [
   path.join(process.cwd(), 'data', 'ops_cache'),
+  path.join(process.cwd(), 'certifyd-ops', 'data', 'ops_cache'),
   path.join('/tmp', 'ops_cache'),
   path.join(process.cwd(), '.next', 'ops_cache'),
+  path.resolve(__dirname, '../../../../data/ops_cache'),
+  'C:\\Users\\Tanuj Rajdev\\Downloads\\certifyroi\\certifyroi\\certifyd-ops\\data\\ops_cache'
 ];
 
 for (const dir of CACHE_DIRS) {
@@ -146,25 +166,7 @@ function writeLocalCache<T>(table: string, data: T[]): void {
 }
 
 // --- Initial Dynamic Data (if table is newly created or empty) ---
-const INITIAL_TEAM: OpsTeamMember[] = [
-  {
-    id: 'team-admin-primary',
-    email: 'admin@certifyd.in',
-    name: 'Super Admin',
-    role: 'SUPER_ADMIN',
-    permissions: {
-      access_marketing: true,
-      access_technical: true,
-      access_database: true,
-      access_verifications: true,
-      access_content: true,
-      access_admin: true,
-    },
-    status: 'active',
-    created_at: new Date().toISOString(),
-    avatar_url: `https://api.dicebear.com/7.x/avataaars/svg?seed=admin%40certifyd.in&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`,
-  },
-];
+const INITIAL_TEAM: OpsTeamMember[] = [];
 
 const INITIAL_TASKS: OpsTaskItem[] = [];
 
@@ -186,6 +188,35 @@ const INITIAL_MARKETING_IDEAS: OpsMarketingIdea[] = [
   },
 ];
 
+const INITIAL_NOTIFICATIONS: OpsNotification[] = [
+  {
+    id: 'notif-1',
+    recipient_email: 'all',
+    recipient_name: 'All Team Members',
+    title: 'Placement Cell Inquiry',
+    message: 'New HIGH priority inquiry from Tier 1 Engineering College Placement Officer.',
+    link_url: '/content/contacts',
+    time: '10 min ago',
+    read: false,
+    priority: 'high',
+    type: 'contact',
+    created_at: new Date().toISOString(),
+  },
+  {
+    id: 'notif-2',
+    recipient_email: 'all',
+    recipient_name: 'All Team Members',
+    title: 'Submission Flagged',
+    message: 'Resume submission #a3f2b1c9 flagged by team member for implausible CTC.',
+    link_url: '/submissions/resumes',
+    time: '25 min ago',
+    read: false,
+    priority: 'normal',
+    type: 'submission',
+    created_at: new Date().toISOString(),
+  },
+];
+
 // ==========================================
 // 1. TEAM MEMBERS & DYNAMIC RBAC ACTIONS
 // ==========================================
@@ -196,6 +227,36 @@ export async function getTeamMembersAction(): Promise<OpsTeamMember[]> {
     const { data, error } = await supabaseAdmin.from('ops_team_members').select('*').order('created_at', { ascending: true });
     if (!error && data && data.length > 0) {
       dbMembers = data as OpsTeamMember[];
+    }
+    const { data: allowlist } = await supabaseAdmin.from('admin_users_allowlist').select('*');
+    if (allowlist && allowlist.length > 0) {
+      for (const item of allowlist) {
+        if (item.email && !dbMembers.some((m) => m.email.toLowerCase() === item.email.toLowerCase())) {
+          let parsedPermissions = {
+            access_marketing: true,
+            access_technical: false,
+            access_database: false,
+            access_verifications: false,
+            access_content: false,
+            access_admin: false,
+          };
+          if (item.permissions) {
+            try {
+              parsedPermissions = typeof item.permissions === 'string' ? JSON.parse(item.permissions) : item.permissions;
+            } catch (e) {}
+          }
+          dbMembers.push({
+            id: `team-allow-${item.email.replace(/[^a-z0-9]/g, '-')}`,
+            email: item.email.toLowerCase(),
+            name: item.email.split('@')[0] || item.email,
+            role: item.role || 'TEAM_MEMBER',
+            permissions: parsedPermissions,
+            status: 'active',
+            created_at: item.added_at || new Date().toISOString(),
+            avatar_url: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(item.email)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`,
+          });
+        }
+      }
     }
   } catch (e) {}
 
@@ -226,7 +287,64 @@ export async function getTeamMembersAction(): Promise<OpsTeamMember[]> {
     });
   }
 
-  return Array.from(map.values());
+  for (const dir of CACHE_DIRS) {
+    try {
+      const credsFile = path.join(dir, 'admin_credentials.json');
+      if (fs.existsSync(credsFile)) {
+        const creds = JSON.parse(fs.readFileSync(credsFile, 'utf-8'));
+        for (const [key, val] of Object.entries(creds || {})) {
+          if (!key || typeof val !== 'string') continue;
+          if (key.endsWith('_permissions')) {
+            const cleanKey = key.replace('_permissions', '').toLowerCase().trim();
+            const fullEmail = cleanKey.includes('@') ? cleanKey : `${cleanKey}@certifyd.in`;
+            const existing = map.get(cleanKey) || map.get(fullEmail);
+            if (existing) {
+              try { existing.permissions = JSON.parse(val); } catch (e) {}
+            }
+            continue;
+          }
+          const cleanEmail = key.toLowerCase().trim();
+          const fullEmail = cleanEmail.includes('@') ? cleanEmail : `${cleanEmail}@certifyd.in`;
+          const existing = map.get(cleanEmail) || map.get(fullEmail);
+          if (existing) {
+            if (!existing.temp_password && val) existing.temp_password = val;
+          } else {
+            let parsedPerms = {
+              access_marketing: true,
+              access_technical: false,
+              access_database: false,
+              access_verifications: false,
+              access_content: false,
+              access_admin: false,
+            };
+            if (creds[`${cleanEmail}_permissions`] || creds[`${fullEmail}_permissions`]) {
+              try { parsedPerms = JSON.parse(creds[`${cleanEmail}_permissions`] || creds[`${fullEmail}_permissions`]); } catch (e) {}
+            }
+            map.set(fullEmail, {
+              id: `team-${fullEmail.replace(/[^a-z0-9]/g, '-')}`,
+              email: fullEmail,
+              name: fullEmail.split('@')[0] || fullEmail,
+              role: fullEmail.includes('admin') || fullEmail === 'tanuj@certifyd.in' ? 'SUPER_ADMIN' : 'TEAM_MEMBER',
+              permissions: parsedPerms,
+              status: 'active',
+              created_at: new Date().toISOString(),
+              temp_password: val,
+              avatar_url: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(fullEmail)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`,
+            });
+          }
+        }
+      }
+    } catch (e) {}
+  }
+
+  return Array.from(map.values()).filter((m) => {
+    const clean = (m.email || '').toLowerCase().trim();
+    const cleanName = (m.name || '').toLowerCase().trim();
+    if (clean === 'admin@certifyd.in' || clean === 'superadmin@certifyd.in' || cleanName === 'super admin' || (m.role === 'SUPER_ADMIN' && clean.includes('admin'))) {
+      return false;
+    }
+    return true;
+  });
 }
 
 export async function saveTeamMemberAction(member: OpsTeamMember): Promise<{ success: boolean; data: OpsTeamMember }> {
@@ -251,7 +369,7 @@ export async function saveTeamMemberAction(member: OpsTeamMember): Promise<{ suc
   else list.push(enhancedMember);
   writeLocalCache('ops_team_members', list);
 
-  if (enhancedMember.temp_password) {
+  if (enhancedMember.temp_password || enhancedMember.permissions) {
     for (const dir of CACHE_DIRS) {
       try {
         if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
@@ -260,26 +378,65 @@ export async function saveTeamMemberAction(member: OpsTeamMember): Promise<{ suc
         if (fs.existsSync(credsFile)) {
           creds = JSON.parse(fs.readFileSync(credsFile, 'utf-8'));
         }
-        creds[cleanEmail] = enhancedMember.temp_password;
+        if (enhancedMember.temp_password) {
+          creds[cleanEmail] = enhancedMember.temp_password;
+          creds[cleanEmail.split('@')[0]] = enhancedMember.temp_password;
+        }
+        if (enhancedMember.permissions) {
+          creds[`${cleanEmail}_permissions`] = JSON.stringify(enhancedMember.permissions);
+          creds[`${cleanEmail.split('@')[0]}_permissions`] = JSON.stringify(enhancedMember.permissions);
+        }
         fs.writeFileSync(credsFile, JSON.stringify(creds, null, 2), 'utf-8');
       } catch (e) {}
     }
   }
 
   revalidatePath('/ops/team');
+  revalidatePath('/ops/tasks');
+  revalidatePath('/ops/calendar');
+  revalidatePath('/ops/notes');
+  revalidatePath('/marketing/ideas');
+  revalidatePath('/ops/my-work');
   return { success: true, data: enhancedMember };
 }
 
 export async function deleteTeamMemberAction(id: string): Promise<{ success: boolean }> {
+  const list = readLocalCache<OpsTeamMember>('ops_team_members', INITIAL_TEAM);
+  const memberToDelete = list.find((m) => m.id === id);
+  const cleanEmail = memberToDelete?.email?.toLowerCase()?.trim() || '';
+
   try {
     await supabaseAdmin.from('ops_team_members').delete().eq('id', id);
+    if (cleanEmail) {
+      await supabaseAdmin.from('ops_team_members').delete().eq('email', cleanEmail);
+      await supabaseAdmin.from('admin_users_allowlist').delete().eq('email', cleanEmail);
+    }
   } catch (e) {}
 
-  const list = readLocalCache<OpsTeamMember>('ops_team_members', INITIAL_TEAM);
-  const filtered = list.filter((m) => m.id !== id);
+  const filtered = list.filter((m) => m.id !== id && (!cleanEmail || m.email.toLowerCase() !== cleanEmail));
   writeLocalCache('ops_team_members', filtered);
 
+  if (cleanEmail) {
+    for (const dir of CACHE_DIRS) {
+      try {
+        const credsFile = path.join(dir, 'admin_credentials.json');
+        if (fs.existsSync(credsFile)) {
+          const creds = JSON.parse(fs.readFileSync(credsFile, 'utf-8'));
+          delete creds[cleanEmail];
+          delete creds[cleanEmail.split('@')[0]];
+          if (memberToDelete?.name) delete creds[memberToDelete.name.toLowerCase()];
+          fs.writeFileSync(credsFile, JSON.stringify(creds, null, 2), 'utf-8');
+        }
+      } catch (e) {}
+    }
+  }
+
   revalidatePath('/ops/team');
+  revalidatePath('/ops/tasks');
+  revalidatePath('/ops/calendar');
+  revalidatePath('/ops/notes');
+  revalidatePath('/marketing/ideas');
+  revalidatePath('/ops/my-work');
   return { success: true };
 }
 
@@ -301,6 +458,16 @@ export async function saveOpsTaskAction(task: OpsTaskItem): Promise<{ success: b
   try {
     const { data, error } = await supabaseAdmin.from('ops_tasks').upsert(task).select().single();
     if (!error && data) {
+      if (task.assignee && task.assignee !== 'Unassigned' && task.assignee !== 'Super Admin') {
+        await sendNotificationAction(
+          task.assignee,
+          `New Task Assigned: ${task.title}`,
+          `You have been assigned a task due on ${task.deadline || 'soon'} with ${task.priority || 'Medium'} priority.`,
+          '/ops/tasks',
+          'task',
+          task.priority === 'Urgent' || task.priority === 'High' ? 'high' : 'normal'
+        );
+      }
       revalidatePath('/ops/tasks');
       return { success: true, data: data as OpsTaskItem };
     }
@@ -311,6 +478,17 @@ export async function saveOpsTaskAction(task: OpsTaskItem): Promise<{ success: b
   if (idx >= 0) list[idx] = task;
   else list.unshift(task);
   writeLocalCache('ops_tasks', list);
+
+  if (task.assignee && task.assignee !== 'Unassigned' && task.assignee !== 'Super Admin') {
+    await sendNotificationAction(
+      task.assignee,
+      `New Task Assigned: ${task.title}`,
+      `You have been assigned a task due on ${task.deadline || 'soon'} with ${task.priority || 'Medium'} priority.`,
+      '/ops/tasks',
+      'task',
+      task.priority === 'Urgent' || task.priority === 'High' ? 'high' : 'normal'
+    );
+  }
 
   revalidatePath('/ops/tasks');
   return { success: true, data: task };
@@ -347,6 +525,16 @@ export async function saveCalendarEventAction(event: OpsCalendarEvent): Promise<
   try {
     const { data, error } = await supabaseAdmin.from('ops_calendar_events').upsert(event).select().single();
     if (!error && data) {
+      if (event.assignee && event.assignee !== 'Unassigned') {
+        await sendNotificationAction(
+          event.assignee,
+          `Calendar Event Assigned: ${event.title}`,
+          `You were assigned a calendar event scheduled for ${event.date} ${event.time || ''}.`,
+          '/ops/calendar',
+          'calendar',
+          'normal'
+        );
+      }
       revalidatePath('/ops/calendar');
       return { success: true, data: data as OpsCalendarEvent };
     }
@@ -357,6 +545,17 @@ export async function saveCalendarEventAction(event: OpsCalendarEvent): Promise<
   if (idx >= 0) list[idx] = event;
   else list.push(event);
   writeLocalCache('ops_calendar_events', list);
+
+  if (event.assignee && event.assignee !== 'Unassigned') {
+    await sendNotificationAction(
+      event.assignee,
+      `Calendar Event Assigned: ${event.title}`,
+      `You were assigned a calendar event scheduled for ${event.date} ${event.time || ''}.`,
+      '/ops/calendar',
+      'calendar',
+      'normal'
+    );
+  }
 
   revalidatePath('/ops/calendar');
   return { success: true, data: event };
@@ -393,6 +592,16 @@ export async function saveOpsNoteAction(note: OpsNoteThread): Promise<{ success:
   try {
     const { data, error } = await supabaseAdmin.from('ops_notes').upsert(note).select().single();
     if (!error && data) {
+      if (note.assignee && note.assignee !== 'Unassigned') {
+        await sendNotificationAction(
+          note.assignee,
+          `Action Item/Note Assigned: ${note.title}`,
+          `You were tagged as the assignee on department note in [${note.section.toUpperCase()}].`,
+          '/ops/notes',
+          'note',
+          'normal'
+        );
+      }
       revalidatePath('/ops/notes');
       return { success: true, data: data as OpsNoteThread };
     }
@@ -403,6 +612,17 @@ export async function saveOpsNoteAction(note: OpsNoteThread): Promise<{ success:
   if (idx >= 0) list[idx] = note;
   else list.unshift(note);
   writeLocalCache('ops_notes', list);
+
+  if (note.assignee && note.assignee !== 'Unassigned') {
+    await sendNotificationAction(
+      note.assignee,
+      `Action Item/Note Assigned: ${note.title}`,
+      `You were tagged as the assignee on department note in [${note.section.toUpperCase()}].`,
+      '/ops/notes',
+      'note',
+      'normal'
+    );
+  }
 
   revalidatePath('/ops/notes');
   return { success: true, data: note };
@@ -493,9 +713,18 @@ export async function createEmployeeProfileAction(
     await supabaseAdmin.from('admin_users_allowlist').upsert({
       email: email.toLowerCase(),
       role: 'TEAM_MEMBER',
+      permissions: JSON.stringify(permissions),
       added_at: new Date().toISOString(),
     });
-  } catch (e) {}
+  } catch (e) {
+    try {
+      await supabaseAdmin.from('admin_users_allowlist').upsert({
+        email: email.toLowerCase(),
+        role: 'TEAM_MEMBER',
+        added_at: new Date().toISOString(),
+      });
+    } catch (e2) {}
+  }
 
   return { success: true, member: newMember, email: email.toLowerCase(), tempPassword };
 }
@@ -666,6 +895,18 @@ export async function saveMarketingIdeaAction(idea: OpsMarketingIdea): Promise<{
   else list.unshift(idea);
   writeLocalCache('ops_marketing_ideas', list);
 
+  if (idea.assignee && idea.assignee !== 'Unassigned') {
+    await sendNotificationAction(
+      idea.assignee,
+      `Marketing Execution Assigned: ${idea.title}`,
+      `You were assigned to execute a ${idea.channel} campaign targeting ${idea.target_audience || 'key audience'}.`,
+      '/marketing/ideas',
+      'marketing',
+      'normal'
+    );
+  }
+
+  revalidatePath('/marketing/ideas');
   return { success: true, data: idea };
 }
 
@@ -678,5 +919,137 @@ export async function deleteMarketingIdeaAction(id: string): Promise<{ success: 
   const filtered = list.filter((i) => i.id !== id);
   writeLocalCache('ops_marketing_ideas', filtered);
 
+  revalidatePath('/marketing/ideas');
+  return { success: true };
+}
+
+// ==========================================
+// 9. NOTIFICATIONS & CONNECTION ENGINE
+// ==========================================
+
+export async function getNotificationsAction(userEmail?: string, userRole?: string): Promise<OpsNotification[]> {
+  let dbNotifs: OpsNotification[] = [];
+  try {
+    const { data, error } = await supabaseAdmin.from('ops_notifications').select('*').order('created_at', { ascending: false });
+    if (!error && data && data.length > 0) {
+      dbNotifs = data as OpsNotification[];
+    }
+  } catch (e) {}
+
+  const cacheNotifs = readLocalCache<OpsNotification>('ops_notifications', INITIAL_NOTIFICATIONS);
+  const map = new Map<string, OpsNotification>();
+  for (const n of cacheNotifs) map.set(n.id, n);
+  for (const n of dbNotifs) map.set(n.id, n);
+
+  const allList = Array.from(map.values()).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+  if (!userEmail) return allList;
+  const cleanEmail = userEmail.toLowerCase().trim();
+  const teamList = await getTeamMembersAction();
+  const currentMember = teamList.find(m => m.email.toLowerCase() === cleanEmail);
+  const userName = currentMember?.name?.toLowerCase().trim() || '';
+
+  return allList.filter((n) => {
+    if (n.recipient_email === 'all' || !n.recipient_email) return true;
+    const recEmail = n.recipient_email.toLowerCase().trim();
+    const recName = (n.recipient_name || '').toLowerCase().trim();
+    if (recEmail === cleanEmail) return true;
+    if (userName && recName && (userName === recName || recName.includes(userName) || userName.includes(recName))) return true;
+    if (userName && recEmail && (userName === recEmail || recEmail.includes(userName) || userName.includes(recEmail))) return true;
+    if (userRole === 'SUPER_ADMIN') return true;
+    return false;
+  });
+}
+
+export async function sendNotificationAction(
+  recipient: string,
+  title: string,
+  message: string,
+  linkUrl: string = '/ops/tasks',
+  type: OpsNotification['type'] = 'task',
+  priority: OpsNotification['priority'] = 'normal'
+): Promise<{ success: boolean }> {
+  if (!recipient || recipient === 'Unassigned') return { success: true };
+  const teamList = await getTeamMembersAction();
+  const member = teamList.find(
+    m => m.email.toLowerCase() === recipient.toLowerCase().trim() ||
+         m.name.toLowerCase() === recipient.toLowerCase().trim()
+  );
+
+  const notif: OpsNotification = {
+    id: `notif-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+    recipient_email: member ? member.email : recipient,
+    recipient_name: member ? member.name : recipient,
+    title,
+    message,
+    link_url: linkUrl,
+    time: 'Just now',
+    read: false,
+    priority,
+    type,
+    created_at: new Date().toISOString(),
+  };
+
+  try {
+    await supabaseAdmin.from('ops_notifications').upsert(notif);
+  } catch (e) {}
+
+  const list = readLocalCache<OpsNotification>('ops_notifications', INITIAL_NOTIFICATIONS);
+  list.unshift(notif);
+  writeLocalCache('ops_notifications', list);
+
+  revalidatePath('/');
+  revalidatePath('/ops/tasks');
+  revalidatePath('/ops/calendar');
+  revalidatePath('/ops/notes');
+  revalidatePath('/marketing/ideas');
+  return { success: true };
+}
+
+export async function markNotificationReadAction(id: string): Promise<{ success: boolean }> {
+  try {
+    await supabaseAdmin.from('ops_notifications').update({ read: true }).eq('id', id);
+  } catch (e) {}
+
+  const list = readLocalCache<OpsNotification>('ops_notifications', INITIAL_NOTIFICATIONS);
+  const idx = list.findIndex(n => n.id === id);
+  if (idx >= 0) {
+    list[idx].read = true;
+    writeLocalCache('ops_notifications', list);
+  }
+  revalidatePath('/');
+  return { success: true };
+}
+
+export async function deleteNotificationAction(id: string): Promise<{ success: boolean }> {
+  try {
+    await supabaseAdmin.from('ops_notifications').delete().eq('id', id);
+  } catch (e) {}
+
+  const list = readLocalCache<OpsNotification>('ops_notifications', INITIAL_NOTIFICATIONS);
+  const filtered = list.filter(n => n.id !== id);
+  writeLocalCache('ops_notifications', filtered);
+  revalidatePath('/');
+  return { success: true };
+}
+
+export async function clearAllNotificationsAction(userEmail?: string): Promise<{ success: boolean }> {
+  try {
+    if (userEmail) {
+      await supabaseAdmin.from('ops_notifications').delete().eq('recipient_email', userEmail.toLowerCase().trim());
+    } else {
+      await supabaseAdmin.from('ops_notifications').delete().neq('id', '0');
+    }
+  } catch (e) {}
+
+  let list = readLocalCache<OpsNotification>('ops_notifications', INITIAL_NOTIFICATIONS);
+  if (userEmail) {
+    const cleanEmail = userEmail.toLowerCase().trim();
+    list = list.filter(n => n.recipient_email !== cleanEmail && n.recipient_email !== 'all');
+  } else {
+    list = [];
+  }
+  writeLocalCache('ops_notifications', list);
+  revalidatePath('/');
   return { success: true };
 }

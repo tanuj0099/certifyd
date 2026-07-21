@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { AlertTriangle, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -10,7 +10,7 @@ interface ConfirmModalProps {
   onConfirm: () => void;
   title: string;
   impact: string;
-  confirmWord: string;
+  confirmWord?: string;
   loading?: boolean;
 }
 
@@ -20,12 +20,8 @@ export function ConfirmModal({
   onConfirm,
   title,
   impact,
-  confirmWord,
   loading = false,
 }: ConfirmModalProps) {
-  const [input, setInput] = useState('');
-  const isMatch = input.trim().toUpperCase() === confirmWord.toUpperCase();
-
   if (!isOpen) return null;
 
   return (
@@ -44,7 +40,7 @@ export function ConfirmModal({
               </div>
               <div>
                 <h3 className="text-base font-semibold text-white">{title}</h3>
-                <p className="text-xs text-[#8B949E]">Irreversible Destructive Action</p>
+                <p className="text-xs text-[#8B949E]">Are you sure you want to proceed?</p>
               </div>
             </div>
             <button
@@ -56,23 +52,9 @@ export function ConfirmModal({
             </button>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-[#161B22] border border-white/[0.06] mb-5">
+          <div className="p-3.5 rounded-xl bg-[#161B22] border border-white/[0.06] mb-6">
             <p className="text-xs text-[#8B949E] mb-1 font-mono uppercase tracking-wider">Impact Warning</p>
             <p className="text-sm text-[#F0F6FC] leading-relaxed">{impact}</p>
-          </div>
-
-          <div className="mb-6">
-            <label className="block text-xs text-[#8B949E] mb-2 font-mono">
-              Type <strong className="text-[#F85149] font-mono">{confirmWord}</strong> below to confirm:
-            </label>
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder={confirmWord}
-              disabled={loading}
-              className="w-full bg-[#161B22] border border-white/[0.08] rounded-xl px-3.5 py-2 text-sm font-mono text-white placeholder-[#8B949E]/40 focus:outline-none focus:border-[#F85149] transition-colors uppercase"
-            />
           </div>
 
           <div className="flex items-center justify-end gap-3">
@@ -84,16 +66,12 @@ export function ConfirmModal({
               Cancel
             </button>
             <button
-              onClick={() => {
-                if (isMatch) {
-                  onConfirm();
-                }
-              }}
-              disabled={!isMatch || loading}
-              className="px-4 py-2 rounded-xl text-xs font-semibold bg-[#F85149] text-white hover:bg-[#F85149]/90 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-lg shadow-[#F85149]/20 flex items-center gap-1.5"
+              onClick={onConfirm}
+              disabled={loading}
+              className="px-4 py-2 rounded-xl text-xs font-semibold bg-[#F85149] text-white hover:bg-[#F85149]/90 transition-all shadow-lg shadow-[#F85149]/20 flex items-center gap-1.5"
             >
               {loading && <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />}
-              <span>Confirm Action</span>
+              <span>Yes, Delete</span>
             </button>
           </div>
         </motion.div>

@@ -76,8 +76,11 @@ export async function getSession(): Promise<SessionPayload | null> {
   try {
     const cacheDirs = [
       path.join(process.cwd(), 'data', 'ops_cache'),
+      path.join(process.cwd(), 'certifyd-ops', 'data', 'ops_cache'),
       path.join('/tmp', 'ops_cache'),
       path.join(process.cwd(), '.next', 'ops_cache'),
+      path.resolve(__dirname, '../../../../data/ops_cache'),
+      'C:\\Users\\Tanuj Rajdev\\Downloads\\certifyroi\\certifyroi\\certifyd-ops\\data\\ops_cache'
     ];
     for (const dir of cacheDirs) {
       const file = path.join(dir, 'ops_team_members.json');

@@ -1,8 +1,10 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Bell, RefreshCw, LogOut, Check, Trash2, AlertTriangle, MessageSquare, Sun, Moon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Bell, RefreshCw, LogOut, Check, Trash2, AlertTriangle, MessageSquare, Sun, Moon, CheckSquare, Calendar, FileText, Lightbulb } from 'lucide-react';
 import { logoutAction } from '../../actions/authActions';
+import { OpsNotification, getNotificationsAction, markNotificationReadAction, deleteNotificationAction, clearAllNotificationsAction } from '../../actions/opsActions';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface TopBarProps {
@@ -12,57 +14,37 @@ interface TopBarProps {
   userAvatar?: string;
 }
 
-interface Notification {
-  id: string;
-  title: string;
-  message: string;
-  time: string;
-  priority: 'high' | 'normal';
-  type: 'submission' | 'contact' | 'system';
-}
-
 export function TopBar({ userEmail, userRole, userPermissions, userAvatar }: TopBarProps) {
+  const router = useRouter();
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [lastSync, setLastSync] = useState<string>('Just now');
   const [syncing, setSyncing] = useState(false);
   const [showNotifs, setShowNotifs] = useState(false);
-  const [notifications, setNotifications] = useState<Notification[]>([
-    {
-      id: '1',
-      title: 'Placement Cell Inquiry',
-      message: 'New HIGH priority inquiry from Tier 1 Engineering College Placement Officer.',
-      time: '10 min ago',
-      priority: 'high',
-      type: 'contact',
-    },
-    {
-      id: '2',
-      title: 'Submission Flagged',
-      message: 'Resume submission #a3f2b1c9 flagged by team member for implausible CTC.',
-      time: '25 min ago',
-      priority: 'normal',
-      type: 'submission',
-    },
-    {
-      id: '3',
-      title: 'Data Quality Alert',
-      message: 'Market Pulse scraper returned 15% variance for Azure 104 in Bengaluru.',
-      time: '1 hour ago',
-      priority: 'normal',
-      type: 'system',
-    },
-  ]);
+  const [notifications, setNotifications] = useState<OpsNotification[]>([]);
 
   const defaultAvatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(userEmail)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
   const avatarToShow = userAvatar || defaultAvatar;
 
-  // Filter notifications for TEAM_MEMBER
-  const visibleNotifs = notifications.filter((n) => {
-    if (userRole === 'SUPER_ADMIN') return true;
-    return n.type === 'submission';
-  });
+  useEffect(() => {
+    let isMounted = true;
+    async function loadNotifs() {
+      try {
+        const live = await getNotificationsAction(userEmail, userRole);
+        if (isMounted && live) {
+          setNotifications(live);
+        }
+      } catch (e) {}
+    }
+    loadNotifs();
+    const interval = setInterval(loadNotifs, 4000);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, [userEmail, userRole]);
 
-  const unreadCount = visibleNotifs.length;
+  const visibleNotifs = notifications;
+  const unreadCount = visibleNotifs.filter(n => !n.read).length || visibleNotifs.length;
 
   const syncTimeRef = useRef<number>(Date.now());
 
@@ -78,13 +60,17 @@ export function TopBar({ userEmail, userRole, userPermissions, userAvatar }: Top
     return () => clearInterval(timer);
   }, []);
 
-  function handleManualSync() {
+  async function handleManualSync() {
     setSyncing(true);
+    try {
+      const live = await getNotificationsAction(userEmail, userRole);
+      if (live) setNotifications(live);
+    } catch (e) {}
     setTimeout(() => {
       setSyncing(false);
       syncTimeRef.current = Date.now();
       setLastSync('Just now');
-    }, 800);
+    }, 600);
   }
 
   useEffect(() => {
@@ -191,9 +177,12 @@ export function TopBar({ userEmail, userRole, userPermissions, userAvatar }: Top
                         {unreadCount}
                       </span>
                     </div>
-                    {unreadCount > 0 && (
+                    {visibleNotifs.length > 0 && (
                       <button
-                        onClick={() => setNotifications([])}
+                        onClick={async () => {
+                          setNotifications([]);
+                          await clearAllNotificationsAction(userEmail);
+                        }}
                         className="text-xs text-[#8B949E] hover:text-white flex items-center gap-1 transition-colors"
                       >
                         <Trash2 className="w-3 h-3" />
@@ -209,32 +198,64 @@ export function TopBar({ userEmail, userRole, userPermissions, userAvatar }: Top
                       </div>
                     ) : (
                       visibleNotifs.map((n) => (
-                        <div key={n.id} className="p-3.5 hover:bg-white/[0.02] transition-colors flex items-start gap-3">
+                        <div
+                          key={n.id}
+                          onClick={async () => {
+                            setNotifications((prev) => prev.map(item => item.id === n.id ? { ...item, read: true } : item));
+                            await markNotificationReadAction(n.id);
+                            if (n.link_url) {
+                              setShowNotifs(false);
+                              router.push(n.link_url);
+                            }
+                          }}
+                          className={`p-3.5 hover:bg-white/[0.04] cursor-pointer transition-colors flex items-start gap-3 ${!n.read ? 'bg-white/[0.02]' : 'opacity-70'}`}
+                        >
                           <div
                             className={`w-8 h-8 rounded-lg shrink-0 flex items-center justify-center mt-0.5 ${
                               n.priority === 'high'
                                 ? 'bg-[#F85149]/15 text-[#F85149] border border-[#F85149]/30 animate-pulse'
-                                : n.type === 'submission'
+                                : n.type === 'task'
+                                ? 'bg-[#00D4A8]/15 text-[#00D4A8] border border-[#00D4A8]/30'
+                                : n.type === 'calendar'
+                                ? 'bg-[#3B82F6]/15 text-[#3B82F6] border border-[#3B82F6]/30'
+                                : n.type === 'note'
                                 ? 'bg-[#E8C547]/15 text-[#E8C547] border border-[#E8C547]/30'
+                                : n.type === 'marketing'
+                                ? 'bg-[#F97316]/15 text-[#F97316] border border-[#F97316]/30'
                                 : 'bg-[#3B82F6]/15 text-[#3B82F6] border border-[#3B82F6]/30'
                             }`}
                           >
                             {n.priority === 'high' ? (
                               <AlertTriangle className="w-4 h-4" />
+                            ) : n.type === 'task' ? (
+                              <CheckSquare className="w-4 h-4" />
+                            ) : n.type === 'calendar' ? (
+                              <Calendar className="w-4 h-4" />
+                            ) : n.type === 'note' ? (
+                              <FileText className="w-4 h-4" />
+                            ) : n.type === 'marketing' ? (
+                              <Lightbulb className="w-4 h-4" />
                             ) : (
                               <MessageSquare className="w-4 h-4" />
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between gap-2">
-                              <p className="text-xs font-semibold text-white truncate">{n.title}</p>
+                              <p className="text-xs font-semibold text-white truncate flex items-center gap-1.5">
+                                {!n.read && <span className="w-1.5 h-1.5 rounded-full bg-[#00D4A8] shrink-0" />}
+                                {n.title}
+                              </p>
                               <span className="text-[10px] font-mono text-[#8B949E] shrink-0">{n.time}</span>
                             </div>
                             <p className="text-xs text-[#8B949E] mt-0.5 leading-relaxed">{n.message}</p>
                           </div>
                           <button
-                            onClick={() => setNotifications((prev) => prev.filter((item) => item.id !== n.id))}
-                            className="text-[#8B949E] hover:text-white p-1 transition-colors self-center"
+                            onClick={async (e) => {
+                              e.stopPropagation();
+                              setNotifications((prev) => prev.filter((item) => item.id !== n.id));
+                              await deleteNotificationAction(n.id);
+                            }}
+                            className="text-[#8B949E] hover:text-white p-1 transition-colors self-center shrink-0"
                             title="Dismiss"
                           >
                             <Check className="w-3.5 h-3.5" />

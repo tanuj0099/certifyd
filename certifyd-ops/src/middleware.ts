@@ -83,7 +83,7 @@ export async function middleware(req: NextRequest) {
           { status: 403, headers: { 'content-type': 'application/json' } }
         );
       }
-      if (permissions && permissions.access_technical !== true) {
+      if (!permissions || permissions.access_technical !== true) {
         return new NextResponse(
           JSON.stringify({ error: '403 Forbidden - Technical privileges required for system control routes' }),
           { status: 403, headers: { 'content-type': 'application/json' } }
@@ -96,6 +96,46 @@ export async function middleware(req: NextRequest) {
       if (!permissions || permissions.access_marketing !== true) {
         return new NextResponse(
           JSON.stringify({ error: '403 Forbidden - Marketing privileges required for this section' }),
+          { status: 403, headers: { 'content-type': 'application/json' } }
+        );
+      }
+    }
+
+    if (pathname.startsWith('/submissions') && role !== 'SUPER_ADMIN') {
+      const permissions = payload.permissions as any;
+      if (!permissions || permissions.access_verifications !== true) {
+        return new NextResponse(
+          JSON.stringify({ error: '403 Forbidden - Verifications privileges required for submissions' }),
+          { status: 403, headers: { 'content-type': 'application/json' } }
+        );
+      }
+    }
+
+    if (pathname.startsWith('/data') && role !== 'SUPER_ADMIN') {
+      const permissions = payload.permissions as any;
+      if (!permissions || permissions.access_database !== true) {
+        return new NextResponse(
+          JSON.stringify({ error: '403 Forbidden - Database privileges required for data management' }),
+          { status: 403, headers: { 'content-type': 'application/json' } }
+        );
+      }
+    }
+
+    if (pathname.startsWith('/content') && role !== 'SUPER_ADMIN') {
+      const permissions = payload.permissions as any;
+      if (!permissions || permissions.access_content !== true) {
+        return new NextResponse(
+          JSON.stringify({ error: '403 Forbidden - Content privileges required for content management' }),
+          { status: 403, headers: { 'content-type': 'application/json' } }
+        );
+      }
+    }
+
+    if (pathname.startsWith('/ops/team') && role !== 'SUPER_ADMIN') {
+      const permissions = payload.permissions as any;
+      if (!permissions || permissions.access_admin !== true) {
+        return new NextResponse(
+          JSON.stringify({ error: '403 Forbidden - Admin privileges required for Team Access' }),
           { status: 403, headers: { 'content-type': 'application/json' } }
         );
       }

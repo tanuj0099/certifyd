@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { OpsCalendarEvent, saveCalendarEventAction, deleteCalendarEventAction, getCalendarEventsAction } from '../../actions/opsActions';
+import { OpsCalendarEvent, OpsTeamMember, saveCalendarEventAction, deleteCalendarEventAction, getCalendarEventsAction } from '../../actions/opsActions';
+import { AssigneeSelector } from './AssigneeSelector';
 import { useToast } from '../ui/Toast';
 import { ConfirmModal } from '../ui/ConfirmModal';
 import {
@@ -26,16 +27,18 @@ interface CalendarClientProps {
   initialEvents: OpsCalendarEvent[];
   currentUserRole: string;
   currentUserEmail: string;
+  teamMembers?: OpsTeamMember[];
 }
 
 type SectionType = 'all' | 'marketing' | 'technical' | 'database' | 'verifications' | 'content' | 'admin';
 
-export function CalendarClient({ initialEvents, currentUserRole, currentUserEmail }: CalendarClientProps) {
+export function CalendarClient({ initialEvents, currentUserRole, currentUserEmail, teamMembers = [] }: CalendarClientProps) {
   const [events, setEvents] = useState<OpsCalendarEvent[]>(initialEvents || []);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [activeSection, setActiveSection] = useState<SectionType>('all');
   const [viewMode, setViewMode] = useState<'month' | 'agenda'>('month');
-  const [ownershipFilter, setOwnershipFilter] = useState<'all' | 'mine' | 'private' | string>('all');
+  const [ownershipFilter, setOwnershipFilter] = useState<'all' | 'mine' | 'private' | 'assigned' | string>('all');
+  const [assignee, setAssignee] = useState('Unassigned');
 
   React.useEffect(() => {
     if (initialEvents) setEvents(initialEvents);
@@ -83,9 +86,21 @@ export function CalendarClient({ initialEvents, currentUserRole, currentUserEmai
     const isMine = creator.toLowerCase() === email.toLowerCase() ||
                    creator.toLowerCase().includes(authorName.toLowerCase()) ||
                    isSuperAdmin;
+    const isAssignedToMe = Boolean(ev.assignee && (
+      ev.assignee.toLowerCase() === currentUserEmail.toLowerCase() ||
+      ev.assignee.toLowerCase() === authorName.toLowerCase() ||
+      teamMembers.some(m => m.email.toLowerCase() === currentUserEmail.toLowerCase() && (ev.assignee || '').toLowerCase() === m.name.toLowerCase())
+    ));
     
     if (ev.is_private && !isMine) {
       return false; // Hidden from standard employees who did not create it
+    }
+
+    // Strict assignment privacy: if assigned to a specific employee, ONLY that employee, the creator, or Super Admin can view it
+    if (!isSuperAdmin && ev.assignee && ev.assignee !== 'Unassigned' && ev.assignee !== 'Super Admin') {
+      if (!isAssignedToMe && !isMine) {
+        return false;
+      }
     }
 
     if (ownershipFilter === 'mine' && !isMine) {
@@ -94,7 +109,11 @@ export function CalendarClient({ initialEvents, currentUserRole, currentUserEmai
     if (ownershipFilter === 'private' && (!ev.is_private || !isMine)) {
       return false;
     }
-    if (ownershipFilter !== 'all' && ownershipFilter !== 'mine' && ownershipFilter !== 'private') {
+    if (ownershipFilter === 'assigned') {
+      if (!ev.assignee || ev.assignee === 'Unassigned') return false;
+      if (!isAssignedToMe) return false;
+    }
+    if (ownershipFilter !== 'all' && ownershipFilter !== 'mine' && ownershipFilter !== 'private' && ownershipFilter !== 'assigned') {
       if (ev.created_by !== ownershipFilter) return false;
     }
 
@@ -126,6 +145,7 @@ export function CalendarClient({ initialEvents, currentUserRole, currentUserEmai
     setSection(activeSection === 'all' ? 'marketing' : activeSection);
     setDescription('');
     setIsPrivate(false);
+    setAssignee('Unassigned');
     setIsModalOpen(true);
   }
 
@@ -137,6 +157,7 @@ export function CalendarClient({ initialEvents, currentUserRole, currentUserEmai
     setSection(ev.section);
     setDescription(ev.description || '');
     setIsPrivate(ev.is_private);
+    setAssignee(ev.assignee || 'Unassigned');
     setIsModalOpen(true);
   }
 
@@ -152,6 +173,7 @@ export function CalendarClient({ initialEvents, currentUserRole, currentUserEmai
       section,
       description: description.trim(),
       is_private: isPrivate,
+      assignee: assignee || 'Unassigned',
       created_by: editingEvent ? editingEvent.created_by : currentUserEmail,
       created_at: editingEvent ? editingEvent.created_at : new Date().toISOString(),
     };
@@ -328,6 +350,17 @@ export function CalendarClient({ initialEvents, currentUserRole, currentUserEmai
             <Lock className="w-3.5 h-3.5" />
             <span>Personal Event Only</span>
           </button>
+          <button
+            onClick={() => setOwnershipFilter('assigned')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all flex items-center gap-1.5 ${
+              ownershipFilter === 'assigned'
+                ? 'bg-[#00D4A8] text-[#080A0E] shadow'
+                : 'bg-[#0D1117] text-[#8B949E] hover:text-white border border-white/10'
+            }`}
+          >
+            <User className="w-3.5 h-3.5 text-[#00D4A8]" />
+            <span>✨ Assigned to Me</span>
+          </button>
         </div>
 
         {/* Unique Team Members Dropdown */}
@@ -430,6 +463,7 @@ export function CalendarClient({ initialEvents, currentUserRole, currentUserEmai
                       >
                         <div className="flex items-center gap-1 min-w-0 truncate">
                           {ev.is_private ? <Lock className="w-3 h-3 shrink-0 text-[#E8C547]" /> : <Globe className="w-3 h-3 shrink-0 opacity-70" />}
+                          {ev.assignee && ev.assignee !== 'Unassigned' && <span title={`Assigned to: ${ev.assignee}`} className="inline-flex"><User className="w-3 h-3 shrink-0 text-[#00D4A8]" /></span>}
                           <span className="truncate">{ev.title}</span>
                         </div>
                         {ev.time && <span className="text-[9px] opacity-75 shrink-0 font-mono">{ev.time.split(' ')[0]}</span>}
@@ -470,6 +504,11 @@ export function CalendarClient({ initialEvents, currentUserRole, currentUserEmai
                         <span className={`px-2 py-0.5 rounded text-[10px] font-mono uppercase font-bold border ${sectionBadgeColors[ev.section]}`}>
                           {ev.section}
                         </span>
+                        {ev.assignee && ev.assignee !== 'Unassigned' && (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-mono bg-[#00D4A8]/15 text-[#00D4A8] px-2 py-0.5 rounded border border-[#00D4A8]/30">
+                            <User className="w-2.5 h-2.5" /> Assigned: {ev.assignee}
+                          </span>
+                        )}
                         {ev.is_private ? (
                           <span className="inline-flex items-center gap-1 text-[10px] font-mono bg-[#E8C547]/15 text-[#E8C547] px-2 py-0.5 rounded border border-[#E8C547]/30">
                             <Lock className="w-2.5 h-2.5" /> Private to You
@@ -579,6 +618,16 @@ export function CalendarClient({ initialEvents, currentUserRole, currentUserEmai
                       <option key={s.id} value={s.id}>{s.label}</option>
                     ))}
                   </select>
+                </div>
+
+                <div>
+                  <AssigneeSelector
+                    teamMembers={teamMembers}
+                    value={assignee}
+                    onChange={(val) => setAssignee(val)}
+                    label="Event Assignee (Triggers Calendar Notification)"
+                    currentUserEmail={currentUserEmail}
+                  />
                 </div>
 
                 <div>

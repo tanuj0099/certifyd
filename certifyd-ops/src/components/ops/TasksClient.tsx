@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { OpsTaskItem, OpsTeamMember, saveOpsTaskAction, deleteOpsTaskAction, getOpsTasksAction } from '../../actions/opsActions';
+import { AssigneeSelector } from './AssigneeSelector';
 import { useToast } from '../ui/Toast';
 import { ConfirmModal } from '../ui/ConfirmModal';
 import {
@@ -88,6 +89,7 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
 
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const { showToast } = useToast();
+  const [filterAssignee, setFilterAssignee] = useState<'all' | 'mine'>('all');
 
   const sections: { id: SectionType; label: string; icon: string }[] = [
     { id: 'all', label: 'All Departments', icon: '🌐' },
@@ -99,14 +101,41 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
     { id: 'admin', label: 'General Admin', icon: '👑' },
   ];
 
+  const myAssignedCount = (tasks || []).filter(t => 
+    t.assignee && (
+      t.assignee.toLowerCase() === currentUserEmail.toLowerCase() ||
+      t.assignee.toLowerCase() === (currentUserEmail.split('@')[0] || '').toLowerCase() ||
+      teamMembers.some(m => m.email.toLowerCase() === currentUserEmail.toLowerCase() && (t.assignee || '').toLowerCase() === m.name.toLowerCase())
+    )
+  ).length;
+
+  const authorName = (currentUserEmail || '').split('@')[0] || 'Super Admin';
+  const isSuperAdmin = currentUserRole === 'SUPER_ADMIN';
+
   const filteredTasks = (tasks || []).filter((t) => {
     if (!t) return false;
     const matchSection = activeSection === 'all' || t.section === activeSection;
+    const isAssignedToMe = Boolean(t.assignee && (
+      t.assignee.toLowerCase() === currentUserEmail.toLowerCase() ||
+      t.assignee.toLowerCase() === authorName.toLowerCase() ||
+      teamMembers.some(m => m.email.toLowerCase() === currentUserEmail.toLowerCase() && (t.assignee || '').toLowerCase() === m.name.toLowerCase())
+    ));
+    const creator = t.created_by || '';
+    const isCreatedByMe = creator.toLowerCase() === currentUserEmail.toLowerCase() || creator.toLowerCase().includes(authorName.toLowerCase());
+
+    // Strict assignment privacy: if assigned to a specific employee, ONLY that employee, the creator, or Super Admin can view it
+    if (!isSuperAdmin && t.assignee && t.assignee !== 'Unassigned' && t.assignee !== 'Super Admin') {
+      if (!isAssignedToMe && !isCreatedByMe) {
+        return false;
+      }
+    }
+
+    const matchAssignee = filterAssignee === 'all' || isAssignedToMe;
     const q = searchQuery.toLowerCase();
     const matchSearch = (t.title || '').toLowerCase().includes(q) ||
                         (t.description || '').toLowerCase().includes(q) ||
                         (t.assignee || '').toLowerCase().includes(q);
-    return matchSection && matchSearch;
+    return matchSection && matchAssignee && matchSearch;
   });
 
   function openCreateModal() {
@@ -364,14 +393,31 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
         })}
       </div>
 
-      {/* Search Input */}
-      <div className="flex justify-end">
+      {/* Search & My Assigned Tasks Toggle */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setFilterAssignee(filterAssignee === 'all' ? 'mine' : 'all')}
+            className={`px-3.5 py-2 rounded-xl text-xs font-mono font-bold transition-all flex items-center gap-2 border ${
+              filterAssignee === 'mine'
+                ? 'bg-[#00D4A8]/20 text-[#00D4A8] border-[#00D4A8]'
+                : 'bg-[#161B22] text-[#8B949E] hover:text-white border-white/10'
+            }`}
+          >
+            <span>✨ My Assigned Tasks</span>
+            <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
+              filterAssignee === 'mine' ? 'bg-[#00D4A8] text-[#080A0E]' : 'bg-white/10 text-[#8B949E]'
+            }`}>
+              {myAssignedCount}
+            </span>
+          </button>
+        </div>
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Filter delegated tasks..."
-          className="bg-[#161B22] border border-white/10 rounded-xl px-3.5 py-2 text-sm text-white placeholder-[#8B949E] focus:outline-none focus:border-[#F97316] w-64"
+          className="bg-[#161B22] border border-white/10 rounded-xl px-3.5 py-2 text-sm text-white placeholder-[#8B949E] focus:outline-none focus:border-[#F97316] w-full sm:w-64"
         />
       </div>
 
@@ -647,20 +693,13 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
                   </div>
 
                   <div>
-                    <label className="block text-xs font-mono text-[#8B949E] uppercase mb-1">Assignee</label>
-                    <select
+                    <AssigneeSelector
+                      teamMembers={teamMembers}
                       value={assignee}
-                      onChange={(e) => setAssignee(e.target.value)}
-                      className="w-full bg-[#161B22] border border-white/10 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-[#F97316]"
-                    >
-                      <option value="Entire Marketing Team">👥 Entire Marketing Team</option>
-                      <option value="Entire Technical Team">👥 Entire Technical Team</option>
-                      <option value="Entire Verifications Team">👥 Entire Verifications Team</option>
-                      <option value="Super Admin">👑 Super Admin</option>
-                      {teamMembers.map((m) => (
-                        <option key={m.id} value={m.name}>👤 {m.name}</option>
-                      ))}
-                    </select>
+                      onChange={(val) => setAssignee(val)}
+                      label="Task Assignee (Triggers Notification)"
+                      currentUserEmail={currentUserEmail}
+                    />
                   </div>
 
                   <div>
@@ -792,9 +831,24 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
                     </span>
                   </div>
                   <h2 className="text-xl font-bold text-white leading-snug">{activeTask.title}</h2>
-                  <p className="text-xs text-[#8B949E] font-mono mt-1">
-                    Assigned to: <span className="text-white font-semibold">{activeTask.assignee}</span> • Due: <span className="text-[#E8C547]">{activeTask.deadline}</span>
-                  </p>
+                  <div className="mt-2 flex items-center gap-4 text-xs font-mono text-[#8B949E]">
+                    <span>Due: <span className="text-[#E8C547]">{activeTask.deadline}</span></span>
+                  </div>
+                  <div className="mt-3">
+                    <AssigneeSelector
+                      teamMembers={teamMembers}
+                      value={activeTask.assignee}
+                      onChange={async (newAssignee) => {
+                        const updated = { ...activeTask, assignee: newAssignee };
+                        setActiveTask(updated);
+                        setTasks((prev) => prev.map((t) => (t.id === activeTask.id ? updated : t)));
+                        await saveOpsTaskAction(updated);
+                        showToast(`Reassigned task to ${newAssignee}`, 'success');
+                      }}
+                      label="Task Assignee (Change to Reassign & Notify)"
+                      currentUserEmail={currentUserEmail}
+                    />
+                  </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <button

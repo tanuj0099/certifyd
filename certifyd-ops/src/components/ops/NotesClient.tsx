@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { OpsNoteThread, saveOpsNoteAction, deleteOpsNoteAction, addNoteCommentAction, getOpsNotesAction } from '../../actions/opsActions';
+import { OpsNoteThread, OpsTeamMember, saveOpsNoteAction, deleteOpsNoteAction, addNoteCommentAction, getOpsNotesAction } from '../../actions/opsActions';
+import { AssigneeSelector } from './AssigneeSelector';
 import { useToast } from '../ui/Toast';
 import { ConfirmModal } from '../ui/ConfirmModal';
 import {
@@ -26,15 +27,17 @@ interface NotesClientProps {
   initialNotes: OpsNoteThread[];
   currentUserRole: string;
   currentUserEmail: string;
+  teamMembers?: OpsTeamMember[];
 }
 
 type SectionType = 'all' | 'marketing' | 'technical' | 'database' | 'verifications' | 'content' | 'admin';
 
-export function NotesClient({ initialNotes, currentUserRole, currentUserEmail }: NotesClientProps) {
+export function NotesClient({ initialNotes, currentUserRole, currentUserEmail, teamMembers = [] }: NotesClientProps) {
   const [notes, setNotes] = useState<OpsNoteThread[]>(initialNotes || []);
   const [activeSection, setActiveSection] = useState<SectionType>('all');
-  const [privacyFilter, setPrivacyFilter] = useState<'all' | 'mine' | 'private'>('all');
+  const [privacyFilter, setPrivacyFilter] = useState<'all' | 'mine' | 'private' | 'assigned'>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [assignee, setAssignee] = useState('Unassigned');
 
   React.useEffect(() => {
     if (initialNotes) setNotes(initialNotes);
@@ -86,9 +89,21 @@ export function NotesClient({ initialNotes, currentUserRole, currentUserEmail }:
     const isMine = creator.toLowerCase() === email.toLowerCase() ||
                    creator.toLowerCase().includes(authorName.toLowerCase()) ||
                    (isSuperAdmin && (creator.includes('Admin') || creator.includes('admin')));
+    const isAssignedToMe = Boolean(n.assignee && (
+      n.assignee.toLowerCase() === currentUserEmail.toLowerCase() ||
+      n.assignee.toLowerCase() === authorName.toLowerCase() ||
+      teamMembers.some(m => m.email.toLowerCase() === currentUserEmail.toLowerCase() && (n.assignee || '').toLowerCase() === m.name.toLowerCase())
+    ));
     
     if (n.is_private && !isMine) {
       return false;
+    }
+
+    // Strict assignment privacy: if assigned to a specific employee, ONLY that employee, the creator, or Super Admin can view it
+    if (!isSuperAdmin && n.assignee && n.assignee !== 'Unassigned' && n.assignee !== 'Super Admin') {
+      if (!isAssignedToMe && !isMine) {
+        return false;
+      }
     }
 
     if (privacyFilter === 'mine' && !isMine) {
@@ -96,6 +111,10 @@ export function NotesClient({ initialNotes, currentUserRole, currentUserEmail }:
     }
     if (privacyFilter === 'private' && (!n.is_private || !isMine)) {
       return false;
+    }
+    if (privacyFilter === 'assigned') {
+      if (!n.assignee || n.assignee === 'Unassigned') return false;
+      if (!isAssignedToMe) return false;
     }
 
     // Section check
@@ -137,6 +156,7 @@ export function NotesClient({ initialNotes, currentUserRole, currentUserEmail }:
     setSection(activeSection === 'all' ? 'marketing' : activeSection);
     setIsPrivate(false);
     setPinned(false);
+    setAssignee('Unassigned');
     setIsModalOpen(true);
   }
 
@@ -147,6 +167,7 @@ export function NotesClient({ initialNotes, currentUserRole, currentUserEmail }:
     setSection(n.section);
     setIsPrivate(n.is_private);
     setPinned(n.pinned);
+    setAssignee(n.assignee || 'Unassigned');
     setIsModalOpen(true);
   }
 
@@ -161,6 +182,7 @@ export function NotesClient({ initialNotes, currentUserRole, currentUserEmail }:
       section,
       is_private: isPrivate,
       pinned,
+      assignee: assignee || 'Unassigned',
       comments: editingNote ? editingNote.comments : [],
       created_by: editingNote ? editingNote.created_by : currentUserEmail,
       created_at: editingNote ? editingNote.created_at : new Date().toISOString(),
@@ -344,6 +366,17 @@ export function NotesClient({ initialNotes, currentUserRole, currentUserEmail }:
             <Lock className="w-3.5 h-3.5" />
             <span>Personal Note Only</span>
           </button>
+          <button
+            onClick={() => setPrivacyFilter('assigned')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all flex items-center gap-1.5 ${
+              privacyFilter === 'assigned'
+                ? 'bg-[#00D4A8] text-[#080A0E] shadow'
+                : 'bg-[#0D1117] text-[#8B949E] hover:text-white border border-white/10'
+            }`}
+          >
+            <User className="w-3.5 h-3.5 text-[#00D4A8]" />
+            <span>✨ Assigned to Me</span>
+          </button>
         </div>
       </div>
 
@@ -379,6 +412,11 @@ export function NotesClient({ initialNotes, currentUserRole, currentUserEmail }:
                       <span className={`px-2 py-0.5 rounded text-[10px] font-mono uppercase font-bold border ${sectionBadgeColors[note.section]}`}>
                         {note.section}
                       </span>
+                      {note.assignee && note.assignee !== 'Unassigned' && (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-mono bg-[#00D4A8]/15 text-[#00D4A8] px-2 py-0.5 rounded border border-[#00D4A8]/30">
+                          <User className="w-2.5 h-2.5" /> Assigned: {note.assignee}
+                        </span>
+                      )}
                       {note.is_private ? (
                         <span className="inline-flex items-center gap-1 text-[10px] font-mono bg-[#E8C547]/15 text-[#E8C547] px-2 py-0.5 rounded border border-[#E8C547]/30">
                           <Lock className="w-2.5 h-2.5" /> Private
@@ -493,6 +531,16 @@ export function NotesClient({ initialNotes, currentUserRole, currentUserEmail }:
                 </div>
 
                 <div>
+                  <AssigneeSelector
+                    teamMembers={teamMembers}
+                    value={assignee}
+                    onChange={(val) => setAssignee(val)}
+                    label="Action Item Assignee (Triggers Employee Notification)"
+                    currentUserEmail={currentUserEmail}
+                  />
+                </div>
+
+                <div>
                   <label className="block text-xs font-mono text-[#8B949E] uppercase mb-1">Content / Document Body</label>
                   <textarea
                     rows={8}
@@ -603,6 +651,11 @@ export function NotesClient({ initialNotes, currentUserRole, currentUserEmail }:
                     {activeNote.pinned && (
                       <span className="inline-flex items-center gap-1 text-[10px] font-mono bg-[#F97316]/15 text-[#F97316] px-2 py-0.5 rounded border border-[#F97316]/30 font-bold">
                         <Pin className="w-2.5 h-2.5 fill-current" /> Pinned
+                      </span>
+                    )}
+                    {activeNote.assignee && activeNote.assignee !== 'Unassigned' && (
+                      <span className="inline-flex items-center gap-1 text-[10px] font-mono bg-[#00D4A8]/15 text-[#00D4A8] px-2 py-0.5 rounded border border-[#00D4A8]/30 font-bold">
+                        <User className="w-2.5 h-2.5" /> Assigned: {activeNote.assignee}
                       </span>
                     )}
                   </div>

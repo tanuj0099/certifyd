@@ -49,8 +49,11 @@ export async function loginAction(formData: FormData) {
   const path = await import('path');
   const cacheDirs = [
     path.join(process.cwd(), 'data', 'ops_cache'),
+    path.join(process.cwd(), 'certifyd-ops', 'data', 'ops_cache'),
     path.join('/tmp', 'ops_cache'),
     path.join(process.cwd(), '.next', 'ops_cache'),
+    path.resolve(__dirname, '../../../../data/ops_cache'),
+    'C:\\Users\\Tanuj Rajdev\\Downloads\\certifyroi\\certifyroi\\certifyd-ops\\data\\ops_cache'
   ];
   let cachedCreds: Record<string, string> = {};
   for (const dir of cacheDirs) {
@@ -109,21 +112,48 @@ export async function loginAction(formData: FormData) {
     role = 'SUPER_ADMIN';
   } else {
     // Check if login attempt is for an Employee in Team Members
+    const fullEmail = cleanUser.includes('@') ? cleanUser : `${cleanUser}@certifyd.in`;
+    const prefixUser = cleanUser.split('@')[0];
     const teamMembers = await getTeamMembersAction();
-    const member = teamMembers.find((m) => m.email.toLowerCase() === cleanUser);
+    const member = teamMembers.find((m) => {
+      const mEmail = (m.email || '').toLowerCase().trim();
+      const mName = (m.name || '').toLowerCase().trim();
+      const mPrefix = mEmail.split('@')[0];
+      return mEmail === cleanUser || mEmail === fullEmail || mPrefix === cleanUser || mName === cleanUser || m.id === cleanUser;
+    });
+
     if (member) {
       if (member.status === 'suspended') {
         return { error: 'Your employee account has been suspended by a Super Admin.' };
       }
-      const validPass = cachedCreds[cleanUser] || member.temp_password || 'worker123';
+      const mEmail = (member.email || '').toLowerCase().trim();
+      const mPrefix = mEmail.split('@')[0];
+      const validPass =
+        cachedCreds[cleanUser] ||
+        cachedCreds[fullEmail] ||
+        cachedCreds[prefixUser] ||
+        cachedCreds[mEmail] ||
+        cachedCreds[mPrefix] ||
+        member.temp_password ||
+        'worker123';
 
-      if (password === validPass || password === member.temp_password || password === 'worker123') {
+      if (
+        password === validPass ||
+        password === member.temp_password ||
+        password === cachedCreds[mEmail] ||
+        password === cachedCreds[mPrefix] ||
+        password === 'worker123'
+      ) {
         isValid = true;
         role = member.role || 'TEAM_MEMBER';
         memberPermissions = member.permissions;
         memberAvatarUrl = member.avatar_url;
       }
-    } else if (cachedCreds[cleanUser] && cachedCreds[cleanUser] === password) {
+    } else if (
+      (cachedCreds[cleanUser] && cachedCreds[cleanUser] === password) ||
+      (cachedCreds[fullEmail] && cachedCreds[fullEmail] === password) ||
+      (cachedCreds[prefixUser] && cachedCreds[prefixUser] === password)
+    ) {
       // Direct cache hit for newly created employee before file re-index
       isValid = true;
       role = 'TEAM_MEMBER';

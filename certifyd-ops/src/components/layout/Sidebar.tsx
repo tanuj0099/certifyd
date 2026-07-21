@@ -89,6 +89,7 @@ export function Sidebar({
     {
       title: 'Team Workspace',
       items: [
+        { name: 'My Assigned Work', href: '/ops/my-work', icon: 'Award', requiredPermission: null },
         { name: 'Task Delegation', href: '/ops/tasks', icon: 'CheckSquare', requiredPermission: null },
         { name: 'Team Calendar', href: '/ops/calendar', icon: 'Calendar', requiredPermission: null },
         { name: 'Notes & Comments', href: '/ops/notes', icon: 'FileText', requiredPermission: null },

@@ -1,24 +1,28 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Lightbulb, Plus, Copy, Check, Trash2, Edit3, MessageSquare, Filter, Share2, Sparkles, Send, Tag } from 'lucide-react';
-import { OpsMarketingIdea, saveMarketingIdeaAction, deleteMarketingIdeaAction } from '../../actions/opsActions';
+import { Lightbulb, Plus, Copy, Check, Trash2, Edit3, MessageSquare, Filter, Share2, Sparkles, Send, Tag, User } from 'lucide-react';
+import { OpsMarketingIdea, OpsTeamMember, saveMarketingIdeaAction, deleteMarketingIdeaAction } from '../../actions/opsActions';
+import { AssigneeSelector } from '../ops/AssigneeSelector';
 import { useToast } from '../ui/Toast';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface MarketingIdeasClientProps {
   initialIdeas: OpsMarketingIdea[];
   userEmail: string;
+  teamMembers?: OpsTeamMember[];
 }
 
 const CHANNELS: OpsMarketingIdea['channel'][] = ['LinkedIn', 'YouTube', 'Email Outreach', 'Instagram', 'Sales Pitch'];
 const STATUSES: OpsMarketingIdea['status'][] = ['Draft', 'In Review', 'Approved', 'Live'];
 
-export function MarketingIdeasClient({ initialIdeas, userEmail }: MarketingIdeasClientProps) {
+export function MarketingIdeasClient({ initialIdeas, userEmail, teamMembers = [] }: MarketingIdeasClientProps) {
   const [ideas, setIdeas] = useState<OpsMarketingIdea[]>(initialIdeas);
   const [filterChannel, setFilterChannel] = useState<string>('All');
   const [filterStatus, setFilterStatus] = useState<string>('All');
+  const [filterAssignee, setFilterAssignee] = useState<'all' | 'mine'>('all');
   const [search, setSearch] = useState('');
+  const [assignee, setAssignee] = useState('Unassigned');
 
   // Modal State
   const [showModal, setShowModal] = useState(false);
@@ -46,6 +50,7 @@ export function MarketingIdeasClient({ initialIdeas, userEmail }: MarketingIdeas
     setScriptContent('');
     setTargetAudience('College Placement Officers & Student Deans');
     setStatus('Draft');
+    setAssignee('Unassigned');
     setShowModal(true);
   }
 
@@ -56,6 +61,7 @@ export function MarketingIdeasClient({ initialIdeas, userEmail }: MarketingIdeas
     setScriptContent(idea.script_content);
     setTargetAudience(idea.target_audience || '');
     setStatus(idea.status);
+    setAssignee(idea.assignee || 'Unassigned');
     setShowModal(true);
   }
 
@@ -75,6 +81,7 @@ export function MarketingIdeasClient({ initialIdeas, userEmail }: MarketingIdeas
             script_content: scriptContent,
             target_audience: targetAudience,
             status,
+            assignee: assignee || 'Unassigned',
           }
         : {
             id: `mkt-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
@@ -83,6 +90,7 @@ export function MarketingIdeasClient({ initialIdeas, userEmail }: MarketingIdeas
             script_content: scriptContent,
             target_audience: targetAudience,
             status,
+            assignee: assignee || 'Unassigned',
             created_by: userEmail,
             created_at: new Date().toISOString(),
             comments: [],
@@ -150,15 +158,36 @@ export function MarketingIdeasClient({ initialIdeas, userEmail }: MarketingIdeas
     showToast('Feedback note added to script!', 'success');
   }
 
+  const authorName = (userEmail || '').split('@')[0] || 'Super Admin';
+  const memberObj = teamMembers.find(m => m.email.toLowerCase() === (userEmail || '').toLowerCase());
+  const isSuperAdmin = memberObj?.role === 'SUPER_ADMIN' || (userEmail || '').toLowerCase().includes('admin') || (userEmail || '').toLowerCase() === 'tanuj@certifyd.in';
+
   const filteredIdeas = ideas.filter((idea) => {
     const matchesChannel = filterChannel === 'All' || idea.channel === filterChannel;
     const matchesStatus = filterStatus === 'All' || idea.status === filterStatus;
+    const isAssignedToMe = Boolean(idea.assignee && (
+      idea.assignee.toLowerCase() === userEmail.toLowerCase() ||
+      idea.assignee.toLowerCase() === authorName.toLowerCase() ||
+      teamMembers.some(m => m.email.toLowerCase() === userEmail.toLowerCase() && (idea.assignee || '').toLowerCase() === m.name.toLowerCase())
+    ));
+    const creator = idea.created_by || '';
+    const isCreatedByMe = creator.toLowerCase() === userEmail.toLowerCase() || creator.toLowerCase().includes(authorName.toLowerCase());
+
+    // Strict assignment privacy: if assigned to a specific employee, ONLY that employee, the creator, or Super Admin can view it
+    if (!isSuperAdmin && idea.assignee && idea.assignee !== 'Unassigned' && idea.assignee !== 'Super Admin') {
+      if (!isAssignedToMe && !isCreatedByMe) {
+        return false;
+      }
+    }
+
+    const matchesAssignee = filterAssignee === 'all' || isAssignedToMe;
     const matchesSearch =
       !search ||
       idea.title.toLowerCase().includes(search.toLowerCase()) ||
       idea.script_content.toLowerCase().includes(search.toLowerCase()) ||
-      idea.target_audience?.toLowerCase().includes(search.toLowerCase());
-    return matchesChannel && matchesStatus && matchesSearch;
+      idea.target_audience?.toLowerCase().includes(search.toLowerCase()) ||
+      idea.assignee?.toLowerCase().includes(search.toLowerCase());
+    return matchesChannel && matchesStatus && matchesAssignee && matchesSearch;
   });
 
   return (
@@ -217,6 +246,18 @@ export function MarketingIdeasClient({ initialIdeas, userEmail }: MarketingIdeas
         </div>
 
         <div className="flex items-center gap-3">
+          <button
+            onClick={() => setFilterAssignee(filterAssignee === 'all' ? 'mine' : 'all')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all flex items-center gap-1.5 ${
+              filterAssignee === 'mine'
+                ? 'bg-[#00D4A8] text-[#080A0E] shadow'
+                : 'bg-[#161B22] text-[#8B949E] hover:text-white border border-white/10'
+            }`}
+          >
+            <User className="w-3.5 h-3.5" />
+            <span>✨ Assigned to Me</span>
+          </button>
+
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
@@ -281,6 +322,11 @@ export function MarketingIdeasClient({ initialIdeas, userEmail }: MarketingIdeas
                       <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold uppercase ${statusColors[idea.status]}`}>
                         {idea.status}
                       </span>
+                      {idea.assignee && idea.assignee !== 'Unassigned' && (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-mono bg-[#00D4A8]/15 text-[#00D4A8] px-2 py-0.5 rounded border border-[#00D4A8]/30 font-bold">
+                          <User className="w-2.5 h-2.5" /> Assigned: {idea.assignee}
+                        </span>
+                      )}
                     </div>
                     <div className="flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
                       <button
@@ -466,6 +512,16 @@ export function MarketingIdeasClient({ initialIdeas, userEmail }: MarketingIdeas
                       ))}
                     </select>
                   </div>
+                </div>
+
+                <div>
+                  <AssigneeSelector
+                    teamMembers={teamMembers}
+                    value={assignee}
+                    onChange={(val) => setAssignee(val)}
+                    label="Campaign Assignee (Triggers Notification)"
+                    currentUserEmail={userEmail}
+                  />
                 </div>
 
                 <div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { getSession } from '@/lib/auth/session';
-import { getCalendarEventsAction, getOpsTasksAction, OpsCalendarEvent } from '@/actions/opsActions';
+import { getCalendarEventsAction, getOpsTasksAction, getTeamMembersAction, OpsCalendarEvent } from '@/actions/opsActions';
 import { CalendarClient } from '@/components/ops/CalendarClient';
 
 export const dynamic = 'force-dynamic';
@@ -11,9 +11,10 @@ export default async function CalendarPage() {
   const currentUserRole = session?.role || 'SUPER_ADMIN';
   const currentUserEmail = session?.email || 'admin@certifyd.in';
 
-  const [events, tasks] = await Promise.all([
+  const [events, tasks, teamMembers] = await Promise.all([
     getCalendarEventsAction(),
     getOpsTasksAction(),
+    getTeamMembersAction(),
   ]);
 
   const taskEvents: OpsCalendarEvent[] = tasks
@@ -25,8 +26,7 @@ export default async function CalendarPage() {
       time: '5:00 PM',
       section: t.section || 'admin',
       is_private: false,
-      pinned: t.priority === 'Urgent' || t.priority === 'High',
-      comments: [],
+      assignee: t.assignee,
       created_by: t.assignee || t.created_by || 'Task Engine',
       created_at: t.created_at || new Date().toISOString(),
     }));
@@ -38,6 +38,7 @@ export default async function CalendarPage() {
       initialEvents={initialEvents}
       currentUserRole={currentUserRole}
       currentUserEmail={currentUserEmail}
+      teamMembers={teamMembers}
     />
   );
 }
