@@ -106,6 +106,7 @@ export function Sidebar({
       items: [
         { name: 'Certifications', href: '/data/certifications', icon: 'Award', restricted: false, publishLock: true },
         { name: 'Market Jobs', href: '/data/jobs', icon: 'Database', restricted: false, publishLock: true },
+        { name: 'Demand Observations', href: '/data/demand', icon: 'Database', restricted: false },
       ],
     },
     {

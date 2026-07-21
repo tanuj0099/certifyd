@@ -1,5 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { X, FileText } from 'lucide-react';
+import MethodologyNote from './MethodologyNote.jsx';
+import DemandScoreBadge from './DemandScoreBadge.jsx';
 
 const USD_TO_INR = 95.70;
 // Constants for implicit logic not strictly defined by the user
@@ -199,6 +201,19 @@ const ROIEngine = ({ currentSalary = DEFAULT_CURRENT_SALARY }) => {
               <div className="text-3xl font-bold text-zinc-300 tracking-tight">
                 {formatINR(totalCost)}
               </div>
+            </div>
+
+            {/* Methodology Note & Demand Badge (A5 + B5) */}
+            <div className="pt-6 border-t border-white/10 flex flex-col gap-3">
+              <DemandScoreBadge
+                certName="Selected Certification"
+                city="Bengaluru"
+                role="Cloud Architect"
+                demandScore={82}
+                sampleConfidence="high"
+                lastObservedAt={new Date().toISOString()}
+              />
+              <MethodologyNote compact={true} />
             </div>
           </div>
 

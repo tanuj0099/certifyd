@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState, useDeferredValue } from 'react'
 import { supabase } from '../lib/supabase.js'
 import MarketPulseSidebar, { MARKET_FILTER_SECTIONS } from './MarketPulseSidebar.jsx'
 import { MarketingFooter } from './MarketingPageShell.jsx'
+import { canShowAggregateClaim, INSUFFICIENT_DATA_MESSAGE } from '../lib/analytics/claimGuard.js'
+import MethodologyNote from './MethodologyNote.jsx'
 const FM = "var(--font-mono)";
 const FS = "var(--font-sans)";
 const DEFAULT_CERT_COST = 25_000
@@ -481,6 +483,8 @@ export default function LiveMarketPulse() {
   const stats = useMemo(() => {
     const rowsWithSalary = rows.filter((row) => row.min_salary > 0 && row.max_salary > 0)
     const totalJobs = rows.reduce((sum, row) => sum + row.job_count_naukri, 0)
+    const sampleValid = canShowAggregateClaim(rowsWithSalary.length)
+
     const avgMin = rowsWithSalary.length
       ? Math.round(rowsWithSalary.reduce((sum, row) => sum + row.min_salary, 0) / rowsWithSalary.length)
       : 0
@@ -495,9 +499,9 @@ export default function LiveMarketPulse() {
     return [
       { label: 'Roles Tracked', value: rows.length || '-' },
       { label: 'With Salary', value: rowsWithSalary.length || '-' },
-      { label: 'Avg Entry', value: fmtLpa(avgMin) },
-      { label: 'Avg Ceiling', value: fmtLpa(avgMax) },
-      { label: 'Avg ROI', value: avgPayback },
+      { label: 'Avg Entry', value: sampleValid ? fmtLpa(avgMin) : 'Not enough data (<20)' },
+      { label: 'Avg Ceiling', value: sampleValid ? fmtLpa(avgMax) : 'Not enough data (<20)' },
+      { label: 'Avg ROI', value: sampleValid ? avgPayback : 'Not enough data (<20)' },
       { label: 'Live Jobs', value: totalJobs ? totalJobs.toLocaleString('en-IN') : '-' },
     ]
   }, [rows])
@@ -559,6 +563,10 @@ export default function LiveMarketPulse() {
                 />
                 {loading ? 'Syncing...' : error ? 'Unavailable' : lastSync ? `Synced ${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}` : 'Recent'}
               </div>
+            </div>
+
+            <div style={{ marginBottom: '16px' }}>
+              <MethodologyNote compact={true} />
             </div>
 
         {/*  Stats bar  */}

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { supabase } from '../lib/supabase.js';
+import MethodologyNote from './MethodologyNote.jsx';
+import DemandScoreBadge from './DemandScoreBadge.jsx';
 import {
   ArrowLeft,
   DollarSign,
@@ -382,9 +384,20 @@ const CertDetail = () => {
             Tablet:  text-3xl (30px)
             Desktop: text-5xl (48px) - premium impact
           */}
-          <h1 className="text-2xl md:text-3xl lg:text-5xl font-extrabold tracking-tight leading-[1.05] text-[var(--text)]">
+          <h1 className="text-2xl md:text-3xl lg:text-5xl font-extrabold tracking-tight leading-[1.05] text-[var(--text)] mb-3">
             {cert.name}
           </h1>
+          <div className="flex items-center gap-4 flex-wrap mt-3">
+            <DemandScoreBadge
+              certName={cert.name}
+              city="Bengaluru"
+              role={cert.functional_track || 'Cloud Architect'}
+              demandScore={cert.demand_score || null}
+              sampleConfidence={cert.sample_confidence || 'low'}
+              lastObservedAt={cert.last_observed_at || null}
+            />
+            <MethodologyNote compact={true} />
+          </div>
         </header>
 
         {/*  Bottom-line stat cards 

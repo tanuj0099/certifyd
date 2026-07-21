@@ -14,6 +14,7 @@ import { callGroqForResume, validateDomain } from '../services/aiService.jsx'
 import { useJourneyStore } from '../store/useJourneyStore.js'
 import { useAuth } from '../hooks/useAuth.jsx'
 import SignInPopup from './SignInPopup.jsx'
+import MethodologyNote from './MethodologyNote.jsx'
 
 //  Font tokens  CSS variables 
 var FM = 'var(--font-mono)'
@@ -584,6 +585,9 @@ var ResultDisplay = function ({ result, onCertSelected, mode, onClear, certDomai
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
       <PersonalisedHero name={result.name} city={result.city} domain={result.domain} primaryCert={primaryCert} mode={mode} certDomains={certDomains} certCount={certCount} />
+      <div style={{ margin: '14px 0 18px 0' }}>
+        <MethodologyNote compact={true} />
+      </div>
 
       {primaryCert && onCertSelected && (
         <motion.button
