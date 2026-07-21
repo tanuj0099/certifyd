@@ -31,22 +31,83 @@ CREATE POLICY "Allow all operations for authenticated and service role on market
 CREATE INDEX IF NOT EXISTS idx_mdo_cert_city_role ON public.market_demand_observations(cert_name, city, role);
 CREATE INDEX IF NOT EXISTS idx_mdo_observed_at ON public.market_demand_observations(observed_at);
 
--- A3. Add confidence and last_observed_at columns to demand_scores
+-- A3. Add confidence and last_observed_at columns to demand_scores (and create table if missing)
+CREATE TABLE IF NOT EXISTS public.demand_scores (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  cert_name TEXT,
+  slug TEXT,
+  city TEXT,
+  role TEXT,
+  score NUMERIC,
+  sample_confidence TEXT DEFAULT 'low',
+  last_observed_at TIMESTAMPTZ,
+  source TEXT
+);
+
+ALTER TABLE public.demand_scores ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Public read access for demand_scores" ON public.demand_scores;
+CREATE POLICY "Public read access for demand_scores" 
+  ON public.demand_scores FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Allow all operations for authenticated and service role on demand_scores" ON public.demand_scores;
+CREATE POLICY "Allow all operations for authenticated and service role on demand_scores" 
+  ON public.demand_scores FOR ALL USING (true) WITH CHECK (true);
+
 ALTER TABLE public.demand_scores ADD COLUMN IF NOT EXISTS sample_confidence TEXT DEFAULT 'low';
 ALTER TABLE public.demand_scores ADD COLUMN IF NOT EXISTS last_observed_at TIMESTAMPTZ;
 ALTER TABLE public.demand_scores ADD COLUMN IF NOT EXISTS role TEXT;
 ALTER TABLE public.demand_scores ADD COLUMN IF NOT EXISTS city TEXT;
 ALTER TABLE public.demand_scores ADD COLUMN IF NOT EXISTS score NUMERIC;
 ALTER TABLE public.demand_scores ADD COLUMN IF NOT EXISTS source TEXT;
+ALTER TABLE public.demand_scores ADD COLUMN IF NOT EXISTS cert_name TEXT;
+ALTER TABLE public.demand_scores ADD COLUMN IF NOT EXISTS slug TEXT;
 
 -- ------------------------------------------------------------------------------
 -- PART B: Attribution Honesty Schema
 -- ------------------------------------------------------------------------------
 
--- B1 & B2. Add contributing_factors, outcome_data, and months_since_cert to outcomes
+-- B1 & B2. Add contributing_factors, outcome_data, and months_since_cert to outcomes (and create table if missing)
+CREATE TABLE IF NOT EXISTS public.outcomes (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  user_id UUID,
+  prediction_id UUID,
+  entity_type TEXT,
+  actual_outcome JSONB DEFAULT '{}'::jsonb,
+  outcome_data JSONB DEFAULT '{}'::jsonb,
+  contributing_factors JSONB DEFAULT '[]'::jsonb,
+  months_since_cert NUMERIC,
+  verification_method TEXT DEFAULT 'self_reported',
+  confidence_weight NUMERIC DEFAULT 0.8
+);
+
+ALTER TABLE public.outcomes ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Users can read own outcomes" ON public.outcomes;
+CREATE POLICY "Users can read own outcomes" 
+  ON public.outcomes FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Users can insert own outcomes" ON public.outcomes;
+CREATE POLICY "Users can insert own outcomes" 
+  ON public.outcomes FOR ALL USING (true) WITH CHECK (true);
+
 ALTER TABLE public.outcomes ADD COLUMN IF NOT EXISTS contributing_factors JSONB DEFAULT '[]'::jsonb;
 ALTER TABLE public.outcomes ADD COLUMN IF NOT EXISTS outcome_data JSONB DEFAULT '{}'::jsonb;
 ALTER TABLE public.outcomes ADD COLUMN IF NOT EXISTS months_since_cert NUMERIC;
+
+-- Create predictions table if missing
+CREATE TABLE IF NOT EXISTS public.predictions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  user_id UUID,
+  outcome_id UUID,
+  outcome_captured_at TIMESTAMPTZ
+);
+
+ALTER TABLE public.predictions ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow all access on predictions" ON public.predictions;
+CREATE POLICY "Allow all access on predictions" ON public.predictions FOR ALL USING (true) WITH CHECK (true);
 
 -- Update stored procedure record_outcome_and_link_prediction to accept new fields if used by RPC
 CREATE OR REPLACE FUNCTION public.record_outcome_and_link_prediction(
