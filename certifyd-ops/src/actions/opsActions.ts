@@ -232,7 +232,7 @@ export async function getTeamMembersAction(): Promise<OpsTeamMember[]> {
     if (allowlist && allowlist.length > 0) {
       for (const item of allowlist) {
         if (item.email && !dbMembers.some((m) => m.email.toLowerCase() === item.email.toLowerCase())) {
-          let parsedPermissions = {
+          let parsedPermissions: any = {
             access_marketing: true,
             access_technical: false,
             access_database: false,
@@ -240,9 +240,15 @@ export async function getTeamMembersAction(): Promise<OpsTeamMember[]> {
             access_content: false,
             access_admin: false,
           };
+          let parsedPass: string | undefined = undefined;
           if (item.permissions) {
             try {
-              parsedPermissions = typeof item.permissions === 'string' ? JSON.parse(item.permissions) : item.permissions;
+              const raw = typeof item.permissions === 'string' ? JSON.parse(item.permissions) : item.permissions;
+              if (raw && typeof raw === 'object') {
+                if (raw._pass) parsedPass = raw._pass;
+                const { _pass, ...cleanPerms } = raw;
+                parsedPermissions = cleanPerms;
+              }
             } catch (e) {}
           }
           dbMembers.push({
@@ -253,6 +259,7 @@ export async function getTeamMembersAction(): Promise<OpsTeamMember[]> {
             permissions: parsedPermissions,
             status: 'active',
             created_at: item.added_at || new Date().toISOString(),
+            temp_password: item.temp_password || parsedPass,
             avatar_url: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(item.email)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`,
           });
         }
@@ -267,10 +274,12 @@ export async function getTeamMembersAction(): Promise<OpsTeamMember[]> {
     if (!m.email) continue;
     const cleanEmail = m.email.toLowerCase().trim();
     const existing = map.get(cleanEmail);
+    const pass = m.temp_password || (m.permissions && typeof m.permissions === 'object' ? (m.permissions as any)._pass : undefined);
     map.set(cleanEmail, {
       ...existing,
       ...m,
       email: cleanEmail,
+      temp_password: pass || existing?.temp_password,
       avatar_url: m.avatar_url || existing?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(cleanEmail)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`,
     });
   }
@@ -278,11 +287,12 @@ export async function getTeamMembersAction(): Promise<OpsTeamMember[]> {
     if (!m.email) continue;
     const cleanEmail = m.email.toLowerCase().trim();
     const existing = map.get(cleanEmail);
+    const pass = m.temp_password || (m.permissions && typeof m.permissions === 'object' ? (m.permissions as any)._pass : undefined);
     map.set(cleanEmail, {
       ...existing,
       ...m,
       email: cleanEmail,
-      temp_password: m.temp_password || existing?.temp_password,
+      temp_password: pass || existing?.temp_password,
       avatar_url: m.avatar_url || existing?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(cleanEmail)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`,
     });
   }
@@ -361,6 +371,16 @@ export async function saveTeamMemberAction(member: OpsTeamMember): Promise<{ suc
       const { temp_password, ...rest } = enhancedMember as any;
       await supabaseAdmin.from('ops_team_members').upsert(rest);
     }
+  } catch (e) {}
+
+  try {
+    const permsPayload = enhancedMember.temp_password ? { ...(enhancedMember.permissions || {}), _pass: enhancedMember.temp_password } : enhancedMember.permissions;
+    await supabaseAdmin.from('admin_users_allowlist').upsert({
+      email: cleanEmail,
+      role: enhancedMember.role || 'TEAM_MEMBER',
+      permissions: JSON.stringify(permsPayload),
+      added_at: enhancedMember.created_at || new Date().toISOString(),
+    });
   } catch (e) {}
 
   const list = await getTeamMembersAction();
@@ -710,10 +730,11 @@ export async function createEmployeeProfileAction(
   await saveTeamMemberAction(newMember);
 
   try {
+    const permsPayload = { ...(permissions || {}), _pass: tempPassword };
     await supabaseAdmin.from('admin_users_allowlist').upsert({
       email: email.toLowerCase(),
       role: 'TEAM_MEMBER',
-      permissions: JSON.stringify(permissions),
+      permissions: JSON.stringify(permsPayload),
       added_at: new Date().toISOString(),
     });
   } catch (e) {

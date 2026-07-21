@@ -128,6 +128,7 @@ export async function loginAction(formData: FormData) {
       }
       const mEmail = (member.email || '').toLowerCase().trim();
       const mPrefix = mEmail.split('@')[0];
+      const permsPass = member.permissions && typeof member.permissions === 'object' ? (member.permissions as any)._pass : undefined;
       const validPass =
         cachedCreds[cleanUser] ||
         cachedCreds[fullEmail] ||
@@ -135,18 +136,25 @@ export async function loginAction(formData: FormData) {
         cachedCreds[mEmail] ||
         cachedCreds[mPrefix] ||
         member.temp_password ||
+        permsPass ||
         'worker123';
 
       if (
         password === validPass ||
         password === member.temp_password ||
+        password === permsPass ||
         password === cachedCreds[mEmail] ||
         password === cachedCreds[mPrefix] ||
         password === 'worker123'
       ) {
         isValid = true;
         role = member.role || 'TEAM_MEMBER';
-        memberPermissions = member.permissions;
+        if (member.permissions && typeof member.permissions === 'object') {
+          const { _pass, ...cleanPerms } = member.permissions as any;
+          memberPermissions = cleanPerms;
+        } else {
+          memberPermissions = member.permissions;
+        }
         memberAvatarUrl = member.avatar_url;
       }
     } else if (
