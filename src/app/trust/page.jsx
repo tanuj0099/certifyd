@@ -13,6 +13,7 @@ import {
   FileCheck,
 } from 'lucide-react';
 import MarketingPageShell, { GlassCard } from '@/components/MarketingPageShell.jsx';
+import SEOHead from '@/components/SEOHead.jsx';
 
 const FB = "var(--font-body)";
 const FH = "var(--font-head)";
@@ -21,13 +22,17 @@ const T = { duration: 0.34, ease: [0.16, 1, 0.3, 1] };
 
 export default function TrustPage() {
   return (
-    <MarketingPageShell
-      eyebrow="DPDP ACT 2023 COMPLIANCE & SECURITY CHARTER"
-      title="Trust & Security"
-      accent="Guarantee"
-      subtitle="Plain language, zero legal boilerplate. Here is exactly what data we process, why we need it, and how our automated architecture guarantees zero retention of your personal documents."
-    >
-      <motion.div
+    <>
+      <SEOHead
+        title="Trust & Security | Certifyd"
+        description="DPDP Act 2023 Compliance & Data Minimization Charter for Certifyd."
+        path="/trust"
+      />
+      <MarketingPageShell
+        title="Trust & Security"
+        subtitle="DPDP Act 2023 Compliance & Data Minimization Charter. Last Updated: June 2026"
+      >
+        <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={T}
@@ -239,6 +244,7 @@ export default function TrustPage() {
           </div>
         </GlassCard>
       </motion.div>
-    </MarketingPageShell>
+      </MarketingPageShell>
+    </>
   );
 }

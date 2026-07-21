@@ -193,8 +193,8 @@ export default function MarketingPageShell({ eyebrow, title, accent, subtitle, c
         description={subtitle || 'Certification ROI Calculator'}
         schema={schema}
       />
-      <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
-        <DotMatrixBackground className="w-full h-full absolute inset-0" mode="grid" />
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '480px', zIndex: 0, pointerEvents: 'none', overflow: 'hidden' }}>
+        <DotMatrixBackground className="w-full h-full absolute inset-0" mode="grid" mask="linear-gradient(to bottom, black 0%, black 50%, transparent 100%)" />
       </div>
       <div style={{ position: 'relative', zIndex: 1, paddingTop: '112px' }}>
         <AppSection id={eyebrow ? eyebrow.substring(0, 2).toUpperCase() : 'PG'} title={eyebrow || 'PAGE'} noBorderTop bg="transparent">
