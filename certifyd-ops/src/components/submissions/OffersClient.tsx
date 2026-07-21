@@ -18,8 +18,8 @@ import {
   ChevronLeft,
   ChevronRight,
   TrendingUp,
-  FileText,
   Mail,
+  Clock,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -47,6 +47,23 @@ export interface OfferRecord {
   internal_notes: Array<{ author: string; text: string; timestamp: string }>;
 }
 
+function formatDateTime(dateStr: string) {
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr || 'Just now';
+    return d.toLocaleString('en-IN', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    });
+  } catch (e) {
+    return dateStr || 'Just now';
+  }
+}
+
 interface OffersClientProps {
   initialRecords: OfferRecord[];
   userRole: 'SUPER_ADMIN' | 'TEAM_MEMBER';
@@ -58,6 +75,7 @@ export function OffersClient({ initialRecords, userRole }: OffersClientProps) {
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [cityFilter, setCityFilter] = useState<string>('ALL');
   const [sectorFilter, setSectorFilter] = useState<string>('ALL');
+  const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
 
   // Pagination
   const [pageSize, setPageSize] = useState<number>(50);
@@ -74,7 +92,7 @@ export function OffersClient({ initialRecords, userRole }: OffersClientProps) {
   const { showToast } = useToast();
 
   const filtered = useMemo(() => {
-    return records.filter((r) => {
+    const list = records.filter((r) => {
       if (statusFilter !== 'ALL' && r.status !== statusFilter.toLowerCase()) return false;
       if (cityFilter !== 'ALL' && r.city !== cityFilter) return false;
       if (sectorFilter !== 'ALL' && !r.employer_sector.includes(sectorFilter)) return false;
@@ -87,7 +105,13 @@ export function OffersClient({ initialRecords, userRole }: OffersClientProps) {
       }
       return true;
     });
-  }, [records, statusFilter, cityFilter, sectorFilter, search]);
+
+    return list.sort((a, b) => {
+      const timeA = new Date(a.submitted_at).getTime();
+      const timeB = new Date(b.submitted_at).getTime();
+      return sortOrder === 'newest' ? timeB - timeA : timeA - timeB;
+    });
+  }, [records, statusFilter, cityFilter, sectorFilter, search, sortOrder]);
 
   const totalPages = Math.ceil(filtered.length / pageSize) || 1;
   const paginated = useMemo(() => {
@@ -239,6 +263,22 @@ export function OffersClient({ initialRecords, userRole }: OffersClientProps) {
                 <option value="Fintech" className="bg-[#161B22]">Fintech</option>
               </select>
             </div>
+
+            <div className="flex items-center gap-1.5 bg-[#161B22] px-2.5 py-1.5 rounded-xl border border-white/[0.06]">
+              <Clock className="w-3.5 h-3.5 text-[#F97316]" />
+              <span className="text-[#8B949E]">Sort:</span>
+              <select
+                value={sortOrder}
+                onChange={(e) => {
+                  setSortOrder(e.target.value as 'newest' | 'oldest');
+                  setCurrentPage(1);
+                }}
+                className="bg-transparent text-white focus:outline-none cursor-pointer font-semibold"
+              >
+                <option value="newest" className="bg-[#161B22]">Newest First</option>
+                <option value="oldest" className="bg-[#161B22]">Oldest First</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
@@ -249,8 +289,8 @@ export function OffersClient({ initialRecords, userRole }: OffersClientProps) {
           <table className="w-full text-left border-collapse text-xs">
             <thead>
               <tr className="border-b border-white/[0.06] bg-[#161B22]/60 text-[#8B949E] font-mono uppercase tracking-wider">
-                <th className="py-3 px-4 font-medium">ID (8 CHARS)</th>
-                <th className="py-3 px-4 font-medium">SUBMITTED</th>
+                <th className="py-3 px-4 font-medium">#</th>
+                <th className="py-3 px-4 font-medium">TIME UPLOADED</th>
                 <th className="py-3 px-4 font-medium">CITY</th>
                 <th className="py-3 px-4 font-medium">ROLE CATEGORY</th>
                 <th className="py-3 px-4 font-medium">SECTOR</th>
@@ -270,7 +310,7 @@ export function OffersClient({ initialRecords, userRole }: OffersClientProps) {
                 </tr>
               ) : (
                 paginated.map((row, idx) => {
-                  const shortId = row.id.substring(0, 8);
+                  const seqNo = (currentPage - 1) * pageSize + idx + 1;
                   return (
                     <tr
                       key={row.id}
@@ -279,8 +319,8 @@ export function OffersClient({ initialRecords, userRole }: OffersClientProps) {
                         selectedIdx === idx ? 'bg-[#F97316]/10' : ''
                       }`}
                     >
-                      <td className="py-3.5 px-4 font-mono font-semibold text-white">#{shortId}</td>
-                      <td className="py-3.5 px-4 text-[#8B949E] font-mono">3h ago</td>
+                      <td className="py-3.5 px-4 font-mono font-semibold text-white">#{seqNo}</td>
+                      <td className="py-3.5 px-4 text-[#E8C547] font-mono whitespace-nowrap">{formatDateTime(row.submitted_at)}</td>
                       <td className="py-3.5 px-4 text-white font-medium">{row.city}</td>
                       <td className="py-3.5 px-4 text-white">{row.role_category}</td>
                       <td className="py-3.5 px-4 text-[#8B949E] font-mono">{row.employer_sector}</td>
@@ -502,13 +542,13 @@ export function OffersClient({ initialRecords, userRole }: OffersClientProps) {
                 <div className="p-5 border-b border-white/[0.06] flex items-center justify-between shrink-0">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-xl bg-[#F97316]/10 border border-[#F97316]/20 flex items-center justify-center text-[#F97316] font-mono font-bold">
-                      #{currentRecord.id.substring(0, 4)}
+                      #{(currentPage - 1) * pageSize + (selectedIdx || 0) + 1}
                     </div>
                     <div>
                       <h3 className="text-sm font-semibold text-white font-mono">
-                        Offer Letter Submission #{currentRecord.id.substring(0, 8)}
+                        Offer Letter Submission Details
                       </h3>
-                      <p className="text-xs text-[#8B949E] font-mono mt-0.5">3 hours ago • {currentRecord.city}</p>
+                      <p className="text-xs text-[#E8C547] font-mono mt-0.5">Uploaded {formatDateTime(currentRecord.submitted_at)} • {currentRecord.city}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
@@ -527,17 +567,16 @@ export function OffersClient({ initialRecords, userRole }: OffersClientProps) {
                         Market Compensation Percentile
                       </h4>
                       <span className="text-[10px] font-mono text-[#F97316] bg-[#F97316]/10 px-2 py-0.5 rounded border border-[#F97316]/20">
-                        BENCHMARKED IN BENGALURU
+                        BENCHMARKED IN {currentRecord.city.toUpperCase()}
                       </span>
                     </div>
 
                     <div className="space-y-2 pt-2 font-mono text-xs">
                       <div className="flex justify-between text-white font-semibold">
-                        <span>This Offer: {currentRecord.extracted_data?.headline_ctc || '₹8.5L'}</span>
+                        <span>This Offer: {currentRecord.extracted_data?.headline_ctc || currentRecord.ctc_band}</span>
                         <span className="text-[#E8C547]">28th Percentile</span>
                       </div>
 
-                      {/* Percentile Bar Simulation */}
                       <div className="relative w-full h-4 bg-[#0F1218] rounded-full overflow-hidden border border-white/10">
                         <div className="absolute top-0 bottom-0 left-0 bg-gradient-to-r from-[#F85149] via-[#E8C547] to-[#22C55E] w-full opacity-40" />
                         <div
@@ -546,15 +585,12 @@ export function OffersClient({ initialRecords, userRole }: OffersClientProps) {
                         />
                       </div>
                       <div className="flex justify-between text-[10px] text-[#8B949E]">
-                        <span>Min (₹4L)</span>
-                        <span>City Median: ₹8.0L</span>
-                        <span>75th Pctl: ₹10.5L</span>
-                        <span>Max (₹24L)</span>
+                        <span>Min</span>
+                        <span>City Median</span>
+                        <span>75th Pctl</span>
+                        <span>Max</span>
                       </div>
                     </div>
-                    <p className="text-xs text-[#F0F6FC] mt-2 pt-2 border-t border-white/[0.04]">
-                      This offer is at the <strong className="text-[#E8C547]">28th percentile</strong> for certified Cloud Engineers in {currentRecord.city}.
-                    </p>
                   </div>
 
                   {/* Trap Flags Detail Section */}
@@ -578,14 +614,38 @@ export function OffersClient({ initialRecords, userRole }: OffersClientProps) {
                               </div>
                               <p className="text-[#8B949E] leading-relaxed pl-5">
                                 {flag.includes('CTC Inflation') &&
-                                  'Employer PF contribution (₹54,000/yr) appears to be included in the ₹8.5L headline figure. Actual gross takehome is approximately ₹7.96L.'}
+                                  'Employer PF contribution (₹54,000/yr) appears to be included in headline figure.'}
                                 {flag.includes('90-Day Notice') &&
-                                  'Above industry standard of 30-60 days. Reduces career mobility significantly and makes future switches difficult.'}
+                                  'Above industry standard of 30-60 days. Reduces career mobility significantly.'}
                                 {flag.includes('Clawback') &&
-                                  'Contains clause requiring repayment of joining bonus or cert reimbursement if leaving within 18 months.'}
+                                  'Contains clause requiring repayment of bonus or cert reimbursement if leaving within specified period.'}
                                 {!flag.includes('CTC Inflation') && !flag.includes('90-Day Notice') && !flag.includes('Clawback') &&
-                                  'Employer policy mandates strict 5-day office presence with no hybrid flexibility clause.'}
+                                  'Structural or policy condition flagged during automated offer check.'}
                               </p>
+                            </div>
+                          );
+                        })
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Complete Collected Offer Details & Raw JSON Payload */}
+                  <div className="bg-[#161B22] border border-white/[0.06] rounded-2xl p-4 space-y-3">
+                    <h4 className="text-xs font-semibold text-[#8B949E] font-mono uppercase tracking-wider">
+                      All Collected Offer Details & Contents
+                    </h4>
+                    <div className="space-y-2.5">
+                      {Object.entries(currentRecord.extracted_data || {}).length === 0 ? (
+                        <p className="text-xs text-[#8B949E] font-mono py-2">No additional JSON fields attached to this submission.</p>
+                      ) : (
+                        Object.entries(currentRecord.extracted_data || {}).map(([key, val]) => {
+                          if (key === 'internal_notes' || key === 'status' || key === 'rejection_reason') return null;
+                          const displayVal = typeof val === 'object' && val !== null ? JSON.stringify(val, null, 2) : String(val);
+                          if (!displayVal || displayVal === 'undefined' || displayVal === '{}' || displayVal === '[]') return null;
+                          return (
+                            <div key={key} className="p-3 rounded-xl bg-[#0F1218] border border-white/[0.04] space-y-1">
+                              <p className="text-[10px] text-[#F97316] font-mono uppercase font-bold tracking-wider">{key.replace(/_/g, ' ')}</p>
+                              <pre className="text-xs text-white font-mono whitespace-pre-wrap break-words leading-relaxed">{displayVal}</pre>
                             </div>
                           );
                         })

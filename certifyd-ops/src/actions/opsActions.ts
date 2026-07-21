@@ -72,14 +72,18 @@ export interface OpsNoteThread {
 export interface OpsMarketingIdea {
   id: string;
   title: string;
-  channel: 'LinkedIn' | 'YouTube' | 'Email Outreach' | 'Instagram' | 'Sales Pitch';
-  script_content: string;
+  channel: 'LinkedIn' | 'YouTube' | 'Email Outreach' | 'Instagram' | 'Sales Pitch' | string;
+  script_content?: string;
+  key_hooks?: string[];
+  script_outline?: string;
+  feedback_notes?: any[];
   target_audience: string;
-  status: 'Draft' | 'In Review' | 'Approved' | 'Live';
+  status: 'Draft' | 'In Review' | 'Approved' | 'Live' | 'Planned' | string;
   assignee?: string;
   created_by: string;
   created_at: string;
-  comments: { id: string; author: string; text: string; date: string }[];
+  comments?: { id: string; author: string; text: string; date: string }[];
+  [key: string]: any;
 }
 
 export interface OpsNotification {
@@ -174,48 +178,9 @@ const INITIAL_EVENTS: OpsCalendarEvent[] = [];
 
 const INITIAL_NOTES: OpsNoteThread[] = [];
 
-const INITIAL_MARKETING_IDEAS: OpsMarketingIdea[] = [
-  {
-    id: 'mkt-demo-1',
-    title: 'Q3 ROI Tool LinkedIn Ad Hook',
-    channel: 'LinkedIn',
-    script_content: 'Still guessing your placement metrics? Calculate exactly how much Certifyd boosts student job offers in 60 seconds -> [Link]',
-    target_audience: 'College Deans & Placement Heads',
-    status: 'Approved',
-    created_by: 'marketing@certifyd.in',
-    created_at: new Date().toISOString(),
-    comments: [],
-  },
-];
+const INITIAL_MARKETING_IDEAS: OpsMarketingIdea[] = [];
 
-const INITIAL_NOTIFICATIONS: OpsNotification[] = [
-  {
-    id: 'notif-1',
-    recipient_email: 'all',
-    recipient_name: 'All Team Members',
-    title: 'Placement Cell Inquiry',
-    message: 'New HIGH priority inquiry from Tier 1 Engineering College Placement Officer.',
-    link_url: '/content/contacts',
-    time: '10 min ago',
-    read: false,
-    priority: 'high',
-    type: 'contact',
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: 'notif-2',
-    recipient_email: 'all',
-    recipient_name: 'All Team Members',
-    title: 'Submission Flagged',
-    message: 'Resume submission #a3f2b1c9 flagged by team member for implausible CTC.',
-    link_url: '/submissions/resumes',
-    time: '25 min ago',
-    read: false,
-    priority: 'normal',
-    type: 'submission',
-    created_at: new Date().toISOString(),
-  },
-];
+const INITIAL_NOTIFICATIONS: OpsNotification[] = [];
 
 // ==========================================
 // 1. TEAM MEMBERS & DYNAMIC RBAC ACTIONS
@@ -515,11 +480,13 @@ export async function saveOpsTaskAction(task: OpsTaskItem): Promise<{ success: b
     const cleanPayload = {
       id: task.id,
       title: task.title || 'Untitled Task',
+      description: task.description || '',
       section: task.section || 'admin',
       priority: task.priority || 'Medium',
       assignee: task.assignee || 'Unassigned',
-      status: task.status || 'todo',
+      status: task.status || 'To Do',
       deadline: task.deadline || '',
+      checklist: typeof task.checklist === 'string' ? JSON.parse(task.checklist) : (task.checklist || []),
       notes: typeof task.notes === 'string' ? JSON.parse(task.notes) : (task.notes || []),
       created_by: task.created_by || 'admin@certifyd.in',
       created_at: task.created_at || new Date().toISOString(),
@@ -528,11 +495,22 @@ export async function saveOpsTaskAction(task: OpsTaskItem): Promise<{ success: b
     const { error } = await supabaseAdmin.from('ops_tasks').upsert(cleanPayload, { onConflict: 'id' });
     if (error) {
       console.error('Supabase ops_tasks upsert error 1:', error);
-      const { error: err2 } = await supabaseAdmin.from('ops_tasks').upsert({
-        ...cleanPayload,
-        notes: typeof cleanPayload.notes === 'string' ? cleanPayload.notes : JSON.stringify(cleanPayload.notes || []),
-      }, { onConflict: 'id' });
-      if (err2) console.error('Supabase ops_tasks upsert error 2:', err2);
+      // Fallback 1: try without description/checklist/notes if columns don't exist
+      const { description, checklist, notes, ...basicPayload } = cleanPayload;
+      const { error: err2 } = await supabaseAdmin.from('ops_tasks').upsert(basicPayload, { onConflict: 'id' });
+      if (err2) {
+        console.error('Supabase ops_tasks upsert error 2:', err2);
+        // Fallback 2: try minimal core payload
+        await supabaseAdmin.from('ops_tasks').upsert({
+          id: task.id,
+          title: task.title || 'Untitled Task',
+          section: task.section || 'admin',
+          priority: task.priority || 'Medium',
+          assignee: task.assignee || 'Unassigned',
+          status: task.status || 'To Do',
+          created_at: task.created_at || new Date().toISOString(),
+        }, { onConflict: 'id' });
+      }
     }
   } catch (e) {
     console.error('saveOpsTaskAction exception:', e);
@@ -623,7 +601,15 @@ export async function saveCalendarEventAction(event: OpsCalendarEvent): Promise<
     };
 
     const { error } = await supabaseAdmin.from('ops_calendar_events').upsert(cleanPayload, { onConflict: 'id' });
-    if (error) console.error('Supabase ops_calendar_events upsert error:', error);
+    if (error) {
+      console.error('Supabase ops_calendar_events upsert error 1:', error);
+      // Fallback: try without time/description/assignee if table schema only has core columns
+      const { time, description, assignee, is_private, ...coreEvent } = cleanPayload;
+      const { error: err2 } = await supabaseAdmin.from('ops_calendar_events').upsert(coreEvent, { onConflict: 'id' });
+      if (err2) {
+        console.error('Supabase ops_calendar_events upsert error 2:', err2);
+      }
+    }
   } catch (e) {
     console.error('saveCalendarEventAction exception:', e);
   }
@@ -716,13 +702,27 @@ export async function saveOpsNoteAction(note: OpsNoteThread): Promise<{ success:
     const { error } = await supabaseAdmin.from('ops_notes').upsert(cleanPayload, { onConflict: 'id' });
     if (error) {
       console.error('Supabase ops_notes upsert error 1:', error);
-      // Fallback: retry with stringified comments if JSON column type expects string or array
-      const { error: err2 } = await supabaseAdmin.from('ops_notes').upsert({
-        ...cleanPayload,
-        comments: typeof cleanPayload.comments === 'string' ? cleanPayload.comments : JSON.stringify(cleanPayload.comments || []),
-      }, { onConflict: 'id' });
+      // Fallback 1: strip assignee column since user schema for ops_notes lacks assignee column
+      const { assignee, ...noAssigneePayload } = cleanPayload;
+      const { error: err2 } = await supabaseAdmin.from('ops_notes').upsert(noAssigneePayload, { onConflict: 'id' });
       if (err2) {
         console.error('Supabase ops_notes upsert error 2:', err2);
+        // Fallback 2: retry without assignee and with stringified comments
+        const { error: err3 } = await supabaseAdmin.from('ops_notes').upsert({
+          ...noAssigneePayload,
+          comments: typeof noAssigneePayload.comments === 'string' ? noAssigneePayload.comments : JSON.stringify(noAssigneePayload.comments || []),
+        }, { onConflict: 'id' });
+        if (err3) {
+          console.error('Supabase ops_notes upsert error 3:', err3);
+          // Fallback 3: minimal core schema
+          await supabaseAdmin.from('ops_notes').upsert({
+            id: note.id,
+            title: note.title || 'Untitled Note',
+            content: note.content || '',
+            section: note.section || 'admin',
+            created_at: note.created_at || new Date().toISOString(),
+          }, { onConflict: 'id' });
+        }
       }
     }
   } catch (e) {
@@ -1018,26 +1018,82 @@ export async function updateAdminEmailAction(newEmail: string): Promise<{ succes
 // ==========================================
 
 export async function getMarketingIdeasAction(): Promise<OpsMarketingIdea[]> {
-  let dbIdeas: OpsMarketingIdea[] = [];
   try {
     const { data, error } = await supabaseAdmin.from('ops_marketing_ideas').select('*').order('created_at', { ascending: false });
-    if (!error && data && data.length > 0) {
-      dbIdeas = data as OpsMarketingIdea[];
+    if (error) {
+      console.error('Supabase getMarketingIdeasAction error:', error);
+    } else if (data && Array.isArray(data)) {
+      const parsedIdeas: OpsMarketingIdea[] = data.map((d: any) => ({
+        id: d.id,
+        title: d.title || 'Untitled Idea',
+        channel: d.channel || 'LinkedIn',
+        status: d.status || 'Draft',
+        assignee: d.assignee || 'Unassigned',
+        target_audience: d.target_audience || '',
+        script_content: d.script_content || d.script_outline || '',
+        key_hooks: typeof d.key_hooks === 'string' ? JSON.parse(d.key_hooks || '[]') : (Array.isArray(d.key_hooks) ? d.key_hooks : []),
+        script_outline: d.script_outline || '',
+        feedback_notes: typeof d.feedback_notes === 'string' ? JSON.parse(d.feedback_notes || '[]') : (Array.isArray(d.feedback_notes) ? d.feedback_notes : []),
+        comments: typeof d.comments === 'string' ? JSON.parse(d.comments || '[]') : (Array.isArray(d.comments) ? d.comments : (typeof d.feedback_notes === 'string' ? JSON.parse(d.feedback_notes || '[]') : (Array.isArray(d.feedback_notes) ? d.feedback_notes : []))),
+        created_by: d.created_by || 'admin@certifyd.in',
+        created_at: d.created_at || new Date().toISOString(),
+      })) as unknown as OpsMarketingIdea[];
+
+      return parsedIdeas;
     }
-  } catch (e) {}
+  } catch (e) {
+    console.error('getMarketingIdeasAction exception:', e);
+  }
 
-  const cacheIdeas = readLocalCache<OpsMarketingIdea>('ops_marketing_ideas', INITIAL_MARKETING_IDEAS);
-  const map = new Map<string, OpsMarketingIdea>();
-  for (const item of cacheIdeas) map.set(item.id, item);
-  for (const item of dbIdeas) map.set(item.id, item);
-
-  return Array.from(map.values()).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  return readLocalCache<OpsMarketingIdea>('ops_marketing_ideas', INITIAL_MARKETING_IDEAS);
 }
 
 export async function saveMarketingIdeaAction(idea: OpsMarketingIdea): Promise<{ success: boolean; data: OpsMarketingIdea }> {
   try {
-    await supabaseAdmin.from('ops_marketing_ideas').upsert(idea);
-  } catch (e) {}
+    const cleanPayload = {
+      id: idea.id,
+      title: idea.title || 'Untitled Idea',
+      channel: idea.channel || 'LinkedIn',
+      status: idea.status || 'Draft',
+      assignee: idea.assignee || 'Unassigned',
+      target_audience: idea.target_audience || '',
+      script_content: idea.script_content || idea.script_outline || '',
+      key_hooks: typeof idea.key_hooks === 'string' ? JSON.parse(idea.key_hooks) : (idea.key_hooks || []),
+      script_outline: idea.script_outline || idea.script_content || '',
+      feedback_notes: typeof idea.feedback_notes === 'string' ? JSON.parse(idea.feedback_notes) : (idea.feedback_notes || []),
+      comments: typeof idea.comments === 'string' ? JSON.parse(idea.comments) : (idea.comments || []),
+      created_by: idea.created_by || 'admin@certifyd.in',
+      created_at: idea.created_at || new Date().toISOString(),
+    };
+
+    const { error } = await supabaseAdmin.from('ops_marketing_ideas').upsert(cleanPayload, { onConflict: 'id' });
+    if (error) {
+      console.error('Supabase ops_marketing_ideas upsert error 1:', error);
+      // Fallback 1: strip extra arrays/columns if table only has script_content/comments or vice versa
+      const { key_hooks, script_outline, feedback_notes, comments, script_content, ...baseIdea } = cleanPayload;
+      const { error: err2 } = await supabaseAdmin.from('ops_marketing_ideas').upsert({
+        ...baseIdea,
+        script_content: cleanPayload.script_content,
+        comments: typeof cleanPayload.comments === 'string' ? cleanPayload.comments : JSON.stringify(cleanPayload.comments || []),
+      }, { onConflict: 'id' });
+      if (err2) {
+        console.error('Supabase ops_marketing_ideas upsert error 2:', err2);
+        const { error: err3 } = await supabaseAdmin.from('ops_marketing_ideas').upsert({
+          ...baseIdea,
+          script_outline: cleanPayload.script_outline,
+          key_hooks: typeof cleanPayload.key_hooks === 'string' ? cleanPayload.key_hooks : JSON.stringify(cleanPayload.key_hooks || []),
+          feedback_notes: typeof cleanPayload.feedback_notes === 'string' ? cleanPayload.feedback_notes : JSON.stringify(cleanPayload.feedback_notes || []),
+        }, { onConflict: 'id' });
+        if (err3) {
+          console.error('Supabase ops_marketing_ideas upsert error 3:', err3);
+          // Minimal core fallback
+          await supabaseAdmin.from('ops_marketing_ideas').upsert(baseIdea, { onConflict: 'id' });
+        }
+      }
+    }
+  } catch (e) {
+    console.error('saveMarketingIdeaAction exception:', e);
+  }
 
   const list = readLocalCache<OpsMarketingIdea>('ops_marketing_ideas', INITIAL_MARKETING_IDEAS);
   const idx = list.findIndex((i) => i.id === idea.id);
@@ -1062,8 +1118,11 @@ export async function saveMarketingIdeaAction(idea: OpsMarketingIdea): Promise<{
 
 export async function deleteMarketingIdeaAction(id: string): Promise<{ success: boolean }> {
   try {
-    await supabaseAdmin.from('ops_marketing_ideas').delete().eq('id', id);
-  } catch (e) {}
+    const { error } = await supabaseAdmin.from('ops_marketing_ideas').delete().eq('id', id);
+    if (error) console.error('deleteMarketingIdeaAction error:', error);
+  } catch (e) {
+    console.error('deleteMarketingIdeaAction exception:', e);
+  }
 
   const list = readLocalCache<OpsMarketingIdea>('ops_marketing_ideas', INITIAL_MARKETING_IDEAS);
   const filtered = list.filter((i) => i.id !== id);
@@ -1078,20 +1137,33 @@ export async function deleteMarketingIdeaAction(id: string): Promise<{ success: 
 // ==========================================
 
 export async function getNotificationsAction(userEmail?: string, userRole?: string): Promise<OpsNotification[]> {
-  let dbNotifs: OpsNotification[] = [];
+  let allList: OpsNotification[] = [];
   try {
     const { data, error } = await supabaseAdmin.from('ops_notifications').select('*').order('created_at', { ascending: false });
-    if (!error && data && data.length > 0) {
-      dbNotifs = data as OpsNotification[];
+    if (error) {
+      console.error('Supabase getNotificationsAction error:', error);
+      allList = readLocalCache<OpsNotification>('ops_notifications', INITIAL_NOTIFICATIONS);
+    } else if (data && Array.isArray(data)) {
+      allList = data.map((d: any) => ({
+        id: d.id,
+        recipient_email: d.recipient_email || 'all',
+        recipient_name: d.recipient_name || 'All Team Members',
+        title: d.title || 'Notification',
+        message: d.message || '',
+        link_url: d.link_url || '/ops/tasks',
+        time: d.time || 'Just now',
+        read: Boolean(d.read),
+        priority: d.priority || 'normal',
+        type: d.type || 'task',
+        created_at: d.created_at || new Date().toISOString(),
+      })) as OpsNotification[];
+    } else {
+      allList = readLocalCache<OpsNotification>('ops_notifications', INITIAL_NOTIFICATIONS);
     }
-  } catch (e) {}
-
-  const cacheNotifs = readLocalCache<OpsNotification>('ops_notifications', INITIAL_NOTIFICATIONS);
-  const map = new Map<string, OpsNotification>();
-  for (const n of cacheNotifs) map.set(n.id, n);
-  for (const n of dbNotifs) map.set(n.id, n);
-
-  const allList = Array.from(map.values()).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  } catch (e) {
+    console.error('getNotificationsAction exception:', e);
+    allList = readLocalCache<OpsNotification>('ops_notifications', INITIAL_NOTIFICATIONS);
+  }
 
   if (!userEmail) return allList;
   const cleanEmail = userEmail.toLowerCase().trim();
@@ -1141,8 +1213,11 @@ export async function sendNotificationAction(
   };
 
   try {
-    await supabaseAdmin.from('ops_notifications').upsert(notif);
-  } catch (e) {}
+    const { error } = await supabaseAdmin.from('ops_notifications').upsert(notif, { onConflict: 'id' });
+    if (error) console.error('Supabase ops_notifications upsert error:', error);
+  } catch (e) {
+    console.error('sendNotificationAction exception:', e);
+  }
 
   const list = readLocalCache<OpsNotification>('ops_notifications', INITIAL_NOTIFICATIONS);
   list.unshift(notif);

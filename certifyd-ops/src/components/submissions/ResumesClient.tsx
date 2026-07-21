@@ -50,6 +50,23 @@ export interface ResumeRecord {
   internal_notes: Array<{ author: string; text: string; timestamp: string }>;
 }
 
+function formatDateTime(dateStr: string) {
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr || 'Just now';
+    return d.toLocaleString('en-IN', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    });
+  } catch (e) {
+    return dateStr || 'Just now';
+  }
+}
+
 interface ResumesClientProps {
   initialRecords: ResumeRecord[];
   userRole: 'SUPER_ADMIN' | 'TEAM_MEMBER';
@@ -62,6 +79,7 @@ export function ResumesClient({ initialRecords, userRole }: ResumesClientProps) 
   const [cityFilter, setCityFilter] = useState<string>('ALL');
   const [domainFilter, setDomainFilter] = useState<string>('ALL');
   const [expFilter, setExpFilter] = useState<string>('ALL');
+  const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
 
   // Pagination
   const [pageSize, setPageSize] = useState<number>(50);
@@ -70,7 +88,7 @@ export function ResumesClient({ initialRecords, userRole }: ResumesClientProps) 
   // Slide-over & Modal state
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
   const [rejectingId, setRejectingId] = useState<string | null>(null);
-  const [rejectReason, setRejectReason] = useState<string>('PII detected in extracted fields');
+  const [rejectReason, setRejectReason] = useState<string>('Incomplete or invalid extraction data');
   const [customReason, setCustomReason] = useState<string>('');
   const [newNoteText, setNewNoteText] = useState<string>('');
   const [actionLoading, setActionLoading] = useState<boolean>(false);
@@ -79,7 +97,7 @@ export function ResumesClient({ initialRecords, userRole }: ResumesClientProps) 
 
   // Filtered list
   const filtered = useMemo(() => {
-    return records.filter((r) => {
+    const list = records.filter((r) => {
       if (statusFilter !== 'ALL' && r.status !== statusFilter.toLowerCase()) return false;
       if (cityFilter !== 'ALL' && r.city !== cityFilter) return false;
       if (domainFilter !== 'ALL' && !r.domain.includes(domainFilter)) return false;
@@ -93,7 +111,13 @@ export function ResumesClient({ initialRecords, userRole }: ResumesClientProps) 
       }
       return true;
     });
-  }, [records, statusFilter, cityFilter, domainFilter, expFilter, search]);
+
+    return list.sort((a, b) => {
+      const timeA = new Date(a.submitted_at).getTime();
+      const timeB = new Date(b.submitted_at).getTime();
+      return sortOrder === 'newest' ? timeB - timeA : timeA - timeB;
+    });
+  }, [records, statusFilter, cityFilter, domainFilter, expFilter, search, sortOrder]);
 
   const totalPages = Math.ceil(filtered.length / pageSize) || 1;
   const paginated = useMemo(() => {
@@ -271,6 +295,22 @@ export function ResumesClient({ initialRecords, userRole }: ResumesClientProps) 
                 <option value="10+ yrs" className="bg-[#161B22]">10+ yrs</option>
               </select>
             </div>
+
+            <div className="flex items-center gap-1.5 bg-[#161B22] px-2.5 py-1.5 rounded-xl border border-white/[0.06]">
+              <Clock className="w-3.5 h-3.5 text-[#F97316]" />
+              <span className="text-[#8B949E]">Sort:</span>
+              <select
+                value={sortOrder}
+                onChange={(e) => {
+                  setSortOrder(e.target.value as 'newest' | 'oldest');
+                  setCurrentPage(1);
+                }}
+                className="bg-transparent text-white focus:outline-none cursor-pointer font-semibold"
+              >
+                <option value="newest" className="bg-[#161B22]">Newest First</option>
+                <option value="oldest" className="bg-[#161B22]">Oldest First</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
@@ -281,14 +321,12 @@ export function ResumesClient({ initialRecords, userRole }: ResumesClientProps) 
           <table className="w-full text-left border-collapse text-xs">
             <thead>
               <tr className="border-b border-white/[0.06] bg-[#161B22]/60 text-[#8B949E] font-mono uppercase tracking-wider">
-                <th className="py-3 px-4 font-medium">ID (8 CHARS)</th>
-                <th className="py-3 px-4 font-medium">SUBMITTED</th>
+                <th className="py-3 px-4 font-medium">#</th>
+                <th className="py-3 px-4 font-medium">TIME UPLOADED</th>
                 <th className="py-3 px-4 font-medium">CITY</th>
                 <th className="py-3 px-4 font-medium">DOMAIN</th>
                 <th className="py-3 px-4 font-medium">CERTS FOUND</th>
                 <th className="py-3 px-4 font-medium">EXP BAND</th>
-                <th className="py-3 px-4 font-medium">PII SCAN</th>
-                <th className="py-3 px-4 font-medium">ANOMALY</th>
                 <th className="py-3 px-4 font-medium">STATUS</th>
                 <th className="py-3 px-4 font-medium text-right">ACTIONS</th>
               </tr>
@@ -296,16 +334,13 @@ export function ResumesClient({ initialRecords, userRole }: ResumesClientProps) 
             <tbody className="divide-y divide-white/[0.04]">
               {paginated.length === 0 ? (
                 <tr>
-                  <td colSpan={10} className="py-12 text-center text-[#8B949E] font-mono">
-                    No matching resume submissions found — you're all caught up ✓
+                  <td colSpan={8} className="py-12 text-center text-[#8B949E] font-mono">
+                    No matching resume submissions found ✓
                   </td>
                 </tr>
               ) : (
                 paginated.map((row, idx) => {
-                  const shortId = row.id.substring(0, 8);
-                  const isLowAnomaly = row.anomaly_score < 30;
-                  const isMedAnomaly = row.anomaly_score >= 30 && row.anomaly_score <= 70;
-                  const isHighAnomaly = row.anomaly_score > 70;
+                  const seqNo = (currentPage - 1) * pageSize + idx + 1;
 
                   return (
                     <tr
@@ -315,8 +350,8 @@ export function ResumesClient({ initialRecords, userRole }: ResumesClientProps) 
                         selectedIdx === idx ? 'bg-[#F97316]/10' : ''
                       }`}
                     >
-                      <td className="py-3.5 px-4 font-mono font-semibold text-white">#{shortId}</td>
-                      <td className="py-3.5 px-4 text-[#8B949E] font-mono">2h ago</td>
+                      <td className="py-3.5 px-4 font-mono font-semibold text-white">#{seqNo}</td>
+                      <td className="py-3.5 px-4 text-[#E8C547] font-mono whitespace-nowrap">{formatDateTime(row.submitted_at)}</td>
                       <td className="py-3.5 px-4 text-white font-medium">{row.city}</td>
                       <td className="py-3.5 px-4 text-[#8B949E]">{row.domain}</td>
                       <td className="py-3.5 px-4 text-white font-mono">
@@ -326,30 +361,6 @@ export function ResumesClient({ initialRecords, userRole }: ResumesClientProps) 
                         </span>
                       </td>
                       <td className="py-3.5 px-4 font-mono text-[#8B949E]">{row.exp_band}</td>
-                      <td className="py-3.5 px-4">
-                        {row.pii_scan.pass ? (
-                          <span className="inline-flex items-center gap-1 text-[#22C55E] font-mono text-[11px] bg-[#22C55E]/10 px-2 py-0.5 rounded">
-                            <ShieldCheck className="w-3 h-3" /> PASS
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1 text-[#F85149] font-mono text-[11px] bg-[#F85149]/10 px-2 py-0.5 rounded">
-                            <XCircle className="w-3 h-3" /> FAIL
-                          </span>
-                        )}
-                      </td>
-                      <td className="py-3.5 px-4">
-                        <span
-                          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded font-mono font-semibold text-[11px] ${
-                            isLowAnomaly
-                              ? 'bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/30'
-                              : isMedAnomaly
-                              ? 'bg-[#E8C547]/15 text-[#E8C547] border border-[#E8C547]/30'
-                              : 'bg-[#F85149]/15 text-[#F85149] border border-[#F85149]/30 animate-pulse'
-                          }`}
-                        >
-                          {row.anomaly_score} / 100
-                        </span>
-                      </td>
                       <td className="py-3.5 px-4">
                         <StatusPill status={row.status} />
                       </td>
@@ -546,19 +557,19 @@ export function ResumesClient({ initialRecords, userRole }: ResumesClientProps) 
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
               className="fixed top-0 right-0 bottom-0 w-full max-w-5xl z-50 bg-[#080A0E] border-l border-white/[0.08] shadow-2xl flex flex-col sm:flex-row overflow-hidden"
             >
-              {/* LEFT 60% — Extracted Data & PII Scans */}
+              {/* LEFT 60% — Complete Extracted Data */}
               <div className="w-full sm:w-[60%] border-r border-white/[0.06] flex flex-col h-full bg-[#0F1218]">
                 {/* Header */}
                 <div className="p-5 border-b border-white/[0.06] flex items-center justify-between shrink-0">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-xl bg-[#F97316]/10 border border-[#F97316]/20 flex items-center justify-center text-[#F97316] font-mono font-bold">
-                      #{currentRecord.id.substring(0, 4)}
+                      #{(currentPage - 1) * pageSize + (selectedIdx || 0) + 1}
                     </div>
                     <div>
                       <h3 className="text-sm font-semibold text-white font-mono">
-                        Resume Submission #{currentRecord.id.substring(0, 8)}
+                        Resume Submission Details
                       </h3>
-                      <p className="text-xs text-[#8B949E] font-mono mt-0.5">Submitted 2 hours ago • {currentRecord.city}</p>
+                      <p className="text-xs text-[#E8C547] font-mono mt-0.5">Uploaded {formatDateTime(currentRecord.submitted_at)} • {currentRecord.city}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
@@ -575,99 +586,64 @@ export function ResumesClient({ initialRecords, userRole }: ResumesClientProps) 
 
                 {/* Content Area */}
                 <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-none">
-                  {/* Extracted Fields Table */}
+                  {/* Summary Overview */}
                   <div className="bg-[#161B22] border border-white/[0.06] rounded-2xl p-4 space-y-3">
                     <h4 className="text-xs font-semibold text-[#8B949E] font-mono uppercase tracking-wider mb-2">
-                      Extracted Profile Attributes
+                      Profile Overview
                     </h4>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                       <div className="p-3 rounded-xl bg-[#0F1218] border border-white/[0.04]">
-                        <p className="text-[10px] text-[#8B949E] font-mono uppercase">Role Category</p>
-                        <p className="text-sm font-semibold text-white mt-1">
-                          {currentRecord.extracted_data?.role_category || 'Cloud Eng'} ✓
-                        </p>
+                        <p className="text-[10px] text-[#8B949E] font-mono uppercase">Role / Domain</p>
+                        <p className="text-sm font-semibold text-white mt-1">{currentRecord.domain || 'General Tech'}</p>
                       </div>
                       <div className="p-3 rounded-xl bg-[#0F1218] border border-white/[0.04]">
-                        <p className="text-[10px] text-[#8B949E] font-mono uppercase">City / Hub</p>
-                        <p className="text-sm font-semibold text-white mt-1">{currentRecord.city} ✓</p>
+                        <p className="text-[10px] text-[#8B949E] font-mono uppercase">City / Location</p>
+                        <p className="text-sm font-semibold text-white mt-1">{currentRecord.city}</p>
                       </div>
                       <div className="p-3 rounded-xl bg-[#0F1218] border border-white/[0.04]">
-                        <p className="text-[10px] text-[#8B949E] font-mono uppercase">Experience Band</p>
-                        <p className="text-sm font-semibold text-white mt-1">{currentRecord.exp_band} ✓</p>
+                        <p className="text-[10px] text-[#8B949E] font-mono uppercase">Experience</p>
+                        <p className="text-sm font-semibold text-white mt-1">{currentRecord.exp_band}</p>
                       </div>
-                      <div className="p-3 rounded-xl bg-[#0F1218] border border-white/[0.04]">
-                        <p className="text-[10px] text-[#8B949E] font-mono uppercase">Education Tier</p>
-                        <p className="text-sm font-semibold text-white mt-1">
-                          {currentRecord.extracted_data?.education_tier || 'Tier 2'} ✓
-                        </p>
-                      </div>
-                      <div className="col-span-2 p-3 rounded-xl bg-[#0F1218] border border-white/[0.04]">
-                        <p className="text-[10px] text-[#8B949E] font-mono uppercase">Certification Stack</p>
-                        <div className="flex flex-wrap gap-1.5 mt-1.5">
-                          {currentRecord.certs_found.map((c) => (
-                            <span key={c} className="px-2 py-0.5 rounded bg-[#F97316]/10 text-[#F97316] border border-[#F97316]/20 text-xs font-mono font-medium">
+                    </div>
+
+                    {/* Certification Stack */}
+                    <div className="p-3.5 rounded-xl bg-[#0F1218] border border-white/[0.04] space-y-2">
+                      <p className="text-[10px] text-[#8B949E] font-mono uppercase">Certifications Found</p>
+                      <div className="flex flex-wrap gap-1.5 mt-1">
+                        {currentRecord.certs_found.length > 0 ? (
+                          currentRecord.certs_found.map((c) => (
+                            <span key={c} className="px-2.5 py-1 rounded bg-[#F97316]/10 text-[#F97316] border border-[#F97316]/20 text-xs font-mono font-medium">
                               {c} ✓
                             </span>
-                          ))}
-                        </div>
+                          ))
+                        ) : (
+                          <span className="text-xs text-[#8B949E]">No specific certifications listed</span>
+                        )}
                       </div>
                     </div>
                   </div>
 
-                  {/* PII Scan Results */}
-                  <div className="bg-[#161B22] border border-white/[0.06] rounded-2xl p-4 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-xs font-semibold text-[#8B949E] font-mono uppercase tracking-wider">
-                        Automated PII Compliance Scan
-                      </h4>
-                      <span className="text-[10px] font-mono text-[#22C55E] bg-[#22C55E]/10 px-2 py-0.5 rounded border border-[#22C55E]/20">
-                        ANONYMIZATION VERIFIED
-                      </span>
-                    </div>
-                    <div className="space-y-2 font-mono text-xs text-[#F0F6FC]">
-                      <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#0F1218] border border-white/[0.04]">
-                        <span>No candidate name pattern detected</span>
-                        <span className="text-[#22C55E] font-semibold flex items-center gap-1">✓ PASS</span>
-                      </div>
-                      <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#0F1218] border border-white/[0.04]">
-                        <span>No personal email address detected</span>
-                        <span className="text-[#22C55E] font-semibold flex items-center gap-1">✓ PASS</span>
-                      </div>
-                      <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#0F1218] border border-white/[0.04]">
-                        <span>No mobile phone number detected</span>
-                        <span className="text-[#22C55E] font-semibold flex items-center gap-1">✓ PASS</span>
-                      </div>
-                      <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#0F1218] border border-white/[0.04]">
-                        <span>No PAN / Aadhaar pattern detected</span>
-                        <span className="text-[#22C55E] font-semibold flex items-center gap-1">✓ PASS</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Anomaly & Market Context */}
+                  {/* Complete Collected Resume Contents */}
                   <div className="bg-[#161B22] border border-white/[0.06] rounded-2xl p-4 space-y-3">
                     <h4 className="text-xs font-semibold text-[#8B949E] font-mono uppercase tracking-wider">
-                      Market Context & Anomaly Evaluation
+                      All Collected Resume Details & Contents
                     </h4>
-                    <div className="space-y-2.5 text-xs text-[#8B949E] leading-relaxed">
-                      <div className="p-3 rounded-xl bg-[#0F1218] border border-white/[0.04] flex items-start gap-2.5">
-                        <CheckCircle2 className="w-4 h-4 text-[#22C55E] shrink-0 mt-0.5" />
-                        <div>
-                          <p className="text-white font-medium">Salary Band Normalcy Check</p>
-                          <p className="mt-0.5">
-                            CTC band is within normal statistical range for this role+city+experience combination.
-                          </p>
-                        </div>
-                      </div>
-                      <div className="p-3 rounded-xl bg-[#0F1218] border border-white/[0.04] flex items-start gap-2.5">
-                        <CheckCircle2 className="w-4 h-4 text-[#22C55E] shrink-0 mt-0.5" />
-                        <div>
-                          <p className="text-white font-medium">Similarity & Cohort Positioning</p>
-                          <p className="mt-0.5">
-                            This profile is similar to 12 other approved submissions in our Bengaluru dataset. Certification stack positions candidate in top 30% for their experience band.
-                          </p>
-                        </div>
-                      </div>
+                    <div className="space-y-2.5">
+                      {Object.entries(currentRecord.extracted_data || {}).length === 0 ? (
+                        <p className="text-xs text-[#8B949E] font-mono py-2">No additional JSON fields attached to this submission.</p>
+                      ) : (
+                        Object.entries(currentRecord.extracted_data || {}).map(([key, val]) => {
+                          if (key === 'internal_notes' || key === 'status' || key === 'rejection_reason') return null;
+                          const displayVal = typeof val === 'object' && val !== null ? JSON.stringify(val, null, 2) : String(val);
+                          if (!displayVal || displayVal === 'undefined' || displayVal === '{}' || displayVal === '[]') return null;
+                          return (
+                            <div key={key} className="p-3 rounded-xl bg-[#0F1218] border border-white/[0.04] space-y-1">
+                              <p className="text-[10px] text-[#F97316] font-mono uppercase font-bold tracking-wider">{key.replace(/_/g, ' ')}</p>
+                              <pre className="text-xs text-white font-mono whitespace-pre-wrap break-words leading-relaxed">{displayVal}</pre>
+                            </div>
+                          );
+                        })
+                      )}
                     </div>
                   </div>
                 </div>

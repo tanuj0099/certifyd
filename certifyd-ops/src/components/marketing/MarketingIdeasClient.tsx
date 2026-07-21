@@ -58,7 +58,7 @@ export function MarketingIdeasClient({ initialIdeas, userEmail, teamMembers = []
     setEditingIdea(idea);
     setTitle(idea.title);
     setChannel(idea.channel);
-    setScriptContent(idea.script_content);
+    setScriptContent(idea.script_content || '');
     setTargetAudience(idea.target_audience || '');
     setStatus(idea.status);
     setAssignee(idea.assignee || 'Unassigned');
@@ -184,7 +184,7 @@ export function MarketingIdeasClient({ initialIdeas, userEmail, teamMembers = []
     const matchesSearch =
       !search ||
       idea.title.toLowerCase().includes(search.toLowerCase()) ||
-      idea.script_content.toLowerCase().includes(search.toLowerCase()) ||
+      (idea.script_content || '').toLowerCase().includes(search.toLowerCase()) ||
       idea.target_audience?.toLowerCase().includes(search.toLowerCase()) ||
       idea.assignee?.toLowerCase().includes(search.toLowerCase());
     return matchesChannel && matchesStatus && matchesAssignee && matchesSearch;
@@ -361,7 +361,7 @@ export function MarketingIdeasClient({ initialIdeas, userEmail, teamMembers = []
                   <div className="relative bg-[#161B22] border border-white/[0.06] rounded-2xl p-4 text-xs font-mono text-[#F0F6FC] leading-relaxed whitespace-pre-wrap group/box">
                     {idea.script_content}
                     <button
-                      onClick={() => handleCopy(idea.script_content, idea.id)}
+                      onClick={() => handleCopy(idea.script_content || '', idea.id)}
                       className={`absolute top-2.5 right-2.5 p-2 rounded-xl border transition-all flex items-center gap-1 text-[10px] font-sans font-semibold ${
                         isCopied
                           ? 'bg-[#22C55E]/20 text-[#22C55E] border-[#22C55E]/40 shadow-sm'
