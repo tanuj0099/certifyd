@@ -8,7 +8,7 @@ const key = new TextEncoder().encode(secretKey);
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Static assets and favicon bypass
+  // Static assets, API routes, and favicon bypass
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
@@ -18,7 +18,12 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // LAYER 1: Cloudflare Access Email Header & IP Allowlist Verification
+  // Allow unrestricted access to the login route right at the entry point
+  if (pathname === '/login') {
+    return NextResponse.next();
+  }
+
+  // LAYER 1: Cloudflare Access Email Header Verification (if configured)
   const allowedEmailsStr = process.env.ALLOWED_EMAILS;
   if (allowedEmailsStr && allowedEmailsStr.trim() !== '') {
     const allowedEmails = allowedEmailsStr.split(',').map((e) => e.trim().toLowerCase());
@@ -41,28 +46,22 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  const allowedIpsStr = process.env.ALLOWED_IPS;
-  if (allowedIpsStr && allowedIpsStr.trim() !== '') {
-    const allowedIps = allowedIpsStr.split(',').map((ip) => ip.trim());
-    const clientIp = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || '127.0.0.1';
-    // Clean up forwarded ip list
-    const firstIp = clientIp.split(',')[0].trim();
-    if (!allowedIps.includes(firstIp) && !allowedIps.includes('*')) {
-      return new NextResponse(
-        JSON.stringify({ error: '403 Forbidden - IP Address Not in Allowlist' }),
-        { status: 403, headers: { 'content-type': 'application/json' } }
-      );
-    }
-  }
-
-  // Allow unrestricted access to the login route itself
-  if (pathname === '/login') {
-    return NextResponse.next();
-  }
-
-  // LAYER 2: App-Level JWT Session Verification
+  // LAYER 2: Check App-Level JWT Session
   const sessionCookie = req.cookies.get('admin_session')?.value;
   if (!sessionCookie) {
+    // Check IP Allowlist before redirecting unauthenticated traffic
+    const allowedIpsStr = process.env.ALLOWED_IPS;
+    if (allowedIpsStr && allowedIpsStr.trim() !== '') {
+      const allowedIps = allowedIpsStr.split(',').map((ip) => ip.trim());
+      const clientIp = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || '127.0.0.1';
+      const firstIp = clientIp.split(',')[0].trim();
+      if (!allowedIps.includes(firstIp) && !allowedIps.includes('*')) {
+        return new NextResponse(
+          JSON.stringify({ error: '403 Forbidden - IP Address Not in Allowlist' }),
+          { status: 403, headers: { 'content-type': 'application/json' } }
+        );
+      }
+    }
     return NextResponse.redirect(new URL('/login', req.url));
   }
 
