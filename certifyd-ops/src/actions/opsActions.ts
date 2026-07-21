@@ -483,32 +483,25 @@ export async function deleteTeamMemberAction(id: string): Promise<{ success: boo
 // ==========================================
 
 export async function getOpsTasksAction(): Promise<OpsTaskItem[]> {
+  let dbTasks: OpsTaskItem[] = [];
   try {
     const { data, error } = await supabaseAdmin.from('ops_tasks').select('*').order('created_at', { ascending: false });
-    if (!error && data && data.length > 0) {
-      return data as OpsTaskItem[];
+    if (!error && data) {
+      dbTasks = data as OpsTaskItem[];
     }
   } catch (e) {}
-  return readLocalCache<OpsTaskItem>('ops_tasks', INITIAL_TASKS);
+
+  const cacheTasks = readLocalCache<OpsTaskItem>('ops_tasks', INITIAL_TASKS);
+  const map = new Map<string, OpsTaskItem>();
+  for (const item of cacheTasks) map.set(item.id, item);
+  for (const item of dbTasks) map.set(item.id, item);
+
+  return Array.from(map.values()).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 }
 
 export async function saveOpsTaskAction(task: OpsTaskItem): Promise<{ success: boolean; data: OpsTaskItem }> {
   try {
-    const { data, error } = await supabaseAdmin.from('ops_tasks').upsert(task).select().single();
-    if (!error && data) {
-      if (task.assignee && task.assignee !== 'Unassigned' && task.assignee !== 'Super Admin') {
-        await sendNotificationAction(
-          task.assignee,
-          `New Task Assigned: ${task.title}`,
-          `You have been assigned a task due on ${task.deadline || 'soon'} with ${task.priority || 'Medium'} priority.`,
-          '/ops/tasks',
-          'task',
-          task.priority === 'Urgent' || task.priority === 'High' ? 'high' : 'normal'
-        );
-      }
-      revalidatePath('/ops/tasks');
-      return { success: true, data: data as OpsTaskItem };
-    }
+    await supabaseAdmin.from('ops_tasks').upsert(task);
   } catch (e) {}
 
   const list = readLocalCache<OpsTaskItem>('ops_tasks', INITIAL_TASKS);
@@ -550,32 +543,25 @@ export async function deleteOpsTaskAction(id: string): Promise<{ success: boolea
 // ==========================================
 
 export async function getCalendarEventsAction(): Promise<OpsCalendarEvent[]> {
+  let dbEvents: OpsCalendarEvent[] = [];
   try {
     const { data, error } = await supabaseAdmin.from('ops_calendar_events').select('*').order('date', { ascending: true });
-    if (!error && data && data.length > 0) {
-      return data as OpsCalendarEvent[];
+    if (!error && data) {
+      dbEvents = data as OpsCalendarEvent[];
     }
   } catch (e) {}
-  return readLocalCache<OpsCalendarEvent>('ops_calendar_events', INITIAL_EVENTS);
+
+  const cacheEvents = readLocalCache<OpsCalendarEvent>('ops_calendar_events', INITIAL_EVENTS);
+  const map = new Map<string, OpsCalendarEvent>();
+  for (const item of cacheEvents) map.set(item.id, item);
+  for (const item of dbEvents) map.set(item.id, item);
+
+  return Array.from(map.values()).sort((a, b) => a.date.localeCompare(b.date));
 }
 
 export async function saveCalendarEventAction(event: OpsCalendarEvent): Promise<{ success: boolean; data: OpsCalendarEvent }> {
   try {
-    const { data, error } = await supabaseAdmin.from('ops_calendar_events').upsert(event).select().single();
-    if (!error && data) {
-      if (event.assignee && event.assignee !== 'Unassigned') {
-        await sendNotificationAction(
-          event.assignee,
-          `Calendar Event Assigned: ${event.title}`,
-          `You were assigned a calendar event scheduled for ${event.date} ${event.time || ''}.`,
-          '/ops/calendar',
-          'calendar',
-          'normal'
-        );
-      }
-      revalidatePath('/ops/calendar');
-      return { success: true, data: data as OpsCalendarEvent };
-    }
+    await supabaseAdmin.from('ops_calendar_events').upsert(event);
   } catch (e) {}
 
   const list = readLocalCache<OpsCalendarEvent>('ops_calendar_events', INITIAL_EVENTS);
@@ -617,32 +603,25 @@ export async function deleteCalendarEventAction(id: string): Promise<{ success: 
 // ==========================================
 
 export async function getOpsNotesAction(): Promise<OpsNoteThread[]> {
+  let dbNotes: OpsNoteThread[] = [];
   try {
     const { data, error } = await supabaseAdmin.from('ops_notes').select('*').order('created_at', { ascending: false });
-    if (!error && data && data.length > 0) {
-      return data as OpsNoteThread[];
+    if (!error && data) {
+      dbNotes = data as OpsNoteThread[];
     }
   } catch (e) {}
-  return readLocalCache<OpsNoteThread>('ops_notes', INITIAL_NOTES);
+
+  const cacheNotes = readLocalCache<OpsNoteThread>('ops_notes', INITIAL_NOTES);
+  const map = new Map<string, OpsNoteThread>();
+  for (const item of cacheNotes) map.set(item.id, item);
+  for (const item of dbNotes) map.set(item.id, item);
+
+  return Array.from(map.values()).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 }
 
 export async function saveOpsNoteAction(note: OpsNoteThread): Promise<{ success: boolean; data: OpsNoteThread }> {
   try {
-    const { data, error } = await supabaseAdmin.from('ops_notes').upsert(note).select().single();
-    if (!error && data) {
-      if (note.assignee && note.assignee !== 'Unassigned') {
-        await sendNotificationAction(
-          note.assignee,
-          `Action Item/Note Assigned: ${note.title}`,
-          `You were tagged as the assignee on department note in [${note.section.toUpperCase()}].`,
-          '/ops/notes',
-          'note',
-          'normal'
-        );
-      }
-      revalidatePath('/ops/notes');
-      return { success: true, data: data as OpsNoteThread };
-    }
+    await supabaseAdmin.from('ops_notes').upsert(note);
   } catch (e) {}
 
   const list = readLocalCache<OpsNoteThread>('ops_notes', INITIAL_NOTES);
@@ -692,8 +671,6 @@ export async function addNoteCommentAction(noteId: string, author: string, text:
     if (note) {
       const updatedComments = [...(note.comments || []), comment];
       await supabaseAdmin.from('ops_notes').update({ comments: updatedComments }).eq('id', noteId);
-      revalidatePath('/ops/notes');
-      return { success: true };
     }
   } catch (e) {}
 
