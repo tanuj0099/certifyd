@@ -565,10 +565,6 @@ export default function LiveMarketPulse() {
               </div>
             </div>
 
-            <div style={{ marginBottom: '16px' }}>
-              <MethodologyNote compact={true} />
-            </div>
-
         {/*  Stats bar  */}
         {!loading && rows.length > 0 && (
           <div
@@ -781,22 +777,32 @@ export default function LiveMarketPulse() {
 
         {/*  Footer note  */}
         {!loading && rows.length > 0 && (
-          <p
+          <div
             style={{
-              margin: '32px 0 0',
-              paddingTop: '20px',
+              margin: '36px 0 0',
+              paddingTop: '24px',
               borderTop: '1px solid var(--border)',
-              color: 'var(--text-4)',
-              fontFamily: FM,
-              fontSize: '9px',
-              lineHeight: 1.8,
-              letterSpacing: '0.09em',
-              textTransform: 'uppercase',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px',
             }}
           >
-            Source: certification market dataset  ROI = cost / ((ceiling - entry) / 12)  Missing cost defaults to ₹25,000<br/>
-            Data aggregated from Naukri, LinkedIn India, and AmbitionBox (Q1 2026). For informational purposes only.
-          </p>
+            <MethodologyNote compact={false} />
+            <p
+              style={{
+                margin: 0,
+                color: 'var(--text-4)',
+                fontFamily: FM,
+                fontSize: '9px',
+                lineHeight: 1.8,
+                letterSpacing: '0.09em',
+                textTransform: 'uppercase',
+              }}
+            >
+              Source: certification market dataset  ROI = cost / ((ceiling - entry) / 12)  Missing cost defaults to ₹25,000<br/>
+              Data aggregated from Naukri, LinkedIn India, and AmbitionBox (Q1 2026). For informational purposes only.
+            </p>
+          </div>
         )}
           </div>
         </div>

@@ -1,211 +1,244 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import {
   ShieldCheck,
-  Trash2,
   Lock,
   Database,
   Clock,
   CheckCircle2,
-  AlertTriangle,
-  ArrowRight,
-  FileText,
+  Sparkles,
+  Server,
+  FileCheck,
 } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth.jsx';
-import MarketingPageShell from '@/components/MarketingPageShell.jsx';
+import MarketingPageShell, { GlassCard } from '@/components/MarketingPageShell.jsx';
+
+const FB = "var(--font-body)";
+const FH = "var(--font-head)";
+const FM = "var(--font-mono)";
+const T = { duration: 0.34, ease: [0.16, 1, 0.3, 1] };
 
 export default function TrustPage() {
-  const { user, session } = useAuth();
-  const [deleting, setDeleting] = useState(false);
-  const [deleteSuccess, setDeleteSuccess] = useState(false);
-  const [deleteError, setDeleteError] = useState('');
-
-  const handleDeleteMyData = async () => {
-    if (!user && !session) {
-      setDeleteError('Please sign in to delete your account data, or email privacy@certifyd.in for anonymous erasure.');
-      return;
-    }
-
-    if (!window.confirm('Are you sure you want to permanently delete 100% of your data from Certifyd? This cannot be undone.')) {
-      return;
-    }
-
-    setDeleting(true);
-    setDeleteError('');
-
-    try {
-      const token = session?.access_token || user?.token;
-      const res = await fetch('/api/account/delete-data', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || 'Failed to erase data');
-      }
-
-      setDeleteSuccess(true);
-    } catch (err) {
-      setDeleteError(err.message || 'Error erasing data.');
-    } finally {
-      setDeleting(false);
-    }
-  };
-
   return (
     <MarketingPageShell
-      eyebrow="DPDP ACT 2023 COMPLIANCE CHARTER"
-      title="Trust & Data Erasure"
+      eyebrow="DPDP ACT 2023 COMPLIANCE & SECURITY CHARTER"
+      title="Trust & Security"
       accent="Guarantee"
-      subtitle="Plain language, zero legal boilerplate. Here is exactly what we collect, why we collect it, how long we keep it, and how you can delete everything in one click."
+      subtitle="Plain language, zero legal boilerplate. Here is exactly what data we process, why we need it, and how our automated architecture guarantees zero retention of your personal documents."
     >
-      <div className="max-w-4xl mx-auto py-4 space-y-8">
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={T}
+        style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}
+      >
         {/* Section 1: What We Collect */}
-        <div className="p-7 sm:p-8 rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-md">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-[#00D4A8]/10 text-[#00D4A8] flex items-center justify-center">
-              <Database className="w-5 h-5" />
-            </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-[var(--text)]">
-              1. What We Collect
-            </h2>
-          </div>
-          <p className="text-sm sm:text-base text-[var(--text)]/80 leading-relaxed mb-4">
-            When you use our Counter-Offer Arsenal or Quick CTC Check, we extract only specific, structured compensation data points:
-          </p>
-          <div className="p-4 rounded-xl bg-[var(--bg)] border border-[var(--border)] font-mono text-xs sm:text-sm text-[#00D4A8] space-y-1">
-            <p>• Base salary</p>
-            <p>• Variable pay</p>
-            <p>• Joining date</p>
-            <p>• Employer name</p>
-            <p>• Work city / location</p>
-          </div>
-          <p className="text-xs text-[var(--text)]/60 mt-3">
-            We never extract or retain candidate personally identifiable information (PII) such as your home address, government ID numbers, personal phone numbers, or signature blocks.
-          </p>
-        </div>
-
-        {/* Section 2: Why We Collect It */}
-        <div className="p-7 sm:p-8 rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-md">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-[#00D4A8]/10 text-[#00D4A8] flex items-center justify-center">
-              <ShieldCheck className="w-5 h-5" />
-            </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-[var(--text)]">
-              2. Why We Collect It
-            </h2>
-          </div>
-          <p className="text-sm sm:text-base text-[var(--text)]/80 leading-relaxed">
-            We collect these structured data points for strictly two purposes:
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-            <div className="p-4 rounded-xl bg-[var(--bg)] border border-[var(--border)]">
-              <h4 className="font-bold text-sm text-[var(--text)] mb-1">Fraud Detection</h4>
-              <p className="text-xs text-[var(--text)]/70">
-                To verify that salary submissions are authentic job offers rather than manipulated outlier numbers.
-              </p>
-            </div>
-            <div className="p-4 rounded-xl bg-[var(--bg)] border border-[var(--border)]">
-              <h4 className="font-bold text-sm text-[var(--text)] mb-1">Salary Benchmarking</h4>
-              <p className="text-xs text-[var(--text)]/70">
-                To anonymously power India&apos;s most accurate real-time compensation distribution indices.
-              </p>
-            </div>
-          </div>
-          <p className="text-xs font-semibold text-[var(--text)]/70 mt-4">
-            Nothing else. We do not sell your data to recruiters, employers, or third-party brokers.
-          </p>
-        </div>
-
-        {/* Section 3: How Long We Keep It */}
-        <div className="p-7 sm:p-8 rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-md">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-[#00D4A8]/10 text-[#00D4A8] flex items-center justify-center">
-              <Clock className="w-5 h-5" />
-            </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-[var(--text)]">
-              3. How Long We Keep It (Actual Retention Period)
-            </h2>
-          </div>
-          <p className="text-sm sm:text-base text-[var(--text)]/80 leading-relaxed mb-4">
-            Our retention policy is enforced by automated server-side architecture:
-          </p>
-          <ul className="space-y-3 text-sm text-[var(--text)]/80">
-            <li className="flex items-start gap-2.5">
-              <CheckCircle2 className="w-4 h-4 text-[#00D4A8] flex-shrink-0 mt-0.5" />
-              <span>
-                <strong>Source Documents (&lt; 5 seconds):</strong> Uploaded offer letters (PDF/DOCX) are stored in volatile ephemeral storage during extraction and are <strong>deleted synchronously the moment AI extraction completes</strong>.
-              </span>
-            </li>
-            <li className="flex items-start gap-2.5">
-              <CheckCircle2 className="w-4 h-4 text-[#00D4A8] flex-shrink-0 mt-0.5" />
-              <span>
-                <strong>12 Structured Data Points:</strong> Retained in our encrypted database until you request deletion.
-              </span>
-            </li>
-          </ul>
-        </div>
-
-        {/* Section 4: One-Click Delete Everything Flow */}
-        <div
-          id="delete-data"
-          className="p-7 sm:p-8 rounded-2xl border-2 border-red-500/40 bg-[var(--surface)] shadow-xl space-y-5"
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-red-500/10 text-red-500 flex items-center justify-center">
-              <Trash2 className="w-5 h-5" />
+        <GlassCard style={{ padding: 'clamp(24px, 4vw, 36px)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '18px' }}>
+            <div
+              style={{
+                width: '44px',
+                height: '44px',
+                borderRadius: '12px',
+                background: 'rgba(0, 212, 168, 0.12)',
+                border: '1px solid rgba(0, 212, 168, 0.28)',
+                color: '#00D4A8',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Database size={22} />
             </div>
             <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-[var(--text)]">
-                4. How to Delete Everything (One-Click Erasure)
+              <div style={{ fontFamily: FM, fontSize: '11px', color: 'var(--text-4)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '4px' }}>
+                DATA MINIMIZATION PRINCIPLE
+              </div>
+              <h2 style={{ fontFamily: FH, fontSize: 'clamp(1.3rem, 2.4vw, 1.7rem)', fontWeight: '800', letterSpacing: '-0.02em', color: 'var(--text)', margin: 0 }}>
+                1. What We Collect
               </h2>
-              <p className="text-xs text-[var(--text)]/60 font-mono">
-                DPDP ACT 2023 • RIGHT TO ERASURE
+            </div>
+          </div>
+
+          <p style={{ fontFamily: FB, fontSize: '15px', color: 'var(--text-2)', lineHeight: '1.8', margin: '0 0 18px' }}>
+            When you use our Counter-Offer Arsenal or Quick CTC Check, our AI extraction engine processes only specific, structured compensation metrics:
+          </p>
+
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: '12px',
+              marginBottom: '20px',
+            }}
+          >
+            {[
+              'Base salary & variable structure',
+              'Joining date & timeline',
+              'Employer name & industry',
+              'Work city & job role',
+            ].map((item) => (
+              <div
+                key={item}
+                style={{
+                  padding: '12px 16px',
+                  borderRadius: '10px',
+                  background: 'var(--bg)',
+                  border: '1px solid var(--border)',
+                  fontFamily: FB,
+                  fontSize: '13px',
+                  fontWeight: '600',
+                  color: 'var(--text)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                }}
+              >
+                <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#00D4A8' }} />
+                <span>{item}</span>
+              </div>
+            ))}
+          </div>
+
+          <div
+            style={{
+              padding: '16px 20px',
+              borderRadius: '12px',
+              background: 'var(--bg)',
+              border: '1px solid var(--border)',
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '12px',
+            }}
+          >
+            <ShieldCheck size={18} style={{ color: '#00D4A8', flexShrink: 0, marginTop: '2px' }} />
+            <p style={{ fontFamily: FB, fontSize: '13.5px', color: 'var(--text-3)', lineHeight: '1.7', margin: 0 }}>
+              <strong style={{ color: 'var(--text)' }}>Strict Candidate PII Exclusion:</strong> We never extract or retain personally identifiable information (PII) such as your home address, government ID numbers, personal contact details, or signature blocks.
+            </p>
+          </div>
+        </GlassCard>
+
+        {/* Section 2: Why We Collect It */}
+        <GlassCard style={{ padding: 'clamp(24px, 4vw, 36px)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '18px' }}>
+            <div
+              style={{
+                width: '44px',
+                height: '44px',
+                borderRadius: '12px',
+                background: 'rgba(232, 197, 71, 0.12)',
+                border: '1px solid rgba(232, 197, 71, 0.28)',
+                color: '#E8C547',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <ShieldCheck size={22} />
+            </div>
+            <div>
+              <div style={{ fontFamily: FM, fontSize: '11px', color: 'var(--text-4)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '4px' }}>
+                PURPOSE SPECIFICATION
+              </div>
+              <h2 style={{ fontFamily: FH, fontSize: 'clamp(1.3rem, 2.4vw, 1.7rem)', fontWeight: '800', letterSpacing: '-0.02em', color: 'var(--text)', margin: 0 }}>
+                2. Why We Collect It
+              </h2>
+            </div>
+          </div>
+
+          <p style={{ fontFamily: FB, fontSize: '15px', color: 'var(--text-2)', lineHeight: '1.8', margin: '0 0 20px' }}>
+            We collect and process these structured data points for strictly two purposes:
+          </p>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', marginBottom: '20px' }}>
+            <div style={{ padding: '20px', borderRadius: '12px', background: 'var(--bg)', border: '1px solid var(--border)' }}>
+              <h4 style={{ fontFamily: FH, fontSize: '16px', fontWeight: '800', color: 'var(--text)', margin: '0 0 8px' }}>
+                Fraud Detection & Verification
+              </h4>
+              <p style={{ fontFamily: FB, fontSize: '13.5px', color: 'var(--text-3)', lineHeight: '1.7', margin: 0 }}>
+                To verify that salary submissions represent authentic job offers rather than manipulated outlier numbers, maintaining high-fidelity benchmarks.
+              </p>
+            </div>
+            <div style={{ padding: '20px', borderRadius: '12px', background: 'var(--bg)', border: '1px solid var(--border)' }}>
+              <h4 style={{ fontFamily: FH, fontSize: '16px', fontWeight: '800', color: 'var(--text)', margin: '0 0 8px' }}>
+                Real-Time Salary Benchmarking
+              </h4>
+              <p style={{ fontFamily: FB, fontSize: '13.5px', color: 'var(--text-3)', lineHeight: '1.7', margin: 0 }}>
+                To anonymously power India&apos;s most accurate real-time compensation indices across experience bands and tier-1/tier-2 tech hubs.
               </p>
             </div>
           </div>
 
-          <p className="text-sm text-[var(--text)]/80 leading-relaxed">
-            Clicking the button below instantly triggers a cascading server-side deletion across all tables (<code className="text-xs text-[#00D4A8]">offer_analyses</code>, <code className="text-xs text-[#00D4A8]">offer_uploads</code>, <code className="text-xs text-[#00D4A8]">quick_checks</code>, <code className="text-xs text-[#00D4A8]">consents</code>) tied to your account and sends you an automated confirmation email.
+          <div style={{ fontFamily: FB, fontSize: '14px', fontWeight: '600', color: 'var(--text)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Lock size={16} style={{ color: '#E8C547' }} />
+            <span>We never sell, rent, or broker your compensation data to recruiters, employers, or third parties.</span>
+          </div>
+        </GlassCard>
+
+        {/* Section 3: How Long We Keep It */}
+        <GlassCard style={{ padding: 'clamp(24px, 4vw, 36px)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '18px' }}>
+            <div
+              style={{
+                width: '44px',
+                height: '44px',
+                borderRadius: '12px',
+                background: 'rgba(99, 102, 241, 0.12)',
+                border: '1px solid rgba(99, 102, 241, 0.28)',
+                color: '#818CF8',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Clock size={22} />
+            </div>
+            <div>
+              <div style={{ fontFamily: FM, fontSize: '11px', color: 'var(--text-4)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '4px' }}>
+                AUTOMATED PURGE ARCHITECTURE
+              </div>
+              <h2 style={{ fontFamily: FH, fontSize: 'clamp(1.3rem, 2.4vw, 1.7rem)', fontWeight: '800', letterSpacing: '-0.02em', color: 'var(--text)', margin: 0 }}>
+                3. How Long We Keep It (Retention Policy)
+              </h2>
+            </div>
+          </div>
+
+          <p style={{ fontFamily: FB, fontSize: '15px', color: 'var(--text-2)', lineHeight: '1.8', margin: '0 0 20px' }}>
+            Our retention enforcement is hardcoded directly into our serverless infrastructure:
           </p>
 
-          {deleteSuccess ? (
-            <div className="p-5 rounded-xl bg-[#00D4A8]/10 border border-[#00D4A8] text-[#00D4A8] flex items-center gap-3">
-              <CheckCircle2 className="w-6 h-6 flex-shrink-0" />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px', padding: '18px 20px', borderRadius: '12px', background: 'var(--bg)', border: '1px solid var(--border)' }}>
+              <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(0, 212, 168, 0.12)', color: '#00D4A8', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <Server size={18} />
+              </div>
               <div>
-                <h4 className="font-bold text-sm">All Your Data Has Been Deleted</h4>
-                <p className="text-xs text-[var(--text)]/70 mt-0.5">
-                  We have permanently erased your account and all associated data records. A confirmation email has been dispatched.
+                <h4 style={{ fontFamily: FH, fontSize: '15px', fontWeight: '800', color: 'var(--text)', margin: '0 0 6px' }}>
+                  Source Documents (&lt; 5 Seconds Ephemeral Storage)
+                </h4>
+                <p style={{ fontFamily: FB, fontSize: '13.5px', color: 'var(--text-3)', lineHeight: '1.7', margin: 0 }}>
+                  Uploaded offer letters (PDF/DOCX) are loaded exclusively into volatile memory during parsing and extraction. They are <strong style={{ color: 'var(--text)' }}>deleted synchronously the moment AI extraction completes</strong> without ever hitting permanent cloud storage buckets.
                 </p>
               </div>
             </div>
-          ) : (
-            <div className="space-y-3 pt-2">
-              {deleteError && (
-                <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs flex items-center gap-2">
-                  <AlertTriangle className="w-4 h-4 flex-shrink-0" />
-                  <span>{deleteError}</span>
-                </div>
-              )}
 
-              <button
-                onClick={handleDeleteMyData}
-                disabled={deleting}
-                className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-lg shadow-red-600/20"
-              >
-                <Trash2 className="w-4 h-4" />
-                <span>{deleting ? 'Erasing 100% of Your Data...' : 'Delete All My Data Now'}</span>
-              </button>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px', padding: '18px 20px', borderRadius: '12px', background: 'var(--bg)', border: '1px solid var(--border)' }}>
+              <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(99, 102, 241, 0.12)', color: '#818CF8', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <FileCheck size={18} />
+              </div>
+              <div>
+                <h4 style={{ fontFamily: FH, fontSize: '15px', fontWeight: '800', color: 'var(--text)', margin: '0 0 6px' }}>
+                  Anonymized Structured Benchmarks
+                </h4>
+                <p style={{ fontFamily: FB, fontSize: '13.5px', color: 'var(--text-3)', lineHeight: '1.7', margin: 0 }}>
+                  Extracted compensation records (salary bands, roles, cities) are stripped of candidate identifiers and retained within our encrypted database to power aggregate compensation trends.
+                </p>
+              </div>
             </div>
-          )}
-        </div>
-      </div>
+          </div>
+        </GlassCard>
+      </motion.div>
     </MarketingPageShell>
   );
 }

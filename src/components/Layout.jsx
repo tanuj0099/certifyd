@@ -239,6 +239,7 @@ export function Footer() {
         <div>
           <h4 style={{ fontFamily: F_HEAD, fontSize: '12px', fontWeight: '700', color: 'var(--text)', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Legal</h4>
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <Link href="/trust" style={{ fontFamily: F_BODY, fontSize: '13px', color: 'var(--text-2)', textDecoration: 'none' }}>Trust &amp; Security</Link>
             <Link href="/terms" style={{ fontFamily: F_BODY, fontSize: '13px', color: 'var(--text-2)', textDecoration: 'none' }}>Terms of Service</Link>
             <Link href="/privacy" style={{ fontFamily: F_BODY, fontSize: '13px', color: 'var(--text-2)', textDecoration: 'none' }}>Privacy Policy</Link>
           </nav>
