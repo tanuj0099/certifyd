@@ -231,26 +231,36 @@ export async function getTeamMembersAction(): Promise<OpsTeamMember[]> {
     const { data: allowlist } = await supabaseAdmin.from('admin_users_allowlist').select('*');
     if (allowlist && allowlist.length > 0) {
       for (const item of allowlist) {
-        if (item.email && !dbMembers.some((m) => m.email.toLowerCase() === item.email.toLowerCase())) {
-          let parsedPermissions: any = {
-            access_marketing: true,
-            access_technical: false,
-            access_database: false,
-            access_verifications: false,
-            access_content: false,
-            access_admin: false,
-          };
-          let parsedPass: string | undefined = undefined;
-          if (item.permissions) {
-            try {
-              const raw = typeof item.permissions === 'string' ? JSON.parse(item.permissions) : item.permissions;
-              if (raw && typeof raw === 'object') {
-                if (raw._pass) parsedPass = raw._pass;
-                const { _pass, ...cleanPerms } = raw;
-                parsedPermissions = cleanPerms;
-              }
-            } catch (e) {}
+        if (!item.email) continue;
+        let parsedPermissions: any = {
+          access_marketing: true,
+          access_technical: false,
+          access_database: false,
+          access_verifications: false,
+          access_content: false,
+          access_admin: false,
+        };
+        let parsedPass: string | undefined = undefined;
+        if (item.permissions) {
+          try {
+            const raw = typeof item.permissions === 'string' ? JSON.parse(item.permissions) : item.permissions;
+            if (raw && typeof raw === 'object') {
+              if (raw._pass) parsedPass = raw._pass;
+              const { _pass, ...cleanPerms } = raw;
+              parsedPermissions = cleanPerms;
+            }
+          } catch (e) {}
+        }
+
+        const existingDbIdx = dbMembers.findIndex((m) => m.email.toLowerCase() === item.email.toLowerCase());
+        if (existingDbIdx >= 0) {
+          if (!dbMembers[existingDbIdx].temp_password && (item.temp_password || parsedPass)) {
+            dbMembers[existingDbIdx].temp_password = item.temp_password || parsedPass;
           }
+          if (dbMembers[existingDbIdx].permissions && typeof dbMembers[existingDbIdx].permissions === 'object' && !(dbMembers[existingDbIdx].permissions as any)._pass && parsedPass) {
+            (dbMembers[existingDbIdx].permissions as any)._pass = parsedPass;
+          }
+        } else {
           dbMembers.push({
             id: `team-allow-${item.email.replace(/[^a-z0-9]/g, '-')}`,
             email: item.email.toLowerCase(),

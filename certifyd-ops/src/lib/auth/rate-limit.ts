@@ -25,9 +25,9 @@ export interface RateLimitResult {
 
 export async function checkRateLimit(ip: string): Promise<RateLimitResult> {
   const now = Date.now();
-  const attemptLimit = 5;
+  const attemptLimit = 15;
   const windowMs = 15 * 60 * 1000; // 15 mins
-  const lockoutMs = 30 * 60 * 1000; // 30 mins
+  const lockoutMs = 15 * 60 * 1000; // 15 mins
 
   if (redis) {
     try {
@@ -38,7 +38,7 @@ export async function checkRateLimit(ip: string): Promise<RateLimitResult> {
           success: false,
           remaining: 0,
           lockedUntil,
-          reason: `Too many failed login attempts. IP locked for 30 minutes.`,
+          reason: `Too many failed login attempts. IP locked temporarily.`,
         };
       }
 
@@ -50,13 +50,13 @@ export async function checkRateLimit(ip: string): Promise<RateLimitResult> {
 
       if (count > attemptLimit) {
         const lockTime = now + lockoutMs;
-        await redis.set(lockKey, lockTime, { ex: 30 * 60 });
+        await redis.set(lockKey, lockTime, { ex: 15 * 60 });
         await redis.del(countKey);
         return {
           success: false,
           remaining: 0,
           lockedUntil: lockTime,
-          reason: `Exceeded 5 login attempts. IP locked for 30 minutes.`,
+          reason: `Exceeded login attempts. IP locked temporarily.`,
         };
       }
 
@@ -73,7 +73,7 @@ export async function checkRateLimit(ip: string): Promise<RateLimitResult> {
       success: false,
       remaining: 0,
       lockedUntil: record.lockedUntil,
-      reason: `Too many failed login attempts. IP locked for 30 minutes.`,
+      reason: `Too many failed login attempts. IP locked temporarily.`,
     };
   }
 
@@ -91,7 +91,7 @@ export async function checkRateLimit(ip: string): Promise<RateLimitResult> {
       success: false,
       remaining: 0,
       lockedUntil: lockTime,
-      reason: `Exceeded 5 login attempts. IP locked for 30 minutes.`,
+      reason: `Exceeded login attempts. IP locked temporarily.`,
     };
   }
 
