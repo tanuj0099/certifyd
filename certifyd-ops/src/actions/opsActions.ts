@@ -431,18 +431,26 @@ export async function saveTeamMemberAction(member: OpsTeamMember): Promise<{ suc
 }
 
 export async function deleteTeamMemberAction(id: string): Promise<{ success: boolean }> {
-  const list = readLocalCache<OpsTeamMember>('ops_team_members', INITIAL_TEAM);
-  const memberToDelete = list.find((m) => m.id === id);
-  const cleanEmail = memberToDelete?.email?.toLowerCase()?.trim() || '';
+  const allList = await getTeamMembersAction();
+  const memberToDelete = allList.find((m) => m.id === id);
+  let cleanEmail = memberToDelete?.email?.toLowerCase()?.trim() || '';
+
+  if (!cleanEmail && id.startsWith('team-allow-')) {
+    const raw = id.replace('team-allow-', '');
+    // Try basic reconstruction or find by partial match
+    const found = allList.find((m) => m.id === id || m.email.toLowerCase().replace(/[^a-z0-9]/g, '-') === raw);
+    if (found) cleanEmail = found.email.toLowerCase().trim();
+  }
 
   try {
     await supabaseAdmin.from('ops_team_members').delete().eq('id', id);
     if (cleanEmail) {
-      await supabaseAdmin.from('ops_team_members').delete().eq('email', cleanEmail);
-      await supabaseAdmin.from('admin_users_allowlist').delete().eq('email', cleanEmail);
+      await supabaseAdmin.from('ops_team_members').delete().ilike('email', cleanEmail);
+      await supabaseAdmin.from('admin_users_allowlist').delete().ilike('email', cleanEmail);
     }
   } catch (e) {}
 
+  const list = readLocalCache<OpsTeamMember>('ops_team_members', INITIAL_TEAM);
   const filtered = list.filter((m) => m.id !== id && (!cleanEmail || m.email.toLowerCase() !== cleanEmail));
   writeLocalCache('ops_team_members', filtered);
 
