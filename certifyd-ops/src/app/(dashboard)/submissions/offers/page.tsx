@@ -3,6 +3,7 @@ import { supabaseAdmin } from '@/lib/supabase/server';
 import { getSession } from '@/lib/auth/session';
 import { OffersClient, OfferRecord } from '@/components/submissions/OffersClient';
 import { getSubmissionOverrides } from '@/lib/cache/submissionsCache';
+import { ConfidentialDataShield } from '@/components/ui/ConfidentialDataShield';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -132,5 +133,11 @@ export default async function OffersPage() {
   // Sort newest first
   records.sort((a, b) => new Date(b.submitted_at).getTime() - new Date(a.submitted_at).getTime());
 
-  return <OffersClient initialRecords={records} userRole={userRole} />;
+  const userEmail = session?.email || 'employee@certifyd.in';
+
+  return (
+    <ConfidentialDataShield userEmail={userEmail} userRole={userRole} sectionName="Offer Letters Verification Database">
+      <OffersClient initialRecords={records} userRole={userRole} />
+    </ConfidentialDataShield>
+  );
 }

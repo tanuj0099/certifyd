@@ -73,8 +73,8 @@ export async function middleware(req: NextRequest) {
 
     const role = payload.role as string;
 
-    // LAYER 3: Role-Based Access Protection for /system routes
-    if (pathname.startsWith('/system') && role !== 'SUPER_ADMIN') {
+    // LAYER 3: Role-Based Access Protection for /system and granular routes
+    if (pathname.startsWith('/system') && !pathname.startsWith('/system/settings') && role !== 'SUPER_ADMIN') {
       const permissions = payload.permissions as any;
       const isAuditRoute = pathname.startsWith('/system/audit');
       if (isAuditRoute) {
@@ -86,6 +86,16 @@ export async function middleware(req: NextRequest) {
       if (permissions && permissions.access_technical !== true) {
         return new NextResponse(
           JSON.stringify({ error: '403 Forbidden - Technical privileges required for system control routes' }),
+          { status: 403, headers: { 'content-type': 'application/json' } }
+        );
+      }
+    }
+
+    if (pathname.startsWith('/marketing') && role !== 'SUPER_ADMIN') {
+      const permissions = payload.permissions as any;
+      if (!permissions || permissions.access_marketing !== true) {
+        return new NextResponse(
+          JSON.stringify({ error: '403 Forbidden - Marketing privileges required for this section' }),
           { status: 403, headers: { 'content-type': 'application/json' } }
         );
       }

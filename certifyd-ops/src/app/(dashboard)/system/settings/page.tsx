@@ -8,8 +8,8 @@ export const revalidate = 0;
 
 export default async function SettingsPage() {
   const session = await getSession();
-  if (!session || (session.role !== 'SUPER_ADMIN' && !session.permissions?.access_technical)) {
-    redirect('/');
+  if (!session) {
+    redirect('/login');
   }
 
   let admins: AdminUserRecord[] = [];
@@ -40,5 +40,12 @@ export default async function SettingsPage() {
     }));
   }
 
-  return <SettingsClient initialAdmins={admins} currentAdminEmail={session.email} />;
+  return (
+    <SettingsClient
+      initialAdmins={admins}
+      currentAdminEmail={session.email}
+      userRole={session.role}
+      initialAvatar={session.avatar_url}
+    />
+  );
 }

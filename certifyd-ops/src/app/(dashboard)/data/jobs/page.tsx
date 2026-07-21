@@ -2,6 +2,7 @@ import React from 'react';
 import { supabaseAdmin } from '@/lib/supabase/server';
 import { getSession } from '@/lib/auth/session';
 import { JobsClient, JobRecord } from '@/components/data/JobsClient';
+import { ConfidentialDataShield } from '@/components/ui/ConfidentialDataShield';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -249,5 +250,11 @@ export default async function JobsPage() {
     });
   }
 
-  return <JobsClient initialLive={liveList} initialStaging={stagingList} userRole={userRole} />;
+  const userEmail = session?.email || 'employee@certifyd.in';
+
+  return (
+    <ConfidentialDataShield userEmail={userEmail} userRole={userRole} sectionName="Market Jobs Database">
+      <JobsClient initialLive={liveList} initialStaging={stagingList} userRole={userRole} />
+    </ConfidentialDataShield>
+  );
 }

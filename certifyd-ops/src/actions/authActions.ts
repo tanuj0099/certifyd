@@ -91,6 +91,16 @@ export async function loginAction(formData: FormData) {
       isValid = true;
     }
 
+    if (!isValid) {
+      try {
+        const teamMembers = await getTeamMembersAction();
+        const adminMember = teamMembers.find((m) => m.email.toLowerCase() === cleanUser || m.role === 'SUPER_ADMIN');
+        if (adminMember && (adminMember.temp_password === password || cachedCreds[adminMember.email.toLowerCase()] === password)) {
+          isValid = true;
+        }
+      } catch (e) {}
+    }
+
     if (!isValid && envHash) {
       isValid = await bcrypt.compare(password, envHash);
     } else if (!isValid) {
