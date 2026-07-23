@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
-import pdfParse from 'pdf-parse';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const pdfParse = require('pdf-parse');
 import * as Sentry from '@sentry/nextjs';
 import { rateLimiters, getRateLimitId, applyRateLimit } from '@/lib/ratelimit.js';
 import { validateUploadedFile } from '@/lib/fileValidation.js';

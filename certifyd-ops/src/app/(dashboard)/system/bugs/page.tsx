@@ -2,7 +2,7 @@ import React from 'react';
 import { BugsKanbanClient } from './BugsKanbanClient';
 import { getBugsAction } from '../../../../actions/opsActions';
 import { cookies } from 'next/headers';
-import { verifySession } from '../../../../lib/auth/session';
+import { decryptSession } from '../../../../lib/auth/session';
 
 export const metadata = {
   title: 'Bug Tracker | Certifyd Ops',
@@ -13,7 +13,7 @@ export default async function BugsPage() {
   const sessionCookie = cookies().get('certifyd_session')?.value;
   let userEmail = 'unknown@certifyd.com';
   if (sessionCookie) {
-    const payload = await verifySession(sessionCookie);
+    const payload = await decryptSession(sessionCookie);
     if (payload && payload.email) {
       userEmail = payload.email;
     }

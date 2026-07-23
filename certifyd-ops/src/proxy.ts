@@ -5,7 +5,7 @@ import { jwtVerify } from 'jose';
 const secretKey = process.env.JWT_SECRET || 'super-secret-default-key-for-local-dev-only-change-in-prod-64-chars';
 const key = new TextEncoder().encode(secretKey);
 
-export async function middleware(req: NextRequest) {
+export default async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // Static assets, API routes, and favicon bypass

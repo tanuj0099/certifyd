@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
-import pdfParse from 'pdf-parse';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const pdfParse = require('pdf-parse');
 import mammoth from 'mammoth';
 import { rateLimiters, getRateLimitId, applyRateLimit } from '@/lib/ratelimit.js';
 import { validateUploadedFile } from '@/lib/fileValidation.js';
