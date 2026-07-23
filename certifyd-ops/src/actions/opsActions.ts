@@ -115,11 +115,11 @@ export interface OpsBugReport {
 
 // --- Persistent Fallback Cache for Dynamic Operation if SQL Tables are uncreated ---
 const CACHE_DIRS = [
-  path.join(process.cwd(), 'data', 'ops_cache'),
-  path.join(process.cwd(), 'certifyd-ops', 'data', 'ops_cache'),
+  path.join(/*turbopackIgnore: true*/ process.cwd(), 'data', 'ops_cache'),
+  path.join(/*turbopackIgnore: true*/ process.cwd(), 'certifyd-ops', 'data', 'ops_cache'),
   path.join('/tmp', 'ops_cache'),
-  path.join(process.cwd(), '.next', 'ops_cache'),
-  path.resolve(__dirname, '../../../../data/ops_cache'),
+  path.join(/*turbopackIgnore: true*/ process.cwd(), '.next', 'ops_cache'),
+  path.resolve(/*turbopackIgnore: true*/ __dirname, '../../../../data/ops_cache'),
   'C:\\Users\\Tanuj Rajdev\\Downloads\\certifyroi\\certifyroi\\certifyd-ops\\data\\ops_cache'
 ];
 
