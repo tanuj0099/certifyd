@@ -81,6 +81,58 @@ yarn-error.log*
 .vercel
 .aider*
 
+requirements.txt
+
+# ── Pipeline / data-engineering scripts ──────────────────────────────────────
+# These files contain or may contain credentials loaded from .env.
+# They must NEVER be committed to the frontend repository.
+directory_engine.py
+azure_api_engine.py
+cisco_fast_engine.py
+reddit_ai_engine.py
+master_pipeline.py
+market_ticker.py
+quick_fix.py
+market_pulse_backfill.py
+capture_ui.py
+repomix-output.xml
+
+# CSV data dumps — large binary-like files, no place in source control
+*.csv
+processed_certifications_gold.csv
+final_production_database.csv
+ultimate_156_database.csv
+ultimate_156_database_fixed.csv
+
+# Stray files
+=3.0.0
+api/
+
+# Antigravity brain
+antigravitycertifyroi/
+
+# Editor
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Vercel / Aider
+.vercel
+.aider*
+
 # Next.js
 .next/
 
@@ -89,3 +141,6 @@ yarn-error.log*
 
 # Temporary workspace scripts
 scratch/
+
+# Ops Dashboard (Keep separate from main site)
+certifyd-ops/
