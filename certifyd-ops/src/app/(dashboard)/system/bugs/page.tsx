@@ -10,7 +10,8 @@ export const metadata = {
 
 export default async function BugsPage() {
   const initialBugs = await getBugsAction();
-  const sessionCookie = cookies().get('certifyd_session')?.value;
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get('certifyd_session')?.value;
   let userEmail = 'unknown@certifyd.com';
   if (sessionCookie) {
     const payload = await decryptSession(sessionCookie);
