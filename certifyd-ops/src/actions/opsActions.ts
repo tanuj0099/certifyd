@@ -100,6 +100,19 @@ export interface OpsNotification {
   created_at: string;
 }
 
+export interface OpsBugReport {
+  id: string;
+  url: string;
+  description: string;
+  severity: 'Low' | 'Medium' | 'High' | 'Blocker' | string;
+  status: 'To Do' | 'In Progress' | 'In Review' | 'Done' | string;
+  reporter_email: string;
+  screenshot_url?: string;
+  comments?: { id: string; author: string; text: string; date: string }[];
+  created_at: string;
+  updated_at: string;
+}
+
 // --- Persistent Fallback Cache for Dynamic Operation if SQL Tables are uncreated ---
 const CACHE_DIRS = [
   path.join(process.cwd(), 'data', 'ops_cache'),
@@ -181,6 +194,8 @@ const INITIAL_NOTES: OpsNoteThread[] = [];
 const INITIAL_MARKETING_IDEAS: OpsMarketingIdea[] = [];
 
 const INITIAL_NOTIFICATIONS: OpsNotification[] = [];
+
+const INITIAL_BUGS: OpsBugReport[] = [];
 
 // ==========================================
 // 1. TEAM MEMBERS & DYNAMIC RBAC ACTIONS
@@ -1330,4 +1345,95 @@ export async function clearAllNotificationsAction(userEmail?: string): Promise<{
   writeLocalCache('ops_notifications', list);
   revalidatePath('/');
   return { success: true };
+}
+
+// ==========================================
+// BUG TRACKING ACTIONS
+// ==========================================
+
+export async function getBugsAction(): Promise<OpsBugReport[]> {
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('ops_bug_reports')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (!error && data) {
+      return data as OpsBugReport[];
+    }
+  } catch (e) {
+    console.error('getBugsAction error:', e);
+  }
+  return readLocalCache<OpsBugReport>('ops_bug_reports', INITIAL_BUGS);
+}
+
+export async function saveBugAction(bug: OpsBugReport): Promise<{ success: boolean; data: OpsBugReport; message?: string }> {
+  try {
+    const { error } = await supabaseAdmin.from('ops_bug_reports').upsert(bug);
+    if (!error) {
+      revalidatePath('/system/bugs');
+      return { success: true, data: bug };
+    }
+    console.error('Supabase ops_bug_reports upsert error:', error);
+    
+    // Fallback if schema doesn't exist yet
+    const cache = readLocalCache<OpsBugReport>('ops_bug_reports', INITIAL_BUGS);
+    const existingIdx = cache.findIndex(b => b.id === bug.id);
+    if (existingIdx >= 0) cache[existingIdx] = bug;
+    else cache.unshift(bug);
+    writeLocalCache('ops_bug_reports', cache);
+    
+    revalidatePath('/system/bugs');
+    return { success: true, data: bug, message: 'Saved to local cache' };
+  } catch (e) {
+    console.error('saveBugAction exception:', e);
+    return { success: false, data: bug, message: 'Failed to save bug report' };
+  }
+}
+
+export async function updateBugStatusAction(id: string, newStatus: string): Promise<{ success: boolean }> {
+  try {
+    const { error } = await supabaseAdmin
+      .from('ops_bug_reports')
+      .update({ status: newStatus, updated_at: new Date().toISOString() })
+      .eq('id', id);
+
+    if (!error) {
+      revalidatePath('/system/bugs');
+      return { success: true };
+    }
+    
+    // Cache fallback
+    const cache = readLocalCache<OpsBugReport>('ops_bug_reports', INITIAL_BUGS);
+    const bug = cache.find(b => b.id === id);
+    if (bug) {
+      bug.status = newStatus;
+      bug.updated_at = new Date().toISOString();
+      writeLocalCache('ops_bug_reports', cache);
+      revalidatePath('/system/bugs');
+      return { success: true };
+    }
+  } catch (e) {
+    console.error('updateBugStatusAction exception:', e);
+  }
+  return { success: false };
+}
+
+export async function deleteBugAction(id: string): Promise<{ success: boolean }> {
+  try {
+    const { error } = await supabaseAdmin.from('ops_bug_reports').delete().eq('id', id);
+    if (!error) {
+      revalidatePath('/system/bugs');
+      return { success: true };
+    }
+    
+    // Cache fallback
+    const cache = readLocalCache<OpsBugReport>('ops_bug_reports', INITIAL_BUGS);
+    writeLocalCache('ops_bug_reports', cache.filter(b => b.id !== id));
+    revalidatePath('/system/bugs');
+    return { success: true };
+  } catch (e) {
+    console.error('deleteBugAction exception:', e);
+  }
+  return { success: false };
 }

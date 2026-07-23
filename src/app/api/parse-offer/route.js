@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { extractText } from 'unpdf';
+import pdfParse from 'pdf-parse';
 import * as Sentry from '@sentry/nextjs';
 import { rateLimiters, getRateLimitId, applyRateLimit } from '@/lib/ratelimit.js';
 import { validateUploadedFile } from '@/lib/fileValidation.js';
@@ -33,9 +33,9 @@ export async function POST(request) {
 
     const data = new Uint8Array(arrayBuffer);
 
-    // Parse the PDF text entirely in memory using unpdf
-    const { text } = await extractText(data);
-    const parsedText = Array.isArray(text) ? text.join('\n').trim() : String(text).trim();
+    // Parse the PDF text entirely in memory using pdf-parse
+    const pdfData = await pdfParse(buffer);
+    const parsedText = pdfData.text.trim();
 
     return NextResponse.json({ text: parsedText });
   } catch (error) {

@@ -27,7 +27,8 @@ export default function OnboardingGate({ children }) {
     if (authLoading) return;
     if (!userId) {
       const isDemo = typeof window !== 'undefined' && window.location.search.includes('demo=true');
-      if (!isDemo && pathname !== '/' && pathname !== '/login' && pathname !== '/signup' && pathname !== '/onboarding' && pathname !== '/verify-email') {
+      const publicPaths = ['/', '/login', '/signup', '/onboarding', '/verify-email', '/offer-analysis', '/offer-letter-analyzer', '/roi-calculator'];
+      if (!isDemo && !publicPaths.some(p => pathname === p || pathname?.startsWith(p + '/'))) {
         router.replace('/login');
       }
       return;
@@ -95,7 +96,8 @@ export default function OnboardingGate({ children }) {
   }
 
   const isDemo = typeof window !== 'undefined' && window.location.search.includes('demo=true');
-  if (!user && !isDemo && pathname !== '/' && pathname !== '/login' && pathname !== '/signup' && pathname !== '/onboarding' && pathname !== '/verify-email') {
+  const publicPaths = ['/', '/login', '/signup', '/onboarding', '/verify-email', '/offer-analysis', '/offer-letter-analyzer', '/roi-calculator'];
+  if (!user && !isDemo && !publicPaths.some(p => pathname === p || pathname?.startsWith(p + '/'))) {
     return null;
   }
 

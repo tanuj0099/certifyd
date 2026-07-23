@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { extractText } from 'unpdf';
+import pdfParse from 'pdf-parse';
 import mammoth from 'mammoth';
 import { rateLimiters, getRateLimitId, applyRateLimit } from '@/lib/ratelimit.js';
 import { validateUploadedFile } from '@/lib/fileValidation.js';
@@ -37,9 +37,9 @@ export async function POST(request) {
     const magicBytes = buffer.subarray(0, 5).toString('utf8');
     
     if (magicBytes === '%PDF-') {
-      // Parse PDF using unpdf
-      const { text } = await extractText(new Uint8Array(buffer));
-      extractedText = Array.isArray(text) ? text.join('\n').trim() : String(text).trim();
+      // Parse PDF using pdf-parse
+      const pdfData = await pdfParse(buffer);
+      extractedText = pdfData.text.trim();
     } else if (buffer.subarray(0, 4).toString('hex') === '504b0304') {
       // Parse DOCX (ZIP signature PK..)
       const result = await mammoth.extractRawText({ buffer });

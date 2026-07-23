@@ -25,6 +25,7 @@ import {
   Calendar,
   Users,
   Lightbulb,
+  Bug,
 } from 'lucide-react';
 import { logoutAction } from '../../actions/authActions';
 
@@ -53,6 +54,7 @@ const ICON_MAP: Record<string, React.ElementType> = {
   Calendar,
   Users,
   Lightbulb,
+  Bug,
 };
 
 export function Sidebar({
@@ -127,6 +129,7 @@ export function Sidebar({
     {
       title: 'System',
       items: [
+        { name: 'Bug Reports', href: '/system/bugs', icon: 'Bug', requiredPermission: 'access_technical' },
         { name: 'Feature Flags', href: '/system/flags', icon: 'ToggleRight', requiredPermission: 'access_technical' },
         { name: 'Audit Log', href: '/system/audit', icon: 'ShieldCheck', superAdminOnly: true, requiredPermission: 'access_technical' },
         { name: 'Settings', href: '/system/settings', icon: 'Settings', requiredPermission: null },
