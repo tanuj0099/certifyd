@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
 import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const pdfParse = require('pdf-parse');
 import * as Sentry from '@sentry/nextjs';
 import { rateLimiters, getRateLimitId, applyRateLimit } from '@/lib/ratelimit.js';
 import { validateUploadedFile } from '@/lib/fileValidation.js';
@@ -12,6 +10,9 @@ export const runtime = 'nodejs';
 
 export async function POST(request) {
   try {
+    const require = createRequire(import.meta.url);
+    const pdfParse = require('pdf-parse');
+    
     const id = getRateLimitId(request);
     const { limited, response } = await applyRateLimit(rateLimiters.offerLetter, id);
     if (limited) return response;
