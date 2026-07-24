@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { ChevronRight, Home, Folder, FileText, Wrench, Award, Map, User } from 'lucide-react';
+import { ChevronRight, Home, Folder, FileText, Wrench, Award, Map, User, RotateCcw } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useJourneyStore } from '@/store/useJourneyStore';
 import { MODES } from '@/components/ModeSelector';
@@ -91,7 +91,7 @@ export function DynamicBreadcrumb() {
   });
 
   return (
-    <div className="w-full px-4 md:px-6 mt-0 mb-0 pt-2 z-10 relative">
+    <div className="w-full px-4 md:px-6 mt-0 mb-0 pt-2 z-10 relative flex items-center justify-between">
       <nav aria-label="Breadcrumb">
         <ol className="flex flex-nowrap items-center gap-1.5 text-[11px] sm:text-sm" style={{ color: 'var(--text-3)', overflowX: 'auto', whiteSpace: 'nowrap', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           <AnimatePresence>
@@ -128,6 +128,21 @@ export function DynamicBreadcrumb() {
           </AnimatePresence>
         </ol>
       </nav>
+
+      {modeLocked && mode && (() => {
+        const activeMode = MODES.find(m => m.id === mode);
+        if (!activeMode) return null;
+        return (
+          <Link href="/choose-path" className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono tracking-wide rounded-full border border-dashed transition-opacity hover:opacity-80 flex-shrink-0" style={{
+            borderColor: activeMode.color + '66',
+            color: activeMode.color,
+            background: activeMode.color + '15'
+          }}>
+            <span>{activeMode.label}</span>
+            <RotateCcw className="w-2.5 h-2.5 opacity-70" />
+          </Link>
+        )
+      })()}
     </div>
   );
 }
