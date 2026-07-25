@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../lib/supabase.js';
@@ -7,6 +7,7 @@ import SkeletonGrid from './SkeletonGrid.jsx';
 import { AlertCircle, ArrowRight, X, TrendingUp, Compass, Filter, Scale } from 'lucide-react';
 import { useJourneyStore } from '../store/useJourneyStore.js';
 import FilterSidebar, { FILTER_SECTIONS } from './FilterSidebar.jsx';
+import { useUrlFilter, useUrlFilterObject } from '../hooks/useUrlFilter.js';
 
 const PAGE_SIZE = 20;
 
@@ -121,21 +122,20 @@ const CertRadar = () => {
   const [error, setError] = useState(null);
   const [showCapsule, setShowCapsule] = useState(true);
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [debouncedQuery, setDebouncedQuery] = useState('');
-  
-  const urlVendor = searchParams?.get('vendor');
+  const [searchQuery, setSearchQuery] = useUrlFilter('search', '', 300);
+  const [debouncedQuery, setDebouncedQuery] = useState(searchQuery);
 
-  // Filter States
-  const [filters, setFilters] = useState({ 
-    vendors: urlVendor ? [urlVendor] : [], 
+  // Filter States synced to URL
+  const [filters, setFilters] = useUrlFilterObject({ 
+    vendors: [], 
     difficulties: [], 
     tracks: [] 
-  });
+  }, 300);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useUrlFilter('page', 0);
   const [hasMore, setHasMore] = useState(true);
+  const isInitialMount = useRef(true);
 
   // Debounce search input (300ms)
   useEffect(() => {
@@ -143,22 +143,16 @@ const CertRadar = () => {
     return () => clearTimeout(handler);
   }, [searchQuery]);
 
-  // Reset pagination when filters change
+  // Reset pagination when filters change (skip initial mount to retain back-navigation state)
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
     setPage(0);
     setCertifications([]);
     setHasMore(true);
-  }, [debouncedQuery, filters]);
-
-  // If URL vendor changes, update state
-  useEffect(() => {
-    if (urlVendor) {
-      setFilters(prev => ({
-        ...prev,
-        vendors: prev.vendors.includes(urlVendor) ? prev.vendors : [...prev.vendors, urlVendor]
-      }));
-    }
-  }, [urlVendor]);
+  }, [debouncedQuery, filters, setPage]);
 
   // Fetch data
   useEffect(() => {

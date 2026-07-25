@@ -1,13 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { Search, Map, ArrowRight, Sparkles } from 'lucide-react';
 import { ROADMAP_INDEX, ROADMAP_CATEGORIES } from '@/data/roadmapIndex.js';
+import { useUrlFilter } from '@/hooks/useUrlFilter';
 
-export default function RoadmapsHub() {
-  const [activeCategory, setActiveCategory] = useState('All');
-  const [searchQuery, setSearchQuery] = useState('');
+function RoadmapsHubContent() {
+  const [activeCategory, setActiveCategory] = useUrlFilter('category', 'All');
+  const [searchQuery, setSearchQuery] = useUrlFilter('search', '', 300);
 
   const filteredRoadmaps = ROADMAP_INDEX.filter((roadmap) => {
     const matchesCategory = activeCategory === 'All' || roadmap.category === activeCategory;
@@ -204,3 +205,12 @@ export default function RoadmapsHub() {
     </div>
   );
 }
+
+export default function RoadmapsHub() {
+  return (
+    <Suspense fallback={<div className="min-h-screen" style={{ background: 'var(--bg)' }} />}>
+      <RoadmapsHubContent />
+    </Suspense>
+  );
+}
+

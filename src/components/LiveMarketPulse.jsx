@@ -6,6 +6,7 @@ import MarketPulseSidebar, { MARKET_FILTER_SECTIONS } from './MarketPulseSidebar
 import { MarketingFooter } from './MarketingPageShell.jsx'
 import { canShowAggregateClaim, INSUFFICIENT_DATA_MESSAGE } from '../lib/analytics/claimGuard.js'
 import MethodologyNote from './MethodologyNote.jsx'
+import { useUrlFilter, useUrlFilterObject } from '../hooks/useUrlFilter.js'
 const FM = "var(--font-mono)";
 const FS = "var(--font-sans)";
 const DEFAULT_CERT_COST = 25_000
@@ -351,10 +352,10 @@ export default function LiveMarketPulse() {
   const [rows, setRows] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [activeId, setActiveId] = useState('all')
+  const [activeId, setActiveId] = useUrlFilter('tab', 'all')
   const [lastSync, setLastSync] = useState(null)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [filters, setFilters] = useState({ category: [], salaryTier: [], payback: [], sortBy: 'ceiling_desc' })
+  const [searchQuery, setSearchQuery] = useUrlFilter('search', '', 300)
+  const [filters, setFilters] = useUrlFilterObject({ category: [], salaryTier: [], payback: [], sortBy: 'ceiling_desc' }, 300)
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false)
   const deferredQuery = useDeferredValue(searchQuery)
   const { isPhone, isTablet } = useViewportBand()

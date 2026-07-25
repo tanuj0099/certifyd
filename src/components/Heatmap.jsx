@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MapPin, Wifi, Building2, Globe } from 'lucide-react'
 import { supabase } from '../services/supabase.js'
+import { useUrlFilter } from '../hooks/useUrlFilter.js'
 
 //  Design tokens - read from CSS custom properties 
 var F_HEAD = "var(--font-head)"
@@ -153,8 +154,8 @@ const Heatmap = ({ prefilledCity = '', prefilledDomain = '', certName = '', resu
   //  Loading Fallback 
   
 
-  const [selectedDomain, setSelectedDomain] = useState('tech')
-  const [selectedCity,   setSelectedCity]   = useState('')
+  const [selectedDomain, setSelectedDomain] = useUrlFilter('domain', 'tech')
+  const [selectedCity,   setSelectedCity]   = useUrlFilter('city', '')
   const [autoDetected,   setAutoDetected]   = useState(false)
 
   const firstName = resumeName ? resumeName.split(' ')[0] : ''

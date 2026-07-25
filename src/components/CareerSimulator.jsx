@@ -4,6 +4,7 @@ import { X, TrendingUp, ChevronDown, Route, Loader2, Search } from 'lucide-react
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceLine } from 'recharts'
 import { CERTIFICATIONS, CERT_DOMAINS } from '../tokens.js'
 import { useJourneyStore } from '../store/useJourneyStore.js'
+import { useUrlFilter, useUrlFilterObject } from '../hooks/useUrlFilter.js'
 
 const FH = "var(--font-head)";
 const FM = "var(--font-mono)";
@@ -101,8 +102,17 @@ function ChartTip({ active, payload, label }) {
 function CareerSimulator({ initialSalary }) {
   const { timeCommitment, careerGoal, setTimeCommitment, setCareerGoal } = useJourneyStore()
   initialSalary = initialSalary || 8
-  const [salary, setSalary] = useState(initialSalary)
-  const [certs, setCerts] = useState(['', '', ''])
+  const [salary, setSalary] = useUrlFilter('salary', initialSalary, 300)
+  const [urlState, setUrlState] = useUrlFilterObject({ certs: [] }, 300)
+  const certs = [urlState.certs[0] || '', urlState.certs[1] || '', urlState.certs[2] || '']
+  const setCerts = useCallback((updater) => {
+    setUrlState((prev) => {
+      const prevCerts = [prev.certs[0] || '', prev.certs[1] || '', prev.certs[2] || ''];
+      const nextCerts = typeof updater === 'function' ? updater(prevCerts) : updater;
+      return { ...prev, certs: nextCerts.filter(Boolean) };
+    });
+  }, [setUrlState]);
+
   const [showSimulation, setShowSimulation] = useState(false)
   const [isSimulating, setIsSimulating] = useState(false)
 

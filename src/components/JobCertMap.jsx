@@ -8,6 +8,7 @@ import {
 } from 'lucide-react'
 
 import { supabase } from '../services/supabase.js'
+import { useUrlFilter } from '../hooks/useUrlFilter.js'
 
 const F_HEAD = "var(--font-head)";
 const F_MONO = "var(--font-mono)";
@@ -317,8 +318,8 @@ const FALLBACK_JOBMAP_DATA = {
 };
 
 const JobCertMap = () => {
-  const [tab,    setTab]    = useState('govt')
-  const [search, setSearch] = useState('')
+  const [tab,    setTab]    = useUrlFilter('tab', 'govt')
+  const [search, setSearch] = useUrlFilter('search', '', 300)
   const [loading, setLoading] = useState(true)
   const [dbData, setDbData] = useState({ govt: [], private: [], mandatory: [] })
 

@@ -4,6 +4,7 @@ import { Award, ChevronDown, Scale, Info, Zap, DollarSign, TrendingUp, Search } 
 import { supabase } from '../lib/supabase.js'
 import { CERT_DOMAINS as STATIC_DOMAINS } from '../tokens.js'
 import { logCertComparison } from '../lib/analytics/logEvent.js'
+import { useUrlFilter } from '../hooks/useUrlFilter.js'
 import {
   BarChart,
   Bar,
@@ -406,8 +407,8 @@ function CertCompare({ salary, prefilledCertA, prefilledCertB }) {
 
   const actualSalary = salary > 0 ? salary : null
 
-  var [certA, setCertA] = useState('')
-  var [certB, setCertB] = useState('')
+  var [certA, setCertA] = useUrlFilter('cert1', '')
+  var [certB, setCertB] = useUrlFilter('cert2', '')
 
   useEffect(() => {
     if (CERTIFICATIONS.length > 0) {
