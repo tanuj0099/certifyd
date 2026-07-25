@@ -142,5 +142,6 @@ yarn-error.log*
 # Temporary workspace scripts
 scratch/
 
-# Ops Dashboard (Keep separate from main site)
-certifyd-ops/
+# Ops Dashboard
+# certifyd-ops/
+.git_backup/
