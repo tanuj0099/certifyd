@@ -9,6 +9,7 @@ import SEOHead from './SEOHead.jsx'
 import { validateDomain } from '../services/aiService.jsx'
 import { DotMatrixBackground } from './DotMatrixBackground.jsx'
 import { InfiniteToolsLoop } from './InfiniteToolsLoop.jsx'
+import CompanyLogoCarousel from './CompanyLogoCarousel.jsx'
 function useTheme() {
   return useThemeContext()
 }
@@ -1178,6 +1179,7 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
 
         {/* ---------- SECTIONS ---------- */}
         <TrustStrip />
+        <CompanyLogoCarousel />
         <DataComposition />
         <FeaturesBentoGrid onEnter={handleEnter} />
         <PivotDomainsCard onEnter={handleEnter} />
