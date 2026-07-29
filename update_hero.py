@@ -133,7 +133,7 @@ hero = '''
                 color: TEXT_P,
               }}>
                 Know the ROI<br />
-                before you <span style={{ color: ACCENT }}>certify.</span>
+                before you <span style={{ color: ACCENT }}>invest in the certificate.</span>
               </h1>
 
               <p style={{

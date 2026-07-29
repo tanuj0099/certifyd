@@ -203,226 +203,7 @@ function TrustStrip() {
   )
 }
 
-// 
-// CERT INTELLIGENCE - metallic border + swoosh
-// 
-function CertAssembly() {
-  const C = useTheme()
-  const isMobile = useIsMobile()
-  const trackRef = useRef(null)
-  const { scrollY } = useScroll()
-  const [prog, setProg] = useState(0)
-  const [showSwoosh, setShowSwoosh] = useState(false)
 
-  useEffect(() => {
-    const update = () => {
-      const el = trackRef.current; if (!el) return
-      const rect = el.getBoundingClientRect()
-      const total = el.offsetHeight - window.innerHeight
-      if (total <= 0) return
-      setProg(Math.max(0, Math.min(1, -rect.top / total)))
-    }
-    const unsub = scrollY.on('change', update)
-    update()
-    return unsub
-  }, [scrollY])
-
-  useEffect(() => {
-    if (!isMobile && prog > 0.48 && !showSwoosh) {
-      const timer = setTimeout(() => setShowSwoosh(true), 150)
-      return () => clearTimeout(timer)
-    }
-  }, [prog, showSwoosh, isMobile])
-
-  const rm = (p, a, b, c, d) => c + (d - c) * Math.max(0, Math.min(1, (p - a) / (b - a)))
-  const p8 = rm(prog, 0, 0.45, 0, 1)
-
-  const l1Desktop = `perspective(1200px) translateZ(${rm(p8, 0, 1, -220, 0)}px) translateY(${rm(p8, 0, 1, -55, 0)}px) rotateY(${rm(p8, 0, 1, 26, 0)}deg) rotateX(${rm(p8, 0, 1, 11, 0)}deg)`
-  const l2Desktop = `perspective(1200px) translateZ(${rm(p8, 0, 1, 220, 0)}px) translateY(${rm(p8, 0, 1, 55, 0)}px) rotateY(${rm(p8, 0, 1, -20, 0)}deg) rotateX(${rm(p8, 0, 1, -8, 0)}deg)`
-
-  const certScale = prog < 0.45 ? rm(prog, 0, 0.45, 0.72, 1.0) : rm(prog, 0.45, 1.0, 1.0, 0.95)
-  const certOpacity = prog < 0.03 ? rm(prog, 0, 0.03, 0, 1) : prog > 0.9 ? rm(prog, 0.9, 1.0, 1, 0.4) : 1
-  const hintOp = prog > 0.12 ? 0 : prog > 0.04 ? rm(prog, 0.04, 0.12, 1, 0) : 1
-  const assembledOp = rm(prog, 0.45, 0.52, 0, 1)
-
-  const cardW = isMobile ? 'min(320px, 90vw)' : 'min(440px, 76vw)'
-
-  if (isMobile) {
-    return (
-      <div style={{ background: 'var(--bg)', borderBottom: `1px solid ${'var(--border)'}`, padding: '48px 24px 56px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <motion.div
-          initial={{ opacity: 0, y: 24, scale: 0.94 }}
-          whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          viewport={{ once: true, amount: 0.4 }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          style={{ width: cardW }}
-        >
-          <div style={{ fontFamily: F_MONO, fontSize: '10px', color: 'var(--text-4)', letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: '20px', textAlign: 'center' }}>
-            // CERT INTELLIGENCE
-          </div>
-          <div style={{ position: 'relative', width: '100%', aspectRatio: '480/340', borderRadius: '6px', overflow: 'hidden', border: `1px solid ${'var(--border-mid)'}`, background: 'var(--cert-bg)', boxShadow: '0 24px 64px rgba(0,0,0,0.28)' }}>
-            <svg viewBox="0 0 480 340" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block', pointerEvents: 'none' }}>
-              <defs>
-                <linearGradient id="metalGradM" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%"   stopColor="#333" />
-                  <stop offset="35%"  stopColor="#aaa" />
-                  <stop offset="55%"  stopColor="#b0b0b0" />
-                  <stop offset="100%" stopColor="#444" />
-                </linearGradient>
-              </defs>
-              <rect x="1.5" y="1.5" width="477" height="337" fill="none" stroke="url(#metalGradM)" strokeWidth="1.5" />
-              <rect x="12" y="12" width="456" height="316" fill="none" stroke="#2a2a2a" strokeWidth="0.8" />
-            </svg>
-            <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '28px 24px' }}>
-              <div style={{ fontFamily: F_MONO, fontSize: '10px', color: C.gold, letterSpacing: '0.18em', marginBottom: '12px', textTransform: 'uppercase' }}>
-                Certify  Cert Intelligence
-              </div>
-              <div style={{ fontFamily: F_SERIF, fontWeight: '400', fontSize: '1.5rem', color: 'var(--text)', marginBottom: '4px', textAlign: 'center', lineHeight: 1.1 }}>
-                Route Briefing
-              </div>
-              <div style={{ fontFamily: F_SANS, fontSize: '12px', color: 'var(--text-3)', marginBottom: '24px', textAlign: 'center' }}>
-                Personalised  India 2026
-              </div>
-              <div style={{ display: 'flex', gap: '24px', marginBottom: '20px', justifyContent: 'center', width: '100%' }}>
-                {[
-                  { l: 'PAYBACK',   v: '6 MO',    c: 'var(--text)' },
-                  { l: '5-YR GAIN', v: '₹14.2L',  c: C.gold },
-                  { l: 'DELTA',     v: '+35%',     c: 'var(--text)' },
-                ].map((s, i) => (
-                  <div key={i} style={{ textAlign: 'center' }}>
-                    <div style={{ fontFamily: F_MONO, fontSize: '10px', color: 'var(--text-3)', letterSpacing: '0.1em', marginBottom: '5px' }}>{s.l}</div>
-                    <div style={{ fontFamily: F_MONO, fontSize: '1.1rem', color: s.c, fontWeight: '600', letterSpacing: '-0.02em' }}>{s.v}</div>
-                  </div>
-                ))}
-              </div>
-              <div style={{ width: '70%', height: '1px', background: 'var(--border-mid)', marginBottom: '12px' }} />
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <CheckCircle2 size={11} color={C.gold} />
-                <span style={{ fontFamily: F_MONO, fontSize: '10px', color: 'var(--text-3)', letterSpacing: '0.08em' }}>
-                  CALCULATED FROM YOUR INPUTS
-                </span>
-              </div>
-            </div>
-          </div>
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-            style={{ marginTop: '16px', textAlign: 'center' }}
-          >
-            <div style={{ fontFamily: F_MONO, fontSize: '11px', color: 'var(--text-4)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
-               Analysis complete
-            </div>
-          </motion.div>
-        </motion.div>
-      </div>
-    )
-  }
-
-  return (
-    <div ref={trackRef} style={{
-      height: '150vh',
-      position: 'relative',
-      borderBottom: `1px solid ${'var(--border)'}`,
-      background: 'var(--bg)',
-    }}>
-      <div style={{ position: 'absolute', width: '100%', height: '100%', pointerEvents: 'none' }}>
-        <div style={{ maxWidth: '1400px', margin: '0 auto', position: 'relative', height: '100%' }}>
-          <div style={{ position: 'absolute', left: '140px', top: 0, bottom: 0, width: '1px', background: 'var(--border)' }} />
-        </div>
-      </div>
-
-      <div style={{ position: 'sticky', top: 0, height: '100vh', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, zIndex: 2, pointerEvents: 'none', background: 'var(--bg)', opacity: 0.95 }} />
-
-        <div style={{ position: 'relative', zIndex: 4 }}>
-          <div style={{ transform: `scale(${certScale})`, opacity: certOpacity }}>
-            <div style={{ position: 'relative', width: cardW, height: `calc(${cardW} / 1.414)`, transformStyle: 'preserve-3d' }}>
-
-              <div style={{ position: 'absolute', inset: 0, transform: l1Desktop }}>
-                <svg viewBox="0 0 480 340" width="100%" height="100%" style={{ position: 'absolute', inset: 0, display: 'block' }}>
-                  <defs>
-                    <linearGradient id="metalGrad" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%"   stopColor="#333" />
-                      <stop offset="18%"  stopColor="#777" />
-                      <stop offset="35%"  stopColor="#aaa" />
-                      <stop offset="48%"  stopColor="#c8c8c8" />
-                      <stop offset="55%"  stopColor="#b0b0b0" />
-                      <stop offset="70%"  stopColor="#888" />
-                      <stop offset="85%"  stopColor="#666" />
-                      <stop offset="100%" stopColor="#444" />
-                    </linearGradient>
-                  </defs>
-                  <rect x="0" y="0" width="480" height="340" fill="var(--cert-bg)" />
-                  <rect x="1.5" y="1.5" width="477" height="337" fill="none" stroke="url(#metalGrad)" strokeWidth="1.5" />
-                  <rect x="12" y="12" width="456" height="316" fill="none" stroke="#2a2a2a" strokeWidth="0.8" />
-                </svg>
-              </div>
-
-              <div style={{ position: 'absolute', inset: 0, transform: l2Desktop, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '32px' }}>
-                <div style={{ fontFamily: F_MONO, fontSize: '11px', color: C.gold, letterSpacing: '0.18em', marginBottom: '14px', textTransform: 'uppercase' }}>Certify  Cert Intelligence</div>
-                <div style={{ fontFamily: F_SERIF, fontWeight: '400', fontSize: 'clamp(1.5rem, 3.2vw, 2.4rem)', color: 'var(--text)', marginBottom: '6px', textAlign: 'center', lineHeight: 1.1 }}>ROI Briefing</div>
-                <div style={{ fontFamily: F_SANS, fontSize: '13px', color: 'var(--text-3)', marginBottom: '28px', textAlign: 'center' }}>Live Data  India 2026</div>
-                <div style={{ display: 'flex', gap: '28px', marginBottom: '20px', width: '100%', justifyContent: 'center' }}>
-                  {[
-                    { l: 'PAYBACK',   v: '6 MO',    c: 'var(--text)' },
-                    { l: '5-YR GAIN', v: '₹14.2L',  c: C.gold },
-                    { l: 'DELTA',     v: '+35%',     c: 'var(--text)' },
-                  ].map((s, i) => (
-                    <div key={i} style={{ textAlign: 'center' }}>
-                      <div style={{ fontFamily: F_MONO, fontSize: '11px', color: 'var(--text-3)', letterSpacing: '0.1em', marginBottom: '6px' }}>{s.l}</div>
-                      <div style={{ fontFamily: F_MONO, fontSize: 'clamp(1rem, 2.6vw, 1.5rem)', color: s.c, fontWeight: '600', letterSpacing: '-0.02em' }}>{s.v}</div>
-                    </div>
-                  ))}
-                </div>
-                <div style={{ width: '75%', height: '1px', background: 'var(--border-mid)', marginBottom: '14px' }} />
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <CheckCircle2 size={12} color={C.gold} />
-                  <span style={{ fontFamily: F_MONO, fontSize: '11px', color: 'var(--text-3)', letterSpacing: '0.08em' }}>CALCULATED FROM YOUR INPUTS</span>
-                </div>
-              </div>
-
-              <AnimatePresence>
-                {showSwoosh && (
-                  <motion.div key="swoosh"
-                    initial={{ left: '-40%', opacity: 0 }}
-                    animate={{ left: '140%', opacity: [0, 1, 1, 1, 0] }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 1.1, ease: [0.22, 0.61, 0.36, 1] }}
-                    onAnimationComplete={() => setShowSwoosh(false)}
-                    style={{
-                      position: 'absolute',
-                      top: '-15%',
-                      bottom: '-15%',
-                      width: '30%',
-                      background: 'transparent',
-                      transform: 'skewX(-15deg)',
-                      pointerEvents: 'none',
-                      zIndex: 12,
-                    }}
-                  />
-                )}
-              </AnimatePresence>
-            </div>
-          </div>
-
-          <div style={{ opacity: hintOp, marginTop: '36px', textAlign: 'center', pointerEvents: 'none' }}>
-            <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}>
-              <div style={{ fontFamily: F_MONO, fontSize: '11px', color: 'var(--text-3)', letterSpacing: '0.18em' }}> SCROLL TO BUILD </div>
-            </motion.div>
-          </div>
-        </div>
-
-        <div style={{ opacity: assembledOp, position: 'absolute', bottom: '10%', left: 0, right: 0, textAlign: 'center', pointerEvents: 'none', zIndex: 5 }}>
-          <div className="glass" style={{ fontFamily: F_MONO, fontSize: '11px', color: 'var(--text-3)', letterSpacing: '0.15em', display: 'inline-block', padding: '8px 18px' }}>
-             ANALYSIS COMPLETE
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
 
 // """""""""""""""""""""""""""""""""""""""""""""""""""""""""
 // DATA COMPOSITION - drop-in replacement for the existing
@@ -1257,13 +1038,21 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
   }
 
   return (
-      <div style={{
-        minHeight: '100vh',
+      <div className="scroll-container" style={{
+        height: '100vh',
         background: 'var(--bg)',
         color: 'var(--text)',
-        overflow: 'clip',
+        overflowY: 'auto',
+        overflowX: 'hidden',
+        scrollSnapType: 'y proximity',
+        scrollBehavior: 'smooth',
         transition: 'background 0.3s ease, color 0.3s ease',
       }}>
+        <style>{`
+          .scroll-container > div {
+            scroll-snap-align: start;
+          }
+        `}</style>
         {/* -------------------------------------------
             HERO - 2 Column Pro Max
         ------------------------------------------- */}
@@ -1335,7 +1124,7 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text',
                     color: 'transparent'
-                  }}>before you invest.</span>
+                  }}>before you invest in the certificate.</span>
                 </h1>
                 
                 <p style={{
@@ -1389,7 +1178,6 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
 
         {/* ---------- SECTIONS ---------- */}
         <TrustStrip />
-        <CertAssembly />
         <DataComposition />
         <FeaturesBentoGrid onEnter={handleEnter} />
         <PivotDomainsCard onEnter={handleEnter} />
