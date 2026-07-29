@@ -1,24 +1,24 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { 
-  SiAmazonaws, 
-  SiGooglecloud, 
-  SiMicrosoft, 
-  SiCisco, 
-  SiSalesforce, 
-  SiOracle, 
-  SiIbm 
-} from 'react-icons/si'
+  FaAws, 
+  FaGoogle, 
+  FaMicrosoft, 
+  FaNetworkWired, 
+  FaSalesforce, 
+  FaDatabase, 
+  FaServer 
+} from 'react-icons/fa'
 
 export default function CompanyLogoCarousel() {
   const companies = [
-    { name: 'AWS', icon: SiAmazonaws },
-    { name: 'Google Cloud', icon: SiGooglecloud },
-    { name: 'Microsoft', icon: SiMicrosoft },
-    { name: 'Cisco', icon: SiCisco },
-    { name: 'Salesforce', icon: SiSalesforce },
-    { name: 'Oracle', icon: SiOracle },
-    { name: 'IBM', icon: SiIbm },
+    { name: 'AWS', icon: FaAws },
+    { name: 'Google Cloud', icon: FaGoogle },
+    { name: 'Microsoft', icon: FaMicrosoft },
+    { name: 'Cisco', icon: FaNetworkWired },
+    { name: 'Salesforce', icon: FaSalesforce },
+    { name: 'Oracle', icon: FaDatabase },
+    { name: 'IBM', icon: FaServer },
   ]
 
   // duplicate to ensure seamless loop
