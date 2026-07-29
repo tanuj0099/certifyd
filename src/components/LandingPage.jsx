@@ -1038,21 +1038,13 @@ export default function App({ onNavigate, onEnter, isDark = true }) {
   }
 
   return (
-      <div className="scroll-container" style={{
-        height: '100vh',
+      <div style={{
+        minHeight: '100vh',
         background: 'var(--bg)',
         color: 'var(--text)',
-        overflowY: 'auto',
-        overflowX: 'hidden',
-        scrollSnapType: 'y proximity',
-        scrollBehavior: 'smooth',
+        overflow: 'clip',
         transition: 'background 0.3s ease, color 0.3s ease',
       }}>
-        <style>{`
-          .scroll-container > div {
-            scroll-snap-align: start;
-          }
-        `}</style>
         {/* -------------------------------------------
             HERO - 2 Column Pro Max
         ------------------------------------------- */}
