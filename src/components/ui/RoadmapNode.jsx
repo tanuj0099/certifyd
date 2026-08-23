@@ -26,24 +26,26 @@ export default function RoadmapNode({ data }) {
   // 1. CHECKPOINT: The Main Spine (Slightly larger)
   if (variant === 'checkpoint') {
     return (
-      <div className="px-5 py-3 shadow-lg rounded-xl border-2 border-slate-900 min-w-[220px] max-w-[260px] bg-white cursor-pointer flex flex-col items-center text-center relative z-10 transition-transform hover:scale-105">
+      <div className="px-5 py-3 shadow-lg rounded-xl border-2 min-w-[220px] max-w-[260px] cursor-pointer flex flex-col items-center text-center relative z-10 transition-transform hover:scale-105"
+           style={{ background: 'var(--bg-alt)', borderColor: 'var(--border)' }}>
         {connectionPoints}
         
-        <div className="absolute -top-3.5 bg-slate-900 text-white text-sm font-medium text-[color:var(--text-3)] font-bold px-3 py-1 rounded-md uppercase tracking-widest flex items-center gap-1.5 shadow-sm">
+        <div className="absolute -top-3.5 text-sm font-medium font-bold px-3 py-1 rounded-md uppercase tracking-widest flex items-center gap-1.5 shadow-sm"
+             style={{ background: 'var(--bg)', color: 'var(--text-2)', border: '1px solid var(--border)' }}>
           <Target size={12} /> Core
         </div>
         
-        <h3 className="text-sm font-extrabold text-[color:var(--text)] mt-2 mb-1">{data.label}</h3>
-        <p className="text-[9px] font-semibold text-[color:var(--text-4)] uppercase tracking-widest">Required</p>
+        <h3 className="text-sm font-extrabold mt-2 mb-1" style={{ color: 'var(--text)' }}>{data.label}</h3>
+        <p className="text-[9px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-4)' }}>Required</p>
       </div>
     );
   }
 
   // 2. STANDARD: The Grid Clusters (More compact for dense packing)
   return (
-    <div className={`px-3 py-2.5 shadow-sm transition-all rounded-lg border min-w-[160px] max-w-[200px] bg-white cursor-pointer hover:shadow-md ${
-      isCompleted ? 'border-orange-500' : 'border-slate-300 hover:border-slate-400'
-    }`}>
+    <div className={`px-3 py-2.5 shadow-sm transition-all rounded-lg border min-w-[160px] max-w-[200px] cursor-pointer hover:shadow-md ${
+      isCompleted ? 'border-orange-500' : 'hover:border-slate-400'
+    }`} style={{ background: 'var(--bg-alt)', borderColor: isCompleted ? undefined : 'var(--border)' }}>
       {connectionPoints}
 
       <div className="flex flex-col">
@@ -51,14 +53,14 @@ export default function RoadmapNode({ data }) {
           {isCompleted ? (
             <CheckCircle2 size={12} className="text-orange-500" />
           ) : (
-            <Circle size={10} className="text-slate-300" />
+            <Circle size={10} style={{ color: 'var(--border)' }} />
           )}
-          <span className="text-[9px] font-bold text-[color:var(--text-4)] uppercase tracking-widest">
+          <span className="text-[9px] font-bold uppercase tracking-widest" style={{ color: 'var(--text-4)' }}>
             {data.status || 'Pending'}
           </span>
         </div>
         
-        <span className="text-sm font-medium text-[color:var(--text-3)] font-bold text-[color:var(--text-2)] leading-tight">
+        <span className="text-sm font-medium font-bold leading-tight" style={{ color: 'var(--text-2)' }}>
           {data.label}
         </span>
       </div>

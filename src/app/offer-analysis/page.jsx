@@ -428,8 +428,7 @@ export default function OfferAnalysisPage() {
 
   return (
     <ToolPageWrapper
-      title="Offer Letter"
-      subtitle="Analysis"
+      title="Offer Letter Analysis"
       description="Upload your job offer to instantly identify lowball tactics, expose hidden deductions, and generate a data-backed negotiation script."
       eyebrow="AI NEGOTIATOR"
       footer={false}

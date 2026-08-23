@@ -200,7 +200,7 @@ export default function MarketingPageShell({ eyebrow, title, accent, subtitle, c
         <AppSection id={eyebrow ? eyebrow.substring(0, 2).toUpperCase() : 'PG'} title={eyebrow || 'PAGE'} noBorderTop bg="transparent">
           <div style={{ maxWidth: '880px', margin: '0 auto', width: '100%' }}>
             <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={T}>
-              <h1 style={{ fontFamily: FH, fontSize: 'clamp(2.7rem, 6vw, 4.5rem)', fontWeight: '400', letterSpacing: '-0.03em', lineHeight: 0.95, margin: '0 0 18px', maxWidth: '14ch' }}>
+              <h1 style={{ fontFamily: FH, fontSize: 'clamp(2.7rem, 6vw, 4.5rem)', fontWeight: '400', letterSpacing: '-0.03em', lineHeight: 0.95, margin: '0 0 18px' }}>
                 {title}
                 {accent ? (
                   <>
