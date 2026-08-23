@@ -22,7 +22,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { OpsBugReport, updateBugStatusAction, saveBugAction, deleteBugAction } from '../../../../actions/opsActions';
 import { Tag, Drawer, Button, message, Input, Select, Popconfirm } from 'antd';
-import { BugPlay, MessageSquare, Clock, ExternalLink, Plus, Image as ImageIcon, X, Trash2 } from 'lucide-react';
+import { BugPlay, MessageSquare, Clock, ExternalLink, Plus, Image as ImageIcon, X, Trash2, Copy } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 
@@ -132,6 +132,19 @@ function Column({ id, bugs, onBugClick }: { id: string; bugs: OpsBugReport[]; on
     data: { type: 'Column', column: id }
   });
 
+  const handleCopyBugs = () => {
+    if (bugs.length === 0) {
+      message.info('No bugs to copy in this list.');
+      return;
+    }
+    const textToCopy = bugs.map(bug => `${bug.description}\nLink: ${bug.url}`).join('\n\n');
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      message.success(`Copied ${bugs.length} bugs to clipboard!`);
+    }).catch(() => {
+      message.error('Failed to copy bugs.');
+    });
+  };
+
   return (
     <div 
       ref={setNodeRef}
@@ -147,9 +160,23 @@ function Column({ id, bugs, onBugClick }: { id: string; bugs: OpsBugReport[]; on
           {id === 'Done' && <span className="w-2 h-2 rounded-full bg-emerald-400"></span>}
           {id}
         </h3>
-        <span className="bg-white/5 text-[#c9d1d9] text-[10px] font-bold px-2 py-0.5 rounded-full">
-          {bugs.length}
-        </span>
+        <div className="flex items-center gap-2">
+          {id === 'To Do' && (
+            <Button 
+              type="text" 
+              size="small" 
+              icon={<Copy className="w-3 h-3" />} 
+              onClick={handleCopyBugs}
+              className="text-[#8B949E] hover:text-[#F0F6FC] h-6 px-2 flex items-center justify-center border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.05] rounded text-[10px]"
+              title="Copy all bugs"
+            >
+              Copy All
+            </Button>
+          )}
+          <span className="bg-white/5 text-[#c9d1d9] text-[10px] font-bold px-2 py-0.5 rounded-full">
+            {bugs.length}
+          </span>
+        </div>
       </div>
       
       <div className="flex-1 p-3 overflow-y-auto min-h-[200px] flex flex-col gap-3 custom-scrollbar">
