@@ -1092,7 +1092,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
       console.error('Resume AI error:', e)
       if (e.message?.includes('not configured') || e.message?.includes('500') || e.message?.includes('404') || e.message === 'NO_KEY') {
         setResult({
-          name: 'Demo', summary: 'AI not connected. Check GROQ_API_KEY in Vercel environment variables.',
+          name: 'Demo Profile', summary: 'The AI service is temporarily unavailable. Here is a sample analysis demonstrating how we evaluate a tech profile.',
           city: 'Bangalore', domain: 'tech',
           gaps: ['No hands-on cloud portfolio projects', 'Missing architecture-level certifications', 'Limited DevOps exposure'],
           certs: [
@@ -1100,7 +1100,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
             { name: 'Google Data Analytics', why: 'High demand, entry-friendly', roi: '20-28%', timeline: '4 months', fastTrack: 'Enrol on Coursera - first 7 days free', primary: false },
             { name: 'PMP Certification', why: 'Best path to senior management', roi: '25-30%', timeline: '6 months', fastTrack: "Download PMI's free Exam Content Outline", primary: false },
           ],
-          immediateAction: 'Check Vercel  Settings  Environment Variables  ensure GROQ_API_KEY is set.',
+          immediateAction: 'Please try again later when the AI service is back online, or review the sample recommendations above.',
           marketInsight: 'AWS certified professionals in Bangalore command 35% higher salaries - 2,400+ active roles on Naukri as of March 2026.',
           raw: '(demo)',
         })

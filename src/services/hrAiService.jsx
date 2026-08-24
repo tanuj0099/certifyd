@@ -104,11 +104,11 @@ ${safeOffer}
     }
     logger.error('AI API Error Details', { errData, status: response.status });
     
-    if (response.status === 401) throw new Error('Invalid API Key — check GROQ_API_KEY in your .env or .env.local file.');
-    if (response.status === 403) throw new Error('Access Denied (HTTP 403) — Groq API firewall or key restriction blocked the request. Verify your GROQ_API_KEY permissions.');
+    if (response.status === 401) throw new Error('Invalid API Key.');
+    if (response.status === 403) throw new Error('Access Denied (HTTP 403) — API firewall or key restriction blocked the request.');
     if (response.status === 429) throw new Error('Rate Limit Exceeded — please wait 30 seconds and try again.');
     if (response.status === 413) throw new Error('Document Too Large — please paste a shorter excerpt.');
-    if (response.status >= 500) throw new Error(`Server Error (${response.status}) — Groq API is temporarily unavailable or GROQ_API_KEY is missing.`);
+    if (response.status >= 500) throw new Error(`Server Error (${response.status}) — AI service is temporarily unavailable.`);
 
     const errorMessage = typeof errData.error === 'object' ? errData.error?.message : (errData.error || errData.message || rawText || `HTTP ${response.status}`);
     throw new Error(`Failed to parse offer letter via AI: ${errorMessage || 'Unknown Error'}`);

@@ -104,10 +104,10 @@ const callGroq = async (messages, maxTokens = 700, temperature = 0.65, jsonMode 
     let err = {}
     try { err = JSON.parse(rawText) } catch (_) { err = { error: rawText } }
     const msg = err?.error?.message || err?.error || rawText || 'HTTP ' + response.status
-    if (response.status === 401) throw new Error('Invalid API key (401) — ' + msg + ' (Check GROQ_API_KEY in .env)')
-    if (response.status === 403) throw new Error('Access denied (403) — ' + msg + ' (Verify GROQ_API_KEY or Cloudflare WAF restrictions)')
+    if (response.status === 401) throw new Error('Invalid API key (401) — ' + msg)
+    if (response.status === 403) throw new Error('Access denied (403) — ' + msg)
     if (response.status === 429) throw new Error('Rate limit (429) — wait 30 seconds and retry. (' + msg + ')')
-    if (response.status === 404) throw new Error('API endpoint not found (404) — run: vercel dev (not npm run dev)')
+    if (response.status === 404) throw new Error('API endpoint not found (404)')
     if (response.status >= 500) throw new Error('Server error (' + response.status + ') — ' + msg)
     throw new Error(msg)
   }
