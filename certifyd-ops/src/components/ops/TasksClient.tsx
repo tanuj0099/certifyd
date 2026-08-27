@@ -839,7 +839,13 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
               exit={{ opacity: 0, scale: 0.95 }}
               className="bg-[#0D1117] border border-white/15 rounded-2xl p-6 max-w-2xl w-full shadow-2xl max-h-[90vh] flex flex-col overflow-hidden"
             >
-              <div className="flex justify-end mb-2">
+              <div className="flex justify-between mb-2">
+                 <button onClick={() => {
+                   openEditModal(activeTask);
+                   setActiveTask(null);
+                 }} className="px-3 py-1.5 bg-[#F97316] text-[#080A0E] text-xs font-bold rounded-lg hover:bg-[#F97316]/90 transition-colors flex items-center gap-1.5">
+                    Edit
+                 </button>
                  <button onClick={() => setActiveTask(null)} className="text-[#8B949E] hover:text-white p-1 bg-white/5 rounded-full">
                     <X className="w-5 h-5" />
                  </button>
@@ -848,7 +854,7 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
               {/* Modal Header */}
               <div className="flex items-start justify-between pb-4 border-b border-white/10 gap-4 shrink-0">
                 <div>
-                  <div className="flex items-center gap-2 mb-1">
+                  <div className="flex items-center gap-2 mb-2">
                     <span className={`px-2 py-0.5 rounded text-[10px] font-mono uppercase font-bold border ${priorityColors[activeTask.priority]}`}>
                       {activeTask.priority} Priority
                     </span>
@@ -856,40 +862,16 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
                       {activeTask.section}
                     </span>
                   </div>
-                  <input
-                    type="text"
-                    value={activeTask.title}
-                    onChange={async (e) => {
-                      const updated = { ...activeTask, title: e.target.value };
-                      setActiveTask(updated);
-                      setTasks((prev) => prev.map((t) => (t.id === activeTask.id ? updated : t)));
-                      await saveOpsTaskAction(updated);
-                    }}
-                    className="w-full text-xl font-bold text-white leading-snug bg-transparent border-b border-transparent focus:border-[#F97316] focus:outline-none transition-colors"
-                  />
+                  <h2 className="text-xl font-bold text-white leading-snug">
+                    {activeTask.title}
+                  </h2>
                   <div className="mt-2 flex items-center gap-4 text-xs font-mono text-[#8B949E]">
-                    <span>Due: <input type="date" value={activeTask.deadline} onChange={async (e) => {
-                      const updated = { ...activeTask, deadline: e.target.value };
-                      setActiveTask(updated);
-                      setTasks((prev) => prev.map((t) => (t.id === activeTask.id ? updated : t)));
-                      await saveOpsTaskAction(updated);
-                    }} className="bg-transparent text-[#E8C547] border-b border-transparent focus:border-[#F97316] focus:outline-none" /></span>
+                    <span>Due: <span className="text-[#E8C547]">{activeTask.deadline}</span></span>
                   </div>
-                  <div className="mt-3">
-                    <AssigneeSelector
-                      teamMembers={teamMembers}
-                      value={activeTask.assignee}
-                      onChange={async (newAssignee) => {
-                        const updated = { ...activeTask, assignee: newAssignee };
-                        setActiveTask(updated);
-                        setTasks((prev) => prev.map((t) => (t.id === activeTask.id ? updated : t)));
-                        await saveOpsTaskAction(updated);
-                        showToast(`Reassigned task assignees`, 'success');
-                      }}
-                      label="Task Assignee (Change to Reassign & Notify)"
-                      currentUserEmail={currentUserEmail}
-                      isMulti={true}
-                    />
+                  <div className="mt-3 flex items-center gap-2 text-xs font-mono text-[#8B949E]">
+                     <User className="w-4 h-4 text-[#3B82F6]" />
+                     <span className="text-white/90">Assignee:</span>
+                     <span className="font-bold text-white">{activeTask.assignee}</span>
                   </div>
                 </div>
               </div>
@@ -897,18 +879,10 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
               {/* Modal Body */}
               <div className="py-4 space-y-6 overflow-y-auto flex-1 pr-1">
                 <div>
-                  <h4 className="text-xs font-mono text-[#8B949E] uppercase mb-1">Instructions & Context</h4>
-                  <textarea
-                    rows={4}
-                    value={activeTask.description}
-                    onChange={async (e) => {
-                      const updated = { ...activeTask, description: e.target.value };
-                      setActiveTask(updated);
-                      setTasks((prev) => prev.map((t) => (t.id === activeTask.id ? updated : t)));
-                      await saveOpsTaskAction(updated);
-                    }}
-                    className="w-full bg-[#161B22] p-4 rounded-xl border border-white/5 text-sm text-white/90 leading-relaxed font-sans focus:outline-none focus:border-[#F97316] transition-colors resize-y"
-                  />
+                  <h4 className="text-xs font-mono text-[#8B949E] uppercase mb-2">Instructions & Context</h4>
+                  <div className="w-full bg-[#161B22] p-4 rounded-xl border border-white/5 text-sm text-white/90 leading-relaxed font-sans whitespace-pre-wrap">
+                    {activeTask.description || <span className="italic text-white/40">No description provided.</span>}
+                  </div>
                 </div>
 
                 {/* Status Switcher */}

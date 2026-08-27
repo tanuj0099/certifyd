@@ -23,31 +23,63 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  /* Smooth scrolling and transitions */
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* ==========================================
-   LIGHT MODE OVERRIDES (Amazon Seller style)
+   GLOBAL AESTHETICS (Softer UI)
+   ========================================== */
+
+/* Dark Mode Overrides (Refining the stark GitHub dark to a softer, modern dark) */
+html:not(.light) body {
+  background-color: #0f1115 !important;
+}
+
+html:not(.light) [class*="bg-[#080A0E]"] {
+  background-color: #0f1115 !important;
+}
+
+html:not(.light) [class*="bg-[#0D1117]"],
+html:not(.light) [class*="bg-[#0F1218]"] {
+  background-color: #16181d !important;
+  border-color: rgba(255, 255, 255, 0.05) !important;
+  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.2) !important;
+}
+
+html:not(.light) [class*="bg-[#161B22]"],
+html:not(.light) [class*="bg-[#1C2128]"] {
+  background-color: #1e2128 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* ==========================================
+   LIGHT MODE OVERRIDES (Clean WordPress Style)
    ========================================== */
 html.light, html.light body {
-  background-color: #f1f5f9 !important;
+  background-color: #f8fafc !important; /* Soft slate-50 background */
   color: #0f172a !important;
 }
 
 /* Layout Structural Elements (Header & Sidebar) */
 html.light header {
-  background-color: rgba(255, 255, 255, 0.9) !important;
-  border-bottom-color: #cbd5e1 !important;
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(12px) !important;
+  border-bottom-color: #e2e8f0 !important;
 }
 
 html.light aside,
 html.light [class*="bg-[#080A0E]"] {
   background-color: #ffffff !important;
   color: #0f172a !important;
-  border-color: #cbd5e1 !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 1px 0 10px rgba(0, 0, 0, 0.02) !important;
 }
 
 html.light main {
-  background-color: #f1f5f9 !important;
+  background-color: #f8fafc !important;
 }
 
 /* Primary Containers, Cards, Modals, Calendars, and Tables */
@@ -55,11 +87,11 @@ html.light [class*="bg-[#0D1117]"],
 html.light [class*="bg-[#0F1218]"] {
   background-color: #ffffff !important;
   color: #0f172a !important;
-  border-color: #cbd5e1 !important;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.03) !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.03), 0 0 3px rgba(0,0,0,0.01) !important;
 }
 
-/* Table Headers, Calendar Headers, Secondary Boxes, Inputs, Inactive Pills */
+/* Secondary Boxes, Inputs, Inactive Pills */
 html.light [class*="bg-[#161B22]"],
 html.light [class*="bg-[#1C2128]"],
 html.light [class*="bg-white/5"],
@@ -69,9 +101,9 @@ html.light [class*="bg-white/20"],
 html.light [class*="bg-white/[0.02]"],
 html.light [class*="bg-white/[0.03]"],
 html.light [class*="bg-white/[0.04]"] {
-  background-color: #f8fafc !important;
+  background-color: #f1f5f9 !important;
   color: #334155 !important;
-  border-color: #cbd5e1 !important;
+  border-color: #e2e8f0 !important;
 }
 
 html.light [class*="hover:bg-white/"]:hover,
@@ -86,8 +118,8 @@ html.light [class*="bg-black/60"],
 html.light [class*="bg-black/70"],
 html.light [class*="bg-black/75"],
 html.light [class*="bg-black/80"] {
-  background-color: rgba(15, 23, 42, 0.5) !important;
-  backdrop-filter: blur(4px) !important;
+  background-color: rgba(15, 23, 42, 0.4) !important;
+  backdrop-filter: blur(8px) !important;
 }
 
 /* Text Colors */
@@ -99,15 +131,12 @@ html.light [class*="text-[#7d8590]"],
 html.light [class*="text-[#8B949E]"],
 html.light [class*="text-slate-"],
 html.light [class*="text-gray-"] {
-  color: #334155 !important;
+  color: #475569 !important;
 }
 
 html.light [class*="text-white"],
 html.light [class*="text-[#F0F6FC]"],
-html.light [class*="text-slate-100"],
-html.light [class*="text-slate-200"],
-html.light [class*="text-gray-100"],
-html.light [class*="text-gray-200"] {
+html.light h1, html.light h2, html.light h3, html.light h4, html.light h5, html.light h6 {
   color: #0f172a !important;
 }
 
@@ -123,6 +152,7 @@ html.light [class*="bg-green-600"]:not([class*="/"]),
 html.light button[class*="bg-[#F85149]"]:not([class*="/"]),
 html.light [class*="bg-red-600"]:not([class*="/"]) {
   color: #ffffff !important;
+  box-shadow: 0 4px 12px -2px rgba(0,0,0,0.15) !important;
 }
 
 html.light button[class*="bg-[#F97316]"]:not([class*="/"]) *,
@@ -139,7 +169,7 @@ html.light [class*="bg-gradient-to-r"] {
   color: #0f172a !important;
 }
 
-/* Active Badges, Sidebar Items & Low-Opacity Hover Badges */
+/* Active Badges & Low-Opacity Elements */
 html.light [class*="bg-[#F97316]/"],
 html.light [class*="hover:bg-[#F97316]/"]:hover {
   background-color: #ffedd5 !important;
@@ -147,9 +177,7 @@ html.light [class*="hover:bg-[#F97316]/"]:hover {
   border-color: #fdba74 !important;
 }
 html.light [class*="bg-[#F97316]/"] *,
-html.light [class*="hover:bg-[#F97316]/"]:hover * {
-  color: #c2410c !important;
-}
+html.light [class*="hover:bg-[#F97316]/"]:hover * { color: #c2410c !important; }
 
 html.light [class*="bg-[#3B82F6]/"],
 html.light [class*="hover:bg-[#3B82F6]/"]:hover {
@@ -158,9 +186,7 @@ html.light [class*="hover:bg-[#3B82F6]/"]:hover {
   border-color: #93c5fd !important;
 }
 html.light [class*="bg-[#3B82F6]/"] *,
-html.light [class*="hover:bg-[#3B82F6]/"]:hover * {
-  color: #1d4ed8 !important;
-}
+html.light [class*="hover:bg-[#3B82F6]/"]:hover * { color: #1d4ed8 !important; }
 
 html.light [class*="bg-[#22C55E]/"],
 html.light [class*="hover:bg-[#22C55E]/"]:hover {
@@ -169,20 +195,25 @@ html.light [class*="hover:bg-[#22C55E]/"]:hover {
   border-color: #86efac !important;
 }
 html.light [class*="bg-[#22C55E]/"] *,
-html.light [class*="hover:bg-[#22C55E]/"]:hover * {
-  color: #15803d !important;
-}
+html.light [class*="hover:bg-[#22C55E]/"]:hover * { color: #15803d !important; }
 
 html.light [class*="bg-[#E8C547]/"],
 html.light [class*="hover:bg-[#E8C547]/"]:hover {
   background-color: #fef9c3 !important;
-  color: #854d0e !important;
+  color: #a16207 !important;
   border-color: #fde047 !important;
 }
 html.light [class*="bg-[#E8C547]/"] *,
-html.light [class*="hover:bg-[#E8C547]/"]:hover * {
-  color: #854d0e !important;
+html.light [class*="hover:bg-[#E8C547]/"]:hover * { color: #a16207 !important; }
+
+html.light [class*="bg-[#00D4A8]/"],
+html.light [class*="hover:bg-[#00D4A8]/"]:hover {
+  background-color: #ccfbf1 !important;
+  color: #0f766e !important;
+  border-color: #5eead4 !important;
 }
+html.light [class*="bg-[#00D4A8]/"] *,
+html.light [class*="hover:bg-[#00D4A8]/"]:hover * { color: #0f766e !important; }
 
 html.light [class*="bg-[#F85149]/"],
 html.light [class*="hover:bg-[#F85149]/"]:hover {
@@ -191,55 +222,46 @@ html.light [class*="hover:bg-[#F85149]/"]:hover {
   border-color: #fca5a5 !important;
 }
 html.light [class*="bg-[#F85149]/"] *,
-html.light [class*="hover:bg-[#F85149]/"]:hover * {
-  color: #b91c1c !important;
-}
+html.light [class*="hover:bg-[#F85149]/"]:hover * { color: #b91c1c !important; }
 
-/* Borders & Dividers Across All Boxes, Grids, and Calendars */
+/* Borders & Dividers */
 html.light [class*="border-white"],
 html.light [class*="border-[#080A0E]"],
 html.light [class*="border-[#0D1117]"],
 html.light [class*="border-[#161B22]"],
 html.light [class*="border-[#1C2128]"],
 html.light [class*="border-black"] {
-  border-color: #cbd5e1 !important;
+  border-color: #e2e8f0 !important;
 }
 
 html.light [class*="divide-white"] > *,
 html.light [class*="divide-white"] > * + * {
-  border-color: #cbd5e1 !important;
+  border-color: #e2e8f0 !important;
 }
 
-/* Form Elements (Inputs, Selects, Textareas) */
+/* Form Elements */
 html.light input,
 html.light select,
 html.light textarea,
 html.light select option {
   background-color: #ffffff !important;
   color: #0f172a !important;
-  border-color: #94a3b8 !important;
+  border-color: #cbd5e1 !important;
 }
 
 html.light input:focus,
 html.light select:focus,
 html.light textarea:focus {
   border-color: #f97316 !important;
-  box-shadow: 0 0 0 1px #f97316 !important;
+  box-shadow: 0 0 0 2px rgba(249,115,22,0.2) !important;
+  outline: none !important;
 }
 
-/* Calendar Grid & Box Specific Overrides */
-html.light .grid-cols-7 > div {
-  border-color: #cbd5e1 !important;
-}
-html.light [class*="ring-[#F97316]"] {
-  ring-color: #f97316 !important;
-}
-
-/* Modal Dialogs & Dropdown Menus in Light Mode */
+/* Modal Dialogs in Light Mode */
 html.light [role="dialog"],
 html.light [class*="bg-[#080A0E]/"],
 html.light [class*="bg-[#0D1117]/"] {
   background-color: #ffffff !important;
   color: #0f172a !important;
-  border-color: #cbd5e1 !important;
+  border-color: #e2e8f0 !important;
 }

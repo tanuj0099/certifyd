@@ -643,60 +643,61 @@ export function NotesClient({ initialNotes, currentUserRole, currentUserEmail, t
                     {activeNote.is_private ? (
                       <span className="inline-flex items-center gap-1 text-[10px] font-mono bg-[#E8C547]/15 text-[#E8C547] px-2 py-0.5 rounded border border-[#E8C547]/30">
                         <Lock className="w-2.5 h-2.5" /> Private Note
+                <div className="w-full">
+                  <div className="flex justify-between items-start w-full mb-1.5">
+                    <div className="flex items-center gap-2">
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-mono uppercase font-bold border ${sectionBadgeColors[activeNote.section]}`}>
+                        {activeNote.section}
                       </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-mono bg-white/10 text-[#8B949E] px-2 py-0.5 rounded">
-                        <Globe className="w-2.5 h-2.5" /> Shared Note
-                      </span>
-                    )}
-                    {activeNote.pinned && (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-mono bg-[#F97316]/15 text-[#F97316] px-2 py-0.5 rounded border border-[#F97316]/30 font-bold">
-                        <Pin className="w-2.5 h-2.5 fill-current" /> Pinned
-                      </span>
-                    )}
-                    {activeNote.assignee && activeNote.assignee !== 'Unassigned' && (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-mono bg-[#00D4A8]/15 text-[#00D4A8] px-2 py-0.5 rounded border border-[#00D4A8]/30 font-bold">
-                        <User className="w-2.5 h-2.5" /> Assigned: {activeNote.assignee}
-                      </span>
-                    )}
+                      {activeNote.is_private ? (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-mono bg-[#E8C547]/15 text-[#E8C547] px-2 py-0.5 rounded border border-[#E8C547]/30">
+                          <Lock className="w-2.5 h-2.5" /> Private Note
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-mono bg-white/10 text-[#8B949E] px-2 py-0.5 rounded">
+                          <Globe className="w-2.5 h-2.5" /> Shared Note
+                        </span>
+                      )}
+                      {activeNote.pinned && (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-mono bg-[#F97316]/15 text-[#F97316] px-2 py-0.5 rounded border border-[#F97316]/30 font-bold">
+                          <Pin className="w-2.5 h-2.5 fill-current" /> Pinned
+                        </span>
+                      )}
+                      {activeNote.assignee && activeNote.assignee !== 'Unassigned' && (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-mono bg-[#00D4A8]/15 text-[#00D4A8] px-2 py-0.5 rounded border border-[#00D4A8]/30 font-bold">
+                          <User className="w-2.5 h-2.5" /> Assigned: {activeNote.assignee}
+                        </span>
+                      )}
+                    </div>
+                    
+                    <div className="flex gap-2">
+                       <button onClick={() => {
+                         openEditModal(activeNote);
+                         setActiveNote(null);
+                       }} className="px-3 py-1.5 bg-[#F97316] text-[#080A0E] text-xs font-bold rounded-lg hover:bg-[#F97316]/90 transition-colors flex items-center gap-1.5">
+                          Edit
+                       </button>
+                       <button onClick={() => setActiveNote(null)} className="text-[#8B949E] hover:text-white p-1">
+                          <X className="w-5 h-5" />
+                       </button>
+                    </div>
                   </div>
-                  <input
-                    type="text"
-                    value={activeNote.title}
-                    onChange={async (e) => {
-                      const updated = { ...activeNote, title: e.target.value };
-                      setActiveNote(updated);
-                      setNotes((prev) => prev.map((n) => (n.id === updated.id ? updated : n)));
-                      await saveOpsNoteAction(updated);
-                    }}
-                    className="w-full text-xl font-bold text-white leading-snug bg-transparent border-b border-transparent focus:border-[#F97316] focus:outline-none transition-colors"
-                  />
+                  
+                  <h2 className="text-xl font-bold text-white leading-snug">
+                    {activeNote.title}
+                  </h2>
                   <p className="text-xs text-[#8B949E] font-mono mt-1">
                     Created by <span className="text-white font-semibold">{activeNote.created_by}</span> • {new Date(activeNote.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                   </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  {/* Removed edit button to support inline editing */}
-                  <button onClick={() => setActiveNote(null)} className="text-[#8B949E] hover:text-white p-1">
-                    <X className="w-5 h-5" />
-                  </button>
                 </div>
               </div>
 
               {/* Modal Body */}
               <div className="py-4 space-y-6 overflow-y-auto flex-1 pr-1">
                 {/* Note Document Body */}
-                <textarea
-                  rows={6}
-                  value={activeNote.content}
-                  onChange={async (e) => {
-                    const updated = { ...activeNote, content: e.target.value };
-                    setActiveNote(updated);
-                    setNotes((prev) => prev.map((n) => (n.id === updated.id ? updated : n)));
-                    await saveOpsNoteAction(updated);
-                  }}
-                  className="w-full bg-[#161B22] p-5 rounded-2xl border border-white/5 text-sm text-white/95 leading-relaxed font-sans whitespace-pre-wrap focus:outline-none focus:border-[#F97316] transition-colors resize-y"
-                />
+                <div className="w-full bg-[#161B22] p-5 rounded-2xl border border-white/5 text-sm text-white/95 leading-relaxed font-sans whitespace-pre-wrap">
+                  {activeNote.content || <span className="italic text-white/40">No content provided.</span>}
+                </div>
 
                 {/* Collaborative Comment Thread */}
                 <div className="pt-2 border-t border-white/10">

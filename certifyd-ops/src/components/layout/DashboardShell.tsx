@@ -3,6 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
+import { usePresenceTracker } from '@/hooks/usePresenceTracker';
+import { usePathname } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface DashboardShellProps {
   userEmail: string;
@@ -20,6 +23,8 @@ export function DashboardShell({
   children,
 }: DashboardShellProps) {
   const [collapsed, setCollapsed] = useState(false);
+  const pathname = usePathname();
+  usePresenceTracker();
 
   useEffect(() => {
     const saved = localStorage.getItem('certifyd_sidebar_collapsed');
@@ -61,8 +66,19 @@ export function DashboardShell({
           userAvatar={userAvatar}
         />
 
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-none w-full overflow-x-auto transition-all duration-300">
-          {children}
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-none w-full overflow-x-hidden transition-all duration-300">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={pathname}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="h-full w-full"
+            >
+              {children}
+            </motion.div>
+          </AnimatePresence>
         </main>
       </div>
     </div>
