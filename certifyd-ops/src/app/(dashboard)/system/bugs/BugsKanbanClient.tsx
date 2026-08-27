@@ -399,9 +399,9 @@ export function BugsKanbanClient({ initialBugs, userEmail }: { initialBugs: OpsB
               onChange={handleImageUpload} 
             />
             <Button 
-              type="text" 
+              type="default" 
               onClick={() => fileInputRef.current?.click()}
-              className={`h-10 px-3 border ${screenshotBase64 ? 'border-emerald-500/50 text-emerald-400 bg-emerald-500/10' : 'border-white/[0.06] text-[#8B949E] hover:text-[#F0F6FC] bg-[#1C2128]'} rounded-lg flex items-center justify-center`}
+              className={`h-10 px-3 rounded-lg flex items-center justify-center ${screenshotBase64 ? 'border-emerald-500 text-emerald-500 bg-emerald-50' : ''}`}
               icon={<ImageIcon className="w-4 h-4" />}
             >
               {screenshotBase64 ? 'Attached' : 'Screenshot'}

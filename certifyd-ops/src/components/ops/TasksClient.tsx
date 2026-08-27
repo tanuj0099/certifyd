@@ -82,11 +82,17 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
   const [priority, setPriority] = useState<OpsTaskItem['priority']>('Medium');
   const [deadline, setDeadline] = useState(new Date(Date.now() + 86400000 * 3).toISOString().split('T')[0]);
   const [status, setStatus] = useState<OpsTaskItem['status']>('To Do');
-  const [checklist, setChecklist] = useState<{ id: string; text: string; completed: boolean }[]>([
-    { id: 'c1', text: 'Initial scoping and requirement gathering', completed: false },
-    { id: 'c2', text: 'Execute primary deliverables', completed: false }
-  ]);
+  const [checklist, setChecklist] = useState<{ id: string; text: string; completed: boolean }[]>([]);
   const [newChecklistInput, setNewChecklistInput] = useState('');
+
+  const getSectionAssignees = (sec: string) => {
+    if (sec === 'all') return 'Unassigned';
+    const matching = teamMembers.filter(m => m.permissions?.[`access_${sec}` as keyof typeof m.permissions]);
+    if (matching.length > 0) {
+      return matching.map(m => m.email).join(', ');
+    }
+    return 'Unassigned';
+  };
 
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const { showToast } = useToast();
@@ -151,15 +157,13 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
     setEditingTask(null);
     setTitle('');
     setDescription('');
-    setSection(activeSection === 'all' ? 'marketing' : activeSection);
-    setAssignee(teamMembers[0]?.name || 'Super Admin');
+    const defaultSec = activeSection === 'all' ? 'marketing' : activeSection;
+    setSection(defaultSec);
+    setAssignee(getSectionAssignees(defaultSec));
     setPriority('Medium');
     setDeadline(new Date(Date.now() + 86400000 * 3).toISOString().split('T')[0]);
     setStatus('To Do');
-    setChecklist([
-      { id: 'c1', text: 'Review section requirements & deadlines', completed: false },
-      { id: 'c2', text: 'Execute department action items', completed: false }
-    ]);
+    setChecklist([]);
     setIsModalOpen(true);
   }
 
@@ -692,7 +696,13 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
                     <label className="block text-xs font-mono text-[#8B949E] uppercase mb-1">Target Section</label>
                     <select
                       value={section}
-                      onChange={(e) => setSection(e.target.value as any)}
+                      onChange={(e) => {
+                        const val = e.target.value as any;
+                        setSection(val);
+                        if (!editingTask) {
+                          setAssignee(getSectionAssignees(val));
+                        }
+                      }}
                       className="w-full bg-[#161B22] border border-white/10 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-[#F97316]"
                     >
                       {sections.filter((s) => s.id !== 'all').map((s) => (
@@ -708,6 +718,7 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
                       onChange={(val) => setAssignee(val)}
                       label="Task Assignee (Triggers Notification)"
                       currentUserEmail={currentUserEmail}
+                      isMulti={true}
                     />
                   </div>
 
@@ -873,10 +884,11 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
                         setActiveTask(updated);
                         setTasks((prev) => prev.map((t) => (t.id === activeTask.id ? updated : t)));
                         await saveOpsTaskAction(updated);
-                        showToast(`Reassigned task to ${newAssignee}`, 'success');
+                        showToast(`Reassigned task assignees`, 'success');
                       }}
                       label="Task Assignee (Change to Reassign & Notify)"
                       currentUserEmail={currentUserEmail}
+                      isMulti={true}
                     />
                   </div>
                 </div>
