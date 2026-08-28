@@ -7,21 +7,24 @@ import { motion } from 'framer-motion';
 
 export function AttendanceClient({ initialLogs, teamMembers }: { initialLogs: any[], teamMembers: any[] }) {
   const [logs, setLogs] = useState(initialLogs);
+  const [serverTime, setServerTime] = useState<string>(new Date().toISOString());
   const [loading, setLoading] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
 
-  async function loadLogs() {
+  async function loadLogs(date?: string) {
     try {
-      const freshLogs = await getAttendanceLogsAction();
+      const { logs: freshLogs, serverTime: freshServerTime } = await getAttendanceLogsAction(date || selectedDate);
       setLogs(freshLogs);
+      setServerTime(freshServerTime);
     } catch (e) {
       console.error(e);
     }
   }
 
   useEffect(() => {
-    const interval = setInterval(loadLogs, 30000); // Auto-refresh every 30s
+    const interval = setInterval(() => loadLogs(selectedDate), 30000); // Auto-refresh every 30s
     return () => clearInterval(interval);
-  }, []);
+  }, [selectedDate]);
 
   function formatTime(seconds: number) {
     const h = Math.floor(seconds / 3600);
@@ -31,46 +34,67 @@ export function AttendanceClient({ initialLogs, teamMembers }: { initialLogs: an
   }
 
   function getStatus(lastPing: string) {
-    const diffSeconds = (Date.now() - new Date(lastPing).getTime()) / 1000;
+    // If we're looking at a past date, no one is active today based on that log
+    if (selectedDate !== new Date().toISOString().split('T')[0]) {
+      return 'offline';
+    }
+    
+    // Calculate difference using server time to prevent client clock skew bugs
+    const diffSeconds = (new Date(serverTime).getTime() - new Date(lastPing).getTime()) / 1000;
     if (diffSeconds < 90) return 'active';
     if (diffSeconds < 7 * 60 + 60) return 'idle'; // Within 7 minutes threshold
     return 'offline';
   }
 
   return (
-    <div className="bg-white dark:bg-[#0F1218] rounded-2xl border border-gray-200 dark:border-white/[0.06] shadow-sm overflow-hidden transition-colors">
-      <div className="p-4 sm:p-5 flex items-center justify-between border-b border-gray-100 dark:border-white/[0.06]">
-        <h2 className="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+    <div className="bg-[#0D1117] rounded-2xl border border-white/[0.06] shadow-sm overflow-hidden transition-colors">
+      <div className="p-4 sm:p-5 flex items-center justify-between border-b border-white/[0.06]">
+        <h2 className="text-sm font-semibold text-white flex items-center gap-2">
           <Clock className="w-4 h-4 text-blue-500" />
-          Today's Activity
+          {selectedDate === new Date().toISOString().split('T')[0] ? "Today's Activity" : `Activity for ${new Date(selectedDate).toLocaleDateString()}`}
         </h2>
-        <button
-          onClick={async () => {
-            setLoading(true);
-            await loadLogs();
-            setLoading(false);
-          }}
-          disabled={loading}
-          className="text-gray-500 dark:text-[#8B949E] hover:text-gray-900 dark:hover:text-white transition-colors"
-        >
-          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-        </button>
+        <div className="flex items-center gap-4">
+          <input 
+            type="date"
+            value={selectedDate}
+            max={new Date().toISOString().split('T')[0]}
+            onChange={async (e) => {
+              const newDate = e.target.value;
+              setSelectedDate(newDate);
+              setLoading(true);
+              await loadLogs(newDate);
+              setLoading(false);
+            }}
+            className="text-sm bg-transparent border border-white/10 rounded-lg px-3 py-1.5 text-white focus:outline-none focus:border-blue-500 transition-colors"
+          />
+          <button
+            onClick={async () => {
+              setLoading(true);
+              await loadLogs(selectedDate);
+              setLoading(false);
+            }}
+            disabled={loading}
+            className="text-[#8B949E] hover:text-white transition-colors"
+          >
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+          </button>
+        </div>
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
-          <thead className="bg-gray-50 dark:bg-white/[0.02] border-b border-gray-100 dark:border-white/[0.06]">
+          <thead className="bg-[#161B22] border-b border-white/[0.06]">
             <tr>
-              <th className="px-5 py-3 font-medium text-gray-500 dark:text-[#8B949E]">Employee</th>
-              <th className="px-5 py-3 font-medium text-gray-500 dark:text-[#8B949E]">First Seen</th>
-              <th className="px-5 py-3 font-medium text-gray-500 dark:text-[#8B949E]">Status</th>
-              <th className="px-5 py-3 font-medium text-gray-500 dark:text-[#8B949E] text-right">Active Time</th>
+              <th className="px-5 py-3 font-medium text-[#8B949E]">Employee</th>
+              <th className="px-5 py-3 font-medium text-[#8B949E]">First Seen</th>
+              <th className="px-5 py-3 font-medium text-[#8B949E]">Status</th>
+              <th className="px-5 py-3 font-medium text-[#8B949E] text-right">Active Time</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100 dark:divide-white/[0.04]">
+          <tbody className="divide-y divide-white/[0.04]">
             {logs.length === 0 ? (
               <tr>
-                <td colSpan={4} className="px-5 py-8 text-center text-gray-400 dark:text-[#8B949E]">
+                <td colSpan={4} className="px-5 py-8 text-center text-[#8B949E]">
                   No activity logged yet today.
                 </td>
               </tr>
@@ -84,22 +108,22 @@ export function AttendanceClient({ initialLogs, teamMembers }: { initialLogs: an
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     key={log.id} 
-                    className="hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors"
+                    className="hover:bg-[#161B22] transition-colors"
                   >
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-3">
                         <img 
                           src={member?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${log.user_email}`} 
                           alt="" 
-                          className="w-8 h-8 rounded-full border border-gray-200 dark:border-white/10"
+                          className="w-8 h-8 rounded-full border border-white/10"
                         />
                         <div>
-                          <div className="font-medium text-gray-900 dark:text-white">{member?.name || log.user_email}</div>
-                          <div className="text-[11px] text-gray-500 dark:text-[#8B949E] font-mono">{log.user_email}</div>
+                          <div className="font-medium text-white">{member?.name || log.user_email}</div>
+                          <div className="text-[11px] text-[#8B949E] font-mono">{log.user_email}</div>
                         </div>
                       </div>
                     </td>
-                    <td className="px-5 py-3.5 text-gray-600 dark:text-gray-300">
+                    <td className="px-5 py-3.5 text-gray-300">
                       {new Date(log.session_start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </td>
                     <td className="px-5 py-3.5">
@@ -115,7 +139,7 @@ export function AttendanceClient({ initialLogs, teamMembers }: { initialLogs: an
                         )}
                       </div>
                     </td>
-                    <td className="px-5 py-3.5 text-right font-mono font-medium text-gray-900 dark:text-white">
+                    <td className="px-5 py-3.5 text-right font-mono font-medium text-white">
                       {formatTime(log.active_seconds)}
                     </td>
                   </motion.tr>

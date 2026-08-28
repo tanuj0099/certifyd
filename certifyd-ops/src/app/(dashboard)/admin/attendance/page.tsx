@@ -11,7 +11,7 @@ export default async function AttendancePage() {
     redirect('/ops/tasks');
   }
 
-  const logs = await getAttendanceLogsAction();
+  const { logs } = await getAttendanceLogsAction();
   const members = await getTeamMembersAction();
 
   return (

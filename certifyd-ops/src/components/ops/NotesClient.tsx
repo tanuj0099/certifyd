@@ -635,14 +635,6 @@ export function NotesClient({ initialNotes, currentUserRole, currentUserEmail, t
             >
               {/* Modal Header */}
               <div className="flex items-start justify-between pb-4 border-b border-white/10 gap-4 shrink-0">
-                <div>
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <span className={`px-2 py-0.5 rounded text-[10px] font-mono uppercase font-bold border ${sectionBadgeColors[activeNote.section]}`}>
-                      {activeNote.section}
-                    </span>
-                    {activeNote.is_private ? (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-mono bg-[#E8C547]/15 text-[#E8C547] px-2 py-0.5 rounded border border-[#E8C547]/30">
-                        <Lock className="w-2.5 h-2.5" /> Private Note
                 <div className="w-full">
                   <div className="flex justify-between items-start w-full mb-1.5">
                     <div className="flex items-center gap-2">

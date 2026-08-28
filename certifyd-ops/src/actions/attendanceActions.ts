@@ -64,9 +64,9 @@ export async function recordHeartbeatAction(activeSecondsToAdd: number): Promise
   }
 }
 
-export async function getAttendanceLogsAction(): Promise<any[]> {
+export async function getAttendanceLogsAction(dateString?: string): Promise<{ logs: any[], serverTime: string }> {
   try {
-    const sessionDate = new Date().toISOString().split('T')[0];
+    const sessionDate = dateString || new Date().toISOString().split('T')[0];
     const { data, error } = await supabaseAdmin
       .from('ops_time_logs')
       .select('*')
@@ -75,12 +75,12 @@ export async function getAttendanceLogsAction(): Promise<any[]> {
 
     if (error) {
       console.error('Error fetching attendance logs:', error);
-      return [];
+      return { logs: [], serverTime: new Date().toISOString() };
     }
     
-    return data || [];
+    return { logs: data || [], serverTime: new Date().toISOString() };
   } catch (error) {
     console.error('Exception in getAttendanceLogsAction:', error);
-    return [];
+    return { logs: [], serverTime: new Date().toISOString() };
   }
 }

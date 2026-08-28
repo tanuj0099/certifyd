@@ -1,5 +1,4 @@
 import { Inter } from 'next/font/google'
-import '../globals.css'
 import { CSPostHogProvider } from '../components/providers/PostHogProvider'
 const inter = Inter({ subsets: ['latin'], display: 'swap' })
 

@@ -18,6 +18,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Certifyd Ops — Private Admin Dashboard",
   description: "Private administration and governance portal for Certifyd",
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({

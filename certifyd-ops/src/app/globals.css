@@ -33,27 +33,7 @@ body {
    GLOBAL AESTHETICS (Softer UI)
    ========================================== */
 
-/* Dark Mode Overrides (Refining the stark GitHub dark to a softer, modern dark) */
-html:not(.light) body {
-  background-color: #0f1115 !important;
-}
-
-html:not(.light) [class*="bg-[#080A0E]"] {
-  background-color: #0f1115 !important;
-}
-
-html:not(.light) [class*="bg-[#0D1117]"],
-html:not(.light) [class*="bg-[#0F1218]"] {
-  background-color: #16181d !important;
-  border-color: rgba(255, 255, 255, 0.05) !important;
-  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.2) !important;
-}
-
-html:not(.light) [class*="bg-[#161B22]"],
-html:not(.light) [class*="bg-[#1C2128]"] {
-  background-color: #1e2128 !important;
-  border-color: rgba(255, 255, 255, 0.08) !important;
-}
+/* Dark Mode overrides removed per user request for optimization */
 
 /* ==========================================
    LIGHT MODE OVERRIDES (Clean WordPress Style)

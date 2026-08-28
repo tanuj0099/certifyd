@@ -3,6 +3,7 @@
 import { supabaseAdmin } from '../lib/supabase/server';
 import { getSession, createSession } from '../lib/auth/session';
 import { revalidatePath } from 'next/cache';
+import webpush from 'web-push';
 // --- Types ---
 export interface OpsPermissionSet {
   access_marketing: boolean;
@@ -1075,6 +1076,48 @@ export async function sendNotificationAction(
     if (error) console.error('Supabase ops_notifications upsert error:', error);
   } catch (e) {
     console.error('sendNotificationAction exception:', e);
+  }
+
+  // Web Push Integration
+  if (recipient !== 'all' && recipient && process.env.VAPID_PRIVATE_KEY) {
+    try {
+      webpush.setVapidDetails(
+        'mailto:admin@certifyd.in',
+        process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || '',
+        process.env.VAPID_PRIVATE_KEY
+      );
+
+      const targetEmail = (member ? member.email : recipient).toLowerCase().trim();
+      const { data: subs, error } = await supabaseAdmin
+        .from('ops_push_subscriptions')
+        .select('subscription_object')
+        .eq('user_email', targetEmail);
+
+      if (!error && subs && subs.length > 0) {
+        const payload = JSON.stringify({
+          title: title,
+          body: message,
+          url: linkUrl,
+          icon: '/logo.svg',
+        });
+
+        const promises = subs.map(async (sub) => {
+          try {
+            await webpush.sendNotification(sub.subscription_object, payload);
+          } catch (err: any) {
+            // If subscription is invalid (410 or 404), delete it
+            if (err.statusCode === 410 || err.statusCode === 404) {
+              await supabaseAdmin.from('ops_push_subscriptions').delete().eq('subscription_object', sub.subscription_object);
+            } else {
+              console.error('Failed to send push notification:', err);
+            }
+          }
+        });
+        await Promise.all(promises);
+      }
+    } catch (pushErr) {
+      console.error('Error during push notification broadcast:', pushErr);
+    }
   }
 
   const list = readLocalCache<OpsNotification>('ops_notifications', INITIAL_NOTIFICATIONS);

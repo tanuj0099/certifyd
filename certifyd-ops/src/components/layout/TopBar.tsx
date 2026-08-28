@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Bell, RefreshCw, LogOut, Check, Trash2, AlertTriangle, MessageSquare, Sun, Moon, CheckSquare, Calendar, FileText, Lightbulb } from 'lucide-react';
 import { logoutAction } from '../../actions/authActions';
 import { OpsNotification, getNotificationsAction, markNotificationReadAction, deleteNotificationAction, clearAllNotificationsAction } from '../../actions/opsActions';
+import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface TopBarProps {
@@ -21,6 +22,7 @@ export function TopBar({ userEmail, userRole, userPermissions, userAvatar }: Top
   const [syncing, setSyncing] = useState(false);
   const [showNotifs, setShowNotifs] = useState(false);
   const [notifications, setNotifications] = useState<OpsNotification[]>([]);
+  const { isSupported, permission, isSubscribed, subscribeToPush } = usePushNotifications();
 
   const defaultAvatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(userEmail)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
   const avatarToShow = userAvatar || defaultAvatar;
@@ -192,6 +194,21 @@ export function TopBar({ userEmail, userRole, userPermissions, userAvatar }: Top
                   </div>
 
                   <div className="max-h-80 overflow-y-auto divide-y divide-white/[0.04]">
+                    {isSupported && !isSubscribed && permission !== 'denied' && (
+                      <div className="p-3 bg-[#3B82F6]/10 border-b border-[#3B82F6]/20">
+                        <div className="flex items-center justify-between">
+                          <p className="text-xs text-[#3B82F6] font-medium">Enable Desktop/Mobile Push</p>
+                          <button
+                            onClick={async () => {
+                              await subscribeToPush();
+                            }}
+                            className="text-[10px] bg-[#3B82F6] text-white px-2 py-1 rounded font-semibold hover:bg-[#2563EB] transition-colors"
+                          >
+                            Enable
+                          </button>
+                        </div>
+                      </div>
+                    )}
                     {visibleNotifs.length === 0 ? (
                       <div className="p-8 text-center text-xs text-[#8B949E] font-mono">
                         No new notifications ✓
