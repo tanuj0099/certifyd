@@ -38,11 +38,11 @@ npm run dev
 
 | Layer | Technologies |
 |---|---|
-| **Core Application** | Next.js 16 App Router · React 19 · Node.js |
+| **Core Application** | Next.js 16 App Router · React · Node.js |
 | **Interactive UI & Motion** | Vanilla CSS Tokens · Framer Motion · Canvas Graphics |
 | **Backend & Database** | Supabase PostgreSQL · Row Level Security (RLS) · Idempotent RPCs |
-| **AI Intelligence Layer** | Server-side Groq Llama 3 Inference Pipelines |
-| **Security & Observability** | Cloudflare Turnstile · Deep PII Scanners · Sentry · Vercel Analytics |
+| **AI Intelligence Layer** | Server-side Groq Llama Inference Pipelines |
+| **Security & Observability** | Cloudflare Turnstile · Deep PII Scanners · Sentry |
 
 ---
 
@@ -51,18 +51,33 @@ npm run dev
 ```
 certifyroi/
 ├── src/
-│   ├── app/                    # Next.js 16 App Router pages & API routes
+│   ├── app/                    # Next.js App Router pages & API routes
 │   │   ├── api/                # Server-side AI & secure data endpoints
 │   │   ├── offer-analysis/     # Offer letter risk & CTC analyzer
+│   │   ├── offer-letter-analyzer/ # Detailed offer letter parsing tool
 │   │   ├── tools/              # Specialized career intelligence tools
+│   │   │   ├── cert-radar      # Top certification radar tool
+│   │   │   ├── college         # College vs corporate transition
+│   │   │   ├── compare         # Certification comparison 
+│   │   │   ├── heatmap         # Job skill heatmaps
+│   │   │   ├── hike            # Salary hike simulation
+│   │   │   ├── jobmap          # Job role mapping
+│   │   │   ├── resume          # Resume intelligence
+│   │   │   └── roi             # Granular ROI calculator
 │   │   └── user-profile/       # Secure user data & consent management
 │   ├── components/             # Reusable UI & interactive visual components
 │   │   ├── Hero.jsx            # Dynamic ROI modeling interface
 │   │   ├── LandingPage.jsx     # Accelerated 3D certificate scroll experience
-│   │   └── ResumeAnalyzer.jsx  # PII-safe candidate skill extraction
+│   │   ├── ResumeAnalyzer.jsx  # PII-safe candidate skill extraction
+│   │   ├── CareerSimulator.jsx # Simulate career paths and outcomes
+│   │   └── ROIEngine.jsx       # Real-time ROI modeling component
 │   ├── data/                   # Calibrated Indian tech market benchmarks
+│   │   └── certifyd-master-files/ # Raw curriculum and benchmark JSONs
+│   ├── hooks/                  # Custom React lifecycle and state hooks
 │   ├── lib/                    # Core clients, analytics, and circuit breakers
-│   └── services/               # Supabase, AI, Turnstile, and data services
+│   │   └── analytics/          # Logging pipelines and event telemetry
+│   ├── services/               # Supabase, AI, Turnstile, and data services
+│   └── utils/                  # String parsers, math utils, and PII scanners
 ├── migrations/                 # Idempotent database & RLS hardening schemas
 └── next.config.mjs             # Strict Content Security Policy (CSP) & headers
 ```
