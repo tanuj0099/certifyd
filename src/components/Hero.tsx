@@ -1,0 +1,180 @@
+"use client";
+
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { supabase } from "@/lib/supabase";
+import { Loader2, CheckCircle2 } from "lucide-react";
+
+const formSchema = z.object({
+  fullName: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  phone: z.string().optional(),
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
+export default function Hero() {
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [position, setPosition] = useState<number | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+  });
+
+  const onSubmit = async (data: FormValues) => {
+    setStatus("submitting");
+
+    try {
+      // 1. Get current count to determine position
+      const { count } = await supabase
+        .from('waitlist')
+        .select('*', { count: 'exact', head: true });
+
+      const newPosition = (count || 0) + 1;
+
+      // 2. Insert record
+      const { error } = await supabase.from('waitlist').insert([
+        {
+          full_name: data.fullName,
+          email: data.email,
+          phone: data.phone || null,
+          position: newPosition,
+        }
+      ]);
+
+      if (error) {
+        if (error.code === "23505") { // Unique constraint violation (email)
+          // Just pretend it's a success to prevent scanning, or handle explicitly
+          // Assuming user wants to know they are already on it:
+          setStatus("success");
+          return;
+        }
+        throw error;
+      }
+
+      setPosition(newPosition);
+      setStatus("success");
+      
+    } catch (err) {
+      console.error(err);
+      setStatus("error");
+    }
+  };
+
+  return (
+    <section id="hero" className="w-full pt-20 pb-24 md:pt-32 md:pb-32 overflow-hidden relative">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+          
+          {/* Left Column - Copy */}
+          <div className="flex flex-col items-start gap-6 max-w-2xl">
+            <h1 className="font-display text-5xl md:text-6xl font-bold leading-tight tracking-tight">
+              Know the ROI before you <span className="gradient-text">invest in the certificate.</span>
+            </h1>
+            <p className="text-xl md:text-2xl font-medium text-text-secondary leading-snug">
+              Verify ROI before you buy. Negotiate before you accept.
+            </p>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-elevated/50 text-sm font-medium mt-2">
+              <div className="w-2 h-2 rounded-full bg-brand animate-pulse" />
+              500+ tracked certifications. City-calibrated data.
+            </div>
+          </div>
+
+          {/* Right Column - Form */}
+          <div className="w-full max-w-md mx-auto lg:mx-0 lg:ml-auto">
+            <div className="bg-card border border-border p-8 rounded-xl shadow-sm relative overflow-hidden">
+              
+              {status === "success" ? (
+                <div className="flex flex-col items-center justify-center py-8 text-center space-y-4 animate-in fade-in zoom-in duration-300">
+                  <div className="w-16 h-16 bg-positive/10 rounded-full flex items-center justify-center mb-2">
+                    <CheckCircle2 className="w-8 h-8 text-positive" />
+                  </div>
+                  <h3 className="text-2xl font-display font-semibold text-text-primary">You're on the list.</h3>
+                  <p className="text-text-secondary">
+                    Keep an eye on your inbox. We'll notify you when your access is ready.
+                  </p>
+                  {position && (
+                    <div className="mt-6 p-4 rounded-lg bg-elevated border border-border w-full">
+                      <p className="text-sm text-text-secondary uppercase tracking-wider font-semibold mb-1">Your Waitlist Position</p>
+                      <p className="text-3xl font-mono text-brand font-bold">#{position.toLocaleString()}</p>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+                  <div className="space-y-1 text-left">
+                    <h2 className="text-2xl font-display font-semibold">Join the waitlist</h2>
+                    <p className="text-text-secondary text-sm">Secure your early access to the data engine.</p>
+                  </div>
+
+                  {status === "error" && (
+                    <div className="p-3 rounded-md bg-negative/10 border border-negative/20 text-negative text-sm">
+                      Something went wrong. Please try again.
+                    </div>
+                  )}
+
+                  <div className="space-y-4">
+                    <div>
+                      <label htmlFor="fullName" className="block text-sm font-medium text-text-secondary mb-1">Full Name *</label>
+                      <input
+                        id="fullName"
+                        {...register("fullName")}
+                        className="w-full px-4 py-3 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand transition-all text-text-primary placeholder:text-text-secondary/50"
+                        placeholder="John Doe"
+                      />
+                      {errors.fullName && <p className="text-negative text-xs mt-1">{errors.fullName.message}</p>}
+                    </div>
+
+                    <div>
+                      <label htmlFor="email" className="block text-sm font-medium text-text-secondary mb-1">Email Address *</label>
+                      <input
+                        id="email"
+                        type="email"
+                        {...register("email")}
+                        className="w-full px-4 py-3 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand transition-all text-text-primary placeholder:text-text-secondary/50"
+                        placeholder="john@example.com"
+                      />
+                      {errors.email && <p className="text-negative text-xs mt-1">{errors.email.message}</p>}
+                    </div>
+
+                    <div>
+                      <label htmlFor="phone" className="block text-sm font-medium text-text-secondary mb-1">Phone Number <span className="opacity-60">(optional)</span></label>
+                      <input
+                        id="phone"
+                        type="tel"
+                        {...register("phone")}
+                        className="w-full px-4 py-3 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand transition-all text-text-primary placeholder:text-text-secondary/50"
+                        placeholder="+91 98765 43210"
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={status === "submitting"}
+                    className="w-full py-3 px-4 bg-brand hover:bg-brand/90 text-white rounded-md font-semibold transition-colors flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed shadow-sm"
+                  >
+                    {status === "submitting" ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                        Processing...
+                      </>
+                    ) : (
+                      "Join the waitlist"
+                    )}
+                  </button>
+                </form>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

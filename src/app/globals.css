@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Light mode (Ash) */
+  --background: #F8FAFC;
+  --card: #FFFFFF;
+  --elevated: #F1F5F9;
+  --border-subtle: #E2E8F0;
+  --border-strong: #CBD5E1;
+  
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+
+  --brand: #F97316;
+  --brand-gradient: #818CF8;
+
+  --positive: #5B8C72;
+  --negative: #B5533B;
+}
+
+.dark {
+  /* Dark mode (Nordic) */
+  --background: #0B0F19;
+  --card: #111827;
+  --elevated: #1F2937;
+  --border-subtle: #374151; /* Merging to strong for dark mode simplicity */
+  --border-strong: #374151;
+  
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--text-primary);
+  
+  --color-card: var(--card);
+  --color-elevated: var(--elevated);
+  --color-border: var(--border-subtle);
+  --color-border-strong: var(--border-strong);
+  
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  
+  --color-brand: var(--brand);
+  --color-brand-gradient: var(--brand-gradient);
+  --color-positive: var(--positive);
+  --color-negative: var(--negative);
+
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-inter-tight);
+  --font-mono: var(--font-jetbrains-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--text-primary);
+  font-family: var(--font-sans), sans-serif;
+  scroll-behavior: smooth;
+}
+
+/* Base utility for gradient text */
+.gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-brand to-brand-gradient;
+}

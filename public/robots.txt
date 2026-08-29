@@ -1,6 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /profile
-Disallow: /dashboard
-
-Sitemap: https://certifyd.in/sitemap.xml
