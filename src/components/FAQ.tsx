@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 
 const faqs = [
   {
@@ -27,8 +28,10 @@ const faqs = [
   }
 ];
 
-export default function FAQ() {
+export default function FAQ({ limit }: { limit?: number }) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+
+  const displayedFaqs = limit ? faqs.slice(0, limit) : faqs;
 
   const toggle = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -46,7 +49,7 @@ export default function FAQ() {
         </div>
 
         <div className="space-y-4">
-          {faqs.map((faq, index) => (
+          {displayedFaqs.map((faq, index) => (
             <div 
               key={index} 
               className={`border rounded-lg overflow-hidden transition-colors duration-200 ${
@@ -82,6 +85,14 @@ export default function FAQ() {
             </div>
           ))}
         </div>
+
+        {limit && (
+          <div className="mt-10 text-center">
+            <Link href="/faq" className="inline-flex items-center gap-2 text-brand hover:text-brand/80 font-medium transition-colors">
+              View all FAQs <span>→</span>
+            </Link>
+          </div>
+        )}
 
       </div>
     </section>

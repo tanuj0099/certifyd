@@ -50,7 +50,7 @@
   --color-negative: var(--negative);
 
   --font-sans: var(--font-inter);
-  --font-display: var(--font-inter-tight);
+  --font-display: var(--font-sifonn);
   --font-mono: var(--font-jetbrains-mono);
 }
 
@@ -65,3 +65,9 @@ body {
 .gradient-text {
   @apply bg-clip-text text-transparent bg-gradient-to-r from-brand to-brand-gradient;
 }
+
+@keyframes marquee { 
+  0% { transform: translateX(0); } 
+  100% { transform: translateX(-50%); } 
+}
+.animate-marquee { animation: marquee 20s linear infinite; }

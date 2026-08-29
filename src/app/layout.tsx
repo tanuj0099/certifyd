@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { Inter, Inter_Tight, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -8,9 +10,9 @@ const inter = Inter({
   display: "swap",
 });
 
-const interTight = Inter_Tight({
-  variable: "--font-inter-tight",
-  subsets: ["latin"],
+const sifonnFont = localFont({
+  src: "./fonts/SIFONN_PRO.otf",
+  variable: "--font-sifonn",
   display: "swap",
 });
 
@@ -31,11 +33,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark scroll-smooth">
+    <html lang="en" suppressHydrationWarning className="scroll-smooth">
       <body
-        className={`${inter.variable} ${interTight.variable} ${jetbrainsMono.variable} antialiased bg-background text-text-primary selection:bg-brand/20 selection:text-brand`}
+        className={`${inter.variable} ${sifonnFont.variable} ${jetbrainsMono.variable} antialiased bg-background text-text-primary selection:bg-brand/20 selection:text-brand`}
       >
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

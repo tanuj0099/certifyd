@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useRef } from "react";
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 
 const steps = [
   {
@@ -25,28 +25,36 @@ export default function HowItWorks() {
   const [activeStep, setActiveStep] = useState(1);
   const sectionRef = useRef<HTMLElement>(null);
 
-  // Auto-advance or scroll-trigger can be added here.
-  // For simplicity and accessibility, let's use an auto-advancing interval that pauses on hover.
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActiveStep((prev) => (prev === 3 ? 1 : prev + 1));
-    }, 4000);
-    return () => clearInterval(timer);
-  }, []);
+  // Scroll mapping
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start center", "end center"],
+  });
+
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    if (latest < 0.33) {
+      setActiveStep(1);
+    } else if (latest < 0.66) {
+      setActiveStep(2);
+    } else {
+      setActiveStep(3);
+    }
+  });
 
   return (
-    <section id="how-it-works" ref={sectionRef} className="py-24 bg-elevated/30 border-y border-border">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
+    // Tall section to allow meaningful scroll mapping
+    <section id="how-it-works" ref={sectionRef} className="py-12 md:py-24 bg-elevated/30 border-y border-border min-h-[300vh]">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl sticky top-20 flex flex-col justify-center h-[calc(100vh-6rem)]">
         
-        <div className="text-center mb-16">
-          <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">How it works</h2>
-          <p className="text-text-secondary text-lg max-w-2xl mx-auto">
+        <div className="text-center mb-4 md:mb-8 shrink-0">
+          <h2 className="font-display text-2xl md:text-4xl font-bold mb-1 md:mb-4">How it works</h2>
+          <p className="text-text-secondary text-sm md:text-lg max-w-2xl mx-auto">
             Get clarity on your IT career moves in under 60 seconds.
           </p>
         </div>
 
         {/* Browser Window Mockup */}
-        <div className="relative w-full aspect-video md:aspect-[16/9] max-w-4xl mx-auto bg-card rounded-t-xl rounded-b-md border border-border shadow-sm overflow-hidden mb-12">
+        <div className="relative w-full flex-1 min-h-[150px] max-h-[350px] max-w-4xl mx-auto bg-card rounded-t-xl rounded-b-md border border-border overflow-hidden mb-6 md:mb-12 shadow-sm shrink">
           {/* Browser Chrome */}
           <div className="h-10 border-b border-border bg-elevated flex items-center px-4 gap-2">
             <div className="flex gap-1.5">
@@ -65,10 +73,10 @@ export default function HowItWorks() {
               {activeStep === 1 && (
                 <motion.div
                   key="step1"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
+                  initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
                   className="w-full max-w-md space-y-4"
                 >
                   <div className="h-12 w-full bg-elevated border border-border rounded-md animate-pulse" />
@@ -79,10 +87,10 @@ export default function HowItWorks() {
               {activeStep === 2 && (
                 <motion.div
                   key="step2"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
+                  initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
                   className="w-full max-w-md flex flex-col items-center gap-4"
                 >
                   <div className="text-sm font-medium text-text-secondary uppercase tracking-wider">Projected ROI</div>
@@ -96,10 +104,10 @@ export default function HowItWorks() {
               {activeStep === 3 && (
                 <motion.div
                   key="step3"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
+                  initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
                   className="w-full max-w-lg space-y-4"
                 >
                   <div className="h-8 w-1/3 bg-text-primary/10 rounded-md mb-6" />
@@ -120,31 +128,33 @@ export default function HowItWorks() {
         </div>
 
         {/* Horizontal Stepper */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-3 gap-2 md:gap-8 shrink-0">
           {steps.map((step) => (
             <button
               key={step.id}
-              onClick={() => setActiveStep(step.id)}
+              onClick={() => {
+                setActiveStep(step.id);
+              }}
               className="flex flex-col items-center md:items-start text-center md:text-left group outline-none"
             >
-              <div className="flex items-center w-full mb-4">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-mono text-sm font-bold transition-colors ${
+              <div className="flex items-center justify-center md:justify-start w-full mb-2 md:mb-4">
+                <div className={`w-8 h-8 md:w-8 md:h-8 rounded-full flex items-center justify-center font-mono text-xs md:text-sm font-bold transition-colors duration-300 shrink-0 ${
                   activeStep === step.id 
-                    ? "bg-brand text-white shadow-sm" 
+                    ? "bg-brand text-white" 
                     : "bg-elevated border border-border text-text-secondary group-hover:border-brand/50"
                 }`}>
                   {step.id}
                 </div>
-                <div className={`hidden md:block flex-1 h-px ml-4 transition-colors ${
+                <div className={`hidden md:block flex-1 h-px ml-4 transition-colors duration-300 ${
                   activeStep > step.id ? "bg-brand/50" : "bg-border"
                 }`} />
               </div>
-              <h3 className={`font-semibold text-lg mb-2 transition-colors ${
+              <h3 className={`font-semibold text-xs sm:text-sm md:text-lg mb-1 md:mb-2 transition-colors duration-300 ${
                 activeStep === step.id ? "text-text-primary" : "text-text-secondary"
               }`}>
                 {step.title}
               </h3>
-              <p className="text-text-secondary text-sm">
+              <p className="hidden md:block text-text-secondary text-sm">
                 {step.desc}
               </p>
             </button>

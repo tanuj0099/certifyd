@@ -2,71 +2,78 @@
 
 import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
+import { FaInstagram, FaLinkedin, FaWhatsapp } from "react-icons/fa";
+import { useTheme } from "next-themes";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function Nav() {
-  const [theme, setTheme] = useState("dark");
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Only set if we're in the browser to avoid hydration mismatch
-    const isDark = document.documentElement.classList.contains("dark");
-    setTheme(isDark ? "dark" : "light");
+    setMounted(true);
   }, []);
 
   const toggleTheme = () => {
-    const html = document.documentElement;
-    if (html.classList.contains("dark")) {
-      html.classList.remove("dark");
-      setTheme("light");
-    } else {
-      html.classList.add("dark");
-      setTheme("dark");
-    }
-  };
-
-  const scrollToSection = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    setTheme(theme === "dark" ? "light" : "dark");
   };
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-3">
             {/* Logo Mark */}
-            <div className="w-8 h-8 rounded bg-brand flex items-center justify-center font-bold text-white shadow-sm">
-              C
-            </div>
+            <Image 
+              src="/logo.svg" 
+              alt="Certifyd Logo" 
+              width={32} 
+              height={32} 
+              className="w-8 h-8 object-contain"
+            />
             <span className="font-display font-semibold text-xl tracking-tight text-text-primary">
               Certifyd
             </span>
-          </div>
+          </Link>
 
-          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-text-secondary">
-            <button onClick={() => scrollToSection("how-it-works")} className="hover:text-text-primary transition-colors">
+          <div className="hidden md:flex items-center gap-8 text-sm font-medium">
+            <Link href="/" className="relative text-text-secondary hover:text-text-primary transition-colors after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[2px] after:bg-brand after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left after:duration-300">
+              Home
+            </Link>
+            <Link href="/how-it-works" className="relative text-text-secondary hover:text-text-primary transition-colors after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[2px] after:bg-brand after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left after:duration-300">
               How it works
-            </button>
-            <button onClick={() => scrollToSection("faq")} className="hover:text-text-primary transition-colors">
+            </Link>
+            <Link href="/faq" className="relative text-text-secondary hover:text-text-primary transition-colors after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[2px] after:bg-brand after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left after:duration-300">
               FAQ
-            </button>
-            <button onClick={() => scrollToSection("contact")} className="hover:text-text-primary transition-colors">
-              Contact
-            </button>
+            </Link>
+            <Link href="/about" className="relative text-text-secondary hover:text-text-primary transition-colors after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[2px] after:bg-brand after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left after:duration-300">
+              About
+            </Link>
           </div>
 
           <div className="flex items-center gap-4">
-            <button 
-              onClick={toggleTheme} 
-              className="p-2 rounded-full hover:bg-elevated text-text-secondary hover:text-text-primary transition-colors"
-              aria-label="Toggle theme"
-            >
-              {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
-            <button 
-              onClick={() => scrollToSection("hero")} 
-              className="px-4 py-2 text-sm font-semibold bg-brand text-white rounded-md hover:bg-brand/90 transition-colors shadow-sm"
-            >
-              Join waitlist
-            </button>
+            <div className="hidden sm:flex items-center gap-3 pr-2 border-r border-border">
+              <a href="https://www.instagram.com/officialcertifyd.in" target="_blank" rel="noreferrer" className="text-text-secondary hover:text-text-primary transition-colors">
+                <FaInstagram size={18} />
+              </a>
+              <a href="https://www.linkedin.com/in/certifyd-in" target="_blank" rel="noreferrer" className="text-text-secondary hover:text-text-primary transition-colors">
+                <FaLinkedin size={18} />
+              </a>
+              <a href="https://chat.whatsapp.com/Gi7GZWKTrqI9Pfe4JprJT5" target="_blank" rel="noreferrer" className="text-text-secondary hover:text-text-primary transition-colors" title="Join Community">
+                <FaWhatsapp size={18} />
+              </a>
+            </div>
+            
+            {mounted && (
+              <button 
+                onClick={toggleTheme} 
+                className="p-2 rounded-full hover:bg-elevated text-text-secondary hover:text-text-primary transition-colors"
+                aria-label="Toggle theme"
+              >
+                {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+              </button>
+            )}
           </div>
         </div>
       </div>

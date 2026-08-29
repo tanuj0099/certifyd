@@ -1,3 +1,6 @@
+import { FaInstagram, FaLinkedin, FaWhatsapp } from "react-icons/fa";
+import Image from "next/image";
+
 export default function Footer() {
   return (
     <footer id="contact" className="py-12 bg-card border-t border-border">
@@ -5,10 +8,14 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           
           <div className="flex flex-col items-center md:items-start gap-2">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded bg-brand flex items-center justify-center font-bold text-white shadow-sm text-xs">
-                C
-              </div>
+            <div className="flex items-center gap-3">
+              <Image 
+                src="/logo.svg" 
+                alt="Certifyd Logo" 
+                width={24} 
+                height={24} 
+                className="w-6 h-6 object-contain"
+              />
               <span className="font-display font-semibold text-lg tracking-tight text-text-primary">
                 Certifyd
               </span>
@@ -18,20 +25,29 @@ export default function Footer() {
             </p>
           </div>
 
-          <div className="flex flex-col items-center md:items-end gap-2 text-sm text-text-secondary">
-            <a href="mailto:hello@certifyd.in" className="hover:text-brand transition-colors">
-              hello@certifyd.in
-            </a>
-            <div className="flex gap-4">
-              <a href="#" className="hover:text-text-primary transition-colors">Terms of Service</a>
-              <a href="#" className="hover:text-text-primary transition-colors">Privacy Policy</a>
+          <div className="flex flex-col items-center md:items-end gap-4">
+            <div className="flex items-center gap-4">
+              <a href="https://www.instagram.com/officialcertifyd.in" target="_blank" rel="noreferrer" className="text-text-secondary hover:text-text-primary transition-colors">
+                <FaInstagram size={20} />
+              </a>
+              <a href="https://www.linkedin.com/in/certifyd-in" target="_blank" rel="noreferrer" className="text-text-secondary hover:text-text-primary transition-colors">
+                <FaLinkedin size={20} />
+              </a>
+              <a href="https://chat.whatsapp.com/Gi7GZWKTrqI9Pfe4JprJT5" target="_blank" rel="noreferrer" className="text-text-secondary hover:text-text-primary transition-colors" title="Join Community">
+                <FaWhatsapp size={20} />
+              </a>
+            </div>
+            <div className="flex items-center gap-6 text-sm text-text-secondary">
+              <a href="mailto:officialcertifyd.in@gmail.com" className="hover:text-text-primary transition-colors">officialcertifyd.in@gmail.com</a>
+              <span>&copy; {new Date().getFullYear()} Certifyd.</span>
             </div>
           </div>
-
+          
         </div>
         
-        <div className="mt-8 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-text-secondary/70">
-          <p>© {new Date().getFullYear()} Certifyd. All rights reserved.</p>
+        <div className="mt-8 pt-8 border-t border-border flex justify-center gap-6 text-xs text-text-secondary">
+          <a href="#" className="hover:text-text-primary transition-colors">Terms of Service</a>
+          <a href="#" className="hover:text-text-primary transition-colors">Privacy Policy</a>
         </div>
       </div>
     </footer>

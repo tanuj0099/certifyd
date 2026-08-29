@@ -4,13 +4,13 @@ import { useState } from "react";
 
 const domains = ["Cloud", "Data & AI", "Cybersecurity", "Project Mgmt", "General IT"];
 
-// Mock multipliers for demo
+// Multipliers adjusted to realistic ranges (capped around 25%)
 const domainData: Record<string, { multiplier: number; cost: number }> = {
-  "Cloud": { multiplier: 1.45, cost: 45000 },
-  "Data & AI": { multiplier: 1.55, cost: 55000 },
-  "Cybersecurity": { multiplier: 1.35, cost: 60000 },
-  "Project Mgmt": { multiplier: 1.25, cost: 35000 },
-  "General IT": { multiplier: 1.15, cost: 15000 },
+  "Cloud": { multiplier: 1.18, cost: 45000 },
+  "Data & AI": { multiplier: 1.22, cost: 55000 },
+  "Cybersecurity": { multiplier: 1.15, cost: 60000 },
+  "Project Mgmt": { multiplier: 1.12, cost: 35000 },
+  "General IT": { multiplier: 1.08, cost: 15000 },
 };
 
 export default function Calculator() {
@@ -19,13 +19,15 @@ export default function Calculator() {
 
   // Calculate metrics
   const data = domainData[domain];
-  const projectedSalary = salary * data.multiplier;
-  const deltaSalary = projectedSalary - salary;
+  const deltaSalary = salary * (data.multiplier - 1);
+  const upliftPercent = (data.multiplier - 1) * 100;
   
-  // ROI = ((Delta - Cost) / Cost) * 100 for a simpler realistic output
-  // Standard ROI calculation: Net Return / Cost of Investment
-  const rawRoi = ((deltaSalary - data.cost) / data.cost) * 100;
-  const roi = Math.max(0, Math.round(rawRoi));
+  // Payback period in months = (Cost / Annual Delta) * 12
+  const rawPaybackMonths = (data.cost / deltaSalary) * 12;
+  const paybackMonths = Math.round(rawPaybackMonths);
+
+  // Clamping check
+  const outOfBounds = paybackMonths < 1 || paybackMonths > 120 || upliftPercent > 25;
 
   // Format currency
   const formatINR = (val: number) => {
@@ -49,7 +51,7 @@ export default function Calculator() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
           
           {/* Left Card - Inputs */}
-          <div className="bg-card border border-border p-8 rounded-xl shadow-sm flex flex-col gap-10">
+          <div className="bg-card border border-border p-8 rounded-xl flex flex-col gap-10">
             
             <div className="space-y-6">
               <div className="flex justify-between items-end">
@@ -92,7 +94,7 @@ export default function Calculator() {
                     onClick={() => setDomain(d)}
                     className={`px-4 py-2 rounded-full text-sm font-medium transition-colors border ${
                       domain === d
-                        ? "bg-brand border-brand text-white shadow-sm"
+                        ? "bg-brand border-brand text-white"
                         : "bg-background border-border text-text-secondary hover:border-brand/50 hover:text-text-primary"
                     }`}
                   >
@@ -105,30 +107,41 @@ export default function Calculator() {
           </div>
 
           {/* Right Card - Outputs */}
-          <div className="bg-card border border-border p-8 rounded-xl shadow-sm flex flex-col justify-center text-center relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand to-brand-gradient" />
+          <div className="bg-card border border-border p-8 rounded-xl flex flex-col justify-center text-center relative overflow-hidden">
             
-            <div className="space-y-2 mb-10">
-              <p className="text-sm font-semibold text-text-secondary uppercase tracking-widest">Projected 1-Year ROI</p>
-              <div className="font-mono text-7xl md:text-8xl font-bold text-brand tabular-nums tracking-tighter">
-                {roi}%
+            {outOfBounds ? (
+              <div className="flex flex-col items-center justify-center space-y-4 h-full">
+                <p className="text-text-secondary font-medium">Not enough data for this range yet.</p>
+                <p className="text-sm text-text-secondary/70">
+                  We don't have enough verified outcomes at this salary band to provide a confident projection.
+                </p>
               </div>
-            </div>
+            ) : (
+              <>
+                <div className="space-y-2 mb-10">
+                  <p className="text-sm font-semibold text-text-secondary uppercase tracking-widest">Payback Period</p>
+                  <div className="font-mono text-5xl md:text-7xl font-bold text-brand tabular-nums tracking-tighter">
+                    {paybackMonths} <span className="text-3xl md:text-4xl">months</span>
+                  </div>
+                </div>
 
-            <div className="grid grid-cols-2 gap-4 border-t border-border pt-8">
-              <div className="space-y-1">
-                <p className="text-sm text-text-secondary">Estimated Cost</p>
-                <p className="font-mono text-2xl font-semibold text-text-primary">{formatINR(data.cost)}</p>
-              </div>
-              <div className="space-y-1 border-l border-border pl-4">
-                <p className="text-sm text-text-secondary">Projected New Salary</p>
-                <p className="font-mono text-2xl font-semibold text-positive">{formatINR(projectedSalary)}</p>
-              </div>
-            </div>
+                <div className="grid grid-cols-2 gap-4 border-t border-border pt-8">
+                  <div className="space-y-1">
+                    <p className="text-sm text-text-secondary">Estimated Cost</p>
+                    <p className="font-mono text-2xl font-semibold text-text-primary">{formatINR(data.cost)}</p>
+                  </div>
+                  <div className="space-y-1 border-l border-border pl-4">
+                    <p className="text-sm text-text-secondary">Typical Salary Uplift</p>
+                    <p className="font-mono text-2xl font-semibold text-[#5B8C72]">+{formatINR(deltaSalary)}/yr</p>
+                  </div>
+                </div>
 
-            <p className="text-xs text-text-secondary/70 italic mt-8">
-              *Estimates based on aggregated market data. Not a guarantee of salary outcomes.
-            </p>
+                <p className="text-xs text-text-secondary/70 italic mt-8">
+                  *Estimates based on aggregated market data. Not a guarantee of salary outcomes.
+                </p>
+              </>
+            )}
+            
           </div>
 
         </div>
