@@ -5,7 +5,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { supabase } from "@/lib/supabase";
-import { Loader2, CheckCircle2, User, Mail, Phone } from "lucide-react";
+import { Loader2, User, Mail, Phone } from "lucide-react";
+import SuccessModal from "./SuccessModal";
 
 const formSchema = z.object({
   fullName: z.string().min(2, "Name must be at least 2 characters"),
@@ -22,6 +23,7 @@ export default function Hero() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -38,15 +40,20 @@ export default function Hero() {
 
       const newPosition = (count || 0) + 1;
 
-      // 2. Insert record
-      const { error } = await supabase.from('waitlist').insert([
-        {
-          full_name: data.fullName,
-          email: data.email,
-          phone: data.phone || null,
-          position: newPosition,
-        }
+      // 2. Insert record and artificial delay simultaneously
+      const [insertResult] = await Promise.all([
+        supabase.from('waitlist').insert([
+          {
+            full_name: data.fullName,
+            email: data.email,
+            phone: data.phone || null,
+            position: newPosition,
+          }
+        ]),
+        new Promise(resolve => setTimeout(resolve, 2000)) // Force minimum 2s load time
       ]);
+      
+      const { error } = insertResult;
 
       if (error) {
         if (error.code === "23505") { // Unique constraint violation (email)
@@ -87,104 +94,95 @@ export default function Hero() {
           <div className="w-full max-w-md mx-auto lg:mx-0 lg:ml-auto">
             <div className="bg-card border border-border p-8 rounded-3xl relative overflow-hidden shadow-sm">
               
-              {status === "success" ? (
-                <div className="flex flex-col items-center justify-center py-8 text-center space-y-4 animate-in fade-in zoom-in duration-300">
-                  <div className="w-16 h-16 bg-positive/10 rounded-full flex items-center justify-center mb-2">
-                    <CheckCircle2 className="w-8 h-8 text-positive" />
-                  </div>
-                  <h3 className="text-2xl font-display font-semibold text-text-primary">You're on the list.</h3>
-                  <p className="text-text-secondary">
-                    Keep an eye on your inbox. We'll notify you when your access is ready.
-                  </p>
-                  {position && (
-                    <div className="mt-6 p-4 rounded-lg bg-elevated border border-border w-full">
-                      <p className="text-sm text-text-secondary uppercase tracking-wider font-semibold mb-1">Your Waitlist Position</p>
-                      <p className="text-3xl font-mono text-brand font-bold">#{position.toLocaleString()}</p>
-                    </div>
-                  )}
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+                <div className="space-y-2 text-center mb-8">
+                  <h2 className="text-3xl font-display font-bold">Join the waitlist</h2>
+                  <p className="text-text-secondary text-sm md:text-base">Secure your early access to the data engine.</p>
                 </div>
-              ) : (
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-                  <div className="space-y-2 text-center mb-8">
-                    <h2 className="text-3xl font-display font-bold">Join the waitlist</h2>
-                    <p className="text-text-secondary text-sm md:text-base">Secure your early access to the data engine.</p>
+
+                {status === "error" && (
+                  <div className="p-3 rounded-md bg-negative/10 border border-negative/20 text-negative text-sm">
+                    Something went wrong. Please try again.
+                  </div>
+                )}
+
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex justify-between items-center mb-1">
+                      <label htmlFor="fullName" className="block text-sm font-semibold text-text-primary">Full Name</label>
+                      <span className="text-brand text-lg leading-none">*</span>
+                    </div>
+                    <div className="relative">
+                      <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-secondary/50" />
+                      <input
+                        id="fullName"
+                        {...register("fullName")}
+                        className="w-full pl-12 pr-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand transition-all text-text-primary placeholder:text-text-secondary/50"
+                        placeholder="Rohan Sharma"
+                      />
+                    </div>
+                    {errors.fullName && <p className="text-negative text-xs mt-1">{errors.fullName.message}</p>}
                   </div>
 
-                  {status === "error" && (
-                    <div className="p-3 rounded-md bg-negative/10 border border-negative/20 text-negative text-sm">
-                      Something went wrong. Please try again.
+                  <div>
+                    <div className="flex justify-between items-center mb-1">
+                      <label htmlFor="email" className="block text-sm font-semibold text-text-primary">Email Address</label>
+                      <span className="text-brand text-lg leading-none">*</span>
                     </div>
+                    <div className="relative">
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-secondary/50" />
+                      <input
+                        id="email"
+                        type="email"
+                        {...register("email")}
+                        className="w-full pl-12 pr-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand transition-all text-text-primary placeholder:text-text-secondary/50"
+                        placeholder="rohan.sharma@gmail.com"
+                      />
+                    </div>
+                    {errors.email && <p className="text-negative text-xs mt-1">{errors.email.message}</p>}
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between items-center mb-1">
+                      <label htmlFor="phone" className="block text-sm font-semibold text-text-primary">Phone Number</label>
+                      <span className="text-text-secondary/60 text-sm">(optional)</span>
+                    </div>
+                    <div className="relative">
+                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-secondary/50" />
+                      <input
+                        id="phone"
+                        type="tel"
+                        {...register("phone")}
+                        className="w-full pl-12 pr-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand transition-all text-text-primary placeholder:text-text-secondary/50"
+                        placeholder="+91 98765 43210"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={status === "submitting"}
+                  className="w-full py-4 px-4 bg-brand hover:bg-brand/90 text-white rounded-xl font-bold text-lg transition-colors flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed mt-2 shadow-lg shadow-brand/20"
+                >
+                  {status === "submitting" ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                      Joining...
+                    </>
+                  ) : (
+                    "Join the waitlist"
                   )}
+                </button>
+              </form>
 
-                  <div className="space-y-4">
-                    <div>
-                      <div className="flex justify-between items-center mb-1">
-                        <label htmlFor="fullName" className="block text-sm font-semibold text-text-primary">Full Name</label>
-                        <span className="text-brand text-lg leading-none">*</span>
-                      </div>
-                      <div className="relative">
-                        <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-secondary/50" />
-                        <input
-                          id="fullName"
-                          {...register("fullName")}
-                          className="w-full pl-12 pr-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand transition-all text-text-primary placeholder:text-text-secondary/50"
-                          placeholder="Rohan Sharma"
-                        />
-                      </div>
-                      {errors.fullName && <p className="text-negative text-xs mt-1">{errors.fullName.message}</p>}
-                    </div>
-
-                    <div>
-                      <div className="flex justify-between items-center mb-1">
-                        <label htmlFor="email" className="block text-sm font-semibold text-text-primary">Email Address</label>
-                        <span className="text-brand text-lg leading-none">*</span>
-                      </div>
-                      <div className="relative">
-                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-secondary/50" />
-                        <input
-                          id="email"
-                          type="email"
-                          {...register("email")}
-                          className="w-full pl-12 pr-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand transition-all text-text-primary placeholder:text-text-secondary/50"
-                          placeholder="rohan.sharma@gmail.com"
-                        />
-                      </div>
-                      {errors.email && <p className="text-negative text-xs mt-1">{errors.email.message}</p>}
-                    </div>
-
-                    <div>
-                      <div className="flex justify-between items-center mb-1">
-                        <label htmlFor="phone" className="block text-sm font-semibold text-text-primary">Phone Number</label>
-                        <span className="text-text-secondary/60 text-sm">(optional)</span>
-                      </div>
-                      <div className="relative">
-                        <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-secondary/50" />
-                        <input
-                          id="phone"
-                          type="tel"
-                          {...register("phone")}
-                          className="w-full pl-12 pr-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand transition-all text-text-primary placeholder:text-text-secondary/50"
-                          placeholder="+91 98765 43210"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={status === "submitting"}
-                    className="w-full py-4 px-4 bg-brand hover:bg-brand/90 text-white rounded-xl font-bold text-lg transition-colors flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed mt-2"
-                  >
-                    {status === "submitting" ? (
-                      <>
-                        <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                        Processing...
-                      </>
-                    ) : (
-                      "Join the waitlist"
-                    )}
-                  </button>
-                </form>
+              {status === "success" && (
+                <SuccessModal 
+                  onClose={() => {
+                    setStatus("idle");
+                    reset();
+                  }} 
+                />
               )}
             </div>
           </div>
