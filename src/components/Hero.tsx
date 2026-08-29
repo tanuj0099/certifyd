@@ -35,16 +35,16 @@ export default function Hero() {
     try {
       // 1. Get current count to determine position
       const { count } = await supabase
-        .from('waitlist')
+        .from('certifyd_waitlist')
         .select('*', { count: 'exact', head: true });
 
       const newPosition = (count || 0) + 1;
 
       // 2. Insert record and artificial delay simultaneously
       const [insertResult] = await Promise.all([
-        supabase.from('waitlist').insert([
+        supabase.from('certifyd_waitlist').insert([
           {
-            full_name: data.fullName,
+            name: data.fullName,
             email: data.email,
             phone: data.phone || null,
             position: newPosition,
