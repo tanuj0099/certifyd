@@ -1,4 +1,4 @@
-import { Inter, Plus_Jakarta_Sans, JetBrains_Mono, Playfair_Display, Geist } from 'next/font/google';
+import { Inter, Inter_Tight, Plus_Jakarta_Sans, JetBrains_Mono, Playfair_Display, Geist } from 'next/font/google';
 import Script from 'next/script';
 import { Providers } from './providers';
 import ConsoleGreeting from '@/components/ConsoleGreeting';
@@ -11,8 +11,9 @@ import { cn } from "@/lib/utils";
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
+const interTight = Inter_Tight({ subsets: ['latin'], variable: '--font-inter-tight', display: 'swap' });
 const plusJakarta = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-jakarta', display: 'swap' });
-const jetbrains = JetBrains_Mono({ subsets: ['latin'], variable: '--font-jetbrains', display: 'swap' });
+const jetbrains = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono', display: 'swap' });
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair', display: 'swap' });
 
 export const metadata = {
@@ -26,7 +27,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" data-scroll-behavior="smooth" className={cn(inter.variable, plusJakarta.variable, jetbrains.variable, playfair.variable, "font-sans", geist.variable)} suppressHydrationWarning>
+    <html lang="en" data-scroll-behavior="smooth" className={cn(inter.variable, interTight.variable, plusJakarta.variable, jetbrains.variable, playfair.variable, "font-sans", geist.variable)} suppressHydrationWarning>
       <body suppressHydrationWarning>
         <ConsentManager />
         <Providers>
