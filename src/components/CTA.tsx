@@ -29,13 +29,13 @@ export default function CTA() {
           Be part of our exclusive initial group. Secure your spot on the waitlist to receive access invites, promotional fee waivers, and community bonuses.
         </p>
         
-        <Link 
-          href="#hero" 
-          className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-brand hover:bg-brand/90 text-white rounded-full font-bold text-lg transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/25"
+        <button 
+          onClick={() => document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' })}
+          className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-brand hover:bg-brand/90 text-white rounded-full font-bold text-lg transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/25 cursor-pointer"
         >
           Join the Waitlist Now
           <ArrowRight className="w-5 h-5" />
-        </Link>
+        </button>
       </motion.div>
     </section>
   );

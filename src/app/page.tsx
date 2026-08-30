@@ -16,7 +16,7 @@ export default function Home() {
       
       {/* Divider */}
       <div className="w-full flex justify-center items-center py-6 border-b border-border bg-background overflow-hidden relative h-[80px]">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform scale-[0.35] sm:scale-75 md:scale-90 lg:scale-100 flex justify-center whitespace-nowrap">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform scale-[0.60] sm:scale-75 md:scale-90 lg:scale-100 flex justify-center whitespace-nowrap">
           <SplitFlapText 
             words={["500+ CERTIFICATIONS TRACKED", "CITY-CALIBRATED DATA", "REAL OFFER OUTCOMES"]}
             fontSize={16}
