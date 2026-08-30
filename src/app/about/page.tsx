@@ -5,13 +5,54 @@ import Footer from "@/components/Footer";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import FaultyTerminal from "@/components/reactbits/FaultyTerminal";
+import { useTheme } from "next-themes";
+import { useState, useEffect } from "react";
 
 export default function AboutPage() {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const [reduceMotion, setReduceMotion] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setReduceMotion(mediaQuery.matches);
+    
+    const listener = (e: MediaQueryListEvent) => setReduceMotion(e.matches);
+    mediaQuery.addEventListener('change', listener);
+    return () => mediaQuery.removeEventListener('change', listener);
+  }, []);
+
   return (
     <main className="min-h-screen flex flex-col">
       <Nav />
       <div className="flex-1 flex flex-col">
         <section className="py-24 bg-background relative overflow-hidden flex-1 flex flex-col justify-center">
+          <div className="absolute inset-0 -z-10 flex items-center justify-center opacity-30 mix-blend-multiply dark:mix-blend-screen pointer-events-none">
+            {mounted && (
+              <FaultyTerminal
+                scale={1.5}
+                gridMul={[2.5, 1.25]}
+                digitSize={1.1}
+                timeScale={0.15}
+                scanlineIntensity={0.1}
+                glitchAmount={0.5}
+                flickerAmount={0.1}
+                noiseAmp={0.4}
+                chromaticAberration={0}
+                dither={0}
+                curvature={0}
+                tint="#94A3B8"
+                mouseReact={true}
+                mouseStrength={0.1}
+                pageLoadAnimation={false}
+                brightness={0.3}
+                pause={reduceMotion}
+                lightMode={resolvedTheme === 'light'}
+              />
+            )}
+          </div>
           {/* Subtle background glow */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl h-[600px] bg-brand/5 blur-[120px] rounded-full pointer-events-none" />
 

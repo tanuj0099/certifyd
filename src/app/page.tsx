@@ -15,16 +15,18 @@ export default function Home() {
       <Hero />
       
       {/* Divider */}
-      <div className="w-full flex justify-center items-center py-6 border-b border-border bg-background">
-        <SplitFlapText 
-          words={["500+ CERTIFICATIONS TRACKED", "CITY-CALIBRATED DATA", "REAL OFFER OUTCOMES"]}
-          fontSize={16}
-          tileColor="var(--background)"
-          textColor="var(--text-secondary)"
-          className="text-text-secondary"
-          padTo={27}
-          flipDuration={0.08}
-        />
+      <div className="w-full flex justify-center items-center py-6 border-b border-border bg-background overflow-hidden">
+        <div className="transform scale-[0.45] sm:scale-75 md:scale-90 lg:scale-100 flex justify-center w-full min-w-max">
+          <SplitFlapText 
+            words={["500+ CERTIFICATIONS TRACKED", "CITY-CALIBRATED DATA", "REAL OFFER OUTCOMES"]}
+            fontSize={16}
+            tileColor="var(--background)"
+            textColor="var(--text-secondary)"
+            className="text-text-secondary"
+            padTo={27}
+            flipDuration={0.08}
+          />
+        </div>
       </div>
 
       <Logos />

@@ -41,6 +41,18 @@ const faqs = [
   {
     question: "What happens after I join the waitlist?",
     answer: "You will lock in early access to the platform before our public launch. Waitlist members will also receive a lifetime discount on any future premium features we roll out."
+  },
+  {
+    question: "Are there any hidden fees?",
+    answer: "No. The core functionality—finding the ROI of a specific certification based on your current salary and location—will always be free. We believe in democratizing salary data."
+  },
+  {
+    question: "Does Certifyd help me get certified?",
+    answer: "We are an analytics and data platform, not a training provider. We tell you which certifications are worth your time and money, but you will still need to study and pass the exams through official channels."
+  },
+  {
+    question: "How do I use this data in an interview?",
+    answer: "When asked about your salary expectations, you can present our verified market data report. For example: \"According to market benchmarks, this AWS certification commands an average 18% premium in Bangalore. I am asking for X based on this data.\" Data changes the conversation from a subjective request to an objective market valuation."
   }
 ];
 

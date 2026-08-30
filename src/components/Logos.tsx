@@ -3,13 +3,14 @@
 import LogoLoop from "./reactbits/LogoLoop";
 
 const vendors = [
-  { name: "Google", src: "/logos/google.svg" },
-  { name: "AWS", src: "/logos/aws.svg" },
-  { name: "Microsoft", src: "/logos/microsoft.svg" },
-  { name: "Cisco", src: "https://cdn.simpleicons.org/cisco/1BA0D7" },
-  { name: "ISC2", src: "https://cdn.simpleicons.org/isc2/D93B30" },
-  { name: "CompTIA", src: "https://cdn.simpleicons.org/comptia/ED1B24" },
-  { name: "Oracle", src: "https://cdn.simpleicons.org/oracle/F80000" },
+  { name: "Google", src: "/logos/google.svg", width: 110 },
+  { name: "AWS", src: "/logos/aws.svg", width: 60 },
+  { name: "Microsoft", src: "/logos/microsoft.svg", width: 150 },
+  { name: "Cisco", src: "https://cdn.simpleicons.org/cisco/1BA0D7", width: 65 },
+  { name: "PMI", src: "https://upload.wikimedia.org/wikipedia/commons/2/29/PMI_Logo_2019.svg", width: 110 },
+  { name: "ISC2", src: "https://upload.wikimedia.org/wikipedia/commons/d/df/ISC2_Logo.svg", width: 100 },
+  { name: "CompTIA", src: "https://cdn.simpleicons.org/comptia/ED1B24", width: 140 },
+  { name: "Oracle", src: "https://cdn.simpleicons.org/oracle/F80000", width: 120 },
 ];
 
 export default function Logos() {
@@ -34,7 +35,7 @@ export default function Logos() {
                 src={item.src} 
                 alt={item.name} 
                 className="object-contain"
-                style={{ height: '36px', width: 'auto', maxHeight: '36px' }}
+                style={{ height: '36px', width: item.width ? `${item.width}px` : 'auto', maxHeight: '36px', minWidth: item.width ? `${item.width}px` : 'auto' }}
               />
             </div>
           )}
