@@ -46,15 +46,27 @@ export default function HowItWorks() {
     <section id="how-it-works" ref={sectionRef} className="py-12 md:py-24 bg-elevated/30 border-y border-border min-h-[300vh]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl sticky top-20 flex flex-col justify-center h-[calc(100vh-6rem)]">
         
-        <div className="text-center mb-4 md:mb-8 shrink-0">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-4 md:mb-8 shrink-0"
+        >
           <h2 className="font-display text-2xl md:text-4xl font-bold mb-1 md:mb-4">How it works</h2>
           <p className="text-text-secondary text-sm md:text-lg max-w-2xl mx-auto">
             Get clarity on your IT career moves in under 60 seconds.
           </p>
-        </div>
+        </motion.div>
 
         {/* Browser Window Mockup */}
-        <div className="relative w-full flex-1 min-h-[150px] max-h-[350px] max-w-4xl mx-auto bg-card rounded-t-xl rounded-b-md border border-border overflow-hidden mb-6 md:mb-12 shadow-sm shrink">
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="relative w-full flex-1 min-h-[150px] max-h-[350px] max-w-4xl mx-auto bg-card rounded-t-xl rounded-b-md border border-border overflow-hidden mb-6 md:mb-12 shadow-sm shrink"
+        >
           {/* Browser Chrome */}
           <div className="h-10 border-b border-border bg-elevated flex items-center px-4 gap-2">
             <div className="flex gap-1.5">
@@ -125,10 +137,16 @@ export default function HowItWorks() {
               )}
             </AnimatePresence>
           </div>
-        </div>
+        </motion.div>
 
         {/* Horizontal Stepper */}
-        <div className="grid grid-cols-3 gap-2 md:gap-8 shrink-0">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="grid grid-cols-3 gap-2 md:gap-8 shrink-0"
+        >
           {steps.map((step) => (
             <button
               key={step.id}
@@ -159,7 +177,7 @@ export default function HowItWorks() {
               </p>
             </button>
           ))}
-        </div>
+        </motion.div>
 
       </div>
     </section>

@@ -41,16 +41,38 @@ export default function FAQ({ limit }: { limit?: number }) {
     <section id="faq" className="py-24 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-3xl">
         
-        <div className="text-center mb-16">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-16"
+        >
           <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">Frequently Asked Questions</h2>
           <p className="text-text-secondary text-lg">
             Everything you need to know about the data and the platform.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="space-y-4">
+        <motion.div 
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          variants={{
+            hidden: { opacity: 0 },
+            show: {
+              opacity: 1,
+              transition: { staggerChildren: 0.1 }
+            }
+          }}
+          className="space-y-4"
+        >
           {displayedFaqs.map((faq, index) => (
-            <div 
+            <motion.div 
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                show: { opacity: 1, y: 0, transition: { duration: 0.4 } }
+              }}
               key={index} 
               className={`border rounded-lg overflow-hidden transition-colors duration-200 ${
                 openIndex === index ? "border-brand/30 bg-elevated/30" : "border-border bg-card hover:border-border-strong"
@@ -82,9 +104,9 @@ export default function FAQ({ limit }: { limit?: number }) {
                   </motion.div>
                 )}
               </AnimatePresence>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {limit && (
           <div className="mt-10 text-center">

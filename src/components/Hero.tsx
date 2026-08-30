@@ -7,6 +7,7 @@ import * as z from "zod";
 import { supabase } from "@/lib/supabase";
 import { Loader2, User, Mail, Phone } from "lucide-react";
 import SuccessModal from "./SuccessModal";
+import { motion } from "framer-motion";
 
 const formSchema = z.object({
   fullName: z.string().min(2, "Name must be at least 2 characters"),
@@ -80,18 +81,29 @@ export default function Hero() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center">
           
           {/* Left Column - Copy */}
-          <div className="flex flex-col items-start gap-6 max-w-2xl">
+          <motion.div 
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="flex flex-col items-start gap-6 max-w-2xl"
+          >
             <h1 className="font-display text-5xl md:text-6xl font-bold leading-tight tracking-tight">
               Verify certificate <span className="text-brand">ROI</span> before you buy. <span className="text-brand">Negotiate</span> before you accept your offer letter.
             </h1>
             <p className="text-xl md:text-2xl font-medium text-text-secondary leading-snug">
               Certifyd uses verified market data to calculate the exact ROI and expected salary bump for over 500 IT certifications, giving you the leverage to negotiate your next offer.
             </p>
-
-          </div>
+          </motion.div>
 
           {/* Right Column - Form */}
-          <div className="w-full max-w-md mx-auto lg:mx-0 lg:ml-auto">
+          <motion.div 
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+            className="w-full max-w-md mx-auto lg:mx-0 lg:ml-auto"
+          >
             <div className="bg-card border border-border p-8 rounded-3xl relative overflow-hidden shadow-sm">
               
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -185,7 +197,7 @@ export default function Hero() {
                 />
               )}
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
