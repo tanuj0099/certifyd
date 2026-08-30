@@ -20,7 +20,9 @@ const TargetCursor = ({
   useEffect(() => {
     setMounted(true);
     const checkMobile = () => {
-      setIsMobile(window.matchMedia('(max-width: 768px)').matches || 'ontouchstart' in window || navigator.maxTouchPoints > 0);
+      const isNarrow = window.innerWidth <= 768;
+      const isTouchOnly = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+      setIsMobile(isNarrow || isTouchOnly);
     };
     checkMobile();
     window.addEventListener('resize', checkMobile);
