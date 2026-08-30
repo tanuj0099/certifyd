@@ -407,5 +407,5 @@ export default function FaultyTerminal({
     handleMouseMove
   ]);
 
-  return <div ref={containerRef} className={\`faulty-terminal-container \${className}\`} style={style} {...rest} />;
+  return <div ref={containerRef} className={`faulty-terminal-container ${className}`} style={style} {...rest} />;
 }
