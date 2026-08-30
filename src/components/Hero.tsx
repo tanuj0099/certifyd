@@ -50,39 +50,28 @@ export default function Hero() {
     setStatus("submitting");
 
     try {
-      // 1. Get current count to determine position
-      const { count } = await supabase
-        .from('certifyd_waitlist')
-        .select('*', { count: 'exact', head: true });
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: data.email,
+          name: data.fullName,
+          phone: data.phone || null,
+        }),
+      });
 
-      const newPosition = (count || 0) + 1;
-
-      // 2. Insert record and artificial delay simultaneously
-      const [insertResult] = await Promise.all([
-        supabase.from('certifyd_waitlist').insert([
-          {
-            name: data.fullName,
-            email: data.email,
-            phone: data.phone || null,
-            position: newPosition,
-          }
-        ]),
-        new Promise(resolve => setTimeout(resolve, 2000)) // Force minimum 2s load time
-      ]);
-      
-      const { error } = insertResult;
-
-      if (error) {
-        if (error.code === "23505") { // Unique constraint violation (email)
-          // Just pretend it's a success to prevent scanning, or handle explicitly
-          // Assuming user wants to know they are already on it:
-          setStatus("success");
-          return;
-        }
-        throw error;
+      if (!response.ok) {
+        throw new Error('Failed to subscribe');
       }
 
-      setPosition(newPosition);
+      const result = await response.json();
+      
+      if (result.position) {
+        setPosition(result.position);
+      }
+      
       setStatus("success");
       
     } catch (err) {
