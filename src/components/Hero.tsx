@@ -161,14 +161,17 @@ export default function Hero() {
 
                 <div className="space-y-4">
                   <div>
-                    <div className="flex justify-between items-center mb-1">
-                      <label htmlFor="fullName" className="block text-sm font-semibold text-text-primary">Full Name</label>
-                      <span className="text-brand text-lg leading-none">*</span>
-                    </div>
+                    <label htmlFor="fullName" className="block mb-1">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-semibold text-text-primary">Full Name</span>
+                        <span className="text-brand text-lg leading-none">*</span>
+                      </div>
+                    </label>
                     <div className="relative">
-                      <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-secondary/50" />
+                      <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-secondary/50 pointer-events-none" />
                       <input
                         id="fullName"
+                        autoComplete="name"
                         {...register("fullName")}
                         className="w-full pl-12 pr-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand transition-all text-text-primary placeholder:text-text-secondary/50"
                         placeholder="Rohan Sharma"
@@ -178,15 +181,18 @@ export default function Hero() {
                   </div>
 
                   <div>
-                    <div className="flex justify-between items-center mb-1">
-                      <label htmlFor="email" className="block text-sm font-semibold text-text-primary">Email Address</label>
-                      <span className="text-brand text-lg leading-none">*</span>
-                    </div>
+                    <label htmlFor="email" className="block mb-1">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-semibold text-text-primary">Email Address</span>
+                        <span className="text-brand text-lg leading-none">*</span>
+                      </div>
+                    </label>
                     <div className="relative">
-                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-secondary/50" />
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-secondary/50 pointer-events-none" />
                       <input
                         id="email"
                         type="email"
+                        autoComplete="email"
                         {...register("email")}
                         className="w-full pl-12 pr-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand transition-all text-text-primary placeholder:text-text-secondary/50"
                         placeholder="rohan.sharma@gmail.com"
@@ -196,15 +202,18 @@ export default function Hero() {
                   </div>
 
                   <div>
-                    <div className="flex justify-between items-center mb-1">
-                      <label htmlFor="phone" className="block text-sm font-semibold text-text-primary">Phone Number</label>
-                      <span className="text-text-secondary/60 text-sm">(optional)</span>
-                    </div>
+                    <label htmlFor="phone" className="block mb-1">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-semibold text-text-primary">Phone Number</span>
+                        <span className="text-text-secondary/60 text-sm">(optional)</span>
+                      </div>
+                    </label>
                     <div className="relative">
-                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-secondary/50" />
+                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-secondary/50 pointer-events-none" />
                       <input
                         id="phone"
                         type="tel"
+                        autoComplete="tel"
                         {...register("phone")}
                         className="w-full pl-12 pr-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand transition-all text-text-primary placeholder:text-text-secondary/50"
                         placeholder="+91 98765 43210"

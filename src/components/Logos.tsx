@@ -33,8 +33,8 @@ export default function Logos() {
               <img 
                 src={item.src} 
                 alt={item.name} 
-                className="object-contain h-full w-auto"
-                style={{ maxHeight: '36px' }}
+                className="object-contain"
+                style={{ height: '36px', width: 'auto', maxHeight: '36px' }}
               />
             </div>
           )}

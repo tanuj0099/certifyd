@@ -115,10 +115,8 @@ const TargetCursor = ({
       yPercent: -50,
       x: window.innerWidth / 2 - initialOffset.x,
       y: window.innerHeight / 2 - initialOffset.y,
-      opacity: 0 // Hide initially until first mousemove
+      opacity: 1 // Start visible in center
     });
-
-    let hasMoved = false;
 
     const createSpinTimeline = () => {
       if (spinTl.current) {
@@ -168,11 +166,6 @@ const TargetCursor = ({
     tickerFnRef.current = tickerFn;
 
     const moveHandler = e => {
-      if (!hasMoved) {
-        hasMoved = true;
-        gsap.to(cursorRef.current, { opacity: 1, duration: 0.3 });
-      }
-
       moveCursor(e.clientX, e.clientY);
       
       if (activeTarget && currentLeaveHandler && e.target) {
@@ -189,22 +182,12 @@ const TargetCursor = ({
         
         if ((isTextInput || isTextCursor) && !target.closest(targetSelector)) {
           gsap.to(cursorRef.current, { opacity: 0, duration: 0.1, overwrite: 'auto' });
-        } else if (hasMoved) {
+        } else {
           gsap.to(cursorRef.current, { opacity: 1, duration: 0.1, overwrite: 'auto' });
         }
       }
     };
-    
-    const docMouseLeave = () => {
-      hasMoved = false;
-      gsap.to(cursorRef.current, { opacity: 0, duration: 0.1, overwrite: 'auto' });
-    };
-    const docMouseEnter = () => {
-      // Don't blindly show it on enter, wait for actual mousemove so it appears exactly at cursor
-    };
-    
-    document.addEventListener('mouseleave', docMouseLeave);
-    document.addEventListener('mouseenter', docMouseEnter);
+
     window.addEventListener('mousemove', moveHandler);
 
     const scrollHandler = () => {
