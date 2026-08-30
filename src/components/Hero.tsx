@@ -78,14 +78,14 @@ export default function Hero() {
 
   return (
     <section id="hero" className="w-full pt-10 pb-24 md:pt-16 md:pb-32 overflow-hidden relative group">
-      <div className="absolute inset-0 -z-10 pointer-events-none opacity-40 mix-blend-multiply dark:mix-blend-screen flex items-center justify-center overflow-hidden pt-10">
+      <div className="absolute inset-0 -z-10 opacity-15 mix-blend-multiply dark:mix-blend-screen flex items-center justify-center overflow-hidden pt-10">
         <MagnetLines 
-          rows={12} 
-          columns={24} 
+          rows={20} 
+          columns={40} 
           containerSize="100%" 
           lineColor="var(--text-secondary)" 
-          lineWidth="0.8vmin" 
-          lineHeight="4vmin"
+          lineWidth="0.3vmin" 
+          lineHeight="2.5vmin"
         />
       </div>
       
