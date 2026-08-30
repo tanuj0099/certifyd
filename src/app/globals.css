@@ -72,8 +72,12 @@ body {
 }
 .animate-marquee { animation: marquee 20s linear infinite; }
 
+* {
+  cursor: none !important;
+}
+
 /* Enforce native cursor on text and inputs despite TargetCursor hiding the body cursor */
-input, textarea, p, h1, h2, h3, h4, h5, h6, span, label, [class*="text-"] {
+input, textarea, p, h1, h2, h3, h4, h5, h6, label, .text-text-secondary {
   cursor: auto !important;
 }
 
