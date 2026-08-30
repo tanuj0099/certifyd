@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useCallback, useMemo } from 'react';
+import { useEffect, useRef, useCallback, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { gsap } from 'gsap';
 import './TargetCursor.css';
@@ -53,6 +53,12 @@ const TargetCursor = ({
   const targetCornerPositionsRef = useRef(null);
   const tickerFnRef = useRef(null);
   const activeStrengthRef = useRef(0);
+  
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const isMobile = useMemo(() => {
     if (typeof window === 'undefined') return false;
@@ -406,16 +412,16 @@ const TargetCursor = ({
   ]);
 
   useEffect(() => {
-    if (isMobile || !cursorRef.current || !spinTl.current) return;
+    if (!mounted || isMobile || !cursorRef.current || !spinTl.current) return;
     if (spinTl.current.isActive()) {
       spinTl.current.kill();
       spinTl.current = gsap
         .timeline({ repeat: -1 })
         .to(cursorRef.current, { rotation: '+=360', duration: spinDuration, ease: 'none' });
     }
-  }, [spinDuration, isMobile]);
+  }, [spinDuration, isMobile, mounted]);
 
-  if (isMobile || typeof document === 'undefined') {
+  if (!mounted || isMobile || typeof document === 'undefined') {
     return null;
   }
 
