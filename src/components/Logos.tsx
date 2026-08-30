@@ -36,7 +36,7 @@ export default function Logos() {
                 alt={item.name} 
                 width={120} 
                 height={36} 
-                className="object-contain h-[36px] w-auto max-w-[150px]"
+                className="object-contain"
               />
             </div>
           )}
