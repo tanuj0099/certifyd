@@ -8,7 +8,6 @@ import { supabase } from "@/lib/supabase";
 import { Loader2, User, Mail, Phone } from "lucide-react";
 import SuccessModal from "./SuccessModal";
 import { motion } from "framer-motion";
-import DotGrid from "./reactbits/DotGrid";
 
 const formSchema = z.object({
   fullName: z.string().min(2, "Name must be at least 2 characters"),
@@ -78,8 +77,6 @@ export default function Hero() {
 
   return (
     <section id="hero" className="w-full pt-10 pb-24 md:pt-16 md:pb-32 overflow-hidden relative group">
-      {/* Interactive Dot Grid Background */}
-      <DotGrid />
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center">

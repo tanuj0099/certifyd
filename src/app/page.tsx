@@ -1,6 +1,6 @@
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
-import CurvedLoop from "@/components/reactbits/CurvedLoop";
+import SplitFlapText from "@/components/reactbits/SplitFlapText";
 import Logos from "@/components/Logos";
 import HowItWorks from "@/components/HowItWorks";
 import Calculator from "@/components/Calculator";
@@ -13,7 +13,20 @@ export default function Home() {
     <main className="min-h-screen flex flex-col">
       <Nav />
       <Hero />
-      <CurvedLoop />
+      
+      {/* Divider */}
+      <div className="w-full flex justify-center items-center py-6 border-b border-border bg-background">
+        <SplitFlapText 
+          words={["500+ CERTIFICATIONS TRACKED", "CITY-CALIBRATED DATA", "REAL OFFER OUTCOMES"]}
+          fontSize={16}
+          tileColor="var(--background)"
+          textColor="var(--text-secondary)"
+          className="text-text-secondary"
+          padTo={27}
+          flipDuration={0.08}
+        />
+      </div>
+
       <Logos />
       <HowItWorks />
       <Calculator />

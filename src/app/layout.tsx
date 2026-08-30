@@ -35,6 +35,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className="scroll-smooth">
       <body
+        suppressHydrationWarning
         className={`${inter.variable} ${sifonnFont.variable} ${jetbrainsMono.variable} antialiased bg-background text-text-primary selection:bg-brand/20 selection:text-brand`}
       >
         <ThemeProvider
