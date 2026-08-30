@@ -80,7 +80,7 @@ export default function FAQ({ limit }: { limit?: number }) {
             >
               <button
                 onClick={() => toggle(index)}
-                className="w-full flex items-center justify-between p-5 text-left focus:outline-none"
+                className="w-full flex items-center justify-between p-5 text-left focus:outline-none cursor-target"
               >
                 <span className="font-medium text-text-primary pr-8">{faq.question}</span>
                 <ChevronDown 
@@ -110,7 +110,7 @@ export default function FAQ({ limit }: { limit?: number }) {
 
         {limit && (
           <div className="mt-10 text-center">
-            <Link href="/faq" className="inline-flex items-center gap-2 text-brand hover:text-brand/80 font-medium transition-colors">
+            <Link href="/faq" className="inline-flex items-center gap-2 text-brand hover:text-brand/80 font-medium transition-colors cursor-target">
               View all FAQs <span>→</span>
             </Link>
           </div>

@@ -30,7 +30,7 @@ export default function Logos() {
           logoHeight={36}
           gap={80}
           renderItem={(item) => (
-            <div className="flex items-center justify-center grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300">
+            <div className="flex items-center justify-center grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300 cursor-target">
               <Image 
                 src={item.src} 
                 alt={item.name} 

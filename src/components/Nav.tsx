@@ -38,16 +38,16 @@ export default function Nav() {
           </Link>
 
           <div className="hidden md:flex items-center gap-8 text-sm font-medium">
-            <Link href="/" className="relative text-text-secondary hover:text-text-primary transition-colors after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[2px] after:bg-brand after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left after:duration-300">
+            <Link href="/" className="relative text-text-secondary hover:text-text-primary transition-colors after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[2px] after:bg-brand after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left after:duration-300 cursor-target">
               Home
             </Link>
-            <Link href="/how-it-works" className="relative text-text-secondary hover:text-text-primary transition-colors after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[2px] after:bg-brand after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left after:duration-300">
+            <Link href="/how-it-works" className="relative text-text-secondary hover:text-text-primary transition-colors after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[2px] after:bg-brand after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left after:duration-300 cursor-target">
               How it works
             </Link>
-            <Link href="/faq" className="relative text-text-secondary hover:text-text-primary transition-colors after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[2px] after:bg-brand after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left after:duration-300">
+            <Link href="/faq" className="relative text-text-secondary hover:text-text-primary transition-colors after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[2px] after:bg-brand after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left after:duration-300 cursor-target">
               FAQ
             </Link>
-            <Link href="/about" className="relative text-text-secondary hover:text-text-primary transition-colors after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[2px] after:bg-brand after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left after:duration-300">
+            <Link href="/about" className="relative text-text-secondary hover:text-text-primary transition-colors after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[2px] after:bg-brand after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left after:duration-300 cursor-target">
               About
             </Link>
           </div>

@@ -8,6 +8,7 @@ import { supabase } from "@/lib/supabase";
 import { Loader2, User, Mail, Phone } from "lucide-react";
 import SuccessModal from "./SuccessModal";
 import { motion } from "framer-motion";
+import MagnetLines from "./reactbits/MagnetLines";
 
 const formSchema = z.object({
   fullName: z.string().min(2, "Name must be at least 2 characters"),
@@ -87,8 +88,18 @@ export default function Hero() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="flex flex-col items-start gap-6 max-w-2xl"
+            className="flex flex-col items-start gap-6 max-w-2xl relative"
           >
+            <div className="absolute inset-0 -z-10 pointer-events-none opacity-40 mix-blend-multiply dark:mix-blend-screen flex items-center justify-center">
+              <MagnetLines 
+                rows={7} 
+                columns={7} 
+                containerSize="100%" 
+                lineColor="var(--border)" 
+                lineWidth="0.8vmin" 
+                lineHeight="5vmin"
+              />
+            </div>
             <h1 className="font-display text-5xl md:text-6xl font-bold leading-tight tracking-tight">
               Verify certificate <span className="text-brand">ROI</span> before you buy. <span className="text-brand">Negotiate</span> before you accept your offer letter.
             </h1>
@@ -176,7 +187,7 @@ export default function Hero() {
                 <button
                   type="submit"
                   disabled={status === "submitting"}
-                  className="w-full py-4 px-4 bg-brand hover:bg-brand/90 text-white rounded-xl font-bold text-lg transition-colors flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed mt-2 shadow-lg shadow-brand/20"
+                  className="w-full py-4 px-4 bg-brand hover:bg-brand/90 text-white rounded-xl font-bold text-lg transition-colors flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed mt-2 shadow-lg shadow-brand/20 cursor-target"
                 >
                   {status === "submitting" ? (
                     <>

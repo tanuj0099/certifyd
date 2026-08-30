@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import TargetCursor from "@/components/reactbits/TargetCursor";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -45,6 +46,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <TargetCursor targetSelector=".cursor-target" spinDuration={2} cursorColor="var(--text-primary)" cursorColorOnTarget="var(--brand)" />
         </ThemeProvider>
       </body>
     </html>
