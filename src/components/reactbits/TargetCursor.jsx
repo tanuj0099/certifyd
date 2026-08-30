@@ -166,6 +166,13 @@ const TargetCursor = ({
 
     const moveHandler = e => {
       moveCursor(e.clientX, e.clientY);
+      
+      if (activeTarget && currentLeaveHandler && e.target) {
+        if (!activeTarget.contains(e.target)) {
+          currentLeaveHandler();
+        }
+      }
+
       if (cursorRef.current && e.target) {
         const target = e.target;
         const style = window.getComputedStyle(target);

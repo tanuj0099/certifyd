@@ -93,6 +93,30 @@ export default function Hero() {
 
   return (
     <section id="hero" className="w-full pt-10 pb-24 md:pt-16 md:pb-32 overflow-hidden relative group">
+      <div className="absolute inset-0 -z-10 flex items-center justify-center opacity-80 mix-blend-multiply dark:mix-blend-screen pointer-events-none">
+        {mounted && (
+          <FaultyTerminal
+            scale={1.2}
+            gridMul={[2, 1]}
+            digitSize={1.3}
+            timeScale={0.2}
+            scanlineIntensity={0.15}
+            glitchAmount={1}
+            flickerAmount={0.15}
+            noiseAmp={0.6}
+            chromaticAberration={0}
+            dither={0}
+            curvature={0}
+            tint="#94A3B8"
+            mouseReact={true}
+            mouseStrength={0.18}
+            pageLoadAnimation={true}
+            brightness={0.45}
+            pause={reduceMotion}
+            lightMode={resolvedTheme === 'light'}
+          />
+        )}
+      </div>
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center">
@@ -105,30 +129,6 @@ export default function Hero() {
             transition={{ duration: 0.6, ease: "easeOut" }}
             className="flex flex-col items-start gap-6 max-w-2xl relative"
           >
-            <div className="absolute inset-0 -z-10 flex items-center justify-center opacity-80 mix-blend-multiply dark:mix-blend-screen pointer-events-none">
-              {mounted && (
-                <FaultyTerminal
-                  scale={1.2}
-                  gridMul={[2, 1]}
-                  digitSize={1.3}
-                  timeScale={0.2}
-                  scanlineIntensity={0.15}
-                  glitchAmount={1}
-                  flickerAmount={0.15}
-                  noiseAmp={0.6}
-                  chromaticAberration={0}
-                  dither={0}
-                  curvature={0}
-                  tint="#94A3B8"
-                  mouseReact={true}
-                  mouseStrength={0.18}
-                  pageLoadAnimation={true}
-                  brightness={0.45}
-                  pause={reduceMotion}
-                  lightMode={resolvedTheme === 'light'}
-                />
-              )}
-            </div>
             <h1 className="font-display text-5xl md:text-6xl font-bold leading-tight tracking-tight">
               Verify certificate <span className="text-brand">ROI</span> before you buy. <span className="text-brand">Negotiate</span> before you accept your offer letter.
             </h1>
