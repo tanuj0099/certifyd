@@ -163,8 +163,3 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .split-flap-text__flap {
-    animation: none !important;
-  }
-}
