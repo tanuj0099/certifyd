@@ -25,6 +25,22 @@ const faqs = [
   {
     question: "How often is the data updated?",
     answer: "Our market data is refreshed monthly to reflect the latest hiring trends and salary bands across major Indian tech hubs."
+  },
+  {
+    question: "Does this cover non-IT certifications?",
+    answer: "Currently, we are heavily focused on the Indian IT sector (Cloud, Cybersecurity, Data, Software Engineering, and DevOps). We plan to expand to management and finance certifications in the future."
+  },
+  {
+    question: "How does this help with salary negotiation?",
+    answer: "We provide you with hard, market-backed data showing exactly how much of a premium specific certifications carry. Instead of blindly asking for a hike, you can point to verified benchmarks that justify your asking price."
+  },
+  {
+    question: "Will my employer know I am checking salary benchmarks?",
+    answer: "Absolutely not. Your activity is completely private, and we do not share individual user profiles or queries with employers or recruiters."
+  },
+  {
+    question: "What happens after I join the waitlist?",
+    answer: "You will lock in early access to the platform before our public launch. Waitlist members will also receive a lifetime discount on any future premium features we roll out."
   }
 ];
 
