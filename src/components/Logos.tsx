@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import LogoLoop from "./reactbits/LogoLoop";
 
 const vendors = [
@@ -31,12 +30,11 @@ export default function Logos() {
           gap={80}
           renderItem={(item) => (
             <div className="flex items-center justify-center grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300 cursor-target h-[36px]">
-              <Image 
+              <img 
                 src={item.src} 
                 alt={item.name} 
-                width={120} 
-                height={36} 
-                className="object-contain w-auto h-full"
+                className="object-contain h-full w-auto"
+                style={{ maxHeight: '36px' }}
               />
             </div>
           )}
