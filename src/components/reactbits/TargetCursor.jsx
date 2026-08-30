@@ -55,14 +55,14 @@ const TargetCursor = ({
   const activeStrengthRef = useRef(0);
   
   const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-  }, []);
-
-  const isMobile = useMemo(() => {
-    if (typeof window === 'undefined') return false;
-    return window.innerWidth <= 768;
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   const constants = useMemo(
@@ -185,7 +185,7 @@ const TargetCursor = ({
         const target = e.target;
         const style = window.getComputedStyle(target);
         const isTextInput = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable;
-        const isTextCursor = style.cursor === 'text' || style.cursor === 'auto';
+        const isTextCursor = style.cursor === 'text';
         
         if ((isTextInput || isTextCursor) && !target.closest(targetSelector)) {
           gsap.to(cursorRef.current, { opacity: 0, duration: 0.1, overwrite: 'auto' });
