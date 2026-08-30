@@ -1,5 +1,6 @@
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
+import CurvedLoop from "@/components/reactbits/CurvedLoop";
 import Logos from "@/components/Logos";
 import HowItWorks from "@/components/HowItWorks";
 import Calculator from "@/components/Calculator";
@@ -12,6 +13,7 @@ export default function Home() {
     <main className="min-h-screen flex flex-col">
       <Nav />
       <Hero />
+      <CurvedLoop />
       <Logos />
       <HowItWorks />
       <Calculator />
