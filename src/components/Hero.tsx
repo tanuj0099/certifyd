@@ -93,11 +93,11 @@ export default function Hero() {
 
   return (
     <section id="hero" className="w-full pt-10 pb-24 md:pt-16 md:pb-32 overflow-hidden relative group">
-      <div className="absolute inset-0 -z-10 flex items-center justify-center opacity-30 mix-blend-multiply dark:mix-blend-screen pointer-events-none">
+      <div className="absolute inset-0 -z-10 flex items-center justify-center opacity-45 mix-blend-multiply dark:mix-blend-screen pointer-events-none">
         {mounted && (
           <FaultyTerminal
-            scale={2.5}
-            gridMul={[5, 2.5]}
+            scale={1.8}
+            gridMul={[3.5, 1.75]}
             digitSize={1.3}
             timeScale={0.2}
             scanlineIntensity={0.15}
