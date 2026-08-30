@@ -170,7 +170,7 @@ const TargetCursor = ({
         const target = e.target;
         const style = window.getComputedStyle(target);
         const isTextInput = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable;
-        const isTextCursor = style.cursor === 'text';
+        const isTextCursor = style.cursor === 'text' || style.cursor === 'auto';
         
         if ((isTextInput || isTextCursor) && !target.closest(targetSelector)) {
           gsap.to(cursorRef.current, { opacity: 0, duration: 0.1, overwrite: 'auto' });
@@ -179,6 +179,12 @@ const TargetCursor = ({
         }
       }
     };
+    
+    const docMouseLeave = () => gsap.to(cursorRef.current, { opacity: 0, duration: 0.1, overwrite: 'auto' });
+    const docMouseEnter = () => gsap.to(cursorRef.current, { opacity: 1, duration: 0.1, overwrite: 'auto' });
+    
+    document.addEventListener('mouseleave', docMouseLeave);
+    document.addEventListener('mouseenter', docMouseEnter);
     window.addEventListener('mousemove', moveHandler);
 
     const scrollHandler = () => {
@@ -376,6 +382,8 @@ const TargetCursor = ({
       }
 
       window.removeEventListener('mousemove', moveHandler);
+      document.removeEventListener('mouseleave', docMouseLeave);
+      document.removeEventListener('mouseenter', docMouseEnter);
       window.removeEventListener('mouseover', enterHandler);
       window.removeEventListener('scroll', scrollHandler);
       window.removeEventListener('resize', resizeHandler);

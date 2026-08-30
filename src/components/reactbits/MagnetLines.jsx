@@ -19,10 +19,6 @@ export default function MagnetLines({
     const container = containerRef.current;
     if (!container) return;
 
-    // Check for reduced motion preference
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (mediaQuery.matches) return;
-
     const items = container.querySelectorAll('span');
 
     const onPointerMove = pointer => {
@@ -34,7 +30,7 @@ export default function MagnetLines({
         const b = pointer.clientX - centerX;
         const a = pointer.clientY - centerY;
         const c = Math.sqrt(a * a + b * b) || 1;
-        const r = ((Math.acos(b / c) * 180) / Math.PI) * (pointer.clientY > centerY ? 1 : -1);
+        const r = ((Math.acos(Math.min(1, Math.max(-1, b / c))) * 180) / Math.PI) * (pointer.clientY > centerY ? 1 : -1);
 
         item.style.setProperty('--rotate', `${r}deg`);
       });
