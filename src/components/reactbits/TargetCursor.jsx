@@ -170,7 +170,7 @@ const TargetCursor = ({
         const target = e.target;
         const style = window.getComputedStyle(target);
         const isTextInput = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable;
-        const isTextCursor = style.cursor === 'text' || style.cursor === 'auto';
+        const isTextCursor = style.cursor === 'text';
         
         if ((isTextInput || isTextCursor) && !target.closest(targetSelector)) {
           gsap.to(cursorRef.current, { opacity: 0, duration: 0.1, overwrite: 'auto' });

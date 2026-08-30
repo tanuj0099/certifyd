@@ -31,10 +31,10 @@ export default function MagnetLines({
         const centerX = rect.x + rect.width / 2;
         const centerY = rect.y + rect.height / 2;
 
-        const b = pointer.x - centerX;
-        const a = pointer.y - centerY;
+        const b = pointer.clientX - centerX;
+        const a = pointer.clientY - centerY;
         const c = Math.sqrt(a * a + b * b) || 1;
-        const r = ((Math.acos(b / c) * 180) / Math.PI) * (pointer.y > centerY ? 1 : -1);
+        const r = ((Math.acos(b / c) * 180) / Math.PI) * (pointer.clientY > centerY ? 1 : -1);
 
         item.style.setProperty('--rotate', `${r}deg`);
       });
@@ -45,7 +45,7 @@ export default function MagnetLines({
     if (items.length) {
       const middleIndex = Math.floor(items.length / 2);
       const rect = items[middleIndex].getBoundingClientRect();
-      onPointerMove({ x: rect.x, y: rect.y });
+      onPointerMove({ clientX: rect.x, clientY: rect.y });
     }
 
     return () => {

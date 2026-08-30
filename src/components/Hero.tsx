@@ -78,6 +78,16 @@ export default function Hero() {
 
   return (
     <section id="hero" className="w-full pt-10 pb-24 md:pt-16 md:pb-32 overflow-hidden relative group">
+      <div className="absolute inset-0 -z-10 pointer-events-none opacity-40 mix-blend-multiply dark:mix-blend-screen flex items-center justify-center overflow-hidden pt-10">
+        <MagnetLines 
+          rows={12} 
+          columns={24} 
+          containerSize="100%" 
+          lineColor="var(--text-secondary)" 
+          lineWidth="0.8vmin" 
+          lineHeight="4vmin"
+        />
+      </div>
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center">
@@ -90,16 +100,6 @@ export default function Hero() {
             transition={{ duration: 0.6, ease: "easeOut" }}
             className="flex flex-col items-start gap-6 max-w-2xl relative"
           >
-            <div className="absolute inset-0 -z-10 pointer-events-none opacity-40 mix-blend-multiply dark:mix-blend-screen flex items-center justify-center">
-              <MagnetLines 
-                rows={7} 
-                columns={7} 
-                containerSize="100%" 
-                lineColor="var(--text-secondary)" 
-                lineWidth="0.8vmin" 
-                lineHeight="5vmin"
-              />
-            </div>
             <h1 className="font-display text-5xl md:text-6xl font-bold leading-tight tracking-tight">
               Verify certificate <span className="text-brand">ROI</span> before you buy. <span className="text-brand">Negotiate</span> before you accept your offer letter.
             </h1>
