@@ -37,6 +37,7 @@ export default function Logos() {
                 width={120} 
                 height={36} 
                 className="object-contain"
+                style={{ width: 'auto', height: '36px' }}
               />
             </div>
           )}
