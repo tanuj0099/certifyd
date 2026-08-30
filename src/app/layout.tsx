@@ -24,7 +24,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Certifyd Waitlist | Know the ROI before you invest",
+  title: "Certifyd | Waitlist is Live now !",
   description: "Verify ROI before you buy. Negotiate before you accept. The definitive data engine for Indian IT certifications.",
 };
 

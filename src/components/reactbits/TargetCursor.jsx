@@ -15,13 +15,20 @@ const TargetCursor = ({
   const cornersRef = useRef(null);
   const spinTl = useRef(null);
   const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    const checkMobile = () => {
+      setIsMobile(window.matchMedia('(max-width: 768px)').matches || 'ontouchstart' in window || navigator.maxTouchPoints > 0);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   useEffect(() => {
-    if (!mounted || typeof window === 'undefined' || !cursorRef.current) return;
+    if (!mounted || isMobile || typeof window === 'undefined' || !cursorRef.current) return;
 
     if (hideDefaultCursor) {
       document.body.style.cursor = 'none';
@@ -123,9 +130,9 @@ const TargetCursor = ({
       document.body.style.cursor = 'auto';
       spinTl.current?.kill();
     };
-  }, [mounted, targetSelector, spinDuration, cursorColor, cursorColorOnTarget, hideDefaultCursor]);
+  }, [mounted, isMobile, targetSelector, spinDuration, cursorColor, cursorColorOnTarget, hideDefaultCursor]);
 
-  if (!mounted || typeof document === 'undefined') return null;
+  if (!mounted || isMobile || typeof document === 'undefined') return null;
 
   return createPortal(
     <div ref={cursorRef} className="target-cursor-wrapper">
