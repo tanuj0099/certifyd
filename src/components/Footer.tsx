@@ -45,10 +45,6 @@ export default function Footer() {
           
         </div>
         
-        <div className="mt-8 pt-8 border-t border-border flex justify-center gap-6 text-xs text-text-secondary">
-          <a href="#" className="hover:text-text-primary transition-colors">Terms of Service</a>
-          <a href="#" className="hover:text-text-primary transition-colors">Privacy Policy</a>
-        </div>
       </div>
     </footer>
   );
