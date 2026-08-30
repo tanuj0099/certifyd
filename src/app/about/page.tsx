@@ -25,7 +25,7 @@ export default function AboutPage() {
               <h1 className="text-4xl md:text-6xl font-display font-bold mb-6 tracking-tight">
                 Democratizing <span className="text-brand">IT Career Data</span>
               </h1>
-              <p className="text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed">
+              <p className="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed">
                 Certifyd was built to bring radical transparency to the Indian tech certification market. We believe you should know exactly what a certification is worth before you invest your time and money.
               </p>
             </motion.div>
@@ -40,17 +40,17 @@ export default function AboutPage() {
                   transition: { staggerChildren: 0.2 }
                 }
               }}
-              className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-16"
+              className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-12 md:mt-16"
             >
               <motion.div 
                 variants={{
                   hidden: { opacity: 0, y: 20 },
                   show: { opacity: 1, y: 0, transition: { duration: 0.5 } }
                 }}
-                className="bg-card border border-border p-8 rounded-xl shadow-sm hover:border-border-strong transition-colors duration-300"
+                className="bg-card border border-border p-6 md:p-8 rounded-xl shadow-sm hover:border-border-strong transition-colors duration-300"
               >
-                <h3 className="text-2xl font-display font-bold mb-4 text-text-primary">The Problem</h3>
-                <p className="text-text-secondary leading-relaxed">
+                <h3 className="text-xl md:text-2xl font-display font-bold mb-3 md:mb-4 text-text-primary">The Problem</h3>
+                <p className="text-sm md:text-base text-text-secondary leading-relaxed">
                   Millions of Indian IT professionals spend months studying and thousands of rupees on certifications every year, flying blind on whether it will actually impact their next offer letter or promotion cycle.
                 </p>
               </motion.div>
@@ -60,11 +60,11 @@ export default function AboutPage() {
                   hidden: { opacity: 0, y: 20 },
                   show: { opacity: 1, y: 0, transition: { duration: 0.5 } }
                 }}
-                className="bg-card border border-brand/30 p-8 rounded-xl shadow-[0_0_40px_-15px_rgba(249,115,22,0.1)] hover:border-brand/50 transition-colors duration-300 relative group overflow-hidden"
+                className="bg-card border border-brand/30 p-6 md:p-8 rounded-xl shadow-[0_0_40px_-15px_rgba(249,115,22,0.1)] hover:border-brand/50 transition-colors duration-300 relative group overflow-hidden"
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-brand/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                <h3 className="text-2xl font-display font-bold mb-4 text-text-primary relative z-10">Our Solution</h3>
-                <p className="text-text-secondary leading-relaxed relative z-10">
+                <h3 className="text-xl md:text-2xl font-display font-bold mb-3 md:mb-4 text-text-primary relative z-10">Our Solution</h3>
+                <p className="text-sm md:text-base text-text-secondary leading-relaxed relative z-10">
                   We aggregate verified market data, parsing thousands of compensation data points across major Indian tech hubs (Bengaluru, Hyderabad, Pune, NCR) to give you the exact ROI and negotiation leverage you need.
                 </p>
               </motion.div>

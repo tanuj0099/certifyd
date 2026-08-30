@@ -52,14 +52,14 @@ export default function Calculator() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
           
           {/* Left Card - Inputs */}
-          <div className="bg-card border border-border p-8 rounded-xl flex flex-col gap-10">
+          <div className="bg-card border border-border p-5 md:p-8 rounded-xl flex flex-col gap-8 md:gap-10">
             
             <div className="space-y-6">
               <div className="flex justify-between items-end">
                 <label className="block text-sm font-semibold text-text-primary uppercase tracking-wide">
                   Current Annual Salary
                 </label>
-                <div className="font-mono text-2xl font-bold text-brand">
+                <div className="font-mono text-xl md:text-2xl font-bold text-brand">
                   {formatINR(salary)}
                 </div>
               </div>
@@ -74,6 +74,7 @@ export default function Calculator() {
                   onChange={setSalary}
                   className="w-full !max-w-full"
                   leftIcon={<span className="font-mono text-text-primary text-xl font-bold pr-2">₹</span>}
+                  rightIcon={null}
                 />
                 <div className="flex justify-between text-xs text-text-secondary mt-2 font-mono">
                   <span>₹3L</span>
@@ -91,7 +92,7 @@ export default function Calculator() {
                   <button
                     key={d}
                     onClick={() => setDomain(d)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors border ${
+                    className={`px-3 py-1.5 md:px-4 md:py-2 rounded-full text-sm font-medium transition-colors border ${
                       domain === d
                         ? "bg-brand border-brand text-white"
                         : "bg-background border-border text-text-secondary hover:border-brand/50 hover:text-text-primary"
@@ -106,7 +107,7 @@ export default function Calculator() {
           </div>
 
           {/* Right Card - Outputs */}
-          <div className="bg-card border border-border p-8 rounded-xl flex flex-col justify-center text-center relative overflow-hidden">
+          <div className="bg-card border border-border p-5 md:p-8 rounded-xl flex flex-col justify-center text-center relative overflow-hidden">
             
             {outOfBounds ? (
               <div className="flex flex-col items-center justify-center space-y-4 h-full">
@@ -117,21 +118,21 @@ export default function Calculator() {
               </div>
             ) : (
               <>
-                <div className="space-y-2 mb-10">
-                  <p className="text-sm font-semibold text-text-secondary uppercase tracking-widest">Payback Period</p>
+                <div className="space-y-2 mb-8 md:mb-10 mt-4 md:mt-0">
+                  <p className="text-xs md:text-sm font-semibold text-text-secondary uppercase tracking-widest">Payback Period</p>
                   <div className="font-mono text-5xl md:text-7xl font-bold text-brand tabular-nums tracking-tighter">
-                    {paybackMonths} <span className="text-3xl md:text-4xl">months</span>
+                    {paybackMonths} <span className="text-2xl md:text-4xl">months</span>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 border-t border-border pt-8">
-                  <div className="space-y-1">
-                    <p className="text-sm text-text-secondary">Estimated Cost</p>
-                    <p className="font-mono text-2xl font-semibold text-text-primary">{formatINR(data.cost)}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-4 border-t border-border pt-6 md:pt-8">
+                  <div className="space-y-1 pb-4 sm:pb-0 sm:border-r border-border sm:pr-4">
+                    <p className="text-xs md:text-sm text-text-secondary">Estimated Cost</p>
+                    <p className="font-mono text-xl md:text-2xl font-semibold text-text-primary">{formatINR(data.cost)}</p>
                   </div>
-                  <div className="space-y-1 border-l border-border pl-4">
-                    <p className="text-sm text-text-secondary">Typical Salary Uplift</p>
-                    <p className="font-mono text-2xl font-semibold text-[#5B8C72]">+{formatINR(deltaSalary)}/yr</p>
+                  <div className="space-y-1 sm:pl-4 border-t sm:border-t-0 border-border pt-4 sm:pt-0">
+                    <p className="text-xs md:text-sm text-text-secondary">Typical Salary Uplift</p>
+                    <p className="font-mono text-xl md:text-2xl font-semibold text-[#5B8C72]">+{formatINR(deltaSalary)}/yr</p>
                   </div>
                 </div>
 

@@ -127,12 +127,12 @@ export default function Hero() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="flex flex-col items-start gap-6 max-w-2xl relative"
+            className="flex flex-col items-start gap-5 md:gap-6 max-w-2xl relative"
           >
-            <h1 className="font-display text-5xl md:text-6xl font-bold leading-tight tracking-tight">
+            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight">
               Verify certificate <span className="text-brand">ROI</span> before you buy. <span className="text-brand">Negotiate</span> before you accept your offer letter.
             </h1>
-            <p className="text-xl md:text-2xl font-medium text-text-secondary leading-snug">
+            <p className="text-lg md:text-xl lg:text-2xl font-medium text-text-secondary leading-snug">
               Certifyd uses verified market data to calculate the exact ROI and expected salary bump for over 500 IT certifications, giving you the leverage to negotiate your next offer.
             </p>
           </motion.div>
@@ -143,13 +143,13 @@ export default function Hero() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-            className="w-full max-w-md mx-auto lg:mx-0 lg:ml-auto"
+            className="w-full max-w-md mx-auto lg:mx-0 lg:ml-auto mt-6 lg:mt-0"
           >
-            <div className="bg-card border border-border p-8 rounded-3xl relative overflow-hidden shadow-sm">
+            <div className="bg-card border border-border p-6 md:p-8 rounded-3xl relative overflow-hidden shadow-sm">
               
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-                <div className="space-y-2 text-center mb-8">
-                  <h2 className="text-3xl font-display font-bold">Join the waitlist</h2>
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 md:space-y-5">
+                <div className="space-y-2 text-center mb-6 md:mb-8">
+                  <h2 className="text-2xl md:text-3xl font-display font-bold">Join the waitlist</h2>
                   <p className="text-text-secondary text-sm md:text-base">Secure your early access to the data engine.</p>
                 </div>
 

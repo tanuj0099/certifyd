@@ -96,11 +96,11 @@ export default function FAQ({ limit }: { limit?: number }) {
             >
               <button
                 onClick={() => toggle(index)}
-                className="w-full flex items-center justify-between p-5 text-left focus:outline-none cursor-target"
+                className="w-full flex items-center justify-between p-4 sm:p-5 text-left focus:outline-none cursor-target"
               >
-                <span className="font-medium text-text-primary pr-8">{faq.question}</span>
+                <span className="font-medium text-sm sm:text-base text-text-primary pr-4 sm:pr-8">{faq.question}</span>
                 <ChevronDown 
-                  className={`w-5 h-5 text-text-secondary transition-transform duration-300 flex-shrink-0 ${
+                  className={`w-4 h-4 sm:w-5 sm:h-5 text-text-secondary transition-transform duration-300 flex-shrink-0 ${
                     openIndex === index ? "rotate-180 text-brand" : ""
                   }`} 
                 />
@@ -114,7 +114,7 @@ export default function FAQ({ limit }: { limit?: number }) {
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.3, ease: "easeInOut" }}
                   >
-                    <div className="p-5 pt-0 text-text-secondary text-sm leading-relaxed border-t border-border/50 mt-1">
+                    <div className="p-4 sm:p-5 pt-0 text-text-secondary text-xs sm:text-sm leading-relaxed border-t border-border/50 mt-1">
                       {faq.answer}
                     </div>
                   </motion.div>

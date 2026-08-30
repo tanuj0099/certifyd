@@ -106,7 +106,7 @@ export default function HowItWorks() {
                   className="w-full max-w-md flex flex-col items-center gap-4"
                 >
                   <div className="text-sm font-medium text-text-secondary uppercase tracking-wider">Projected ROI</div>
-                  <div className="text-6xl font-mono font-bold text-brand">240%</div>
+                  <div className="text-6xl font-mono font-bold text-brand">24%</div>
                   <div className="flex gap-4 w-full mt-4">
                     <div className="h-20 flex-1 bg-elevated border border-border rounded-md" />
                     <div className="h-20 flex-1 bg-elevated border border-border rounded-md" />

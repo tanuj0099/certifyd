@@ -72,15 +72,17 @@ body {
 }
 .animate-marquee { animation: marquee 20s linear infinite; }
 
-* {
-  cursor: none !important;
-}
+@media (min-width: 769px) {
+  * {
+    cursor: none !important;
+  }
 
-/* Enforce native cursor on text and inputs despite TargetCursor hiding the body cursor */
-input, textarea, p, h1, h2, h3, h4, h5, h6, label, .text-text-secondary {
-  cursor: auto !important;
-}
+  /* Enforce native cursor on text and inputs despite TargetCursor hiding the body cursor */
+  input, textarea, p, h1, h2, h3, h4, h5, h6, label, .text-text-secondary {
+    cursor: auto !important;
+  }
 
-.cursor-target {
-  cursor: none !important;
+  .cursor-target {
+    cursor: none !important;
+  }
 }
