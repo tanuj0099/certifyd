@@ -16,7 +16,7 @@ export default async function handler(req, res) {
     try {
         // 1. Send confirmation email to the user
         await resend.emails.send({
-            from: 'Certifyd Waitlist <onboarding@resend.dev>', // Replace with your verified domain in production
+            from: 'Certifyd Waitlist <hello@certifyd.co>',
             to: email,
             subject: 'Welcome to the Certifyd Priority Waitlist!',
             html: `
