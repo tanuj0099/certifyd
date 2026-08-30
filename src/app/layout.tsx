@@ -34,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className="scroll-smooth">
+    <html lang="en" suppressHydrationWarning className="scroll-smooth" data-scroll-behavior="smooth">
       <body
         suppressHydrationWarning
         className={`${inter.variable} ${sifonnFont.variable} ${jetbrainsMono.variable} antialiased bg-background text-text-primary selection:bg-brand/20 selection:text-brand`}
