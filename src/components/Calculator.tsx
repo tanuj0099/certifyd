@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import ElasticSlider from "./reactbits/ElasticSlider";
 
 const domains = ["Cloud", "Data & AI", "Cybersecurity", "Project Mgmt", "General IT"];
 
@@ -64,17 +65,15 @@ export default function Calculator() {
               </div>
               
               <div className="relative pt-2">
-                <input
-                  type="range"
-                  min={300000}
-                  max={3000000}
-                  step={50000}
-                  value={salary}
-                  onChange={(e) => setSalary(Number(e.target.value))}
-                  className="w-full h-2 bg-elevated rounded-lg appearance-none cursor-pointer accent-brand"
-                  style={{
-                    background: `linear-gradient(to right, var(--brand) ${((salary - 300000) / (3000000 - 300000)) * 100}%, var(--elevated) 0)`
-                  }}
+                <ElasticSlider
+                  startingValue={300000}
+                  maxValue={3000000}
+                  defaultValue={salary}
+                  isStepped={true}
+                  stepSize={50000}
+                  onChange={setSalary}
+                  className="w-full !max-w-full"
+                  leftIcon={<span className="font-mono text-text-primary text-xl font-bold pr-2">₹</span>}
                 />
                 <div className="flex justify-between text-xs text-text-secondary mt-2 font-mono">
                   <span>₹3L</span>
