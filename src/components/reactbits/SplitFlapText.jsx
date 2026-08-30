@@ -46,7 +46,7 @@ const usePrefersReducedMotion = () => false;
 
 const SplitFlapText = ({
   words = ['LAUNCH READY', 'SYNC ONLINE', 'SIGNAL LIVE'],
-  text,
+  text = undefined,
   flipDuration = 0.12,
   stagger = 0.06,
   cycleDelay = 2400,

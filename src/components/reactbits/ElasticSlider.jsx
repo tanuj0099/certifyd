@@ -6,6 +6,9 @@ import './ElasticSlider.css';
 
 const MAX_OVERFLOW = 50;
 
+/**
+ * @param {{ defaultValue?: number, startingValue?: number, maxValue?: number, className?: string, isStepped?: boolean, stepSize?: number, leftIcon?: React.ReactNode, rightIcon?: React.ReactNode, onChange?: (val: number) => void }} props
+ */
 export default function ElasticSlider({
   defaultValue = 50,
   startingValue = 0,
@@ -13,8 +16,8 @@ export default function ElasticSlider({
   className = '',
   isStepped = false,
   stepSize = 1,
-  leftIcon = null,
-  rightIcon = null,
+  leftIcon,
+  rightIcon,
   onChange
 }) {
   return (
