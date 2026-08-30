@@ -36,9 +36,18 @@ const useImageLoader = (seqRef, onLoad, dependencies) => {
       return;
     }
     let remainingImages = images.length;
+    let fallbackTimer = setTimeout(() => {
+      remainingImages = 0;
+      onLoad();
+    }, 3000);
+
     const handleImageLoad = () => {
+      if (remainingImages <= 0) return;
       remainingImages -= 1;
-      if (remainingImages === 0) onLoad();
+      if (remainingImages === 0) {
+        clearTimeout(fallbackTimer);
+        onLoad();
+      }
     };
     images.forEach(img => {
       const htmlImg = img;
@@ -50,6 +59,7 @@ const useImageLoader = (seqRef, onLoad, dependencies) => {
       }
     });
     return () => {
+      clearTimeout(fallbackTimer);
       images.forEach(img => {
         img.removeEventListener('load', handleImageLoad);
         img.removeEventListener('error', handleImageLoad);

@@ -10,7 +10,7 @@ const vendors = [
   { name: "Cisco", src: "https://cdn.simpleicons.org/cisco/1BA0D7" },
   { name: "ISC2", src: "https://cdn.simpleicons.org/isc2/D93B30" },
   { name: "CompTIA", src: "https://cdn.simpleicons.org/comptia/ED1B24" },
-  { name: "PMI", src: "https://cdn.simpleicons.org/pmi/253992" },
+  { name: "Oracle", src: "https://cdn.simpleicons.org/oracle/F80000" },
 ];
 
 export default function Logos() {
