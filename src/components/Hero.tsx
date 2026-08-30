@@ -95,7 +95,7 @@ export default function Hero() {
                 rows={7} 
                 columns={7} 
                 containerSize="100%" 
-                lineColor="var(--border)" 
+                lineColor="var(--text-secondary)" 
                 lineWidth="0.8vmin" 
                 lineHeight="5vmin"
               />
