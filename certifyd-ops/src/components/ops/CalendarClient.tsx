@@ -54,7 +54,7 @@ export function CalendarClient({ initialEvents, currentUserRole, currentUserEmai
           setEvents(liveEvents);
         }
       } catch (e) {}
-    }, 3000);
+    }, 1000);
     return () => {
       isMounted = false;
       clearInterval(interval);

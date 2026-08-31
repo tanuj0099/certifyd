@@ -89,7 +89,7 @@ export function MyWorkClient({
           if (liveMarketing) setMarketingIdeas(liveMarketing);
         }
       } catch (e) {}
-    }, 4000);
+    }, 1000);
     return () => {
       isMounted = false;
       clearInterval(interval);
@@ -97,21 +97,26 @@ export function MyWorkClient({
   }, []);
 
   // Determine matching assignee string logic
-  function matchesAssignee(assigneeStr?: string): boolean {
+  function matchesAssignee(assigneeStr?: string, targetEmail?: string): boolean {
     if (!assigneeStr || assigneeStr === 'Unassigned') return false;
     const cleanAssignee = assigneeStr.trim().toLowerCase();
-    const cleanSelectedEmail = selectedMemberEmail.trim().toLowerCase();
+    const cleanAssigneeNoSpaces = cleanAssignee.replace(/\s+/g, '');
+    const cleanSelectedEmail = (targetEmail || selectedMemberEmail).trim().toLowerCase();
     const usernamePart = cleanSelectedEmail.split('@')[0] || '';
 
     // Direct match with email or username part
-    if (cleanAssignee === cleanSelectedEmail || cleanAssignee === usernamePart) {
+    if (cleanAssignee === cleanSelectedEmail || cleanAssignee === usernamePart || cleanAssigneeNoSpaces === usernamePart || cleanAssigneeNoSpaces.includes(usernamePart)) {
       return true;
     }
 
     // Match with team member name
     const memberObj = teamMembers.find((m) => m.email.toLowerCase() === cleanSelectedEmail);
-    if (memberObj && cleanAssignee === memberObj.name.toLowerCase()) {
-      return true;
+    if (memberObj) {
+      const cleanMemberName = memberObj.name.toLowerCase();
+      const cleanMemberNameNoSpaces = cleanMemberName.replace(/\s+/g, '');
+      if (cleanAssignee === cleanMemberName || cleanAssigneeNoSpaces === cleanMemberNameNoSpaces || cleanAssignee.includes(cleanMemberName)) {
+        return true;
+      }
     }
 
     return false;
@@ -124,12 +129,7 @@ export function MyWorkClient({
   const myTasks = tasks.filter((t) => {
     if (!matchesAssignee(t.assignee)) return false;
     if (!isSuperAdmin) {
-      const authorName = (currentUserEmail || '').split('@')[0];
-      const isAssignedToMe = Boolean(t.assignee && (
-        t.assignee.toLowerCase() === currentUserEmail.toLowerCase() ||
-        t.assignee.toLowerCase() === authorName.toLowerCase() ||
-        teamMembers.some(m => m.email.toLowerCase() === currentUserEmail.toLowerCase() && (t.assignee || '').toLowerCase() === m.name.toLowerCase())
-      ));
+      const isAssignedToMe = matchesAssignee(t.assignee, currentUserEmail);
       const isCreatedByMe = (t.created_by || '').toLowerCase() === currentUserEmail.toLowerCase();
       if (!isAssignedToMe && !isCreatedByMe) return false;
     }
@@ -138,12 +138,7 @@ export function MyWorkClient({
   const myEvents = events.filter((e) => {
     if (!matchesAssignee(e.assignee)) return false;
     if (!isSuperAdmin) {
-      const authorName = (currentUserEmail || '').split('@')[0];
-      const isAssignedToMe = Boolean(e.assignee && (
-        e.assignee.toLowerCase() === currentUserEmail.toLowerCase() ||
-        e.assignee.toLowerCase() === authorName.toLowerCase() ||
-        teamMembers.some(m => m.email.toLowerCase() === currentUserEmail.toLowerCase() && (e.assignee || '').toLowerCase() === m.name.toLowerCase())
-      ));
+      const isAssignedToMe = matchesAssignee(e.assignee, currentUserEmail);
       const isCreatedByMe = (e.created_by || '').toLowerCase() === currentUserEmail.toLowerCase();
       if (!isAssignedToMe && !isCreatedByMe) return false;
     }
@@ -152,12 +147,7 @@ export function MyWorkClient({
   const myNotes = notes.filter((n) => {
     if (!matchesAssignee(n.assignee)) return false;
     if (!isSuperAdmin) {
-      const authorName = (currentUserEmail || '').split('@')[0];
-      const isAssignedToMe = Boolean(n.assignee && (
-        n.assignee.toLowerCase() === currentUserEmail.toLowerCase() ||
-        n.assignee.toLowerCase() === authorName.toLowerCase() ||
-        teamMembers.some(m => m.email.toLowerCase() === currentUserEmail.toLowerCase() && (n.assignee || '').toLowerCase() === m.name.toLowerCase())
-      ));
+      const isAssignedToMe = matchesAssignee(n.assignee, currentUserEmail);
       const isCreatedByMe = (n.created_by || '').toLowerCase() === currentUserEmail.toLowerCase();
       if (!isAssignedToMe && !isCreatedByMe) return false;
     }
@@ -166,12 +156,7 @@ export function MyWorkClient({
   const myMarketing = marketingIdeas.filter((m) => {
     if (!matchesAssignee(m.assignee)) return false;
     if (!isSuperAdmin) {
-      const authorName = (currentUserEmail || '').split('@')[0];
-      const isAssignedToMe = Boolean(m.assignee && (
-        m.assignee.toLowerCase() === currentUserEmail.toLowerCase() ||
-        m.assignee.toLowerCase() === authorName.toLowerCase() ||
-        teamMembers.some(mObj => mObj.email.toLowerCase() === currentUserEmail.toLowerCase() && (m.assignee || '').toLowerCase() === mObj.name.toLowerCase())
-      ));
+      const isAssignedToMe = matchesAssignee(m.assignee, currentUserEmail);
       const isCreatedByMe = (m.created_by || '').toLowerCase() === currentUserEmail.toLowerCase();
       if (!isAssignedToMe && !isCreatedByMe) return false;
     }

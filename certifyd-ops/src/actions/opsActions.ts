@@ -375,11 +375,13 @@ export async function getOpsTasksAction(): Promise<OpsTaskItem[]> {
       const parsedTasks = data.map((d: any) => ({
         id: d.id,
         title: d.title || 'Untitled Task',
+        description: d.description || '',
         section: d.section || 'admin',
         priority: d.priority || 'Medium',
         assignee: d.assignee || 'Unassigned',
         status: d.status || 'todo',
         deadline: d.deadline || '',
+        checklist: typeof d.checklist === 'string' ? JSON.parse(d.checklist || '[]') : (Array.isArray(d.checklist) ? d.checklist : []),
         notes: typeof d.notes === 'string' ? JSON.parse(d.notes || '[]') : (Array.isArray(d.notes) ? d.notes : []),
         created_by: d.created_by || 'admin@certifyd.in',
         created_at: d.created_at || new Date().toISOString(),
@@ -1031,13 +1033,25 @@ export async function getNotificationsAction(userEmail?: string, userRole?: stri
   const userName = currentMember?.name?.toLowerCase().trim() || '';
 
   return allList.filter((n) => {
+    if (userRole === 'SUPER_ADMIN') return true;
     if (n.recipient_email === 'all' || !n.recipient_email) return true;
+    
     const recEmail = n.recipient_email.toLowerCase().trim();
     const recName = (n.recipient_name || '').toLowerCase().trim();
+    
     if (recEmail === cleanEmail) return true;
+    
+    // Check if recipient email/name maps back to the current user's email via teamList
+    if (teamList.some(m => 
+      m.email.toLowerCase() === cleanEmail && 
+      (m.email.toLowerCase() === recEmail || m.name.toLowerCase() === recName || m.name.toLowerCase() === recEmail)
+    )) {
+      return true;
+    }
+    
     if (userName && recName && (userName === recName || recName.includes(userName) || userName.includes(recName))) return true;
     if (userName && recEmail && (userName === recEmail || recEmail.includes(userName) || userName.includes(recEmail))) return true;
-    if (userRole === 'SUPER_ADMIN') return true;
+    
     return false;
   });
 }

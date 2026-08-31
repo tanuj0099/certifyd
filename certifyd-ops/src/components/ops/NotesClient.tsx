@@ -53,7 +53,7 @@ export function NotesClient({ initialNotes, currentUserRole, currentUserEmail, t
           setNotes(liveNotes);
         }
       } catch (e) {}
-    }, 3000);
+    }, 1000);
     return () => {
       isMounted = false;
       clearInterval(interval);

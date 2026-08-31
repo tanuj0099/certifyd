@@ -59,7 +59,7 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
           setTasks(liveTasks);
         }
       } catch (e) {}
-    }, 3000);
+    }, 1000);
     return () => {
       isMounted = false;
       clearInterval(interval);
@@ -110,13 +110,18 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
   ];
 
   const myAssignedCount = (tasks || []).filter(t => {
-    const cleanAssignee = (t.assignee || '').replace(/\s+/g, '').toLowerCase();
-    const cleanEmail = (currentUserEmail || '').toLowerCase();
+    const rawAssignee = (t.assignee || '').toLowerCase();
+    const cleanAssignee = rawAssignee.replace(/\s+/g, '');
+    const cleanEmail = (currentUserEmail || '').toLowerCase().trim();
     const cleanAuthor = (cleanEmail.split('@')[0] || '').replace(/\s+/g, '').toLowerCase();
     return t.assignee && (
       cleanAssignee === cleanEmail ||
       cleanAssignee === cleanAuthor ||
-      teamMembers.some(m => m.email.toLowerCase() === cleanEmail && cleanAssignee === m.name.replace(/\s+/g, '').toLowerCase())
+      rawAssignee.includes(cleanAuthor) ||
+      teamMembers.some(m => 
+        m.email.toLowerCase() === cleanEmail && 
+        (cleanAssignee === m.name.replace(/\s+/g, '').toLowerCase() || rawAssignee.includes(m.name.toLowerCase()) || rawAssignee === m.email.toLowerCase())
+      )
     );
   }).length;
 
@@ -126,14 +131,19 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
   const filteredTasks = (tasks || []).filter((t) => {
     if (!t) return false;
     const matchSection = activeSection === 'all' || t.section === activeSection;
-    const cleanAssignee = (t.assignee || '').replace(/\s+/g, '').toLowerCase();
-    const cleanEmail = (currentUserEmail || '').toLowerCase();
+    const rawAssignee = (t.assignee || '').toLowerCase();
+    const cleanAssignee = rawAssignee.replace(/\s+/g, '');
+    const cleanEmail = (currentUserEmail || '').toLowerCase().trim();
     const cleanAuthor = authorName.replace(/\s+/g, '').toLowerCase();
 
     const isAssignedToMe = Boolean(t.assignee && (
       cleanAssignee === cleanEmail ||
       cleanAssignee === cleanAuthor ||
-      teamMembers.some(m => m.email.toLowerCase() === cleanEmail && cleanAssignee === m.name.replace(/\s+/g, '').toLowerCase())
+      rawAssignee.includes(cleanAuthor) ||
+      teamMembers.some(m => 
+        m.email.toLowerCase() === cleanEmail && 
+        (cleanAssignee === m.name.replace(/\s+/g, '').toLowerCase() || rawAssignee.includes(m.name.toLowerCase()) || rawAssignee === m.email.toLowerCase())
+      )
     ));
     const creator = t.created_by || '';
     const isCreatedByMe = creator.toLowerCase() === currentUserEmail.toLowerCase() || creator.toLowerCase().includes(authorName.toLowerCase());

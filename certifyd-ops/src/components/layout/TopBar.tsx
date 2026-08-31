@@ -38,7 +38,7 @@ export function TopBar({ userEmail, userRole, userPermissions, userAvatar }: Top
       } catch (e) {}
     }
     loadNotifs();
-    const interval = setInterval(loadNotifs, 4000);
+    const interval = setInterval(loadNotifs, 1000);
     return () => {
       isMounted = false;
       clearInterval(interval);
