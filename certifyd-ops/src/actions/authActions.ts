@@ -252,14 +252,14 @@ export async function loginAction(formData: FormData) {
 
   // Success: reset rate limit and determine role
   await resetRateLimit(cleanIp);
-  const finalRole = getUserRoleFromEnv(username) || role;
+  const finalRole = getUserRoleFromEnv(cleanUser) || role;
 
-  await createSession(username, finalRole, memberPermissions, memberAvatarUrl);
+  await createSession(cleanUser, finalRole, memberPermissions, memberAvatarUrl);
 
   await logAudit({
     action_type: 'LOGIN_SUCCESS',
     target_table: 'auth',
-    new_value: { username, role: finalRole, ip: cleanIp },
+    new_value: { username: cleanUser, role: finalRole, ip: cleanIp },
   });
 
   redirect('/');

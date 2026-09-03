@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
-import { usePresenceTracker } from '@/hooks/usePresenceTracker';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -24,7 +23,6 @@ export function DashboardShell({
 }: DashboardShellProps) {
   const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
-  usePresenceTracker();
 
   useEffect(() => {
     const saved = localStorage.getItem('certifyd_sidebar_collapsed');

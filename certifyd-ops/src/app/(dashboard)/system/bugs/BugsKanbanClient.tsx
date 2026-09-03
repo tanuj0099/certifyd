@@ -366,7 +366,7 @@ export function BugsKanbanClient({ initialBugs, userEmail }: { initialBugs: OpsB
             <Input 
               placeholder="Page URL where bug occurred..."
               value={newUrl}
-              onChange={(e) => setNewUrl(e.target.value)}
+              onChange={(e: any) => setNewUrl(e.target.value)}
               onPressEnter={() => descInputRef.current?.focus()}
               className="bg-[#1C2128] border-white/[0.06] text-[#F0F6FC] placeholder-[#7d8590] rounded-lg hover:border-red-500/50 focus:border-red-500 focus:shadow-[0_0_0_2px_rgba(239,68,68,0.2)] h-10 min-w-[200px] flex-1"
             />
@@ -374,7 +374,7 @@ export function BugsKanbanClient({ initialBugs, userEmail }: { initialBugs: OpsB
               ref={descInputRef}
               placeholder="Short description of the bug..."
               value={newDesc}
-              onChange={(e) => setNewDesc(e.target.value)}
+              onChange={(e: any) => setNewDesc(e.target.value)}
               onPressEnter={handleCreateBug}
               className="bg-[#1C2128] border-white/[0.06] text-[#F0F6FC] placeholder-[#7d8590] rounded-lg hover:border-red-500/50 focus:border-red-500 focus:shadow-[0_0_0_2px_rgba(239,68,68,0.2)] h-10 min-w-[250px] flex-[2]"
             />

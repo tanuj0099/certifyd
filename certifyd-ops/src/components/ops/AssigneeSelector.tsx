@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { OpsTeamMember, getTeamMembersAction } from '../../actions/opsActions';
+import { useSupabaseRealtime } from '@/hooks/useSupabaseRealtime';
 import { User, Check, ChevronDown, X } from 'lucide-react';
 
 interface AssigneeSelectorProps {
@@ -27,7 +28,7 @@ export function AssigneeSelector({
   currentUserName,
   isMulti = false
 }: AssigneeSelectorProps) {
-  const [liveMembers, setLiveMembers] = useState<OpsTeamMember[]>(initialMembers);
+  const { data: liveMembers, setData: setLiveMembers } = useSupabaseRealtime<OpsTeamMember>('ops_team_members', initialMembers);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -42,11 +43,7 @@ export function AssigneeSelector({
       } catch (e) {}
     }
     syncMembers();
-    const interval = setInterval(syncMembers, 3000);
-    return () => {
-      isMounted = false;
-      clearInterval(interval);
-    };
+    return () => { isMounted = false; };
   }, []);
 
   useEffect(() => {
@@ -100,7 +97,7 @@ export function AssigneeSelector({
       return false;
     }
     return true;
-  });
+  }).sort((a, b) => a.name.localeCompare(b.name));
 
   const selectedValues = (value || '').split(',').map(v => v.trim().toLowerCase()).filter(Boolean);
 

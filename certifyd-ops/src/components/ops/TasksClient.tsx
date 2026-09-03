@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useUrlFilter } from '@/hooks/useUrlFilter';
+import { useSupabaseRealtime } from '@/hooks/useSupabaseRealtime';
 import { OpsTaskItem, OpsTeamMember, saveOpsTaskAction, deleteOpsTaskAction, getOpsTasksAction } from '../../actions/opsActions';
 import { AssigneeSelector } from './AssigneeSelector';
 import { useToast } from '../ui/Toast';
@@ -37,7 +38,7 @@ interface TasksClientProps {
 type SectionType = 'all' | 'marketing' | 'technical' | 'database' | 'verifications' | 'content' | 'admin';
 
 export function TasksClient({ initialTasks, teamMembers, currentUserRole, currentUserEmail }: TasksClientProps) {
-  const [tasks, setTasks] = useState<OpsTaskItem[]>(initialTasks || []);
+  const { data: tasks, setData: setTasks } = useSupabaseRealtime<OpsTaskItem>('ops_tasks', initialTasks || []);
   const [activeSection, setActiveSection] = useState<SectionType>('all');
   const [viewMode, setViewMode] = useState<'kanban' | 'list'>('kanban');
   const [searchQuery, setSearchQuery] = useUrlFilter<string>('search', '', 300);
@@ -45,26 +46,6 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
   const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
   const [dragOverColumn, setDragOverColumn] = useState<string | null>(null);
   const [dragOverSection, setDragOverSection] = useState<string | null>(null);
-
-  React.useEffect(() => {
-    if (initialTasks) setTasks(initialTasks);
-  }, [initialTasks]);
-
-  React.useEffect(() => {
-    let isMounted = true;
-    const interval = setInterval(async () => {
-      try {
-        const liveTasks = await getOpsTasksAction();
-        if (isMounted && liveTasks) {
-          setTasks(liveTasks);
-        }
-      } catch (e) {}
-    }, 1000);
-    return () => {
-      isMounted = false;
-      clearInterval(interval);
-    };
-  }, []);
 
   // Add / Edit Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -232,8 +213,6 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
 
     setIsModalOpen(false);
     await saveOpsTaskAction(taskData);
-    const latest = await getOpsTasksAction();
-    if (latest) setTasks(latest);
     showToast(editingTask ? 'Updated delegated task!' : 'Delegated new section task!', 'success');
   }
 
@@ -242,8 +221,6 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
     setTasks((prev) => prev.map((t) => (t.id === task.id ? updated : t)));
     if (activeTask && activeTask.id === task.id) setActiveTask(updated);
     await saveOpsTaskAction(updated);
-    const latest = await getOpsTasksAction();
-    if (latest) setTasks(latest);
     showToast(`Task moved to ${newStatus}`, 'success');
   }
 
@@ -255,8 +232,6 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
     setTasks((prev) => prev.map((t) => (t.id === task.id ? updated : t)));
     if (activeTask && activeTask.id === task.id) setActiveTask(updated);
     await saveOpsTaskAction(updated);
-    const latest = await getOpsTasksAction();
-    if (latest) setTasks(latest);
   }
 
   async function handleAddNote(e: React.FormEvent) {
@@ -277,8 +252,6 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
     setNewNoteText('');
 
     await saveOpsTaskAction(updatedTask);
-    const latest = await getOpsTasksAction();
-    if (latest) setTasks(latest);
     showToast('Added comment to task log', 'success');
   }
 
@@ -288,8 +261,6 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
     if (activeTask && activeTask.id === deleteId) setActiveTask(null);
     setDeleteId(null);
     await deleteOpsTaskAction(deleteId);
-    const latest = await getOpsTasksAction();
-    if (latest) setTasks(latest);
     showToast('Deleted delegated task', 'success');
   }
 
@@ -300,8 +271,6 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
     setTasks((prev) => prev.map((t) => (t.id === taskId ? updated : t)));
     if (activeTask && activeTask.id === taskId) setActiveTask(updated);
     await saveOpsTaskAction(updated);
-    const latest = await getOpsTasksAction();
-    if (latest) setTasks(latest);
     showToast(`Task moved to "${newStatus}"`, 'success');
   }
 
@@ -312,8 +281,6 @@ export function TasksClient({ initialTasks, teamMembers, currentUserRole, curren
     setTasks((prev) => prev.map((t) => (t.id === taskId ? updated : t)));
     if (activeTask && activeTask.id === taskId) setActiveTask(updated);
     await saveOpsTaskAction(updated);
-    const latest = await getOpsTasksAction();
-    if (latest) setTasks(latest);
     showToast(`Re-assigned task to department: ${newSection}`, 'success');
   }
 

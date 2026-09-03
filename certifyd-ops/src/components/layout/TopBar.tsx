@@ -6,6 +6,7 @@ import { Bell, RefreshCw, LogOut, Check, Trash2, AlertTriangle, MessageSquare, S
 import { logoutAction } from '../../actions/authActions';
 import { OpsNotification, getNotificationsAction, markNotificationReadAction, deleteNotificationAction, clearAllNotificationsAction } from '../../actions/opsActions';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
+import { useSupabaseRealtime } from '@/hooks/useSupabaseRealtime';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface TopBarProps {
@@ -18,10 +19,11 @@ interface TopBarProps {
 export function TopBar({ userEmail, userRole, userPermissions, userAvatar }: TopBarProps) {
   const router = useRouter();
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
-  const [lastSync, setLastSync] = useState<string>('Just now');
-  const [syncing, setSyncing] = useState(false);
   const [showNotifs, setShowNotifs] = useState(false);
-  const [notifications, setNotifications] = useState<OpsNotification[]>([]);
+  const [initialNotifs, setInitialNotifs] = useState<OpsNotification[]>([]);
+  
+  // Realtime subscription handles updates automatically
+  const { data: notifications, setData: setNotifications, isConnected } = useSupabaseRealtime<OpsNotification>('ops_notifications', initialNotifs);
   const { isSupported, permission, isSubscribed, subscribeToPush } = usePushNotifications();
 
   const defaultAvatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(userEmail)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
@@ -33,47 +35,21 @@ export function TopBar({ userEmail, userRole, userPermissions, userAvatar }: Top
       try {
         const live = await getNotificationsAction(userEmail, userRole);
         if (isMounted && live) {
-          setNotifications(live);
+          setInitialNotifs(live);
         }
       } catch (e) {}
     }
     loadNotifs();
-    const interval = setInterval(loadNotifs, 1000);
-    return () => {
-      isMounted = false;
-      clearInterval(interval);
-    };
+    return () => { isMounted = false; };
   }, [userEmail, userRole]);
 
-  const visibleNotifs = notifications;
-  const unreadCount = visibleNotifs.filter(n => !n.read).length || visibleNotifs.length;
-
-  const syncTimeRef = useRef<number>(Date.now());
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      const diffSec = Math.floor((Date.now() - syncTimeRef.current) / 1000);
-      if (diffSec < 60) {
-        setLastSync('Just now');
-      } else {
-        setLastSync(`${Math.floor(diffSec / 60)}m ago`);
-      }
-    }, 15000);
-    return () => clearInterval(timer);
-  }, []);
-
-  async function handleManualSync() {
-    setSyncing(true);
-    try {
-      const live = await getNotificationsAction(userEmail, userRole);
-      if (live) setNotifications(live);
-    } catch (e) {}
-    setTimeout(() => {
-      setSyncing(false);
-      syncTimeRef.current = Date.now();
-      setLastSync('Just now');
-    }, 600);
-  }
+  // Filter notifications securely on the client in case RLS sends all
+  const visibleNotifs = notifications.filter(n => {
+    if (userRole === 'SUPER_ADMIN') return true;
+    if (!n.recipient_email || n.recipient_email === 'all') return true;
+    return n.recipient_email.toLowerCase() === userEmail.toLowerCase();
+  });
+  const unreadCount = visibleNotifs.filter(n => !n.read).length;
 
   useEffect(() => {
     const saved = localStorage.getItem('certifyd-ops-theme') as 'dark' | 'light' | null;
@@ -100,18 +76,8 @@ export function TopBar({ userEmail, userRole, userPermissions, userAvatar }: Top
       {/* Left section - Last Sync & Status */}
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2 px-2.5 py-1 rounded-full bg-[#161B22] border border-white/[0.04] text-xs font-mono text-[#8B949E]">
-          <span className="w-2 h-2 rounded-full bg-[#22C55E] animate-pulse" />
-          <span>Supabase Connected</span>
-          <span className="opacity-40">•</span>
-          <span>Sync: {lastSync}</span>
-          <button
-            onClick={handleManualSync}
-            disabled={syncing}
-            className="ml-1 text-[#8B949E] hover:text-white transition-colors p-0.5"
-            title="Force Manual Sync"
-          >
-            <RefreshCw className={`w-3 h-3 ${syncing ? 'animate-spin text-[#F97316]' : ''}`} />
-          </button>
+          <span className={`w-2 h-2 rounded-full ${isConnected ? 'bg-[#22C55E] animate-pulse' : 'bg-[#F85149]'}`} />
+          <span>{isConnected ? 'Supabase Live' : 'Connecting...'}</span>
         </div>
       </div>
 

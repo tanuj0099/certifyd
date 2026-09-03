@@ -27,25 +27,24 @@ export function usePushNotifications() {
   const [isSubscribed, setIsSubscribed] = useState(false);
 
   useEffect(() => {
+    async function checkSubscription() {
+      try {
+        const registration = await navigator.serviceWorker.ready;
+        const subscription = await registration.pushManager.getSubscription();
+        if (subscription) {
+          setIsSubscribed(true);
+        }
+      } catch (e) {
+        console.error('Error checking push subscription', e);
+      }
+    }
+
     if ('serviceWorker' in navigator && 'PushManager' in window) {
       setIsSupported(true);
       setPermission(Notification.permission);
       checkSubscription();
     }
   }, []);
-
-  async function checkSubscription() {
-    try {
-      const registration = await navigator.serviceWorker.ready;
-      const subscription = await registration.pushManager.getSubscription();
-      if (subscription) {
-        setIsSubscribed(true);
-      }
-    } catch (e) {
-      console.error('Error checking push subscription', e);
-    }
-  }
-
   async function subscribeToPush() {
     if (!isSupported) return false;
 
