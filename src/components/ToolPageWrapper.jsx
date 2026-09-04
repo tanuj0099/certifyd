@@ -10,6 +10,7 @@ import { MarketingFooter } from './MarketingPageShell.jsx'
 import FeedbackWidget from './FeedbackWidget.jsx'
 import SEOHead from './SEOHead.jsx'
 import { Sparkles } from 'lucide-react'
+import Breadcrumbs from './Breadcrumbs.jsx'
 
 const FM = "var(--font-mono)";
 
@@ -66,6 +67,11 @@ export default function ToolPageWrapper({
         <DotMatrixBackground className="px-4 md:px-6 pt-2 pb-8" style={{ minHeight: '240px' }}>
           <div className="flex flex-col items-start max-w-5xl mx-0 pt-2">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }}>
+              <Breadcrumbs items={[
+                { label: 'Home', href: '/' },
+                { label: 'Tools', href: '/tools' },
+                { label: title }
+              ]} />
               
               {/* Title */}
               <h1 

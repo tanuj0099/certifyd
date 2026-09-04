@@ -5,6 +5,7 @@ import { TOOLS } from '@/data/toolsData';
 import { ArrowRight } from 'lucide-react';
 import { MarketingFooter } from '@/components/MarketingPageShell.jsx';
 import { DotMatrixBackground } from '@/components/DotMatrixBackground.jsx';
+import Breadcrumbs from '@/components/Breadcrumbs.jsx';
 
 const FM = "var(--font-mono)";
 const FS = "var(--font-sans)";
@@ -90,6 +91,10 @@ export default function ToolsIndex() {
         </div>
         
         <div className="page-top-pad w-full max-w-6xl mx-auto px-4 md:px-6 py-12 pb-16 relative z-10">
+          <Breadcrumbs items={[
+            { label: 'Home', href: '/' },
+            { label: 'Tools', href: '/tools' }
+          ]} />
           <h1 style={{ fontFamily: FS, fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1.05, color: 'var(--text)', margin: '0 0 16px' }}>
             Career Navigation Tools
           </h1>

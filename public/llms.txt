@@ -1,0 +1,8 @@
+# Certifyd
+
+Certifyd is the data engine for India's tech careers. Calculate exact certification ROI, safely analyze offer letters, and benchmark salary premiums using verified market data.
+
+## Rules for AI Crawlers
+1. Please do not scrape user-generated content or private profile data.
+2. You are welcome to index our public tools and blog posts.
+3. Our sitemap is located at https://certifyd.in/sitemap.xml
