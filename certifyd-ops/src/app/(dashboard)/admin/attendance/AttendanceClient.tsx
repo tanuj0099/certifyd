@@ -15,7 +15,6 @@ export function AttendanceClient({ initialLogs, teamMembers }: { initialLogs: an
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const [dailyLogs, setDailyLogs] = useState<any[]>(initialLogs);
   const [isLoading, setIsLoading] = useState(false);
-  const isInitialMount = React.useRef(true);
 
   useEffect(() => {
     let isMounted = true;
@@ -41,11 +40,6 @@ export function AttendanceClient({ initialLogs, teamMembers }: { initialLogs: an
   }, []);
 
   useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      return;
-    }
-    
     let isMounted = true;
     const fetchLogs = async () => {
       setIsLoading(true);
@@ -67,8 +61,10 @@ export function AttendanceClient({ initialLogs, teamMembers }: { initialLogs: an
   }, [selectedDate]);
 
   function getStatus(email: string) {
-    if (selectedDate !== new Date().toISOString().split('T')[0]) return 'offline';
-    return onlineUsers[email] ? 'active' : 'offline';
+    const isToday = selectedDate === new Date().toISOString().split('T')[0];
+    if (isToday && onlineUsers[email]) return 'active';
+    const hasLog = dailyLogs.some(l => l.user_email.toLowerCase() === email.toLowerCase());
+    return hasLog ? 'logged' : 'offline';
   }
 
   function formatActiveTime(seconds: number) {
@@ -85,6 +81,7 @@ export function AttendanceClient({ initialLogs, teamMembers }: { initialLogs: an
         <h2 className="text-sm font-semibold text-white flex items-center gap-2">
           <Clock className="w-4 h-4 text-blue-500" />
           {selectedDate === new Date().toISOString().split('T')[0] ? "Today's Activity" : `Activity for ${new Date(selectedDate).toLocaleDateString()}`}
+          {isLoading && <span className="text-xs text-gray-500 ml-2 animate-pulse">Fetching...</span>}
         </h2>
         <div className="flex items-center gap-4">
           <input 
@@ -165,8 +162,11 @@ export function AttendanceClient({ initialLogs, teamMembers }: { initialLogs: an
                         {status === 'active' && (
                           <><span className="relative flex h-2.5 w-2.5"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span></span> <span className="text-green-600 dark:text-green-400 font-medium text-xs">Online</span></>
                         )}
+                        {status === 'logged' && (
+                          <><Moon className="w-3.5 h-3.5 text-blue-400" /> <span className="text-blue-500 dark:text-blue-400 font-medium text-xs">Logged Offline</span></>
+                        )}
                         {status === 'offline' && (
-                          <><Moon className="w-3.5 h-3.5 text-gray-400" /> <span className="text-gray-500 dark:text-gray-400 font-medium text-xs">Offline</span></>
+                          <><Moon className="w-3.5 h-3.5 text-gray-600" /> <span className="text-gray-500 dark:text-gray-600 font-medium text-xs">No Record</span></>
                         )}
                       </div>
                     </td>
