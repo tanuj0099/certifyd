@@ -11,7 +11,7 @@ export async function recordHeartbeatAction(activeSecondsToAdd: number): Promise
       return { success: false, error: 'Unauthorized' };
     }
 
-    const userEmail = session.email;
+    const userEmail = session.email.toLowerCase();
     const sessionDate = new Date().toISOString().split('T')[0];
     
     const { data: existingRecord, error: fetchError } = await supabaseAdmin
@@ -31,7 +31,7 @@ export async function recordHeartbeatAction(activeSecondsToAdd: number): Promise
         .from('ops_time_logs')
         .update({
           last_ping: new Date().toISOString(),
-          active_seconds: existingRecord.active_seconds + activeSecondsToAdd,
+          active_seconds: (existingRecord.active_seconds || 0) + activeSecondsToAdd,
           updated_at: new Date().toISOString()
         })
         .eq('id', existingRecord.id);

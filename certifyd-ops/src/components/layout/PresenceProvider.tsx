@@ -49,12 +49,16 @@ export function PresenceProvider({ children, userEmail, userName }: { children: 
       });
 
     // Record initial session start (0 seconds)
-    recordHeartbeatAction(0).catch(console.error);
+    recordHeartbeatAction(0).then(res => {
+      if (!res.success) console.error("Heartbeat initial failed:", res.error);
+    }).catch(console.error);
 
     // Heartbeat every 60 seconds
     const HEARTBEAT_SECONDS = 60;
     const heartbeatTimer = setInterval(() => {
-      recordHeartbeatAction(HEARTBEAT_SECONDS).catch(console.error);
+      recordHeartbeatAction(HEARTBEAT_SECONDS).then(res => {
+        if (!res.success) console.error("Heartbeat 60s failed:", res.error);
+      }).catch(console.error);
     }, HEARTBEAT_SECONDS * 1000);
 
     return () => {
