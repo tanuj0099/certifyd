@@ -27,6 +27,7 @@ import {
   Lightbulb,
   Bug,
   Clock,
+  Move3D,
 } from 'lucide-react';
 import { logoutAction } from '../../actions/authActions';
 

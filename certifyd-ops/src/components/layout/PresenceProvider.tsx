@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
+import { recordHeartbeatAction } from '@/actions/attendanceActions';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.supabase.co';
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock-anon-key';
@@ -47,10 +48,20 @@ export function PresenceProvider({ children, userEmail, userName }: { children: 
         }
       });
 
+    // Record initial session start (0 seconds)
+    recordHeartbeatAction(0).catch(console.error);
+
+    // Heartbeat every 60 seconds
+    const HEARTBEAT_SECONDS = 60;
+    const heartbeatTimer = setInterval(() => {
+      recordHeartbeatAction(HEARTBEAT_SECONDS).catch(console.error);
+    }, HEARTBEAT_SECONDS * 1000);
+
     return () => {
       isMounted = false;
       channel.untrack();
       supabaseClient.removeChannel(channel);
+      clearInterval(heartbeatTimer);
     };
   }, [userEmail, userName]);
 
