@@ -40,7 +40,7 @@ export function DashboardShell({
   }
 
   return (
-    <div className="min-h-screen bg-[#080A0E] text-[#F0F6FC] font-sans selection:bg-[#F97316]/30 flex">
+    <div className="min-h-screen bg-[var(--color-zef-bg)] text-[var(--color-zef-text-primary)] font-sans selection:bg-[var(--color-zef-gold)]/30 flex">
       {/* Fixed Navigation Sidebar with coordinated collapsed state */}
       <Sidebar
         userEmail={userEmail}
@@ -54,7 +54,7 @@ export function DashboardShell({
       {/* Main Content Area whose padding dynamically adjusts with the sidebar dimensions */}
       <div
         className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out ${
-          collapsed ? 'pl-[60px]' : 'pl-[220px]'
+          collapsed ? 'pl-[60px]' : 'pl-[240px]'
         }`}
       >
         <TopBar

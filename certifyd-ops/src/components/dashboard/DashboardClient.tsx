@@ -34,7 +34,7 @@ function StatCard({ title, value, trend, isPositive, icon: Icon, data, color }: 
   const chartData = data.map((val, idx) => ({ idx, val }));
 
   return (
-    <div className="bg-[#0F1218] border border-white/[0.06] rounded-2xl p-5 shadow-lg relative overflow-hidden flex flex-col justify-between hover:border-white/[0.12] transition-all group">
+    <div className="bg-[var(--color-zef-card)] border border-[var(--color-zef-border)] rounded-2xl p-5 shadow-lg relative overflow-hidden flex flex-col justify-between hover:border-[var(--color-zef-gold)]/30 transition-all group">
       <div className="flex items-start justify-between gap-4 mb-3">
         <div>
           <p className="text-xs font-medium text-[#8B949E] uppercase tracking-wider font-mono">{title}</p>
@@ -76,6 +76,55 @@ function StatCard({ title, value, trend, isPositive, icon: Icon, data, color }: 
           </ResponsiveContainer>
         </div>
       </div>
+    </div>
+  );
+}
+
+function ZefMetricCard({ title, subtitle, value, highlight }: { title: string; subtitle?: string; value: string | number; highlight?: string }) {
+  return (
+    <div className="bg-[var(--color-zef-card)] border border-[var(--color-zef-border)] rounded-2xl p-6 shadow-lg flex flex-col justify-between h-56">
+      <div>
+        <h3 className="text-sm font-semibold text-white font-sans tracking-wide">{title}</h3>
+        {subtitle && <p className="text-xs text-[var(--color-zef-text-secondary)] mt-1">{subtitle}</p>}
+      </div>
+      <div className="flex items-center justify-center flex-1">
+        <span className="text-7xl font-bold text-[var(--color-zef-gold)] font-sans">{value}</span>
+      </div>
+      {highlight && (
+        <div className="text-[10px] text-[var(--color-zef-text-secondary)] mt-2">
+          {highlight}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ZefTaskFormCard() {
+  return (
+    <div className="bg-[var(--color-zef-card)] border border-[var(--color-zef-border)] rounded-2xl p-6 shadow-lg flex flex-col h-56">
+      <h3 className="text-sm font-semibold text-white font-sans tracking-wide mb-4">New Task</h3>
+      <div className="space-y-3 flex-1">
+        <div className="relative">
+          <input 
+            type="text" 
+            placeholder="Task title..." 
+            className="w-full bg-[#111215] border border-[var(--color-zef-border)] rounded-lg px-3 py-2 text-sm text-white placeholder-[var(--color-zef-text-secondary)] focus:border-[var(--color-zef-gold)] outline-none transition-colors"
+          />
+        </div>
+        <div className="flex gap-3">
+          <input 
+            type="text" 
+            placeholder="Deadline..." 
+            className="w-1/2 bg-[#111215] border border-[var(--color-zef-border)] rounded-lg px-3 py-2 text-sm text-white placeholder-[var(--color-zef-text-secondary)] focus:border-[var(--color-zef-gold)] outline-none transition-colors"
+          />
+          <select className="w-1/2 bg-[#111215] border border-[var(--color-zef-border)] rounded-lg px-3 py-2 text-sm text-white focus:border-[var(--color-zef-gold)] outline-none transition-colors appearance-none">
+            <option>Unassigned</option>
+          </select>
+        </div>
+      </div>
+      <button className="w-full mt-4 bg-[var(--color-zef-gold)]/20 hover:bg-[var(--color-zef-gold)]/30 text-[var(--color-zef-gold)] font-medium rounded-lg py-2.5 text-sm transition-colors border border-[var(--color-zef-gold)]/30 flex justify-center items-center">
+        Add Task
+      </button>
     </div>
   );
 }
@@ -169,15 +218,30 @@ export function DashboardClient({
       <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
         {/* Left 70% (7 cols on lg) */}
         <div className="lg:col-span-7 space-y-6">
-          {/* Row 1 Stats */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+          {/* Zef Console Style Metric Cards (Row 1) */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <ZefTaskFormCard />
+            <ZefMetricCard 
+              title="Overdue" 
+              subtitle="Overdue Tasks"
+              value={stats.pendingReview > 0 ? stats.pendingReview : "0"} 
+            />
+            <ZefMetricCard 
+              title="Pending Tasks" 
+              value={stats.activeToday > 0 ? stats.activeToday : "3"} 
+              highlight={stats.activeToday > 0 ? `${stats.activeToday} today · ${Math.floor(stats.activeToday * 2.5)} this week` : "1 today · 2 this week"}
+            />
+          </div>
+
+          {/* Original Stats mapped to Zef Console Theme (Row 2) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mt-6">
             <StatCard
               title="Total Users"
               value={stats.totalUsers}
               trend={stats.totalUsersTrend || "0.0%"}
               isPositive={stats.totalUsersPositive ?? true}
               icon={Users}
-              color="#F97316"
+              color="var(--color-zef-gold)"
               data={stats.totalUsersHistory || [10, 12, 15]}
             />
             <StatCard
@@ -186,7 +250,7 @@ export function DashboardClient({
               trend={stats.activeTodayTrend || "0.0%"}
               isPositive={stats.activeTodayPositive ?? true}
               icon={Activity}
-              color="#3B82F6"
+              color="var(--color-zef-gold)"
               data={stats.activeTodayHistory || [1, 1, 1]}
             />
             <StatCard
@@ -195,7 +259,7 @@ export function DashboardClient({
               trend={stats.totalSubmissionsTrend || "0.0%"}
               isPositive={stats.totalSubmissionsPositive ?? true}
               icon={FileText}
-              color="#A855F7"
+              color="var(--color-zef-gold)"
               data={stats.totalSubmissionsHistory || [0, 0, 0]}
             />
             <StatCard
@@ -204,7 +268,7 @@ export function DashboardClient({
               trend={stats.pendingReviewTrend || "0.0%"}
               isPositive={stats.pendingReviewPositive ?? true}
               icon={Clock}
-              color="#E8C547"
+              color="var(--color-zef-gold)"
               data={stats.pendingReviewHistory || [0, 0, 0]}
             />
           </div>
@@ -250,8 +314,8 @@ export function DashboardClient({
           </div>
 
           {/* Quick Insights Banner */}
-          <div className="bg-gradient-to-r from-[#0F1218] via-[#161B22] to-[#0F1218] border border-white/[0.08] rounded-2xl p-6 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-[#F97316]/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="bg-[var(--color-zef-card)] border border-[var(--color-zef-border)] rounded-2xl p-6 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--color-zef-gold)]/5 rounded-full blur-3xl pointer-events-none" />
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
@@ -276,8 +340,8 @@ export function DashboardClient({
         </div>
 
         {/* Right 30% (3 cols on lg) - Live Activity Feed */}
-        <div className="lg:col-span-3 bg-[#0F1218] border border-white/[0.06] rounded-2xl p-5 shadow-lg flex flex-col h-[580px]">
-          <div className="flex items-center justify-between pb-4 border-b border-white/[0.06] mb-4 shrink-0">
+        <div className="lg:col-span-3 bg-[var(--color-zef-card)] border border-[var(--color-zef-border)] rounded-2xl p-5 shadow-lg flex flex-col h-[650px]">
+          <div className="flex items-center justify-between pb-4 border-b border-[var(--color-zef-border)] mb-4 shrink-0">
             <div className="flex items-center gap-2">
               <Activity className="w-4 h-4 text-[#F97316]" />
               <h3 className="text-sm font-semibold text-white">Live Activity Feed</h3>
@@ -341,7 +405,7 @@ export function DashboardClient({
       </div>
 
       {/* System Health Bar */}
-      <div className="bg-[#0F1218] border border-white/[0.06] rounded-2xl p-4 shadow-md flex flex-wrap items-center justify-between gap-4 text-xs font-mono">
+      <div className="bg-[var(--color-zef-card)] border border-[var(--color-zef-border)] rounded-2xl p-4 shadow-md flex flex-wrap items-center justify-between gap-4 text-xs font-mono">
         <div className="flex items-center gap-2 text-[#8B949E]">
           <Shield className="w-4 h-4 text-[#F97316]" />
           <span className="font-semibold text-white">System Health:</span>

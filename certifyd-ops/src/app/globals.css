@@ -10,6 +10,16 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  
+  /* Zef Console Custom Colors */
+  --color-zef-bg: #0c0d0f;
+  --color-zef-card: #16181d;
+  --color-zef-hover: #1f2128;
+  --color-zef-gold: #c5a059;
+  --color-zef-gold-hover: #d4af37;
+  --color-zef-border: #272a30;
+  --color-zef-text-primary: #f9fafb;
+  --color-zef-text-secondary: #9ca3af;
 }
 
 @media (prefers-color-scheme: dark) {

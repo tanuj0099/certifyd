@@ -72,10 +72,10 @@ export function TopBar({ userEmail, userRole, userPermissions, userAvatar }: Top
   }
 
   return (
-    <header className="h-14 bg-[#080A0E]/90 backdrop-blur-md border-b border-white/[0.06] sticky top-0 z-30 flex items-center justify-between px-6">
+    <header className="h-14 bg-[var(--color-zef-bg)]/90 backdrop-blur-md border-b border-[var(--color-zef-border)] sticky top-0 z-30 flex items-center justify-between px-6">
       {/* Left section - Last Sync & Status */}
       <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2 px-2.5 py-1 rounded-full bg-[#161B22] border border-white/[0.04] text-xs font-mono text-[#8B949E]">
+        <div className="flex items-center gap-2 px-2.5 py-1 rounded-full bg-[var(--color-zef-card)] border border-[var(--color-zef-border)] text-xs font-mono text-[var(--color-zef-text-secondary)]">
           <span className={`w-2 h-2 rounded-full ${isConnected ? 'bg-[#22C55E] animate-pulse' : 'bg-[#F85149]'}`} />
           <span>{isConnected ? 'Supabase Live' : 'Connecting...'}</span>
         </div>
@@ -84,11 +84,11 @@ export function TopBar({ userEmail, userRole, userPermissions, userAvatar }: Top
       {/* Right section - User & Notifications */}
       <div className="flex items-center gap-4">
         {/* Role & Email Badge with DP Avatar */}
-        <div className="hidden sm:flex items-center gap-2.5 px-3 py-1 rounded-xl bg-[#0F1218] border border-white/[0.06] text-xs font-mono">
+        <div className="hidden sm:flex items-center gap-2.5 px-3 py-1 rounded-xl bg-[var(--color-zef-card)] border border-[var(--color-zef-border)] text-xs font-mono">
           <img
             src={avatarToShow}
             alt="User DP"
-            className="w-6 h-6 rounded-full border border-white/10 shrink-0 bg-[#080A0E] object-cover"
+            className="w-6 h-6 rounded-full border border-[var(--color-zef-border)] shrink-0 bg-[var(--color-zef-bg)] object-cover"
           />
           <span
             className={`px-1.5 py-0.5 rounded uppercase font-semibold text-[10px] ${
@@ -105,7 +105,7 @@ export function TopBar({ userEmail, userRole, userPermissions, userAvatar }: Top
         {/* Theme Toggle Button */}
         <button
           onClick={toggleTheme}
-          className="p-2 rounded-xl bg-[#0F1218] hover:bg-[#161B22] border border-white/[0.06] text-[#8B949E] hover:text-white transition-colors flex items-center justify-center"
+          className="p-2 rounded-xl bg-[var(--color-zef-card)] hover:bg-[var(--color-zef-hover)] border border-[var(--color-zef-border)] text-[var(--color-zef-text-secondary)] hover:text-white transition-colors flex items-center justify-center"
           title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
         >
           {theme === 'dark' ? <Sun className="w-4 h-4 text-[#E8C547]" /> : <Moon className="w-4 h-4 text-[#3B82F6]" />}
@@ -115,7 +115,7 @@ export function TopBar({ userEmail, userRole, userPermissions, userAvatar }: Top
         <div className="relative">
           <button
             onClick={() => setShowNotifs(!showNotifs)}
-            className="p-2 rounded-xl bg-[#0F1218] hover:bg-[#161B22] border border-white/[0.06] text-[#8B949E] hover:text-white transition-colors relative"
+            className="p-2 rounded-xl bg-[var(--color-zef-card)] hover:bg-[var(--color-zef-hover)] border border-[var(--color-zef-border)] text-[var(--color-zef-text-secondary)] hover:text-white transition-colors relative"
             title="Notifications"
           >
             <Bell className="w-4 h-4" />
@@ -256,7 +256,7 @@ export function TopBar({ userEmail, userRole, userPermissions, userAvatar }: Top
         {/* Logout Button */}
         <button
           onClick={() => logoutAction()}
-          className="p-2 rounded-xl bg-[#0F1218] hover:bg-[#F85149]/10 border border-white/[0.06] text-[#8B949E] hover:text-[#F85149] transition-colors"
+          className="p-2 rounded-xl bg-[var(--color-zef-card)] hover:bg-[#F85149]/10 border border-[var(--color-zef-border)] text-[var(--color-zef-text-secondary)] hover:text-[#F85149] transition-colors"
           title="Sign Out"
         >
           <LogOut className="w-4 h-4" />

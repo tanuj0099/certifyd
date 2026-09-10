@@ -143,8 +143,8 @@ export function Sidebar({
 
   return (
     <aside
-      className={`fixed top-0 left-0 bottom-0 z-40 bg-[#080A0E] border-r border-white/[0.06] transition-all duration-300 flex flex-col ${
-        collapsed ? 'w-[60px]' : 'w-[220px]'
+      className={`fixed top-0 left-0 bottom-0 z-40 bg-[var(--color-zef-bg)] border-r border-[var(--color-zef-border)] transition-all duration-300 flex flex-col ${
+        collapsed ? 'w-[60px]' : 'w-[240px]'
       }`}
     >
       {/* Brand Header optimized for Super Admin vs Employee */}
@@ -224,12 +224,12 @@ export function Sidebar({
                       href={item.href}
                       className={`flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-medium transition-all ${
                         isActive
-                          ? 'bg-[#F97316]/10 text-[#F97316] border border-[#F97316]/20 shadow-sm'
-                          : 'text-[#8B949E] hover:text-white hover:bg-white/[0.04]'
+                          ? 'bg-[var(--color-zef-gold)]/10 text-[var(--color-zef-gold)] border border-[var(--color-zef-gold)]/20 shadow-sm'
+                          : 'text-[var(--color-zef-text-secondary)] hover:text-[var(--color-zef-text-primary)] hover:bg-[var(--color-zef-hover)]'
                       } ${collapsed ? 'justify-center' : ''}`}
                       title={collapsed ? item.name : undefined}
                     >
-                      <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#F97316]' : ''}`} />
+                      <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[var(--color-zef-gold)]' : ''}`} />
                       {!collapsed && (
                         <div className="flex items-center justify-between flex-1 overflow-hidden">
                           <span className="truncate">{item.name}</span>
@@ -250,14 +250,14 @@ export function Sidebar({
       </div>
 
       {/* User Footer with Avatar / DP */}
-      <div className="border-t border-white/[0.06] p-2.5 shrink-0 bg-[#0F1218]">
+      <div className="border-t border-[var(--color-zef-border)] p-2.5 shrink-0 bg-[var(--color-zef-bg)]">
         {!collapsed ? (
-          <div className="flex items-center justify-between gap-2.5 bg-[#161B22] p-2 rounded-xl border border-white/[0.04]">
+          <div className="flex items-center justify-between gap-2.5 bg-[var(--color-zef-card)] p-2 rounded-xl border border-[var(--color-zef-border)]">
             <div className="flex items-center gap-2.5 min-w-0 overflow-hidden">
               <img
                 src={avatarToShow}
                 alt="DP"
-                className="w-8 h-8 rounded-full border border-white/10 shrink-0 bg-[#080A0E] object-cover"
+                className="w-8 h-8 rounded-full border border-[var(--color-zef-border)] shrink-0 bg-[var(--color-zef-bg)] object-cover"
               />
               <div className="flex flex-col min-w-0">
                 <span className="text-xs font-mono font-medium text-white truncate" title={userEmail}>
@@ -287,12 +287,12 @@ export function Sidebar({
             <img
               src={avatarToShow}
               alt="DP"
-              className="w-8 h-8 rounded-full border border-white/10 bg-[#080A0E] object-cover"
+              className="w-8 h-8 rounded-full border border-[var(--color-zef-border)] bg-[var(--color-zef-bg)] object-cover"
               title={userEmail}
             />
             <button
               onClick={() => logoutAction()}
-              className="w-full flex items-center justify-center p-2 rounded-xl bg-[#161B22] text-[#8B949E] hover:text-[#F85149] hover:bg-[#F85149]/10 transition-colors"
+              className="w-full flex items-center justify-center p-2 rounded-xl bg-[var(--color-zef-card)] text-[var(--color-zef-text-secondary)] hover:text-[#F85149] hover:bg-[#F85149]/10 transition-colors"
               title="Logout"
             >
               <LogOut className="w-4 h-4" />
