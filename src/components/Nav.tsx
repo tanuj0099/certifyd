@@ -35,25 +35,35 @@ export default function Nav() {
     <nav className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <div className="flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center gap-3" onClick={closeMenu}>
-            {/* Logo Mark */}
-            <Image 
-              src="/logo.svg" 
-              alt="Certifyd Logo" 
-              width={32} 
-              height={32} 
-              className="w-8 h-8 object-contain"
-            />
-            <span className="font-display font-semibold text-xl tracking-tight text-text-primary">
-              Certifyd
-            </span>
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/certifyd-games-combined-fixed.html"
+              className="p-2 rounded-md text-text-secondary hover:bg-elevated hover:text-text-primary transition-colors cursor-target"
+              aria-label="Open Certifyd games"
+              title="Open Certifyd games"
+            >
+              <Menu size={22} />
+            </Link>
+
+            <Link href="/" className="flex items-center gap-3" onClick={closeMenu}>
+              <Image
+                src="/logo.svg"
+                alt="Certifyd Logo"
+                width={32}
+                height={32}
+                className="w-8 h-8 object-contain"
+              />
+              <span className="font-display font-semibold text-xl tracking-tight text-text-primary">
+                Certifyd
+              </span>
+            </Link>
+          </div>
 
           <div className="hidden md:flex items-center gap-8 text-sm font-medium">
-            {navLinks.map(link => (
-              <Link 
-                key={link.name} 
-                href={link.href} 
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
                 className="relative text-text-secondary hover:text-text-primary transition-colors after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[2px] after:bg-brand after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left after:duration-300 cursor-target"
               >
                 {link.name}
@@ -73,10 +83,10 @@ export default function Nav() {
                 <FaWhatsapp size={18} />
               </a>
             </div>
-            
+
             {mounted && (
-              <button 
-                onClick={toggleTheme} 
+              <button
+                onClick={toggleTheme}
                 className="p-2 rounded-full hover:bg-elevated text-text-secondary hover:text-text-primary transition-colors cursor-target"
                 aria-label="Toggle theme"
               >
@@ -84,7 +94,7 @@ export default function Nav() {
               </button>
             )}
 
-            <button 
+            <button
               className="md:hidden p-2 text-text-secondary hover:text-text-primary transition-colors cursor-target"
               onClick={toggleMenu}
               aria-label="Toggle menu"
@@ -95,7 +105,6 @@ export default function Nav() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
@@ -105,7 +114,7 @@ export default function Nav() {
             className="md:hidden border-t border-border bg-background"
           >
             <div className="flex flex-col px-4 py-4 space-y-4">
-              {navLinks.map(link => (
+              {navLinks.map((link) => (
                 <Link
                   key={link.name}
                   href={link.href}
