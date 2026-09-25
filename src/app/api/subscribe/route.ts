@@ -9,12 +9,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "Invalid request body" }, { status: 400 });
   }
 
-  const name = typeof body.name === "string" ? body.name.trim() : "";
   const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
-
-  if (name.length < 2 || name.length > 200) {
-    return Response.json({ error: "Please enter a valid name" }, { status: 400 });
-  }
 
   if (email.length > 320 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return Response.json({ error: "Please enter a valid email address" }, { status: 400 });
@@ -31,7 +26,7 @@ export async function POST(request: Request) {
   const supabase = createClient(supabaseUrl, supabaseAnonKey);
   const { error } = await supabase
     .from("Website_Waitlist")
-    .insert({ name, email });
+    .insert({ email });
 
   if (error) {
     console.error("Could not save waitlist signup", error);
@@ -44,6 +39,13 @@ export async function POST(request: Request) {
       return Response.json(
         { error: "The waitlist database is not configured to accept signups yet" },
         { status: 503 },
+      );
+    }
+
+    if (error.code === "PGRST204" || error.code === "42703") {
+      return Response.json(
+        { error: "The waitlist table columns do not match this signup form" },
+        { status: 500 },
       );
     }
 
