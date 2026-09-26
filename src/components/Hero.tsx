@@ -5,7 +5,6 @@ import { useTheme } from "next-themes";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { supabase } from "@/lib/supabase";
 import { Loader2, User, Mail, Phone } from "lucide-react";
 import SuccessModal from "./SuccessModal";
 import { motion } from "framer-motion";
@@ -21,7 +20,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 export default function Hero() {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
-  const [position, setPosition] = useState<number | null>(null);
+  const [submissionError, setSubmissionError] = useState<string | null>(null);
   
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -48,6 +47,7 @@ export default function Hero() {
 
   const onSubmit = async (data: FormValues) => {
     setStatus("submitting");
+    setSubmissionError(null);
 
     try {
       const response = await fetch('/api/subscribe', {
@@ -62,20 +62,16 @@ export default function Hero() {
         }),
       });
 
+      const result = await response.json().catch(() => ({}));
       if (!response.ok) {
-        throw new Error('Failed to subscribe');
+        throw new Error(result.error || 'Could not save your signup. Please try again.');
       }
 
-      const result = await response.json();
-      
-      if (result.position) {
-        setPosition(result.position);
-      }
-      
       setStatus("success");
       
     } catch (err) {
       console.error(err);
+      setSubmissionError(err instanceof Error ? err.message : 'Could not save your signup. Please try again.');
       setStatus("error");
     }
   };
@@ -144,7 +140,7 @@ export default function Hero() {
 
                 {status === "error" && (
                   <div className="p-3 rounded-md bg-negative/10 border border-negative/20 text-negative text-sm">
-                    Something went wrong. Please try again.
+                    {submissionError || "Something went wrong. Please try again."}
                   </div>
                 )}
 
