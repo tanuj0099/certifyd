@@ -1,9 +1,8 @@
-import { createRequire } from 'node:module';
-
-const require = createRequire(import.meta.url);
-const { PDFParse } = require('pdf-parse');
-
 export async function extractPdfText(buffer) {
+  // Load the Node-only package inside the request handler. Keeping this out of
+  // module initialization avoids serverless cold-start failures if the runtime
+  // resolves external packages from the deployed function bundle.
+  const { PDFParse } = await import('pdf-parse');
   const parser = new PDFParse({ data: buffer });
 
   try {
