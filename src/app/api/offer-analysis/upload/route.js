@@ -1,25 +1,32 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { extractText } from 'unpdf';
+import mammoth from 'mammoth';
+import { extractPdfText } from '@/lib/pdfParser.js';
 import crypto from 'crypto';
 import { scanAndScrubPII } from '@/utils/piiScanner.js';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
+export const maxDuration = 60;
 
 // Helper to get admin Supabase client
 function getSupabaseClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (!supabaseUrl || !supabaseKey) return null;
-  return createClient(supabaseUrl, supabaseKey, {
-    auth: { persistSession: false },
-  });
+  try {
+    return createClient(supabaseUrl, supabaseKey, {
+      auth: { persistSession: false },
+    });
+  } catch (error) {
+    console.error('Offer upload Supabase client initialization failed:', error?.message || error);
+    return null;
+  }
 }
 
-// Background / asynchronous processing and verifiable synchronous deletion
-async function processAndCleanUpOfferUpload(uploadId, fileBuffer, fileName) {
-  const supabase = getSupabaseClient();
+// Process the upload before responding so extracted salary details only go back
+// to the browser that submitted the document.
+async function processAndCleanUpOfferUpload(uploadId, fileBuffer, supabase) {
   const tempPath = `ephemeral/${uploadId}-${Date.now()}.bin`;
 
   try {
@@ -36,9 +43,15 @@ async function processAndCleanUpOfferUpload(uploadId, fileBuffer, fileName) {
     }
 
     // Step 2: Extract text from document buffer
-    const uint8Array = new Uint8Array(fileBuffer);
-    const { text } = await extractText(uint8Array);
-    const rawText = Array.isArray(text) ? text.join('\n').trim() : String(text).trim();
+    let rawText;
+    if (fileBuffer.subarray(0, 5).toString('utf8') === '%PDF-') {
+      rawText = await extractPdfText(fileBuffer);
+    } else if (fileBuffer.subarray(0, 4).toString('hex') === '504b0304') {
+      rawText = (await mammoth.extractRawText({ buffer: fileBuffer })).value.trim();
+    } else {
+      rawText = fileBuffer.toString('utf8').replace(/^\uFEFF/, '').trim();
+    }
+    if (!rawText) throw new Error('No readable text found in the uploaded offer letter.');
 
     // Step 3: Run AI extraction via Groq or structured parser for the 12 explicit fields
     const extractedData = await extract12DataPoints(rawText);
@@ -61,18 +74,13 @@ async function processAndCleanUpOfferUpload(uploadId, fileBuffer, fileName) {
 
     // Step 5: Persist only the 12 extracted fields + deleted_at timestamp
     if (supabase) {
-      await supabase.from('offer_uploads').update({
-        status: 'complete',
-        extracted_data: extractedData,
-        deleted_at: deletedAt,
+      const { error } = await supabase.from('offer_uploads').update({
+        status: 'complete', extracted_data: extractedData, deleted_at: deletedAt,
       }).eq('id', uploadId);
-    } else {
-      inMemoryUploads.set(uploadId, {
-        status: 'complete',
-        extractedData,
-        deletedAt,
-      });
+      if (error) console.error('Could not persist completed offer upload:', error.message);
     }
+    inMemoryUploads.set(uploadId, { status: 'complete', extractedData, deletedAt });
+    return { status: 'complete', extractedData, deletedAt };
   } catch (err) {
     // Even on error, ensure source file deletion occurs synchronously
     if (supabase) {
@@ -82,18 +90,22 @@ async function processAndCleanUpOfferUpload(uploadId, fileBuffer, fileName) {
     }
     const deletedAt = new Date().toISOString();
     if (supabase) {
-      await supabase.from('offer_uploads').update({
-        status: 'error',
-        error: err.message || 'Failed to extract offer letter data.',
-        deleted_at: deletedAt,
-      }).eq('id', uploadId);
-    } else {
-      inMemoryUploads.set(uploadId, {
-        status: 'error',
-        error: err.message || 'Failed to extract offer letter data.',
-        deletedAt,
-      });
+      try {
+        const { error } = await supabase.from('offer_uploads').update({
+          status: 'error',
+          error: err.message || 'Failed to extract offer letter data.',
+          deleted_at: deletedAt,
+        }).eq('id', uploadId);
+        if (error) console.error('Could not persist failed offer upload:', error.message);
+      } catch (persistError) {
+        console.error('Could not persist failed offer upload:', persistError?.message || persistError);
+      }
     }
+    inMemoryUploads.set(uploadId, {
+      status: 'error', error: err.message || 'Failed to extract offer letter data.', deletedAt,
+    });
+    fileBuffer.fill(0);
+    return { status: 'error', error: err.message || 'Failed to extract offer letter data.' };
   }
 }
 
@@ -197,8 +209,8 @@ Do not include any extra keys or PII (no candidate names, emails, or phone numbe
 }
 
 // In-memory store fallback if Supabase is unconfigured
-const inMemoryUploads = new Map();
-globalThis.__CERTIFYD_UPLOADS__ = globalThis.__CERTIFYD_UPLOADS__ || inMemoryUploads;
+const inMemoryUploads = globalThis.__CERTIFYD_UPLOADS__ || new Map();
+globalThis.__CERTIFYD_UPLOADS__ = inMemoryUploads;
 
 export async function POST(request) {
   try {
@@ -239,11 +251,11 @@ export async function POST(request) {
     // Security check 3: Verify magic byte headers to prevent extension/MIME spoofing
     const isPDF = buffer.length >= 4 && buffer[0] === 0x25 && buffer[1] === 0x50 && buffer[2] === 0x44 && buffer[3] === 0x46; // %PDF
     const isZipDocx = buffer.length >= 4 && buffer[0] === 0x50 && buffer[1] === 0x4b; // PK (zip/docx)
-    const isTextOrDoc = file.name?.endsWith('.txt') || file.name?.endsWith('.doc') || file.type === 'text/plain';
+    const isText = file.name?.toLowerCase().endsWith('.txt') || file.type === 'text/plain';
 
-    if (!isPDF && !isZipDocx && !isTextOrDoc) {
+    if (!isPDF && !isZipDocx && !isText) {
       return NextResponse.json(
-        { error: 'File signature mismatch. Uploaded file does not match a valid PDF or Word document format.' },
+        { error: 'File signature mismatch. Upload a valid PDF, DOCX, or TXT document.' },
         { status: 400 }
       );
     }
@@ -253,21 +265,32 @@ export async function POST(request) {
     const consentVersion = formData.get('consentVersion') || 'v1.0-dpdp-2023';
 
     if (supabase) {
-      await supabase.from('offer_uploads').insert({
-        id: uploadId,
-        status: 'processing',
-        created_at: new Date().toISOString(),
-      });
+      try {
+        const { error } = await supabase.from('offer_uploads').insert({
+          id: uploadId,
+          status: 'processing',
+          created_at: new Date().toISOString(),
+        });
+        if (error) throw error;
+      } catch (error) {
+        console.error('Offer upload status persistence failed:', error?.message || error);
+        inMemoryUploads.set(uploadId, { status: 'processing', extractedData: null, deletedAt: null });
+      }
 
       if (consentGranted === 'true') {
         const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'anonymous';
         const ipHash = crypto.createHash('sha256').update(ip).digest('hex');
-        await supabase.from('consents').insert({
-          consent_type: 'offer_analysis_upload',
-          consent_text_version: consentVersion,
-          ip_hash: ipHash,
-          granted_at: new Date().toISOString(),
-        }).catch(() => {});
+        try {
+          const { error } = await supabase.from('consents').insert({
+            consent_type: 'offer_analysis_upload',
+            consent_text_version: consentVersion,
+            ip_hash: ipHash,
+            granted_at: new Date().toISOString(),
+          });
+          if (error) console.error('Offer consent audit insert failed:', error.message);
+        } catch (error) {
+          console.error('Offer consent audit insert failed:', error?.message || error);
+        }
       }
     } else {
       inMemoryUploads.set(uploadId, {
@@ -277,18 +300,28 @@ export async function POST(request) {
       });
     }
 
-    // Trigger immediate extraction and verifiable synchronous deletion
-    processAndCleanUpOfferUpload(uploadId, buffer, file.name || 'offer.pdf');
+    // Extract and erase before returning the data to this uploading client.
+    const result = await processAndCleanUpOfferUpload(uploadId, buffer, supabase);
+    if (result.status === 'error') {
+      return NextResponse.json({ error: result.error }, { status: 422 });
+    }
 
     return NextResponse.json({
       success: true,
       uploadId,
+      status: result.status,
+      extractedData: result.extractedData,
+      deletedAt: result.deletedAt,
     });
   } catch (error) {
     const correlationId = crypto.randomUUID();
-    console.error(`[Correlation ID: ${correlationId}] Offer letter upload error:`, error?.message || '[REDACTED]');
+    console.error(`[Correlation ID: ${correlationId}] Offer letter upload error:`, error);
     return NextResponse.json(
-      { error: 'Failed to process offer letter upload.', correlationId },
+      {
+        error: 'Failed to process offer letter upload.',
+        correlationId,
+        ...(process.env.NODE_ENV !== 'production' ? { details: error?.message || String(error) } : {}),
+      },
       { status: 500 }
     );
   }

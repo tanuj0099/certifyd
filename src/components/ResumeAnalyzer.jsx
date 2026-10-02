@@ -213,6 +213,32 @@ var safeParseResumeJSON = function (text) {
     var cleaned = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').trim()
     var obj = JSON.parse(cleaned)
 
+    // Accept flat result objects returned by providers or seeded analysis fixtures.
+    if (obj && (obj.summary || obj.immediateAction || obj.action) && !obj.Personal_Profile && !obj.Analysis_and_Insights) {
+      var flatCerts = Array.isArray(obj.certs) ? obj.certs : []
+      return {
+        name: String(obj.name || ''),
+        summary: String(obj.summary || ''),
+        city: String(obj.city || ''),
+        domain: String(obj.domain || 'business'),
+        gaps: Array.isArray(obj.gaps) ? obj.gaps.map(String) : [],
+        certs: flatCerts.slice(0, 3).map(function (cert, i) {
+          return {
+            name: String(cert.name || cert.Cert_Name || ''),
+            why: String(cert.why || cert.Why || ''),
+            roi: String(cert.roi || cert.Expected_ROI_Percentage || ''),
+            timeline: String(cert.timeline || cert.Estimated_Months_To_Complete || ''),
+            fastTrack: String(cert.fastTrack || cert.Fast_Track_Step || ''),
+            primary: i === 0,
+          }
+        }).filter(function (cert) { return cert.name }),
+        immediateAction: String(obj.immediateAction || obj.action || ''),
+        marketInsight: String(obj.marketInsight || ''),
+        raw: text,
+        parseError: false,
+      }
+    }
+
     if (obj.error === 'INVALID_DOCUMENT') {
       return { error: 'INVALID_DOCUMENT', Message: obj.message, parseError: false }
     }
@@ -278,7 +304,7 @@ var safeParseResumeJSON = function (text) {
       name: '', summary: 'Analysis complete - re-run for structured results.',
       city: '', domain: 'business',
       gaps: [], certs: [],
-      immediateAction: text.slice(0, 300),
+      immediateAction: '',
       marketInsight: '',
       raw: text,
       parseError: true,

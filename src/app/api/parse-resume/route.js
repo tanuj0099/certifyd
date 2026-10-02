@@ -1,18 +1,15 @@
 import { NextResponse } from 'next/server';
-import { createRequire } from 'module';
 import mammoth from 'mammoth';
 import { rateLimiters, getRateLimitId, applyRateLimit } from '@/lib/ratelimit.js';
 import { validateUploadedFile } from '@/lib/fileValidation.js';
 import { logger } from '@/lib/logger.js';
+import { extractPdfText } from '@/lib/pdfParser.js';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 export async function POST(request) {
   try {
-    const require = createRequire(import.meta.url);
-    const pdfParse = require('pdf-parse');
-
     const id = getRateLimitId(request);
     const { limited, response } = await applyRateLimit(rateLimiters.resumeAnalysis, id);
     if (limited) return response;
@@ -40,9 +37,7 @@ export async function POST(request) {
     const magicBytes = buffer.subarray(0, 5).toString('utf8');
     
     if (magicBytes === '%PDF-') {
-      // Parse PDF using pdf-parse
-      const pdfData = await pdfParse(buffer);
-      extractedText = pdfData.text.trim();
+      extractedText = await extractPdfText(buffer);
     } else if (buffer.subarray(0, 4).toString('hex') === '504b0304') {
       // Parse DOCX (ZIP signature PK..)
       const result = await mammoth.extractRawText({ buffer });

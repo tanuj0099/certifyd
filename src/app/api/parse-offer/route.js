@@ -1,18 +1,15 @@
 import { NextResponse } from 'next/server';
-import { createRequire } from 'module';
 import * as Sentry from '@sentry/nextjs';
 import { rateLimiters, getRateLimitId, applyRateLimit } from '@/lib/ratelimit.js';
 import { validateUploadedFile } from '@/lib/fileValidation.js';
 import { logger } from '@/lib/logger.js';
+import { extractPdfText } from '@/lib/pdfParser.js';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 export async function POST(request) {
   try {
-    const require = createRequire(import.meta.url);
-    const pdfParse = require('pdf-parse');
-    
     const id = getRateLimitId(request);
     const { limited, response } = await applyRateLimit(rateLimiters.offerLetter, id);
     if (limited) return response;
@@ -34,11 +31,8 @@ export async function POST(request) {
       return NextResponse.json({ error: validation.reason }, { status: 400 });
     }
 
-    const data = new Uint8Array(arrayBuffer);
-
-    // Parse the PDF text entirely in memory using pdf-parse
-    const pdfData = await pdfParse(buffer);
-    const parsedText = pdfData.text.trim();
+    // Parse the PDF text entirely in memory.
+    const parsedText = await extractPdfText(buffer);
 
     return NextResponse.json({ text: parsedText });
   } catch (error) {

@@ -90,12 +90,21 @@ export default function AutoDeleteUpload({ onComplete }) {
 
       const data = await res.json();
       if (!res.ok || !data.uploadId) {
-        throw new Error(data.error || 'Upload failed');
+        const reason = data.details ? `${data.error || 'Upload failed'} (${data.details})` : data.error || 'Upload failed';
+        const reference = data.correlationId ? ` Reference: ${data.correlationId}` : '';
+        throw new Error(reason + reference);
       }
 
       setUploadId(data.uploadId);
-      setState('processing');
-      startPollingStatus(data.uploadId);
+      if (data.status === 'complete' && data.deletedAt && data.extractedData) {
+        setDeletedAt(data.deletedAt);
+        setExtractedData(data.extractedData);
+        setState('complete');
+        if (onComplete) onComplete(data.extractedData, data.deletedAt);
+      } else {
+        setState('processing');
+        startPollingStatus(data.uploadId);
+      }
     } catch (err) {
       setError(err.message || 'Failed to upload document.');
       setState('error');
