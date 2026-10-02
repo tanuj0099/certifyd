@@ -8,12 +8,12 @@ const ALLOWED_TYPES = [
 ];
 
 export async function validateUploadedFile(buffer, claimedMimeType) {
-  // Check file size first (max 5MB for documents)
-  if (buffer.length > 5 * 1024 * 1024) {
+  // Leave room for multipart overhead under common serverless request limits.
+  if (buffer.length > 4 * 1024 * 1024) {
     logger.warn('File upload rejected: too large', { size: buffer.length });
     return {
       valid: false,
-      reason: 'File too large. Maximum 5MB.',
+      reason: 'File too large. Maximum 4MB.',
     };
   }
 

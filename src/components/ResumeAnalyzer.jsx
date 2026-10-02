@@ -882,6 +882,13 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
 
   var readFile = async function (file) {
     if (!file) return
+    if (file.size > 4 * 1024 * 1024) {
+      setFileName('')
+      setError('This file is too large to upload. Please use a file under 4MB or paste your resume text.')
+      setTextReady(true)
+      setPdfLoading(false)
+      return
+    }
     var ext = file.name.split('.').pop().toLowerCase()
     var isPdf = file.name.toLowerCase().endsWith('.pdf') || file.type === 'application/pdf'
     var isDocx = file.name.toLowerCase().endsWith('.docx') || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
@@ -937,8 +944,18 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
           body: formData
         })
         if (!response.ok) {
-          var errData = await response.json().catch(function() { return {} })
-          throw new Error(errData.error || 'Server rejected file')
+          var responseBody = await response.text().catch(function() { return '' })
+          var errData = {}
+          try { errData = JSON.parse(responseBody) } catch (_) {}
+          var message = errData.error
+          if (!message && response.status === 413) {
+            message = 'This file is too large for the upload service. Please use a file under 4MB or paste your resume text.'
+          }
+          if (!message && response.status >= 500) {
+            message = 'The file parser is temporarily unavailable. Please try again or paste your resume text.'
+          }
+          if (!message) message = 'Upload was rejected (HTTP ' + response.status + '). Please check the file and try again.'
+          throw new Error(message)
         }
         var data = await response.json()
         var extracted = data.text
