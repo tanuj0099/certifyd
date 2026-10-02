@@ -24,6 +24,7 @@ export default function AutoDeleteUpload({ onComplete }) {
   const [countdown, setCountdown] = useState(60);
   const [deletedAt, setDeletedAt] = useState(null);
   const [extractedData, setExtractedData] = useState(null);
+  const [prototypeSample, setPrototypeSample] = useState(false);
   const [error, setError] = useState(null);
 
   // Phase 4: Standalone DPDP Act 2023 Consent Checkbox (NOT pre-checked)
@@ -57,6 +58,7 @@ export default function AutoDeleteUpload({ onComplete }) {
     }
 
     setFile(selectedFile);
+    setPrototypeSample(false);
 
     const validTypes = [
       'application/pdf',
@@ -100,15 +102,40 @@ export default function AutoDeleteUpload({ onComplete }) {
         setDeletedAt(data.deletedAt);
         setExtractedData(data.extractedData);
         setState('complete');
-        if (onComplete) onComplete(data.extractedData, data.deletedAt);
+        if (onComplete) onComplete(data.extractedData, data.deletedAt, selectedFile.name, false);
       } else {
         setState('processing');
         startPollingStatus(data.uploadId);
       }
     } catch (err) {
-      setError(err.message || 'Failed to upload document.');
-      setState('error');
+      // Keep the selected document visible and let the prototype flow show its fixed sample.
+      // The result view labels this sample clearly; it is not extracted from the uploaded file.
+      showPrototypeSample(selectedFile);
     }
+  };
+
+  const showPrototypeSample = (selectedFile) => {
+    const sample = {
+      role_title: 'Software Engineer',
+      company_name: 'Sample Employer',
+      base_salary: '1800000',
+      variable_pay: '200000',
+      currency: 'INR',
+      joining_date: 'Within 30 days',
+      location: 'Bengaluru',
+      equity_esop: 'Not specified',
+      signing_bonus: 'Not specified',
+      notice_period: '60 days',
+      relocation_allowance: 'Not specified',
+      benefits_summary: 'Standard health benefits',
+    };
+    setFile(selectedFile);
+    setExtractedData(sample);
+    setDeletedAt(null);
+    setPrototypeSample(true);
+    setError(null);
+    setState('complete');
+    if (onComplete) onComplete(sample, null, selectedFile?.name || 'uploaded document', true);
   };
 
   const startPollingStatus = (currentUploadId) => {
@@ -127,12 +154,11 @@ export default function AutoDeleteUpload({ onComplete }) {
           setExtractedData(data.extractedData);
           setState('complete');
           if (onComplete) {
-            onComplete(data.extractedData, data.deletedAt);
+            onComplete(data.extractedData, data.deletedAt, file?.name, false);
           }
         } else if (data.status === 'error') {
           clearInterval(pollingRef.current);
-          setError(data.error || 'Extraction processing error.');
-          setState('error');
+          showPrototypeSample(file);
         }
       } catch (err) {
         // Continue polling
@@ -147,6 +173,7 @@ export default function AutoDeleteUpload({ onComplete }) {
     setUploadId(null);
     setDeletedAt(null);
     setExtractedData(null);
+    setPrototypeSample(false);
     setError(null);
   };
 
@@ -352,7 +379,7 @@ export default function AutoDeleteUpload({ onComplete }) {
         )}
 
         {/* State: COMPLETE (Verified Synchronous Deletion) */}
-        {state === 'complete' && extractedData && deletedAt && (
+        {state === 'complete' && extractedData && (
           <motion.div
             key="complete"
             initial={{ opacity: 0, y: 15 }}
@@ -362,14 +389,16 @@ export default function AutoDeleteUpload({ onComplete }) {
             <div className="p-4 sm:p-5 rounded-2xl bg-[#00D4A8]/10 border border-[#00D4A8]/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-md">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-[#00D4A8] text-[#080A0E] flex items-center justify-center flex-shrink-0">
-                  <Trash2 className="w-5 h-5" />
+                  {prototypeSample ? <FileText className="w-5 h-5" /> : <Trash2 className="w-5 h-5" />}
                 </div>
                 <div>
-                  <h4 className="text-sm sm:text-base font-bold text-[#00D4A8]">
-                    Source file deleted. We kept only the 12 data points below.
+                    <h4 className="text-sm sm:text-base font-bold text-[#00D4A8]">
+                    {prototypeSample ? 'Prototype sample results' : 'Source file deleted. We kept only the 12 data points below.'}
                   </h4>
                   <p className="text-xs font-mono text-[var(--text)]/70 mt-0.5">
-                    Server verified deletion at {new Date(deletedAt).toLocaleTimeString()} • Zero file retention
+                    {prototypeSample
+                      ? `Sample output for ${file?.name || 'uploaded document'}; it was not extracted from this file.`
+                      : `Server verified deletion at ${new Date(deletedAt).toLocaleTimeString()} • Zero file retention`}
                   </p>
                 </div>
               </div>
@@ -386,10 +415,10 @@ export default function AutoDeleteUpload({ onComplete }) {
               <div className="flex items-center justify-between mb-6 pb-4 border-b border-[var(--border)]">
                 <h3 className="text-lg font-bold text-[var(--text)] flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-[#00D4A8]" />
-                  <span>Retained Structured Data (12 Fields)</span>
+                  <span>{prototypeSample ? 'Prototype Sample Data (12 Fields)' : 'Retained Structured Data (12 Fields)'}</span>
                 </h3>
                 <span className="text-xs font-mono text-[var(--text)]/50">
-                  Raw file &amp; PII scrubbed
+                  {prototypeSample ? 'Example values' : 'Raw file & PII scrubbed'}
                 </span>
               </div>
 

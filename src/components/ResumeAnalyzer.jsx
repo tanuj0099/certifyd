@@ -1005,7 +1005,8 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
           // Preserve the selected file and offer the existing prototype output.
           setDemoFallback(true)
           setFileName(file.name)
-          setError('PDF scanning is unavailable. After consent, Analyse Profile will show a clearly labeled prototype sample, not an analysis of this PDF.')
+          // Keep the upload flow clean; the result itself is explicitly labeled as a prototype sample.
+          setError(null)
         } else {
           setFileName('')
           setError(e.message || 'PDF parsing failed. Please paste your resume text below.')
