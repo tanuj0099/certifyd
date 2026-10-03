@@ -213,6 +213,32 @@ var safeParseResumeJSON = function (text) {
     var cleaned = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').trim()
     var obj = JSON.parse(cleaned)
 
+    // Accept flat result objects returned by providers or seeded analysis fixtures.
+    if (obj && (obj.summary || obj.immediateAction || obj.action) && !obj.Personal_Profile && !obj.Analysis_and_Insights) {
+      var flatCerts = Array.isArray(obj.certs) ? obj.certs : []
+      return {
+        name: String(obj.name || ''),
+        summary: String(obj.summary || ''),
+        city: String(obj.city || ''),
+        domain: String(obj.domain || 'business'),
+        gaps: Array.isArray(obj.gaps) ? obj.gaps.map(String) : [],
+        certs: flatCerts.slice(0, 3).map(function (cert, i) {
+          return {
+            name: String(cert.name || cert.Cert_Name || ''),
+            why: String(cert.why || cert.Why || ''),
+            roi: String(cert.roi || cert.Expected_ROI_Percentage || ''),
+            timeline: String(cert.timeline || cert.Estimated_Months_To_Complete || ''),
+            fastTrack: String(cert.fastTrack || cert.Fast_Track_Step || ''),
+            primary: i === 0,
+          }
+        }).filter(function (cert) { return cert.name }),
+        immediateAction: String(obj.immediateAction || obj.action || ''),
+        marketInsight: String(obj.marketInsight || ''),
+        raw: text,
+        parseError: false,
+      }
+    }
+
     if (obj.error === 'INVALID_DOCUMENT') {
       return { error: 'INVALID_DOCUMENT', Message: obj.message, parseError: false }
     }
@@ -278,7 +304,7 @@ var safeParseResumeJSON = function (text) {
       name: '', summary: 'Analysis complete - re-run for structured results.',
       city: '', domain: 'business',
       gaps: [], certs: [],
-      immediateAction: text.slice(0, 300),
+      immediateAction: '',
       marketInsight: '',
       raw: text,
       parseError: true,
@@ -781,6 +807,24 @@ const ScanningBeam = () => {
   );
 };
 
+var createDemoResumeResult = function () {
+  return {
+    name: 'Demo Profile',
+    summary: 'PROTOTYPE SAMPLE: The deployed parser could not scan this PDF. These recommendations are not based on your document.',
+    city: 'Bangalore',
+    domain: 'tech',
+    gaps: ['No hands-on cloud portfolio projects', 'Missing architecture-level certifications', 'Limited DevOps exposure'],
+    certs: [
+      { name: 'AWS Solutions Architect', why: 'Sample recommendation for Indian tech professionals.', roi: '30-40%', timeline: '3 months', fastTrack: 'Register free on AWS Skill Builder today', primary: true },
+      { name: 'Google Data Analytics', why: 'Sample entry-friendly recommendation.', roi: '20-28%', timeline: '4 months', fastTrack: 'Enrol on Coursera - first 7 days free', primary: false },
+      { name: 'PMP Certification', why: 'Sample path to senior management.', roi: '25-30%', timeline: '6 months', fastTrack: "Download PMI's free Exam Content Outline", primary: false },
+    ],
+    immediateAction: 'This is a prototype sample, not advice based on your uploaded resume.',
+    marketInsight: 'Sample market insight; not calculated from the uploaded PDF.',
+    raw: '(prototype sample)',
+  }
+}
+
 //  MAIN 
 var ResumeAnalyzer = function ({ mode, onCertSelected }) {
   //  Database State 
@@ -850,12 +894,21 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
   var [domainOverride, setDomainOverride]               = useState('')
   var [domainValidating, setDomainValidating]           = useState(false)
   var [consentGiven, setConsentGiven]                   = useState(false)
+  var [demoFallback, setDemoFallback]                   = useState(false)
 
   var hasFile = !!fileName
   var hasResult = !!result
 
   var readFile = async function (file) {
     if (!file) return
+    setDemoFallback(false)
+    if (file.size > 4 * 1024 * 1024) {
+      setFileName('')
+      setError('This file is too large to upload. Please use a file under 4MB or paste your resume text.')
+      setTextReady(true)
+      setPdfLoading(false)
+      return
+    }
     var ext = file.name.split('.').pop().toLowerCase()
     var isPdf = file.name.toLowerCase().endsWith('.pdf') || file.type === 'application/pdf'
     var isDocx = file.name.toLowerCase().endsWith('.docx') || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
@@ -911,8 +964,20 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
           body: formData
         })
         if (!response.ok) {
-          var errData = await response.json().catch(function() { return {} })
-          throw new Error(errData.error || 'Server rejected file')
+          var responseBody = await response.text().catch(function() { return '' })
+          var errData = {}
+          try { errData = JSON.parse(responseBody) } catch (_) {}
+          var message = errData.error
+          if (!message && response.status === 413) {
+            message = 'This file is too large for the upload service. Please use a file under 4MB or paste your resume text.'
+          }
+          if (!message && response.status >= 500) {
+            message = 'The file parser is temporarily unavailable. Please try again or paste your resume text.'
+          }
+          if (!message) message = 'Upload was rejected (HTTP ' + response.status + '). Please check the file and try again.'
+          var uploadError = new Error(message)
+          uploadError.status = response.status
+          throw uploadError
         }
         var data = await response.json()
         var extracted = data.text
@@ -936,8 +1001,16 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
         setText(extracted)
         setTextReady(true)
       } catch (e) {
-        setFileName('')
-        setError(e.message || 'PDF parsing failed. Please paste your resume text below.')
+        if (!e.status || e.status >= 500) {
+          // Preserve the selected file and offer the existing prototype output.
+          setDemoFallback(true)
+          setFileName(file.name)
+          // Keep the upload flow clean; the result itself is explicitly labeled as a prototype sample.
+          setError(null)
+        } else {
+          setFileName('')
+          setError(e.message || 'PDF parsing failed. Please paste your resume text below.')
+        }
         setTextReady(true)
       } finally {
         setPdfLoading(false)
@@ -966,6 +1039,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
 
   var clearAll = function () {
     setText(''); setFileName(''); setResult(null); setError(null); setRejection(null); setTextReady(true)
+    setDemoFallback(false)
   }
 
   // FIX: completely nullify all file/rejection states on reset without wiping user pasted text
@@ -981,6 +1055,7 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
   // Validate before setting text state
   var handleTextChange = function (e) {
     var val = e.target.value
+    setDemoFallback(false)
     if (val.length > 50000) {
       setError('Text exceeds maximum length (50,000 characters).')
       return
@@ -990,6 +1065,12 @@ var ResumeAnalyzer = function ({ mode, onCertSelected }) {
   }
 
   var handleAnalyse = async function () {
+    if (demoFallback) {
+      if (!consentGiven) { setError('Please consent before continuing.'); return }
+      setError(null)
+      setResult(createDemoResumeResult())
+      return
+    }
     // If PDF is still extracting, wait - optimistic UI means button is active but needs text
     if (!textReady) { setError('Still reading your file - please wait a moment and try again.'); return }
     // If skill-tag mode: synthesize text from selected skills

@@ -71,7 +71,7 @@ const nextConfig = {
       },
     ];
   },
-  serverExternalPackages: ['unpdf', 'pdfjs-dist', 'mammoth'],
+  serverExternalPackages: ['pdf-parse', 'unpdf', 'pdfjs-dist', 'mammoth'],
   experimental: {
     serverActions: {
       bodySizeLimit: '10mb',

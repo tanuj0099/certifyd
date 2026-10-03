@@ -57,6 +57,7 @@ export default function OfferAnalysisPage() {
   const resumeFileInputRef = useRef(null)
   const [resumeText, setResumeText] = useState('')
   const [resumeFileName, setResumeFileName] = useState('')
+  const [resumePrototype, setResumePrototype] = useState(false)
   const [resumeDragging, setResumeDragging] = useState(false)
   const [resumeLoading, setResumeLoading] = useState(false)
 
@@ -64,6 +65,7 @@ export default function OfferAnalysisPage() {
   const offerFileInputRef = useRef(null)
   const [offerText, setOfferText] = useState('')
   const [offerFileName, setOfferFileName] = useState('')
+  const [offerPrototype, setOfferPrototype] = useState(false)
   const [offerDragging, setOfferDragging] = useState(false)
   const [offerPdfLoading, setOfferPdfLoading] = useState(false)
 
@@ -78,7 +80,7 @@ export default function OfferAnalysisPage() {
   const hasResult = !!result
 
   // Generic File Reader
-  const readFile = async (file, setFileName, setText, setPdfLoadState, setErrorState) => {
+  const readFile = async (file, setFileName, setText, setPdfLoadState, setErrorState, isResumeUpload = false) => {
     if (!file) return
     const isPdf = file.name.toLowerCase().endsWith('.pdf') || file.type === 'application/pdf'
     const isDocx = file.name.toLowerCase().endsWith('.docx') || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
@@ -86,6 +88,7 @@ export default function OfferAnalysisPage() {
 
     if (isPdf) {
       setFileName(file.name); setText(''); setPdfLoadState(true);
+      if (isResumeUpload) setResumePrototype(false)
       try {
         const formData = new FormData()
         formData.append('file', file)
@@ -102,14 +105,25 @@ export default function OfferAnalysisPage() {
         const extracted = data.text
 
         if (!extracted || !extracted.trim()) {
-          setFileName('')
-          setErrorState('Could not extract text from this PDF. Please paste your text below.')
+          if (isResumeUpload) {
+            setResumePrototype(true)
+            setErrorState('')
+          } else {
+            setFileName('')
+            setErrorState('Could not extract text from this PDF. Please paste your text below.')
+          }
           return
         }
         setText(extracted)
       } catch (e) {
-        setFileName('')
-        setErrorState(e.message || 'PDF parsing failed. Please paste your text below.')
+        if (isResumeUpload) {
+          // Keep the selected filename and let the prototype flow continue with its sample path.
+          setResumePrototype(true)
+          setErrorState('')
+        } else {
+          setFileName('')
+          setErrorState(e.message || 'PDF parsing failed. Please paste your text below.')
+        }
       } finally {
         setPdfLoadState(false)
       }
@@ -153,13 +167,13 @@ export default function OfferAnalysisPage() {
     reader.readAsText(file)
   }
 
-  const handleResumeDrop = (e) => { e.preventDefault(); setResumeDragging(false); readFile(e.dataTransfer.files[0], setResumeFileName, setResumeText, setResumeLoading, setError) }
+  const handleResumeDrop = (e) => { e.preventDefault(); setResumeDragging(false); readFile(e.dataTransfer.files[0], setResumeFileName, setResumeText, setResumeLoading, setError, true) }
   const handleOfferDrop = (e) => { e.preventDefault(); setOfferDragging(false); readFile(e.dataTransfer.files[0], setOfferFileName, setOfferText, setOfferPdfLoading, setError) }
 
   const clearAll = () => {
     setStep(1)
-    setResumeText(''); setResumeFileName('');
-    setOfferText(''); setOfferFileName('');
+    setResumeText(''); setResumeFileName(''); setResumePrototype(false)
+    setOfferText(''); setOfferFileName(''); setOfferPrototype(false)
     setResult(null); setError(''); setMarketMedian(0); setTierMatched(true);
   }
 
@@ -223,6 +237,45 @@ export default function OfferAnalysisPage() {
     }
     if (!effectiveOfferText || effectiveOfferText.trim().length < 15) {
       setError('Please paste or upload at least 15 characters of offer text.')
+      return
+    }
+    if (offerPrototype) {
+      setError('')
+      setMarketMedian(0)
+      setTierMatched(false)
+      setResult({
+        Analysis_Metadata: {
+          Target_Location: 'Bengaluru',
+          Target_Job_Title: 'Software Engineer',
+          Company_Tier: 'Sample',
+          Profile_Mismatch_Flag: false,
+        },
+        CTC_Breakdown: {
+          Total_CTC_Stated: 2000000,
+          Basic_Salary: 1800000,
+          HRA: 0,
+          Other_Allowances: 0,
+          Special_Allowance: 0,
+          Joining_Bonus: 0,
+          Variable_PLVP: 200000,
+          Employer_PF: 0,
+          Gratuity_Provision: 0,
+          ESOP_Annual_Vesting_Value: 0,
+          Estimated_Monthly_In_Hand: 105000,
+        },
+        Database_Payload: { fixed_base: 1800000 },
+        Market_Context: {
+          Calculated_Experience_Level_For_Offer: '3 years',
+          Negotiation_Strategy: 'Use this example as a starting point for a real offer review.',
+          UI_Status_Message: 'Prototype sample output',
+        },
+        Strategic_Negotiation_Output: {
+          Blunt_Assessment: 'This is a prototype example and is not based on the uploaded offer.',
+          Red_Flags: ['Review the fixed and variable pay split in your actual offer.'],
+          Strengths: ['The example includes a fixed salary and variable pay breakdown.'],
+          Counter_Offer_Email_Script: 'Thank you for the offer. I would like to discuss the compensation structure and align the fixed component with the responsibilities of the role.',
+        },
+      })
       return
     }
     setLoading(true)
@@ -395,7 +448,11 @@ export default function OfferAnalysisPage() {
                 <FileText size={16} color={ORANGE} />
                 <span style={{ fontSize: '13px', color: 'var(--text)', fontWeight: '600', fontFamily: FH }}>{fileName}</span>
               </div>
-              <button onClick={() => { isResume ? setResumeFileName('') : setOfferFileName(''); setTextValue('') }} style={{ background: 'none', border: 'none', color: 'var(--text-4)', cursor: 'pointer' }}>
+              <button onClick={() => {
+                if (isResume) { setResumeFileName(''); setResumePrototype(false) }
+                else setOfferFileName('')
+                setTextValue('')
+              }} style={{ background: 'none', border: 'none', color: 'var(--text-4)', cursor: 'pointer' }}>
                 <X size={14} />
               </button>
             </div>
@@ -510,8 +567,13 @@ export default function OfferAnalysisPage() {
 
               {renderUploadZone(
                 "Drop your Resume PDF", resumeDragging, setResumeDragging, !!resumeFileName, resumeFileName, resumeLoading, handleResumeDrop, resumeFileInputRef,
-                (file) => readFile(file, setResumeFileName, setResumeText, setResumeLoading, setError),
+                (file) => readFile(file, setResumeFileName, setResumeText, setResumeLoading, setError, true),
                 resumeText, setResumeText, true
+              )}
+              {resumePrototype && (
+                <p style={{ margin: '10px 0 0', color: 'var(--text-3)', fontFamily: FB, fontSize: '12px' }}>
+                  Prototype sample recommendations will be used for this upload.
+                </p>
               )}
 
               <div style={{ marginTop: '24px', marginBottom: '8px', display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
@@ -558,8 +620,9 @@ export default function OfferAnalysisPage() {
               </div>
 
               <AutoDeleteUpload
-                onComplete={(extractedData, deletedAt) => {
-                  setOfferFileName('VERIFIED_DELETED_OFFER.pdf');
+                onComplete={(extractedData, deletedAt, uploadedFileName, isPrototype) => {
+                  setOfferFileName(uploadedFileName || 'offer-letter.pdf');
+                  setOfferPrototype(!!isPrototype);
                   setOfferText(JSON.stringify(extractedData, null, 2));
                   setError('');
                 }}
@@ -621,6 +684,11 @@ export default function OfferAnalysisPage() {
                 transition={T}
                 style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}
               >
+                {offerPrototype && (
+                  <div style={{ padding: '12px 16px', borderRadius: '8px', background: 'var(--bg-surface)', border: '1px solid var(--border)', color: 'var(--text-3)', fontFamily: FB, fontSize: '12px' }}>
+                    Prototype sample output for {offerFileName || 'uploaded document'}; it is not based on the PDF contents.
+                  </div>
+                )}
                 {/* Warnings */}
                 {result.Analysis_Metadata?.Profile_Mismatch_Flag && (
                   <div style={{ padding: '16px', borderRadius: '10px', background: 'rgba(239, 68, 68, 0.06)', border: '1px solid rgba(239, 68, 68, 0.2)', display: 'flex', gap: '12px' }}>
