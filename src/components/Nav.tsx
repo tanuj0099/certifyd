@@ -36,15 +36,6 @@ export default function Nav() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-2">
-            <Link
-              href="/certifyd-games-combined-fixed.html"
-              className="p-2 rounded-md text-text-secondary hover:bg-elevated hover:text-text-primary transition-colors cursor-target"
-              aria-label="Open Certifyd games"
-              title="Open Certifyd games"
-            >
-              <Menu size={22} />
-            </Link>
-
             <Link href="/" className="flex items-center gap-3" onClick={closeMenu}>
               <Image
                 src="/logo.svg"
